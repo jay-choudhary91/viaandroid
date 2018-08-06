@@ -8,6 +8,6 @@ public class mainactivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mainactivity);
+        setContentView(R.layout.row_videolist);
     }
 }
