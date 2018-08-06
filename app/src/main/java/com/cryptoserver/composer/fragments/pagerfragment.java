@@ -3,15 +3,18 @@ package com.cryptoserver.composer.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.models.intro;
 
 
 /**
@@ -19,27 +22,26 @@ import com.cryptoserver.composer.R;
  */
 
 public class pagerfragment extends Fragment {
-    ImageView img_gif;
+    ImageView img_image;
     View RootView;
     boolean isGifLoaded=false;
     int gifFile=0;
-    WebView webview;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if(RootView == null)
         {
             RootView = inflater.inflate(R.layout.fragment_pager, container, false);
-            TextView tv = (TextView) RootView.findViewById(R.id.tvFragFirst);
-            img_gif = (ImageView) RootView.findViewById(R.id.img_gif);
-            webview = (WebView) RootView.findViewById(R.id.webview);
+            TextView txt_title = (TextView) RootView.findViewById(R.id.txt_title);
+            TextView txt_description = (TextView) RootView.findViewById(R.id.txt_description);
+            TextView btn_start_record = (TextView) RootView.findViewById(R.id.btn_start_record);
+            img_image = (ImageView) RootView.findViewById(R.id.img_image);
 
-            gifFile=getArguments().getInt("gif_code");
+            intro introobject=(intro)getArguments().getParcelable("Object");
 
-            if(getArguments().getString("msg").contains("Welcome") && (! isGifLoaded))
-                loadAnimation();
-
-            tv.setText(getArguments().getString("msg"));
+            txt_title.setText(introobject.getTitle());
+            txt_description.setText(introobject.getDescription());
+            img_image.setImageResource(introobject.getImage());
             //tv.setBackgroundColor(Color.parseColor(getArguments().getString("color")));
 
         }
@@ -47,60 +49,19 @@ public class pagerfragment extends Fragment {
         return RootView;
     }
 
-    public String getGif(int code)
-    {
-        switch (code)
-        {
-            case 1:
-                return "file:///android_asset/nicolas.html";
-            case 2:
-                return "file:///android_asset/angus.html";
-            case 3:
-                return "file:///android_asset/sadi.html";
-            case 4:
-                return "file:///android_asset/forrest.html";
-        }
-        return "";
-    }
 
-    public void loadAnimation()
-    {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isGifLoaded=true;
-                //Glide.with(getActivity()).load(getGif(gifFile)).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).crossFade().
-                //      into(img_gif);
-                webview.loadUrl(getGif(gifFile));
-            }
-        },100);
-    }
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(webview != null && (! isGifLoaded))
-            loadAnimation();
     }
 
-    public static pagerfragment newInstance(String text, String bgColor) {
 
+    public static pagerfragment newInstance(intro intro) {
+
+        Object object=null;
         pagerfragment f = new pagerfragment();
         Bundle b = new Bundle();
-        b.putString("msg", text);
-        b.putString("color", bgColor);
-
-        f.setArguments(b);
-
-        return f;
-    }
-
-    public static pagerfragment newInstance(String text, String bgColor, int imageCode) {
-
-        pagerfragment f = new pagerfragment();
-        Bundle b = new Bundle();
-        b.putString("msg", text);
-        b.putString("color", bgColor);
-        b.putInt("gif_code",imageCode);
+        b.putParcelable("Object", (Parcelable) intro);
 
         f.setArguments(b);
 

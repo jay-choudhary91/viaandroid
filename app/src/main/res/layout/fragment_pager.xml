@@ -2,47 +2,74 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/intro_bg"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
+        android:layout_weight="0.5"
+        android:gravity="bottom|center_horizontal"
         android:orientation="vertical">
 
-        <WebView
-            android:id="@+id/webview"
+        <ImageView
+            android:id="@+id/img_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            ></WebView>
+            android:background="@drawable/point_shoot"/>
 
     </LinearLayout>
 
-
-
-    <ImageView
-        android:id="@+id/img_gif"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:visibility="gone"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
-
-    <TextView
-        android:id="@+id/tvFragFirst"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_below="@id/img_gif"
-        android:gravity="center_horizontal"
-        android:padding="10dp"
-        android:textSize="20sp"
-        android:text="TextView" />
+        android:layout_weight="0.4"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.cryptoserver.composer.views.CustomFontTextView
+            app:fontType="OpenSans_Regular"
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:text="TextView" />
+
+        <com.cryptoserver.composer.views.CustomFontTextView
+            app:fontType="OpenSans_Regular"
+            android:id="@+id/txt_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="TextView" />
+
+        <com.cryptoserver.composer.views.CustomFontTextView
+            app:fontType="OpenSans_Regular"
+            android:id="@+id/btn_start_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_secure_record"
+            android:layout_marginTop="10dp"
+            android:background="@color/recorder_btn_color"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textSize="13sp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"></View>
+
 
 </LinearLayout>
