@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">viavideocomposer</string>
+    <string name="welcome_inapp">Welcome to the Video Hash App. To learn about the app, swipe left</string>
+    <string name="authentic_fraud">Video Hash allows you to determine if your video is authentic or fraudulent</string>
+    <string name="record_crop_count">Record a video, crop video, and count frames</string>
+    <string name="trim_video_match">Trim your video to find matching hashes</string>
+</resources>
