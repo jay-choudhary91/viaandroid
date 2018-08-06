@@ -7,4 +7,7 @@
     <color name="black">#212121</color>
     <color name="intro_bg">#62a6d6</color>
     <color name="recorder_btn_color">#19c6aa</color>
+    <color name="lightblue">#79B5F4</color>
+    <color name="lightgray">#aab8bd</color>
+
 </resources>
