@@ -16,7 +16,7 @@ import com.cryptoserver.composer.views.pageranimation;
 import com.cryptoserver.composer.views.pagercustomduration;
 
 
-public class intropageractivity extends FragmentActivity {
+public class introactivity extends FragmentActivity {
 
     int currentselected,nextselection;
     pagercustomduration viewpager;
