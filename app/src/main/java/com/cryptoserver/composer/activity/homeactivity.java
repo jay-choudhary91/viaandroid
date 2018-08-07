@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 
@@ -65,5 +66,18 @@ public class homeactivity extends baseactivity {
     @Override
     public void showPermissionDialog() {
 
+    }
+
+    @Override
+    public void onfragmentbackstackchanged() {
+        super.onfragmentbackstackchanged();
+        basefragment fragment = getcurrentfragment();
+
+        if (fragment instanceof fragmentvideolist) {
+
+        }
+        else if (fragment instanceof fragmentvideocomposer) {
+
+        }
     }
 }
