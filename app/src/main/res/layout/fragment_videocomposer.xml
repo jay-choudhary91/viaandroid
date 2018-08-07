@@ -1,9 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lightblue">
+    android:background="@color/black"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="2dp"
+        android:gravity="center_horizontal"
+        >
+
+        <com.cryptoserver.composer.ffmpeg.fixedratiocroppedtextureview
+            android:id="@+id/camera_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            />
+
+        <com.cryptoserver.composer.views.CustomFontTextView
+            android:id="@+id/txt_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="17sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_centerHorizontal="true"
+            android:text="@string/save"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"/>
+
+        <com.cryptoserver.composer.views.CustomFontTextView
+            android:id="@+id/txt_clear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginTop="5dp"
+            android:textSize="17sp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/txt_save"
+            android:text="@string/clear"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/img_video_capture"
+            android:src="@drawable/shape_recorder_off"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
 
     <SlidingDrawer
         android:id="@+id/simpleSlidingDrawer"
@@ -14,15 +74,7 @@
         android:orientation="horizontal"
         android:rotation="180"
         >
-        <!-- Button for the handle of SlidingDrawer -->
 
-        <!--<ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:rotation="270"
-            android:id="@id/handle"
-            android:src="@drawable/righthandle"
-            />-->
         <ImageView
             android:id="@id/handle"
             android:layout_width="wrap_content"
@@ -46,8 +98,4 @@
             </LinearLayout>
         </LinearLayout>
     </SlidingDrawer>
-
-
-
-
 </RelativeLayout>

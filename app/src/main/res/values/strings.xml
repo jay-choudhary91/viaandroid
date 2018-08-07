@@ -7,7 +7,12 @@
     <string name="provable_protection">Provable Protection</string>
     <string name="varifiable">100% varifiable video documentation.</string>
     <string name="start_secure_record">START SECURE RECORDING</string>
-
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="initiating">Initiating…</string>
+    <string name="processing">Processing…</string>
+    <string name="please_wait">Please wait</string>
+    <string name="permissions_denied_exit">Permissions denied, exit.</string>
     <string name="welcome_inapp">Welcome to the Video Hash App. To learn about the app, swipe left</string>
     <string name="authentic_fraud">Video Hash allows you to determine if your video is authentic or fraudulent</string>
     <string name="record_crop_count">Record a video, crop video, and count frames</string>

@@ -121,10 +121,6 @@ public class introactivity extends FragmentActivity {
                         getResources().getString(R.string.video_manager),R.drawable.key));
                 case 2: return pagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
                         getResources().getString(R.string.varifiable),R.drawable.lock));
-                case 3: return pagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.mobile));
-                case 4: return pagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.shield));
 
                 default: return pagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
                         getResources().getString(R.string.modern_security),R.drawable.globe));
@@ -133,7 +129,7 @@ public class introactivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 3;
         }
     }
 }

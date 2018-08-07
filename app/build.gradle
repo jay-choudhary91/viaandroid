@@ -40,7 +40,9 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
+    implementation 'org.jcodec:jcodec:0.2.3'
+    implementation 'org.jcodec:jcodec-android:0.2.3'
+    //implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     compile(group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.1') {
         exclude group: 'org.bytedeco.javacpp-presets'
     }

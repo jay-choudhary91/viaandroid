@@ -10,5 +10,6 @@
     <color name="lightblue">#79B5F4</color>
     <color name="lightgray">#aab8bd</color>
     <color name="dark_x">#918e8e</color>
-
+    <color name="txt_color_icons">#005274</color>
+    <color name="red">#FF0000</color>
 </resources>

@@ -1,8 +1,17 @@
 package com.cryptoserver.composer.utils;
 
 
+import android.os.Environment;
+
+import com.cryptoserver.composer.BuildConfig;
+
+import java.io.File;
+
 public class config {
 
+
+    public static final String videodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
+            BuildConfig.APPLICATION_ID+"/"+"videos";
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";
     public static final String date_time_format = "MM-dd-yyyy hh:mm:ss";

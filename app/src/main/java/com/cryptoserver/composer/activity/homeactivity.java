@@ -1,5 +1,6 @@
 package com.cryptoserver.composer.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
+import com.cryptoserver.composer.fragments.writerappactivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,8 +34,11 @@ public class homeactivity extends baseactivity {
         imgaddicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragmentvideocomposer frag=new fragmentvideocomposer();
-                replaceFragment(frag, false, true);
+                //fragmentvideocomposer frag=new fragmentvideocomposer();
+                //replaceFragment(frag, false, true);
+
+                Intent in=new Intent(homeactivity.this,writerappactivity.class);
+                startActivity(in);
             }
         });
     }
