@@ -5,6 +5,49 @@
     android:layout_height="match_parent"
     android:background="@color/lightblue">
 
+    <SlidingDrawer
+        android:id="@+id/simpleSlidingDrawer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:content="@+id/content"
+        android:handle="@+id/handle"
+        android:orientation="horizontal"
+        android:rotation="180"
+        >
+        <!-- Button for the handle of SlidingDrawer -->
+
+        <!--<ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rotation="270"
+            android:id="@id/handle"
+            android:src="@drawable/righthandle"
+            />-->
+        <ImageView
+            android:id="@id/handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lefthandle"
+            android:rotation="360"
+            />
+        <LinearLayout
+            android:id="@id/content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:rotation="180">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:layout_height="match_parent">
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </SlidingDrawer>
+
+
 
 
 </RelativeLayout>
