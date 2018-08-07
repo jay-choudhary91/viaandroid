@@ -1,20 +1,21 @@
-package com.cryptoserver.composer;
+package com.cryptoserver.composer.activity;
 
 import android.os.Bundle;
 
-import com.cryptoserver.composer.activity.baseactivity;
+import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 
 import butterknife.ButterKnife;
 
-public class mainactivity extends baseactivity {
+public class homeactivity extends baseactivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        applicationviavideocomposer.setActivity(mainactivity.this);
+        applicationviavideocomposer.setActivity(homeactivity.this);
 
         fragmentvideolist frag=new fragmentvideolist();
         replaceFragment(frag, false, true);
@@ -23,7 +24,7 @@ public class mainactivity extends baseactivity {
 
     @Override
     public int getlayoutid() {
-        return R.layout.activity_mainactivity;
+        return R.layout.activity_homeactivity;
     }
 
     @Override

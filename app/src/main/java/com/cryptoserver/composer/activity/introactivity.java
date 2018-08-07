@@ -116,20 +116,24 @@ public class introactivity extends FragmentActivity {
             switch(pos) {
 
                 case 0: return pagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.simply_secure_icon));
+                        getResources().getString(R.string.modern_security),R.drawable.globe));
                 case 1: return pagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
-                        getResources().getString(R.string.video_manager),R.drawable.point_shoot));
+                        getResources().getString(R.string.video_manager),R.drawable.key));
                 case 2: return pagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.provable_protection));
+                        getResources().getString(R.string.varifiable),R.drawable.lock));
+                case 3: return pagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
+                        getResources().getString(R.string.varifiable),R.drawable.mobile));
+                case 4: return pagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
+                        getResources().getString(R.string.varifiable),R.drawable.shield));
 
                 default: return pagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.simply_secure_icon));
+                        getResources().getString(R.string.modern_security),R.drawable.globe));
             }
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return 5;
         }
     }
 }

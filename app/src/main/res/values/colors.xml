@@ -9,5 +9,6 @@
     <color name="recorder_btn_color">#19c6aa</color>
     <color name="lightblue">#79B5F4</color>
     <color name="lightgray">#aab8bd</color>
+    <color name="dark_x">#918e8e</color>
 
 </resources>

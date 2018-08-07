@@ -9,13 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.activity.homeactivity;
 import com.cryptoserver.composer.models.intro;
 
 
@@ -24,36 +24,43 @@ import com.cryptoserver.composer.models.intro;
  */
 
 public class pagerfragment extends Fragment {
-    ImageView img_image,img_gif;
+    ImageView img_image,imggif;
     WebView webview;
-    View RootView;
-    boolean isGifLoaded=false;
-    int gifFile=0;
+    View rootview;
+    boolean isgifloaded =false;
+    intro introobject=null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if(RootView == null)
+        if(rootview == null)
         {
-            RootView = inflater.inflate(R.layout.fragment_pager, container, false);
-            TextView txt_title = (TextView) RootView.findViewById(R.id.txt_title);
-            TextView txt_description = (TextView) RootView.findViewById(R.id.txt_description);
-            TextView btn_start_record = (TextView) RootView.findViewById(R.id.btn_start_record);
-            img_image = (ImageView) RootView.findViewById(R.id.img_image);
-            img_gif = (ImageView) RootView.findViewById(R.id.img_gif);
-            webview = (WebView) RootView.findViewById(R.id.webview);
+            rootview = inflater.inflate(R.layout.fragment_pager, container, false);
+            TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
+            TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
+            TextView btn_start_record = (TextView) rootview.findViewById(R.id.btn_start_record);
+            img_image = (ImageView) rootview.findViewById(R.id.img_image);
+            imggif = (ImageView) rootview.findViewById(R.id.img_gif);
+            webview = (WebView) rootview.findViewById(R.id.webview);
 
-            intro introobject=(intro)getArguments().getParcelable("object");
+            introobject=(intro)getArguments().getParcelable("object");
 
             txt_title.setText(introobject.getTitle());
             txt_description.setText(introobject.getDescription());
-            //img_image.setImageResource(introobject.getImage());
-            //tv.setBackgroundColor(Color.parseColor(getArguments().getString("color")));
 
-            if((! isGifLoaded))
+            if((!isgifloaded && introobject.getTitle().contains("Simply Secure")))
                 loadAnimation();
+
+            btn_start_record.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent in=new Intent(getActivity(),homeactivity.class);
+                    getActivity().startActivity(in);
+                    getActivity().finish();
+                }
+            });
         }
 
-        return RootView;
+        return rootview;
     }
 
 
@@ -62,30 +69,25 @@ public class pagerfragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                isGifLoaded=true;
-               // webview.loadUrl("file:///android_asset/globe.html");
-                Glide.with(getActivity()).load(R.drawable.globe).diskCacheStrategy(DiskCacheStrategy.SOURCE).
+                isgifloaded =true;
+                //webview.loadUrl("file:///android_asset/globe.html");
+                /*GlideApp.with(getActivity()).load(introobject.getImage()).
                         fitCenter().
-                        crossFade().
-                        into(img_gif);
+                        crossFade()
+                        .into(new GifDrawableImageViewTarget(mGifView, 1));*/
 
-                /*Glide.with(getActivity()).load("file:///android_asset/globe.gif").diskCacheStrategy(DiskCacheStrategy.SOURCE).
-                      fitCenter().
-                      crossFade().
-                      into(img_gif);*/
-
-/*                Glide.with(getContext()).load("file:///android_asset/nicolas.html")
+                Glide.with(getActivity())
+                        .load(introobject.getImage())
                         .asGif()
-                        .fitCenter()
-                        .crossFade()
-                        .into(img_gif);*/
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(imggif);
             }
-        },100);
+        },200);
     }
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(img_gif != null && (! isGifLoaded))
+        if(imggif != null && (!isgifloaded))
             loadAnimation();
     }
 
