@@ -1,0 +1,17 @@
+package com.cryptoserver.composer.utils;
+
+
+public class config {
+
+    public static final String prefs_name = "main_prefs";
+    public static final String time_format = "hh:mm a";
+    public static final String date_time_format = "MM-dd-yyyy hh:mm:ss";
+    public static final String build_flavor_videocreater = "creater";
+    public static final String build_flavor_videoviewer = "viewer";
+
+
+    public static final String prefs_md5 = "md5";
+    public static final String prefs_md5_salt = "md5-salt";
+    public static final String prefs_sha = "sha";
+    public static final String prefs_sha_salt = "sha-salt";
+}

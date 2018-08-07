@@ -15,14 +15,13 @@
         android:layout_toLeftOf="@+id/rl_sharedeleteicon"
         android:weightSum="1">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/img_videothumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight=".7"
             android:background="@drawable/sequrity_icon"
-            android:orientation="vertical">
-
-        </LinearLayout>
+            />
 
         <LinearLayout
             android:layout_width="match_parent"

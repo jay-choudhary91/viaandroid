@@ -1,13 +1,53 @@
 package com.cryptoserver.composer;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class mainactivity extends AppCompatActivity {
+import com.cryptoserver.composer.activity.baseactivity;
+import com.cryptoserver.composer.fragments.fragmentvideolist;
+
+import butterknife.ButterKnife;
+
+public class mainactivity extends baseactivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.row_videolist);
+        ButterKnife.bind(this);
+
+        applicationviavideocomposer.setActivity(mainactivity.this);
+
+        fragmentvideolist frag=new fragmentvideolist();
+        replaceFragment(frag, false, true);
+
+    }
+
+    @Override
+    public int getlayoutid() {
+        return R.layout.activity_mainactivity;
+    }
+
+    @Override
+    public void launchHome() {
+
+    }
+
+    @Override
+    public void updateheader(String txt) {
+
+    }
+
+    @Override
+    public void updateActionBar(int showHide, String color) {
+
+    }
+
+    @Override
+    public void updateActionBar(int showHide) {
+
+    }
+
+    @Override
+    public void showPermissionDialog() {
+
     }
 }

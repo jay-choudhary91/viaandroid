@@ -22,6 +22,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 
+import com.cryptoserver.composer.utils.config;
+
 import static android.content.Context.LOCATION_SERVICE;
 
 public abstract class basefragment extends Fragment {
@@ -52,7 +54,7 @@ public abstract class basefragment extends Fragment {
         } catch (Exception e) {
         }
 
-       // prefs = activity.getSharedPreferences(config.prefs_name, Context.MODE_PRIVATE);
+        prefs = activity.getSharedPreferences(config.prefs_name, Context.MODE_PRIVATE);
     }
 
     public void updateheader() {
