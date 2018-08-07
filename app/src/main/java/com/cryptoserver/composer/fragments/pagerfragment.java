@@ -18,14 +18,18 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.homeactivity;
 import com.cryptoserver.composer.models.intro;
 
+import java.io.IOException;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
+
 
 /**
  * Created by root on 26/7/18.
  */
 
 public class pagerfragment extends Fragment {
-    ImageView img_image,imggif;
-    WebView webview;
+    GifImageView imggif;
     View rootview;
     boolean isgifloaded =false;
     intro introobject=null;
@@ -38,9 +42,7 @@ public class pagerfragment extends Fragment {
             TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
             TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
             TextView btn_start_record = (TextView) rootview.findViewById(R.id.btn_start_record);
-            img_image = (ImageView) rootview.findViewById(R.id.img_image);
-            imggif = (ImageView) rootview.findViewById(R.id.img_gif);
-            webview = (WebView) rootview.findViewById(R.id.webview);
+            imggif = (GifImageView) rootview.findViewById(R.id.img_gif);
 
             introobject=(intro)getArguments().getParcelable("object");
 
@@ -70,17 +72,15 @@ public class pagerfragment extends Fragment {
             @Override
             public void run() {
                 isgifloaded =true;
-                //webview.loadUrl("file:///android_asset/globe.html");
-                /*GlideApp.with(getActivity()).load(introobject.getImage()).
-                        fitCenter().
-                        crossFade()
-                        .into(new GifDrawableImageViewTarget(mGifView, 1));*/
 
-                Glide.with(getActivity())
-                        .load(introobject.getImage())
-                        .asGif()
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .into(imggif);
+                GifDrawable gifDrawable = null;
+                try {
+                    gifDrawable = new GifDrawable(getResources(), introobject.getImage());
+                    gifDrawable.setLoopCount(1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                imggif.setImageDrawable(gifDrawable);
             }
         },200);
     }

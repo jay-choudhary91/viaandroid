@@ -51,4 +51,5 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
         transitive = true;
     }
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
 }
