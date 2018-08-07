@@ -49,7 +49,7 @@ public class fragmentvideolist extends basefragment {
             if(arrayvideolist != null)
                 arrayvideolist.clear();
 
-            arrayvideolist.add("video 1");
+            //arrayvideolist.add("video 1");
 
             //RecyclerView recyclerView = (RecyclerView)rootview.findViewById(R.id.rv_videolist);
 
