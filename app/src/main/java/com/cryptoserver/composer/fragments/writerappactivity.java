@@ -44,6 +44,7 @@ import com.cryptoserver.composer.ffmpeg.fixedratiocroppedtextureview;
 import com.cryptoserver.composer.ffmpeg.util.camerahelper;
 import com.cryptoserver.composer.ffmpeg.util.miscutils;
 import com.cryptoserver.composer.utils.common;
+import com.cryptoserver.composer.utils.config;
 
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacpp.avutil;
@@ -83,6 +84,7 @@ public class writerappactivity extends AppCompatActivity implements
 
     private int mcameraid;
     private Camera mcamera;
+    Camera.Parameters parameters;
     private FFmpegFrameRecorder mframerecorder;
     private videorecordthread mvideorecordthread;
     private audiorecordthread maudiorecordthread;
@@ -100,8 +102,8 @@ public class writerappactivity extends AppCompatActivity implements
     private int mpreviewwidth = preferred_preview_width;
     private int mpreviewheight = preferred_preview_height;
     // Output video size
-    private int videowidth = 720;
-    private int videoheight = 1280;
+    private int videowidth = 320;
+    private int videoheight = 240;
     private int framerate = 30;
     private int framedepth = Frame.DEPTH_UBYTE;
     private int framechannels = 2;
@@ -112,8 +114,12 @@ public class writerappactivity extends AppCompatActivity implements
     TextView txt_save;
     TextView txt_clear;
 
+    boolean isflashon = false,inPreview = true;
+
     fixedratiocroppedtextureview mpreview;
-    ImageView mrecordimagebutton;
+    ImageView mrecordimagebutton,imgflashon,rotatecamera;
+    int camBackId = 0;
+
 
     long currentframenumber =0;
     long frameduration =4, mframetorecordcount =0;
@@ -127,6 +133,8 @@ public class writerappactivity extends AppCompatActivity implements
         //ButterKnife.bind(this);
         mpreview = (fixedratiocroppedtextureview) findViewById(R.id.camera_preview);
         mrecordimagebutton = (ImageView) findViewById(R.id.img_video_capture);
+        imgflashon = (ImageView) findViewById(R.id.img_flash_on);
+        rotatecamera = (ImageView) findViewById(R.id.img_rotate_camera);
         txt_save = (TextView) findViewById(R.id.txt_save);
         txt_clear = (TextView) findViewById(R.id.txt_clear);
 //        mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -135,6 +143,8 @@ public class writerappactivity extends AppCompatActivity implements
         mpreview.setcroppedsizeweight(videowidth, videoheight);
         mpreview.setSurfaceTextureListener(this);
         mrecordimagebutton.setOnClickListener(this);
+        imgflashon.setOnClickListener(this);
+        rotatecamera.setOnClickListener(this);
 
         // At most buffer 10 Frame
         mframetorecordqueue = new LinkedBlockingQueue<>(10);
@@ -162,6 +172,7 @@ public class writerappactivity extends AppCompatActivity implements
         });
         timer.setBase(SystemClock.elapsedRealtime());
         timer.setText("00:00:00");
+
     }
 
     @Override
@@ -267,9 +278,11 @@ public class writerappactivity extends AppCompatActivity implements
                     pauserecording();
                     new finishrecordingtask().execute();
                 } else {
-                    mrecordimagebutton.setClickable(false);
+                   mrecordimagebutton.setClickable(false);
+                    imgflashon.setVisibility(View.GONE);
+                    rotatecamera.setVisibility(View.GONE);
 
-                    common.hidekeyboard(writerappactivity.this);
+                    //common.hidekeyboard(writerappactivity.this);
                     /*frameduration =Long.parseLong(edt_framesduration.getText().toString());
                     if(frameduration > 0)
                     {
@@ -290,38 +303,52 @@ public class writerappactivity extends AppCompatActivity implements
                             }
                             startrecording();
                             resumerecording();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    starttimer();
+                                }
+                            });
                             return null;
                         }
                     }.execute();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        starttimer();
-                    }
-                });
+
                 break;
             case R.id.txt_save:
                 timer.setBase(SystemClock.elapsedRealtime());
                 //if (mvideoframes.size() > 0) {
                    // progressdialog.showwaitingdialog(writerappactivity.this);
-                   // exportvideo();
-                  //  clearvideolist();
+                    exportvideo();
+                    clearvideolist();
                // }
                 break;
             case R.id.txt_clear:
                 timer.setBase(SystemClock.elapsedRealtime());
-                //clearvideolist();
+                    clearvideolist();
+                break;
+
+            case R.id.img_flash_on:
+                if (isflashon) {
+                    // turn off flash
+                    turnoffflash();
+                } else {
+                    // turn on flash
+                    turnonflash();
+                }
+                break;
+
+            case R.id.img_rotate_camera:
+              setrotatecamera();
                 break;
         }
     }
 
-    /*public void exportvideo()
+    public void exportvideo()
     {
         if(mvideo != null)
         {
-            mvideoframes.add(new videomodel("Exported video to camera roll"));
-
+           // mvideoframes.add(new videomodel("Exported video to camera roll"));
             try
             {
                 ContentValues values = new ContentValues(3);
@@ -336,9 +363,9 @@ public class writerappactivity extends AppCompatActivity implements
             }
         }
 
-        madapter.notifyDataSetChanged();
+       /* madapter.notifyDataSetChanged();
         recyviewitem.getLayoutManager().scrollToPosition(mvideoframes.size()-1);
-        progressdialog.dismisswaitdialog();
+        progressdialog.dismisswaitdialog();*/
     }
 
     public void clearvideolist()
@@ -346,16 +373,18 @@ public class writerappactivity extends AppCompatActivity implements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressdialog.dismisswaitdialog();
 
-                mvideoframes.clear();
-                madapter.notifyDataSetChanged();
+               // mvideoframes.clear();
+                //madapter.notifyDataSetChanged();
                 txt_save.setVisibility(View.GONE);
                 txt_clear.setVisibility(View.GONE);
                 mrecordimagebutton.setVisibility(View.VISIBLE);
+                imgflashon.setVisibility(View.VISIBLE);
+                rotatecamera.setVisibility(View.VISIBLE);
+
             }
         });
-    }*/
+    }
 
     private void doafterallpermissionsgranted() {
         acquireCamera();
@@ -368,6 +397,8 @@ public class writerappactivity extends AppCompatActivity implements
         if(txt_save.getVisibility() == View.GONE)
         {
             mrecordimagebutton.setVisibility(View.VISIBLE);
+            imgflashon.setVisibility(View.VISIBLE);
+            rotatecamera.setVisibility(View.VISIBLE);
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
         }
     }
@@ -386,7 +417,7 @@ public class writerappactivity extends AppCompatActivity implements
             return;
         }
 
-        Camera.Parameters parameters = mcamera.getParameters();
+        parameters = mcamera.getParameters();
         List<Camera.Size> previewsizes = parameters.getSupportedPreviewSizes();
         Camera.Size previewsize = camerahelper.getoptimalsize(previewsizes,
                 preferred_preview_width, preferred_preview_height);
@@ -466,11 +497,14 @@ public class writerappactivity extends AppCompatActivity implements
             ioe.printStackTrace();
         }
         mcamera.startPreview();
+        inPreview= true;
+
     }
 
     private void stoppreview() {
         if (mcamera != null) {
             mcamera.stopPreview();
+
             mcamera.setPreviewCallbackWithBuffer(null);
         }
     }
@@ -495,6 +529,7 @@ public class writerappactivity extends AppCompatActivity implements
 
         String recordedtime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         mvideo = camerahelper.getoutputmediafile(recordedtime, camerahelper.media_type_video);
+
         Log.i(log_tag, "Output Video: " + mvideo);
 
         try {
@@ -613,7 +648,6 @@ public class writerappactivity extends AppCompatActivity implements
             mrecordfragments.push(recordfragment);
 
             mrecording = true;
-
             mrecordimagebutton.setClickable(true);
         }
     }
@@ -627,7 +661,6 @@ public class writerappactivity extends AppCompatActivity implements
                     }
                 });
             mrecordfragments.peek().setendtimestamp(System.currentTimeMillis());
-
             mrecording = false;
         }
     }
@@ -915,6 +948,9 @@ public class writerappactivity extends AppCompatActivity implements
 
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             mrecordimagebutton.setVisibility(View.GONE);
+            imgflashon.setVisibility(View.GONE);
+            rotatecamera.setVisibility(View.GONE);
+
             txt_save.setVisibility(View.VISIBLE);
             txt_clear.setVisibility(View.VISIBLE);
 
@@ -935,4 +971,49 @@ public class writerappactivity extends AppCompatActivity implements
 
     }
 
+    private void turnonflash() {
+        if (!isflashon) {
+            if (mcamera == null || parameters == null) {
+                return;
+            }
+            // play sound
+            parameters = mcamera.getParameters();
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            mcamera.setParameters(parameters);
+            //mcamera.startPreview();
+            isflashon = true;
+
+            // changing button/switch image
+        }
+
+    }
+
+    // Turning Off flash
+    private void turnoffflash() {
+        if (isflashon) {
+            if (mcamera == null || parameters == null) {
+                return;
+            }
+
+            parameters = mcamera.getParameters();
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            mcamera.setParameters(parameters);
+            //mcamera.stopPreview();
+            isflashon = false;
+        }
+    }
+
+    public void setrotatecamera(){
+
+        stoppreview();
+        releasecamera();
+        if(mcameraid == Camera.CameraInfo.CAMERA_FACING_BACK){
+            mcameraid = Camera.CameraInfo.CAMERA_FACING_FRONT;
+        }
+        else {
+            mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
+        }
+        doafterallpermissionsgranted();
+    }
 }
+
