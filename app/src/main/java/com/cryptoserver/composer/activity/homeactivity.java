@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -23,18 +24,20 @@ public class homeactivity extends baseactivity {
     ImageView imgaddicon;
     @BindView(R.id.img_setting)
     ImageView imgsettingsicon;
+    @BindView(R.id.actionbar)
+    RelativeLayout actionbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-
+        actionbar.setVisibility(View.VISIBLE);
         applicationviavideocomposer.setActivity(homeactivity.this);
 
         fragmentvideolist frag=new fragmentvideolist();
         replaceFragment(frag, false, true);
 
-        imgaddicon.setOnClickListener(new View.OnClickListener() {
+        imgaddicon.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                /* fragmentvideocomposer frag=new fragmentvideocomposer();
@@ -47,6 +50,7 @@ public class homeactivity extends baseactivity {
         imgsettingsicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                actionbar.setVisibility(View.GONE);
                 fragmentsettings fragsettings=new fragmentsettings();
                 replaceFragment(fragsettings, false, true);
             }
@@ -136,6 +140,8 @@ public class homeactivity extends baseactivity {
 
         if (fragment instanceof fragmentvideolist) {
 
+            actionbar.setVisibility(View.VISIBLE);
+
         }
         else if (fragment instanceof fragmentvideocomposer) {
 
@@ -144,4 +150,10 @@ public class homeactivity extends baseactivity {
 
         }
     }
+
+   /* @Override
+    protected void onResume() {
+        super.onResume();
+        actionbar.setVisibility(View.VISIBLE);
+    }*/
 }

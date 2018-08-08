@@ -23,7 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.cryptoserver.composer.utils.xData;
+import com.cryptoserver.composer.utils.xdata;
 
 
 import java.util.ArrayList;
@@ -182,7 +182,7 @@ public class LocationService extends Service implements LocationListener, GpsSta
         }
         Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
 
-        xData.getInstance().saveSetting("gpsnumberofsatelites","In view : "+satellites+", In using : "+satellitesInFix);
+        xdata.getinstance().saveSetting("gpsnumberofsatelites","In view : "+satellites+", In using : "+satellitesInFix);
     }
 
     private void notifyLocationProviderStatusUpdated(boolean isLocationProviderAvailable) {

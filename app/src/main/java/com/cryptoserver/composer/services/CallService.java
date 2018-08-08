@@ -10,7 +10,7 @@ import android.telephony.TelephonyManager;
 
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.xData;
+import com.cryptoserver.composer.utils.xdata;
 
 import java.util.Date;
 
@@ -113,9 +113,9 @@ public class CallService extends Service {
 
                 callStartTime=null;
 
-                xData.getInstance().saveSetting("CALL_STATUS","");
-                xData.getInstance().saveSetting("CALL_DURATION","");
-                xData.getInstance().saveSetting("CALL_REMOTE_NUMBER","");
+                xdata.getinstance().saveSetting("CALL_STATUS","");
+                xdata.getinstance().saveSetting("CALL_DURATION","");
+                xdata.getinstance().saveSetting("CALL_REMOTE_NUMBER","");
 
                 break;
         }

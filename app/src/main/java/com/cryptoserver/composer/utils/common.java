@@ -27,6 +27,7 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
@@ -751,5 +752,13 @@ public class common
             }
         }
     };
+
+    public static void showselectedunselected(ImageView img1, ImageView img2, ImageView img3, ImageView img4)
+    {
+        img1.setImageResource(R.drawable.selectedicon);
+        img2.setImageResource(R.drawable.unselectedicon);
+        img3.setImageResource(R.drawable.unselectedicon);
+        img4.setImageResource(R.drawable.unselectedicon);
+    }
 
 }

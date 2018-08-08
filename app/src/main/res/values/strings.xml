@@ -30,6 +30,7 @@
     <string name="hash">Hash</string>
     <string name="frames">Frames</string>
 
+    <string name="settings">Settings</string>
     <string name="hash_list">Hash List</string>
     <string name="frames_per_second">Frames per second</string>
     <string name="metric_list">Metric List</string>

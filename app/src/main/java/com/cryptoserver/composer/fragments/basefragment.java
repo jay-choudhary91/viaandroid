@@ -93,6 +93,7 @@ public abstract class basefragment extends Fragment {
         prefs = activity.getSharedPreferences(config.prefs_name, Context.MODE_PRIVATE);
     }
 
+
     public void updateheader() {
 
     }

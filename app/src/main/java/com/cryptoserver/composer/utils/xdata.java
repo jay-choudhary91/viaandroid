@@ -4,16 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 
-public class xData {
+public class xdata {
     private static final String PREF_NAME = "application";
 
 
-    private static xData ourInstance;
+    private static xdata ourInstance;
     private Context mContext;
 
-    public static xData getInstance() {
+    public static xdata getinstance() {
         if (ourInstance == null) {
-            ourInstance = new xData();
+            ourInstance = new xdata();
         }
         return ourInstance;
     }

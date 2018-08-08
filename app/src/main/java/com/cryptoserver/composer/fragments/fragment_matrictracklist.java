@@ -3,7 +3,6 @@ package com.cryptoserver.composer.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,11 +30,9 @@ import com.cryptoserver.composer.interfaces.AdapterItemClick;
 import com.cryptoserver.composer.models.MetricModel;
 import com.cryptoserver.composer.services.LocationService;
 import com.cryptoserver.composer.utils.common;
-import com.cryptoserver.composer.utils.xData;
+import com.cryptoserver.composer.utils.xdata;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -108,7 +105,7 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                         //Toast.makeText(getActivity(),str,Toast.LENGTH_SHORT).show();
 
                         doubleTotalDistance=doubleTotalDistance+location.getSpeed();
-                        if(xData.getInstance().getSetting("gpsaltittude").trim().isEmpty())
+                        if(xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty())
                         {
                             for (int i = 0; i < metricItemArraylist.size(); i++) {
 
@@ -159,11 +156,11 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                             itemMetricAdapter.notifyDataSetChanged();
                         }*/
 
-                        xData.getInstance().saveSetting("gpsaltittude",""+location.getAltitude());
-                        xData.getInstance().saveSetting("heading",""+common.getGpsDirection(location.getBearing()));
-                        xData.getInstance().saveSetting("speed",""+location.getSpeed());
-                        xData.getInstance().saveSetting("distancetraveled",""+doubleTotalDistance);
-                        xData.getInstance().saveSetting("gpsquality",""+location.getAccuracy());
+                        xdata.getinstance().saveSetting("gpsaltittude",""+location.getAltitude());
+                        xdata.getinstance().saveSetting("heading",""+common.getGpsDirection(location.getBearing()));
+                        xdata.getinstance().saveSetting("speed",""+location.getSpeed());
+                        xdata.getinstance().saveSetting("distancetraveled",""+doubleTotalDistance);
+                        xdata.getinstance().saveSetting("gpsquality",""+location.getAccuracy());
 
 
                     }
@@ -327,36 +324,36 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
 
 
 
-        if(! xData.getInstance().getSetting("gpsaltittude").trim().isEmpty())
+        if(! xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty())
         {
             for (int i = 0; i < metricItemArraylist.size(); i++) {
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaltittude")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xData.getInstance().getSetting("gpsaltittude")));
+                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsaltittude")));
                     if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                         metricItemArraylist.get(i).setSelected(true);
                 }
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + xData.getInstance().getSetting("heading"));
+                    metricItemArraylist.get(i).setMetricTrackValue("" + xdata.getinstance().getSetting("heading"));
                     if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                         metricItemArraylist.get(i).setSelected(true);
                 }
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xData.getInstance().getSetting("speed")));
+                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("speed")));
                     if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                         metricItemArraylist.get(i).setSelected(true);
                 }
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xData.getInstance().getSetting("gpsquality")));
+                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsquality")));
                     if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                         metricItemArraylist.get(i).setSelected(true);
                 }
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsnumberofsatelites")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xData.getInstance().getSetting("gpsnumberofsatelites")));
+                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsnumberofsatelites")));
                     if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                         metricItemArraylist.get(i).setSelected(true);
                 }
@@ -549,7 +546,13 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
     }
     public void setAdapter()
     {
-        itemMetricAdapter = new ItemMetricAdapter(getActivity(), metricItemArraylist, new AdapterItemClick() {
+        itemMetricAdapter=new ItemMetricAdapter(getActivity(), metricItemArraylist, new AdapterItemClick() {
+            @Override
+            public void onItemClicked(Object object) {
+
+            }
+        });
+        /*itemMetricAdapter = new ItemMetricAdapter(getActivity(), metricItemArraylist, new AdapterItemClick() {
             @Override
             public void onItemClicked(Object object) {
                 String key = (String) object;
@@ -572,7 +575,8 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                     }
                 }
             }
-        });
+        });*/
+        setvalueadapter();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyviewItem.setLayoutManager(mLayoutManager);
         recyviewItem.setItemAnimator(new DefaultItemAnimator());
@@ -586,19 +590,19 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         for (int i = 0; i < metricItemArraylist.size(); i++) {
 
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("currentcallinprogress")) {
-                metricItemArraylist.get(i).setMetricTrackValue("" + (xData.getInstance().getSetting("CALL_STATUS")));
+                metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("CALL_STATUS")));
                 if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                     metricItemArraylist.get(i).setSelected(true);
             }
 
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("currentcalldurationseconds")) {
-                metricItemArraylist.get(i).setMetricTrackValue("" + ((xData.getInstance().getSetting("CALL_DURATION"))));
+                metricItemArraylist.get(i).setMetricTrackValue("" + ((xdata.getinstance().getSetting("CALL_DURATION"))));
                 if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                     metricItemArraylist.get(i).setSelected(true);
             }
 
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("currentcallremotenumber")) {
-                metricItemArraylist.get(i).setMetricTrackValue("" + ((xData.getInstance().getSetting("CALL_REMOTE_NUMBER"))));
+                metricItemArraylist.get(i).setMetricTrackValue("" + ((xdata.getinstance().getSetting("CALL_REMOTE_NUMBER"))));
                 if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                     metricItemArraylist.get(i).setSelected(true);
             }
@@ -683,7 +687,7 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
 
         try {
 
-            Calendar calander = Calendar.getInstance();
+            Calendar calander = Calendar.getinstance();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Config.DATE_TIME_FORMAT);
             String datetime = simpleDateFormat.format(calander.getTime());
             Log.e("Current Time = ", ""+datetime);
@@ -720,5 +724,29 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         getHelper().replaceFragment(frag, false, true);
     }
 */
+   public void setvalueadapter(){
+       for(int key=0;key<metricItemArraylist.size();key++){
+           if(metricItemArraylist.get(key).getMetricTrackKeyName()==null){
+               Log.d("metrictrak app",metricItemArraylist.get(key).getMetricTrackKeyName());
+           }
+           if (metric_onoff(metricItemArraylist.get(key).getMetricTrackKeyName())) {
+               String value = metric_read(metricItemArraylist.get(key).getMetricTrackKeyName());
+               if(value.equals("UpdateLater"))
+               {
 
+               }
+               else
+               {
+                   if(value.isEmpty() && value != null)
+                   {
+                       matchInArray(metricItemArraylist.get(key).getMetricTrackKeyName(), "N/A");
+                   }
+                   else if(value != null)
+                   {
+                       matchInArray(metricItemArraylist.get(key).getMetricTrackKeyName(), value);
+                   }
+               }
+           }
+       }
+   }
 }
