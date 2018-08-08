@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/ll_root"
+        android:gravity="center">
+
+
+        <com.cryptoserver.composer.views.CustomFontTextView
+            android:id="@+id/txt_hash_label"
+            style="@style/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hash_every"
+            app:fontType="OpenSans_Regular"/>
+
+        <EditText
+            android:id="@+id/edt_framescount"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="8"
+            android:maxLength="10"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:background="@drawable/rectangle_edittext"
+            />
+
+        <com.cryptoserver.composer.views.CustomFontTextView
+            style="@style/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/frames"
+            app:fontType="OpenSans_Regular"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

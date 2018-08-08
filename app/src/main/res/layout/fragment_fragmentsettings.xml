@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.fragmentsettings">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.cryptoserver.composer.views.CustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/headinghashlist"
+                android:padding="5dp"
+                android:background="@color/lightgray"
+                android:text="@string/hash_list"
+                android:gravity="center_horizontal"/>
+        </RelativeLayout>
+
+
+        <include layout="@layout/layout_md_salt_sha">
+
+        </include>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.cryptoserver.composer.views.CustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/heading"
+                android:padding="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/lightgray"
+                android:text="@string/frames_per_second"
+                android:gravity="center_horizontal"/>
+        </RelativeLayout>
+
+        <include
+            android:id="@+id/hashframes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/hash_frames"
+            android:layout_marginTop="10dp"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.cryptoserver.composer.views.CustomFontTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/headingmatriclist"
+                android:padding="5dp"
+                android:background="@color/lightgray"
+                android:text="@string/metric_list"
+                android:layout_marginTop="5dp"
+                android:gravity="center_horizontal"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+
+
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:orientation="vertical"
+      android:layout_height="wrap_content">
+
+
+
+
+
+    <!--  <include layout="@layout/hash_frames"></include>-->
+  </LinearLayout>
+
+
+</RelativeLayout>
