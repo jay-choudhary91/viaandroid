@@ -85,6 +85,51 @@ public class homeactivity extends baseactivity {
     }
 
     @Override
+    public void registerAccelerometerSensor() {
+
+    }
+
+    @Override
+    public void registerMobileNetworkStrength() {
+
+    }
+
+    @Override
+    public void registerCompassSensor() {
+
+    }
+
+    @Override
+    public void registerBarometerSensor() {
+
+    }
+
+    @Override
+    public void registerUsageUser() {
+
+    }
+
+    @Override
+    public void registerUsageSystem() {
+
+    }
+
+    @Override
+    public void registerUsageIow() {
+
+    }
+
+    @Override
+    public void registerUsageIrq() {
+
+    }
+
+    @Override
+    public void getCallInfo() {
+
+    }
+
+    @Override
     public void onfragmentbackstackchanged() {
         super.onfragmentbackstackchanged();
         basefragment fragment = getcurrentfragment();

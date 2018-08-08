@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/rootlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/tv_itemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/item_text_size_15"
+            android:textColor="#000000"
+            android:text=""/>
+
+        <ImageView
+            android:id="@+id/img_selected"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@+id/tv_itemName"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/unselectedicon"/>
+
+    </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_itemValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/item_text_size_12"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="#000000"
+            android:padding="5dp"
+            android:text=""/>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

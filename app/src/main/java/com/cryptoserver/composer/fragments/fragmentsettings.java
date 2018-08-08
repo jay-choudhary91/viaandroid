@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.cryptoserver.composer.R;
 
@@ -17,6 +18,7 @@ import butterknife.ButterKnife;
 public class fragmentsettings extends basefragment {
 
     View rootview = null;
+    FrameLayout framelayout;
     public fragmentsettings() {
         // Required empty public constructor
     }
@@ -28,7 +30,9 @@ public class fragmentsettings extends basefragment {
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
+            framelayout=rootview.findViewById(R.id.matrictracklist);
+            fragment_matrictracklist fragment_matrictracklist=new fragment_matrictracklist();
+            gethelper().replaceFragment(fragment_matrictracklist,R.id.matrictracklist, false, true);
         }
         return rootview;
     }
