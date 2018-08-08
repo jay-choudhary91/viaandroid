@@ -50,7 +50,7 @@ public class homeactivity extends baseactivity {
         imgsettingsicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionbar.setVisibility(View.GONE);
+               // actionbar.setVisibility(View.GONE);
                 fragmentsettings fragsettings=new fragmentsettings();
                 replaceFragment(fragsettings, false, true);
             }

@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -87,12 +88,13 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                 // and understand that you must make sure to not use a different type anywhere
                 metricItemArraylist = (ArrayList<MetricModel>) savedInstanceState.getSerializable(STATE_ITEMS);
                 setAdapter();
+                setvalueadapter();
             }
             else
             {
                 prepareData();
                 setAdapter();
-
+                setvalueadapter();
                 locationUpdateReceiver = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -546,13 +548,7 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
     }
     public void setAdapter()
     {
-        itemMetricAdapter=new ItemMetricAdapter(getActivity(), metricItemArraylist, new AdapterItemClick() {
-            @Override
-            public void onItemClicked(Object object) {
-
-            }
-        });
-        /*itemMetricAdapter = new ItemMetricAdapter(getActivity(), metricItemArraylist, new AdapterItemClick() {
+        itemMetricAdapter = new ItemMetricAdapter(getActivity(), metricItemArraylist, new AdapterItemClick() {
             @Override
             public void onItemClicked(Object object) {
                 String key = (String) object;
@@ -575,14 +571,20 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                     }
                 }
             }
-        });*/
-        setvalueadapter();
+        });
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyviewItem.setLayoutManager(mLayoutManager);
         recyviewItem.setItemAnimator(new DefaultItemAnimator());
         recyviewItem.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
         recyviewItem.setAdapter(itemMetricAdapter);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setvalueadapter();
+            }
+        }, 5000);
     }
     @Override
     public void updateCallInfo(String callStaus, String callDuration, String CallerNumber) {
