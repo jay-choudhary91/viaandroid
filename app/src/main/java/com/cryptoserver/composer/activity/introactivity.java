@@ -116,14 +116,14 @@ public class introactivity extends FragmentActivity {
             switch(pos) {
 
                 case 0: return pagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.globe));
+                        getResources().getString(R.string.modern_security),R.drawable.shield));
                 case 1: return pagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
-                        getResources().getString(R.string.video_manager),R.drawable.key));
+                        getResources().getString(R.string.video_manager),R.drawable.mobile));
                 case 2: return pagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.lock));
+                        getResources().getString(R.string.varifiable),R.drawable.globe));
 
                 default: return pagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.globe));
+                        getResources().getString(R.string.modern_security),R.drawable.shield));
             }
         }
 

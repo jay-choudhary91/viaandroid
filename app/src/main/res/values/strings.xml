@@ -17,4 +17,22 @@
     <string name="authentic_fraud">Video Hash allows you to determine if your video is authentic or fraudulent</string>
     <string name="record_crop_count">Record a video, crop video, and count frames</string>
     <string name="trim_video_match">Trim your video to find matching hashes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="md">md5</string>
+    <string name="md_salt">md5+salt</string>
+    <string name="sha">SHA1</string>
+    <string name="sha_salt">SHA1+salt</string>
+
+    <string name="hash_every">Hash Every</string>
+    <string name="hash">Hash</string>
+    <string name="frames">Frames</string>
+
+    <string name="hash_list">Hash List</string>
+    <string name="frames_per_second">Frames per second</string>
+    <string name="metric_list">Metric List</string>
+
+
 </resources>

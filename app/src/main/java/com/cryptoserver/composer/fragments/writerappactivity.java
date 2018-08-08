@@ -12,6 +12,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -27,6 +28,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,7 +71,7 @@ import static java.lang.Thread.State.WAITING;
 public class writerappactivity extends AppCompatActivity implements
         TextureView.SurfaceTextureListener, View.OnClickListener {
     private static final String log_tag = writerappactivity.class.getSimpleName();
-
+    Chronometer timer;
     private static final int request_permissions = 1;
 
     private static final int preferred_preview_width = 720;
@@ -146,6 +148,20 @@ public class writerappactivity extends AppCompatActivity implements
         txt_save.setOnClickListener(this);
         txt_clear.setOnClickListener(this);
 
+        timer=findViewById(R.id.timer);
+        timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                long time = SystemClock.elapsedRealtime() - chronometer.getBase();
+                int h   = (int)(time /3600000);
+                int m = (int)(time - h*3600000)/60000;
+                int s= (int)(time - h*3600000- m*60000)/1000 ;
+                String t = (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
+                chronometer.setText(t);
+            }
+        });
+        timer.setBase(SystemClock.elapsedRealtime());
+        timer.setText("00:00:00");
     }
 
     @Override
@@ -278,9 +294,15 @@ public class writerappactivity extends AppCompatActivity implements
                         }
                     }.execute();
                 }
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        starttimer();
+                    }
+                });
                 break;
             case R.id.txt_save:
+                timer.setBase(SystemClock.elapsedRealtime());
                 //if (mvideoframes.size() > 0) {
                    // progressdialog.showwaitingdialog(writerappactivity.this);
                    // exportvideo();
@@ -288,6 +310,7 @@ public class writerappactivity extends AppCompatActivity implements
                // }
                 break;
             case R.id.txt_clear:
+                timer.setBase(SystemClock.elapsedRealtime());
                 //clearvideolist();
                 break;
         }
@@ -597,6 +620,12 @@ public class writerappactivity extends AppCompatActivity implements
 
     private void pauserecording() {
         if (mrecording) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        stoptimer();
+                    }
+                });
             mrecordfragments.peek().setendtimestamp(System.currentTimeMillis());
 
             mrecording = false;
@@ -894,6 +923,16 @@ public class writerappactivity extends AppCompatActivity implements
             intent.putExtra(playbackactivity.intent_name_video_path, mvideo.getpath());
             startActivity(intent);*/
         }
+    }
+    public void starttimer(){
+        //timer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+        timer.start();
+    }
+
+    public void stoptimer(){
+        //  timeWhenStopped = timer.getBase() - SystemClock.elapsedRealtime();
+        timer.stop();
+
     }
 
 }

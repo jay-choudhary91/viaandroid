@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
+import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.writerappactivity;
@@ -20,6 +21,8 @@ public class homeactivity extends baseactivity {
 
     @BindView(R.id.img_add_icon)
     ImageView imgaddicon;
+    @BindView(R.id.img_setting)
+    ImageView imgsettingsicon;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,13 +37,21 @@ public class homeactivity extends baseactivity {
         imgaddicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //fragmentvideocomposer frag=new fragmentvideocomposer();
-                //replaceFragment(frag, false, true);
+               /* fragmentvideocomposer frag=new fragmentvideocomposer();
+                replaceFragment(frag, false, true);*/
 
                 Intent in=new Intent(homeactivity.this,writerappactivity.class);
                 startActivity(in);
             }
         });
+        imgsettingsicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentsettings fragsettings=new fragmentsettings();
+                replaceFragment(fragsettings, false, true);
+            }
+        });
+
     }
 
     @Override
@@ -82,6 +93,9 @@ public class homeactivity extends baseactivity {
 
         }
         else if (fragment instanceof fragmentvideocomposer) {
+
+        }
+        else if(fragment instanceof fragmentsettings){
 
         }
     }
