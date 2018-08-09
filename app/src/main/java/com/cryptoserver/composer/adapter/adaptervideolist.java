@@ -1,6 +1,9 @@
 package com.cryptoserver.composer.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,7 +30,7 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tvvideodescription;
-        public ImageView imgvideothumbnail,imgshareicon,imgdeleteicon;
+        public ImageView imgvideothumbnail,imgshareicon,imgdeleteicon,img_videothumbnail;
 
         public myViewHolder(View view) {
             super(view);
@@ -38,6 +41,7 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
             imgvideothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
             imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
             imgdeleteicon = (ImageView) view.findViewById(R.id.img_deleteicon);
+            img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
         }
     }
 
@@ -63,7 +67,10 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
         holder.tvvideoname.setText(arrayvideolist.get(position).getName());
         holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
         holder.tvvideoduration.setText("Duration : " +arrayvideolist.get(position).getDuration());
-        holder.tvvideodescription.setText(arrayvideolist.get(position).getMd5());
+        //holder.tvvideodescription.setText(arrayvideolist.get(position).getMd5());
+
+        Bitmap bitmap= ThumbnailUtils.createVideoThumbnail(arrayvideolist.get(position).getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
+        holder.img_videothumbnail.setImageBitmap(bitmap);
 
         holder.imgshareicon.setOnClickListener(new View.OnClickListener() {
             @Override

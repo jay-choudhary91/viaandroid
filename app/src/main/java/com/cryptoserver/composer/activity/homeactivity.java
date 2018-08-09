@@ -31,7 +31,7 @@ public class homeactivity extends baseactivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-        actionbar.setVisibility(View.VISIBLE);
+
         applicationviavideocomposer.setActivity(homeactivity.this);
 
         fragmentvideolist frag=new fragmentvideolist();
@@ -144,10 +144,10 @@ public class homeactivity extends baseactivity {
 
         }
         else if (fragment instanceof fragmentvideocomposer) {
-
+            actionbar.setVisibility(View.GONE);
         }
         else if(fragment instanceof fragmentsettings){
-
+            actionbar.setVisibility(View.GONE);
         }
     }
 

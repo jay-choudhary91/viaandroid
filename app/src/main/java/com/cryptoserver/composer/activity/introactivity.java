@@ -20,6 +20,7 @@ public class introactivity extends FragmentActivity {
 
     int currentselected,nextselection;
     pagercustomduration viewpager;
+    int touchstate=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +35,10 @@ public class introactivity extends FragmentActivity {
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+                //Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+                if(touchstate > 0)
+                    return;
+
                 if ( position == currentselected )
                 {
                     // We are moving to next screen on right side
@@ -83,7 +87,7 @@ public class introactivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Log.e("position", position+" ") ;
+                //Log.e("position", position+" ") ;
                 currentselected = position;
                 nextselection = position;
             }
@@ -91,6 +95,7 @@ public class introactivity extends FragmentActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 Log.e("state", state+" ") ;
+                touchstate=state;
             }
         });
 

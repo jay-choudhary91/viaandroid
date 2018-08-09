@@ -223,8 +223,8 @@ public class fragmentvideolist extends basefragment {
                 //Release stuff
                 extractor.release();
             }
-            String md= md5.calculatemd5(file);
-            videoobj.setMd5(""+md);
+            //String md= md5.calculatemd5(file);
+            //videoobj.setMd5(""+md);
             arrayvideolist.add(videoobj);
 
         }

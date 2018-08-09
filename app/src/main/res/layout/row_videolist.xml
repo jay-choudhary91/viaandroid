@@ -45,7 +45,7 @@
             android:layout_height="90dp"
             android:layout_weight="0.3"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/sequrity_icon"
+            android:scaleType="fitXY"
             />
 
         <LinearLayout
@@ -101,7 +101,7 @@
                     android:layout_below="@+id/tv_videoduration"
                     android:textColor="@color/lightgray"
                     android:maxLines="1"
-                    android:text="djfkdsfjdj845eieur0ewfdsjf"
+                    android:text="Its dummy text."
                     />
         </LinearLayout>
     </LinearLayout>
