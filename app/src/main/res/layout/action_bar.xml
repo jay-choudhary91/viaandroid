@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:background="@color/black"
     android:id="@+id/actionbar"
-    android:visibility="gone"
     android:padding="5dp">
 
     <ImageView

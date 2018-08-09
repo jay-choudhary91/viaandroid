@@ -160,21 +160,30 @@ public class homeactivity extends LocationAwareActivity {
         basefragment fragment = getcurrentfragment();
 
         if (fragment instanceof fragmentvideolist) {
-
-            actionbar.setVisibility(View.VISIBLE);
-
+            imgaddicon.setVisibility(View.VISIBLE);
+            imgsettingsicon.setVisibility(View.VISIBLE);
         }
         else if (fragment instanceof fragmentvideocomposer) {
-            actionbar.setVisibility(View.GONE);
+            imgaddicon.setVisibility(View.INVISIBLE);
+            imgsettingsicon.setVisibility(View.INVISIBLE);
         }
         else if(fragment instanceof fragmentsettings){
-            actionbar.setVisibility(View.GONE);
+            imgaddicon.setVisibility(View.INVISIBLE);
+            imgsettingsicon.setVisibility(View.INVISIBLE);
         }
     }
 
-   /* @Override
+    /*@Override
     protected void onResume() {
         super.onResume();
-        actionbar.setVisibility(View.VISIBLE);
+        try
+        {
+            imgaddicon.setVisibility(View.VISIBLE);
+            imgsettingsicon.setVisibility(View.VISIBLE);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }*/
 }

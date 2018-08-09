@@ -577,6 +577,7 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         });
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recyviewItem.setNestedScrollingEnabled(false);
         recyviewItem.setLayoutManager(mLayoutManager);
         recyviewItem.setItemAnimator(new DefaultItemAnimator());
         recyviewItem.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));

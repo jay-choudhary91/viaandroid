@@ -6,22 +6,6 @@
     android:orientation="vertical"
     tools:context=".fragments.fragmentsettings">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.cryptoserver.composer.views.CustomFontTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/settings"
-            android:padding="5dp"
-            android:textColor="@color/white"
-            android:background="@color/intro_bg"
-            android:text="@string/settings"
-            android:gravity="center_horizontal"/>
-    </RelativeLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
