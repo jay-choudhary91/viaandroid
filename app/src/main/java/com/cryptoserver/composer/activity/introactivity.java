@@ -35,14 +35,14 @@ public class introactivity extends FragmentActivity {
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+                Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
                 if(touchstate > 0)
                     return;
 
-                if ( position == currentselected )
+                /*if ( position == currentselected )
                 {
                     // We are moving to next screen on right side
-                    if ( positionOffset > 0.5 )
+                    if ( positionOffset > 0.4 )
                     {
                         // Closer to next screen than to current
                         if ( position + 1 != nextselection )
@@ -64,7 +64,7 @@ public class introactivity extends FragmentActivity {
                 else
                 {
                     // We are moving to next screen left side
-                    if ( positionOffset > 0.5 )
+                    if ( positionOffset > 0.4 )
                     {
                         // Closer to current screen than to next
                         if ( position + 1 != nextselection )
@@ -82,7 +82,7 @@ public class introactivity extends FragmentActivity {
                             setviewpager( nextselection);
                         }
                     }
-                }
+                }*/
             }
 
             @Override
