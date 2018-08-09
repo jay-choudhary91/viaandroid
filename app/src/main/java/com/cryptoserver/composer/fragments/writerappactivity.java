@@ -12,6 +12,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -46,6 +47,7 @@ import com.cryptoserver.composer.ffmpeg.util.miscutils;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 
+import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.AndroidFrameConverter;
@@ -57,9 +59,12 @@ import org.bytedeco.javacv.FrameFilter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -312,6 +317,7 @@ public class writerappactivity extends AppCompatActivity implements
 
                 break;
             case R.id.txt_save:
+                //makeFileCopy();
                 resettimer();
                 exportvideo();
                 clearvideolist();
@@ -330,6 +336,48 @@ public class writerappactivity extends AppCompatActivity implements
               setrotatecamera();
                 break;
         }
+    }
+
+    public void makeFileCopy()
+    {
+        String sourcePath = mvideo.getAbsolutePath();
+        File sourceFile = new File(sourcePath);
+
+        String destinationPath = config.videodir;
+        File destinationFile = new File(destinationPath);
+        /*try
+        {
+            FileUtils.copyFile(source, destination);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }*/
+
+
+
+        try
+        {
+            if (!destinationFile.getParentFile().exists())
+                destinationFile.getParentFile().mkdirs();
+
+            if (!destinationFile.exists()) {
+                destinationFile.createNewFile();
+            }
+
+            /*try
+            {
+                FileUtils.copyFile(sourceFile, destination);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }*/
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void resettimer()

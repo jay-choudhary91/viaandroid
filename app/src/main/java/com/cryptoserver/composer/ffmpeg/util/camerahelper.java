@@ -105,6 +105,7 @@ public class camerahelper {
             return null;
         }
 
+        //File mediastoragedir=new File(config.tempvideodir);
         File mediastoragedir=new File(config.videodir);
 
         // This location works best if you want the created images to be shared

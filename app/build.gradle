@@ -29,6 +29,7 @@ ext {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation files('libs/commons-io-2.6.jar')
     implementation files('libs/sun.misc.base64decoder.jar')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
