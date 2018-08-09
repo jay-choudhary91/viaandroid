@@ -1,8 +1,11 @@
 package com.cryptoserver.composer.activity;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -14,11 +17,12 @@ import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.writerappactivity;
+import com.cryptoserver.composer.services.CallService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class homeactivity extends baseactivity {
+public class homeactivity extends LocationAwareActivity {
 
     @BindView(R.id.img_add_icon)
     ImageView imgaddicon;
@@ -56,6 +60,23 @@ public class homeactivity extends baseactivity {
             }
         });
 
+        CallService mService = new CallService();
+        Intent mIntent = new Intent(homeactivity.this, CallService.class);
+
+        if (!isMyServiceRunning(mService.getClass()))
+            startService(mIntent);
+
+    }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("isMyServiceRunning?", true+"");
+                return true;
+            }
+        }
+        Log.i ("isMyServiceRunning?", false+"");
+        return false;
     }
 
     @Override

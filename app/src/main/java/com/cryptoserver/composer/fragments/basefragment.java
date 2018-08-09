@@ -101,6 +101,9 @@ public abstract class basefragment extends Fragment {
     public void oncurrentlocationchanged(Location location) {
 
     }
+    public void onCurrentLocationChanged(Location location) {
+
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults);

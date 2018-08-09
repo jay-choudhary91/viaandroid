@@ -1,6 +1,7 @@
 package com.cryptoserver.composer.fragments;
 
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -9,11 +10,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -23,6 +29,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.ItemMetricAdapter;
@@ -33,10 +41,14 @@ import com.cryptoserver.composer.services.LocationService;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.xdata;
 
+import java.security.Permission;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,92 +71,76 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
     private BroadcastReceiver locationUpdateReceiver;
     private Location oldLocation=null;
     private double doubleTotalDistance=0;
-
+    private static final int request_permissions = 1;
+    private Runnable doafterallpermissionsgranted;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        applicationviavideocomposer.setActivity(getActivity());
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (rootView == null) {
             rootView = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootView);
 
-           // getHelper().updateHeader("Device Metrics");
-           /* btn_refresh.setOnClickListener(this);
-            btn_log.setOnClickListener(this);
-*/
-            if (savedInstanceState != null) {
-                // Restore some state that needs to happen after the Activity was created
-                //
-                // Note #1: Our views haven't had their states restored yet
-                // This could be a good place to restore a ListView's contents (and it's your last
-                // opportunity if you want your scroll position to be restored properly)
-                //
-                // Note #2:
-                // The following line will cause an unchecked type cast compiler warning
-                // It's impossible to actually check the type because of Java's type erasure:
-                //      At runtime all generic types become Object
-                // So the best you can do is add the @SuppressWarnings("unchecked") annotation
-                // and understand that you must make sure to not use a different type anywhere
-                metricItemArraylist = (ArrayList<MetricModel>) savedInstanceState.getSerializable(STATE_ITEMS);
-                setAdapter();
-                setvalueadapter();
-            }
-            else
-            {
-                prepareData();
-                setAdapter();
-                setvalueadapter();
-                locationUpdateReceiver = new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        Location location = intent.getParcelableExtra("location");
 
-                        String str="Speed accuracy altitude "+""+location.getSpeed()+" "+location.getAccuracy()+" "+
-                                location.getAltitude();
+               /* if (savedInstanceState != null) {
+                    metricItemArraylist = (ArrayList<MetricModel>) savedInstanceState.getSerializable(STATE_ITEMS);
+                    setAdapter();
+                    setvalueadapter();
+                } else {
+                    prepareData();
+                    setAdapter();
+                    setvalueadapter();
+                    locationUpdateReceiver = new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            Location location = intent.getParcelableExtra("location");
+
+                            String str = "Speed accuracy altitude " + "" + location.getSpeed() + " " + location.getAccuracy() + " " +
+                                    location.getAltitude();
 
 
-                        //Toast.makeText(getActivity(),str,Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(),str,Toast.LENGTH_SHORT).show();
 
-                        doubleTotalDistance=doubleTotalDistance+location.getSpeed();
-                        if(xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty())
-                        {
-                            for (int i = 0; i < metricItemArraylist.size(); i++) {
+                            doubleTotalDistance = doubleTotalDistance + location.getSpeed();
+                            if (xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty()) {
+                                for (int i = 0; i < metricItemArraylist.size(); i++) {
 
-                                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaltittude")) {
-                                    metricItemArraylist.get(i).setMetricTrackValue("" + (location.getAltitude()));
-                                    if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
-                                        metricItemArraylist.get(i).setSelected(true);
-                                }
+                                    if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaltittude")) {
+                                        metricItemArraylist.get(i).setMetricTrackValue("" + (location.getAltitude()));
+                                        if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                                            metricItemArraylist.get(i).setSelected(true);
+                                    }
 
-                                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
-                                    metricItemArraylist.get(i).setMetricTrackValue("" + common.getGpsDirection(location.getBearing()));
-                                    if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
-                                        metricItemArraylist.get(i).setSelected(true);
-                                }
+                                    if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
+                                        metricItemArraylist.get(i).setMetricTrackValue("" + common.getGpsDirection(location.getBearing()));
+                                        if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                                            metricItemArraylist.get(i).setSelected(true);
+                                    }
 
-                                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-                                    metricItemArraylist.get(i).setMetricTrackValue("" + (location.getSpeed()));
-                                    if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
-                                        metricItemArraylist.get(i).setSelected(true);
-                                }
+                                    if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
+                                        metricItemArraylist.get(i).setMetricTrackValue("" + (location.getSpeed()));
+                                        if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                                            metricItemArraylist.get(i).setSelected(true);
+                                    }
 
-                                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
-                                    metricItemArraylist.get(i).setMetricTrackValue("" + ((int) location.getAccuracy()));
-                                    if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
-                                        metricItemArraylist.get(i).setSelected(true);
-                                }
+                                    if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
+                                        metricItemArraylist.get(i).setMetricTrackValue("" + ((int) location.getAccuracy()));
+                                        if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                                            metricItemArraylist.get(i).setSelected(true);
+                                    }
 
-                                /*if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("distancetraveled")) {
+                                *//*if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("distancetraveled")) {
                                     metricItemArraylist.get(i).setMetricTrackValue("" + ((int) doubleTotalDistance));
                                     if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
                                         metricItemArraylist.get(i).setSelected(true);
-                                }*/
+                                }*//*
 
+                                }
+                                itemMetricAdapter.notifyDataSetChanged();
                             }
-                            itemMetricAdapter.notifyDataSetChanged();
-                        }
-                        /*else
+                        *//*else
                         {
                             for (int i = 0; i < metricItemArraylist.size(); i++) {
 
@@ -156,29 +152,31 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
 
                             }
                             itemMetricAdapter.notifyDataSetChanged();
-                        }*/
+                        }*//*
 
-                        xdata.getinstance().saveSetting("gpsaltittude",""+location.getAltitude());
-                        xdata.getinstance().saveSetting("heading",""+common.getGpsDirection(location.getBearing()));
-                        xdata.getinstance().saveSetting("speed",""+location.getSpeed());
-                        xdata.getinstance().saveSetting("distancetraveled",""+doubleTotalDistance);
-                        xdata.getinstance().saveSetting("gpsquality",""+location.getAccuracy());
+                            xdata.getinstance().saveSetting("gpsaltittude", "" + location.getAltitude());
+                            xdata.getinstance().saveSetting("heading", "" + common.getGpsDirection(location.getBearing()));
+                            xdata.getinstance().saveSetting("speed", "" + location.getSpeed());
+                            xdata.getinstance().saveSetting("distancetraveled", "" + doubleTotalDistance);
+                            xdata.getinstance().saveSetting("gpsquality", "" + location.getAccuracy());
 
 
-                    }
-                };
+                        }
+                    };
 
-                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
-                        locationUpdateReceiver,
-                        new IntentFilter("LocationUpdated"));
-            }
+                    LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                            locationUpdateReceiver,
+                            new IntentFilter("LocationUpdated"));
+                }*/
         }
-
+   //     }
         return rootView;
+
     }
 
     @Override
     public int getlayoutid() {
+
         return R.layout.fragment_fragment_matrictracklist;
     }
     @SuppressWarnings("unchecked")
@@ -579,12 +577,12 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         recyviewItem.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
         recyviewItem.setAdapter(itemMetricAdapter);
-        new Handler().postDelayed(new Runnable() {
+      /*  new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                setvalueadapter();
+             //   setvalueadapter();
             }
-        }, 5000);
+        }, 5000);*/
     }
     @Override
     public void updateCallInfo(String callStaus, String callDuration, String CallerNumber) {
@@ -728,9 +726,6 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
 */
    public void setvalueadapter(){
        for(int key=0;key<metricItemArraylist.size();key++){
-           if(metricItemArraylist.get(key).getMetricTrackKeyName()==null){
-               Log.d("metrictrak app",metricItemArraylist.get(key).getMetricTrackKeyName());
-           }
            if (metric_onoff(metricItemArraylist.get(key).getMetricTrackKeyName())) {
                String value = metric_read(metricItemArraylist.get(key).getMetricTrackKeyName());
                if(value.equals("UpdateLater"))
@@ -751,4 +746,135 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
            }
        }
    }
+
+   public void permissiongrants() {
+
+       if (doafterallpermissionsgranted != null) {
+           doafterallpermissionsgranted.run();
+           doafterallpermissionsgranted = null;
+       } else {
+           String[] neededpermissions = {
+                   Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+                   , Manifest.permission.READ_EXTERNAL_STORAGE,
+                     Manifest.permission.READ_PHONE_STATE,
+                     Manifest.permission.RECORD_AUDIO
+                   , Manifest.permission.ACCESS_COARSE_LOCATION,
+                   Manifest.permission.ACCESS_FINE_LOCATION
+           };
+           List<String> deniedpermissions = new ArrayList<>();
+           for (String permission : neededpermissions) {
+               if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                   deniedpermissions.add(permission);
+               }
+           }
+           if (deniedpermissions.isEmpty()) {
+               // All permissions are granted
+               doafterallpermissionsgranted();
+           } else {
+               String[] array = new String[deniedpermissions.size()];
+               array = deniedpermissions.toArray(array);
+               ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+           }
+       }
+
+   }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_permissions) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted) {
+                doafterallpermissionsgranted = new Runnable() {
+                    @Override
+                    public void run() {
+                        doafterallpermissionsgranted();
+                    }
+                };
+            } else {
+                doafterallpermissionsgranted = new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+                        getActivity().finish();
+                    }
+                };
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        permissiongrants();
+    }
+
+    private void doafterallpermissionsgranted(){
+        prepareData();
+        setAdapter();
+        setvalueadapter();
+        locationUpdateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Location location = intent.getParcelableExtra("location");
+
+                String str="Speed accuracy altitude "+""+location.getSpeed()+" "+location.getAccuracy()+" "+
+                        location.getAltitude();
+
+
+                //Toast.makeText(getActivity(),str,Toast.LENGTH_SHORT).show();
+
+                doubleTotalDistance=doubleTotalDistance+location.getSpeed();
+                if(xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty())
+                {
+                    for (int i = 0; i < metricItemArraylist.size(); i++) {
+
+                        if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaltittude")) {
+                            metricItemArraylist.get(i).setMetricTrackValue("" + (location.getAltitude()));
+                            if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                                metricItemArraylist.get(i).setSelected(true);
+                        }
+
+                        if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
+                            metricItemArraylist.get(i).setMetricTrackValue("" + common.getGpsDirection(location.getBearing()));
+                            if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                                metricItemArraylist.get(i).setSelected(true);
+                        }
+
+                        if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
+                            metricItemArraylist.get(i).setMetricTrackValue("" + (location.getSpeed()));
+                            if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                                metricItemArraylist.get(i).setSelected(true);
+                        }
+
+                        if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
+                            metricItemArraylist.get(i).setMetricTrackValue("" + ((int) location.getAccuracy()));
+                            if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                                metricItemArraylist.get(i).setSelected(true);
+                        }
+
+                    }
+                    itemMetricAdapter.notifyDataSetChanged();
+                }
+
+                xdata.getinstance().saveSetting("gpsaltittude",""+location.getAltitude());
+                xdata.getinstance().saveSetting("heading",""+common.getGpsDirection(location.getBearing()));
+                xdata.getinstance().saveSetting("speed",""+location.getSpeed());
+                xdata.getinstance().saveSetting("distancetraveled",""+doubleTotalDistance);
+                xdata.getinstance().saveSetting("gpsquality",""+location.getAccuracy());
+
+
+            }
+        };
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
+                locationUpdateReceiver,
+                new IntentFilter("LocationUpdated"));
+    }
 }

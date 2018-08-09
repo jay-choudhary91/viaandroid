@@ -33,6 +33,9 @@ import android.widget.Toast;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -147,6 +150,32 @@ public class common
             default:
                 return NETWORK_UNKOWN;
         }
+    }
+    public static String executeTop() {
+        java.lang.Process p = null;
+        BufferedReader in = null;
+        String returnString = null;
+        try {
+            p = Runtime.getRuntime().exec("top -n 1");
+            in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while (returnString == null || returnString.contentEquals("")) {
+                returnString = in.readLine();
+            }
+        } catch (IOException e) {
+            Log.e("executeTop", "error in getting first line of top");
+            e.printStackTrace();
+        } finally {
+            try {
+                in.close();
+                p.destroy();
+            } catch (IOException e) {
+                Log.e("executeTop",
+                        "error in closing and destroying top process");
+                e.printStackTrace();
+            }
+        }
+
+        return returnString;
     }
     public static String getGpsDirection(float degree) {
         String direction_text="";

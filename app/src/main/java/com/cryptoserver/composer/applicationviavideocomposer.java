@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.cryptoserver.composer.utils.xdata;
+
 
 /**
  * Created by devesh on 26/4/18.
@@ -19,6 +21,7 @@ public class applicationviavideocomposer extends Application {
        /* Fabric.with(this, new Crashlytics());
         mcontext = this;
         xdata.getinstance().init(this);*/
+        xdata.getinstance().init(this);
     }
 
     public static Context getappcontext() {
