@@ -19,7 +19,8 @@ public class applicationviavideocomposer extends Application {
     public void onCreate() {
         super.onCreate();
        /* Fabric.with(this, new Crashlytics());
-        mcontext = this;*/
+        mcontext = this;
+        xdata.getinstance().init(this);*/
         xdata.getinstance().init(this);
     }
 
