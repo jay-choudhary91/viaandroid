@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:padding="10dp"
-    android:layout_height="110dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
+    <RelativeLayout
+        android:id="@+id/rl_sharedeleteicon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/img_shareicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/share_icon"
+            android:gravity="left"/>
+
+
+        <ImageView
+            android:id="@+id/img_deleteicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/img_shareicon"
+            android:background="@drawable/delete_icon"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="horizontal"
         android:layout_toLeftOf="@+id/rl_sharedeleteicon"
@@ -17,30 +41,33 @@
 
         <ImageView
             android:id="@+id/img_videothumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".7"
+            android:layout_width="0dp"
+            android:layout_height="90dp"
+            android:layout_weight="0.3"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/sequrity_icon"
             />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.7"
             android:background="@color/white"
             android:layout_marginLeft="5dp"
             android:orientation="vertical">
 
-                <TextView
+                <com.cryptoserver.composer.views.CustomFontTextView
+                    app:fontType="OpenSans_Regular"
                     android:id="@+id/tv_videoname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:textColor="@color/black"
                     android:text="Video 1 Name"
                     />
-                <TextView
+                <com.cryptoserver.composer.views.CustomFontTextView
+                    app:fontType="OpenSans_Regular"
                     android:id="@+id/tv_videocreatedate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -51,7 +78,8 @@
                     android:textColor="@color/black"
                     android:text="5/31/2018"
                     />
-                <TextView
+                <com.cryptoserver.composer.views.CustomFontTextView
+                    app:fontType="OpenSans_Regular"
                     android:id="@+id/tv_videoduration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -62,7 +90,8 @@
                     android:textColor="@color/lightblue"
                     android:text="duration: 3:23"
                     />
-                <TextView
+                <com.cryptoserver.composer.views.CustomFontTextView
+                    app:fontType="OpenSans_Regular"
                     android:id="@+id/tv_videodescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,29 +105,5 @@
                     />
         </LinearLayout>
     </LinearLayout>
-    <RelativeLayout
-        android:id="@+id/rl_sharedeleteicon"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/img_shareicon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/share_icon"
-            android:gravity="left"
-            android:layout_weight=".5"/>
-
-
-        <ImageView
-            android:id="@+id/img_deleteicon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/img_shareicon"
-            android:background="@drawable/delete_icon"
-            android:layout_weight=".5"/>
-    </RelativeLayout>
 </RelativeLayout>

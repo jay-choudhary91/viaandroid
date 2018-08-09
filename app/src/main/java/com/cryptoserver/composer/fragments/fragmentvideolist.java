@@ -1,19 +1,41 @@
 package com.cryptoserver.composer.fragments;
 
-import android.content.Context;
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adaptervideolist;
+import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.interfaces.AdapterItemClick;
+import com.cryptoserver.composer.models.video;
+import com.cryptoserver.composer.utils.common;
+import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.md5;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,9 +50,9 @@ public class fragmentvideolist extends basefragment {
     RecyclerView recyrviewvideolist;
 
     View rootview = null;
-
-    ArrayList<String> arrayvideolist = new ArrayList<String>();
-
+    private static final int request_permissions = 1;
+    ArrayList<video> arrayvideolist = new ArrayList<video>();
+    adaptervideolist adapter;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videolist;
@@ -44,42 +66,168 @@ public class fragmentvideolist extends basefragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        requestPremission();
+    }
+
+    public void requestPremission()
+    {
+        String[] neededpermissions = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        };
+        List<String> deniedpermissions = new ArrayList<>();
+        for (String permission : neededpermissions) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                deniedpermissions.add(permission);
+            }
+        }
+        if (deniedpermissions.isEmpty()) {
+            // All permissions are granted
+            getVideoList();
+        } else {
+            String[] array = new String[deniedpermissions.size()];
+            array = deniedpermissions.toArray(array);
+            ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_permissions) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted) {
+                getVideoList();
+            } else {
+                Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
 
-            if(arrayvideolist != null)
-                arrayvideolist.clear();
+            adapter = new adaptervideolist(getActivity(),arrayvideolist, new AdapterItemClick() {
+                @Override
+                public void onItemClicked(Object object) {
 
-            File mydir = getActivity().getDir("videos", Context.MODE_PRIVATE);
-            File lister = mydir.getAbsoluteFile();
-            Log.e("app videos",""+lister.list().length);
+                }
 
-            for (String list : lister.list())
-            {
-                Log.e("app videos",""+lister.list().length);
-            }
-
-            //arrayvideolist.add("video 1");
-
-            adaptervideolist adptervideolist1 = new adaptervideolist(getActivity(),arrayvideolist);
+                @Override
+                public void onItemClicked(Object object, int type) {
+                    final video videoobj=(video)object;
+                    if(type == 1)
+                    {
+                        Uri uri = Uri.parse("file://"+videoobj.getPath());
+                        Intent share = new Intent(Intent.ACTION_SEND);
+                        share.putExtra(Intent.EXTRA_STREAM, uri);
+                        share.setType("video/*");
+                        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        getActivity().startActivity(Intent.createChooser(share, "Share video"));
+                    }
+                    else if(type == 2)
+                    {
+                        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+                                .setTitle("Alert!!")
+                                .setMessage(getActivity().getResources().getString(R.string.delete_confirm))
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        File fdelete = new File(videoobj.getPath());
+                                        if (fdelete.exists()) {
+                                            if (fdelete.delete()) {
+                                                System.out.println("file Deleted :" + videoobj.getPath());
+                                                arrayvideolist.remove(videoobj);
+                                                dialog.dismiss();
+                                            } else {
+                                                System.out.println("file not Deleted :" + videoobj.getPath());
+                                            }
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                }
+            });
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             recyrviewvideolist.setLayoutManager(mLayoutManager);
-            recyrviewvideolist.setAdapter(adptervideolist1);
+            recyrviewvideolist.setAdapter(adapter);
         }
-
-      //  RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.rv_videolist);
-
-
-        /*DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyrviewvideolist.getContext(),
-                mLayoutManager.getOrientation());
-        recyrviewvideolist.addItemDecoration(dividerItemDecoration);*/
-
         return rootview;
-
-
     }
 
+    public void getVideoList()
+    {
+        arrayvideolist.clear();
 
+        File videodir = new File(config.videodir);
+        if(! videodir.exists())
+            return;
+
+        File[] files = videodir.listFiles();
+        for (File file : files)
+        {
+            video videoobj=new video();
+            Date lastModDate = new Date(file.lastModified());
+            DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
+            String outputDateStr = outputFormat.format(lastModDate);
+
+            videoobj.setPath(file.getAbsolutePath());
+            videoobj.setName(file.getName());
+            videoobj.setCreatedate(outputDateStr);
+
+            MediaExtractor extractor = new MediaExtractor();
+            try {
+                //Adjust data source as per the requirement if file, URI, etc.
+                extractor.setDataSource(file.getAbsolutePath());
+                int numTracks = extractor.getTrackCount();
+                for (int i = 0; i < numTracks; ++i) {
+                    MediaFormat format = extractor.getTrackFormat(i);
+                    String mime = format.getString(MediaFormat.KEY_MIME);
+                    if (mime.startsWith("video/")) {
+                        if (format.containsKey(MediaFormat.KEY_DURATION)) {
+                            long seconds = format.getLong(MediaFormat.KEY_DURATION);
+                            seconds=seconds/1000000;
+                            int day = (int) TimeUnit.SECONDS.toDays(seconds);
+                            long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
+                            long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
+                            long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                            videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                            if(hours > 0)
+                                videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                //Release stuff
+                extractor.release();
+            }
+            String md= md5.calculatemd5(file);
+            videoobj.setMd5(""+md);
+            arrayvideolist.add(videoobj);
+
+        }
+        adapter.notifyDataSetChanged();
+    }
 }

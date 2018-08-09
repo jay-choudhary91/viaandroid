@@ -753,12 +753,12 @@ public class common
         }
     };
 
-    public static void showselectedunselected(ImageView img1, ImageView img2, ImageView img3, ImageView img4)
+    public static String appendzero(long value)
     {
-        img1.setImageResource(R.drawable.selectedicon);
-        img2.setImageResource(R.drawable.unselectedicon);
-        img3.setImageResource(R.drawable.unselectedicon);
-        img4.setImageResource(R.drawable.unselectedicon);
+        if((""+value).length() == 1)
+            return "0"+value;
+
+        return ""+value;
     }
 
 }

@@ -571,6 +571,11 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                     }
                 }
             }
+
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
         });
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

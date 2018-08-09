@@ -5,8 +5,7 @@ import android.content.SharedPreferences;
 
 
 public class xdata {
-    private static final String PREF_NAME = "application";
-
+    public final String prefname = "prefname";
 
     private static xdata ourInstance;
     private Context mContext;
@@ -24,13 +23,13 @@ public class xdata {
 
     public String saveSetting(String key, String value) {
 
-        SharedPreferences prefs = this.mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = this.mContext.getSharedPreferences(prefname, Context.MODE_PRIVATE);
         prefs.edit().putString(key, value).apply();
         return value;
     }
 
     public String getSetting(String key) {
-        SharedPreferences prefs = mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = mContext.getSharedPreferences(prefname, Context.MODE_PRIVATE);
         String data = prefs.getString(key, "");
         return data;
     }

@@ -26,6 +26,8 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.utils.config;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -96,7 +98,7 @@ public class camerahelper {
      * @param type Media type. Can be video or image.
      * @return A file object pointing to the newly created file.
      */
-    public static File getoutputmediafile(String fileName, int type) {
+    public static File getoutputmediafile(int type) {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         if (!Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
@@ -117,6 +119,8 @@ public class camerahelper {
         }
 
         // Create a media file name
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        fileName="VIA_"+fileName;
         File mediaFile;
         if (type == media_type_image) {
             mediaFile = new File(mediastoragedir.getPath() + File.separator +

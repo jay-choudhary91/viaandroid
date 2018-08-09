@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.interfaces.AdapterItemClick;
+import com.cryptoserver.composer.models.video;
 
 import java.util.ArrayList;
 
@@ -20,7 +22,8 @@ import java.util.ArrayList;
 public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myViewHolder> {
 
     Context context;
-    ArrayList<String> arrayvideolist = new ArrayList<String>();
+    ArrayList<video> arrayvideolist = new ArrayList<video>();
+    AdapterItemClick adapter;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tvvideodescription;
@@ -38,9 +41,10 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
         }
     }
 
-    public adaptervideolist(Context context,ArrayList<String> arrayvideolist){
+    public adaptervideolist(Context context, ArrayList<video> arrayvideolist, AdapterItemClick adapter){
         this.context = context;
         this.arrayvideolist = arrayvideolist;
+        this.adapter = adapter;
     }
 
     @NonNull
@@ -54,10 +58,26 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull myViewHolder holder, final int position) {
 
-        holder.tvvideoname.setText(arrayvideolist.get(position));
+        holder.tvvideoname.setText(arrayvideolist.get(position).getName());
+        holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
+        holder.tvvideoduration.setText("Duration : " +arrayvideolist.get(position).getDuration());
+        holder.tvvideodescription.setText(arrayvideolist.get(position).getMd5());
 
+        holder.imgshareicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.onItemClicked(arrayvideolist.get(position),1);
+            }
+        });
+
+        holder.imgdeleteicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter.onItemClicked(arrayvideolist.get(position),2);
+            }
+        });
     }
 
     @Override

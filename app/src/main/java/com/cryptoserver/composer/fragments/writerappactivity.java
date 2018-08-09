@@ -78,10 +78,6 @@ public class writerappactivity extends AppCompatActivity implements
     private static final int preferred_preview_width = 720;
     private static final int preferred_preview_height = 1280;
 
-    // both in milliseconds
-    private static final long MIN_VIDEO_LENGTH = 1 * 1000;
-    private static final long MAX_VIDEO_LENGTH = 90 * 1000;
-
     private int mcameraid;
     private Camera mcamera;
     Camera.Parameters parameters;
@@ -113,13 +109,12 @@ public class writerappactivity extends AppCompatActivity implements
 
     TextView txt_save;
     TextView txt_clear;
+    LinearLayout layout_bottom;
 
     boolean isflashon = false,inPreview = true;
 
     fixedratiocroppedtextureview mpreview;
     ImageView mrecordimagebutton,imgflashon,rotatecamera;
-    int camBackId = 0;
-
 
     long currentframenumber =0;
     long frameduration =4, mframetorecordcount =0;
@@ -137,6 +132,7 @@ public class writerappactivity extends AppCompatActivity implements
         rotatecamera = (ImageView) findViewById(R.id.img_rotate_camera);
         txt_save = (TextView) findViewById(R.id.txt_save);
         txt_clear = (TextView) findViewById(R.id.txt_clear);
+        layout_bottom = (LinearLayout) findViewById(R.id.layout_bottom);
 //        mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
         mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
         setpreviewsize(mpreviewwidth, mpreviewheight);
@@ -170,7 +166,6 @@ public class writerappactivity extends AppCompatActivity implements
                 chronometer.setText(t);
             }
         });
-        timer.setBase(SystemClock.elapsedRealtime());
         timer.setText("00:00:00");
 
     }
@@ -279,8 +274,8 @@ public class writerappactivity extends AppCompatActivity implements
                     new finishrecordingtask().execute();
                 } else {
                    mrecordimagebutton.setClickable(false);
-                    imgflashon.setVisibility(View.GONE);
-                    rotatecamera.setVisibility(View.GONE);
+                    imgflashon.setVisibility(View.INVISIBLE);
+                    rotatecamera.setVisibility(View.INVISIBLE);
 
                     //common.hidekeyboard(writerappactivity.this);
                     /*frameduration =Long.parseLong(edt_framesduration.getText().toString());
@@ -306,6 +301,7 @@ public class writerappactivity extends AppCompatActivity implements
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    timer.setBase(SystemClock.elapsedRealtime());
                                     starttimer();
                                 }
                             });
@@ -316,26 +312,18 @@ public class writerappactivity extends AppCompatActivity implements
 
                 break;
             case R.id.txt_save:
-                timer.setBase(SystemClock.elapsedRealtime());
-                //if (mvideoframes.size() > 0) {
-                   // progressdialog.showwaitingdialog(writerappactivity.this);
-                    exportvideo();
-                    clearvideolist();
+                resettimer();
+                exportvideo();
+                clearvideolist();
                // }
                 break;
             case R.id.txt_clear:
-                timer.setBase(SystemClock.elapsedRealtime());
-                    clearvideolist();
+                resettimer();
+                clearvideolist();
                 break;
 
             case R.id.img_flash_on:
-                if (isflashon) {
-                    // turn off flash
-                    turnoffflash();
-                } else {
-                    // turn on flash
-                    turnonflash();
-                }
+                navigateflash();
                 break;
 
             case R.id.img_rotate_camera:
@@ -344,6 +332,11 @@ public class writerappactivity extends AppCompatActivity implements
         }
     }
 
+    public void resettimer()
+    {
+        timer.stop();
+        timer.setText("00:00:00");
+    }
     public void exportvideo()
     {
         if(mvideo != null)
@@ -378,7 +371,7 @@ public class writerappactivity extends AppCompatActivity implements
                 //madapter.notifyDataSetChanged();
                 txt_save.setVisibility(View.GONE);
                 txt_clear.setVisibility(View.GONE);
-                mrecordimagebutton.setVisibility(View.VISIBLE);
+                layout_bottom.setVisibility(View.VISIBLE);
                 imgflashon.setVisibility(View.VISIBLE);
                 rotatecamera.setVisibility(View.VISIBLE);
 
@@ -396,9 +389,7 @@ public class writerappactivity extends AppCompatActivity implements
 
         if(txt_save.getVisibility() == View.GONE)
         {
-            mrecordimagebutton.setVisibility(View.VISIBLE);
-            imgflashon.setVisibility(View.VISIBLE);
-            rotatecamera.setVisibility(View.VISIBLE);
+            layout_bottom.setVisibility(View.VISIBLE);
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
         }
     }
@@ -527,8 +518,7 @@ public class writerappactivity extends AppCompatActivity implements
     private void initrecorder() {
         Log.i(log_tag, "init mframerecorder");
 
-        String recordedtime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        mvideo = camerahelper.getoutputmediafile(recordedtime, camerahelper.media_type_video);
+        mvideo = camerahelper.getoutputmediafile(camerahelper.media_type_video);
 
         Log.i(log_tag, "Output Video: " + mvideo);
 
@@ -947,9 +937,7 @@ public class writerappactivity extends AppCompatActivity implements
             super.onPostExecute(aVoid);
 
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
-            mrecordimagebutton.setVisibility(View.GONE);
-            imgflashon.setVisibility(View.GONE);
-            rotatecamera.setVisibility(View.GONE);
+            layout_bottom.setVisibility(View.GONE);
 
             txt_save.setVisibility(View.VISIBLE);
             txt_clear.setVisibility(View.VISIBLE);
@@ -971,36 +959,23 @@ public class writerappactivity extends AppCompatActivity implements
 
     }
 
-    private void turnonflash() {
-        if (!isflashon) {
-            if (mcamera == null || parameters == null) {
-                return;
-            }
-            // play sound
-            parameters = mcamera.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-            mcamera.setParameters(parameters);
-            //mcamera.startPreview();
-            isflashon = true;
-
-            // changing button/switch image
-        }
-
-    }
-
     // Turning Off flash
-    private void turnoffflash() {
-        if (isflashon) {
-            if (mcamera == null || parameters == null) {
-                return;
-            }
-
-            parameters = mcamera.getParameters();
+    private void navigateflash() {
+        if (mcamera == null || parameters == null) {
+            return;
+        }
+        parameters = mcamera.getParameters();
+        if(isflashon)
+        {
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-            mcamera.setParameters(parameters);
-            //mcamera.stopPreview();
             isflashon = false;
         }
+        else
+        {
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            isflashon = true;
+        }
+        mcamera.setParameters(parameters);
     }
 
     public void setrotatecamera(){
@@ -1015,5 +990,7 @@ public class writerappactivity extends AppCompatActivity implements
         }
         doafterallpermissionsgranted();
     }
+
+
 }
 
