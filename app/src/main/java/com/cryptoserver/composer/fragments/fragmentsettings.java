@@ -4,6 +4,7 @@ package com.cryptoserver.composer.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.utils.common;
+import com.cryptoserver.composer.utils.minmaxfilter;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
 
@@ -104,6 +104,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     xdata.getinstance().saveSetting(config.framecount,editable.toString());
                 }
             });
+
+            edt_framescount.setFilters(new InputFilter[]{ new minmaxfilter("1", "1000")});
             if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
                     xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
             {
