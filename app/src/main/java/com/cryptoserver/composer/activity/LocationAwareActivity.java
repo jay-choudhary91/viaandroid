@@ -192,7 +192,7 @@ public abstract class LocationAwareActivity extends baseactivity implements
             mCurrentLocation = location;
             mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
             if (getcurrentfragment() != null) {
-                getcurrentfragment().onCurrentLocationChanged(location);
+                getcurrentfragment().oncurrentlocationchanged(location);
             }
             stopLocationUpdates();
         }
