@@ -596,6 +596,7 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                 gethelper().onBack();
                 break;
             case R.id.img_cancel:
+                gethelper().onBack();
                 break;
         }
     }
