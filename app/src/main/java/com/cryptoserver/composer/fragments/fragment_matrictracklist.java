@@ -378,8 +378,6 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
             }
         }
 
-
-
         if(! xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty())
         {
             for (int i = 0; i < metricItemArraylist.size(); i++) {

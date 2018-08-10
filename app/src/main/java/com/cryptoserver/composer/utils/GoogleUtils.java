@@ -16,5 +16,8 @@ public class GoogleUtils {
     public static void saveUserCurrentLocation(Location location) {
         xdata.getinstance().saveSetting("lat", "" + location.getLatitude());
         xdata.getinstance().saveSetting("lng", "" + location.getLongitude());
+        xdata.getinstance().saveSetting("gpsaltittude", "" + location.getLongitude());
+        xdata.getinstance().saveSetting("gpsquality", "" + location.getAccuracy());
+
     }
 }
