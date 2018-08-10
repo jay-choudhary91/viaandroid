@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
+import com.cryptoserver.composer.fragments.fragment_matrictracklist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
@@ -83,8 +84,8 @@ public class homeactivity extends LocationAwareActivity {
     public int getlayoutid() {
         return R.layout.activity_homeactivity;
     }
-
     @Override
+
     public void launchHome() {
 
     }
@@ -105,56 +106,6 @@ public class homeactivity extends LocationAwareActivity {
     }
 
     @Override
-    public void showPermissionDialog() {
-
-    }
-
-    @Override
-    public void registerAccelerometerSensor() {
-
-    }
-
-    @Override
-    public void registerMobileNetworkStrength() {
-
-    }
-
-    @Override
-    public void registerCompassSensor() {
-
-    }
-
-    @Override
-    public void registerBarometerSensor() {
-
-    }
-
-    @Override
-    public void registerUsageUser() {
-
-    }
-
-    @Override
-    public void registerUsageSystem() {
-
-    }
-
-    @Override
-    public void registerUsageIow() {
-
-    }
-
-    @Override
-    public void registerUsageIrq() {
-
-    }
-
-    @Override
-    public void getCallInfo() {
-
-    }
-
-    @Override
     public void onfragmentbackstackchanged() {
         super.onfragmentbackstackchanged();
         basefragment fragment = getcurrentfragment();
@@ -168,8 +119,8 @@ public class homeactivity extends LocationAwareActivity {
             imgsettingsicon.setVisibility(View.INVISIBLE);
         }
         else if(fragment instanceof fragmentsettings){
-            imgaddicon.setVisibility(View.INVISIBLE);
-            imgsettingsicon.setVisibility(View.INVISIBLE);
+           /* imgaddicon.setVisibility(View.INVISIBLE);
+            imgsettingsicon.setVisibility(View.INVISIBLE);*/
         }
     }
 

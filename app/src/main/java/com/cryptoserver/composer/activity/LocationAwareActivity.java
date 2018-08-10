@@ -54,7 +54,6 @@ public abstract class LocationAwareActivity extends baseactivity implements
         } else {
             enableGPS(LocationAwareActivity.this);
         }*/
-
     }
 
     @Override
