@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.AudioFormat;
@@ -12,28 +11,21 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,25 +38,23 @@ import com.cryptoserver.composer.ffmpeg.util.camerahelper;
 import com.cryptoserver.composer.ffmpeg.util.miscutils;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.progressdialog;
 
-import org.apache.commons.io.FileUtils;
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.AndroidFrameConverter;
 import org.bytedeco.javacv.FFmpegFrameFilter;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameFilter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
-import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -317,11 +307,8 @@ public class writerappactivity extends AppCompatActivity implements
 
                 break;
             case R.id.txt_save:
-                //makeFileCopy();
-                resettimer();
-                exportvideo();
-                clearvideolist();
-               // }
+                progressdialog.showwaitingdialog(writerappactivity.this);
+                saveTempFile();
                 break;
             case R.id.txt_clear:
                 resettimer();
@@ -338,24 +325,15 @@ public class writerappactivity extends AppCompatActivity implements
         }
     }
 
-    public void makeFileCopy()
+    public void saveTempFile()
     {
         String sourcePath = mvideo.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
         String destinationPath = config.videodir;
-        File destinationFile = new File(destinationPath);
-        /*try
-        {
-            FileUtils.copyFile(source, destination);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }*/
-
-
-
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        fileName="VIA_"+fileName;
+        File destinationFile = new File(destinationPath+File.separator+fileName+".mp4");
         try
         {
             if (!destinationFile.getParentFile().exists())
@@ -365,19 +343,32 @@ public class writerappactivity extends AppCompatActivity implements
                 destinationFile.createNewFile();
             }
 
-            /*try
-            {
-                FileUtils.copyFile(sourceFile, destination);
+            InputStream in = new FileInputStream(sourceFile);
+            OutputStream out = new FileOutputStream(destinationFile);
+
+            // Copy the bits from instream to outstream
+            byte[] buf = new byte[1024];
+            int len;
+
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
             }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }*/
+
+            in.close();
+            out.close();
+
+            exportvideo(destinationFile);
+            resettimer();
+            clearvideolist();
+
+            Toast.makeText(writerappactivity.this,"Video saved successfully!",Toast.LENGTH_SHORT).show();
+
         }catch (Exception e)
         {
             e.printStackTrace();
+            Toast.makeText(writerappactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
         }
-
+        progressdialog.dismisswaitdialog();
     }
 
     public void resettimer()
@@ -385,7 +376,7 @@ public class writerappactivity extends AppCompatActivity implements
         timer.stop();
         timer.setText("00:00:00");
     }
-    public void exportvideo()
+    public void exportvideo(File file)
     {
         if(mvideo != null)
         {
@@ -395,7 +386,7 @@ public class writerappactivity extends AppCompatActivity implements
                 ContentValues values = new ContentValues(3);
                 values.put(MediaStore.Video.Media.TITLE, "Video hash");
                 values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                values.put(MediaStore.Video.Media.DATA, mvideo.getPath());
+                values.put(MediaStore.Video.Media.DATA, file.getAbsolutePath());
                 getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
 
             }catch (Exception e)
@@ -566,7 +557,7 @@ public class writerappactivity extends AppCompatActivity implements
     private void initrecorder() {
         Log.i(log_tag, "init mframerecorder");
 
-        mvideo = camerahelper.getoutputmediafile(camerahelper.media_type_video);
+        mvideo = camerahelper.getoutputmediafile();
 
         Log.i(log_tag, "Output Video: " + mvideo);
 

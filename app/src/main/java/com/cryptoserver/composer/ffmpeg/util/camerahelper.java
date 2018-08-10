@@ -23,9 +23,11 @@ import android.util.Log;
 import android.view.Surface;
 
 import com.cryptoserver.composer.BuildConfig;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.utils.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -95,45 +97,26 @@ public class camerahelper {
      * Creates a media file in the {@code Environment.DIRECTORY_PICTURES} directory. The directory
      * is persistent and available to other applications like gallery.
      *
-     * @param type Media type. Can be video or image.
      * @return A file object pointing to the newly created file.
      */
-    public static File getoutputmediafile(int type) {
+    public static File getoutputmediafile() {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         if (!Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
             return null;
         }
 
-        //File mediastoragedir=new File(config.tempvideodir);
-        File mediastoragedir=new File(config.videodir);
-
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-
-        // Create the storage directory if it does not exist
-        if (!mediastoragedir.exists()) {
-            if (!mediastoragedir.mkdirs()) {
-                Log.d(tag, "failed to create directory");
-                return null;
-            }
+        File outputDir = applicationviavideocomposer.getactivity().getCacheDir(); // context being the Activity pointer
+        try {
+            String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            fileName="VIA_"+fileName;
+            File outputFile = File.createTempFile(fileName, ".mp4", outputDir);
+            return outputFile;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        // Create a media file name
-        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        fileName="VIA_"+fileName;
-        File mediaFile;
-        if (type == media_type_image) {
-            mediaFile = new File(mediastoragedir.getPath() + File.separator +
-                    fileName + ".jpg");
-        } else if (type == media_type_video) {
-            mediaFile = new File(mediastoragedir.getPath() + File.separator +
-                    fileName + ".mp4");
-        } else {
-            return null;
-        }
-
-        return mediaFile;
+        return null;
     }
 
     public static int getcameradisplayorientation(Activity activity, int cameraid) {
