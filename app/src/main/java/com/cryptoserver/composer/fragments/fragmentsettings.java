@@ -541,7 +541,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                 }
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -567,7 +568,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
     @Override
     public void updateMobileNetworkStrength(String result) {
@@ -580,7 +582,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -593,7 +596,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -606,7 +610,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -620,7 +625,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -634,7 +640,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
     public void matchInArray(String key, String value) {
 
@@ -642,7 +649,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             if (key.equals(metricItemArraylist.get(i).getMetricTrackKeyName())) {
                 metricItemArraylist.get(i).setMetricTrackValue(value);
                 metricItemArraylist.get(i).setSelected(true);
-                itemMetricAdapter.notifyDataSetChanged();
+                if(itemMetricAdapter != null)
+                    itemMetricAdapter.notifyDataSetChanged();
                 break;
             }
         }
@@ -673,7 +681,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
 
         }
 
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
 
     }
     @Override
@@ -688,7 +697,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -703,7 +713,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -719,7 +730,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             }
 
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -734,7 +746,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     metricItemArraylist.get(i).setSelected(true);
             }
         }
-        itemMetricAdapter.notifyDataSetChanged();
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
     }
 
    public void setvalueadapter(){
@@ -879,7 +892,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                         }
 
                     }
-                    itemMetricAdapter.notifyDataSetChanged();
+                    if(itemMetricAdapter != null)
+                        itemMetricAdapter.notifyDataSetChanged();
                 }
 
                 xdata.getinstance().saveSetting("gpsaltittude",""+location.getAltitude());
