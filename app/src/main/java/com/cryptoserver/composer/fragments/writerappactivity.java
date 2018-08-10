@@ -276,6 +276,7 @@ public class writerappactivity extends AppCompatActivity implements
                     mframetorecordcount =0;
                     currentframenumber = currentframenumber + frameduration;
 
+                    progressdialog.showwaitingdialog(writerappactivity.this);
                     mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
                     new ProgressDialogTask<Void, Integer, Void>(R.string.initiating) {
                         @Override
@@ -292,6 +293,7 @@ public class writerappactivity extends AppCompatActivity implements
                                 public void run() {
                                     timer.setBase(SystemClock.elapsedRealtime());
                                     starttimer();
+                                    progressdialog.dismisswaitdialog();
                                 }
                             });
                             return null;
