@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.cryptoserver.composer.utils.xdata;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -18,6 +20,7 @@ public class applicationviavideocomposer extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
        /* Fabric.with(this, new Crashlytics());
         mcontext = this;
         xdata.getinstance().init(this);*/
