@@ -39,6 +39,30 @@
         android:layout_toLeftOf="@+id/rl_sharedeleteicon"
         android:weightSum="1">
 
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3">
+
+
+        <com.cryptoserver.composer.utils.costomvideoview
+            android:id="@+id/videoviewthumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"
+            />
+
+        <ImageView
+            android:id="@+id/img_play"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/rotate_camera"
+            android:scaleType="fitXY"
+            />
+
         <ImageView
             android:id="@+id/img_videothumbnail"
             android:layout_width="0dp"
@@ -47,6 +71,9 @@
             android:layout_gravity="center_vertical"
             android:scaleType="fitXY"
             />
+
+        </RelativeLayout>
+
 
         <LinearLayout
             android:layout_width="0dp"
