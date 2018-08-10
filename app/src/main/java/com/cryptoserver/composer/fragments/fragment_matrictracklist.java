@@ -48,7 +48,10 @@ import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.minmaxfilter;
 import com.cryptoserver.composer.utils.xdata;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static org.bytedeco.javacv.FrameRecorder.list;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -169,13 +173,8 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                 showselectedunselected(img_sha_salt,img_md,img_md_salt,img_sha,config.prefs_sha_salt);
                 edt_sha_salt.setText(xdata.getinstance().getSetting(config.prefs_sha_salt));
             }
-
-
-
         }
-
         return rootview;
-
     }
     private class MyTextWatcher implements TextWatcher {
 
@@ -241,27 +240,7 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         keytype=keyname;
         xdata.getinstance().saveSetting(config.hashtype,keyname);
     }
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            // Restore some state that needs to happen after the Activity was created
-            //
-            // Note #1: Our views haven't had their states restored yet
-            // This could be a good place to restore a ListView's contents (and it's your last
-            // opportunity if you want your scroll position to be restored properly)
-            //
-            // Note #2:
-            // The following line will cause an unchecked type cast compiler warning
-            // It's impossible to actually check the type because of Java's type erasure:
-            //      At runtime all generic types become Object
-            // So the best you can do is add the @SuppressWarnings("unchecked") annotation
-            // and understand that you must make sure to not use a different type anywhere
-            metricItemArraylist = (ArrayList<MetricModel>) savedInstanceState.getSerializable(STATE_ITEMS);
-            setAdapter();
-        }
-    }
+
     private ServiceConnection serviceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             // This is called when the connection with the service has been
@@ -290,8 +269,6 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
             }*/
         }
     };
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -308,17 +285,6 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         }
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        try {
-            outState.putSerializable(STATE_ITEMS, metricItemArraylist);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) applicationviavideocomposer.getactivity().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -330,23 +296,23 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
     }
 
 
-        @Override
-        public void getAccurateLocation() {
-            super.getAccurateLocation();
+    @Override
+    public void getAccurateLocation() {
+        super.getAccurateLocation();
 
-            if(isMyServiceRunning(LocationService.class))
-            {
-                Log.e("Running ","Yes");
-            }
-            else
-            {
-                Log.e("Running ","No");
-
-                final Intent locationService = new Intent(getActivity(), LocationService.class);
-                getActivity().startService(locationService);
-                getActivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
-            }
+        if(isMyServiceRunning(LocationService.class))
+        {
+            Log.e("Running ","Yes");
         }
+        else
+        {
+            Log.e("Running ","No");
+
+            final Intent locationService = new Intent(getActivity(), LocationService.class);
+            getActivity().startService(locationService);
+            getActivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
     @SuppressLint("MissingPermission")
     @Override
     public void oncurrentlocationchanged(Location location) {
@@ -521,85 +487,122 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
             }
         }
     }
+
     private void prepareData() {
 
-        //metricItemArraylist.add(new MetricModel("username", "",false));
-        metricItemArraylist.add(new MetricModel("battery", "", true));
-        metricItemArraylist.add(new MetricModel("imeinumber", "", true));
-        metricItemArraylist.add(new MetricModel("simserialnumber", "", true));
-        metricItemArraylist.add(new MetricModel("version", "", true));
-        metricItemArraylist.add(new MetricModel("osversion", "", true));
-        metricItemArraylist.add(new MetricModel("softwareversion", "", true));
-        metricItemArraylist.add(new MetricModel("model", "", true));
-        metricItemArraylist.add(new MetricModel("manufacturer", "", true));
-        metricItemArraylist.add(new MetricModel("brightness", "",true));
-        metricItemArraylist.add(new MetricModel("gpslatitude", "", true));
-        metricItemArraylist.add(new MetricModel("gpslongitude", "", true));
-        metricItemArraylist.add(new MetricModel("gpsaltittude", "", true));
-        metricItemArraylist.add(new MetricModel("gpsquality", "", true));
-        metricItemArraylist.add(new MetricModel("carrier", "", true));
-        metricItemArraylist.add(new MetricModel("screenwidth", "", true));
-        metricItemArraylist.add(new MetricModel("screenheight", "", true));
-        metricItemArraylist.add(new MetricModel("systemuptime", "", true));
-        metricItemArraylist.add(new MetricModel("multitaskingenabled", "", true));
-        metricItemArraylist.add(new MetricModel("proximitysensorenabled", "", true));
-        metricItemArraylist.add(new MetricModel("pluggedin", "", true));
-        metricItemArraylist.add(new MetricModel("devicetime", "", true));
-        metricItemArraylist.add(new MetricModel("deviceregion", "", true));
-        metricItemArraylist.add(new MetricModel("devicelanguage", "", true));
-        metricItemArraylist.add(new MetricModel("devicecurrency", "", true));
-        metricItemArraylist.add(new MetricModel("timezone", "", true));
-        metricItemArraylist.add(new MetricModel("headphonesattached", "", true));
-        metricItemArraylist.add(new MetricModel("accessoriesattached", "", true));
-        metricItemArraylist.add(new MetricModel("nameattachedaccessories", "", true));
-        metricItemArraylist.add(new MetricModel("attachedaccessoriescount", "", true));
-        metricItemArraylist.add(new MetricModel("totalspace", "", true));
-        metricItemArraylist.add(new MetricModel("usedspace", "", true));
-        metricItemArraylist.add(new MetricModel("freespace", "", true));
-        metricItemArraylist.add(new MetricModel("deviceorientation", "", true));
-        metricItemArraylist.add(new MetricModel("rammemory", "", true));
-        metricItemArraylist.add(new MetricModel("usedram", "", true));
-        metricItemArraylist.add(new MetricModel("freeram", "", true));
-        metricItemArraylist.add(new MetricModel("wificonnect", "", true));
-        metricItemArraylist.add(new MetricModel("cellnetworkconnect", "", true));
-        metricItemArraylist.add(new MetricModel("internalip", "", true));
-        metricItemArraylist.add(new MetricModel("externalip", "", true));
-        metricItemArraylist.add(new MetricModel("networktype", "", true));
-        metricItemArraylist.add(new MetricModel("connectedphonenetworkquality", "", true));
-        metricItemArraylist.add(new MetricModel("gravitysensorenabled", "", true));
-        metricItemArraylist.add(new MetricModel("gyroscopesensorenabled", "", true));
-        metricItemArraylist.add(new MetricModel("lightsensorenabled", "", true));
-        metricItemArraylist.add(new MetricModel("debuggerattached", "", true));
-        metricItemArraylist.add(new MetricModel("deviceid", "", true));
-        metricItemArraylist.add(new MetricModel("bluetoothonoff", "", true));
-        metricItemArraylist.add(new MetricModel("wifiname", "", true));
-        metricItemArraylist.add(new MetricModel("wifinetworksaveailable", "", true));
-        metricItemArraylist.add(new MetricModel("processorcount", "", true));
-        metricItemArraylist.add(new MetricModel("activeprocessorcount", "", true));
-        metricItemArraylist.add(new MetricModel("cpuusageuser", "", true));
-        metricItemArraylist.add(new MetricModel("cpuusagesystem", "", true));
-        metricItemArraylist.add(new MetricModel("cpuusageiow", "", true));
-        metricItemArraylist.add(new MetricModel("cpuusageirq", "", true));
-        metricItemArraylist.add(new MetricModel("compass", "", true));
-        metricItemArraylist.add(new MetricModel("decibel", "", true));
-        metricItemArraylist.add(new MetricModel("barometer", "", true));
-        metricItemArraylist.add(new MetricModel("isaccelerometeravailable", "", true));
-        metricItemArraylist.add(new MetricModel("acceleration.x", "", true));
-        metricItemArraylist.add(new MetricModel("acceleration.y", "", true));
-        metricItemArraylist.add(new MetricModel("acceleration.z", "", true));
-        metricItemArraylist.add(new MetricModel("distancetraveled", "", true));
-        metricItemArraylist.add(new MetricModel("dataconnection", "", true));
-        metricItemArraylist.add(new MetricModel("currentcallinprogress", "", true));
-        metricItemArraylist.add(new MetricModel("currentcallremotenumber", "", true));
-        metricItemArraylist.add(new MetricModel("currentcalldurationseconds", "", true));
-        metricItemArraylist.add(new MetricModel("currentcallvolume", "", true));
-        metricItemArraylist.add(new MetricModel("currentcalldecibel", "", true));
-        //metricItemArraylist.add(new MetricModel("carrierVOIP", "", false));
-        //metricItemArraylist.add(new MetricModel("gpsverticalaccuracy", "", false));
-
-
-        //metricItemArraylist.add(new MetricModel("usbconnecteddevicename", "", false));
+        ArrayList<MetricModel> mlist = new ArrayList<>();
+        mlist.addAll(getMetricList());
+        if(mlist.size() > 0)
+        {
+            for(int i=0;i<mlist.size();i++)
+            {
+                metricItemArraylist.add(mlist.get(i));
+            }
+            //metricItemArraylist.addAll(getMetricList());
+        }
+        else
+        {
+            metricItemArraylist.add(new MetricModel("battery", "", true));
+            metricItemArraylist.add(new MetricModel("imeinumber", "", true));
+            metricItemArraylist.add(new MetricModel("simserialnumber", "", true));
+            metricItemArraylist.add(new MetricModel("version", "", true));
+            metricItemArraylist.add(new MetricModel("osversion", "", true));
+            metricItemArraylist.add(new MetricModel("softwareversion", "", true));
+            metricItemArraylist.add(new MetricModel("model", "", true));
+            metricItemArraylist.add(new MetricModel("manufacturer", "", true));
+            metricItemArraylist.add(new MetricModel("brightness", "",true));
+            metricItemArraylist.add(new MetricModel("gpslatitude", "", true));
+            metricItemArraylist.add(new MetricModel("gpslongitude", "", true));
+            metricItemArraylist.add(new MetricModel("gpsaltittude", "", true));
+            metricItemArraylist.add(new MetricModel("gpsquality", "", true));
+            metricItemArraylist.add(new MetricModel("carrier", "", true));
+            metricItemArraylist.add(new MetricModel("screenwidth", "", true));
+            metricItemArraylist.add(new MetricModel("screenheight", "", true));
+            metricItemArraylist.add(new MetricModel("systemuptime", "", true));
+            metricItemArraylist.add(new MetricModel("multitaskingenabled", "", true));
+            metricItemArraylist.add(new MetricModel("proximitysensorenabled", "", true));
+            metricItemArraylist.add(new MetricModel("pluggedin", "", true));
+            metricItemArraylist.add(new MetricModel("devicetime", "", true));
+            metricItemArraylist.add(new MetricModel("deviceregion", "", true));
+            metricItemArraylist.add(new MetricModel("devicelanguage", "", true));
+            metricItemArraylist.add(new MetricModel("devicecurrency", "", true));
+            metricItemArraylist.add(new MetricModel("timezone", "", true));
+            metricItemArraylist.add(new MetricModel("headphonesattached", "", true));
+            metricItemArraylist.add(new MetricModel("accessoriesattached", "", true));
+            metricItemArraylist.add(new MetricModel("nameattachedaccessories", "", true));
+            metricItemArraylist.add(new MetricModel("attachedaccessoriescount", "", true));
+            metricItemArraylist.add(new MetricModel("totalspace", "", true));
+            metricItemArraylist.add(new MetricModel("usedspace", "", true));
+            metricItemArraylist.add(new MetricModel("freespace", "", true));
+            metricItemArraylist.add(new MetricModel("deviceorientation", "", true));
+            metricItemArraylist.add(new MetricModel("rammemory", "", true));
+            metricItemArraylist.add(new MetricModel("usedram", "", true));
+            metricItemArraylist.add(new MetricModel("freeram", "", true));
+            metricItemArraylist.add(new MetricModel("wificonnect", "", true));
+            metricItemArraylist.add(new MetricModel("cellnetworkconnect", "", true));
+            metricItemArraylist.add(new MetricModel("internalip", "", true));
+            metricItemArraylist.add(new MetricModel("externalip", "", true));
+            metricItemArraylist.add(new MetricModel("networktype", "", true));
+            metricItemArraylist.add(new MetricModel("connectedphonenetworkquality", "", true));
+            metricItemArraylist.add(new MetricModel("gravitysensorenabled", "", true));
+            metricItemArraylist.add(new MetricModel("gyroscopesensorenabled", "", true));
+            metricItemArraylist.add(new MetricModel("lightsensorenabled", "", true));
+            metricItemArraylist.add(new MetricModel("debuggerattached", "", true));
+            metricItemArraylist.add(new MetricModel("deviceid", "", true));
+            metricItemArraylist.add(new MetricModel("bluetoothonoff", "", true));
+            metricItemArraylist.add(new MetricModel("wifiname", "", true));
+            metricItemArraylist.add(new MetricModel("wifinetworksaveailable", "", true));
+            metricItemArraylist.add(new MetricModel("processorcount", "", true));
+            metricItemArraylist.add(new MetricModel("activeprocessorcount", "", true));
+            metricItemArraylist.add(new MetricModel("cpuusageuser", "", true));
+            metricItemArraylist.add(new MetricModel("cpuusagesystem", "", true));
+            metricItemArraylist.add(new MetricModel("cpuusageiow", "", true));
+            metricItemArraylist.add(new MetricModel("cpuusageirq", "", true));
+            metricItemArraylist.add(new MetricModel("compass", "", true));
+            metricItemArraylist.add(new MetricModel("decibel", "", true));
+            metricItemArraylist.add(new MetricModel("barometer", "", true));
+            metricItemArraylist.add(new MetricModel("isaccelerometeravailable", "", true));
+            metricItemArraylist.add(new MetricModel("acceleration.x", "", true));
+            metricItemArraylist.add(new MetricModel("acceleration.y", "", true));
+            metricItemArraylist.add(new MetricModel("acceleration.z", "", true));
+            metricItemArraylist.add(new MetricModel("distancetraveled", "", true));
+            metricItemArraylist.add(new MetricModel("dataconnection", "", true));
+            metricItemArraylist.add(new MetricModel("currentcallinprogress", "", true));
+            metricItemArraylist.add(new MetricModel("currentcallremotenumber", "", true));
+            metricItemArraylist.add(new MetricModel("currentcalldurationseconds", "", true));
+            metricItemArraylist.add(new MetricModel("currentcallvolume", "", true));
+            metricItemArraylist.add(new MetricModel("currentcalldecibel", "", true));
+        }
     }
+
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid) {
+            case R.id.img_back:
+                saveData();
+                gethelper().onBack();
+                break;
+            case R.id.img_cancel:
+
+                break;
+        }
+    }
+
+    public List<MetricModel> getMetricList() {
+        Gson gson = new Gson();
+        List<MetricModel> metricList=new ArrayList<>();
+
+        String value = xdata.getinstance().getSetting(config.metriclist);
+        if(value.trim().length() > 0)
+        {
+            Type type = new TypeToken<List<MetricModel>>() {
+            }.getType();
+            metricList = gson.fromJson(value, type);
+        }
+        return metricList;
+    }
+
     public void setAdapter()
     {
         itemMetricAdapter = new ItemMetricAdapter(getActivity(), metricItemArraylist, new AdapterItemClick() {
@@ -646,6 +649,15 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
             }
         }, 5000);*/
     }
+
+    public void saveData()
+    {
+        // save metric list
+        Gson gson = new Gson();
+        String json = gson.toJson(metricItemArraylist);
+        xdata.getinstance().saveSetting(config.metriclist,json);
+    }
+
     @Override
     public void updateCallInfo(String callStaus, String callDuration, String CallerNumber) {
         super.updateCallInfo(callStaus, callDuration, CallerNumber);
@@ -787,25 +799,25 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
     }
 */
    public void setvalueadapter(){
-       for(int key=0;key<metricItemArraylist.size();key++){
-           if (metric_onoff(metricItemArraylist.get(key).getMetricTrackKeyName())) {
-               String value = metric_read(metricItemArraylist.get(key).getMetricTrackKeyName());
-               if(value.equals("UpdateLater"))
-               {
-
-               }
-               else
-               {
-                   if(value.isEmpty() && value != null)
+       for(int i=0;i<metricItemArraylist.size();i++){
+           if(metricItemArraylist.get(i).isSelected())
+           {
+               if (metric_onoff(metricItemArraylist.get(i).getMetricTrackKeyName())) {
+                   String value = metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
+                   if(! value.equals("UpdateLater"))
                    {
-                       matchInArray(metricItemArraylist.get(key).getMetricTrackKeyName(), "N/A");
-                   }
-                   else if(value != null)
-                   {
-                       matchInArray(metricItemArraylist.get(key).getMetricTrackKeyName(), value);
+                       if(value.isEmpty() && value != null)
+                       {
+                           matchInArray(metricItemArraylist.get(i).getMetricTrackKeyName(), "N/A");
+                       }
+                       else if(value != null)
+                       {
+                           matchInArray(metricItemArraylist.get(i).getMetricTrackKeyName(), value);
+                       }
                    }
                }
            }
+
        }
    }
     @Override

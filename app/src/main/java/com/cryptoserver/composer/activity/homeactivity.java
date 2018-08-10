@@ -23,12 +23,16 @@ import com.cryptoserver.composer.services.CallService;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class homeactivity extends LocationAwareActivity {
+public class homeactivity extends LocationAwareActivity implements View.OnClickListener {
 
     @BindView(R.id.img_add_icon)
     ImageView imgaddicon;
     @BindView(R.id.img_setting)
     ImageView imgsettingsicon;
+    @BindView(R.id.img_back)
+    ImageView img_back;
+    @BindView(R.id.img_cancel)
+    ImageView img_cancel;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
 
@@ -42,24 +46,12 @@ public class homeactivity extends LocationAwareActivity {
         fragmentvideolist frag=new fragmentvideolist();
         replaceFragment(frag, false, true);
 
-        imgaddicon.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               /* fragmentvideocomposer frag=new fragmentvideocomposer();
-                replaceFragment(frag, false, true);*/
+        imgaddicon.setOnClickListener(this);
+        imgsettingsicon.setOnClickListener(this);
+        img_back.setOnClickListener(this);
+        img_cancel.setOnClickListener(this);
 
-                Intent in=new Intent(homeactivity.this,writerappactivity.class);
-                startActivity(in);
-            }
-        });
-        imgsettingsicon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               // actionbar.setVisibility(View.GONE);
-                fragment_matrictracklist fragmatriclist=new fragment_matrictracklist();
-                replaceFragment(fragmatriclist, false, true);
-            }
-        });
+
 
         CallService mService = new CallService();
         Intent mIntent = new Intent(homeactivity.this, CallService.class);
@@ -109,6 +101,8 @@ public class homeactivity extends LocationAwareActivity {
     public void onfragmentbackstackchanged() {
         super.onfragmentbackstackchanged();
         basefragment fragment = getcurrentfragment();
+        img_back.setVisibility(View.GONE);
+        img_cancel.setVisibility(View.GONE);
 
         if (fragment instanceof fragmentvideolist) {
             imgaddicon.setVisibility(View.VISIBLE);
@@ -119,8 +113,36 @@ public class homeactivity extends LocationAwareActivity {
             imgsettingsicon.setVisibility(View.INVISIBLE);
         }
         else if(fragment instanceof fragmentsettings){
-           /* imgaddicon.setVisibility(View.INVISIBLE);
-            imgsettingsicon.setVisibility(View.INVISIBLE);*/
+            img_back.setVisibility(View.VISIBLE);
+            img_cancel.setVisibility(View.VISIBLE);
+            imgaddicon.setVisibility(View.GONE);
+            imgsettingsicon.setVisibility(View.GONE);
+        }
+        else if(fragment instanceof fragment_matrictracklist){
+            img_back.setVisibility(View.VISIBLE);
+            img_cancel.setVisibility(View.VISIBLE);
+            imgaddicon.setVisibility(View.GONE);
+            imgsettingsicon.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.img_back:
+                getcurrentfragment().onHeaderBtnClick(R.id.img_back);
+                break;
+            case R.id.img_cancel:
+                getcurrentfragment().onHeaderBtnClick(R.id.img_cancel);
+                break;
+            case R.id.img_add_icon:
+                Intent in=new Intent(homeactivity.this,writerappactivity.class);
+                startActivity(in);
+                break;
+            case R.id.img_setting:
+                fragment_matrictracklist fragmatriclist=new fragment_matrictracklist();
+                replaceFragment(fragmatriclist, false, true);
+                break;
         }
     }
 
