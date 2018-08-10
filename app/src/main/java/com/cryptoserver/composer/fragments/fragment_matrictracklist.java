@@ -128,8 +128,8 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
             layout_md_salt.setOnClickListener(this);
             layout_sha.setOnClickListener(this);
             layout_sha_salt.setOnClickListener(this);
-            edt_md_salt.addTextChangedListener(new fragment_matrictracklist.MyTextWatcher(edt_md_salt));
-            edt_sha_salt.addTextChangedListener(new fragment_matrictracklist.MyTextWatcher(edt_sha_salt));
+            //edt_md_salt.addTextChangedListener(new fragment_matrictracklist.MyTextWatcher(edt_md_salt));
+            //edt_sha_salt.addTextChangedListener(new fragment_matrictracklist.MyTextWatcher(edt_sha_salt));
 
             edt_framescount.setText(""+framecount);
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
@@ -148,7 +148,7 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    xdata.getinstance().saveSetting(config.framecount,editable.toString());
+
                 }
             });
 
@@ -194,10 +194,10 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
             switch (view.getId()) {
 
                 case R.id.edt_md_salt:
-                    xdata.getinstance().saveSetting(config.prefs_md5_salt,editable.toString());
+
                     break;
                 case R.id.edt_sha_salt:
-                    xdata.getinstance().saveSetting(config.prefs_sha_salt,editable.toString());
+
                     break;
             }
         }
@@ -238,7 +238,6 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         img4.setImageResource(R.drawable.unselectedicon);
 
         keytype=keyname;
-        xdata.getinstance().saveSetting(config.hashtype,keyname);
     }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -575,6 +574,19 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         }
     }
 
+    public void saveData()
+    {
+        xdata.getinstance().saveSetting(config.hashtype,keytype);
+        xdata.getinstance().saveSetting(config.framecount,edt_framescount.getText().toString().trim());
+        xdata.getinstance().saveSetting(config.prefs_sha_salt,edt_sha_salt.getText().toString());
+        xdata.getinstance().saveSetting(config.prefs_md5_salt,edt_md_salt.getText().toString());
+
+        // save metric list
+        Gson gson = new Gson();
+        String json = gson.toJson(metricItemArraylist);
+        xdata.getinstance().saveSetting(config.metriclist,json);
+    }
+
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
@@ -584,7 +596,6 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
                 gethelper().onBack();
                 break;
             case R.id.img_cancel:
-
                 break;
         }
     }
@@ -642,21 +653,9 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         recyviewItem.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
 
         recyviewItem.setAdapter(itemMetricAdapter);
-      /*  new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-             //   setvalueadapter();
-            }
-        }, 5000);*/
     }
 
-    public void saveData()
-    {
-        // save metric list
-        Gson gson = new Gson();
-        String json = gson.toJson(metricItemArraylist);
-        xdata.getinstance().saveSetting(config.metriclist,json);
-    }
+
 
     @Override
     public void updateCallInfo(String callStaus, String callDuration, String CallerNumber) {
@@ -747,57 +746,6 @@ public class fragment_matrictracklist extends basefragment implements View.OnCli
         itemMetricAdapter.notifyDataSetChanged();
     }
 
-    /*public void saveRefreshItems() {
-        if (mDbHelper == null) {
-            mDbHelper = new DatabaseManager(getActivity());
-            mDbHelper.createDatabase();
-        }
-
-        try {
-            mDbHelper.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-
-            Calendar calander = Calendar.getinstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Config.DATE_TIME_FORMAT);
-            String datetime = simpleDateFormat.format(calander.getTime());
-            Log.e("Current Time = ", ""+datetime);
-
-            for (int i = 0; i < metricItemArraylist.size(); i++) {
-                if (metricItemArraylist.get(i).isSelected()) {
-                    mDbHelper.insertLog(datetime, metricItemArraylist.get(i).getMetricTrackKeyName(),
-                            metricItemArraylist.get(i).getMetricTrackValue(), "0", "true");
-                } *//*else {
-                    mDbHelper.insertLog(datetime, metricItemArraylist.get(i).getMetricTrackKeyName(),
-                            "", "0", "false");
-                }*//*
-            }
-            mDbHelper.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; i < metricItemArraylist.size(); i++) {
-            if (metricItemArraylist.get(i).isSelected()) {
-                if (metric_onoff(metricItemArraylist.get(i).getMetricTrackKeyName())) {
-                    String value = metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
-                    if (!value.isEmpty()) {
-                        metricItemArraylist.get(i).setMetricTrackValue(value);
-                    }
-                }
-            }
-        }
-        itemMetricAdapter.notifyDataSetChanged();
-    }
-
-    public void displayLog() {
-        LogListFragment frag = new LogListFragment();
-        getHelper().replaceFragment(frag, false, true);
-    }
-*/
    public void setvalueadapter(){
        for(int i=0;i<metricItemArraylist.size();i++){
            if(metricItemArraylist.get(i).isSelected())
