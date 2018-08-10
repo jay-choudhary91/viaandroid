@@ -337,10 +337,7 @@ public abstract class basefragment extends Fragment {
     public boolean metric_onoff(String key)
     {
 
-        if(key.equalsIgnoreCase("gpslatitude")|| key.equalsIgnoreCase("gpslongitude") || key.equalsIgnoreCase("gpsquality")
-                || key.equalsIgnoreCase("gpsaltittude") || key.equalsIgnoreCase("gpsverticalaccuracy")
-                || key.equalsIgnoreCase("heading") || key.equalsIgnoreCase("speed")
-                || key.equalsIgnoreCase("gpsnumberofsatelites") || key.equalsIgnoreCase("distancetraveled"))
+        if(key.equalsIgnoreCase("gpslatitude"))
         {
 
             gethelper().showPermissionDialog();
@@ -944,7 +941,7 @@ public abstract class basefragment extends Fragment {
 
         final String deciblevalue = String.valueOf(new DecimalFormat("##.####").format(signalEMA));
 
-        getActivity().runOnUiThread(new Runnable() {
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 updateDecibelValue(deciblevalue);

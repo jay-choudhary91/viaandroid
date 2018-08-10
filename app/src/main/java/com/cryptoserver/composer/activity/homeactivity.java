@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,7 +12,6 @@ import android.widget.RelativeLayout;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
-import com.cryptoserver.composer.fragments.fragment_matrictracklist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
@@ -107,18 +105,13 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         if (fragment instanceof fragmentvideolist) {
             imgaddicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setVisibility(View.VISIBLE);
+            imgsettingsicon.setEnabled(true);
         }
         else if (fragment instanceof fragmentvideocomposer) {
             imgaddicon.setVisibility(View.INVISIBLE);
             imgsettingsicon.setVisibility(View.INVISIBLE);
         }
         else if(fragment instanceof fragmentsettings){
-            img_back.setVisibility(View.VISIBLE);
-            img_cancel.setVisibility(View.VISIBLE);
-            imgaddicon.setVisibility(View.GONE);
-            imgsettingsicon.setVisibility(View.GONE);
-        }
-        else if(fragment instanceof fragment_matrictracklist){
             img_back.setVisibility(View.VISIBLE);
             img_cancel.setVisibility(View.VISIBLE);
             imgaddicon.setVisibility(View.GONE);
@@ -140,7 +133,8 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 startActivity(in);
                 break;
             case R.id.img_setting:
-                fragment_matrictracklist fragmatriclist=new fragment_matrictracklist();
+                imgsettingsicon.setEnabled(false);
+                fragmentsettings fragmatriclist=new fragmentsettings();
                 replaceFragment(fragmatriclist, false, true);
                 break;
         }

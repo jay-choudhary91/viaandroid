@@ -12,9 +12,11 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.utils.AppDialog;
 import com.cryptoserver.composer.utils.GoogleUtils;
 import com.google.android.gms.common.ConnectionResult;
@@ -23,6 +25,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -280,24 +283,48 @@ public abstract class LocationAwareActivity extends baseactivity implements
     {
         if (!LocationAwareActivity.checkLocationEnable(context))
         {
-            AppDialog.showConfirmationDialog(context, "GPS", "GPS is disabled in your device. Would you like to enable it?","YES","NO", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_REQUEST_CODE);
-                }
-            },
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    setNavigateWithLocation();
-                }
-            }).show();
+            showgpsalert(context);
         }
         else
         {
             setNavigateWithLocation();
         }
+    }
+
+    public void showgpsalert(final Context context)
+    {
+/*        AppDialog.showConfirmationDialog(context, "GPS", "GPS is disabled in your device. Would you like to enable it?","YES","NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_REQUEST_CODE);
+                    }
+                },
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        setNavigateWithLocation();
+                    }
+                }).show();*/
+
+        new AlertDialog.Builder(context, R.style.customdialogtheme)
+                .setTitle("GPS")
+                .setMessage("GPS is disabled in your device. Would you like to enable it?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_REQUEST_CODE);
+                        if(dialog != null)
+                            dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
 

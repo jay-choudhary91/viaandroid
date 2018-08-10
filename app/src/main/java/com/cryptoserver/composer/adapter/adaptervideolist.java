@@ -34,8 +34,9 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tvvideodescription;
-        public ImageView imgvideothumbnail,imgshareicon,imgdeleteicon,img_videothumbnail,img_play;
-        public costomvideoview videoviewthumbnail;
+        public ImageView imgshareicon,imgdeleteicon,img_videothumbnail;
+      //  public ImageView imgvideothumbnail,imgshareicon,imgdeleteicon,img_videothumbnail,img_play;
+       // public costomvideoview videoviewthumbnail;
 
         public myViewHolder(View view) {
             super(view);
@@ -43,12 +44,9 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
             tvvideocreatedate = (TextView) view.findViewById(R.id.tv_videocreatedate);
             tvvideoduration = (TextView) view.findViewById(R.id.tv_videoduration);
             tvvideodescription = (TextView) view.findViewById(R.id.tv_videodescription);
-            imgvideothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
             imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
             imgdeleteicon = (ImageView) view.findViewById(R.id.img_deleteicon);
             img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
-            img_play = (ImageView) view.findViewById(R.id.img_play);
-            videoviewthumbnail = (costomvideoview) view.findViewById(R.id.videoviewthumbnail);
         }
     }
 
@@ -76,7 +74,7 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
         holder.tvvideoduration.setText("Duration : " +arrayvideolist.get(position).getDuration());
         //holder.tvvideodescription.setText(arrayvideolist.get(position).getMd5());
 
-        holder.img_videothumbnail.setVisibility(View.GONE);
+        /*holder.img_videothumbnail.setVisibility(View.GONE);
 
         holder.videoviewthumbnail.setVideoPath(arrayvideolist.get(position).getPath());
         holder.videoviewthumbnail.seekTo(100);
@@ -98,7 +96,7 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
 
             }
         });
-
+*/
         Bitmap bitmap= ThumbnailUtils.createVideoThumbnail(arrayvideolist.get(position).getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
         holder.img_videothumbnail.setImageBitmap(bitmap);
 

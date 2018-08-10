@@ -28,7 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.fragments.basefragment;
-import com.cryptoserver.composer.fragments.fragment_matrictracklist;
+import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
@@ -649,7 +649,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             xdata.getinstance().saveSetting("CALL_DURATION",(duration.isEmpty())?"None":duration);
             xdata.getinstance().saveSetting("CALL_REMOTE_NUMBER",(CALL_REMOTE_NUMBER.isEmpty())?"None":CALL_REMOTE_NUMBER);
 
-            if(getcurrentfragment() instanceof fragment_matrictracklist)
+            if(getcurrentfragment() instanceof fragmentsettings)
                 getcurrentfragment().updateCallInfo(CALL_STATUS,CALL_DURATION,CALL_REMOTE_NUMBER);
 
         }catch (Exception e)
