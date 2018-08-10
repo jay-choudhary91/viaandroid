@@ -306,7 +306,9 @@ public abstract class basefragment extends Fragment {
     {
 
     }
+    public void updateHeader() {
 
+    }
 
     public void dismissprogress()
     {

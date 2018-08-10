@@ -55,6 +55,7 @@
                 android:resource="@xml/device_filter" />
 
         </activity>
+
         <activity android:name=".activity.homeactivity"/>
         <activity android:name=".fragments.writerappactivity"/>
 

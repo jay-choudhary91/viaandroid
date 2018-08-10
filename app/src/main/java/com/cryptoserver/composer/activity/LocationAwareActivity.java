@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.utils.AppDialog;
@@ -54,7 +55,6 @@ public abstract class LocationAwareActivity extends baseactivity implements
         } else {
             enableGPS(LocationAwareActivity.this);
         }*/
-
     }
 
     @Override

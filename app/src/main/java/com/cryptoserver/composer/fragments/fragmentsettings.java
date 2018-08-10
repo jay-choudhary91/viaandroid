@@ -126,8 +126,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                 showselectedunselected(img_sha_salt,img_md,img_md_salt,img_sha,config.prefs_sha_salt);
                 edt_sha_salt.setText(xdata.getinstance().getSetting(config.prefs_sha_salt));
             }
-            //fragment_matrictracklist fragment_matrictracklist=new fragment_matrictracklist();
-            //gethelper().replaceFragment(fragment_matrictracklist,R.id.matrictracklist, false, false);
+            fragment_matrictracklist fragment_matrictracklist=new fragment_matrictracklist();
+            gethelper().replaceFragment(fragment_matrictracklist,R.id.matrictracklist, false, false);
         }
         return rootview;
     }
