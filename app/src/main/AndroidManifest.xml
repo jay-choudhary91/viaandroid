@@ -66,5 +66,8 @@
         <service
             android:name=".services.CallService"
             android:enabled="true"></service>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="42d19fb0e2e5d57caf4b1257310ca64e6f19cade" />
     </application>
 </manifest>
