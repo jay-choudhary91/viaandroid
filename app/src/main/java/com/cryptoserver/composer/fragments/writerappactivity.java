@@ -272,12 +272,6 @@ public class writerappactivity extends AppCompatActivity implements
                     imgflashon.setVisibility(View.INVISIBLE);
                     rotatecamera.setVisibility(View.INVISIBLE);
 
-                    //common.hidekeyboard(writerappactivity.this);
-                    /*frameduration =Long.parseLong(edt_framesduration.getText().toString());
-                    if(frameduration > 0)
-                    {
-
-                    }*/
                     currentframenumber =0;
                     mframetorecordcount =0;
                     currentframenumber = currentframenumber + frameduration;
