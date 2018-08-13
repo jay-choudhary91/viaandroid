@@ -1031,6 +1031,11 @@ public class writerappactivity extends AppCompatActivity implements
             mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
         }
         doafterallpermissionsgranted();
+        if(isflashon)
+        {
+            isflashon=false;
+            navigateflash();
+        }
     }
 
 
