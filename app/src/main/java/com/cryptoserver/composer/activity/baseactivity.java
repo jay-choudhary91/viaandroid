@@ -106,6 +106,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        try {
+            unregisterReceiver(mBroadcast);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void initviews(Bundle savedInstanceState) {

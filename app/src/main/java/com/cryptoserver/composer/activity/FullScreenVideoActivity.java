@@ -31,7 +31,7 @@ public class FullScreenVideoActivity extends AppCompatActivity {
         String videopath =  getIntent().getStringExtra("videopath");
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 //        getSupportActionBar().hide();
 
         videoView.setVideoPath(videopath);
