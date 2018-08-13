@@ -73,7 +73,7 @@
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:background="@drawable/icon_full_screen"
+                android:src="@drawable/icon_full_screen"
                 />
 
         </RelativeLayout>

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
@@ -86,6 +88,10 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
 
         // set the uri for the video view
         holder.simpleVideoView.setVideoPath(arrayvideolist.get(position).getPath());
+
+        holder.img_play_pause.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        holder.img_full_screen.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+
         holder.simpleVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mediaPlayer) {
@@ -120,6 +126,7 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
             @Override
             public void onPause() {
                 System.out.println("Pause!");
+                holder.img_play_pause.setImageResource(R.drawable.icon_play);
             }
         });
 
