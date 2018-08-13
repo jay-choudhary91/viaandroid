@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".fragments.fragmentsettings">
 
     <!-- TODO: Update blank fragment layout -->
@@ -11,6 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/layout_view"
         android:orientation="vertical">
 
         <RelativeLayout

@@ -1002,11 +1002,13 @@ public class writerappactivity extends AppCompatActivity implements
         parameters = mcamera.getParameters();
         if(isflashon)
         {
+            imgflashon.setImageResource(R.drawable.flash_off);
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             isflashon = false;
         }
         else
         {
+            imgflashon.setImageResource(R.drawable.flash_on);
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
             isflashon = true;
         }

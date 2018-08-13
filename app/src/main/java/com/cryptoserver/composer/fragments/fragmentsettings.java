@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,11 +29,13 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -80,6 +83,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
     private double doubleTotalDistance=0;
     private static final int request_permissions = 1;
     private Runnable doafterallpermissionsgranted;
+    LinearLayout layout_view;
     RelativeLayout layout_md;
     RelativeLayout layout_md_salt;
     RelativeLayout layout_sha;
@@ -117,16 +121,25 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             edt_md_salt =(EditText) rootview.findViewById(R.id.edt_md_salt);
             edt_sha_salt =(EditText) rootview.findViewById(R.id.edt_sha_salt);
 
+            layout_view=rootview.findViewById(R.id.layout_view);
+
 
             layout_md.setOnClickListener(this);
             layout_md_salt.setOnClickListener(this);
             layout_sha.setOnClickListener(this);
             layout_sha_salt.setOnClickListener(this);
+            layout_view.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    clearfocus();
+                    return false;
+                }
+
+            });
 
             edt_framescount.setText(""+framecount);
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                 edt_framescount.setText(xdata.getinstance().getSetting(config.framecount));
-
             edt_framescount.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -179,22 +192,22 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layout_md:
-                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                clearfocus();
                 showselectedunselected(img_md,img_md_salt,img_sha,img_sha_salt,config.prefs_md5);
                 break;
 
             case R.id.layout_md_salt:
-                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                clearfocus();
                 showselectedunselected(img_md_salt,img_md,img_sha,img_sha_salt,config.prefs_md5_salt);
                 break;
 
             case R.id.layout_sha:
-                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                clearfocus();
                 showselectedunselected(img_sha,img_md,img_md_salt,img_sha_salt,config.prefs_sha);
                 break;
 
             case R.id.layout_sha_salt:
-                common.hidekeyboard(applicationviavideocomposer.getactivity());
+                clearfocus();
                 showselectedunselected(img_sha_salt,img_md,img_md_salt,img_sha,config.prefs_sha_salt);
                 break;
         }
@@ -909,5 +922,12 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 locationUpdateReceiver,
                 new IntentFilter("LocationUpdated"));
+    }
+
+    public void clearfocus(){
+        edt_framescount.clearFocus();
+        edt_md_salt.clearFocus();
+        edt_sha_salt.clearFocus();
+        common.hidekeyboard(applicationviavideocomposer.getactivity());
     }
 }
