@@ -268,7 +268,7 @@ public class writerappactivity extends AppCompatActivity implements
                     pauserecording();
                     new finishrecordingtask().execute();
                 } else {
-                   mrecordimagebutton.setClickable(false);
+                   mrecordimagebutton.setEnabled(false);
                     imgflashon.setVisibility(View.INVISIBLE);
                     rotatecamera.setVisibility(View.INVISIBLE);
 
@@ -673,7 +673,12 @@ public class writerappactivity extends AppCompatActivity implements
             mrecordfragments.push(recordfragment);
 
             mrecording = true;
-            mrecordimagebutton.setClickable(true);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mrecordimagebutton.setEnabled(true);
+                }
+            });
         }
     }
 

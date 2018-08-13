@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cryptoserver.composer.R;
@@ -35,6 +36,7 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tvvideodescription;
         public ImageView imgshareicon,imgdeleteicon,img_videothumbnail;
+        public VideoView simpleVideoView;
       //  public ImageView imgvideothumbnail,imgshareicon,imgdeleteicon,img_videothumbnail,img_play;
        // public costomvideoview videoviewthumbnail;
 
@@ -47,6 +49,7 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
             imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
             imgdeleteicon = (ImageView) view.findViewById(R.id.img_deleteicon);
             img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
+            simpleVideoView = (VideoView) view.findViewById(R.id.simpleVideoView);
         }
     }
 
@@ -97,6 +100,34 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
             }
         });
 */
+
+        // set the uri for the video view
+        holder.simpleVideoView.setVideoPath(arrayvideolist.get(position).getPath());
+        holder.simpleVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                // start a video
+                //holder.simpleVideoView.start();
+
+
+            }
+        });
+
+        // implement on completion listener on video view
+        holder.simpleVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Toast.makeText(context, "Thank You...!!!", Toast.LENGTH_LONG).show(); // display a toast when an video is completed
+            }
+        });
+        holder.simpleVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                Toast.makeText(context, "Oops An Error Occur While Playing Video...!!!", Toast.LENGTH_LONG).show(); // display a toast when an error is occured while playing an video
+                return false;
+            }
+        });
+
         Bitmap bitmap= ThumbnailUtils.createVideoThumbnail(arrayvideolist.get(position).getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
         holder.img_videothumbnail.setImageBitmap(bitmap);
 
