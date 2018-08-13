@@ -11,7 +11,7 @@ public class config {
 
 
     public static final String videodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
-            BuildConfig.APPLICATION_ID+"/"+"videos";
+            BuildConfig.APPLICATION_ID+File.separator+"videos";
 
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";

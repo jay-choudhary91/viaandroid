@@ -45,20 +45,36 @@
             android:layout_weight="0.3"
             android:layout_gravity="center_vertical">
 
+            <com.cryptoserver.composer.utils.costomvideoview
+                android:id="@+id/simpleVideoView"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:layout_centerVertical="true"/>
+
             <ImageView
                 android:id="@+id/img_videothumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:visibility="gone"
                 android:layout_gravity="center_vertical"
                 android:scaleType="fitXY"
                 />
 
-            <VideoView
-                android:id="@+id/simpleVideoView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+            <ImageView
+                android:id="@+id/img_play_pause"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_play"
+                />
+
+            <ImageView
+                android:id="@+id/img_full_screen"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/icon_full_screen"
+                />
 
         </RelativeLayout>
 

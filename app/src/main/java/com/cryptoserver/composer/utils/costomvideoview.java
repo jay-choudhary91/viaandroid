@@ -9,6 +9,7 @@ import android.widget.VideoView;
  */
 
 public class costomvideoview extends VideoView {
+
     private PlayPauseListener mListener;
 
     public costomvideoview(Context context) {
@@ -47,5 +48,4 @@ public class costomvideoview extends VideoView {
         void onPlay();
         void onPause();
     }
-
 }

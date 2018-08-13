@@ -57,6 +57,7 @@
         </activity>
 
         <activity android:name=".activity.homeactivity"/>
+        <activity android:name=".activity.FullScreenVideoActivity"/>
         <activity android:name=".fragments.writerappactivity"/>
 
         <service

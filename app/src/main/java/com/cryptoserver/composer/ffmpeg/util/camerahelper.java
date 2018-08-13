@@ -106,6 +106,24 @@ public class camerahelper {
             return null;
         }
 
+        String destinationPath = config.videodir;
+        try {
+            File file=new File(destinationPath);
+            if(! file.exists())
+            {
+                boolean success1 = file.mkdirs();
+                if(! file.exists())
+                {
+                    boolean success = file.mkdirs();
+                    boolean newss=success;
+                }
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         File outputDir = applicationviavideocomposer.getactivity().getCacheDir(); // context being the Activity pointer
         try {
             String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
