@@ -70,8 +70,8 @@ public class writerappactivity extends AppCompatActivity implements
     Chronometer timer;
     private static final int request_permissions = 1;
 
-    private static final int preferred_preview_width = 720;
-    private static final int preferred_preview_height = 1280;
+    private static final int preferred_preview_width =  1280;
+    private static final int preferred_preview_height = 720;
 
     private int mcameraid;
     private Camera mcamera;
@@ -93,9 +93,9 @@ public class writerappactivity extends AppCompatActivity implements
     private int mpreviewwidth = preferred_preview_width;
     private int mpreviewheight = preferred_preview_height;
     // Output video size
-    private int videowidth = 320;
-    private int videoheight = 240;
-    private int framerate = 30;
+    private int videowidth = 480;
+    private int videoheight = 720;
+    private int framerate = 15;
     private int framedepth = Frame.DEPTH_UBYTE;
     private int framechannels = 2;
 
@@ -457,6 +457,8 @@ public class writerappactivity extends AppCompatActivity implements
         parameters.setPreviewSize(mpreviewwidth, mpreviewheight);
 //        parameters.setPreviewFormat(ImageFormat.NV21);
         mcamera.setParameters(parameters);
+
+
 
         mcamera.setDisplayOrientation(camerahelper.getcameradisplayorientation(
                 this, mcameraid));
@@ -1037,7 +1039,5 @@ public class writerappactivity extends AppCompatActivity implements
             navigateflash();
         }
     }
-
-
 }
 
