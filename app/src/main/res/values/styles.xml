@@ -17,6 +17,30 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="txt_share_screen">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
+    <style name="btn_share_screen">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginLeft">50dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginRight">50dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="customdialogtheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!--buttons color-->
         <item name="colorAccent">@color/black</item>

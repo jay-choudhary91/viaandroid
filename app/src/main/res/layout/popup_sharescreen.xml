@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/dialog_bg"
+    android:layout_height="match_parent">
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        android:id="@+id/txt_title1"
+        app:fontType="OpenSans_Regular"
+        style="@style/txt_share_screen"
+        android:text="@string/video_has_been_encrypted" />
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        android:id="@+id/txt_title2"
+        app:fontType="OpenSans_Regular"
+        style="@style/txt_share_screen"
+        android:text="@string/congratulations_video" />
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        app:fontType="OpenSans_Regular"
+        android:id="@+id/txt_share_btn1"
+        android:text="@string/share"
+        style="@style/btn_share_screen"
+        android:background="@color/black"
+        />
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        app:fontType="OpenSans_Regular"
+        android:id="@+id/txt_share_btn2"
+        android:text="@string/new_video"
+        style="@style/btn_share_screen"
+        android:background="@color/black"
+        />
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        app:fontType="OpenSans_Regular"
+        android:id="@+id/txt_share_btn3"
+        android:text="@string/watch"
+        style="@style/btn_share_screen"
+        android:background="@color/black"
+        />
+
+
+</LinearLayout>

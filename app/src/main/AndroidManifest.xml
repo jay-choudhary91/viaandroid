@@ -45,12 +45,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:largeHeap="true">
+
+        <provider
+            android:name="com.cryptoserver.composer.utils.genericfileprovider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
         <activity android:name=".activity.introactivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
             <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
 
@@ -58,7 +65,13 @@
 
         <activity android:name=".activity.homeactivity"/>
         <activity android:name=".activity.FullScreenVideoActivity"/>
-        <activity android:name=".fragments.writerappactivity"/>
+        <activity android:name=".fragments.writerappactivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
 
         <service
             android:name=".services.LocationService"

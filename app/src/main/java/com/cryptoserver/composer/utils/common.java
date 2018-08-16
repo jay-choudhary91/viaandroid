@@ -9,12 +9,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Point;
 import android.graphics.drawable.GradientDrawable;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
@@ -25,6 +28,7 @@ import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -34,6 +38,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -108,6 +113,43 @@ public class common
 
         return acCharge;
     }
+
+    public static void changeFocusStyle(View view,int solidcolor,int radius)
+    {
+        float borderradius=5f;
+        borderradius=(float)radius;
+
+        view.setBackgroundResource(R.drawable.style_rounded);
+        GradientDrawable drawable = (GradientDrawable)view.getBackground();
+        drawable.setCornerRadius(borderradius);
+        drawable.setColor(solidcolor);
+    }
+
+    public static int[] getScreenWidthHeight(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        int[] Params = {width, height};
+        return Params;
+    }
+
+    public static void shareMedia(Context context,String videoPath)
+    {
+        File file=new File(videoPath);
+        if(file.exists())
+        {
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            Uri uri = Uri.fromFile(file);
+            //Uri uri = Uri.fromFile(file);
+            sharingIntent.setType("video/mp4");
+            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            sharingIntent.putExtra(Intent.EXTRA_STREAM,uri);
+            context.startActivity(Intent.createChooser(sharingIntent, "Share video using"));
+        }
+    }
+
     public static String mapNetworkTypeToName(Context context) {
 
         TelephonyManager mTelephonyManager = (TelephonyManager)

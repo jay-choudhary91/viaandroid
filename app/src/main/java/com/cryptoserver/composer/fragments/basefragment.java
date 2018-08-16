@@ -45,6 +45,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 
+import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.utils.Noise;
 import com.cryptoserver.composer.utils.common;

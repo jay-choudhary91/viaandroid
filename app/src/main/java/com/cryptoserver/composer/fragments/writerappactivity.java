@@ -1,7 +1,10 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
@@ -11,6 +14,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -22,6 +26,7 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -30,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.activity.FullScreenVideoActivity;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.ffmpeg.data.frametorecord;
 import com.cryptoserver.composer.ffmpeg.data.recordfragment;
@@ -113,6 +119,8 @@ public class writerappactivity extends AppCompatActivity implements
 
     long currentframenumber =0;
     long frameduration =4, mframetorecordcount =0;
+    public Dialog maindialogshare,subdialogshare;
+    File destinationSaveFile=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +169,17 @@ public class writerappactivity extends AppCompatActivity implements
                 chronometer.setText(t);
             }
         });
+
+        /*Date d1 = new Date();
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Date d2 = new Date();
+        long seconds = (d2.getTime()-d1.getTime())/1000;
+        Log.e("seconds ",""+seconds);*/
+
         timer.setText("00:00:00");
 
     }
@@ -303,8 +322,7 @@ public class writerappactivity extends AppCompatActivity implements
 
                 break;
             case R.id.txt_save:
-                progressdialog.showwaitingdialog(writerappactivity.this);
-                saveTempFile();
+
                 break;
             case R.id.txt_clear:
                 resettimer();
@@ -323,24 +341,26 @@ public class writerappactivity extends AppCompatActivity implements
 
     public void saveTempFile()
     {
+        destinationSaveFile=null;
         String sourcePath = mvideo.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
         String destinationPath = config.videodir;
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         fileName="VIA_"+fileName;
-        File destinationFile = new File(destinationPath+File.separator+fileName+".mp4");
+        destinationSaveFile = new File(destinationPath+File.separator+fileName+".mp4");
+
         try
         {
-            if (!destinationFile.getParentFile().exists())
-                destinationFile.getParentFile().mkdirs();
+            if (!destinationSaveFile.getParentFile().exists())
+                destinationSaveFile.getParentFile().mkdirs();
 
-            if (!destinationFile.exists()) {
-                destinationFile.createNewFile();
+            if (!destinationSaveFile.exists()) {
+                destinationSaveFile.createNewFile();
             }
 
             InputStream in = new FileInputStream(sourceFile);
-            OutputStream out = new FileOutputStream(destinationFile);
+            OutputStream out = new FileOutputStream(destinationSaveFile);
 
             // Copy the bits from instream to outstream
             byte[] buf = new byte[1024];
@@ -352,12 +372,6 @@ public class writerappactivity extends AppCompatActivity implements
 
             in.close();
             out.close();
-
-            exportvideo(destinationFile);
-            resettimer();
-            clearvideolist();
-
-            Toast.makeText(writerappactivity.this,"Video saved successfully!",Toast.LENGTH_SHORT).show();
 
         }catch (Exception e)
         {
@@ -981,8 +995,19 @@ public class writerappactivity extends AppCompatActivity implements
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             layout_bottom.setVisibility(View.GONE);
 
-            txt_save.setVisibility(View.VISIBLE);
-            txt_clear.setVisibility(View.VISIBLE);
+            progressdialog.showwaitingdialog(writerappactivity.this);
+            saveTempFile();
+            if(destinationSaveFile != null)
+            {
+                //exportvideo(destinationSaveFile);
+                resettimer();
+                clearvideolist();
+            }
+            showsharepopupmain();
+
+          //  txt_save.setVisibility(View.VISIBLE);
+          //  txt_clear.setVisibility(View.VISIBLE);
+
 
             //Toast.makeText(writerappactivity.this,"Saved ",Toast.LENGTH_SHORT).show();
             /*Intent intent = new Intent(writerappactivity.this, playbackactivity.class);
@@ -1038,6 +1063,148 @@ public class writerappactivity extends AppCompatActivity implements
             isflashon=false;
             navigateflash();
         }
+    }
+
+    public void showsharepopupmain()
+    {
+        if(maindialogshare != null && maindialogshare.isShowing())
+            maindialogshare.dismiss();
+
+        maindialogshare=new Dialog(writerappactivity.this);
+        maindialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        maindialogshare.setCanceledOnTouchOutside(true);
+        maindialogshare.setContentView(R.layout.popup_sharescreen);
+        //maindialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        int[] widthHeight=common.getScreenWidthHeight(writerappactivity.this);
+        int width=widthHeight[0];
+        double height=widthHeight[1]/1.7;
+        maindialogshare.getWindow().setLayout(width-20, (int)height);
+        maindialogshare.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        TextView txt_share_btn1 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn1);
+        TextView txt_share_btn2 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn2);
+        TextView txt_share_btn3 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn3);
+        TextView txt_title1 = (TextView)maindialogshare.findViewById(R.id.txt_title1);
+        TextView txt_title2 = (TextView)maindialogshare.findViewById(R.id.txt_title2);
+
+        txt_share_btn1.setText(getResources().getString(R.string.share));
+        txt_share_btn2.setText(getResources().getString(R.string.new_video));
+        txt_share_btn3.setText(getResources().getString(R.string.watch));
+
+        txt_title1.setText(getResources().getString(R.string.video_has_been_encrypted));
+        txt_title2.setText(getResources().getString(R.string.congratulations_video));
+
+        common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),20);
+        common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),20);
+        common.changeFocusStyle(txt_share_btn3,getResources().getColor(R.color.share_c),20);
+
+        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+
+                showsharepopupsub();
+            }
+        });
+
+        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+
+            }
+        });
+
+        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent in=new Intent(writerappactivity.this, FullScreenVideoActivity.class);
+                in.putExtra("videopath",destinationSaveFile.getAbsolutePath());
+                startActivity(in);
+            }
+        });
+        maindialogshare.show();
+    }
+
+
+    public void showsharepopupsub()
+    {
+        if(subdialogshare != null && subdialogshare.isShowing())
+            subdialogshare.dismiss();
+
+        subdialogshare=new Dialog(writerappactivity.this);
+        subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        subdialogshare.setCanceledOnTouchOutside(true);
+
+        subdialogshare.setContentView(R.layout.popup_sharescreen);
+        //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        int[] widthHeight=common.getScreenWidthHeight(writerappactivity.this);
+        int width=widthHeight[0];
+        double height=widthHeight[1]/1.7;
+        subdialogshare.getWindow().setLayout(width-20, (int)height);
+
+        TextView txt_share_btn1 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn1);
+        TextView txt_share_btn2 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn2);
+        TextView txt_share_btn3 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn3);
+        TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
+        TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
+
+        txt_share_btn1.setText(getResources().getString(R.string.share_full_video));
+        txt_share_btn2.setText(getResources().getString(R.string.share_partial_video));
+        txt_share_btn3.setText(getResources().getString(R.string.cancel_viewlist));
+
+        txt_title1.setText(getResources().getString(R.string.how_would_you));
+        txt_title2.setText("");
+
+        common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),5);
+        common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),5);
+        common.changeFocusStyle(txt_share_btn3,getResources().getColor(R.color.share_c),5);
+
+        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                progressdialog.showwaitingdialog(writerappactivity.this);
+                saveTempFile();
+
+                if(destinationSaveFile != null && destinationSaveFile.getAbsolutePath() != null)
+                    common.shareMedia(writerappactivity.this,destinationSaveFile.getAbsolutePath());
+            }
+        });
+
+        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+
+                finish();
+            }
+        });
+        subdialogshare.show();
     }
 }
 
