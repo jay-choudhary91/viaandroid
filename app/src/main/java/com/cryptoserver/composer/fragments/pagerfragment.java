@@ -76,7 +76,7 @@ public class pagerfragment extends Fragment {
                 GifDrawable gifDrawable = null;
                 try {
                     gifDrawable = new GifDrawable(getResources(), introobject.getImage());
-                    gifDrawable.setLoopCount(1);
+                    gifDrawable.setLoopCount(1000);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

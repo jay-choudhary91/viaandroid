@@ -26,21 +26,23 @@ public class introactivity extends FragmentActivity {
     pagercustomduration viewpager;
     int touchstate=0;
     boolean pressed=false;
-    Date a;
+    Date initialDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_pager);
-        a=new Date();
+        initialDate=new Date();
         viewpager = (pagercustomduration) findViewById(R.id.viewpager);
         //viewpager.setPageTransformer(false, new pageranimation());
         viewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewpager, true);
+
         viewpager.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                initialDate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         pressed = true;
@@ -60,23 +62,24 @@ public class introactivity extends FragmentActivity {
             @Override
             public void run() {
                 handler.postDelayed(this,100);
-                Date b=new Date();
-                int insec= (int) (Math.abs(a.getTime()-b.getTime())/1000);
-                Log.e("insec",""+insec);
-                if(insec>=4) {
-                    a = new Date();
-                 int size= viewpager.getAdapter().getCount();
+                Date currentDate=new Date();
+                int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
+                //Log.e("insec",""+secondDifference);
+                if(secondDifference >= 4)
+                {
+                    initialDate = new Date();
 
-                   if(currentselected==size-1){
-                       currentselected=0;
-                   }
-                   else{
-                       currentselected++;
-                   }
-                   setviewpager(currentselected);
-
+                    if(currentselected < viewpager.getAdapter().getCount())
+                    {
+                        setviewpager(currentselected);
+                        currentselected++;
+                    }
+                    else
+                    {
+                        currentselected=0;
+                        setviewpager(currentselected);
+                    }
                 }
-
             }
         },100);
 
@@ -84,7 +87,7 @@ public class introactivity extends FragmentActivity {
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+               // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
               /*  if(touchstate > 0)
                     return;*/
 
@@ -137,13 +140,12 @@ public class introactivity extends FragmentActivity {
             @Override
             public void onPageSelected(int position) {
                 //Log.e("position", position+" ") ;
-                currentselected = position;
-                nextselection = position;
+                currentselected=position;
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                Log.e("state", state+" ") ;
+
                 touchstate=state;
             }
         });
@@ -152,11 +154,8 @@ public class introactivity extends FragmentActivity {
 
     public void setviewpager(int position)
     {
-        viewpager.setCurrentItem(0, true);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewpager, true);
-
+        Log.e("Positions ", position+" ") ;
+        viewpager.setCurrentItem(position, true);
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
