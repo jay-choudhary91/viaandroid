@@ -1,14 +1,26 @@
 package com.cryptoserver.composer.activity;
 
+import android.Manifest;
 import android.app.ActivityManager;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
@@ -17,6 +29,16 @@ import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.writerappactivity;
 import com.cryptoserver.composer.services.CallService;
+import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.progressdialog;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,10 +51,19 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
     ImageView imgsettingsicon;
     @BindView(R.id.img_back)
     ImageView img_back;
+    @BindView(R.id.img_upload_icon)
+    ImageView imguploadicon;
     @BindView(R.id.img_cancel)
     ImageView img_cancel;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
+
+    int request_take_gallery_video = 101;
+
+    private static final int request_read_external_storage = 1;
+    private static final int request_write_external_storage = 2;
+    Uri selectedimageuri =null;
+    private String selectedvideopath ="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +78,7 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         imgaddicon.setOnClickListener(this);
         imgsettingsicon.setOnClickListener(this);
         img_back.setOnClickListener(this);
+        imguploadicon.setOnClickListener(this);
         img_cancel.setOnClickListener(this);
 
 
@@ -105,17 +137,22 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         if (fragment instanceof fragmentvideolist) {
             imgaddicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setVisibility(View.VISIBLE);
+            imguploadicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setEnabled(true);
         }
         else if (fragment instanceof fragmentvideocomposer) {
             imgaddicon.setVisibility(View.INVISIBLE);
             imgsettingsicon.setVisibility(View.INVISIBLE);
+            imguploadicon.setVisibility(View.INVISIBLE);
+
         }
         else if(fragment instanceof fragmentsettings){
             img_back.setVisibility(View.VISIBLE);
             img_cancel.setVisibility(View.VISIBLE);
             imgaddicon.setVisibility(View.GONE);
             imgsettingsicon.setVisibility(View.GONE);
+            imguploadicon.setVisibility(View.GONE);
+
         }
     }
 
@@ -137,7 +174,208 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 replaceFragment(fragmatriclist, false, true);
                 break;
+            case R.id.img_upload_icon:
+                checkwritestoragepermission();
+                break;
         }
+    }
+
+
+    private void checkwritestoragepermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED ) {
+                opengallery();
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(this, "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, request_read_external_storage);
+            }
+        }
+        else
+        {
+            opengallery();
+        }
+    }
+
+
+    public  void opengallery()
+    {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("video/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Video"), request_take_gallery_video);
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == request_take_gallery_video) {
+                selectedimageuri = data.getData();
+                // OI FILE Manager
+                selectedvideopath = getpath(this, selectedimageuri);
+                File sourceFile = new File(selectedvideopath);
+
+                String destinationPath = config.videodir;
+
+                String filename = sourceFile.getName();
+
+                File destinationFile = new File(destinationPath+File.separator+filename);
+
+                    try
+                    {
+                        if (!destinationFile.getParentFile().exists())
+                            destinationFile.getParentFile().mkdirs();
+
+                        if (!destinationFile.exists()) {
+                            destinationFile.createNewFile();
+                        }
+
+                        InputStream in = new FileInputStream(selectedvideopath);
+                        OutputStream out = new FileOutputStream(destinationFile);
+
+                        // Copy the bits from instream to outstream
+                        byte[] buf = new byte[1024];
+                        int len;
+
+                        while ((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+
+                        in.close();
+                        out.close();
+
+                        Toast.makeText(homeactivity.this,"Video upload successfully!",Toast.LENGTH_SHORT).show();
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                        Toast.makeText(homeactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+
+    public static String getpath(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docid = DocumentsContract.getDocumentId(uri);
+                final String[] split = docid.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isdownloadsdocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contenturi = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getdatacolumn(context, contenturi, null, null);
+            }
+            // MediaProvider
+            else if (ismediadocument(uri)) {
+                final String docid = DocumentsContract.getDocumentId(uri);
+                final String[] split = docid.split(":");
+                final String type = split[0];
+
+                Uri contenturi = null;
+                if ("image".equals(type)) {
+                    contenturi = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contenturi = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contenturi = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionargs = new String[] {
+                        split[1]
+                };
+
+                return getdatacolumn(context, contenturi, selection, selectionargs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return getdatacolumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the value of the data column for this Uri. This is useful for
+     * MediaStore Uris, and other file-based ContentProviders.
+     *
+     * @param context The context.
+     * @param uri The Uri to query.
+     * @param selection (Optional) Filter used in the query.
+     * @param selectionArgs (Optional) Selection arguments used in the query.
+     * @return The value of the _data column, which is typically a file path.
+     */
+    public static String getdatacolumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isdownloadsdocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean ismediadocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+
+
+
+
     }
 
     /*@Override
@@ -153,4 +391,4 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         }
 
     }*/
-}
+

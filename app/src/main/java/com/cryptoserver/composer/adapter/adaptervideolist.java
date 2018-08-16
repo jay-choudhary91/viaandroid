@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
@@ -27,6 +29,8 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.AdapterItemClick;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.costomvideoview;
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 import java.util.ArrayList;
 
@@ -34,31 +38,38 @@ import java.util.ArrayList;
  * Created by devesh on 6/8/18.
  */
 
-public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myViewHolder> {
+public class adaptervideolist extends RecyclerSwipeAdapter<adaptervideolist.myViewHolder> {
 
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     AdapterItemClick adapter;
 
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return R.id.swipe;
+    }
+
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tvvideodescription;
+        EditText edtvideoname;
         public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_full_screen,img_play_pause;
-        public costomvideoview simpleVideoView;
+        public SwipeLayout swipelayout;
+        public Button btnedit;
       //  public ImageView imgvideothumbnail,imgshareicon,imgdeleteicon,img_videothumbnail,img_play;
        // public costomvideoview videoviewthumbnail;
 
         public myViewHolder(View view) {
             super(view);
+            swipelayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
             tvvideoname = (TextView) view.findViewById(R.id.tv_videoname);
+            edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
             tvvideocreatedate = (TextView) view.findViewById(R.id.tv_videocreatedate);
             tvvideoduration = (TextView) view.findViewById(R.id.tv_videoduration);
             tvvideodescription = (TextView) view.findViewById(R.id.tv_videodescription);
             imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
             imgdeleteicon = (ImageView) view.findViewById(R.id.img_deleteicon);
             img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
-            img_full_screen = (ImageView) view.findViewById(R.id.img_full_screen);
-            img_play_pause = (ImageView) view.findViewById(R.id.img_play_pause);
-            simpleVideoView = (costomvideoview) view.findViewById(R.id.simpleVideoView);
+            btnedit = (Button) view.findViewById(R.id.btn_edit);
         }
     }
 
@@ -87,6 +98,81 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
         //holder.tvvideodescription.setText(arrayvideolist.get(position).getMd5());
 
         // set the uri for the video view
+        holder.swipelayout.setShowMode(SwipeLayout.ShowMode.LayDown);
+        //drag from right
+        holder.swipelayout.addDrag(SwipeLayout.DragEdge.Right, holder.swipelayout.findViewById(R.id.bottom_wraper));
+
+        //handling different event when swiping
+        holder.swipelayout.addSwipeListener(new SwipeLayout.SwipeListener() {
+            @Override
+            public void onStartOpen(SwipeLayout layout) {
+                //when the SurfaceView totally cover the BottomView.
+            }
+
+            @Override
+            public void onOpen(SwipeLayout layout) {
+                //when the BottomView totally show.
+            }
+
+            @Override
+            public void onStartClose(SwipeLayout layout) {
+
+            }
+
+            @Override
+            public void onClose(SwipeLayout layout) {
+                //when the SurfaceView totally cover the BottomView.
+            }
+
+            @Override
+            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
+                //you are swiping.
+            }
+
+            @Override
+            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
+                //when user's hand released.
+            }
+        });
+
+        holder.swipelayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+            }
+        });
+
+
+        holder.btnedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.swipelayout.close();
+
+                holder.tvvideoname.setVisibility(View.VISIBLE);
+                /*holder.edtvideoname.setVisibility(View.VISIBLE);
+                holder.edtvideoname.setText(holder.tvvideoname.getText());
+                holder.edtvideoname.setSelection(holder.edtvideoname.getText().length());
+                holder.edtvideoname.requestFocus();*/
+
+
+               /* String path = arrayvideolist.get(position).getPath();
+
+                Log.e("selected video path = ", "" + path);
+
+                File sourceFile = new File(path);
+                File filedirectory = sourceFile.getParentFile();
+                String filename=  sourceFile.getName();
+
+                File from = new File(filedirectory,filename);
+                File to = new File(filedirectory,"demo.mp4");
+                from.renameTo(to);*/
+
+            }
+        });
+
+
+       /* // set the uri for the video view
         holder.simpleVideoView.setVideoPath(arrayvideolist.get(position).getPath());
 
         holder.img_play_pause.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
@@ -181,7 +267,7 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
                 }
                 return false;
             }
-        });
+        });*/
 
         Bitmap bitmap= ThumbnailUtils.createVideoThumbnail(arrayvideolist.get(position).getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
         holder.img_videothumbnail.setImageBitmap(bitmap);
@@ -199,6 +285,18 @@ public class adaptervideolist extends  RecyclerView.Adapter<adaptervideolist.myV
                 adapter.onItemClicked(arrayvideolist.get(position),2);
             }
         });
+
+
+        holder.img_videothumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent in=new Intent(context, FullScreenVideoActivity.class);
+                in.putExtra("videopath",arrayvideolist.get(position).getPath());
+                context.startActivity(in);
+            }
+        });
+
+        mItemManger.bindView(holder.itemView, position);
     }
 
     @Override
