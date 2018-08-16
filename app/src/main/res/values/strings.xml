@@ -17,6 +17,8 @@
     <string name="authentic_fraud">Video Hash allows you to determine if your video is authentic or fraudulent</string>
     <string name="record_crop_count">Record a video, crop video, and count frames</string>
     <string name="trim_video_match">Trim your video to find matching hashes</string>
+    <string name="video_has_been_encrypted">Video Has Been Encrypted!</string>
+    <string name="congratulations_on_your_video">Congratulations on your video!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -35,6 +37,10 @@
     <string name="frames_per_second">Frames per second</string>
     <string name="metric_list">Metric List</string>
     <string name="delete_confirm">Are you sure you want to delete?</string>
+    
+    <string name="share">Share</string>
+    <string name="new_video">New Video</string>
+    <string name="watch">Watch</string>
 
 
 </resources>

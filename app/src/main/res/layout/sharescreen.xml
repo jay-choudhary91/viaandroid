@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_height="match_parent">
+
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        app:fontType="OpenSans_Regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:text="@string/video_has_been_encrypted" />
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        app:fontType="OpenSans_Regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:text="@string/congratulations_on_your_video" />
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        app:fontType="OpenSans_Regular"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="@string/share"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/roundcorner"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textSize="13sp"/>
+    <com.cryptoserver.composer.views.CustomFontTextView
+        app:fontType="OpenSans_Regular"
+        android:layout_width="250dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="@string/new_video"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/roundcorner"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textSize="13sp"/>
+    <com.cryptoserver.composer.views.CustomFontTextView
+        app:fontType="OpenSans_Regular"
+        android:layout_width="250dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="@string/watch"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/roundcorner"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textSize="13sp"/>
+
+
+</LinearLayout>
