@@ -38,6 +38,13 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/add_icon"/>
 
-
+    <ImageView
+        android:id="@+id/img_upload_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_toLeftOf="@+id/img_add_icon"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/upload"/>
 
 </RelativeLayout>
