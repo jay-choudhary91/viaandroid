@@ -27,6 +27,15 @@ public class introactivity extends FragmentActivity {
     int touchstate=0;
     boolean pressed=false;
     Date initialDate;
+    private Handler myHandler;
+    private Runnable myRunnable;
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +66,13 @@ public class introactivity extends FragmentActivity {
                 return false;
             }
         });
-        final Handler handler=new Handler();
-        handler.postDelayed(new Runnable() {
+
+
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
             @Override
             public void run() {
-                handler.postDelayed(this,100);
+
                 Date currentDate=new Date();
                 int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
                 //Log.e("insec",""+secondDifference);
@@ -83,8 +94,11 @@ public class introactivity extends FragmentActivity {
                         setviewpager(currentselected);
                     }
                 }
+
+                myHandler.postDelayed(this, 100);
             }
-        },100);
+        };
+        myHandler.post(myRunnable);
 
 
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {

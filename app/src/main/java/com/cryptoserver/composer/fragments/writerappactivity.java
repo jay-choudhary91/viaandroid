@@ -399,6 +399,7 @@ public class writerappactivity extends AppCompatActivity implements
                 values.put(MediaStore.Video.Media.DATA, file.getAbsolutePath());
                 getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
 
+                Toast.makeText(writerappactivity.this,"Video has exported.",Toast.LENGTH_SHORT).show();
             }catch (Exception e)
             {
                 e.printStackTrace();
@@ -995,14 +996,6 @@ public class writerappactivity extends AppCompatActivity implements
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             layout_bottom.setVisibility(View.GONE);
 
-            progressdialog.showwaitingdialog(writerappactivity.this);
-            saveTempFile();
-            if(destinationSaveFile != null)
-            {
-                //exportvideo(destinationSaveFile);
-                resettimer();
-                clearvideolist();
-            }
             showsharepopupmain();
 
           //  txt_save.setVisibility(View.VISIBLE);
@@ -1121,6 +1114,8 @@ public class writerappactivity extends AppCompatActivity implements
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
+                resettimer();
+                clearvideolist();
             }
         });
 
@@ -1129,7 +1124,7 @@ public class writerappactivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 Intent in=new Intent(writerappactivity.this, FullScreenVideoActivity.class);
-                in.putExtra("videopath",destinationSaveFile.getAbsolutePath());
+                in.putExtra("videopath",mvideo.getAbsolutePath());
                 startActivity(in);
             }
         });
@@ -1160,7 +1155,7 @@ public class writerappactivity extends AppCompatActivity implements
         TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
         TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
 
-        txt_share_btn1.setText(getResources().getString(R.string.share_full_video));
+        txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
         txt_share_btn2.setText(getResources().getString(R.string.share_partial_video));
         txt_share_btn3.setText(getResources().getString(R.string.cancel_viewlist));
 
@@ -1175,11 +1170,18 @@ public class writerappactivity extends AppCompatActivity implements
 
             @Override
             public void onClick(View v) {
+
                 progressdialog.showwaitingdialog(writerappactivity.this);
                 saveTempFile();
+                if(destinationSaveFile != null)
+                {
+                    exportvideo(destinationSaveFile);
+                    resettimer();
+                    clearvideolist();
+                }
 
-                if(destinationSaveFile != null && destinationSaveFile.getAbsolutePath() != null)
-                    common.shareMedia(writerappactivity.this,destinationSaveFile.getAbsolutePath());
+                //if(destinationSaveFile != null && destinationSaveFile.getAbsolutePath() != null)
+                    //common.shareMedia(writerappactivity.this,destinationSaveFile.getAbsolutePath());
             }
         });
 

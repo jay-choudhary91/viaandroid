@@ -43,6 +43,7 @@
     <string name="new_video">New Video</string>
     <string name="watch">Watch</string>
     <string name="share_full_video">Share Full Video</string>
+    <string name="shave_to_camera">Save to Camera</string>
     <string name="share_partial_video">Share Partial Video</string>
     <string name="cancel_viewlist">Cancel and View List</string>
 

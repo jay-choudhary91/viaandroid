@@ -214,6 +214,9 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 selectedimageuri = data.getData();
                 // OI FILE Manager
                 selectedvideopath = getpath(this, selectedimageuri);
+                if(selectedvideopath == null)
+                    return;
+
                 File sourceFile = new File(selectedvideopath);
 
                 String destinationPath = config.videodir;
