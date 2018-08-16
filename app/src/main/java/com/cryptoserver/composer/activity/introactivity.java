@@ -71,10 +71,13 @@ public class introactivity extends FragmentActivity {
 
                     if(currentselected < viewpager.getAdapter().getCount())
                     {
+                        if(currentselected == 0)
+                            currentselected++;
+
                         setviewpager(currentselected);
                         currentselected++;
                     }
-                    else
+                    else if(currentselected == viewpager.getAdapter().getCount())
                     {
                         currentselected=0;
                         setviewpager(currentselected);

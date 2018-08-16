@@ -49,7 +49,7 @@ public class pagerfragment extends Fragment {
             txt_title.setText(introobject.getTitle());
             txt_description.setText(introobject.getDescription());
 
-            if((!isgifloaded && introobject.getTitle().contains("Simply Secure")))
+            if((introobject.getTitle().contains("Simply Secure")))
                 loadAnimation();
 
             btn_start_record.setOnClickListener(new View.OnClickListener() {
@@ -76,18 +76,19 @@ public class pagerfragment extends Fragment {
                 GifDrawable gifDrawable = null;
                 try {
                     gifDrawable = new GifDrawable(getResources(), introobject.getImage());
-                    gifDrawable.setLoopCount(1000);
+                    //gifDrawable.setLoopCount(1000);
+                    //gifDrawable.setSpeed(0.5f);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 imggif.setImageDrawable(gifDrawable);
             }
-        },200);
+        },100);
     }
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(imggif != null && (!isgifloaded))
+        if(imggif != null)
             loadAnimation();
     }
 
