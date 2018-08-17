@@ -214,50 +214,58 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 selectedimageuri = data.getData();
                 // OI FILE Manager
                 selectedvideopath = getpath(this, selectedimageuri);
+
                 if(selectedvideopath == null)
                     return;
 
-                File sourceFile = new File(selectedvideopath);
+                setcopyvideo(selectedvideopath);
 
-                String destinationPath = config.videodir;
-
-                String filename = sourceFile.getName();
-
-                File destinationFile = new File(destinationPath+File.separator+filename);
-
-                    try
-                    {
-                        if (!destinationFile.getParentFile().exists())
-                            destinationFile.getParentFile().mkdirs();
-
-                        if (!destinationFile.exists()) {
-                            destinationFile.createNewFile();
-                        }
-
-                        InputStream in = new FileInputStream(selectedvideopath);
-                        OutputStream out = new FileOutputStream(destinationFile);
-
-                        // Copy the bits from instream to outstream
-                        byte[] buf = new byte[1024];
-                        int len;
-
-                        while ((len = in.read(buf)) > 0) {
-                            out.write(buf, 0, len);
-                        }
-
-                        in.close();
-                        out.close();
-
-                        Toast.makeText(homeactivity.this,"Video upload successfully!",Toast.LENGTH_SHORT).show();
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                        Toast.makeText(homeactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
-                    }
                 }
             }
         }
+
+        public void setcopyvideo(String selectedvideopath){
+
+            File sourceFile = new File(selectedvideopath);
+
+            String destinationPath = config.videodir;
+
+            String filename = sourceFile.getName();
+
+            File destinationFile = new File(destinationPath+File.separator+filename);
+
+            try
+            {
+                if (!destinationFile.getParentFile().exists())
+                    destinationFile.getParentFile().mkdirs();
+
+                if (!destinationFile.exists()) {
+                    destinationFile.createNewFile();
+                }
+
+                InputStream in = new FileInputStream(selectedvideopath);
+                OutputStream out = new FileOutputStream(destinationFile);
+
+                // Copy the bits from instream to outstream
+                byte[] buf = new byte[1024];
+                int len;
+
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+
+                in.close();
+                out.close();
+
+                Toast.makeText(homeactivity.this,"Video upload successfully!",Toast.LENGTH_SHORT).show();
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+                Toast.makeText(homeactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
+            }
+        }
+
 
     public static String getpath(final Context context, final Uri uri) {
 
