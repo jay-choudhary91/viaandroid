@@ -26,15 +26,35 @@ public class introactivity extends FragmentActivity {
     pagercustomduration viewpager;
     int touchstate=0;
     boolean pressed=false;
+    boolean isinbackground=false;
     Date initialDate;
     private Handler myHandler;
     private Runnable myRunnable;
 
+
     @Override
     public void onStop() {
         super.onStop();
+        isinbackground=true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        isinbackground=false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isinbackground=false;
     }
 
     @Override
@@ -73,28 +93,30 @@ public class introactivity extends FragmentActivity {
             @Override
             public void run() {
 
-                Date currentDate=new Date();
-                int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
-                //Log.e("insec",""+secondDifference);
-                if(secondDifference >= 4)
+                if(! isinbackground)
                 {
-                    initialDate = new Date();
-
-                    if(currentselected < viewpager.getAdapter().getCount())
+                    Date currentDate=new Date();
+                    int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
+                    //Log.e("insec",""+secondDifference);
+                    if(secondDifference >= 4)
                     {
-                        if(currentselected == 0)
+                        initialDate = new Date();
+
+                        if(currentselected < viewpager.getAdapter().getCount())
+                        {
+                            if(currentselected == 0)
+                                currentselected++;
+
+                            setviewpager(currentselected);
                             currentselected++;
-
-                        setviewpager(currentselected);
-                        currentselected++;
-                    }
-                    else if(currentselected == viewpager.getAdapter().getCount())
-                    {
-                        currentselected=0;
-                        setviewpager(currentselected);
+                        }
+                        else if(currentselected == viewpager.getAdapter().getCount())
+                        {
+                            currentselected=0;
+                            setviewpager(currentselected);
+                        }
                     }
                 }
-
                 myHandler.postDelayed(this, 100);
             }
         };

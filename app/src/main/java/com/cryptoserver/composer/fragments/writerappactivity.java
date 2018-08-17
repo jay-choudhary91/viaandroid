@@ -993,8 +993,14 @@ public class writerappactivity extends AppCompatActivity implements
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
+            progressdialog.showwaitingdialog(writerappactivity.this);
+            saveTempFile();
+
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             layout_bottom.setVisibility(View.GONE);
+
+            resettimer();
+            clearvideolist();
 
             showsharepopupmain();
 
@@ -1113,9 +1119,6 @@ public class writerappactivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
-
-                resettimer();
-                clearvideolist();
             }
         });
 
@@ -1124,7 +1127,7 @@ public class writerappactivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 Intent in=new Intent(writerappactivity.this, FullScreenVideoActivity.class);
-                in.putExtra("videopath",mvideo.getAbsolutePath());
+                in.putExtra("videopath",destinationSaveFile.getAbsolutePath());
                 startActivity(in);
             }
         });
@@ -1171,14 +1174,8 @@ public class writerappactivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
-                progressdialog.showwaitingdialog(writerappactivity.this);
-                saveTempFile();
                 if(destinationSaveFile != null)
-                {
                     exportvideo(destinationSaveFile);
-                    resettimer();
-                    clearvideolist();
-                }
 
                 //if(destinationSaveFile != null && destinationSaveFile.getAbsolutePath() != null)
                     //common.shareMedia(writerappactivity.this,destinationSaveFile.getAbsolutePath());

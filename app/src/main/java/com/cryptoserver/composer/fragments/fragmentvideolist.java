@@ -180,69 +180,84 @@ public class fragmentvideolist extends basefragment {
     {
         arrayvideolist.clear();
 
-        File videodir = new File(config.videodir);
-        if(! videodir.exists())
-            return;
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                File videodir = new File(config.videodir);
+                if(! videodir.exists())
+                    return;
 
-        File[] files = videodir.listFiles();
-        Arrays.sort( files, new Comparator()
-        {
-            public int compare(Object o1, Object o2) {
-                if (((File)o1).lastModified() > ((File)o2).lastModified()) {
-                    return -1;
-                } else if (((File)o1).lastModified() < ((File)o2).lastModified()) {
-                    return +1;
-                } else {
-                    return 0;
-                }
-            }
-        });
-
-        for (File file : files)
-        {
-            video videoobj=new video();
-            Date lastModDate = new Date(file.lastModified());
-            DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
-            String outputDateStr = outputFormat.format(lastModDate);
-
-            videoobj.setPath(file.getAbsolutePath());
-            videoobj.setName(file.getName());
-            videoobj.setCreatedate(outputDateStr);
-
-            MediaExtractor extractor = new MediaExtractor();
-            try {
-                //Adjust data source as per the requirement if file, URI, etc.
-                extractor.setDataSource(file.getAbsolutePath());
-                int numTracks = extractor.getTrackCount();
-                for (int i = 0; i < numTracks; ++i) {
-                    MediaFormat format = extractor.getTrackFormat(i);
-                    String mime = format.getString(MediaFormat.KEY_MIME);
-                    if (mime.startsWith("video/")) {
-                        if (format.containsKey(MediaFormat.KEY_DURATION)) {
-                            long seconds = format.getLong(MediaFormat.KEY_DURATION);
-                            seconds=seconds/1000000;
-                            int day = (int) TimeUnit.SECONDS.toDays(seconds);
-                            long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
-                            long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
-                            long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
-                            videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                            if(hours > 0)
-                                videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
-
+                File[] files = videodir.listFiles();
+                Arrays.sort( files, new Comparator()
+                {
+                    public int compare(Object o1, Object o2) {
+                        if (((File)o1).lastModified() > ((File)o2).lastModified()) {
+                            return -1;
+                        } else if (((File)o1).lastModified() < ((File)o2).lastModified()) {
+                            return +1;
+                        } else {
+                            return 0;
                         }
                     }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }finally {
-                //Release stuff
-                extractor.release();
-            }
-            //String md= md5.calculatemd5(file);
-            //videoobj.setMd5(""+md);
-            arrayvideolist.add(videoobj);
+                });
 
-        }
-        adapter.notifyDataSetChanged();
+                for (File file : files)
+                {
+                    video videoobj=new video();
+                    Date lastModDate = new Date(file.lastModified());
+                    DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
+                    String outputDateStr = outputFormat.format(lastModDate);
+
+                    videoobj.setPath(file.getAbsolutePath());
+                    videoobj.setName(file.getName());
+                    videoobj.setCreatedate(outputDateStr);
+
+                    MediaExtractor extractor = new MediaExtractor();
+                    try {
+                        //Adjust data source as per the requirement if file, URI, etc.
+                        extractor.setDataSource(file.getAbsolutePath());
+                        int numTracks = extractor.getTrackCount();
+                        for (int i = 0; i < numTracks; ++i) {
+                            MediaFormat format = extractor.getTrackFormat(i);
+                            String mime = format.getString(MediaFormat.KEY_MIME);
+                            if (mime.startsWith("video/")) {
+                                if (format.containsKey(MediaFormat.KEY_DURATION)) {
+                                    long seconds = format.getLong(MediaFormat.KEY_DURATION);
+                                    seconds=seconds/1000000;
+                                    int day = (int) TimeUnit.SECONDS.toDays(seconds);
+                                    long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
+                                    long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
+                                    long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                                    videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                    if(hours > 0)
+                                        videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }finally {
+                        //Release stuff
+                        extractor.release();
+                    }
+                    //String md= md5.calculatemd5(file);
+                    //videoobj.setMd5(""+md);
+                    arrayvideolist.add(videoobj);
+
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+
+
+
+
     }
 }
