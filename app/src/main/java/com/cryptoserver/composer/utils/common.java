@@ -17,6 +17,8 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -148,6 +150,39 @@ public class common
             sharingIntent.putExtra(Intent.EXTRA_STREAM,uri);
             context.startActivity(Intent.createChooser(sharingIntent, "Share video using"));
         }
+    }
+
+    public static long getvideoduration(String selectedvideopath)
+    {
+        File file=new File(selectedvideopath);
+        if(! file.exists())
+            return 0;
+
+        long duration = 0; //may be default
+
+        MediaExtractor extractor = new MediaExtractor();
+
+        try {
+            //Adjust data source as per the requirement if file, URI, etc.
+            extractor.setDataSource(selectedvideopath);
+            int numTracks = extractor.getTrackCount();
+            for (int i = 0; i < numTracks; ++i) {
+                MediaFormat format = extractor.getTrackFormat(i);
+                String mime = format.getString(MediaFormat.KEY_MIME);
+                if (mime.startsWith("video/")) {
+                    if (format.containsKey(MediaFormat.KEY_DURATION)) {
+                        duration = format.getLong(MediaFormat.KEY_DURATION);
+                        duration=duration/1000000;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            //Release stuff
+            extractor.release();
+        }
+        return duration;
     }
 
     public static String mapNetworkTypeToName(Context context) {

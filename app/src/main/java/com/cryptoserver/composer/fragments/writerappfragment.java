@@ -14,7 +14,6 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -23,14 +22,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,11 +70,13 @@ import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import butterknife.ButterKnife;
+
 import static java.lang.Thread.State.WAITING;
 
-public class writerappactivity extends AppCompatActivity implements
+public class writerappfragment extends basefragment implements
         TextureView.SurfaceTextureListener, View.OnClickListener {
-    private static final String log_tag = writerappactivity.class.getSimpleName();
+    private static final String log_tag = writerappfragment.class.getSimpleName();
     Chronometer timer;
     private static final int request_permissions = 1;
 
@@ -121,78 +125,83 @@ public class writerappactivity extends AppCompatActivity implements
     long frameduration =4, mframetorecordcount =0;
     public Dialog maindialogshare,subdialogshare;
     File destinationSaveFile=null;
+    View rootview = null;
+    @Override
+    public int getlayoutid() {
+        return R.layout.fragment_videocomposer;
+    }
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        applicationviavideocomposer.setActivity(writerappactivity.this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.fragment_videocomposer);
-        //ButterKnife.bind(this);
-        mpreview = (fixedratiocroppedtextureview) findViewById(R.id.camera_preview);
-        mrecordimagebutton = (ImageView) findViewById(R.id.img_video_capture);
-        imgflashon = (ImageView) findViewById(R.id.img_flash_on);
-        rotatecamera = (ImageView) findViewById(R.id.img_rotate_camera);
-        txt_save = (TextView) findViewById(R.id.txt_save);
-        txt_clear = (TextView) findViewById(R.id.txt_clear);
-        layout_bottom = (LinearLayout) findViewById(R.id.layout_bottom);
-//        mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
-        mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
-        setpreviewsize(mpreviewwidth, mpreviewheight);
-        mpreview.setcroppedsizeweight(videowidth, videoheight);
-        mpreview.setSurfaceTextureListener(this);
-        mrecordimagebutton.setOnClickListener(this);
-        imgflashon.setOnClickListener(this);
-        rotatecamera.setOnClickListener(this);
-
-        // At most buffer 10 Frame
-        mframetorecordqueue = new LinkedBlockingQueue<>(10);
-        // At most recycle 2 Frame
-        mrecycledframequeue = new LinkedBlockingQueue<>(2);
-        mrecordfragments = new Stack<>();
-
-        common.changefocusstyle(txt_save, Color.parseColor("#006495"),Color.parseColor("#006495"),30);
-        common.changefocusstyle(txt_clear, Color.parseColor("#006495"),Color.parseColor("#006495"),30);
-
-        txt_save.setOnClickListener(this);
-        txt_clear.setOnClickListener(this);
-
-        timer=findViewById(R.id.timer);
-        timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                long time = SystemClock.elapsedRealtime() - chronometer.getBase();
-                int h   = (int)(time /3600000);
-                int m = (int)(time - h*3600000)/60000;
-                int s= (int)(time - h*3600000- m*60000)/1000 ;
-                String t = (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
-                chronometer.setText(t);
-            }
-        });
-
-        /*Date d1 = new Date();
-        try {
-            Thread.sleep(2500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Date d2 = new Date();
-        long seconds = (d2.getTime()-d1.getTime())/1000;
-        Log.e("seconds ",""+seconds);*/
-
-        timer.setText("00:00:00");
-
+    public void initviews(View parent, Bundle savedInstanceState) {
+        super.initviews(parent, savedInstanceState);
+        ButterKnife.bind(this,parent);
     }
 
     @Override
-    protected void onDestroy() {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(rootview == null) {
+            rootview = super.onCreateView(inflater, container, savedInstanceState);
+            ButterKnife.bind(this,rootview);
+            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+            mpreview = (fixedratiocroppedtextureview) rootview.findViewById(R.id.camera_preview);
+            mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
+            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
+            rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
+            txt_save = (TextView) rootview.findViewById(R.id.txt_save);
+            txt_clear = (TextView) rootview.findViewById(R.id.txt_clear);
+            layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
+            timer=(Chronometer)rootview.findViewById(R.id.timer);
+//        mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
+            mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
+            setpreviewsize(mpreviewwidth, mpreviewheight);
+            mpreview.setcroppedsizeweight(videowidth, videoheight);
+            mpreview.setSurfaceTextureListener(this);
+            mrecordimagebutton.setOnClickListener(this);
+            imgflashon.setOnClickListener(this);
+            rotatecamera.setOnClickListener(this);
+
+            // At most buffer 10 Frame
+            mframetorecordqueue = new LinkedBlockingQueue<>(10);
+            // At most recycle 2 Frame
+            mrecycledframequeue = new LinkedBlockingQueue<>(2);
+            mrecordfragments = new Stack<>();
+
+            common.changefocusstyle(txt_save, Color.parseColor("#006495"),Color.parseColor("#006495"),30);
+            common.changefocusstyle(txt_clear, Color.parseColor("#006495"),Color.parseColor("#006495"),30);
+
+            txt_save.setOnClickListener(this);
+            txt_clear.setOnClickListener(this);
+
+
+            timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+                @Override
+                public void onChronometerTick(Chronometer chronometer) {
+                    long time = SystemClock.elapsedRealtime() - chronometer.getBase();
+                    int h   = (int)(time /3600000);
+                    int m = (int)(time - h*3600000)/60000;
+                    int s= (int)(time - h*3600000- m*60000)/1000 ;
+                    String t = (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
+                    chronometer.setText(t);
+                    gethelper().updateheader(t);
+                }
+            });
+            timer.setText("00:00:00");
+            gethelper().updateheader("00:00:00");
+        }
+        return rootview;
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         stoprecorder();
         releaserecorder(true);
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
 
         if (doafterallpermissionsgranted != null) {
@@ -206,7 +215,7 @@ public class writerappactivity extends AppCompatActivity implements
             };
             List<String> deniedpermissions = new ArrayList<>();
             for (String permission : neededpermissions) {
-                if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                     deniedpermissions.add(permission);
                 }
             }
@@ -216,13 +225,13 @@ public class writerappactivity extends AppCompatActivity implements
             } else {
                 String[] array = new String[deniedpermissions.size()];
                 array = deniedpermissions.toArray(array);
-                ActivityCompat.requestPermissions(this, array, request_permissions);
+                ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
             }
         }
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         pauserecording();
         stoprecording();
@@ -252,8 +261,8 @@ public class writerappactivity extends AppCompatActivity implements
                 doafterallpermissionsgranted = new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(writerappactivity.this, R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
-                        finish();
+                        Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+                        gethelper().onBack();
                     }
                 };
             }
@@ -295,7 +304,7 @@ public class writerappactivity extends AppCompatActivity implements
                     mframetorecordcount =0;
                     currentframenumber = currentframenumber + frameduration;
 
-                    progressdialog.showwaitingdialog(writerappactivity.this);
+                    progressdialog.showwaitingdialog(getActivity());
                     mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
                     new ProgressDialogTask<Void, Integer, Void>(R.string.initiating) {
                         @Override
@@ -307,7 +316,7 @@ public class writerappactivity extends AppCompatActivity implements
                             }
                             startrecording();
                             resumerecording();
-                            runOnUiThread(new Runnable() {
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     timer.setBase(SystemClock.elapsedRealtime());
@@ -376,7 +385,7 @@ public class writerappactivity extends AppCompatActivity implements
         }catch (Exception e)
         {
             e.printStackTrace();
-            Toast.makeText(writerappactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
         }
         progressdialog.dismisswaitdialog();
     }
@@ -385,6 +394,7 @@ public class writerappactivity extends AppCompatActivity implements
     {
         timer.stop();
         timer.setText("00:00:00");
+        gethelper().updateheader("00:00:00");
     }
     public void exportvideo(File file)
     {
@@ -397,9 +407,8 @@ public class writerappactivity extends AppCompatActivity implements
                 values.put(MediaStore.Video.Media.TITLE, "Video hash");
                 values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
                 values.put(MediaStore.Video.Media.DATA, file.getAbsolutePath());
-                getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
 
-                Toast.makeText(writerappactivity.this,"Video has exported.",Toast.LENGTH_SHORT).show();
             }catch (Exception e)
             {
                 e.printStackTrace();
@@ -413,7 +422,7 @@ public class writerappactivity extends AppCompatActivity implements
 
     public void clearvideolist()
     {
-        runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
@@ -445,7 +454,7 @@ public class writerappactivity extends AppCompatActivity implements
     }
 
     private void setpreviewsize(int width, int height) {
-        if (miscutils.isorientationlandscape(this)) {
+        if (miscutils.isorientationlandscape(getActivity())) {
             mpreview.setpreviewsize(width, height);
         } else {
             // Swap width and height
@@ -476,7 +485,7 @@ public class writerappactivity extends AppCompatActivity implements
 
 
         mcamera.setDisplayOrientation(camerahelper.getcameradisplayorientation(
-                this, mcameraid));
+                getActivity(), mcameraid));
 
         // YCbCr_420_SP (NV21) format
         byte[] bufferByte = new byte[mpreviewwidth * mpreviewheight * 3 / 2];
@@ -690,7 +699,7 @@ public class writerappactivity extends AppCompatActivity implements
             mrecordfragments.push(recordfragment);
 
             mrecording = true;
-            runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mrecordimagebutton.setEnabled(true);
@@ -701,7 +710,7 @@ public class writerappactivity extends AppCompatActivity implements
 
     private void pauserecording() {
         if (mrecording) {
-                runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         stoptimer();
@@ -794,7 +803,7 @@ public class writerappactivity extends AppCompatActivity implements
             int cropheight;
             Camera.CameraInfo info = new Camera.CameraInfo();
             Camera.getCameraInfo(mcameraid, info);
-            int rotation = getWindowManager().getDefaultDisplay().getRotation();
+            int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
             switch (rotation) {
                 case Surface.ROTATION_0:
                     switch (info.orientation) {
@@ -993,7 +1002,7 @@ public class writerappactivity extends AppCompatActivity implements
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            progressdialog.showwaitingdialog(writerappactivity.this);
+            progressdialog.showwaitingdialog(getActivity());
             saveTempFile();
 
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
@@ -1069,14 +1078,14 @@ public class writerappactivity extends AppCompatActivity implements
         if(maindialogshare != null && maindialogshare.isShowing())
             maindialogshare.dismiss();
 
-        maindialogshare=new Dialog(writerappactivity.this);
+        maindialogshare=new Dialog(getActivity());
         maindialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
         maindialogshare.setCanceledOnTouchOutside(true);
         maindialogshare.setContentView(R.layout.popup_sharescreen);
         //maindialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        int[] widthHeight=common.getScreenWidthHeight(writerappactivity.this);
+        int[] widthHeight=common.getScreenWidthHeight(getActivity());
         int width=widthHeight[0];
-        double height=widthHeight[1]/1.7;
+        double height=widthHeight[1]/1.6;
         maindialogshare.getWindow().setLayout(width-20, (int)height);
         maindialogshare.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -1126,7 +1135,7 @@ public class writerappactivity extends AppCompatActivity implements
 
             @Override
             public void onClick(View v) {
-                Intent in=new Intent(writerappactivity.this, FullScreenVideoActivity.class);
+                Intent in=new Intent(getActivity(), FullScreenVideoActivity.class);
                 in.putExtra("videopath",destinationSaveFile.getAbsolutePath());
                 startActivity(in);
             }
@@ -1140,16 +1149,16 @@ public class writerappactivity extends AppCompatActivity implements
         if(subdialogshare != null && subdialogshare.isShowing())
             subdialogshare.dismiss();
 
-        subdialogshare=new Dialog(writerappactivity.this);
+        subdialogshare=new Dialog(getActivity());
         subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
         subdialogshare.setCanceledOnTouchOutside(true);
 
         subdialogshare.setContentView(R.layout.popup_sharescreen);
         //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        int[] widthHeight=common.getScreenWidthHeight(writerappactivity.this);
+        int[] widthHeight=common.getScreenWidthHeight(getActivity());
         int width=widthHeight[0];
-        double height=widthHeight[1]/1.7;
+        double height=widthHeight[1]/1.6;
         subdialogshare.getWindow().setLayout(width-20, (int)height);
 
         TextView txt_share_btn1 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn1);
@@ -1177,6 +1186,14 @@ public class writerappactivity extends AppCompatActivity implements
                 if(destinationSaveFile != null)
                     exportvideo(destinationSaveFile);
 
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+
+                gethelper().onBack();
+
                 //if(destinationSaveFile != null && destinationSaveFile.getAbsolutePath() != null)
                     //common.shareMedia(writerappactivity.this,destinationSaveFile.getAbsolutePath());
             }
@@ -1186,6 +1203,13 @@ public class writerappactivity extends AppCompatActivity implements
 
             @Override
             public void onClick(View v) {
+
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+
+                videoplayfragment videoplayfragment =new videoplayfragment();
+                videoplayfragment.setdata(destinationSaveFile.getAbsolutePath());
+                gethelper().replaceFragment(videoplayfragment, false, true);
 
             }
         });
@@ -1200,7 +1224,7 @@ public class writerappactivity extends AppCompatActivity implements
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                finish();
+                gethelper().onBack();
             }
         });
         subdialogshare.show();

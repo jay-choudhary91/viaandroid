@@ -73,15 +73,21 @@ public class pagerfragment extends Fragment {
             public void run() {
                 isgifloaded =true;
 
-                GifDrawable gifDrawable = null;
                 try {
-                    gifDrawable = new GifDrawable(getResources(), introobject.getImage());
-                    //gifDrawable.setLoopCount(1000);
-                    gifDrawable.setSpeed(0.9f);
-                } catch (IOException e) {
+                    GifDrawable gifDrawable = null;
+                    try {
+                        gifDrawable = new GifDrawable(getResources(), introobject.getImage());
+                        //gifDrawable.setLoopCount(1000);
+                        gifDrawable.setSpeed(0.9f);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    imggif.setImageDrawable(gifDrawable);
+                }catch (Exception e)
+                {
                     e.printStackTrace();
                 }
-                imggif.setImageDrawable(gifDrawable);
+
             }
         },100);
     }

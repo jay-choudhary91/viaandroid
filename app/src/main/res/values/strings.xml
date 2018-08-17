@@ -37,7 +37,7 @@
     <string name="hash_list">Hash List</string>
     <string name="frames_per_second">Frames per second</string>
     <string name="metric_list">Metric List</string>
-    <string name="delete_confirm">Are you sure you want to delete?</string>
+    <string name="delete_confirm">Are you sure you want to delete thsi video?</string>
     
     <string name="share">Share</string>
     <string name="new_video">New Video</string>
@@ -47,5 +47,7 @@
     <string name="share_partial_video">Share Partial Video</string>
     <string name="cancel_viewlist">Cancel and View List</string>
 
-
+    <string name="short_seconds">sec</string>
+    <string name="megabyte">MB</string>
+    <string name="kilobyte">KB</string>
 </resources>

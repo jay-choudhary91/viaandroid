@@ -18,33 +18,32 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
-import com.cryptoserver.composer.fragments.writerappactivity;
+import com.cryptoserver.composer.fragments.writerappfragment;
 import com.cryptoserver.composer.services.CallService;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.progressdialog;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class homeactivity extends LocationAwareActivity implements View.OnClickListener {
 
+    @BindView(R.id.txt_title)
+    TextView txt_title;
     @BindView(R.id.img_add_icon)
     ImageView imgaddicon;
     @BindView(R.id.img_setting)
@@ -55,6 +54,10 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
     ImageView imguploadicon;
     @BindView(R.id.img_cancel)
     ImageView img_cancel;
+    @BindView(R.id.img_menu)
+    ImageView img_menu;
+    @BindView(R.id.img_help)
+    ImageView img_help;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
 
@@ -80,7 +83,6 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         img_back.setOnClickListener(this);
         imguploadicon.setOnClickListener(this);
         img_cancel.setOnClickListener(this);
-
 
 
         CallService mService = new CallService();
@@ -114,7 +116,7 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
 
     @Override
     public void updateheader(String txt) {
-
+        txt_title.setText(txt);
     }
 
     @Override
@@ -133,17 +135,22 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         basefragment fragment = getcurrentfragment();
         img_back.setVisibility(View.GONE);
         img_cancel.setVisibility(View.GONE);
+        img_menu.setVisibility(View.GONE);
+        img_help.setVisibility(View.GONE);
 
         if (fragment instanceof fragmentvideolist) {
             imgaddicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setVisibility(View.VISIBLE);
             imguploadicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setEnabled(true);
+            updateheader("");
         }
-        else if (fragment instanceof fragmentvideocomposer) {
-            imgaddicon.setVisibility(View.INVISIBLE);
-            imgsettingsicon.setVisibility(View.INVISIBLE);
-            imguploadicon.setVisibility(View.INVISIBLE);
+        else if (fragment instanceof writerappfragment) {
+            imgaddicon.setVisibility(View.GONE);
+            imgsettingsicon.setVisibility(View.GONE);
+            imguploadicon.setVisibility(View.GONE);
+            img_menu.setVisibility(View.VISIBLE);
+            img_help.setVisibility(View.VISIBLE);
 
         }
         else if(fragment instanceof fragmentsettings){
@@ -152,6 +159,7 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
             imgaddicon.setVisibility(View.GONE);
             imgsettingsicon.setVisibility(View.GONE);
             imguploadicon.setVisibility(View.GONE);
+            updateheader("");
 
         }
     }
@@ -166,8 +174,12 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 getcurrentfragment().onHeaderBtnClick(R.id.img_cancel);
                 break;
             case R.id.img_add_icon:
-                Intent in=new Intent(homeactivity.this,writerappactivity.class);
-                startActivity(in);
+                //Intent in=new Intent(homeactivity.this,writerappactivity.class);
+               // startActivity(in);
+                {
+                    writerappfragment fragment=new writerappfragment();
+                    addFragment(fragment, false, true);
+                }
                 break;
             case R.id.img_setting:
                 imgsettingsicon.setEnabled(false);
@@ -354,7 +366,6 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         return null;
     }
 
-
     public static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
@@ -374,12 +385,7 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
     public static boolean ismediadocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
-
-
-
-
-
-    }
+}
 
     /*@Override
     protected void onResume() {
