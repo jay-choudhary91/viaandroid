@@ -1,40 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_player"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/video_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@android:color/black"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical" >
 
-    <uk.co.jakelee.vidsta.VidstaPlayer
-        android:id="@+id/player"
+    <FrameLayout
+        android:id="@+id/videoSurfaceContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:textColor = "@color/colorPrimary"
-        app:playVideoDrawable = "@drawable/custom_video_play"
-        app:pauseVideoDrawable = "@drawable/custom_video_pause"
-        app:retryVideoDrawable = "@drawable/custom_video_retry"
-        app:nextVideoDrawable = "@drawable/custom_video_next"
-        app:previousVideoDrawable = "@drawable/custom_video_previous"
-        app:buttonTintColor = "@color/colorAccent"
-        app:autoPlay = "true"
-        app:autoLoop = "false"
-        app:setFullScreen = "true"
-        app:fullScreenButtonEnabled = "true"
-        app:fullScreenButtonVisible = "true"
-        android:paddingBottom="50dp"
-        />
+        android:layout_height="wrap_content" >
 
-    <ScrollView
-        android:id="@+id/listenerScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="150dp">
-        <LinearLayout
-            android:id="@+id/listenerMessages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
+        <SurfaceView
+            android:id="@+id/videoSurface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 
-</RelativeLayout>
+</LinearLayout>
