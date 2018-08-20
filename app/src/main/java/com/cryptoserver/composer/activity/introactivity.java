@@ -125,7 +125,7 @@ public class introactivity extends FragmentActivity {
                     Date currentDate=new Date();
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
                     //Log.e("insec",""+secondDifference);
-                    if(secondDifference >= 10)
+                    if(secondDifference > 4)
                     {
                         initialDate = new Date();
 
