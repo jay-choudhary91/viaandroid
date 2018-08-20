@@ -54,5 +54,8 @@
     <string name="file_not_supported">File format not supported</string>
 
 
+    <string name="description">Media Controls</string>
+
+
 
 </resources>
