@@ -55,6 +55,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -71,6 +72,7 @@ public abstract class basefragment extends Fragment {
     private static final int permission_location_request_code = 91;
     int gps_request_code =111;
     Noise mNoise;
+    LocationManager manager;
     private static final int PERMISSION_RECORD_AUDIO= 92;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,6 +133,7 @@ public abstract class basefragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(getlayoutid(), container, false);
         view.setClickable(true);
+         manager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE );
         return view;
     }
 
@@ -245,6 +248,8 @@ public abstract class basefragment extends Fragment {
 
         public void getCallInfo();
 
+        public void getairplanemodeon();
+
 
 
     }
@@ -306,6 +311,10 @@ public abstract class basefragment extends Fragment {
 
     }
     public void updateHeader() {
+
+    }
+
+    public void updateairplanemode(String result){
 
     }
 
@@ -898,6 +907,31 @@ public abstract class basefragment extends Fragment {
             }
 
         }
+        else if(key.equalsIgnoreCase("phonetime")){
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");
+            String time = sdf.format(c.getTime());
+            metricItemValue=time;
+        }
+        else if(key.equalsIgnoreCase("airplanemode")){
+            gethelper().getairplanemodeon();
+          /*  return false;*/
+            }
+        else if(key.equalsIgnoreCase("gpsonoff")){
+          //  LocationManager manager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE );
+            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ){
+                metricItemValue="OFF";
+            }
+            else{
+                metricItemValue="ON";
+            }
+        }else if(key.equalsIgnoreCase("syncphonetime")){
+            if(android.provider.Settings.Global.getInt(getActivity().getContentResolver(), Settings.Global.AUTO_TIME, 0)==1) {
+                metricItemValue = "ON";
+            } else if((android.provider.Settings.Global.getInt(getActivity().getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 0)==1)){
+                metricItemValue="OFF";
+            }
+        }
 
         if(metricItemValue == null)
             metricItemValue="";
@@ -951,5 +985,4 @@ public abstract class basefragment extends Fragment {
             }
         });
     }
-
 }

@@ -12,8 +12,10 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -364,6 +366,11 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             metricItemArraylist.add(new MetricModel("currentcalldurationseconds", "", true));
             metricItemArraylist.add(new MetricModel("currentcallvolume", "", true));
             metricItemArraylist.add(new MetricModel("currentcalldecibel", "", true));
+            metricItemArraylist.add(new MetricModel("gpsonoff","",true));
+            metricItemArraylist.add(new MetricModel("airplanemode","",true));
+            metricItemArraylist.add(new MetricModel("phonetime","",true));
+            metricItemArraylist.add(new MetricModel("syncphonetime","",true));
+
         }
     }
 
@@ -597,6 +604,21 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
         if(itemMetricAdapter != null)
             itemMetricAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void updateairplanemode(String result) {
+        super.updateairplanemode(result);
+        for (int i = 0; i < metricItemArraylist.size(); i++) {
+            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("airplanemode")) {
+                metricItemArraylist.get(i).setMetricTrackValue(result);
+                if (metricItemArraylist.get(i).getTag().equalsIgnoreCase("checked"))
+                    metricItemArraylist.get(i).setSelected(true);
+            }
+        }
+        if(itemMetricAdapter != null)
+            itemMetricAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void updateCompassDegree(String result) {
