@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.cryptoserver.composer.views.CustomFontTextView
+        android:id="@+id/txt_md_info"
+        style="@style/tv_basic"
+        android:layout_width="wrap_content"
+        android:text=""
+        android:padding="1dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/black"
+        android:textSize="10sp"
+        app:fontType="OpenSans_Regular" />
+
+</LinearLayout>

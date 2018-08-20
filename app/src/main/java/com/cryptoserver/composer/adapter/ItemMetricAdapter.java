@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.interfaces.AdapterItemClick;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.MetricModel;
 import com.cryptoserver.composer.utils.common;
 
@@ -26,9 +26,9 @@ public class ItemMetricAdapter extends RecyclerView.Adapter<ItemMetricAdapter.Co
     ArrayList<MetricModel> metricItemArrayList;
     private Context mContext;
     int row_index;
-    AdapterItemClick mItemClick;
+    adapteritemclick mItemClick;
 
-    public ItemMetricAdapter(Context mContext, ArrayList<MetricModel> metricItemArrayList, AdapterItemClick mItemClick) {
+    public ItemMetricAdapter(Context mContext, ArrayList<MetricModel> metricItemArrayList, adapteritemclick mItemClick) {
         this.metricItemArrayList = metricItemArrayList;
         this.mContext = mContext;
         this.mItemClick = mItemClick;

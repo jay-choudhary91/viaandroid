@@ -14,15 +14,21 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -36,25 +42,35 @@ import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.FullScreenVideoActivity;
+import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.ffmpeg.data.frametorecord;
 import com.cryptoserver.composer.ffmpeg.data.recordfragment;
 import com.cryptoserver.composer.ffmpeg.fixedratiocroppedtextureview;
 import com.cryptoserver.composer.ffmpeg.util.camerahelper;
 import com.cryptoserver.composer.ffmpeg.util.miscutils;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
+import com.cryptoserver.composer.utils.sha;
+import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.AndroidFrameConverter;
 import org.bytedeco.javacv.FFmpegFrameFilter;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameFilter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -77,7 +93,6 @@ import static java.lang.Thread.State.WAITING;
 public class writerappfragment extends basefragment implements
         TextureView.SurfaceTextureListener, View.OnClickListener {
     private static final String log_tag = writerappfragment.class.getSimpleName();
-    Chronometer timer;
     private static final int request_permissions = 1;
 
     private static final int preferred_preview_width =  1280;
@@ -115,22 +130,30 @@ public class writerappfragment extends basefragment implements
     TextView txt_save;
     TextView txt_clear;
     LinearLayout layout_bottom;
+    SlidingDrawer simpleSlidingDrawer;
+    RecyclerView recyviewitem;
 
     boolean isflashon = false,inPreview = true;
 
     fixedratiocroppedtextureview mpreview;
-    ImageView mrecordimagebutton,imgflashon,rotatecamera;
+    ImageView mrecordimagebutton,imgflashon,rotatecamera,handle;
 
-    long currentframenumber =0;
-    long frameduration =4, mframetorecordcount =0;
+    float mDist = 0;
     public Dialog maindialogshare,subdialogshare;
-    File destinationSaveFile=null;
     View rootview = null;
+    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    Handler timerhandler;
+    int Seconds, Minutes, MilliSeconds ;
+    String keytype ="md5";
+    ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    videoframeadapter madapter;
+    long currentframenumber =0;
+    long frameduration =15, mframetorecordcount =0;
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
     }
-
 
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
@@ -149,11 +172,12 @@ public class writerappfragment extends basefragment implements
             mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
+            handle = (ImageView) rootview.findViewById(R.id.handle);
             txt_save = (TextView) rootview.findViewById(R.id.txt_save);
             txt_clear = (TextView) rootview.findViewById(R.id.txt_clear);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
-            timer=(Chronometer)rootview.findViewById(R.id.timer);
-//        mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
+            simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
+            recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
             setpreviewsize(mpreviewwidth, mpreviewheight);
             mpreview.setcroppedsizeweight(videowidth, videoheight);
@@ -161,6 +185,50 @@ public class writerappfragment extends basefragment implements
             mrecordimagebutton.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             rotatecamera.setOnClickListener(this);
+
+            mpreview.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+
+                    Camera.Parameters params = mcamera.getParameters();
+                    int action = event.getAction();
+
+
+                    if (event.getPointerCount() > 1) {
+                        // handle multi-touch events
+                        if (action == MotionEvent.ACTION_POINTER_DOWN) {
+                            mDist = getFingerSpacing(event);
+                        } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
+                            mcamera.cancelAutoFocus();
+                            handleZoom(event, params);
+                        }
+                    } else {
+                        // handle single touch events
+                        if (action == MotionEvent.ACTION_UP) {
+                            handleFocus(event, params);
+                        }
+                    }
+
+                    return true;
+                }
+            });
+
+            /*simpleSlidingDrawer.lock();
+            handle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(simpleSlidingDrawer.isOpened())
+                    {
+                        simpleSlidingDrawer.unlock();
+                        simpleSlidingDrawer.animateClose();
+                    }
+                    else
+                    {
+                        simpleSlidingDrawer.lock();
+                        simpleSlidingDrawer.animateOpen();
+                    }
+                }
+            });*/
 
             // At most buffer 10 Frame
             mframetorecordqueue = new LinkedBlockingQueue<>(10);
@@ -174,24 +242,89 @@ public class writerappfragment extends basefragment implements
             txt_save.setOnClickListener(this);
             txt_clear.setOnClickListener(this);
 
+            timerhandler = new Handler() ;
+            gethelper().updateheader("00:00:00");
 
-            timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener(){
+            madapter = new videoframeadapter(getActivity(), mvideoframes, new adapteritemclick() {
                 @Override
-                public void onChronometerTick(Chronometer chronometer) {
-                    long time = SystemClock.elapsedRealtime() - chronometer.getBase();
-                    int h   = (int)(time /3600000);
-                    int m = (int)(time - h*3600000)/60000;
-                    int s= (int)(time - h*3600000- m*60000)/1000 ;
-                    String t = (h < 10 ? "0"+h: h)+":"+(m < 10 ? "0"+m: m)+":"+ (s < 10 ? "0"+s: s);
-                    chronometer.setText(t);
-                    gethelper().updateheader(t);
+                public void onItemClicked(Object object) {
+                }
+
+                @Override
+                public void onItemClicked(Object object, int type) {
                 }
             });
-            timer.setText("00:00:00");
-            gethelper().updateheader("00:00:00");
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            recyviewitem.setLayoutManager(mLayoutManager);
+            recyviewitem.setItemAnimator(new DefaultItemAnimator());
+            recyviewitem.setAdapter(madapter);
+
+            if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+                frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+
+            if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                    xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+            {
+                keytype=config.prefs_md5;
+            }
+            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+            {
+                keytype=config.prefs_md5_salt;
+            }
+            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+            {
+                keytype=config.prefs_sha;
+            }
+            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+            {
+                keytype=config.prefs_sha_salt;
+            }
         }
         return rootview;
     }
+
+    public void startvideotimer()
+    {
+        StartTime = SystemClock.uptimeMillis();
+        timerhandler.postDelayed(runnable, 0);
+    }
+
+    public void stopvideotimer()
+    {
+        TimeBuff += MillisecondTime;
+        timerhandler.removeCallbacks(runnable);
+    }
+
+    public void resetvideotimer()
+    {
+        MillisecondTime = 0L ;
+        StartTime = 0L ;
+        TimeBuff = 0L ;
+        UpdateTime = 0L ;
+        Seconds = 0 ;
+        Minutes = 0 ;
+        MilliSeconds = 0 ;
+        //timer.setText("00:00:00");
+        gethelper().updateheader("00:00:00");
+    }
+
+    public Runnable runnable = new Runnable() {
+
+        public void run() {
+            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+            UpdateTime = TimeBuff + MillisecondTime;
+            Seconds = (int) (UpdateTime / 1000);
+            Minutes = Seconds / 60;
+            Seconds = Seconds % 60;
+            MilliSeconds = (int) (UpdateTime % 1000);
+            gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
+                    + String.format("%02d", Seconds) + ":"
+                    + String.format("%02d", (MilliSeconds/10)));
+            timerhandler.postDelayed(this, 0);
+        }
+
+    };
 
     @Override
     public void onDestroy() {
@@ -292,49 +425,13 @@ public class writerappfragment extends basefragment implements
         switch (v.getId())
         {
             case R.id.img_video_capture:
-                if (mrecording) {
-                    pauserecording();
-                    new finishrecordingtask().execute();
-                } else {
-                   mrecordimagebutton.setEnabled(false);
-                    imgflashon.setVisibility(View.INVISIBLE);
-                    rotatecamera.setVisibility(View.INVISIBLE);
-
-                    currentframenumber =0;
-                    mframetorecordcount =0;
-                    currentframenumber = currentframenumber + frameduration;
-
-                    progressdialog.showwaitingdialog(getActivity());
-                    mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
-                    new ProgressDialogTask<Void, Integer, Void>(R.string.initiating) {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            if (mframerecorder == null) {
-
-                                initrecorder();
-                                startrecorder();
-                            }
-                            startrecording();
-                            resumerecording();
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    timer.setBase(SystemClock.elapsedRealtime());
-                                    starttimer();
-                                    progressdialog.dismisswaitdialog();
-                                }
-                            });
-                            return null;
-                        }
-                    }.execute();
-                }
-
+                startstoprecording();
                 break;
             case R.id.txt_save:
 
                 break;
             case R.id.txt_clear:
-                resettimer();
+                resetvideotimer();
                 clearvideolist();
                 break;
 
@@ -348,28 +445,72 @@ public class writerappfragment extends basefragment implements
         }
     }
 
-    public void saveTempFile()
+    public void startstoprecording()
     {
-        destinationSaveFile=null;
+        if (mrecording) {
+            pauserecording();
+            progressdialog.showwaitingdialog(getActivity());
+            new finishrecordingtask().execute();
+        } else {
+            mrecordimagebutton.setEnabled(false);
+            imgflashon.setVisibility(View.VISIBLE);
+            rotatecamera.setVisibility(View.INVISIBLE);
+
+            currentframenumber =0;
+            mframetorecordcount =0;
+            currentframenumber = currentframenumber + frameduration;
+
+            progressdialog.showwaitingdialog(getActivity());
+            mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
+            new ProgressDialogTask<Void, Integer, Void>(R.string.initiating) {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    if (mframerecorder == null) {
+
+                        initrecorder();
+                        startrecorder();
+                    }
+                    startrecording();
+                    resumerecording();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            startvideotimer();
+                            progressdialog.dismisswaitdialog();
+                        }
+                    });
+                    return null;
+                }
+            }.execute();
+        }
+    }
+
+    public void exportvideo()
+    {
         String sourcePath = mvideo.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
-        String destinationPath = config.videodir;
-        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        fileName="VIA_"+fileName;
-        destinationSaveFile = new File(destinationPath+File.separator+fileName+".mp4");
+        File destinationDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MOVIES), BuildConfig.APPLICATION_ID);
+
+        if (!destinationDir.exists())
+            destinationDir.mkdirs();
+
+        File mediaFile = new File(destinationDir.getPath() + File.separator +
+                sourceFile.getName());
+
 
         try
         {
-            if (!destinationSaveFile.getParentFile().exists())
-                destinationSaveFile.getParentFile().mkdirs();
+            if (!mediaFile.getParentFile().exists())
+                mediaFile.getParentFile().mkdirs();
 
-            if (!destinationSaveFile.exists()) {
-                destinationSaveFile.createNewFile();
+            if (!mediaFile.exists()) {
+                mediaFile.createNewFile();
             }
 
             InputStream in = new FileInputStream(sourceFile);
-            OutputStream out = new FileOutputStream(destinationSaveFile);
+            OutputStream out = new FileOutputStream(mediaFile);
 
             // Copy the bits from instream to outstream
             byte[] buf = new byte[1024];
@@ -382,42 +523,25 @@ public class writerappfragment extends basefragment implements
             in.close();
             out.close();
 
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
-        }
-        progressdialog.dismisswaitdialog();
-    }
-
-    public void resettimer()
-    {
-        timer.stop();
-        timer.setText("00:00:00");
-        gethelper().updateheader("00:00:00");
-    }
-    public void exportvideo(File file)
-    {
-        if(mvideo != null)
-        {
-           // mvideoframes.add(new videomodel("Exported video to camera roll"));
             try
             {
                 ContentValues values = new ContentValues(3);
                 values.put(MediaStore.Video.Media.TITLE, "Video hash");
                 values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                values.put(MediaStore.Video.Media.DATA, file.getAbsolutePath());
+                values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
                 getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
 
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
-        }
 
-       /* madapter.notifyDataSetChanged();
-        recyviewitem.getLayoutManager().scrollToPosition(mvideoframes.size()-1);
-        progressdialog.dismisswaitdialog();*/
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
+        }
+        progressdialog.dismisswaitdialog();
     }
 
     public void clearvideolist()
@@ -439,17 +563,14 @@ public class writerappfragment extends basefragment implements
     }
 
     private void doafterallpermissionsgranted() {
+        layout_bottom.setVisibility(View.VISIBLE);
+        mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
+
         acquireCamera();
         SurfaceTexture surfaceTexture = mpreview.getSurfaceTexture();
         if (surfaceTexture != null) {
             // SurfaceTexture already created
             startpreview(surfaceTexture);
-        }
-
-        if(txt_save.getVisibility() == View.GONE)
-        {
-            layout_bottom.setVisibility(View.VISIBLE);
-            mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
         }
     }
 
@@ -532,7 +653,23 @@ public class writerappfragment extends basefragment implements
                             frame = new Frame(mpreviewwidth, mpreviewheight, framedepth, framechannels);
                             frametorecord = new frametorecord(timestamp, frame);
                         }
+
                         ((ByteBuffer) frame.image[0].position(0)).put(data);
+
+                        try {
+                            ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
+                            //isFrameRemain=true;
+                            if(mframetorecordcount == currentframenumber)
+                            {
+                                //isFrameRemain=false;
+                                byte[] arr = new byte[buffer.remaining()];
+                                buffer.get(arr);
+                                updatelistitemnotify(arr,"Frame");
+                                currentframenumber = currentframenumber + frameduration;
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
 
                         if (mframetorecordqueue.offer(frametorecord)) {
                             mframetorecordcount++;
@@ -551,6 +688,7 @@ public class writerappfragment extends basefragment implements
         mcamera.startPreview();
         inPreview= true;
 
+        startstoprecording();
     }
 
     private void stoppreview() {
@@ -713,7 +851,7 @@ public class writerappfragment extends basefragment implements
             getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        stoptimer();
+                        stopvideotimer();
                     }
                 });
             mrecordfragments.peek().setendtimestamp(System.currentTimeMillis());
@@ -1003,13 +1141,14 @@ public class writerappfragment extends basefragment implements
             super.onPostExecute(aVoid);
 
             progressdialog.showwaitingdialog(getActivity());
-            saveTempFile();
+            //saveTempFile();
 
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             layout_bottom.setVisibility(View.GONE);
 
-            resettimer();
+            resetvideotimer();
             clearvideolist();
+            setvideoadapter();
 
             showsharepopupmain();
 
@@ -1022,16 +1161,6 @@ public class writerappfragment extends basefragment implements
             intent.putExtra(playbackactivity.intent_name_video_path, mvideo.getpath());
             startActivity(intent);*/
         }
-    }
-    public void starttimer(){
-        //timer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-        timer.start();
-    }
-
-    public void stoptimer(){
-        //  timeWhenStopped = timer.getBase() - SystemClock.elapsedRealtime();
-        timer.stop();
-
     }
 
     // Turning Off flash
@@ -1071,6 +1200,219 @@ public class writerappfragment extends basefragment implements
             isflashon=false;
             navigateflash();
         }
+    }
+
+    private void handleZoom(MotionEvent event, Camera.Parameters params) {
+        int maxZoom = params.getMaxZoom();
+        int zoom = params.getZoom();
+        float newDist = getFingerSpacing(event);
+        if (newDist > mDist) {
+            //zoom in
+            if (zoom < maxZoom)
+                zoom++;
+        } else if (newDist < mDist) {
+            //zoom out
+            if (zoom > 0)
+                zoom--;
+        }
+        mDist = newDist;
+        params.setZoom(zoom);
+        mcamera.setParameters(params);
+    }
+
+    public void handleFocus(MotionEvent event, Camera.Parameters params) {
+        int pointerId = event.getPointerId(0);
+        int pointerIndex = event.findPointerIndex(pointerId);
+        // Get the pointer's current position
+        float x = event.getX(pointerIndex);
+        float y = event.getY(pointerIndex);
+
+        List<String> supportedFocusModes = params.getSupportedFocusModes();
+        if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            mcamera.autoFocus(new Camera.AutoFocusCallback() {
+                @Override
+                public void onAutoFocus(boolean b, Camera camera) {
+                    // currently set to auto-focus on single touch
+                }
+            });
+        }
+    }
+
+    /** Determine the space between the first two fingers */
+    private float getFingerSpacing(MotionEvent event) {
+        // ...
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float)Math.sqrt(x * x + y * y);
+    }
+
+    public void setvideoadapter() {
+
+        int count = 1;
+        currentframenumber =0;
+        currentframenumber = currentframenumber + frameduration;
+
+        final ArrayList<videomodel> arrayList=new ArrayList<videomodel>();
+        try
+        {
+            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(mvideo.getAbsolutePath());
+            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+            String format= common.getvideoformat(mvideo.getAbsolutePath());
+            if(format.equalsIgnoreCase("mp4"))
+                grabber.setFormat(format);
+
+            grabber.start();
+            boolean isFrameRemain=true;
+            ByteBuffer buffer=null;
+            AndroidFrameConverter bitmapConverter = new AndroidFrameConverter();
+            Log.e("Total frames ",""+grabber.getLengthInFrames());
+            for(int i = 0; i<grabber.getLengthInFrames(); i++){
+                //grabber.setFrameNumber(count);
+
+                Frame frame = grabber.grabImage();
+
+                if (count == currentframenumber) {
+                    isFrameRemain = false;
+                    if (frame != null)
+                    {
+                        //final Bitmap currentImage = bitmapConverter.convert(frame);
+                        buffer= ((ByteBuffer) frame.image[0].position(0));
+
+                        byte[] arr = new byte[buffer.remaining()];
+                        buffer.get(arr);
+                        arrayList.add(updatelistitem(arr,"Frame"));
+                    }
+                    else
+                    {
+                        Log.e("Frame ","null");
+                    }
+                    currentframenumber = currentframenumber + frameduration;
+                }
+                count++;
+            }
+
+            if(isFrameRemain && (buffer != null))
+            {
+                currentframenumber =count;
+                byte[] arr = new byte[buffer.remaining()];
+                buffer.get(arr);
+                arrayList.add(updatelistitem(arr,"Last Frame"));
+            }
+
+            grabber.flush();
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mvideoframes.clear();
+                    madapter.notifyDataSetChanged();
+
+                    mvideoframes.addAll(arrayList);
+                    madapter.notifyDataSetChanged();
+                    recyviewitem.getLayoutManager().scrollToPosition(0);
+                    progressdialog.dismisswaitdialog();
+                }
+            });
+
+        }
+        catch (Exception e)
+        {
+            progressdialog.dismisswaitdialog();
+            e.printStackTrace();
+        }
+    }
+
+    public videomodel updatelistitem(byte[] array, String message)
+    {
+        if(array == null || array.length == 0)
+            return null;
+
+        String keyvalue= getkeyvalue(array);
+        return new videomodel(message+" "+ keytype +" "+ currentframenumber + ": " + keyvalue);
+    }
+
+    public void updatelistitemnotify(final byte[] array, final String message)
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(array == null || array.length == 0)
+                    return;
+                String keyvalue= getkeyvalue(array);
+                mvideoframes.add(new videomodel(message+" "+ keytype +" "+ currentframenumber + ": " + keyvalue));
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        madapter.notifyDataSetChanged();
+                        recyviewitem.getLayoutManager().scrollToPosition(mvideoframes.size()-1);
+                    }
+                });
+            }
+        }).start();
+
+
+    }
+
+    public String getkeyvalue(byte[] data)
+    {
+        String value="";
+        String salt="";
+
+        switch (keytype)
+        {
+            case config.prefs_md5:
+                value= md5.calculatebytemd5(data);
+                break;
+
+            case config.prefs_md5_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= md5.calculatebytemd5(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= md5.calculatebytemd5(data);
+                }
+
+                break;
+            case config.prefs_sha:
+                value= sha.sha1(data);
+                break;
+            case config.prefs_sha_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= sha.sha1(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= sha.sha1(data);
+                }
+                break;
+
+        }
+        return value;
     }
 
     public void showsharepopupmain()
@@ -1136,7 +1478,7 @@ public class writerappfragment extends basefragment implements
             @Override
             public void onClick(View v) {
                 Intent in=new Intent(getActivity(), FullScreenVideoActivity.class);
-                in.putExtra("videopath",destinationSaveFile.getAbsolutePath());
+                in.putExtra("videopath",mvideo.getAbsolutePath());
                 startActivity(in);
             }
         });
@@ -1183,8 +1525,8 @@ public class writerappfragment extends basefragment implements
             @Override
             public void onClick(View v) {
 
-                if(destinationSaveFile != null)
-                    exportvideo(destinationSaveFile);
+                if(mvideo != null)
+                    exportvideo();
 
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
@@ -1192,10 +1534,7 @@ public class writerappfragment extends basefragment implements
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                gethelper().onBack();
-
-                //if(destinationSaveFile != null && destinationSaveFile.getAbsolutePath() != null)
-                    //common.shareMedia(writerappactivity.this,destinationSaveFile.getAbsolutePath());
+                launchvideolist();
             }
         });
 
@@ -1208,7 +1547,7 @@ public class writerappfragment extends basefragment implements
                     subdialogshare.dismiss();
 
                 videoplayfragment videoplayfragment =new videoplayfragment();
-                videoplayfragment.setdata(destinationSaveFile.getAbsolutePath());
+                videoplayfragment.setdata(mvideo.getAbsolutePath());
                 gethelper().replaceFragment(videoplayfragment, false, true);
 
             }
@@ -1224,10 +1563,16 @@ public class writerappfragment extends basefragment implements
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                gethelper().onBack();
+                launchvideolist();
             }
         });
         subdialogshare.show();
+    }
+
+    public void launchvideolist()
+    {
+        fragmentvideolist frag=new fragmentvideolist();
+        gethelper().replaceFragment(frag, true, false);
     }
 }
 

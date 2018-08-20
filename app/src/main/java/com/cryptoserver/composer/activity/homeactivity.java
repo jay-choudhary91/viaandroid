@@ -75,7 +75,7 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
 
         applicationviavideocomposer.setActivity(homeactivity.this);
 
-        fragmentvideolist frag=new fragmentvideolist();
+        writerappfragment frag=new writerappfragment();
         replaceFragment(frag, false, true);
 
         imgaddicon.setOnClickListener(this);

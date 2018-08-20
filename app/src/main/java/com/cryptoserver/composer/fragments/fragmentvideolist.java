@@ -21,12 +21,10 @@ import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adaptervideolist;
-import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.interfaces.AdapterItemClick;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.md5;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,7 +118,7 @@ public class fragmentvideolist extends basefragment {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
 
-            adapter = new adaptervideolist(getActivity(),arrayvideolist, new AdapterItemClick() {
+            adapter = new adaptervideolist(getActivity(),arrayvideolist, new adapteritemclick() {
                 @Override
                 public void onItemClicked(Object object) {
 

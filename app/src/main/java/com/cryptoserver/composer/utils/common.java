@@ -867,4 +867,14 @@ public class common
         return ""+value;
     }
 
+    public static String getvideoformat(String path)
+    {
+        String format="";
+        if(! path.trim().isEmpty())
+        {
+            int extIndex=path.lastIndexOf(".");
+            format=path.substring(extIndex+1,path.length());
+        }
+        return format;
+    }
 }

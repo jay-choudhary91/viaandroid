@@ -19,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,7 +41,7 @@ import android.widget.Toast;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.ItemMetricAdapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.interfaces.AdapterItemClick;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.MetricModel;
 import com.cryptoserver.composer.services.LocationService;
 import com.cryptoserver.composer.utils.common;
@@ -431,7 +430,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
 
     public void setAdapter()
     {
-        itemMetricAdapter = new ItemMetricAdapter(getActivity(), metricItemArraylist, new AdapterItemClick() {
+        itemMetricAdapter = new ItemMetricAdapter(getActivity(), metricItemArraylist, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
                 String key = (String) object;

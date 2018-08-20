@@ -110,30 +110,22 @@ public class camerahelper {
         try {
             File file=new File(destinationPath);
             if(! file.exists())
-            {
-                boolean success1 = file.mkdirs();
-                if(! file.exists())
-                {
-                    boolean success = file.mkdirs();
-                    boolean newss=success;
-                }
+                file.mkdirs();
+
+            File mediaFile = null; // context being the Activity pointer
+            try {
+                String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                mediaFile = new File(file.getPath() + File.separator +
+                        fileName + ".mp4");
+                return mediaFile;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-
-        File outputDir = applicationviavideocomposer.getactivity().getCacheDir(); // context being the Activity pointer
-        try {
-            String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            fileName="VIA_"+fileName;
-            File outputFile = File.createTempFile(fileName, ".mp4", outputDir);
-            return outputFile;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         return null;
     }
 

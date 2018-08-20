@@ -2,11 +2,7 @@ package com.cryptoserver.composer.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -17,18 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.FullScreenVideoActivity;
-import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.interfaces.AdapterItemClick;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
-import com.cryptoserver.composer.utils.costomvideoview;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
@@ -42,7 +32,7 @@ public class adaptervideolist extends RecyclerSwipeAdapter<adaptervideolist.myVi
 
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
-    AdapterItemClick adapter;
+    adapteritemclick adapter;
 
     @Override
     public int getSwipeLayoutResourceId(int position) {
@@ -73,7 +63,7 @@ public class adaptervideolist extends RecyclerSwipeAdapter<adaptervideolist.myVi
         }
     }
 
-    public adaptervideolist(Context context, ArrayList<video> arrayvideolist, AdapterItemClick adapter){
+    public adaptervideolist(Context context, ArrayList<video> arrayvideolist, adapteritemclick adapter){
         this.context = context;
         this.arrayvideolist = arrayvideolist;
         this.adapter = adapter;
