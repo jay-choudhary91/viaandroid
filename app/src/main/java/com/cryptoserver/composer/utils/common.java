@@ -25,6 +25,7 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
@@ -607,6 +608,15 @@ public class common
         else if(key.equalsIgnoreCase("currentcalldecibel"))
         {
             metricItemName = "currentcalldecibel";
+        }else if(key.equalsIgnoreCase("phonetime")){
+            metricItemName = "phonetime";
+        }
+        else if(key.equalsIgnoreCase("airplanemode")){
+            metricItemName = "airplanemode";
+        } else if(key.equalsIgnoreCase("gpsonoff")){
+            metricItemName = "gpsonoff";
+        }else if(key.equalsIgnoreCase("syncphonetime")){
+            metricItemName = "syncphonetime";
         }
         return metricItemName;
     }

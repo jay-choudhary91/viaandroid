@@ -10,7 +10,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +26,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 
 import com.cryptoserver.composer.R;
@@ -47,6 +50,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     private static final int permission_location_request_code = 91;
     private SensorManager mSensorManager;
     private Sensor mAccelereometer;
+    private BroadcastReceiver airplanemodecheck ;
 
     private float[] mGData = new float[3];
     private float[] mMData = new float[3];
@@ -274,7 +278,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     protected void onStop() {
         super.onStop();
-
+        if(airplanemodecheck!=null){
+            unregisterReceiver(airplanemodecheck);
+        }
 
     }
 
@@ -513,6 +519,26 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     @Override
+    public void getairplanemodeon() {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+                filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+                airplanemodecheck = new airplanemodecheck();
+                instance.registerReceiver(airplanemodecheck,filter);
+            }
+        });
+       /* Thread thread=new Thread(){
+            public void run(){
+
+            }
+        };thread.start();*/
+
+    }
+
+    @Override
     public void registerCompassSensor() {
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -700,4 +726,22 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         };
         registerReceiver(mBroadcast, intentFilter);
     }
+
+    public class airplanemodecheck extends BroadcastReceiver{
+
+        String turn;
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(Settings.System.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0)== 0)
+            {
+                turn="OFF";
+            }
+            else
+            {
+                turn="ON";
+            }
+           getcurrentfragment().updateairplanemode(turn);
+        }
+    }
+
 }
