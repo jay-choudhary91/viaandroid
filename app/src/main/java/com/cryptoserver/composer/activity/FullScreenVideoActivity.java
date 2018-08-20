@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -68,6 +69,17 @@ public class FullScreenVideoActivity extends AppCompatActivity implements Surfac
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(player != null && player.isPlaying())
+        {
+            player.pause();
+            //player.release();
+        }
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         return false;
@@ -124,7 +136,13 @@ public class FullScreenVideoActivity extends AppCompatActivity implements Surfac
 
     @Override
     public int getCurrentPosition() {
-        return player.getCurrentPosition();
+        try {
+            return player.getCurrentPosition();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @Override
