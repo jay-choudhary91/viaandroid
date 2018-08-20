@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +16,10 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -29,6 +33,7 @@ import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.writerappactivity;
 import com.cryptoserver.composer.services.CallService;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
 
@@ -215,11 +220,12 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 // OI FILE Manager
                 selectedvideopath = getpath(this, selectedimageuri);
 
-                if(selectedvideopath == null)
+                if(selectedvideopath == null){
+                    common.showalert(homeactivity.this,getResources().getString(R.string.file_not_supported));
+
                     return;
-
+                }
                 setcopyvideo(selectedvideopath);
-
                 }
             }
         }
@@ -383,7 +389,22 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
+    }
 
 
 

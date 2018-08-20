@@ -48,4 +48,8 @@
     <string name="cancel_viewlist">Cancel and View List</string>
 
 
+    <string name="file_not_supported">File format not supported</string>
+
+
+
 </resources>

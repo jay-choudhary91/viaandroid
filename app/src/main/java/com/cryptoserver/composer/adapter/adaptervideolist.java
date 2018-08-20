@@ -1,66 +1,52 @@
 package com.cryptoserver.composer.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.FullScreenVideoActivity;
-import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.AdapterItemClick;
 import com.cryptoserver.composer.models.video;
-import com.cryptoserver.composer.utils.costomvideoview;
-import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by devesh on 6/8/18.
  */
 
-public class adaptervideolist extends RecyclerSwipeAdapter<adaptervideolist.myViewHolder> {
+public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myViewHolder> {
 
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     AdapterItemClick adapter;
+    private int row_index = -1;
 
-    @Override
-    public int getSwipeLayoutResourceId(int position) {
-        return R.id.swipe;
-    }
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tvvideodescription;
         EditText edtvideoname;
         public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_full_screen,img_play_pause;
-        public SwipeLayout swipelayout;
         public Button btnedit;
-      //  public ImageView imgvideothumbnail,imgshareicon,imgdeleteicon,img_videothumbnail,img_play;
-       // public costomvideoview videoviewthumbnail;
 
         public myViewHolder(View view) {
             super(view);
-            swipelayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
             tvvideoname = (TextView) view.findViewById(R.id.tv_videoname);
             edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
             tvvideocreatedate = (TextView) view.findViewById(R.id.tv_videocreatedate);
@@ -92,190 +78,67 @@ public class adaptervideolist extends RecyclerSwipeAdapter<adaptervideolist.myVi
     @Override
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
-        holder.tvvideoname.setText(arrayvideolist.get(position).getName());
+
+        holder.edtvideoname.setText(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().lastIndexOf(".")));
         holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
         holder.tvvideoduration.setText("Duration : " +arrayvideolist.get(position).getDuration());
-        //holder.tvvideodescription.setText(arrayvideolist.get(position).getMd5());
 
-        // set the uri for the video view
-        holder.swipelayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-        //drag from right
-        holder.swipelayout.addDrag(SwipeLayout.DragEdge.Right, holder.swipelayout.findViewById(R.id.bottom_wraper));
+        holder.edtvideoname.setEnabled(false);
+        holder.edtvideoname.setClickable(false);
+        holder.edtvideoname.setFocusable(false);
 
-        //handling different event when swiping
-        holder.swipelayout.addSwipeListener(new SwipeLayout.SwipeListener() {
-            @Override
-            public void onStartOpen(SwipeLayout layout) {
-                //when the SurfaceView totally cover the BottomView.
-            }
-
-            @Override
-            public void onOpen(SwipeLayout layout) {
-                //when the BottomView totally show.
-            }
-
-            @Override
-            public void onStartClose(SwipeLayout layout) {
-
-            }
-
-            @Override
-            public void onClose(SwipeLayout layout) {
-                //when the SurfaceView totally cover the BottomView.
-            }
-
-            @Override
-            public void onUpdate(SwipeLayout layout, int leftOffset, int topOffset) {
-                //you are swiping.
-            }
-
-            @Override
-            public void onHandRelease(SwipeLayout layout, float xvel, float yvel) {
-                //when user's hand released.
-            }
-        });
-
-        holder.swipelayout.getSurfaceView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                       final Bitmap bitmap = Glide.
+                                with(context).
+                                load(arrayvideolist.get(position).getPath()).
+                                asBitmap().
+                                into(100, 100). // Width and height
+                                get();
 
 
-            }
-        });
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                holder.img_videothumbnail.setImageBitmap(bitmap);
+                            }
+                        });
 
 
-        holder.btnedit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.swipelayout.close();
-
-                holder.tvvideoname.setVisibility(View.VISIBLE);
-                /*holder.edtvideoname.setVisibility(View.VISIBLE);
-                holder.edtvideoname.setText(holder.tvvideoname.getText());
-                holder.edtvideoname.setSelection(holder.edtvideoname.getText().length());
-                holder.edtvideoname.requestFocus();*/
-
-
-               /* String path = arrayvideolist.get(position).getPath();
-
-                Log.e("selected video path = ", "" + path);
-
-                File sourceFile = new File(path);
-                File filedirectory = sourceFile.getParentFile();
-                String filename=  sourceFile.getName();
-
-                File from = new File(filedirectory,filename);
-                File to = new File(filedirectory,"demo.mp4");
-                from.renameTo(to);*/
-
-            }
-        });
-
-
-       /* // set the uri for the video view
-        holder.simpleVideoView.setVideoPath(arrayvideolist.get(position).getPath());
-
-        holder.img_play_pause.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-        holder.img_full_screen.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-
-        holder.simpleVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                // start a video
-                //holder.simpleVideoView.start();
-                mediaPlayer.setVolume(0,0);
-                //holder.img_videothumbnail.setVisibility(View.VISIBLE);
-                if(holder.simpleVideoView.isPlaying())
-                {
-                   // Toast.makeText(context, "Playing", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                   // Toast.makeText(context, "Not Playing", Toast.LENGTH_SHORT).show();
-                    holder.img_videothumbnail.setVisibility(View.VISIBLE);
-                    holder.simpleVideoView.setVisibility(View.VISIBLE);
-                    holder.img_play_pause.setImageResource(R.drawable.icon_play);
-                }
-
-
-               // Toast.makeText(context, "Prepared...", Toast.LENGTH_SHORT).show(); // display a toast when an video is completed
-            }
-        });
-
-        holder.simpleVideoView.setPlayPauseListener(new costomvideoview.PlayPauseListener() {
-
-            @Override
-            public void onPlay() {
-                System.out.println("Play!");
-                holder.img_play_pause.setImageResource(R.drawable.icon_pause);
-            }
-            @Override
-            public void onPause() {
-                System.out.println("Pause!");
-                holder.img_play_pause.setImageResource(R.drawable.icon_play);
-            }
-        });
-
-        holder.img_play_pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                holder.img_videothumbnail.setVisibility(View.GONE);
-                holder.simpleVideoView.setVisibility(View.VISIBLE);
-                if(holder.simpleVideoView.isPlaying())
-                    holder.simpleVideoView.pause();
-                else
-                    holder.simpleVideoView.start();
-            }
-        });
-
-        holder.img_full_screen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent in=new Intent(context, FullScreenVideoActivity.class);
-                in.putExtra("videopath",arrayvideolist.get(position).getPath());
-                context.startActivity(in);
-            }
-        });
-
-        // implement on completion listener on video view
-        holder.simpleVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                holder.img_videothumbnail.setVisibility(View.VISIBLE);
-                //holder.simpleVideoView.setVisibility(View.GONE);
-                holder.img_play_pause.setImageResource(R.drawable.icon_play);
-              //  Toast.makeText(context, "Thank You...!!!", Toast.LENGTH_LONG).show(); // display a toast when an video is completed
-            }
-        });
-        holder.simpleVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-             //   Toast.makeText(context, "Oops An Error Occur While Playing Video...!!!", Toast.LENGTH_LONG).show(); // display a toast when an error is occured while playing an video
-                return false;
-            }
-        });
-
-        holder.simpleVideoView.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-            @Override
-            public boolean onInfo(MediaPlayer mediaPlayer, int what, int extra) {
-                switch (what) {
-                    case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START: {
-                        holder.img_videothumbnail.setVisibility(View.GONE);
-                    //    Toast.makeText(context, "Render start", Toast.LENGTH_SHORT).show();
-                        return true;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
                     }
                 }
-                return false;
-            }
-        });*/
+            });thread.start();
 
-        Bitmap bitmap= ThumbnailUtils.createVideoThumbnail(arrayvideolist.get(position).getPath(), MediaStore.Images.Thumbnails.MINI_KIND);
-        holder.img_videothumbnail.setImageBitmap(bitmap);
+        if(arrayvideolist.get(position).isSelected){
+            holder.edtvideoname.setEnabled(true);
+            holder.edtvideoname.setClickable(true);
+            holder.edtvideoname.setFocusableInTouchMode(true);
+            holder.edtvideoname.setSelection(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().lastIndexOf(".")).length());
+            holder.edtvideoname.requestFocus();
+            arrayvideolist.get(position).setSelected(false);
+
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+        }
+        else
+        {
+            arrayvideolist.get(position).setSelected(false);
+            holder.edtvideoname.setEnabled(false);
+            holder.edtvideoname.setClickable(false);
+        }
 
         holder.imgshareicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapter.onItemClicked(arrayvideolist.get(position),1);
+
             }
         });
 
@@ -290,17 +153,47 @@ public class adaptervideolist extends RecyclerSwipeAdapter<adaptervideolist.myVi
         holder.img_videothumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent in=new Intent(context, FullScreenVideoActivity.class);
                 in.putExtra("videopath",arrayvideolist.get(position).getPath());
                 context.startActivity(in);
             }
         });
 
-        mItemManger.bindView(holder.itemView, position);
+        holder.edtvideoname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+
+                    v.setFocusable(false);
+                    InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(holder.edtvideoname.getWindowToken(), 0);
+
+                    String renamevalue = holder.edtvideoname.getText().toString();
+                    String path = arrayvideolist.get(position).getPath();
+
+                        File sourceFile = new File(path);
+                        File filedirectory = sourceFile.getParentFile();
+                        String filename = sourceFile.getName();
+
+                    if(!filename.equalsIgnoreCase(renamevalue)){
+                        File from = new File(filedirectory,filename);
+                        File to = new File(filedirectory,renamevalue + ".mp4");
+                        from.renameTo(to);
+
+                        adapter.onItemClicked(arrayvideolist.get(position),3);
+                    }
+
+                    Log.e("Focaus change ", "Focus change");
+
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return arrayvideolist.size();
     }
+
 }
