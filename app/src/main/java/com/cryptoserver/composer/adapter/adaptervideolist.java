@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.FullScreenVideoActivity;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.interfaces.AdapterItemClick;
 import com.cryptoserver.composer.models.video;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
@@ -41,7 +40,6 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adapteritemclick adapter;
-    AdapterItemClick adapter;
     private int row_index = -1;
 
 
