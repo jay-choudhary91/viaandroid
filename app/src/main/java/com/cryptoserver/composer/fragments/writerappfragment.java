@@ -149,6 +149,7 @@ public class writerappfragment extends basefragment implements
     videoframeadapter madapter;
     long currentframenumber =0;
     long frameduration =15, mframetorecordcount =0;
+    public boolean autostartvideo=false;
 
     @Override
     public int getlayoutid() {
@@ -664,7 +665,7 @@ public class writerappfragment extends basefragment implements
                                 //isFrameRemain=false;
                                 byte[] arr = new byte[buffer.remaining()];
                                 buffer.get(arr);
-                                updatelistitemnotify(arr,"Frame");
+                                updatelistitemnotify(arr,currentframenumber,"Frame");
                                 currentframenumber = currentframenumber + frameduration;
                             }
                         }catch (Exception e){
@@ -688,7 +689,11 @@ public class writerappfragment extends basefragment implements
         mcamera.startPreview();
         inPreview= true;
 
-        startstoprecording();
+        if(autostartvideo)
+        {
+            autostartvideo=false;
+            startstoprecording();
+        }
     }
 
     private void stoppreview() {
@@ -865,6 +870,10 @@ public class writerappfragment extends basefragment implements
             recordedtime += recordfragment.getduration();
         }
         return recordedtime;
+    }
+
+    public void setData(boolean autostartvideo) {
+        this.autostartvideo = autostartvideo;
     }
 
     class runningthread extends Thread {
@@ -1140,7 +1149,6 @@ public class writerappfragment extends basefragment implements
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            progressdialog.showwaitingdialog(getActivity());
             //saveTempFile();
 
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
@@ -1251,7 +1259,7 @@ public class writerappfragment extends basefragment implements
         int count = 1;
         currentframenumber =0;
         currentframenumber = currentframenumber + frameduration;
-
+        progressdialog.showwaitingdialog(getActivity());
         final ArrayList<videomodel> arrayList=new ArrayList<videomodel>();
         try
         {
@@ -1328,10 +1336,11 @@ public class writerappfragment extends basefragment implements
             return null;
 
         String keyvalue= getkeyvalue(array);
+        Log.e("number ",""+currentframenumber);
         return new videomodel(message+" "+ keytype +" "+ currentframenumber + ": " + keyvalue);
     }
 
-    public void updatelistitemnotify(final byte[] array, final String message)
+    public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
     {
         new Thread(new Runnable() {
             @Override
@@ -1339,7 +1348,7 @@ public class writerappfragment extends basefragment implements
                 if(array == null || array.length == 0)
                     return;
                 String keyvalue= getkeyvalue(array);
-                mvideoframes.add(new videomodel(message+" "+ keytype +" "+ currentframenumber + ": " + keyvalue));
+                mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 
 public class pagercustomduration extends ViewPager {
 
-    int delay=500;
+    int delay=1000;
     public pagercustomduration(Context context, AttributeSet attrs)
     {
         super( context, attrs );

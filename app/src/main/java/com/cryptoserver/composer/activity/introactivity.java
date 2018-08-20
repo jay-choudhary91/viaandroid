@@ -12,9 +12,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.fragments.pagerfragment;
+import com.cryptoserver.composer.fragments.footerpagerfragment;
+import com.cryptoserver.composer.fragments.headerpagerfragment;
 import com.cryptoserver.composer.models.intro;
 
+import com.cryptoserver.composer.views.pageranimation;
 import com.cryptoserver.composer.views.pagercustomduration;
 import java.util.Date;
 
@@ -23,7 +25,7 @@ import java.util.Date;
 public class introactivity extends FragmentActivity {
 
     int currentselected,nextselection;
-    pagercustomduration viewpager;
+    pagercustomduration viewpager_header,viewpager_footer;
     int touchstate=0;
     boolean pressed=false;
     boolean isinbackground=false;
@@ -62,13 +64,38 @@ public class introactivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_pager);
         initialDate=new Date();
-        viewpager = (pagercustomduration) findViewById(R.id.viewpager);
-        //viewpager.setPageTransformer(false, new pageranimation());
-        viewpager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewpager, true);
+        viewpager_header = (pagercustomduration) findViewById(R.id.viewpager_header);
+        viewpager_footer = (pagercustomduration) findViewById(R.id.viewpager_footer);
 
-        viewpager.setOnTouchListener(new View.OnTouchListener() {
+        viewpager_header.setPageTransformer(false, new pageranimation());
+        viewpager_footer.setPageTransformer(false, new pageranimation());
+
+        viewpager_header.setAdapter(new headerpageradapter(getSupportFragmentManager()));
+        viewpager_footer.setAdapter(new footerpageradapter(getSupportFragmentManager()));
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewpager_footer, true);
+
+        viewpager_header.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                initialDate = new Date();
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        pressed = true;
+                        Log.e("user touch","on touch" + pressed);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        pressed = false;
+                        Log.e("on touch end ","on touch end" + pressed);
+                        break;
+                }
+                return false;
+            }
+        });
+
+        viewpager_footer.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 initialDate = new Date();
@@ -98,11 +125,11 @@ public class introactivity extends FragmentActivity {
                     Date currentDate=new Date();
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
                     //Log.e("insec",""+secondDifference);
-                    if(secondDifference >= 4)
+                    if(secondDifference >= 10)
                     {
                         initialDate = new Date();
 
-                        if(currentselected < viewpager.getAdapter().getCount())
+                        if(currentselected < viewpager_header.getAdapter().getCount())
                         {
                             if(currentselected == 0)
                                 currentselected++;
@@ -110,7 +137,7 @@ public class introactivity extends FragmentActivity {
                             setviewpager(currentselected);
                             currentselected++;
                         }
-                        else if(currentselected == viewpager.getAdapter().getCount())
+                        else if(currentselected == viewpager_header.getAdapter().getCount())
                         {
                             currentselected=0;
                             setviewpager(currentselected);
@@ -123,63 +150,39 @@ public class introactivity extends FragmentActivity {
         myHandler.post(myRunnable);
 
 
-        viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewpager_header.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
-              /*  if(touchstate > 0)
-                    return;*/
 
-                /*if ( position == currentselected )
-                {
-                    // We are moving to next screen on right side
-                    if ( positionOffset > 0.4 )
-                    {
-                        // Closer to next screen than to current
-                        if ( position + 1 != nextselection )
-                        {
-                            nextselection = position + 1;
-                            setviewpager( nextselection);
-                        }
-                    }
-                    else
-                    {
-                        // Closer to current screen than to next
-                        if ( position != nextselection )
-                        {
-                            nextselection = position;
-                            setviewpager( nextselection);
-                        }
-                    }
-                }
-                else
-                {
-                    // We are moving to next screen left side
-                    if ( positionOffset > 0.4 )
-                    {
-                        // Closer to current screen than to next
-                        if ( position + 1 != nextselection )
-                        {
-                            nextselection = position + 1;
-                            setviewpager( nextselection);
-                        }
-                    }
-                    else
-                    {
-                        // Closer to next screen than to current
-                        if ( position != nextselection )
-                        {
-                            nextselection = position;
-                            setviewpager( nextselection);
-                        }
-                    }
-                }*/
             }
 
             @Override
             public void onPageSelected(int position) {
                 //Log.e("position", position+" ") ;
                 currentselected=position;
+                viewpager_footer.setCurrentItem(position, true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+                touchstate=state;
+            }
+        });
+
+        viewpager_footer.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+               // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //Log.e("position", position+" ") ;
+                currentselected=position;
+                viewpager_header.setCurrentItem(position, true);
             }
 
             @Override
@@ -194,12 +197,13 @@ public class introactivity extends FragmentActivity {
     public void setviewpager(int position)
     {
         Log.e("Positions ", position+" ") ;
-        viewpager.setCurrentItem(position, true);
+        viewpager_header.setCurrentItem(position, true);
+        viewpager_footer.setCurrentItem(position, true);
     }
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+    private class headerpageradapter extends FragmentPagerAdapter {
 
-        public MyPagerAdapter(FragmentManager fm) {
+        public headerpageradapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -207,14 +211,42 @@ public class introactivity extends FragmentActivity {
         public Fragment getItem(int pos) {
             switch(pos) {
 
-                case 0: return pagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
+                case 0: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
                         getResources().getString(R.string.modern_security),R.drawable.shield));
-                case 1: return pagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
+                case 1: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
                         getResources().getString(R.string.video_manager),R.drawable.mobile));
-                case 2: return pagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
+                case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
                         getResources().getString(R.string.varifiable),R.drawable.globe));
 
-                default: return pagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
+                default: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
+                        getResources().getString(R.string.modern_security),R.drawable.shield));
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+    }
+
+    private class footerpageradapter extends FragmentPagerAdapter {
+
+        public footerpageradapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            switch(pos) {
+
+                case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
+                        getResources().getString(R.string.modern_security),R.drawable.shield));
+                case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
+                        getResources().getString(R.string.video_manager),R.drawable.mobile));
+                case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
+                        getResources().getString(R.string.varifiable),R.drawable.globe));
+
+                default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
                         getResources().getString(R.string.modern_security),R.drawable.shield));
             }
         }

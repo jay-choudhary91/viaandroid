@@ -8,12 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.homeactivity;
 import com.cryptoserver.composer.models.intro;
@@ -28,7 +24,7 @@ import pl.droidsonroids.gif.GifImageView;
  * Created by root on 26/7/18.
  */
 
-public class pagerfragment extends Fragment {
+public class headerpagerfragment extends Fragment {
     GifImageView imggif;
     View rootview;
     boolean isgifloaded =false;
@@ -38,28 +34,13 @@ public class pagerfragment extends Fragment {
 
         if(rootview == null)
         {
-            rootview = inflater.inflate(R.layout.fragment_pager, container, false);
-            TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
-            TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
-            TextView btn_start_record = (TextView) rootview.findViewById(R.id.btn_start_record);
+            rootview = inflater.inflate(R.layout.fragment_pager_header, container, false);
             imggif = (GifImageView) rootview.findViewById(R.id.img_gif);
 
             introobject=(intro)getArguments().getParcelable("object");
 
-            txt_title.setText(introobject.getTitle());
-            txt_description.setText(introobject.getDescription());
-
             if((introobject.getTitle().contains("Simply Secure")))
                 loadAnimation();
-
-            btn_start_record.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent in=new Intent(getActivity(),homeactivity.class);
-                    getActivity().startActivity(in);
-                    getActivity().finish();
-                }
-            });
         }
 
         return rootview;
@@ -99,8 +80,8 @@ public class pagerfragment extends Fragment {
     }
 
 
-    public static pagerfragment newInstance(intro intro) {
-        pagerfragment f = new pagerfragment();
+    public static headerpagerfragment newInstance(intro intro) {
+        headerpagerfragment f = new headerpagerfragment();
         Bundle b = new Bundle();
         b.putParcelable("object", (Parcelable) intro);
         f.setArguments(b);
