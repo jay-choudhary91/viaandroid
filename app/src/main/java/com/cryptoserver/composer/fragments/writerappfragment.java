@@ -1156,7 +1156,13 @@ public class writerappfragment extends basefragment implements
 
             resetvideotimer();
             clearvideolist();
-            setvideoadapter();
+
+           new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    setvideoadapter();
+                }
+            }).start();
 
             showsharepopupmain();
 
@@ -1259,7 +1265,6 @@ public class writerappfragment extends basefragment implements
         int count = 1;
         currentframenumber =0;
         currentframenumber = currentframenumber + frameduration;
-        progressdialog.showwaitingdialog(getActivity());
         final ArrayList<videomodel> arrayList=new ArrayList<videomodel>();
         try
         {
