@@ -6,6 +6,7 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -796,7 +797,6 @@ public class common
             case UsbConstants.USB_CLASS_WIRELESS_CONTROLLER:
                 return "USB class for wireless controller devices";
             default: return "Unknown USB class!";
-
         }
     }
 
@@ -877,4 +877,20 @@ public class common
         }
         return format;
     }
+
+    public static void showalert(Activity activity, String meg){
+        alertdialog =   new AlertDialog.Builder(activity)
+                .setTitle("Alert")
+                .setMessage(meg)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        alertdialog.dismiss();
+
+                    }
+                })
+                .show();
+    }
+
 }

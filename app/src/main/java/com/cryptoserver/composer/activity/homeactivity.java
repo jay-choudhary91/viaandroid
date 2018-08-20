@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +16,10 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,6 +33,7 @@ import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.writerappfragment;
 import com.cryptoserver.composer.services.CallService;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 
 import java.io.File;
@@ -226,50 +231,59 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 selectedimageuri = data.getData();
                 // OI FILE Manager
                 selectedvideopath = getpath(this, selectedimageuri);
-                if(selectedvideopath == null)
+
+                if(selectedvideopath == null){
+                    common.showalert(homeactivity.this,getResources().getString(R.string.file_not_supported));
+
                     return;
-
-                File sourceFile = new File(selectedvideopath);
-
-                String destinationPath = config.videodir;
-
-                String filename = sourceFile.getName();
-
-                File destinationFile = new File(destinationPath+File.separator+filename);
-
-                    try
-                    {
-                        if (!destinationFile.getParentFile().exists())
-                            destinationFile.getParentFile().mkdirs();
-
-                        if (!destinationFile.exists()) {
-                            destinationFile.createNewFile();
-                        }
-
-                        InputStream in = new FileInputStream(selectedvideopath);
-                        OutputStream out = new FileOutputStream(destinationFile);
-
-                        // Copy the bits from instream to outstream
-                        byte[] buf = new byte[1024];
-                        int len;
-
-                        while ((len = in.read(buf)) > 0) {
-                            out.write(buf, 0, len);
-                        }
-
-                        in.close();
-                        out.close();
-
-                        Toast.makeText(homeactivity.this,"Video upload successfully!",Toast.LENGTH_SHORT).show();
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                        Toast.makeText(homeactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
-                    }
+                }
+                setcopyvideo(selectedvideopath);
                 }
             }
         }
+
+        public void setcopyvideo(String selectedvideopath){
+
+            File sourceFile = new File(selectedvideopath);
+
+            String destinationPath = config.videodir;
+
+            String filename = sourceFile.getName();
+
+            File destinationFile = new File(destinationPath+File.separator+filename);
+
+            try
+            {
+                if (!destinationFile.getParentFile().exists())
+                    destinationFile.getParentFile().mkdirs();
+
+                if (!destinationFile.exists()) {
+                    destinationFile.createNewFile();
+                }
+
+                InputStream in = new FileInputStream(selectedvideopath);
+                OutputStream out = new FileOutputStream(destinationFile);
+
+                // Copy the bits from instream to outstream
+                byte[] buf = new byte[1024];
+                int len;
+
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+
+                in.close();
+                out.close();
+
+                Toast.makeText(homeactivity.this,"Video upload successfully!",Toast.LENGTH_SHORT).show();
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+                Toast.makeText(homeactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
+            }
+        }
+
 
     public static String getpath(final Context context, final Uri uri) {
 
@@ -384,6 +398,27 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
      */
     public static boolean ismediadocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
+    }
+
+
+
     }
 }
 

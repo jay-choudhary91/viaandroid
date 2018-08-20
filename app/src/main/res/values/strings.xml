@@ -50,4 +50,9 @@
     <string name="short_seconds">sec</string>
     <string name="megabyte">MB</string>
     <string name="kilobyte">KB</string>
+
+    <string name="file_not_supported">File format not supported</string>
+
+
+
 </resources>

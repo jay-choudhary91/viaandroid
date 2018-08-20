@@ -76,4 +76,7 @@ dependencies {
     }
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
     compile "com.daimajia.swipelayout:library:1.2.0@aar"
+
+    implementation 'com.nikhilpanju.recyclerviewenhanced:recyclerviewenhanced:1.1.0'
+
 }

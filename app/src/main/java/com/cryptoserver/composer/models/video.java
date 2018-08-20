@@ -11,8 +11,10 @@ public class video
     public String createdate="";
     public String duration="";
     public String md5="";
+    public boolean isSelected = false;
 
-    public video(String path,String name,String createdate,String duration,String md5)
+
+    public video(String path, String name, String createdate, String duration, String md5)
     {
         setPath(path);
         setName(name);
@@ -64,5 +66,14 @@ public class video
 
     public void setMd5(String md5) {
         this.md5 = md5;
+    }
+
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

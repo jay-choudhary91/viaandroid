@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.daimajia.swipe.SwipeLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:swipe="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe"
@@ -11,7 +11,8 @@
         android:id="@+id/bottom_wraper"
         android:layout_width="60dp"
         android:orientation="horizontal"
-        android:layout_height="match_parent">
+        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content">
 
         <Button
             android:id="@+id/btn_edit"
@@ -20,12 +21,14 @@
             android:layout_weight="1"
             android:background="@color/red"
             android:gravity="center"
+            android:focusable="false"
             android:text="Edit"
             android:textColor="@color/white"/>
 
     </LinearLayout>
 
 <RelativeLayout
+    android:id="@+id/rl_rowfg"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="5dp"
@@ -96,8 +99,9 @@
                 android:gravity="left"
                 android:textSize="15sp"
                 android:ems="1"
+                android:background="@drawable/edittext_shap"
                 android:textColor="@color/black"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
 
             <com.cryptoserver.composer.views.CustomFontTextView
@@ -109,6 +113,7 @@
                 android:textSize="15sp"
                 android:textColor="@color/black"
                 android:text="Video 1 Name"
+                android:visibility="gone"
                 />
             <com.cryptoserver.composer.views.CustomFontTextView
                 app:fontType="OpenSans_Regular"
@@ -150,4 +155,4 @@
         </LinearLayout>
     </LinearLayout>
   </RelativeLayout>
-</com.daimajia.swipe.SwipeLayout>
+</RelativeLayout>

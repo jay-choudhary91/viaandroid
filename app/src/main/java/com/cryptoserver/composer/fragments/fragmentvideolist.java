@@ -1,6 +1,8 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,8 +14,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +25,17 @@ import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adaptervideolist;
+import com.cryptoserver.composer.interfaces.AdapterItemClick;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +60,7 @@ public class fragmentvideolist extends basefragment {
     private static final int request_permissions = 1;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adaptervideolist adapter;
+    private RecyclerTouchListener onTouchListener;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videolist;
@@ -69,6 +77,7 @@ public class fragmentvideolist extends basefragment {
     public void onResume() {
         super.onResume();
         requestPremission();
+        recyrviewvideolist.addOnItemTouchListener(onTouchListener);
     }
 
     public void requestPremission()
@@ -164,13 +173,44 @@ public class fragmentvideolist extends basefragment {
                                     }
                                 })
                                 .show();
+                    }else if(type == 3){
+
+                        getVideoList();
+
                     }
                 }
             });
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             recyrviewvideolist.setLayoutManager(mLayoutManager);
+            ((DefaultItemAnimator) recyrviewvideolist.getItemAnimator()).setSupportsChangeAnimations(false);
+            recyrviewvideolist.getItemAnimator().setChangeDuration(0);
             recyrviewvideolist.setAdapter(adapter);
         }
+
+        onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
+        onTouchListener
+                .setSwipeOptionViews(R.id.btn_edit)
+                .setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                    @Override
+                    public void onSwipeOptionClicked(int viewID, int position) {
+
+
+                        arrayvideolist.get(position).setSelected(true);
+                        adapter.notifyDataSetChanged();
+                        Log.e("selected Position = " ,""+ position);
+
+                    }
+                });
+
+
+        /*recyrviewvideolist.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hidekeyboard();
+                return false;
+            }
+        });*/
+
         return rootview;
     }
 
@@ -257,5 +297,12 @@ public class fragmentvideolist extends basefragment {
 
 
 
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
     }
 }
