@@ -82,8 +82,15 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
     @Override
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
+        if(arrayvideolist.get(position).getName().contains("."))
+        {
+            holder.edtvideoname.setText(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().lastIndexOf(".")));
+        }
+        else
+        {
+            holder.edtvideoname.setText(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().trim().length()));
+        }
 
-        holder.edtvideoname.setText(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().lastIndexOf(".")));
         holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
         holder.tvvideoduration.setText("Duration : " +arrayvideolist.get(position).getDuration());
 
@@ -180,13 +187,21 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                         File filedirectory = sourceFile.getParentFile();
                         String filename = sourceFile.getName();
 
-                    if(!filename.equalsIgnoreCase(renamevalue)){
-                        File from = new File(filedirectory,filename);
-                        File to = new File(filedirectory,renamevalue + ".mp4");
-                        from.renameTo(to);
+                    if(renamevalue.toString().trim().length() > 0)
+                    {
+                        if(!filename.equalsIgnoreCase(renamevalue)){
+                            File from = new File(filedirectory,filename);
+                            File to = new File(filedirectory,renamevalue + ".mp4");
+                            from.renameTo(to);
 
-                        adapter.onItemClicked(arrayvideolist.get(position),3);
+                            adapter.onItemClicked(arrayvideolist.get(position),3);
+                        }
                     }
+                    else
+                    {
+                        holder.edtvideoname.setText(filename);
+                    }
+
 
                     Log.e("Focaus change ", "Focus change");
 

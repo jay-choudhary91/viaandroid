@@ -41,6 +41,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,12 +82,12 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
 
         applicationviavideocomposer.setActivity(homeactivity.this);
 
-        writerappfragment frag=new writerappfragment();
+        /*writerappfragment frag=new writerappfragment();
         frag.setData(true);
-        replaceFragment(frag, true, false);
+        replaceFragment(frag, true, false);*/
 
-        /*fragmentvideolist frag=new fragmentvideolist();
-        replaceFragment(frag, false, true);*/
+        fragmentvideolist frag=new fragmentvideolist();
+        replaceFragment(frag, false, true);
 
         imgaddicon.setOnClickListener(this);
         imgsettingsicon.setOnClickListener(this);
@@ -223,9 +225,23 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
 
     public  void opengallery()
     {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("video*//*");
+        startActivityForResult(Intent.createChooser(intent, "Select Video"), request_take_gallery_video);*/
+
+        Intent intent;
+        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+        {
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        }
+        else
+        {
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+        }
         intent.setType("video/*");
-        startActivityForResult(Intent.createChooser(intent, "Select Video"), request_take_gallery_video);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent,request_take_gallery_video);
     }
 
 
@@ -250,42 +266,62 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
 
             File sourceFile = new File(selectedvideopath);
 
-            String destinationPath = config.videodir;
-
-            String filename = sourceFile.getName();
-
-            File destinationFile = new File(destinationPath+File.separator+filename);
-
-            try
+            if(sourceFile.exists())
             {
-                if (!destinationFile.getParentFile().exists())
-                    destinationFile.getParentFile().mkdirs();
+                long space=sourceFile.getTotalSpace();
 
-                if (!destinationFile.exists()) {
-                    destinationFile.createNewFile();
+                String destinationDir = config.videodir;
+
+                // check for existance of file.
+                File destinationFile = null;
+                File pathFile=new File(destinationDir+File.separator+sourceFile.getName());
+                if(pathFile.exists())
+                {
+                    String extension = pathFile.getAbsolutePath().substring(pathFile.getAbsolutePath().lastIndexOf("."));
+                    String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    destinationFile = new File(destinationDir+File.separator+fileName+extension);
+                }
+                else
+                {
+                    destinationFile = new File(destinationDir+File.separator+sourceFile.getName());
                 }
 
-                InputStream in = new FileInputStream(selectedvideopath);
-                OutputStream out = new FileOutputStream(destinationFile);
+                try
+                {
+                    if (!destinationFile.getParentFile().exists())
+                        destinationFile.getParentFile().mkdirs();
 
-                // Copy the bits from instream to outstream
-                byte[] buf = new byte[1024];
-                int len;
+                    if (!destinationFile.exists()) {
+                        destinationFile.createNewFile();
+                    }
 
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
+                    InputStream in = new FileInputStream(selectedvideopath);
+                    OutputStream out = new FileOutputStream(destinationFile);
+
+                    // Copy the bits from instream to outstream
+                    byte[] buf = new byte[1024];
+                    int len;
+
+                    while ((len = in.read(buf)) > 0) {
+                        out.write(buf, 0, len);
+                    }
+
+                    in.close();
+                    out.close();
+
+                    Toast.makeText(homeactivity.this,"Video upload successfully!",Toast.LENGTH_SHORT).show();
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                    Toast.makeText(homeactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
                 }
-
-                in.close();
-                out.close();
-
-                Toast.makeText(homeactivity.this,"Video upload successfully!",Toast.LENGTH_SHORT).show();
-
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-                Toast.makeText(homeactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
             }
+            else
+            {
+                Toast.makeText(homeactivity.this,"File doesn't exist!",Toast.LENGTH_SHORT).show();
+            }
+
         }
 
 

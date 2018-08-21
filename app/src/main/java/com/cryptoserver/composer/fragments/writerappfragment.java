@@ -488,7 +488,7 @@ public class writerappfragment extends basefragment implements
 
     public void exportvideo()
     {
-        String sourcePath = mvideo.getAbsolutePath();
+        /*String sourcePath = mvideo.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
         File destinationDir = new File(Environment.getExternalStoragePublicDirectory(
@@ -541,7 +541,21 @@ public class writerappfragment extends basefragment implements
         {
             e.printStackTrace();
             Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
+        }*/
+
+        try
+        {
+            ContentValues values = new ContentValues(3);
+            values.put(MediaStore.Video.Media.TITLE, "Via composer");
+            values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+            values.put(MediaStore.Video.Media.DATA, mvideo.getAbsolutePath());
+            getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
+
         progressdialog.dismisswaitdialog();
     }
 
