@@ -294,50 +294,39 @@ public class hglvideotrimmer extends FrameLayout {
             mplayview.setVisibility(View.VISIBLE);
             mvideoview.pause();
 
-           /* int diff = (int) mendposition - mstartposition;
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(getContext(), msrc);
+            long METADATA_KEY_DURATION = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
 
-            if(diff < 3000){
+           file = new File(msrc.getPath());
 
-                Toast.makeText(getContext(), "Video should be of minimum 3 seconds",
-                        Toast.LENGTH_LONG).show();
+            if (mtimevideo < min_time_frame) {
 
-
-            }else {*/
-                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                mediaMetadataRetriever.setDataSource(getContext(), msrc);
-                long METADATA_KEY_DURATION = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-
-               file = new File(msrc.getPath());
-
-                if (mtimevideo < min_time_frame) {
-
-                    if ((METADATA_KEY_DURATION - mendposition) > (min_time_frame - mtimevideo)) {
-                        mendposition += (min_time_frame - mtimevideo);
-                    } else if (mstartposition > (min_time_frame - mtimevideo)) {
-                        mstartposition -= (min_time_frame - mtimevideo);
-                    }
+                if ((METADATA_KEY_DURATION - mendposition) > (min_time_frame - mtimevideo)) {
+                    mendposition += (min_time_frame - mtimevideo);
+                } else if (mstartposition > (min_time_frame - mtimevideo)) {
+                    mstartposition -= (min_time_frame - mtimevideo);
                 }
+            }
 
-                //notify that video trimming started
-                if (montrimvideolistener != null)
-                    montrimvideolistener.ontrimstarted();
+            //notify that video trimming started
+            if (montrimvideolistener != null)
+                montrimvideolistener.ontrimstarted();
 
-                backgroundexecutor.execute(
-                        new backgroundexecutor.task("", 0L, "") {
-                            @Override
-                            public void execute() {
-                                try {
-
-                                    executeCutVideoCommand(mstartposition, mendposition);
-
-                                    //trimvideoutils.starttrim(file, getDestinationPath(), mstartposition, mendposition, montrimvideolistener);
-                                } catch (final Throwable e) {
-                                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
-                                }
+            backgroundexecutor.execute(
+                    new backgroundexecutor.task("", 0L, "") {
+                        @Override
+                        public void execute() {
+                            try {
+                                executeCutVideoCommand(mstartposition, mendposition);
+                                //trimvideoutils.starttrim(file, getDestinationPath(), mstartposition, mendposition, montrimvideolistener);
+                            } catch (final Throwable e) {
+                                Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                             }
                         }
-                );
-            }
+                    }
+            );
+        }
        // }
     }
 
@@ -706,7 +695,7 @@ public class hglvideotrimmer extends FrameLayout {
         final String fileName = "MP4_" + timeStamp + ".mp4";
         String filePath = getDestinationPath() + fileName;
 
-        String filePrefix = "cut_video";
+        String filePrefix = "via_video";
         String fileExtn = ".mp4";
         String yourRealPath = file.getAbsolutePath();
 
@@ -722,31 +711,12 @@ public class hglvideotrimmer extends FrameLayout {
         Log.d(tag, "starttrim: startMs: " + startMs);
         Log.d(tag, "starttrim: endMs: " + endMs);
         filePath = dest.getAbsolutePath();
-        //String[] complexCommand = {"-i", yourRealPath, "-ss", "" + startMs / 1000, "-t", "" + endMs / 1000, dest.getAbsolutePath()};
-        //String[] complexCommand = {"-ss", "" + startMs / 1000, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs) / 1000,"-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
-        //String[] complexCommand = {"-ss", "" + startMs / 1000, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs) / 1000, filePath};
 
         String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + startMs / 1000, "-t", "" + (endMs - startMs) / 1000, "-c","copy", filePath};
 
         execFFmpegBinary(complexCommand,dest);
     }
 
-    /*private void showUnsupportedExceptionDialog() {
-        new AlertDialog.Builder()
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Not Supported")
-                .setMessage("Device Not Supported")
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        MainActivity.this.finish();
-                    }
-                })
-                .create()
-                .show();
-
-    }*/
 
     private void execFFmpegBinary(final String[] command, final File dest) {
         try {
@@ -783,7 +753,7 @@ public class hglvideotrimmer extends FrameLayout {
                         //Toast.makeText(getContext(), "Video save", Toast.LENGTH_SHORT).show();
                     progressdialog.dismisswaitdialog();
                         if (montrimvideolistener != null)
-                            montrimvideolistener.getresult(Uri.parse(dest.toString()));
+                            montrimvideolistener.getresult(dest.toString());
                 }
             });
         } catch (FFmpegCommandAlreadyRunningException e) {

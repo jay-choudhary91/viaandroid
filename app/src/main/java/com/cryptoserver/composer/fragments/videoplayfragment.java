@@ -79,27 +79,23 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
     }
 
     @Override
-    public void getresult(final Uri uri) {
+    public void getresult(Uri uri) {
+
+    }
+
+    @Override
+    public void getresult(final String filePath) {
 
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                if(uri != null){
-                    ContentValues values = new ContentValues(3);
-                    values.put(MediaStore.Video.Media.TITLE, "Via composer");
-                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                    values.put(MediaStore.Video.Media.DATA,uri.getPath());
-                    getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-
-              //      common.showalert(getActivity(),getResources().getString(R.string.video_saved_at));
-                   // Toast.makeText(getactivity(), getString(R.string.video_saved_at), Toast.LENGTH_LONG).show();
+                if(filePath != null){
+                    String selectedvideopath = filePath;
+                    common.shareMedia(getActivity(),selectedvideopath);
                 }
            }
         });
-        /*Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        intent.setDataAndType(uri, "video/mp4");
-        startActivity(intent);*/
     }
 
     @Override
@@ -128,15 +124,26 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
         });
     }
 
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid)
+        {
+            case R.id.img_share_icon:
+
+                if(mvideotrimmer != null)
+                {
+                    mvideotrimmer.onSaveClicked();
+                }
+
+                break;
+        }
+    }
+
     public void setdata(String videoPath, int duration)
     {
         this.videopath =videoPath;
         this.videoduration =  duration;
-    }
-
-    public void savevideo(){
-
-        mvideotrimmer.onSaveClicked();
     }
 }
 
