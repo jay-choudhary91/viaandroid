@@ -39,7 +39,7 @@ public class fragmentvideocomposer extends basefragment {
             ButterKnife.bind(this,rootview);
             final ImageView handleimageview = rootview.findViewById(R.id.handle);
 
-            SlidingDrawer simpleSlidingDrawer =(SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer); // initiate the SlidingDrawer
+           /* SlidingDrawer simpleSlidingDrawer =(SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer); // initiate the SlidingDrawer
 
             simpleSlidingDrawer.setOnDrawerOpenListener(new SlidingDrawer.OnDrawerOpenListener() {
                 @Override
@@ -57,7 +57,7 @@ public class fragmentvideocomposer extends basefragment {
                     handleimageview.setImageResource(R.drawable.lefthandle);
                 }
             });
-
+*/
         }
 
         return rootview;
