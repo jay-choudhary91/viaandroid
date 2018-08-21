@@ -212,8 +212,8 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
             case R.id.img_cancel:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_cancel);
                 break;
-            case R.id.imgshareicon:
-                getcurrentfragment().onHeaderBtnClick(R.id.imgshareicon);
+            case R.id.img_share_icon:
+                getcurrentfragment().onHeaderBtnClick(R.id.img_share_icon);
                 break;
             case R.id.img_add_icon:
                 //Intent in=new Intent(homeactivity.this,writerappactivity.class);
