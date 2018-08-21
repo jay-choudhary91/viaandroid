@@ -32,6 +32,7 @@ import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.fullscreenvideofragment;
+import com.cryptoserver.composer.fragments.videoplayfragment;
 import com.cryptoserver.composer.fragments.writerappfragment;
 import com.cryptoserver.composer.services.CallService;
 import com.cryptoserver.composer.utils.common;
@@ -98,6 +99,7 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         img_back.setOnClickListener(this);
         imguploadicon.setOnClickListener(this);
         img_cancel.setOnClickListener(this);
+        imgshareicon.setOnClickListener(this);
 
 
         CallService mService = new CallService();
@@ -189,6 +191,16 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
             updateheader("");
 
         }
+        else if(fragment instanceof videoplayfragment){
+            img_back.setVisibility(View.GONE);
+            img_cancel.setVisibility(View.GONE);
+            imgaddicon.setVisibility(View.GONE);
+            imgsettingsicon.setVisibility(View.GONE);
+            imguploadicon.setVisibility(View.GONE);
+            imgshareicon.setVisibility(View.VISIBLE);
+            updateheader("");
+
+        }
     }
 
     @Override
@@ -199,6 +211,9 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 break;
             case R.id.img_cancel:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_cancel);
+                break;
+            case R.id.imgshareicon:
+                getcurrentfragment().onHeaderBtnClick(R.id.imgshareicon);
                 break;
             case R.id.img_add_icon:
                 //Intent in=new Intent(homeactivity.this,writerappactivity.class);
