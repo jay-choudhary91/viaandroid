@@ -526,7 +526,7 @@ public class videocontrollerview extends FrameLayout {
             }
 
             int pos = mPlayer.getCurrentPosition();
-            pos -= 5000; // milliseconds
+          //  pos -= 5000; // milliseconds
             mPlayer.seekTo(pos);
             setProgress();
 
@@ -541,7 +541,7 @@ public class videocontrollerview extends FrameLayout {
             }
 
             int pos = mPlayer.getCurrentPosition();
-            pos += 15000; // milliseconds
+           // pos += 15000; // milliseconds
             mPlayer.seekTo(pos);
             setProgress();
 
