@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.FullScreenVideoActivity;
+import com.cryptoserver.composer.fragments.fullscreenvideofragment;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
 import com.daimajia.swipe.SwipeLayout;
@@ -165,9 +166,11 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
             @Override
             public void onClick(View view) {
 
-                Intent in=new Intent(context, FullScreenVideoActivity.class);
+                adapter.onItemClicked(arrayvideolist.get(position),4);
+
+                /*Intent in=new Intent(context, FullScreenVideoActivity.class);
                 in.putExtra("videopath",arrayvideolist.get(position).getPath());
-                context.startActivity(in);
+                context.startActivity(in);*/
             }
         });
 

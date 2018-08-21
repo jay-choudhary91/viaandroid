@@ -11,7 +11,9 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -77,6 +79,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
@@ -1574,8 +1577,12 @@ public class writerappfragment extends basefragment implements
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
 
+                Uri selectedimageuri =Uri.fromFile(new File(mvideo.getAbsolutePath()));
+
+                int duration =  getmediaduration(selectedimageuri);
+
                 videoplayfragment videoplayfragment =new videoplayfragment();
-                videoplayfragment.setdata(mvideo.getAbsolutePath());
+                videoplayfragment.setdata(mvideo.getAbsolutePath(), duration);
                 gethelper().replaceFragment(videoplayfragment, false, true);
 
             }
@@ -1602,5 +1609,13 @@ public class writerappfragment extends basefragment implements
         fragmentvideolist frag=new fragmentvideolist();
         gethelper().replaceFragment(frag, true, false);
     }
+
+
+    private int getmediaduration(Uri uriOfFile)  {
+        MediaPlayer mp = MediaPlayer.create(getActivity(),uriOfFile);
+        int duration = mp.getDuration();
+        return  duration;
+    }
+
 }
 

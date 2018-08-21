@@ -33,6 +33,7 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
     View rootview = null;
     String videopath;
     int videoduration;
+
     @Override
     public int getlayoutid() {
 
@@ -55,7 +56,7 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            videoduration = (int)common.getvideoduration(videopath);
+           // videoduration = (int)common.getvideoduration(videopath);
             if (mvideotrimmer != null) {
                 mvideotrimmer.setMaxDuration(videoduration);
                 mvideotrimmer.setOnTrimVideoListener(this);
@@ -127,17 +128,15 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
         });
     }
 
-    public void setdata(String videoPath)
+    public void setdata(String videoPath, int duration)
     {
         this.videopath =videoPath;
+        this.videoduration =  duration;
     }
 
     public void savevideo(){
 
         mvideotrimmer.onSaveClicked();
     }
-
-
-
 }
 
