@@ -124,7 +124,6 @@ public class introactivity extends FragmentActivity {
                 {
                     Date currentDate=new Date();
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
-                    //Log.e("insec",""+secondDifference);
                     if(secondDifference > 4)
                     {
                         initialDate = new Date();
@@ -144,7 +143,7 @@ public class introactivity extends FragmentActivity {
                         }
                     }
                 }
-                myHandler.postDelayed(this, 100);
+                myHandler.postDelayed(this, 500);
             }
         };
         myHandler.post(myRunnable);
@@ -154,6 +153,57 @@ public class introactivity extends FragmentActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+                if(pressed)
+                    return;
+/*
+                if ( position == currentselected )
+                {
+                    // We are moving to next screen on right side
+                    if ( positionOffset > 0.4 )
+                    {
+                        // Closer to next screen than to current
+                        if ( position + 1 != nextselection )
+                        {
+                            nextselection = position + 1;
+                            currentselected=nextselection;
+                            setviewpager( nextselection);
+                        }
+                    }
+                    else
+                    {
+                        // Closer to current screen than to next
+                        if ( position != nextselection )
+                        {
+                            nextselection = position;
+                            currentselected=nextselection;
+                            setviewpager( nextselection);
+                        }
+                    }
+                }
+                else
+                {
+                    // We are moving to next screen left side
+                    if ( positionOffset > 0.4 )
+                    {
+                        // Closer to current screen than to next
+                        if ( position + 1 != nextselection )
+                        {
+                            nextselection = position + 1;
+                            currentselected=nextselection;
+                            setviewpager( nextselection);
+                        }
+                    }
+                    else
+                    {
+                        // Closer to next screen than to current
+                        if ( position != nextselection )
+                        {
+                            nextselection = position;
+                            currentselected=nextselection;
+                            setviewpager( nextselection);
+                        }
+                    }
+                }*/
 
             }
 
@@ -197,6 +247,7 @@ public class introactivity extends FragmentActivity {
     public void setviewpager(int position)
     {
         Log.e("Positions ", position+" ") ;
+        initialDate = new Date();
         viewpager_header.setCurrentItem(position, true);
         viewpager_footer.setCurrentItem(position, true);
     }
@@ -216,7 +267,7 @@ public class introactivity extends FragmentActivity {
                 case 1: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
                         getResources().getString(R.string.video_manager),R.drawable.mobile));
                 case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.globe));
+                        getResources().getString(R.string.varifiable),R.drawable.mobile_new));
 
                 default: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
                         getResources().getString(R.string.modern_security),R.drawable.shield));
@@ -244,7 +295,7 @@ public class introactivity extends FragmentActivity {
                 case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
                         getResources().getString(R.string.video_manager),R.drawable.mobile));
                 case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.globe));
+                        getResources().getString(R.string.varifiable),R.drawable.mobile_new));
 
                 default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
                         getResources().getString(R.string.modern_security),R.drawable.shield));
