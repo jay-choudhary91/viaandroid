@@ -41,7 +41,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="10dp">
 
         <TextView android:id="@+id/time_current"
             android:textSize="14sp"
@@ -56,10 +57,11 @@
 
         <SeekBar
             android:id="@+id/mediacontroller_progress"
-            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="0dip"
             android:layout_weight="1"
-            android:layout_height="32dip" />
+            android:progressDrawable="@drawable/custom_seekbar"
+            android:layout_height="40dip"
+            android:thumb="@drawable/custom_thumb"/>
 
         <TextView android:id="@+id/time"
             android:textSize="14sp"

@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
+import com.cryptoserver.composer.fragments.fullscreenvideofragment;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
@@ -99,6 +100,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        if(getcurrentfragment() instanceof fullscreenvideofragment){
+
+            ((fullscreenvideofragment) getcurrentfragment()).onRestart();
+        }
+
 
     }
     @Override
