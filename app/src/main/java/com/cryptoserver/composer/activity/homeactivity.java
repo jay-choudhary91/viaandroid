@@ -31,6 +31,7 @@ import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
+import com.cryptoserver.composer.fragments.fullscreenvideofragment;
 import com.cryptoserver.composer.fragments.writerappfragment;
 import com.cryptoserver.composer.services.CallService;
 import com.cryptoserver.composer.utils.common;
@@ -59,6 +60,9 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
     ImageView img_back;
     @BindView(R.id.img_upload_icon)
     ImageView imguploadicon;
+
+    @BindView(R.id.img_share_icon)
+    ImageView imgshareicon;
     @BindView(R.id.img_cancel)
     ImageView img_cancel;
     @BindView(R.id.img_menu)
@@ -154,6 +158,7 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
             imgsettingsicon.setVisibility(View.VISIBLE);
             imguploadicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setEnabled(true);
+            imgshareicon.setVisibility(View.GONE);
             updateheader("");
         }
         else if (fragment instanceof writerappfragment) {
@@ -162,6 +167,7 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
             imguploadicon.setVisibility(View.GONE);
             img_menu.setVisibility(View.VISIBLE);
             img_help.setVisibility(View.VISIBLE);
+            imgshareicon.setVisibility(View.GONE);
 
         }
         else if(fragment instanceof fragmentsettings){
@@ -170,6 +176,16 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
             imgaddicon.setVisibility(View.GONE);
             imgsettingsicon.setVisibility(View.GONE);
             imguploadicon.setVisibility(View.GONE);
+            imgshareicon.setVisibility(View.GONE);
+            updateheader("");
+
+        }else if(fragment instanceof fullscreenvideofragment){
+            img_back.setVisibility(View.GONE);
+            img_cancel.setVisibility(View.GONE);
+            imgaddicon.setVisibility(View.GONE);
+            imgsettingsicon.setVisibility(View.GONE);
+            imguploadicon.setVisibility(View.GONE);
+            imgshareicon.setVisibility(View.VISIBLE);
             updateheader("");
 
         }
