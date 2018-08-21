@@ -55,6 +55,7 @@ public class FullScreenVideoActivity extends AppCompatActivity implements Surfac
         try {
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             player.setDataSource(this, Uri.parse(VIDEO_URL));
+            player.prepareAsync();
             player.setOnPreparedListener(this);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -66,6 +67,29 @@ public class FullScreenVideoActivity extends AppCompatActivity implements Surfac
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        try {
+            player = new MediaPlayer();
+            controller.removeAllViews();
+            controller = new videocontrollerview(this);
+
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            player.setDataSource(this, Uri.parse(VIDEO_URL));
+            player.prepareAsync();
+            player.setOnPreparedListener(this);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -93,13 +117,19 @@ public class FullScreenVideoActivity extends AppCompatActivity implements Surfac
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        player.setDisplay(holder);
-        player.prepareAsync();
+        if (player != null)
+            player.setDisplay(holder);
+
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        if (player != null) {
+            player.pause();
+            player.reset();
+            player.release();
+            player = null;
+        }
     }
     // End SurfaceHolder.Callback
 
@@ -137,37 +167,47 @@ public class FullScreenVideoActivity extends AppCompatActivity implements Surfac
     @Override
     public int getCurrentPosition() {
         try {
-            return player.getCurrentPosition();
+            if(player != null)
+                return player.getCurrentPosition();
         }catch (Exception e)
         {
             e.printStackTrace();
-            return 0;
         }
+        return 0;
     }
 
     @Override
     public int getDuration() {
-        return player.getDuration();
+        if(player != null)
+            return player.getDuration();
+
+        return 0;
     }
 
     @Override
     public boolean isPlaying() {
-        return player.isPlaying();
+        if(player != null)
+            return player.isPlaying();
+
+        return false;
     }
 
     @Override
     public void pause() {
-        player.pause();
+        if(player != null)
+            player.pause();
     }
 
     @Override
     public void seekTo(int i) {
-        player.seekTo(i);
+        if(player != null)
+            player.seekTo(i);
     }
 
     @Override
     public void start() {
-        player.start();
+        if(player != null)
+            player.start();
     }
 
     @Override
