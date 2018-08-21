@@ -14,14 +14,12 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,18 +33,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Chronometer;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.FullScreenVideoActivity;
 import com.cryptoserver.composer.adapter.videoframeadapter;
-import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.ffmpeg.data.frametorecord;
 import com.cryptoserver.composer.ffmpeg.data.recordfragment;
 import com.cryptoserver.composer.ffmpeg.fixedratiocroppedtextureview;
@@ -72,16 +68,10 @@ import org.bytedeco.javacv.FrameFilter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -130,9 +120,10 @@ public class writerappfragment extends basefragment implements
     TextView txt_save;
     TextView txt_clear;
     LinearLayout layout_bottom;
-    SlidingDrawer simpleSlidingDrawer;
-    RecyclerView recyviewitem;
 
+    RecyclerView recyviewitem;
+     ImageView handleimageview,righthandle;
+    LinearLayout linearLayout;
     boolean isflashon = false,inPreview = true;
 
     fixedratiocroppedtextureview mpreview;
@@ -177,7 +168,11 @@ public class writerappfragment extends basefragment implements
             txt_save = (TextView) rootview.findViewById(R.id.txt_save);
             txt_clear = (TextView) rootview.findViewById(R.id.txt_clear);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
-            simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
+          //  simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
+            linearLayout=rootview.findViewById(R.id.content);
+            handleimageview=rootview.findViewById(R.id.handle);
+            righthandle=rootview.findViewById(R.id.righthandle);
+
             recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             mcameraid = Camera.CameraInfo.CAMERA_FACING_BACK;
             setpreviewsize(mpreviewwidth, mpreviewheight);
@@ -230,6 +225,62 @@ public class writerappfragment extends basefragment implements
                     }
                 }
             });*/
+
+            handleimageview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+                    linearLayout.startAnimation(rightswipe);
+                    handleimageview.setVisibility(View.GONE);
+                    linearLayout.setVisibility(View.VISIBLE);
+                    rightswipe.start();
+                    righthandle.setVisibility(View.VISIBLE);
+                    rightswipe.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            righthandle.setImageResource(R.drawable.righthandle);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            righthandle.setImageResource(R.drawable.lefthandle);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+
+                }
+            });
+
+            righthandle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+                    linearLayout.startAnimation(leftswipe);
+                    linearLayout.setVisibility(View.INVISIBLE);
+                    righthandle.setVisibility(View.VISIBLE);
+                    handleimageview.setVisibility(View.GONE);
+                    leftswipe.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            handleimageview.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                }
+            });
 
             // At most buffer 10 Frame
             mframetorecordqueue = new LinkedBlockingQueue<>(10);
@@ -1005,7 +1056,7 @@ public class writerappfragment extends basefragment implements
                             }
                             break;
                         case Surface.ROTATION_270:
-                            // landscape-right
+                            // landscape-right_slide
                             switch (info.orientation) {
                                 case 90:
                                     if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {

@@ -143,7 +143,60 @@
 
     </RelativeLayout>
 
-    <SlidingDrawer
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:content="@+id/content"
+        android:handle="@+id/handle"
+        android:orientation="horizontal"
+        android:layout_centerVertical="true">
+        <ImageView
+            android:id="@id/handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/righthandle"
+            />
+        <LinearLayout
+            android:id="@id/content"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:weightSum="1"
+            >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.9"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                >
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyview_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight=".1"
+                android:layout_height="wrap_content"
+                android:src="@drawable/righthandle"
+                android:visibility="gone"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/righthandle"
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+    <!--<SlidingDrawer
         android:id="@+id/simpleSlidingDrawer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -183,5 +236,5 @@
 
             </LinearLayout>
         </LinearLayout>
-    </SlidingDrawer>
+    </SlidingDrawer>-->
 </RelativeLayout>
