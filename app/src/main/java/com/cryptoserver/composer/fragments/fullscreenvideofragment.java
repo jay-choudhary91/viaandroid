@@ -12,7 +12,11 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.utils.common;
@@ -34,7 +38,8 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
     MediaPlayer player;
     videocontrollerview controller;
     View rootview = null;
-
+    ImageView handleimageview,righthandle;
+    LinearLayout linearLayout;
 
     @Override
     public int getlayoutid() {
@@ -49,6 +54,9 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
             ButterKnife.bind(this, rootview);
 
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+            linearLayout=rootview.findViewById(R.id.content);
+            handleimageview=rootview.findViewById(R.id.handle);
+            righthandle=rootview.findViewById(R.id.righthandle);
             SurfaceHolder videoHolder = videoSurface.getHolder();
             videoHolder.addCallback(this);
 
@@ -73,6 +81,63 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
             }
 
         }
+
+        handleimageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+                linearLayout.startAnimation(rightswipe);
+                handleimageview.setVisibility(View.GONE);
+                linearLayout.setVisibility(View.VISIBLE);
+                rightswipe.start();
+                righthandle.setVisibility(View.VISIBLE);
+                rightswipe.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        righthandle.setImageResource(R.drawable.righthandle);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        righthandle.setImageResource(R.drawable.lefthandle);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
+            }
+        });
+
+        righthandle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+                linearLayout.startAnimation(leftswipe);
+                linearLayout.setVisibility(View.INVISIBLE);
+                righthandle.setVisibility(View.VISIBLE);
+                handleimageview.setVisibility(View.GONE);
+                leftswipe.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        handleimageview.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+            }
+        });
+
         return rootview;
     }
     public void onRestart() {
