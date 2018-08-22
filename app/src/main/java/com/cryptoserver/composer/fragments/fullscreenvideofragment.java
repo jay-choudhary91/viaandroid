@@ -491,6 +491,7 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
 //            e.printStackTrace();
 //        }
 //    }
+    
 public void setvideoadapter() {
 
     int count = 1;
