@@ -1561,9 +1561,15 @@ public class writerappfragment extends basefragment implements
 
             @Override
             public void onClick(View v) {
-                Intent in=new Intent(getActivity(), FullScreenVideoActivity.class);
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+                fullscreenvideofragment fullvdofragmnet=new fullscreenvideofragment();
+                fullvdofragmnet.setdata(mvideo.getAbsolutePath());
+                gethelper().addFragment(fullvdofragmnet,false,true);
+
+               /* Intent in=new Intent(getActivity(), FullScreenVideoActivity.class);
                 in.putExtra("videopath",mvideo.getAbsolutePath());
-                startActivity(in);
+                startActivity(in);*/
             }
         });
         maindialogshare.show();
@@ -1608,8 +1614,10 @@ public class writerappfragment extends basefragment implements
 
             @Override
             public void onClick(View v) {
-
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
                 if(mvideo != null)
+
                     exportvideo();
 
                 if(subdialogshare != null && subdialogshare.isShowing())
@@ -1619,6 +1627,7 @@ public class writerappfragment extends basefragment implements
                     maindialogshare.dismiss();
 
                 launchvideolist();
+                progressdialog.dismisswaitdialog();
             }
         });
 

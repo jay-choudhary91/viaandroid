@@ -99,6 +99,7 @@
                 android:gravity="left"
                 android:textSize="15sp"
                 android:ems="1"
+                android:maxLines="1"
                 android:background="@drawable/edittext_shap"
                 android:textColor="@color/black"
                 android:visibility="visible"
