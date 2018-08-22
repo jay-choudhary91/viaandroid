@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="10dp"
     android:background="@color/black"
     android:orientation="vertical">
 
@@ -11,7 +10,6 @@
         android:id="@+id/layout_surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layout"
         android:background="@android:color/black"
         android:gravity="center"
         android:orientation="vertical">
@@ -23,30 +21,33 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"/>
 
-        <ImageView
-            android:id="@+id/icon_video_play"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/play_button"/>
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/background_video_color">
+        android:background="#4D000000">
+
+        <ImageView
+            android:id="@+id/icon_video_play"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/play"/>
 
         <SeekBar
             android:id="@+id/handlerTop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/icon_video_play"
             android:max="1000"
-            android:visibility="visible"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
             android:progressDrawable="@android:color/transparent"
             android:secondaryProgress="0"
            />
@@ -69,6 +70,7 @@
             android:id="@+id/timeLineBar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:visibility="visible"
             android:layout_alignTop="@+id/timeLineView"/>
 
         <View
@@ -76,20 +78,44 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/timeLineBar"
+            android:visibility="gone"
             android:background="@color/line_button"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lineTop"
-            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:visibility="visible"
             android:orientation="horizontal">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/img_uparrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/uparrow"
+                    android:layout_centerHorizontal="true"
+                    />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/img_uparrow"
+                    android:background="@color/white"/>
+
+            </RelativeLayout>
+
 
             <Button
                 android:id="@+id/btCancel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:visibility="gone"
                 android:background="@drawable/black_button_background"
                 android:text="cancel"
 
@@ -100,6 +126,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
+                android:visibility="gone"
                 android:background="@color/line_button"/>
 
             <Button
@@ -109,6 +136,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/black_button_background"
                 android:text="save"
+                android:visibility="gone"
                 android:textColor="@android:color/white"/>
 
         </LinearLayout>
@@ -153,6 +181,6 @@
             android:textColor="@android:color/white"/>
 
     </RelativeLayout>
-
+    </RelativeLayout>
 
 </RelativeLayout>

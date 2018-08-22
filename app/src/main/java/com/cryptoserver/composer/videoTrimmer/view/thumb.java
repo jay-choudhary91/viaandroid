@@ -97,9 +97,13 @@ public class thumb {
             thumb th = new thumb();
             th.setindex(i);
             if (i == 0) {
+
                 int resimageleft = R.drawable.apptheme_text_select_handle_left;
+
                 th.setbitmap(BitmapFactory.decodeResource(resources, resimageleft));
             } else {
+
+
                 int resimageright = R.drawable.apptheme_text_select_handle_right;
                 th.setbitmap(BitmapFactory.decodeResource(resources, resimageright));
             }

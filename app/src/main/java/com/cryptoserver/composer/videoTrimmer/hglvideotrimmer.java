@@ -201,13 +201,26 @@ public class hglvideotrimmer extends FrameLayout {
             }
         });
 
+
+
         mvideoview.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, @NonNull MotionEvent event) {
-                gestureDetector.onTouchEvent(event);
+                //gestureDetector.onTouchEvent(event);
                 return true;
             }
         });
+
+        mplayview.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickVideoPlayPause();
+            }
+        });
+
+
+
+
 
         mrangeseekbarview.addonrangeseekbarlistener(mvideoprogressindicator);
 
@@ -291,7 +304,11 @@ public class hglvideotrimmer extends FrameLayout {
             if (montrimvideolistener != null)
                 montrimvideolistener.getresult(msrc);
         } else {
+
+            mplayview.setBackgroundResource(R.drawable.play);
             mplayview.setVisibility(View.VISIBLE);
+
+
             mvideoview.pause();
 
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -332,12 +349,11 @@ public class hglvideotrimmer extends FrameLayout {
 
     private void onClickVideoPlayPause() {
         if (mvideoview.isPlaying()) {
-            mplayview.setVisibility(View.VISIBLE);
+            mplayview.setBackgroundResource(R.drawable.play);
             mmessagehandler.removeMessages(show_progress);
             mvideoview.pause();
         } else {
-            mplayview.setVisibility(View.GONE);
-
+            mplayview.setBackgroundResource(R.drawable.pause);
             if (mresetseekbar) {
                 mresetseekbar = false;
                 mvideoview.seekTo(mstartposition);
@@ -390,6 +406,8 @@ public class hglvideotrimmer extends FrameLayout {
     private void onPlayerIndicatorSeekStop(@NonNull SeekBar seekBar) {
         mmessagehandler.removeMessages(show_progress);
         mvideoview.pause();
+
+        mplayview.setBackgroundResource(R.drawable.play);
         mplayview.setVisibility(View.VISIBLE);
 
         int duration = (int) ((mduration * seekBar.getProgress()) / 1000L);
@@ -418,6 +436,7 @@ public class hglvideotrimmer extends FrameLayout {
         }
         mvideoview.setLayoutParams(lp);
 
+        mplayview.setBackgroundResource(R.drawable.play);
         mplayview.setVisibility(View.VISIBLE);
 
         mduration = mvideoview.getDuration();
@@ -455,11 +474,15 @@ public class hglvideotrimmer extends FrameLayout {
     private void setTimeFrames() {
         String seconds = getContext().getString(R.string.short_seconds);
         mtexttimeframe.setText(String.format("%s %s - %s %s", stringfortime(mstartposition), seconds, stringfortime(mendposition), seconds));
+        mtexttimeframe.setVisibility(GONE);
+
+
     }
 
     private void setTimeVideo(int position) {
         String seconds = getContext().getString(R.string.short_seconds);
         mtexttime.setText(String.format("%s %s", stringfortime(position), seconds));
+        mtexttime.setVisibility(GONE);
     }
 
     public String stringfortime(int timeMs) {
@@ -498,10 +521,12 @@ public class hglvideotrimmer extends FrameLayout {
     private void onStopSeekThumbs() {
         mmessagehandler.removeMessages(show_progress);
         mvideoview.pause();
+        mplayview.setBackgroundResource(R.drawable.play);
         mplayview.setVisibility(View.VISIBLE);
     }
 
     private void onVideoCompleted() {
+        mplayview.setBackgroundResource(R.drawable.play);
         mvideoview.seekTo(mstartposition);
     }
 
@@ -526,6 +551,7 @@ public class hglvideotrimmer extends FrameLayout {
         if (time >= mendposition) {
             mmessagehandler.removeMessages(show_progress);
             mvideoview.pause();
+            mplayview.setBackgroundResource(R.drawable.play);
             mplayview.setVisibility(View.VISIBLE);
             mresetseekbar = true;
             return;
@@ -628,6 +654,7 @@ public class hglvideotrimmer extends FrameLayout {
             } else {
                 mtextsize.setText(String.format("%s %s", fileSizeInKB, getContext().getString(R.string.kilobyte)));
             }
+            mtextsize.setVisibility(GONE);
         }
 
         mvideoview.setVideoURI(msrc);

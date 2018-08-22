@@ -104,7 +104,7 @@ public class rangeseekbarview extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int minW = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
+        int minW = 5+ 5 + getSuggestedMinimumWidth();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mviewwidth = resolveSizeAndState(minW, widthMeasureSpec, 1);
         }
