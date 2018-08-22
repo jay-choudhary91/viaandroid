@@ -1,6 +1,5 @@
 package com.cryptoserver.composer.fragments;
 
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -16,9 +15,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.videocontrollerview;
-import com.cryptoserver.composer.videoTrimmer.interfaces.onhglvideolistener;
-import com.cryptoserver.composer.videoTrimmer.interfaces.ontrimvideolistener;
 
 import java.io.IOException;
 
@@ -222,5 +220,23 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
 
     public void setdata(String VIDEO_URL){
         this.VIDEO_URL = VIDEO_URL;
+    }
+
+
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+
+        switch (btnid){
+
+            case R.id.img_share_icon:
+
+                common.shareMedia(getActivity(),VIDEO_URL);
+
+
+                break;
+
+
+        }
     }
 }

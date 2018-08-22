@@ -267,7 +267,7 @@ public class common
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             Uri uri = Uri.fromFile(file);
             //Uri uri = Uri.fromFile(file);
-            sharingIntent.setType("video/mp4");
+            sharingIntent.setType("video/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM,uri);
             context.startActivity(Intent.createChooser(sharingIntent, "Share video using"));
