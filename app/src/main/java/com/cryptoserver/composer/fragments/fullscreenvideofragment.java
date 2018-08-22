@@ -6,6 +6,9 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,11 +23,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.videoframeadapter;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.common;
+import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.md5;
+import com.cryptoserver.composer.utils.progressdialog;
+import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
+import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.videoTrimmer.interfaces.onhglvideolistener;
 import com.cryptoserver.composer.videoTrimmer.interfaces.ontrimvideolistener;
 
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.AndroidFrameConverter;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
@@ -42,7 +62,14 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
     View rootview = null;
     ImageView handleimageview,righthandle;
     LinearLayout linearLayout;
-
+    RecyclerView recyviewitem;
+    String keytype ="md5";
+    videoframeadapter madapter;
+    long currentframenumber =0;
+    long frameduration =15, mframetorecordcount =0;
+    ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    ArrayList<videomodel> mallframes =new ArrayList<>();
+    long videoduration =0;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -59,6 +86,7 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
             righthandle=rootview.findViewById(R.id.righthandle);
+            recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             SurfaceHolder videoHolder = videoSurface.getHolder();
             videoHolder.addCallback(this);
 
@@ -66,11 +94,14 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
             controller = new videocontrollerview(getActivity());
 
             try {
+                Uri videopath=Uri.parse(VIDEO_URL);
+                if(videopath!=null){
+                    player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    player.setDataSource(getActivity(), videopath);
 
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
-                player.prepareAsync();
-                player.setOnPreparedListener(this);
+                    player.prepareAsync();
+                    player.setOnPreparedListener(this);
+                }
 
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
@@ -139,6 +170,56 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
                 });
             }
         });
+        madapter = new videoframeadapter(getActivity(), mvideoframes, new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+
+            }
+
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recyviewitem.setLayoutManager(mLayoutManager);
+        recyviewitem.setItemAnimator(new DefaultItemAnimator());
+        recyviewitem.setAdapter(madapter);
+        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+
+        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+        {
+            keytype=config.prefs_md5;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+        {
+            keytype=config.prefs_md5_salt;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+        {
+            keytype=config.prefs_sha;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+        {
+            keytype=config.prefs_sha_salt;
+        }
+
+        if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+            mvideoframes.clear();
+            mallframes.clear();
+            Thread thread = new Thread(){
+                public void run(){
+                  //  videoduration = common.getvideoduration(VIDEO_URL);
+                  //  totalframecount = common.gettotalframe(VIDEO_URL);
+                    setvideoadapter();
+                }
+            };
+            thread.start();
+
+        }
 
         return rootview;
     }
@@ -284,8 +365,233 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
     public void toggleFullScreen() {
 
     }
+    public String getkeyvalue(byte[] data)
+    {
+        String value="";
+        String salt="";
+
+        switch (keytype)
+        {
+            case config.prefs_md5:
+                value= md5.calculatebytemd5(data);
+                break;
+
+            case config.prefs_md5_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= md5.calculatebytemd5(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= md5.calculatebytemd5(data);
+                }
+
+                break;
+            case config.prefs_sha:
+                value= sha.sha1(data);
+                break;
+            case config.prefs_sha_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= sha.sha1(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= sha.sha1(data);
+                }
+                break;
+
+        }
+        return value;
+    }
+
 
     public void setdata(String VIDEO_URL){
         this.VIDEO_URL = VIDEO_URL;
     }
+//    public void setVideoAdapter() {
+//        int count = 1;
+//        currentframenumber = currentframenumber + frameduration;
+//        try
+//        {
+//            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(VIDEO_URL);
+//
+//            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+//            //grabber.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
+//            String format= common.getvideoformat(VIDEO_URL);
+//            if(format.equalsIgnoreCase("mp4"))
+//                grabber.setFormat(format);
+//
+//
+//            grabber.start();
+//
+//            for(int i = 0; i<grabber.getLengthInFrames(); i++){
+//                Frame frame = grabber.grabImage();
+//                if (frame == null)
+//                    break;
+//
+//
+//                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
+//                byte[] byteData = new byte[buffer.remaining()];
+//                buffer.get(byteData);
+//
+//                String keyValue= getkeyvalue(byteData);
+//
+//                mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
+//
+//                if (count == currentframenumber) {
+//                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
+//                    notifydata();
+//
+//                    currentframenumber = currentframenumber + frameduration;
+//                }
+//                count++;
+//            }
+//
+//            if(mallframes.size() > 0 && mvideoframes.size() > 0)
+//            {
+//                if(! mvideoframes.get(mvideoframes.size()-1).getkeyvalue().equals(mallframes.get(mallframes.size()-1).getkeyvalue()))
+//                {
+//                    mvideoframes.add(new videomodel("Last Frame ", mallframes.get(mallframes.size()-1).getkeytype()
+//                            , mallframes.get(mallframes.size()-1).getcurrentframenumber(), mallframes.get(mallframes.size()-1).getkeyvalue()));
+//                    notifydata();
+//                }
+//            }
+//
+//            grabber.flush();
+//
+//
+//
+//        }catch (Exception e)
+//        {
+//            //dismissprogress();
+//            Log.e("crash", String.valueOf(e));
+//            e.printStackTrace();
+//        }
+//    }
+public void setvideoadapter() {
+
+    int count = 1;
+    currentframenumber =0;
+    currentframenumber = currentframenumber + frameduration;
+    final ArrayList<videomodel> arrayList=new ArrayList<videomodel>();
+    try
+    {
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(VIDEO_URL);
+        grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+        String format= common.getvideoformat(VIDEO_URL);
+        if(format.equalsIgnoreCase("mp4"))
+            grabber.setFormat(format);
+
+        grabber.start();
+        boolean isFrameRemain=true;
+        ByteBuffer buffer=null;
+        AndroidFrameConverter bitmapConverter = new AndroidFrameConverter();
+        Log.e("Total frames ",""+grabber.getLengthInFrames());
+        for(int i = 0; i<grabber.getLengthInFrames(); i++){
+            //grabber.setFrameNumber(count);
+
+            Frame frame = grabber.grabImage();
+
+            if (count == currentframenumber) {
+                isFrameRemain = false;
+                if (frame != null)
+                {
+                    //final Bitmap currentImage = bitmapConverter.convert(frame);
+                    buffer= ((ByteBuffer) frame.image[0].position(0));
+
+                    byte[] arr = new byte[buffer.remaining()];
+                    buffer.get(arr);
+                    arrayList.add(updatelistitem(arr,"Frame"));
+                }
+                else
+                {
+                    Log.e("Frame ","null");
+                }
+                currentframenumber = currentframenumber + frameduration;
+            }
+            count++;
+        }
+
+        if(isFrameRemain && (buffer != null))
+        {
+            currentframenumber =count;
+            byte[] arr = new byte[buffer.remaining()];
+            buffer.get(arr);
+            arrayList.add(updatelistitem(arr,"Last Frame"));
+        }
+
+        grabber.flush();
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mvideoframes.clear();
+                madapter.notifyDataSetChanged();
+
+                mvideoframes.addAll(arrayList);
+                madapter.notifyDataSetChanged();
+                recyviewitem.getLayoutManager().scrollToPosition(0);
+                progressdialog.dismisswaitdialog();
+            }
+        });
+
+    }
+    catch (Exception e)
+    {
+        progressdialog.dismisswaitdialog();
+        e.printStackTrace();
+    }
+}
+    public void notifydata()
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                madapter.notifyDataSetChanged();
+            }
+        });
+    }
+    public void visibleProcessView()
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              /*  layout_process_frame.setVisibility(View.VISIBLE);
+                btn_single_frame.setVisibility(View.VISIBLE);*/
+            }
+        });
+    }
+    public videomodel updatelistitem(byte[] array, String message)
+    {
+        if(array == null || array.length == 0)
+            return null;
+
+        String keyvalue= getkeyvalue(array);
+        Log.e("number ",""+currentframenumber);
+        return new videomodel(message+" "+ keytype +" "+ currentframenumber + ": " + keyvalue);
+    }
+
 }
