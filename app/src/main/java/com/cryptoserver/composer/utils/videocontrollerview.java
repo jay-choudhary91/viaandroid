@@ -54,6 +54,7 @@ public class videocontrollerview extends FrameLayout {
     private ImageButton         mNextButton;
     private ImageButton         mPrevButton;
     private ImageButton         mFullscreenButton;
+    private ImageButton         imgvolume;
     private Handler mHandler = new MessageHandler(this);
 
     public videocontrollerview(Context context, AttributeSet attrs) {
@@ -134,6 +135,12 @@ public class videocontrollerview extends FrameLayout {
         }
 
         mFullscreenButton = (ImageButton) v.findViewById(R.id.fullscreen);
+        if (mFullscreenButton != null) {
+            mFullscreenButton.requestFocus();
+            mFullscreenButton.setOnClickListener(mFullscreenListener);
+        }
+
+        imgvolume = (ImageButton) v.findViewById(R.id.img_volume);
         if (mFullscreenButton != null) {
             mFullscreenButton.requestFocus();
             mFullscreenButton.setOnClickListener(mFullscreenListener);
@@ -411,10 +418,10 @@ public class videocontrollerview extends FrameLayout {
         }
 
         if (mPlayer.isFullScreen()) {
-            mFullscreenButton.setImageResource(R.drawable.ic_media_fullscreen_shrink);
+            mFullscreenButton.setImageResource(R.drawable.expand);
         }
         else {
-            mFullscreenButton.setImageResource(R.drawable.ic_media_fullscreen_stretch);
+            mFullscreenButton.setImageResource(R.drawable.expand);
         }
     }
 
