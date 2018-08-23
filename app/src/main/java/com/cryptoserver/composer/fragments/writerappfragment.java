@@ -1614,6 +1614,9 @@ public class writerappfragment extends basefragment implements
 
             @Override
             public void onClick(View v) {
+
+                progressdialog.showwaitingdialog(getActivity());
+
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
                 if(mvideo != null)
@@ -1627,7 +1630,6 @@ public class writerappfragment extends basefragment implements
                     maindialogshare.dismiss();
 
                 launchvideolist();
-                progressdialog.dismisswaitdialog();
             }
         });
 
@@ -1668,6 +1670,7 @@ public class writerappfragment extends basefragment implements
 
     public void launchvideolist()
     {
+        progressdialog.dismisswaitdialog();
         fragmentvideolist frag=new fragmentvideolist();
         gethelper().replaceFragment(frag, true, false);
     }

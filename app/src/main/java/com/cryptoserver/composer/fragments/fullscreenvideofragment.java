@@ -215,7 +215,7 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
                 public void run(){
                   //  videoduration = common.getvideoduration(VIDEO_URL);
                   //  totalframecount = common.gettotalframe(VIDEO_URL);
-                    setvideoadapter();
+                    setVideoAdapter();
                 }
             };
             thread.start();
@@ -450,68 +450,68 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
 
         }
     }
-//    public void setVideoAdapter() {
-//        int count = 1;
-//        currentframenumber = currentframenumber + frameduration;
-//        try
-//        {
-//            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(VIDEO_URL);
-//
-//            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-//            //grabber.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
-//            String format= common.getvideoformat(VIDEO_URL);
-//            if(format.equalsIgnoreCase("mp4"))
-//                grabber.setFormat(format);
-//
-//
-//            grabber.start();
-//
-//            for(int i = 0; i<grabber.getLengthInFrames(); i++){
-//                Frame frame = grabber.grabImage();
-//                if (frame == null)
-//                    break;
-//
-//
-//                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-//                byte[] byteData = new byte[buffer.remaining()];
-//                buffer.get(byteData);
-//
-//                String keyValue= getkeyvalue(byteData);
-//
-//                mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
-//
-//                if (count == currentframenumber) {
-//                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-//                    notifydata();
-//
-//                    currentframenumber = currentframenumber + frameduration;
-//                }
-//                count++;
-//            }
-//
-//            if(mallframes.size() > 0 && mvideoframes.size() > 0)
-//            {
-//                if(! mvideoframes.get(mvideoframes.size()-1).getkeyvalue().equals(mallframes.get(mallframes.size()-1).getkeyvalue()))
-//                {
-//                    mvideoframes.add(new videomodel("Last Frame ", mallframes.get(mallframes.size()-1).getkeytype()
-//                            , mallframes.get(mallframes.size()-1).getcurrentframenumber(), mallframes.get(mallframes.size()-1).getkeyvalue()));
-//                    notifydata();
-//                }
-//            }
-//
-//            grabber.flush();
-//
-//
-//
-//        }catch (Exception e)
-//        {
-//            //dismissprogress();
-//            Log.e("crash", String.valueOf(e));
-//            e.printStackTrace();
-//        }
-//    }
+    public void setVideoAdapter() {
+        int count = 1;
+        currentframenumber = currentframenumber + frameduration;
+       try
+        {
+            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(VIDEO_URL);
 
-public void setvideoadapter() {
+            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+            //grabber.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
+            String format= common.getvideoformat(VIDEO_URL);
+            if(format.equalsIgnoreCase("mp4"))
+               grabber.setFormat(format);
+
+
+           grabber.start();
+
+           for(int i = 0; i<grabber.getLengthInFrames(); i++){
+               Frame frame = grabber.grabImage();
+                if (frame == null)
+                    break;
+
+
+                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
+                byte[] byteData = new byte[buffer.remaining()];
+                buffer.get(byteData);
+
+                String keyValue= getkeyvalue(byteData);
+
+                mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
+
+                if (count == currentframenumber) {
+                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
+                    notifydata();
+
+                    currentframenumber = currentframenumber + frameduration;
+                }
+                count++;
+            }
+
+            if(mallframes.size() > 0 && mvideoframes.size() > 0)
+            {
+                if(! mvideoframes.get(mvideoframes.size()-1).getkeyvalue().equals(mallframes.get(mallframes.size()-1).getkeyvalue()))
+                {
+                    mvideoframes.add(new videomodel("Last Frame ", mallframes.get(mallframes.size()-1).getkeytype()
+                            , mallframes.get(mallframes.size()-1).getcurrentframenumber(), mallframes.get(mallframes.size()-1).getkeyvalue()));
+                    notifydata();
+                }
+            }
+
+            grabber.flush();
+
+
+
+        }catch (Exception e)
+        {
+            //dismissprogress();
+            Log.e("crash", String.valueOf(e));
+            e.printStackTrace();
+        }
+    }
+
+/*public void setvideoadapter() {
 
     int count = 1;
     currentframenumber =0;
@@ -584,7 +584,7 @@ public void setvideoadapter() {
         progressdialog.dismisswaitdialog();
         e.printStackTrace();
     }
-}
+}*/
     public void notifydata()
     {
         getActivity().runOnUiThread(new Runnable() {
