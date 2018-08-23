@@ -1688,7 +1688,7 @@ public class writerappfragment extends basefragment implements
     {
         progressdialog.dismisswaitdialog();
         fragmentvideolist frag=new fragmentvideolist();
-        gethelper().replaceFragment(frag, true, false);
+        gethelper().replaceFragment(frag, false, true);
     }
 
 
