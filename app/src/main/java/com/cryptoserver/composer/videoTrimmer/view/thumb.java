@@ -98,13 +98,13 @@ public class thumb {
             th.setindex(i);
             if (i == 0) {
 
-                int resimageleft = R.drawable.apptheme_text_select_handle_left;
+                int resimageleft = R.drawable.video_left_cutline;
 
                 th.setbitmap(BitmapFactory.decodeResource(resources, resimageleft));
             } else {
 
 
-                int resimageright = R.drawable.apptheme_text_select_handle_right;
+                int resimageright = R.drawable.video_right_cutline;
                 th.setbitmap(BitmapFactory.decodeResource(resources, resimageright));
             }
 
