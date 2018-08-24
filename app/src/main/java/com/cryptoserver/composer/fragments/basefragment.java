@@ -944,11 +944,23 @@ public abstract class basefragment extends Fragment {
 
         //Log.i("Noise", "==== start ===");
 
-        if(mNoise != null)
-            mNoise.stop();
 
-        mNoise = new Noise();
-        mNoise.start();
+
+        try {
+
+            if(mNoise != null)
+                mNoise.stop();
+
+            mNoise = new Noise();
+
+            if(mNoise != null)
+            {
+                if(mNoise != null)
+                    mNoise.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Thread thread = new Thread(){
             public void run(){
@@ -959,16 +971,34 @@ public abstract class basefragment extends Fragment {
                     e.printStackTrace();
                 }
                 //Do something after 100ms
-                double amp = mNoise.getAmplitude();
-                //Log.i("Noise", "runnable mPollTask");
-                updateDisplay("Monitoring Voice...", amp);
+
+                try {
+                    if(mNoise != null)
+                    {
+                        double amp = mNoise.getAmplitude();
+                        //Log.i("Noise", "runnable mPollTask");
+                        updateDisplay("Monitoring Voice...", amp);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
             }
         };
         thread.start();
     }
     private void stop() {
         Log.e("Noise", "==== Stop Noise Monitoring===");
-        mNoise.stop();
+        try {
+            if(mNoise != null)
+            {
+                mNoise.stop();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
     private void updateDisplay(String status, double signalEMA) {
 

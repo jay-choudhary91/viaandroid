@@ -1667,11 +1667,18 @@ public class writerappfragment extends basefragment implements
 
                 Uri selectedimageuri =Uri.fromFile(new File(mvideo.getAbsolutePath()));
 
-                int duration =  getmediaduration(selectedimageuri);
+               // int duration =  getmediaduration(selectedimageuri);
 
-                videoplayfragment videoplayfragment =new videoplayfragment();
-                videoplayfragment.setdata(mvideo.getAbsolutePath(), duration);
-                gethelper().replaceFragment(videoplayfragment, false, true);
+                final MediaPlayer mp = MediaPlayer.create(getActivity(),selectedimageuri);
+                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        int duration = mp.getDuration();
+                        videoplayfragment videoplayfragment =new videoplayfragment();
+                        videoplayfragment.setdata(mvideo.getAbsolutePath(), duration);
+                        gethelper().replaceFragment(videoplayfragment, false, true);
+                    }
+                });
 
             }
         });
@@ -1697,13 +1704,6 @@ public class writerappfragment extends basefragment implements
         progressdialog.dismisswaitdialog();
         fragmentvideolist frag=new fragmentvideolist();
         gethelper().replaceFragment(frag, false, true);
-    }
-
-
-    private int getmediaduration(Uri uriOfFile)  {
-        MediaPlayer mp = MediaPlayer.create(getActivity(),uriOfFile);
-        int duration = mp.getDuration();
-        return  duration;
     }
 
 }
