@@ -256,6 +256,22 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        progressdialog.dismisswaitdialog();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
     // Implement SurfaceHolder.Callback
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -423,7 +439,6 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
                     value= sha.sha1(data);
                 }
                 break;
-
         }
         return value;
     }
@@ -441,15 +456,12 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
         switch (btnid){
 
             case R.id.img_share_icon:
-
+                progressdialog.showwaitingdialog(getActivity());
                 common.shareMedia(getActivity(),VIDEO_URL);
-
-
                 break;
-
-
         }
     }
+
     public void setVideoAdapter() {
         int count = 1;
         currentframenumber = currentframenumber + frameduration;
@@ -511,80 +523,6 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
         }
     }
 
-/*public void setvideoadapter() {
-
-    int count = 1;
-    currentframenumber =0;
-    currentframenumber = currentframenumber + frameduration;
-    final ArrayList<videomodel> arrayList=new ArrayList<videomodel>();
-    try
-    {
-        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(VIDEO_URL);
-        grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-        String format= common.getvideoformat(VIDEO_URL);
-        if(format.equalsIgnoreCase("mp4"))
-            grabber.setFormat(format);
-
-        grabber.start();
-        boolean isFrameRemain=true;
-        ByteBuffer buffer=null;
-        AndroidFrameConverter bitmapConverter = new AndroidFrameConverter();
-        Log.e("Total frames ",""+grabber.getLengthInFrames());
-        for(int i = 0; i<grabber.getLengthInFrames(); i++){
-            //grabber.setFrameNumber(count);
-
-            Frame frame = grabber.grabImage();
-
-            if (count == currentframenumber) {
-                isFrameRemain = false;
-                if (frame != null)
-                {
-                    //final Bitmap currentImage = bitmapConverter.convert(frame);
-                    buffer= ((ByteBuffer) frame.image[0].position(0));
-
-                    byte[] arr = new byte[buffer.remaining()];
-                    buffer.get(arr);
-                    arrayList.add(updatelistitem(arr,"Frame"));
-                }
-                else
-                {
-                    Log.e("Frame ","null");
-                }
-                currentframenumber = currentframenumber + frameduration;
-            }
-            count++;
-        }
-
-        if(isFrameRemain && (buffer != null))
-        {
-            currentframenumber =count;
-            byte[] arr = new byte[buffer.remaining()];
-            buffer.get(arr);
-            arrayList.add(updatelistitem(arr,"Last Frame"));
-        }
-
-        grabber.flush();
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mvideoframes.clear();
-                madapter.notifyDataSetChanged();
-
-                mvideoframes.addAll(arrayList);
-                madapter.notifyDataSetChanged();
-                recyviewitem.getLayoutManager().scrollToPosition(0);
-                progressdialog.dismisswaitdialog();
-            }
-        });
-
-    }
-    catch (Exception e)
-    {
-        progressdialog.dismisswaitdialog();
-        e.printStackTrace();
-    }
-}*/
     public void notifydata()
     {
         getActivity().runOnUiThread(new Runnable() {
@@ -593,25 +531,6 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
                 madapter.notifyDataSetChanged();
             }
         });
-    }
-    public void visibleProcessView()
-    {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-              /*  layout_process_frame.setVisibility(View.VISIBLE);
-                btn_single_frame.setVisibility(View.VISIBLE);*/
-            }
-        });
-    }
-    public videomodel updatelistitem(byte[] array, String message)
-    {
-        if(array == null || array.length == 0)
-            return null;
-
-        String keyvalue= getkeyvalue(array);
-        Log.e("number ",""+currentframenumber);
-        return new videomodel(message+" "+ keytype +" "+ currentframenumber + ": " + keyvalue);
     }
 
 }
