@@ -441,15 +441,13 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
         switch (btnid){
 
             case R.id.img_share_icon:
-
                 common.shareMedia(getActivity(),VIDEO_URL);
-
-
                 break;
 
 
         }
     }
+
     public void setVideoAdapter() {
         int count = 1;
         currentframenumber = currentframenumber + frameduration;
