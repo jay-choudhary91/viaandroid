@@ -1437,8 +1437,10 @@ public class writerappfragment extends basefragment implements
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        madapter.notifyDataSetChanged();
-                        recyviewitem.getLayoutManager().scrollToPosition(mvideoframes.size()-1);
+                        if(mvideoframes.size() > 0)
+                            madapter.notifyItemChanged(mvideoframes.size()-1);
+
+                        //recyviewitem.getLayoutManager().scrollToPosition(mvideoframes.size()-1);
                     }
                 });
             }
