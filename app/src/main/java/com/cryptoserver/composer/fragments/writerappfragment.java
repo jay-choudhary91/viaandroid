@@ -1240,6 +1240,8 @@ public class writerappfragment extends basefragment implements
             resetvideotimer();
             clearvideolist();
 
+            progressdialog.dismisswaitdialog();
+
            new Thread(new Runnable() {
                 @Override
                 public void run() {
