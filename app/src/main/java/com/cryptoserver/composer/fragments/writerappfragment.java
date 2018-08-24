@@ -1624,9 +1624,6 @@ public class writerappfragment extends basefragment implements
 
             @Override
             public void onClick(View v) {
-
-
-
                     progressdialog.showwaitingdialog(getActivity());
                     new Handler().postDelayed(new Runnable() {
                         @Override
