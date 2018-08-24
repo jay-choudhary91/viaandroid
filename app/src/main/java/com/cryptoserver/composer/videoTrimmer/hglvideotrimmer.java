@@ -45,6 +45,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cryptoserver.composer.R;
@@ -735,6 +736,21 @@ public class hglvideotrimmer extends FrameLayout {
 
         Log.d(tag, "starttrim: src: " + yourRealPath);
         Log.d(tag, "starttrim: dest: " + dest.getAbsolutePath());
+
+        Log.e("start time",""+startMs / 1000);
+        Log.e("end time",""+endMs / 1000);
+        Log.e("time",""+(endMs - startMs) / 1000);
+
+
+
+
+        //Toast.makeText(context, ""+(endMs - startMs) / 1000, Toast.LENGTH_SHORT).show();
+
+
+
+
+
+
         Log.d(tag, "starttrim: startMs: " + startMs);
         Log.d(tag, "starttrim: endMs: " + endMs);
         filePath = dest.getAbsolutePath();
@@ -756,6 +772,8 @@ public class hglvideotrimmer extends FrameLayout {
                 @Override
                 public void onSuccess(String s) {
                     Log.e("SUCCESS with output : ","SUCCESS");
+
+
 
                 }
 
