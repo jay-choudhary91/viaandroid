@@ -23,6 +23,7 @@
     <color name="uvv_black">#ff000000</color>
     <color name="uvv_light_gray">#ffF0F0F0</color>
     <color name="uvv_gray">#ffbbbbbb</color>
+    <color name="whitetransparent">#A6ffffff</color>
 
     <!-- VIDEO TRIMMER -->
     <color name="background_video_color">#2f3031</color>

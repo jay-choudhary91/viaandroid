@@ -101,6 +101,8 @@
                 android:ems="1"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:ellipsize="end"
+                android:inputType="none"
                 android:scrollHorizontally="false"
                 android:background="@drawable/edittext_shap"
                 android:textColor="@color/black"

@@ -4,6 +4,7 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -256,6 +257,12 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
     public void onDestroy() {
         super.onDestroy();
 
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         try {
             if (locationUpdateReceiver != null) {
                 getActivity().unregisterReceiver(locationUpdateReceiver);
@@ -267,8 +274,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             ex.printStackTrace();
         }
     }
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+/* private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) applicationviavideocomposer.getactivity().getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -276,7 +282,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             }
         }
         return false;
-    }
+    }*/
 
 
 
@@ -481,7 +487,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
     public void getAccurateLocation() {
         super.getAccurateLocation();
 
-        if(isMyServiceRunning(LocationService.class))
+        if(common.isMyServiceRunning(getActivity(),LocationService.class)!=true)
         {
             Log.e("Running ","Yes");
         }

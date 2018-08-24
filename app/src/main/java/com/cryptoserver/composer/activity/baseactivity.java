@@ -51,7 +51,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     private static final int permission_location_request_code = 91;
     private SensorManager mSensorManager;
     private Sensor mAccelereometer;
-    private BroadcastReceiver airplanemodecheck ;
+    private BroadcastReceiver flightmodebroadcast ;
+    IntentFilter filter;
 
     private float[] mGData = new float[3];
     private float[] mMData = new float[3];
@@ -117,12 +118,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            unregisterReceiver(mBroadcast);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+
     }
 
     public void initviews(Bundle savedInstanceState) {
@@ -285,8 +281,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     protected void onStop() {
         super.onStop();
-        if(airplanemodecheck!=null){
-            unregisterReceiver(airplanemodecheck);
+        try {
+
+            try {
+                unregisterReceiver(mBroadcast);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            if(flightmodebroadcast!=null){
+                unregisterReceiver(flightmodebroadcast);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     }
@@ -525,24 +533,18 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         mTelephonyManager.listen(mPhoneStatelistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
 
-    @Override
+  @Override
     public void getairplanemodeon() {
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+                filter= new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
                 filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-                airplanemodecheck = new airplanemodecheck();
-                instance.registerReceiver(airplanemodecheck,filter);
+                registerReceiver(flightmodebroadcast,filter);
+
             }
         });
-       /* Thread thread=new Thread(){
-            public void run(){
-
-            }
-        };thread.start();*/
-
     }
 
     @Override
@@ -732,23 +734,27 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             }
         };
         registerReceiver(mBroadcast, intentFilter);
+
+        flightmodebroadcast= new BroadcastReceiver() {
+            String turn;
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent!=null){
+                    if(Settings.System.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0)== 0)
+                    {
+                        turn="OFF";
+                    }
+                    else
+                    {
+                        turn="ON";
+                    }
+                    getcurrentfragment().updateairplanemode(turn);
+                }
+            }
+        };
+
+
     }
 
-    public class airplanemodecheck extends BroadcastReceiver{
-
-        String turn;
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(Settings.System.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0)== 0)
-            {
-                turn="OFF";
-            }
-            else
-            {
-                turn="ON";
-            }
-           getcurrentfragment().updateairplanemode(turn);
-        }
-    }
 
 }
