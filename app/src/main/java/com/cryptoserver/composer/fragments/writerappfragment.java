@@ -1624,9 +1624,6 @@ public class writerappfragment extends basefragment implements
 
             @Override
             public void onClick(View v) {
-
-
-
                     progressdialog.showwaitingdialog(getActivity());
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -1688,7 +1685,7 @@ public class writerappfragment extends basefragment implements
     {
         progressdialog.dismisswaitdialog();
         fragmentvideolist frag=new fragmentvideolist();
-        gethelper().replaceFragment(frag, true, false);
+        gethelper().replaceFragment(frag, false, true);
     }
 
 
