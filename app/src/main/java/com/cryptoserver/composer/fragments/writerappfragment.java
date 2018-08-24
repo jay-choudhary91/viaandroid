@@ -542,6 +542,9 @@ public class writerappfragment extends basefragment implements
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            mvideoframes.clear();
+                            madapter.notifyDataSetChanged();
+
                             startvideotimer();
                             progressdialog.dismisswaitdialog();
                         }
