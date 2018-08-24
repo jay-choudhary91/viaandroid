@@ -92,11 +92,18 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
             public void run() {
 
                 if(filePath != null){
+                    progressdialog.showwaitingdialog(getActivity());
                     String selectedvideopath = filePath;
                     common.shareMedia(getActivity(),selectedvideopath);
                 }
            }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        progressdialog.dismisswaitdialog();
     }
 
     @Override
@@ -134,7 +141,6 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
 
                 if(mvideotrimmer != null)
                 {
-
                     progressdialog.showwaitingdialog(getActivity());
                     mvideotrimmer.onSaveClicked();
                 }
@@ -147,15 +153,6 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
     {
         this.videopath =videoPath;
         this.videoduration =  duration;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 101)
-        {
-            progressdialog.dismisswaitdialog();
-        }
     }
 }
 

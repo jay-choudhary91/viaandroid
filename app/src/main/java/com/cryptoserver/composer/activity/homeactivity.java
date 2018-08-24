@@ -133,7 +133,16 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
 
     @Override
     public void updateheader(String txt) {
-        txt_title.setText(txt);
+        if((getcurrentfragment() instanceof writerappfragment))
+        {
+            txt_title.setText(txt);
+        }
+        else if((getcurrentfragment() instanceof fragmentvideolist) || getcurrentfragment() instanceof fragmentsettings
+                || getcurrentfragment() instanceof fullscreenvideofragment  || getcurrentfragment() instanceof videoplayfragment)
+        {
+            txt_title.setText("");
+        }
+
     }
 
     @Override

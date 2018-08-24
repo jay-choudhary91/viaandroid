@@ -271,7 +271,7 @@ public class common
             sharingIntent.setType("video/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM,uri);
-            applicationviavideocomposer.getactivity().startActivityForResult(sharingIntent,101);
+            context.startActivity(Intent.createChooser(sharingIntent, "Share video using"));
             //applicationviavideocomposer.getactivity().startActivityForResult(Intent.createChooser(sharingIntent, "Share video using"));
 
         }

@@ -341,6 +341,13 @@ public class writerappfragment extends basefragment implements
         return rootview;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stoprecorder();
+        releaserecorder(true);
+    }
+
     public void startvideotimer()
     {
         StartTime = SystemClock.uptimeMillis();
@@ -382,9 +389,13 @@ public class writerappfragment extends basefragment implements
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
-                                    + String.format("%02d", Seconds) + ":"
-                                    + String.format("%02d", (MilliSeconds/10)));
+                            if(mrecording)
+                            {
+                                gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
+                                        + String.format("%02d", Seconds) + ":"
+                                        + String.format("%02d", (MilliSeconds/10)));
+                            }
+
                         }
                     });
                 }
@@ -393,12 +404,7 @@ public class writerappfragment extends basefragment implements
         }
     };
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stoprecorder();
-        releaserecorder(true);
-    }
+
 
     @Override
     public void onResume() {
@@ -1569,6 +1575,7 @@ public class writerappfragment extends basefragment implements
 
             @Override
             public void onClick(View v) {
+
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
             }
@@ -1580,13 +1587,10 @@ public class writerappfragment extends basefragment implements
             public void onClick(View v) {
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
+
                 fullscreenvideofragment fullvdofragmnet=new fullscreenvideofragment();
                 fullvdofragmnet.setdata(mvideo.getAbsolutePath());
                 gethelper().addFragment(fullvdofragmnet,false,true);
-
-               /* Intent in=new Intent(getActivity(), FullScreenVideoActivity.class);
-                in.putExtra("videopath",mvideo.getAbsolutePath());
-                startActivity(in);*/
             }
         });
         maindialogshare.show();
