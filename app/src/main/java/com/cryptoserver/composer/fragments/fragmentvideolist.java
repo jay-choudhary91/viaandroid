@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adaptervideolist;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
@@ -300,7 +301,7 @@ public class fragmentvideolist extends basefragment {
                         arrayvideolist.add(videoobj);
 
                 }
-                getActivity().runOnUiThread(new Runnable() {
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         adapter.notifyDataSetChanged();
