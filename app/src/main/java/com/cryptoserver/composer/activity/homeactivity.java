@@ -91,15 +91,13 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         frag.setData(true);
         replaceFragment(frag, true, false);
 
-        /*fragmentvideolist frag=new fragmentvideolist();
-        replaceFragment(frag, false, true);*/
-
         imgaddicon.setOnClickListener(this);
         imgsettingsicon.setOnClickListener(this);
         img_back.setOnClickListener(this);
         imguploadicon.setOnClickListener(this);
         img_cancel.setOnClickListener(this);
         imgshareicon.setOnClickListener(this);
+        img_menu.setOnClickListener(this);
 
 
         CallService mService = new CallService();
@@ -230,6 +228,10 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 break;
             case R.id.img_upload_icon:
                 checkwritestoragepermission();
+                break;
+            case R.id.img_menu:
+                   fragmentvideolist frag=new fragmentvideolist();
+                  replaceFragment(frag, false, true);
                 break;
         }
     }
