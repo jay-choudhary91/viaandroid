@@ -9,10 +9,14 @@ import android.provider.MediaStore;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -137,13 +141,20 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
 
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
+            Editable editableText=  holder.edtvideoname.getEditableText();
+            if(editableText!=null) {
+                Log.e("position",""+position);
+                holder.edtvideoname.setInputType(InputType.TYPE_CLASS_TEXT);
+                holder.edtvideoname.setEllipsize(TextUtils.TruncateAt.END);
+                holder.edtvideoname.setSingleLine();
+            }
         }
         else
         {
             arrayvideolist.get(position).setSelected(false);
             holder.edtvideoname.setEnabled(false);
             holder.edtvideoname.setClickable(false);
+            holder.edtvideoname.setKeyListener(null);
         }
 
         holder.imgshareicon.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +189,7 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-
+                    holder.edtvideoname.setKeyListener(null);
                     v.setFocusable(false);
                     InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(holder.edtvideoname.getWindowToken(), 0);
@@ -217,5 +228,6 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
     public int getItemCount() {
         return arrayvideolist.size();
     }
+
 
 }
