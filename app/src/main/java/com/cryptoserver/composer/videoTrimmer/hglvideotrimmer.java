@@ -24,6 +24,7 @@
 package com.cryptoserver.composer.videoTrimmer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -303,7 +304,13 @@ public class hglvideotrimmer extends FrameLayout {
     public void onSaveClicked() {
         if (mstartposition <= 0 && mendposition >= mduration) {
             if (montrimvideolistener != null)
-                montrimvideolistener.getresult(msrc);
+            {
+                File file = new File(msrc.getPath());
+                if(file.exists()) {
+                    montrimvideolistener.getresult(file.getAbsolutePath());
+                }
+            }
+
         } else {
 
             mplayview.setBackgroundResource(R.drawable.play);
