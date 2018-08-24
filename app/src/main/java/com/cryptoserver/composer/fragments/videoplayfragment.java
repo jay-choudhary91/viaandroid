@@ -1,6 +1,7 @@
 package com.cryptoserver.composer.fragments;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -133,6 +134,8 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
 
                 if(mvideotrimmer != null)
                 {
+
+                    progressdialog.showwaitingdialog(getActivity());
                     mvideotrimmer.onSaveClicked();
                 }
 
@@ -144,6 +147,15 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
     {
         this.videopath =videoPath;
         this.videoduration =  duration;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 101)
+        {
+            progressdialog.dismisswaitdialog();
+        }
     }
 }
 

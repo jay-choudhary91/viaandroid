@@ -35,6 +35,7 @@ import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fullscreenvideofragment;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 
 import java.util.Date;
@@ -112,6 +113,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == 101){
+            progressdialog.dismisswaitdialog();
+        }
     }
 
     @Override
