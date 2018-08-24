@@ -369,18 +369,28 @@ public class writerappfragment extends basefragment implements
     public Runnable runnable = new Runnable() {
 
         public void run() {
-            MillisecondTime = SystemClock.uptimeMillis() - StartTime;
-            UpdateTime = TimeBuff + MillisecondTime;
-            Seconds = (int) (UpdateTime / 1000);
-            Minutes = Seconds / 60;
-            Seconds = Seconds % 60;
-            MilliSeconds = (int) (UpdateTime % 1000);
-            gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
-                    + String.format("%02d", Seconds) + ":"
-                    + String.format("%02d", (MilliSeconds/10)));
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    MillisecondTime = SystemClock.uptimeMillis() - StartTime;
+                    UpdateTime = TimeBuff + MillisecondTime;
+                    Seconds = (int) (UpdateTime / 1000);
+                    Minutes = Seconds / 60;
+                    Seconds = Seconds % 60;
+                    MilliSeconds = (int) (UpdateTime % 1000);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
+                                    + String.format("%02d", Seconds) + ":"
+                                    + String.format("%02d", (MilliSeconds/10)));
+                        }
+                    });
+                }
+            }).start();
             timerhandler.postDelayed(this, 0);
         }
-
     };
 
     @Override
@@ -1615,21 +1625,27 @@ public class writerappfragment extends basefragment implements
             @Override
             public void onClick(View v) {
 
-                progressdialog.showwaitingdialog(getActivity());
 
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
-                if(mvideo != null)
 
-                    exportvideo();
+                    progressdialog.showwaitingdialog(getActivity());
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
+                            exportvideo();
 
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
+                            if(maindialogshare != null && maindialogshare.isShowing())
+                                maindialogshare.dismiss();
 
-                launchvideolist();
+                            if(subdialogshare != null && subdialogshare.isShowing())
+                                subdialogshare.dismiss();
+
+                            if(maindialogshare != null && maindialogshare.isShowing())
+                                maindialogshare.dismiss();
+
+                            launchvideolist();
+                        }
+                    },2000);
             }
         });
 
