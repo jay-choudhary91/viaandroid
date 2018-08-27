@@ -7,7 +7,7 @@
     android:id="@+id/actionbar"
     android:padding="5dp">
 
-    <com.cryptoserver.composer.views.CustomFontTextView
+    <com.cryptoserver.composer.views.customfonttextview
         android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

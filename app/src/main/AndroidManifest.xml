@@ -73,12 +73,12 @@
         <activity android:name=".activity.fullscreenvideoactivity"/>
 
         <service
-            android:name=".services.LocationService"
+            android:name=".services.locationservice"
             android:enabled="true"
             android:exported="false"></service>
 
         <service
-            android:name=".services.CallService"
+            android:name=".services.callservice"
             android:enabled="true"></service>
         <meta-data
             android:name="io.fabric.ApiKey"

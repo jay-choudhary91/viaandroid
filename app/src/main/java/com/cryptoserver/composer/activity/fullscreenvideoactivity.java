@@ -1,33 +1,26 @@
 package com.cryptoserver.composer.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.utils.Listeners;
 import com.cryptoserver.composer.utils.videocontrollerview;
 
 import java.io.IOException;
-
-import uk.co.jakelee.vidsta.VidstaPlayer;
 
 /**
  * Created by root on 13/8/18.
  */
 
-public class FullScreenVideoActivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
+public class fullscreenvideoactivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
 
     private String VIDEO_URL = null;
 

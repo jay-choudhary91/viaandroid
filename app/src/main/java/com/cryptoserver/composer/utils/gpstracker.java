@@ -18,7 +18,7 @@ import android.util.Log;
  * Created by root on 1/5/18.
  */
 
-public class GPSTracker extends Service implements LocationListener {
+public class gpstracker extends Service implements LocationListener {
 
     private final Context mContext;
 
@@ -44,7 +44,7 @@ public class GPSTracker extends Service implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-    public GPSTracker(Context context) {
+    public gpstracker(Context context) {
         this.mContext = context;
         getLocation();
     }
@@ -114,7 +114,7 @@ public class GPSTracker extends Service implements LocationListener {
      * */
     public void stopUsingGPS() {
         if (locationManager != null) {
-            locationManager.removeUpdates(GPSTracker.this);
+            locationManager.removeUpdates(gpstracker.this);
         }
     }
 

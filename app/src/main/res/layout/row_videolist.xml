@@ -109,7 +109,7 @@
                 android:visibility="visible"
                 />
 
-            <com.cryptoserver.composer.views.CustomFontTextView
+            <com.cryptoserver.composer.views.customfonttextview
                 app:fontType="OpenSans_Regular"
                 android:id="@+id/tv_videoname"
                 android:layout_width="match_parent"
@@ -120,7 +120,7 @@
                 android:text="Video 1 Name"
                 android:visibility="gone"
                 />
-            <com.cryptoserver.composer.views.CustomFontTextView
+            <com.cryptoserver.composer.views.customfonttextview
                 app:fontType="OpenSans_Regular"
                 android:id="@+id/tv_videocreatedate"
                 android:layout_width="match_parent"
@@ -132,7 +132,7 @@
                 android:textColor="@color/black"
                 android:text="5/31/2018"
                 />
-            <com.cryptoserver.composer.views.CustomFontTextView
+            <com.cryptoserver.composer.views.customfonttextview
                 app:fontType="OpenSans_Regular"
                 android:id="@+id/tv_videoduration"
                 android:layout_width="match_parent"
@@ -144,7 +144,7 @@
                 android:textColor="@color/lightblue"
                 android:text="duration: 3:23"
                 />
-            <com.cryptoserver.composer.views.CustomFontTextView
+            <com.cryptoserver.composer.views.customfonttextview
                 app:fontType="OpenSans_Regular"
                 android:id="@+id/tv_videodescription"
                 android:layout_width="match_parent"

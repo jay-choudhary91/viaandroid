@@ -30,8 +30,8 @@ import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
-public class LocationService extends Service implements LocationListener, GpsStatus.Listener {
-    public static final String LOG_TAG = LocationService.class.getSimpleName();
+public class locationservice extends Service implements LocationListener, GpsStatus.Listener {
+    public static final String LOG_TAG = locationservice.class.getSimpleName();
 
     private final LocationServiceBinder binder = new LocationServiceBinder();
     boolean isLocationManagerUpdatingLocation;
@@ -57,7 +57,7 @@ public class LocationService extends Service implements LocationListener, GpsSta
     int batteryScale;
     int gpsCount;
 
-    public LocationService() {
+    public locationservice() {
 
     }
 
@@ -125,8 +125,8 @@ public class LocationService extends Service implements LocationListener, GpsSta
      *
      */
     public class LocationServiceBinder extends Binder {
-        public LocationService getService() {
-            return LocationService.this;
+        public locationservice getService() {
+            return locationservice.this;
         }
     }
 

@@ -8,10 +8,10 @@ import android.widget.MediaController;
  * Created by root on 13/8/18.
  */
 
-public class FullScreenMediaController extends MediaController {
+public class fullscreenmediacontroller extends MediaController {
 
 
-    public FullScreenMediaController(Context context) {
+    public fullscreenmediacontroller(Context context) {
         super(context);
     }
 

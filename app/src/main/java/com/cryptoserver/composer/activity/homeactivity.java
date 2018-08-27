@@ -1,20 +1,10 @@
 package com.cryptoserver.composer.activity;
 
-import android.Manifest;
 import android.app.ActivityManager;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Rect;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,35 +13,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
-import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.fullscreenvideofragment;
 import com.cryptoserver.composer.fragments.readervideofragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
 import com.cryptoserver.composer.fragments.writerappfragment;
-import com.cryptoserver.composer.services.CallService;
-import com.cryptoserver.composer.utils.common;
+import com.cryptoserver.composer.services.callservice;
 import com.cryptoserver.composer.utils.config;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class homeactivity extends LocationAwareActivity implements View.OnClickListener {
+public class homeactivity extends locationawareactivity implements View.OnClickListener {
 
     @BindView(R.id.txt_title)
     TextView txt_title;
@@ -102,8 +81,8 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         imgshareicon.setOnClickListener(this);
         img_menu.setOnClickListener(this);
 
-        CallService mService = new CallService();
-        Intent mIntent = new Intent(homeactivity.this, CallService.class);
+        callservice mService = new callservice();
+        Intent mIntent = new Intent(homeactivity.this, callservice.class);
 
         if (!isMyServiceRunning(mService.getClass()))
             startService(mIntent);

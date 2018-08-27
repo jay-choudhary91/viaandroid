@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.models.MetricModel;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.utils.common;
 
 
@@ -21,14 +21,14 @@ import java.util.ArrayList;
  * Created by devesh on 20/4/18.
  */
 
-public class ItemMetricAdapter extends RecyclerView.Adapter<ItemMetricAdapter.ContactViewHolder> {
+public class Itemmetricadapter extends RecyclerView.Adapter<Itemmetricadapter.ContactViewHolder> {
 
-    ArrayList<MetricModel> metricItemArrayList;
+    ArrayList<metricmodel> metricItemArrayList;
     private Context mContext;
     int row_index;
     adapteritemclick mItemClick;
 
-    public ItemMetricAdapter(Context mContext, ArrayList<MetricModel> metricItemArrayList, adapteritemclick mItemClick) {
+    public Itemmetricadapter(Context mContext, ArrayList<metricmodel> metricItemArrayList, adapteritemclick mItemClick) {
         this.metricItemArrayList = metricItemArrayList;
         this.mContext = mContext;
         this.mItemClick = mItemClick;
@@ -46,7 +46,7 @@ public class ItemMetricAdapter extends RecyclerView.Adapter<ItemMetricAdapter.Co
     @Override
     public void onBindViewHolder(final ContactViewHolder holder, final int position) {
 
-        final MetricModel metricModel = metricItemArrayList.get(position);
+        final metricmodel metricModel = metricItemArrayList.get(position);
 
         holder.tvItemName.setText(common.metric_display(metricModel.getMetricTrackKeyName()));
         holder.tv_itemValue.setText(metricModel.getMetricTrackValue());

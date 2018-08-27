@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by devesh on 20/4/18.
  */
 
-public class MetricModel implements Serializable {
+public class metricmodel implements Serializable {
 
      String MetricTrackKeyName = "";
      String MetricTrackValue = "";
@@ -14,7 +14,7 @@ public class MetricModel implements Serializable {
      String Tag = "";
      boolean isSelected=false;
 
-    public MetricModel(String datetime, String keyname, String keyValue, boolean isSelected) {
+    public metricmodel(String datetime, String keyname, String keyValue, boolean isSelected) {
         setDateTime(datetime);
         setMetricTrackKeyName(keyname);
         setMetricTrackValue(keyValue);
@@ -37,7 +37,7 @@ public class MetricModel implements Serializable {
         DateTime = dateTime;
     }
 
-    public MetricModel(String MetricTrackKeyName, String MetricTrackValue, boolean isSelected) {
+    public metricmodel(String MetricTrackKeyName, String MetricTrackValue, boolean isSelected) {
         this.MetricTrackKeyName = MetricTrackKeyName;
         this.MetricTrackValue = MetricTrackValue;
         this.isSelected = isSelected;

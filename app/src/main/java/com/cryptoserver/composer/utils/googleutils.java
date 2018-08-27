@@ -6,7 +6,7 @@ import android.location.Location;
  * Created by Ejaz on 2/14/2017.
  */
 
-public class GoogleUtils {
+public class googleutils {
 
     /**
      * Saving the user curent location for the current location
