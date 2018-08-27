@@ -31,8 +31,9 @@ public class introactivity extends FragmentActivity {
     int currentselected,nextselection;
     pagercustomduration viewpager_header,viewpager_footer;
     int touchstate=0;
-    boolean pressed=false;
+    boolean touched =false;
     boolean isinbackground=false;
+    boolean slidebytime=false;
     Date initialDate;
     private Handler myHandler;
     private Runnable myRunnable;
@@ -94,13 +95,13 @@ public class introactivity extends FragmentActivity {
                 initialDate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        pressed = true;
-                        Log.e("user touch","on touch" + pressed);
+                        touched = true;
+                        Log.e("user touch","on touch" + touched);
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        pressed = false;
-                        Log.e("on touch end ","on touch end" + pressed);
+                        touched = false;
+                        Log.e("on touch end ","on touch end" + touched);
                         break;
                 }
                 return false;
@@ -113,13 +114,13 @@ public class introactivity extends FragmentActivity {
                 initialDate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        pressed = true;
-                        Log.e("user touch","on touch" + pressed);
+                        touched = true;
+                        Log.e("user touch","on touch" + touched);
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        pressed = false;
-                        Log.e("on touch end ","on touch end" + pressed);
+                        touched = false;
+                        Log.e("on touch end ","on touch end" + touched);
                         break;
                 }
                 return false;
@@ -136,7 +137,7 @@ public class introactivity extends FragmentActivity {
                 {
                     Date currentDate=new Date();
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
-                    if(secondDifference > 4)
+                    if(secondDifference > 20)
                     {
                         initialDate = new Date();
 
@@ -145,12 +146,14 @@ public class introactivity extends FragmentActivity {
                             if(currentselected == 0)
                                 currentselected++;
 
+                            slidebytime=true;
                             setviewpager(currentselected);
                             currentselected++;
                         }
                         else if(currentselected == viewpager_header.getAdapter().getCount())
                         {
                             currentselected=0;
+                            slidebytime=true;
                             setviewpager(currentselected);
                         }
                     }
@@ -165,9 +168,9 @@ public class introactivity extends FragmentActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
-                if(pressed)
+                if(touched || slidebytime)
                     return;
-/*
+
                 if ( position == currentselected )
                 {
                     // We are moving to next screen on right side
@@ -176,9 +179,9 @@ public class introactivity extends FragmentActivity {
                         // Closer to next screen than to current
                         if ( position + 1 != nextselection )
                         {
-                            nextselection = position + 1;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
+                            //nextselection = position + 1;
+                            //currentselected=nextselection;
+                            //setviewpager( nextselection);
                         }
                     }
                     else
@@ -186,9 +189,9 @@ public class introactivity extends FragmentActivity {
                         // Closer to current screen than to next
                         if ( position != nextselection )
                         {
-                            nextselection = position;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
+                            //nextselection = position;
+                            //currentselected=nextselection;
+                            //setviewpager( nextselection);
                         }
                     }
                 }
@@ -200,9 +203,9 @@ public class introactivity extends FragmentActivity {
                         // Closer to current screen than to next
                         if ( position + 1 != nextselection )
                         {
-                            nextselection = position + 1;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
+                            //nextselection = position + 1;
+                            //currentselected=nextselection;
+                            //setviewpager( nextselection);
                         }
                     }
                     else
@@ -210,12 +213,12 @@ public class introactivity extends FragmentActivity {
                         // Closer to next screen than to current
                         if ( position != nextselection )
                         {
-                            nextselection = position;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
+                            //nextselection = position;
+                            //currentselected=nextselection;
+                            //setviewpager( nextselection);
                         }
                     }
-                }*/
+                }
 
             }
 
@@ -223,6 +226,7 @@ public class introactivity extends FragmentActivity {
             public void onPageSelected(int position) {
                 //Log.e("position", position+" ") ;
                 currentselected=position;
+                //slidebytime=false;
                 viewpager_footer.setCurrentItem(position, true);
             }
 

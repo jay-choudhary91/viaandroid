@@ -70,7 +70,7 @@
         </activity>
 
         <activity android:name=".activity.homeactivity"/>
-        <activity android:name=".activity.FullScreenVideoActivity"/>
+        <activity android:name=".activity.fullscreenvideoactivity"/>
 
         <service
             android:name=".services.LocationService"
