@@ -33,6 +33,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "default"
+    productFlavors {
+        reader {
+            versionCode 1
+            versionName "1.0"
+            applicationId 'com.cryptoserver.reader'
+        }
+        composer {
+            versionCode 1
+            versionName "1.0"
+            applicationId 'com.cryptoserver.composer'
+        }
+    }
 }
 
 ext {

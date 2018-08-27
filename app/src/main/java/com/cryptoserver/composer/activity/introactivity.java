@@ -1,5 +1,6 @@
 package com.cryptoserver.composer.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -11,11 +12,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.fragments.footerpagerfragment;
 import com.cryptoserver.composer.fragments.headerpagerfragment;
 import com.cryptoserver.composer.models.intro;
 
+import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.views.pageranimation;
 import com.cryptoserver.composer.views.pagercustomduration;
 import java.util.Date;
@@ -63,6 +67,14 @@ public class introactivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_pager);
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            Intent in=new Intent(introactivity.this,homeactivity.class);
+            startActivity(in);
+            finish();
+        }
+
         initialDate=new Date();
         viewpager_header = (pagercustomduration) findViewById(R.id.viewpager_header);
         viewpager_footer = (pagercustomduration) findViewById(R.id.viewpager_footer);
@@ -159,7 +171,7 @@ public class introactivity extends FragmentActivity {
                 if ( position == currentselected )
                 {
                     // We are moving to next screen on right side
-                    if ( positionOffset > 0.4 )
+                    if ( positionOffset > 0.5 )
                     {
                         // Closer to next screen than to current
                         if ( position + 1 != nextselection )
@@ -183,7 +195,7 @@ public class introactivity extends FragmentActivity {
                 else
                 {
                     // We are moving to next screen left side
-                    if ( positionOffset > 0.4 )
+                    if ( positionOffset > 0.5 )
                     {
                         // Closer to current screen than to next
                         if ( position + 1 != nextselection )

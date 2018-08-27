@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
@@ -32,6 +33,7 @@ import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideocomposer;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.fullscreenvideofragment;
+import com.cryptoserver.composer.fragments.readervideofragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
 import com.cryptoserver.composer.fragments.writerappfragment;
 import com.cryptoserver.composer.services.CallService;
@@ -73,13 +75,6 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
 
-    int request_take_gallery_video = 101;
-
-    private static final int request_read_external_storage = 1;
-    private static final int request_write_external_storage = 2;
-    Uri selectedimageuri =null;
-    private String selectedvideopath ="";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,9 +82,17 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
 
         applicationviavideocomposer.setActivity(homeactivity.this);
 
-        writerappfragment frag=new writerappfragment();
-        frag.setData(true);
-        replaceFragment(frag, true, false);
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            readervideofragment frag=new readervideofragment();
+            replaceFragment(frag, true, false);
+        }
+        else
+        {
+            writerappfragment frag=new writerappfragment();
+            frag.setData(true);
+            replaceFragment(frag, true, false);
+        }
 
         imgaddicon.setOnClickListener(this);
         imgsettingsicon.setOnClickListener(this);
@@ -98,7 +101,6 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
         img_cancel.setOnClickListener(this);
         imgshareicon.setOnClickListener(this);
         img_menu.setOnClickListener(this);
-
 
         CallService mService = new CallService();
         Intent mIntent = new Intent(homeactivity.this, CallService.class);
@@ -136,11 +138,11 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
             txt_title.setText(txt);
         }
         else if((getcurrentfragment() instanceof fragmentvideolist) || getcurrentfragment() instanceof fragmentsettings
-                || getcurrentfragment() instanceof fullscreenvideofragment  || getcurrentfragment() instanceof videoplayfragment)
+                || getcurrentfragment() instanceof fullscreenvideofragment  || getcurrentfragment() instanceof videoplayfragment
+                || getcurrentfragment() instanceof readervideofragment)
         {
             txt_title.setText("");
         }
-
     }
 
     @Override
@@ -208,6 +210,17 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
             updateheader("");
 
         }
+        else if(fragment instanceof readervideofragment){
+            img_back.setVisibility(View.GONE);
+            img_cancel.setVisibility(View.GONE);
+            imgaddicon.setVisibility(View.GONE);
+            imgsettingsicon.setVisibility(View.VISIBLE);
+            imguploadicon.setVisibility(View.GONE);
+            img_menu.setVisibility(View.VISIBLE);
+            imgshareicon.setVisibility(View.VISIBLE);
+            updateheader("");
+
+        }
     }
 
     @Override
@@ -223,8 +236,6 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 getcurrentfragment().onHeaderBtnClick(R.id.img_share_icon);
                 break;
             case R.id.img_add_icon:
-                //Intent in=new Intent(homeactivity.this,writerappactivity.class);
-               // startActivity(in);
                 {
                     writerappfragment fragment=new writerappfragment();
                     addFragment(fragment, false, true);
@@ -236,140 +247,13 @@ public class homeactivity extends LocationAwareActivity implements View.OnClickL
                 replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_upload_icon:
-                checkwritestoragepermission();
+                getcurrentfragment().onHeaderBtnClick(R.id.img_upload_icon);
                 break;
             case R.id.img_menu:
-                   fragmentvideolist frag=new fragmentvideolist();
-                  replaceFragment(frag, false, true);
+                getcurrentfragment().onHeaderBtnClick(R.id.img_menu);
                 break;
         }
     }
-
-
-    private void checkwritestoragepermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED ) {
-                opengallery();
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE}, request_read_external_storage);
-            }
-        }
-        else
-        {
-            opengallery();
-        }
-    }
-
-
-    public  void opengallery()
-    {
-        /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("video*//*");
-        startActivityForResult(Intent.createChooser(intent, "Select Video"), request_take_gallery_video);*/
-
-        Intent intent;
-        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-        {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        }
-        else
-        {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
-        }
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent,request_take_gallery_video);
-    }
-
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == request_take_gallery_video) {
-                selectedimageuri = data.getData();
-                // OI FILE Manager
-                selectedvideopath = common.getpath(this, selectedimageuri);
-
-                if(selectedvideopath == null){
-                    common.showalert(homeactivity.this,getResources().getString(R.string.file_not_supported));
-
-                    return;
-                }
-                setcopyvideo(selectedvideopath);
-                }
-            }
-        }
-
-        public void setcopyvideo(String selectedvideopath){
-
-            File sourceFile = new File(selectedvideopath);
-
-            if(sourceFile.exists())
-            {
-                long space=sourceFile.getTotalSpace();
-
-                String destinationDir = config.videodir;
-
-                // check for existance of file.
-                File destinationFile = null;
-                File pathFile=new File(destinationDir+File.separator+sourceFile.getName());
-                if(pathFile.exists())
-                {
-                    String extension = pathFile.getAbsolutePath().substring(pathFile.getAbsolutePath().lastIndexOf("."));
-                    String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    destinationFile = new File(destinationDir+File.separator+fileName+extension);
-                }
-                else
-                {
-                    destinationFile = new File(destinationDir+File.separator+sourceFile.getName());
-                }
-
-                try
-                {
-                    if (!destinationFile.getParentFile().exists())
-                        destinationFile.getParentFile().mkdirs();
-
-                    if (!destinationFile.exists()) {
-                        destinationFile.createNewFile();
-                    }
-
-                    InputStream in = new FileInputStream(selectedvideopath);
-                    OutputStream out = new FileOutputStream(destinationFile);
-
-                    // Copy the bits from instream to outstream
-                    byte[] buf = new byte[1024];
-                    int len;
-
-                    while ((len = in.read(buf)) > 0) {
-                        out.write(buf, 0, len);
-                    }
-
-                    in.close();
-                    out.close();
-
-                    Toast.makeText(homeactivity.this,"Video upload successfully!",Toast.LENGTH_SHORT).show();
-
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                    Toast.makeText(homeactivity.this,"An error occured!",Toast.LENGTH_SHORT).show();
-                }
-            }
-            else
-            {
-                Toast.makeText(homeactivity.this,"File doesn't exist!",Toast.LENGTH_SHORT).show();
-            }
-
-        }
-
-
-
-
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {

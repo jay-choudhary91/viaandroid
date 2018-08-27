@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.activity.homeactivity;
 import com.cryptoserver.composer.adapter.adaptervideolist;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
@@ -33,7 +35,11 @@ import com.cryptoserver.composer.utils.config;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +52,8 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by devesh on 6/8/18.
@@ -61,6 +69,13 @@ public class fragmentvideolist extends basefragment {
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adaptervideolist adapter;
     private RecyclerTouchListener onTouchListener;
+    int request_take_gallery_video = 101;
+
+    private static final int request_read_external_storage = 1;
+    private static final int request_write_external_storage = 2;
+    Uri selectedimageuri =null;
+    private String selectedvideopath ="";
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videolist;
@@ -310,10 +325,135 @@ public class fragmentvideolist extends basefragment {
             }
         }).start();
 
+    }
+
+    private void checkwritestoragepermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED ) {
+                opengallery();
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        request_read_external_storage);
+            }
+        }
+        else
+        {
+            opengallery();
+        }
+    }
+
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid){
+            case R.id.img_upload_icon:
+                checkwritestoragepermission();
+
+                break;
+        }
+    }
+
+    public  void opengallery()
+    {
+        Intent intent;
+        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+        {
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        }
+        else
+        {
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+        }
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent,request_take_gallery_video);
+    }
 
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == request_take_gallery_video) {
+            if (resultCode == RESULT_OK) {
+                selectedimageuri = data.getData();
+                // OI FILE Manager
+                selectedvideopath = common.getpath(getActivity(), selectedimageuri);
+
+                if(selectedvideopath == null){
+                    common.showalert(getActivity(),getResources().getString(R.string.file_not_supported));
+
+                    return;
+                }
+                setcopyvideo(selectedvideopath);
+                }
+            }
+        }
+
+    public void setcopyvideo(String selectedvideopath){
+
+        File sourceFile = new File(selectedvideopath);
+
+        if(sourceFile.exists())
+        {
+            long space=sourceFile.getTotalSpace();
+
+            String destinationDir = config.videodir;
+
+            // check for existance of file.
+            File destinationFile = null;
+            File pathFile=new File(destinationDir+File.separator+sourceFile.getName());
+            if(pathFile.exists())
+            {
+                String extension = pathFile.getAbsolutePath().substring(pathFile.getAbsolutePath().lastIndexOf("."));
+                String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                destinationFile = new File(destinationDir+File.separator+fileName+extension);
+            }
+            else
+            {
+                destinationFile = new File(destinationDir+File.separator+sourceFile.getName());
+            }
+
+            try
+            {
+                if (!destinationFile.getParentFile().exists())
+                    destinationFile.getParentFile().mkdirs();
+
+                if (!destinationFile.exists()) {
+                    destinationFile.createNewFile();
+                }
+
+                InputStream in = new FileInputStream(selectedvideopath);
+                OutputStream out = new FileOutputStream(destinationFile);
+
+                // Copy the bits from instream to outstream
+                byte[] buf = new byte[1024];
+                int len;
+
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+
+                in.close();
+                out.close();
+
+                Toast.makeText(getActivity(),"Video upload successfully!",Toast.LENGTH_SHORT).show();
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+                Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            Toast.makeText(getActivity(),"File doesn't exist!",Toast.LENGTH_SHORT).show();
+        }
 
     }
+
 
 
     @Override

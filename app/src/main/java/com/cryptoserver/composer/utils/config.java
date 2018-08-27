@@ -19,6 +19,8 @@ public class config {
     public static final String build_flavor_videocreater = "creater";
     public static final String build_flavor_videoviewer = "viewer";
     public static final String broadcast_call = "com.matraex.call_broadcast";
+    public static final String build_flavor_reader = "reader";
+    public static final String build_flavor_composer = "composer";
 
     public static final String metriclist = "metriclist";
     public static final String framecount = "framecount";

@@ -341,6 +341,20 @@ public class writerappfragment extends basefragment implements
         return rootview;
     }
 
+
+
+
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid){
+            case R.id.img_menu:
+                fragmentvideolist frag=new fragmentvideolist();
+                gethelper().replaceFragment(frag, false, true);
+                break;
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
