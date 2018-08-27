@@ -64,7 +64,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             readervideofragment frag=new readervideofragment();
-            replaceFragment(frag, true, false);
+            replaceFragment(frag, false, true);
         }
         else
         {
@@ -185,6 +185,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgaddicon.setVisibility(View.GONE);
             imgsettingsicon.setVisibility(View.GONE);
             imguploadicon.setVisibility(View.GONE);
+            img_menu.setVisibility(View.VISIBLE);
             imgshareicon.setVisibility(View.VISIBLE);
             updateheader("");
 
@@ -198,6 +199,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             img_menu.setVisibility(View.VISIBLE);
             imgshareicon.setVisibility(View.VISIBLE);
             updateheader("");
+            imgsettingsicon.setEnabled(true);
 
         }
     }
@@ -222,8 +224,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 break;
             case R.id.img_setting:
                 imgsettingsicon.setEnabled(false);
-                fragmentsettings fragmatriclist=new fragmentsettings();
-                replaceFragment(fragmatriclist, false, true);
+                getcurrentfragment().onHeaderBtnClick(R.id.img_setting);
                 break;
             case R.id.img_upload_icon:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_upload_icon);

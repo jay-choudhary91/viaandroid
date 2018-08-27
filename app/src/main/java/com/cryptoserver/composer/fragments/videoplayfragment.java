@@ -146,6 +146,10 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
                 }
 
                 break;
+
+            case R.id.img_menu:
+                gethelper().onBack();
+                break;
         }
     }
 

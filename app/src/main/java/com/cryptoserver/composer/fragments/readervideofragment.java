@@ -1,10 +1,14 @@
 package com.cryptoserver.composer.fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +23,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.homeactivity;
@@ -68,8 +73,9 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<videomodel> mallframes =new ArrayList<>();
     long videoduration =0;
-    boolean stopprevious=false;
+    boolean ishashprocessing=false;
     public int REQUESTCODE_PICK=201;
+    private static final int request_read_external_storage = 1;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -161,27 +167,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         recyviewitem.setLayoutManager(mLayoutManager);
         recyviewitem.setItemAnimator(new DefaultItemAnimator());
         recyviewitem.setAdapter(madapter);
-        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
-
-
-        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-        {
-            keytype=config.prefs_md5;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-        {
-            keytype=config.prefs_md5_salt;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-        {
-            keytype=config.prefs_sha;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-        {
-            keytype=config.prefs_sha_salt;
-        }
 
         return rootview;
     }
@@ -418,13 +403,43 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 common.shareMedia(getActivity(),VIDEO_URL);
                 break;
             case R.id.img_menu:
-                opengallery();
+                checkwritestoragepermission();
                 break;
+            case R.id.img_setting:
+                fragmentsettings fragmatriclist=new fragmentsettings();
+                gethelper().replaceFragment(fragmatriclist, false, true);
+                break;
+        }
+    }
+
+
+    private void checkwritestoragepermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED ) {
+                opengallery();
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        request_read_external_storage);
+            }
+        }
+        else
+        {
+            opengallery();
         }
     }
 
     public  void opengallery()
     {
+        if(ishashprocessing)
+        {
+            Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if(player != null)
             player.pause();
 
@@ -459,12 +474,36 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
                     return;
                 }
+
+                if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+                    frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+
+                if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                        xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+                {
+                    keytype=config.prefs_md5;
+                }
+                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+                {
+                    keytype=config.prefs_md5_salt;
+                }
+                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+                {
+                    keytype=config.prefs_sha;
+                }
+                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+                {
+                    keytype=config.prefs_sha_salt;
+                }
+
                 setupVideoPlayer(selectedimageuri);
 
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                     currentframenumber=0;
                     mvideoframes.clear();
                     mallframes.clear();
+                    madapter.notifyDataSetChanged();
                     Thread thread = new Thread(){
                         public void run(){
                             setVideoAdapter();
@@ -511,6 +550,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
     public void setVideoAdapter() {
         int count = 1;
+        ishashprocessing=true;
         currentframenumber = currentframenumber + frameduration;
        try
         {
@@ -556,11 +596,13 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 }
             }
 
+            ishashprocessing=false;
             grabber.flush();
 
         }catch (Exception e)
         {
             e.printStackTrace();
+            ishashprocessing=false;
         }
     }
 

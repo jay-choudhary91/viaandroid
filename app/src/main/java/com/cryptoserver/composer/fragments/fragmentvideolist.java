@@ -352,7 +352,10 @@ public class fragmentvideolist extends basefragment {
         switch (btnid){
             case R.id.img_upload_icon:
                 checkwritestoragepermission();
-
+                break;
+            case R.id.img_setting:
+                fragmentsettings fragmatriclist=new fragmentsettings();
+                gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
         }
     }
