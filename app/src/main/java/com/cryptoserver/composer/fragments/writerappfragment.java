@@ -81,7 +81,7 @@ import butterknife.ButterKnife;
 import static java.lang.Thread.State.WAITING;
 
 public class writerappfragment extends basefragment implements
-        TextureView.SurfaceTextureListener, View.OnClickListener {
+        TextureView.SurfaceTextureListener, View.OnClickListener,Camera.OnZoomChangeListener {
     private static final String log_tag = writerappfragment.class.getSimpleName();
     private static final int request_permissions = 1;
 
@@ -974,6 +974,11 @@ public class writerappfragment extends basefragment implements
         this.autostartvideo = autostartvideo;
     }
 
+    @Override
+    public void onZoomChange(int i, boolean b, Camera camera) {
+
+    }
+
     class runningthread extends Thread {
         boolean isrunning;
 
@@ -1331,6 +1336,8 @@ public class writerappfragment extends basefragment implements
         }
         mDist = newDist;
         params.setZoom(zoom);
+        params.setVideoStabilization(false);
+       // mcamera.startSmoothZoom();
         mcamera.setParameters(params);
     }
 
