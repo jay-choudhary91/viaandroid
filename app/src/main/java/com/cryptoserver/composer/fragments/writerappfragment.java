@@ -192,25 +192,27 @@ public class writerappfragment extends basefragment implements
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
 
-                    Camera.Parameters params = mcamera.getParameters();
-                    int action = event.getAction();
+                    if(mcamera != null)
+                    {
+                        Camera.Parameters params = mcamera.getParameters();
+                        int action = event.getAction();
 
 
-                    if (event.getPointerCount() > 1) {
-                        // handle multi-touch events
-                        if (action == MotionEvent.ACTION_POINTER_DOWN) {
-                            mDist = getFingerSpacing(event);
-                        } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
-                            mcamera.cancelAutoFocus();
-                            handleZoom(event, params);
-                        }
-                    } else {
-                        // handle single touch events
-                        if (action == MotionEvent.ACTION_UP) {
-                            handleFocus(event, params);
+                        if (event.getPointerCount() > 1) {
+                            // handle multi-touch events
+                            if (action == MotionEvent.ACTION_POINTER_DOWN) {
+                                mDist = getFingerSpacing(event);
+                            } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
+                                mcamera.cancelAutoFocus();
+                                handleZoom(event, params);
+                            }
+                        } else {
+                            // handle single touch events
+                            if (action == MotionEvent.ACTION_UP) {
+                                handleFocus(event, params);
+                            }
                         }
                     }
-
                     return true;
                 }
             });
