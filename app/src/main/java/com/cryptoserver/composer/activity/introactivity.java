@@ -31,9 +31,11 @@ public class introactivity extends FragmentActivity {
     int currentselected,nextselection;
     pagercustomduration viewpager_header,viewpager_footer;
     int touchstate=0;
+    float positionoffset=0;
     boolean touched =false;
     boolean isinbackground=false;
     boolean slidebytime=false;
+    boolean isrighttoleft=false;
     Date initialDate;
     private Handler myHandler;
     private Runnable myRunnable;
@@ -139,7 +141,7 @@ public class introactivity extends FragmentActivity {
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
                     if(secondDifference > 4)
                     {
-                        initialDate = new Date();
+                        /*initialDate = new Date();
 
                         if(currentselected < viewpager_header.getAdapter().getCount())
                         {
@@ -155,7 +157,7 @@ public class introactivity extends FragmentActivity {
                             currentselected=0;
                             slidebytime=true;
                             setviewpager(currentselected);
-                        }
+                        }*/
                     }
                 }
                 myHandler.postDelayed(this, 500);
@@ -165,58 +167,15 @@ public class introactivity extends FragmentActivity {
 
 
         viewpager_header.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            float positionandoffset=0;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-               // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+                Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+                isrighttoleft = position + positionOffset > positionandoffset;
+                positionandoffset = position + positionOffset;
 
-                /*if ( position == currentselected )
-                {
-                    // We are moving to next screen on right side
-                    if ( positionOffset > 0.5 )
-                    {
-                        // Closer to next screen than to current
-                        if ( position + 1 != nextselection )
-                        {
-                            nextselection = position + 1;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
-                        }
-                    }
-                    else
-                    {
-                        // Closer to current screen than to next
-                        if ( position != nextselection )
-                        {
-                            nextselection = position;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
-                        }
-                    }
-                }
-                else
-                {
-                    // We are moving to next screen left side
-                    if ( positionOffset > 0.5 )
-                    {
-                        // Closer to current screen than to next
-                        if ( position + 1 != nextselection )
-                        {
-                            nextselection = position + 1;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
-                        }
-                    }
-                    else
-                    {
-                        // Closer to next screen than to current
-                        if ( position != nextselection )
-                        {
-                            nextselection = position;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
-                        }
-                    }
-                }*/
+                positionoffset=positionOffset;
+              //  Log.e("isrighttoleft", " "+isrighttoleft);
 
             }
 
@@ -231,7 +190,42 @@ public class introactivity extends FragmentActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
 
+                Log.e("scrollStateChanged ","" + state);
+                if(touchstate == 1 && state == 2)
+                {
+                    if(isrighttoleft)
+                    {
+                        if(positionoffset > 0.5)
+                        {
+                            Log.e("isrighttoleft", " 1") ;
+                            int newcount=currentselected+1;
+                            if(newcount < viewpager_header.getAdapter().getCount())
+                            {
+                                currentselected++;
+                                viewpager_header.setCurrentItem(currentselected, true);
+                                //setviewpager(currentselected);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(positionoffset < 0.5)
+                        {
+                            Log.e("islefttoright", " 2") ;
+                            int newcount=currentselected-1;
+                            if(newcount > -1)
+                            {
+                                currentselected--;
+                                viewpager_header.setCurrentItem(currentselected, true);
+                                //setviewpager(currentselected);
+                            }
+                        }
+                    }
+                }
                 touchstate=state;
+                /*onPageScrollStateChanged:        1             SCROLL_STATE_DRAGGING
+                onPageScrollStateChanged:        2             SCROLL_STATE_SETTLING
+                onPageScrollStateChanged:        0             SCROLL_STATE_IDLE*/
             }
         });
 

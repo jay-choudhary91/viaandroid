@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
@@ -300,10 +301,30 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
     @Override
     public void onPrepared(MediaPlayer mp) {
         controller.setMediaPlayer(this);
-        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
+        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer),mitemclick);
         player.start();
         controller.show();
     }
+
+    adapteritemclick mitemclick=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+            if(common.isDeviceInPortraitMode(applicationviavideocomposer.getactivity()))
+            {
+                common.setDevicePortraitMode(false);
+            }
+            else
+            {
+                common.setDevicePortraitMode(true);
+            }
+
+        }
+
+        @Override
+        public void onItemClicked(Object object, int type) {
+
+        }
+    };
     // End MediaPlayer.OnPreparedListener
 
     // Implement VideoMediaController.MediaPlayerControl
