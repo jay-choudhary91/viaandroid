@@ -141,7 +141,7 @@ public class introactivity extends FragmentActivity {
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
                     if(secondDifference > 4)
                     {
-                        /*initialDate = new Date();
+                        initialDate = new Date();
 
                         if(currentselected < viewpager_header.getAdapter().getCount())
                         {
@@ -157,7 +157,7 @@ public class introactivity extends FragmentActivity {
                             currentselected=0;
                             slidebytime=true;
                             setviewpager(currentselected);
-                        }*/
+                        }
                     }
                 }
                 myHandler.postDelayed(this, 500);
@@ -191,7 +191,7 @@ public class introactivity extends FragmentActivity {
             public void onPageScrollStateChanged(int state) {
 
                 Log.e("scrollStateChanged ","" + state);
-                if(touchstate == 1 && state == 2)
+                /*if(touchstate == 1 && state == 2)
                 {
                     if(isrighttoleft)
                     {
@@ -221,7 +221,7 @@ public class introactivity extends FragmentActivity {
                             }
                         }
                     }
-                }
+                }*/
                 touchstate=state;
                 /*onPageScrollStateChanged:        1             SCROLL_STATE_DRAGGING
                 onPageScrollStateChanged:        2             SCROLL_STATE_SETTLING
