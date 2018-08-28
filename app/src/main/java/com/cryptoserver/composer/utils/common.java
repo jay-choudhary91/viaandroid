@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -40,6 +41,7 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -238,6 +240,28 @@ public class common
                 cursor.close();
         }
         return null;
+    }
+
+    public static boolean isDeviceInPortraitMode(Context mContext)
+    {
+        Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        int rotation = display.getRotation();
+        if(rotation == 0)
+            return true;
+
+        return false;
+    }
+
+    public static void setDevicePortraitMode(boolean mode)
+    {
+        if(mode)
+        {
+            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        else
+        {
+            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 
     public static boolean isExternalStorageDocument(Uri uri) {
