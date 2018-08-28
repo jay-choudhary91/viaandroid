@@ -345,7 +345,7 @@ public class writerappfragment extends basefragment implements
         switch (btnid){
             case R.id.img_menu:
                 fragmentvideolist frag=new fragmentvideolist();
-                gethelper().replaceFragment(frag, false, true);
+                gethelper().replaceFragment(frag, true, false);
                 break;
         }
     }
@@ -1712,7 +1712,7 @@ public class writerappfragment extends basefragment implements
     {
         progressdialog.dismisswaitdialog();
         fragmentvideolist frag=new fragmentvideolist();
-        gethelper().replaceFragment(frag, false, true);
+        gethelper().replaceFragment(frag, true, false);
     }
 
 }
