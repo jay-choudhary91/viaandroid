@@ -137,7 +137,7 @@ public class introactivity extends FragmentActivity {
                 {
                     Date currentDate=new Date();
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
-                    if(secondDifference > 20)
+                    if(secondDifference > 4)
                     {
                         initialDate = new Date();
 
@@ -168,10 +168,8 @@ public class introactivity extends FragmentActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
-                if(touched || slidebytime)
-                    return;
 
-                if ( position == currentselected )
+                /*if ( position == currentselected )
                 {
                     // We are moving to next screen on right side
                     if ( positionOffset > 0.5 )
@@ -179,9 +177,9 @@ public class introactivity extends FragmentActivity {
                         // Closer to next screen than to current
                         if ( position + 1 != nextselection )
                         {
-                            //nextselection = position + 1;
-                            //currentselected=nextselection;
-                            //setviewpager( nextselection);
+                            nextselection = position + 1;
+                            currentselected=nextselection;
+                            setviewpager( nextselection);
                         }
                     }
                     else
@@ -189,9 +187,9 @@ public class introactivity extends FragmentActivity {
                         // Closer to current screen than to next
                         if ( position != nextselection )
                         {
-                            //nextselection = position;
-                            //currentselected=nextselection;
-                            //setviewpager( nextselection);
+                            nextselection = position;
+                            currentselected=nextselection;
+                            setviewpager( nextselection);
                         }
                     }
                 }
@@ -203,9 +201,9 @@ public class introactivity extends FragmentActivity {
                         // Closer to current screen than to next
                         if ( position + 1 != nextselection )
                         {
-                            //nextselection = position + 1;
-                            //currentselected=nextselection;
-                            //setviewpager( nextselection);
+                            nextselection = position + 1;
+                            currentselected=nextselection;
+                            setviewpager( nextselection);
                         }
                     }
                     else
@@ -213,12 +211,12 @@ public class introactivity extends FragmentActivity {
                         // Closer to next screen than to current
                         if ( position != nextselection )
                         {
-                            //nextselection = position;
-                            //currentselected=nextselection;
-                            //setviewpager( nextselection);
+                            nextselection = position;
+                            currentselected=nextselection;
+                            setviewpager( nextselection);
                         }
                     }
-                }
+                }*/
 
             }
 
