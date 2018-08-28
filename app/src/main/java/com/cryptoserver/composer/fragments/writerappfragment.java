@@ -15,6 +15,7 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -41,6 +42,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.ffmpeg.data.frametorecord;
@@ -68,7 +70,11 @@ import org.bytedeco.javacv.FrameFilter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
@@ -572,7 +578,7 @@ public class writerappfragment extends basefragment implements
 
     public void exportvideo()
     {
-        /*String sourcePath = mvideo.getAbsolutePath();
+        String sourcePath = mvideo.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
         File destinationDir = new File(Environment.getExternalStoragePublicDirectory(
@@ -611,7 +617,7 @@ public class writerappfragment extends basefragment implements
             try
             {
                 ContentValues values = new ContentValues(3);
-                values.put(MediaStore.Video.Media.TITLE, "Video hash");
+                values.put(MediaStore.Video.Media.TITLE, "Via composer");
                 values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
                 values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
                 getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
@@ -625,19 +631,6 @@ public class writerappfragment extends basefragment implements
         {
             e.printStackTrace();
             Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
-        }*/
-
-        try
-        {
-            ContentValues values = new ContentValues(3);
-            values.put(MediaStore.Video.Media.TITLE, "Via composer");
-            values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-            values.put(MediaStore.Video.Media.DATA, mvideo.getAbsolutePath());
-            getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
         }
 
         progressdialog.dismisswaitdialog();

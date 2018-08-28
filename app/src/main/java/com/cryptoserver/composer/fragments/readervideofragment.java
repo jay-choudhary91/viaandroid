@@ -233,7 +233,11 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (player != null)
+        {
+            //holder.setFixedSize(1000,500);
             player.setDisplay(holder);
+        }
+
 
     }
 
@@ -253,6 +257,27 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer),mitemclick);
         player.start();
         controller.show();
+
+        //Get the dimensions of the video
+        /*int videoWidth = mp.getVideoWidth();
+        int videoHeight = mp.getVideoHeight();
+
+        //Get the width of the screen
+        int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+
+        //Get the SurfaceView layout parameters
+        android.view.ViewGroup.LayoutParams lp = videoSurface.getLayoutParams();
+
+        //Set the width of the SurfaceView to the width of the screen
+        lp.width = screenWidth;
+
+        //Set the height of the SurfaceView to match the aspect ratio of the video
+        //be sure to cast these as floats otherwise the calculation will likely be 0
+        lp.height = screenHeight;
+
+        //Commit the layout parameters
+        videoSurface.setLayoutParams(lp);*/
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
