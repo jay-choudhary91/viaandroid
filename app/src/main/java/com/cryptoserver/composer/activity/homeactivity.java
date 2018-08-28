@@ -70,7 +70,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             writerappfragment frag=new writerappfragment();
             frag.setData(true);
-            replaceFragment(frag, true, false);
+            replaceFragment(frag, false, true);
         }
 
         imgaddicon.setOnClickListener(this);
