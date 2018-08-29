@@ -12,7 +12,7 @@ import java.util.Date;
  * Created by root on 21/5/18.
  */
 
-public class PhoneStateBroadcastReceiver extends BroadcastReceiver {
+public class phonestatebroadcastreceiver extends BroadcastReceiver {
 
     private static int lastState = TelephonyManager.CALL_STATE_IDLE;
     private static Date callStartTime;

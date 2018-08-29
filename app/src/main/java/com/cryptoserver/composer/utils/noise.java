@@ -10,7 +10,7 @@ import java.io.IOException;
  * Created by devesh on 3/5/18.
  */
 
-public class Noise extends Activity {
+public class noise extends Activity {
 
     static final private double EMA_FILTER = 0.6;
 

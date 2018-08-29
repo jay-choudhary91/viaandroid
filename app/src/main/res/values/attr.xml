@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="CustomFontTextView">
+    <declare-styleable name="customfonttextview">
         <attr name="fontType">
             <enum name="OpenSans_Bold" value="0" />
             <enum name="OpenSans_BoldItalic" value="1" />

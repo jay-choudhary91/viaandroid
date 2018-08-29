@@ -44,7 +44,7 @@
 
 
 
-        <com.cryptoserver.composer.views.CustomFontTextView
+        <com.cryptoserver.composer.views.customfonttextview
             android:id="@+id/txt_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:textColor="@color/white"
             app:fontType="OpenSans_Regular"/>
 
-        <com.cryptoserver.composer.views.CustomFontTextView
+        <com.cryptoserver.composer.views.customfonttextview
             app:fontType="OpenSans_Regular"
             android:id="@+id/txt_clear"
             android:layout_width="match_parent"

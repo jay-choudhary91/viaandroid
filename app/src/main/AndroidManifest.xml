@@ -69,16 +69,19 @@
 
         </activity>
 
-        <activity android:name=".activity.homeactivity"/>
-        <activity android:name=".activity.FullScreenVideoActivity"/>
+        <activity android:name=".activity.homeactivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity android:name=".activity.fullscreenvideoactivity"/>
 
         <service
-            android:name=".services.LocationService"
+            android:name=".services.locationservice"
             android:enabled="true"
             android:exported="false"></service>
 
         <service
-            android:name=".services.CallService"
+            android:name=".services.callservice"
             android:enabled="true"></service>
         <meta-data
             android:name="io.fabric.ApiKey"

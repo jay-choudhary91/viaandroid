@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import com.cryptoserver.composer.R;
 
 
-public class CustomFontTextView extends android.support.v7.widget.AppCompatTextView {
+public class customfonttextview extends android.support.v7.widget.AppCompatTextView {
 
     public static final String SANS_BOLD = "fonts/OpenSans-Bold.ttf";
     public static final String SANS_BOLD_ITALIC = "fonts/OpenSans-BoldItalic.ttf";
@@ -22,10 +22,10 @@ public class CustomFontTextView extends android.support.v7.widget.AppCompatTextV
     public static final String SANS_SEMI_BOLD_ITALIC = "fonts/OpenSans-SemiboldItalic.ttf";
 
 
-    public CustomFontTextView(Context context, AttributeSet attrs) {
+    public customfonttextview(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CustomFontTextView, 0, 0);
-        int value =ta.getInteger(R.styleable.CustomFontTextView_fontType,0);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.customfonttextview, 0, 0);
+        int value =ta.getInteger(R.styleable.customfonttextview_fontType,0);
         switch (value){
             case 0:
                 this.setTypeface(Typeface.createFromAsset(context.getAssets(),SANS_BOLD));

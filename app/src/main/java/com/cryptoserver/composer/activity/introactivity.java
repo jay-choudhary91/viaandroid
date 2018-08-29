@@ -1,5 +1,6 @@
 package com.cryptoserver.composer.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -11,11 +12,14 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.fragments.footerpagerfragment;
 import com.cryptoserver.composer.fragments.headerpagerfragment;
 import com.cryptoserver.composer.models.intro;
 
+import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.views.pageranimation;
 import com.cryptoserver.composer.views.pagercustomduration;
 import java.util.Date;
@@ -27,8 +31,11 @@ public class introactivity extends FragmentActivity {
     int currentselected,nextselection;
     pagercustomduration viewpager_header,viewpager_footer;
     int touchstate=0;
-    boolean pressed=false;
+    float positionoffset=0;
+    boolean touched =false;
     boolean isinbackground=false;
+    boolean slidebytime=false;
+    boolean isrighttoleft=false;
     Date initialDate;
     private Handler myHandler;
     private Runnable myRunnable;
@@ -63,6 +70,14 @@ public class introactivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_pager);
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            Intent in=new Intent(introactivity.this,homeactivity.class);
+            startActivity(in);
+            finish();
+        }
+
         initialDate=new Date();
         viewpager_header = (pagercustomduration) findViewById(R.id.viewpager_header);
         viewpager_footer = (pagercustomduration) findViewById(R.id.viewpager_footer);
@@ -82,13 +97,13 @@ public class introactivity extends FragmentActivity {
                 initialDate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        pressed = true;
-                        Log.e("user touch","on touch" + pressed);
+                        touched = true;
+                        Log.e("user touch","on touch" + touched);
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        pressed = false;
-                        Log.e("on touch end ","on touch end" + pressed);
+                        touched = false;
+                        Log.e("on touch end ","on touch end" + touched);
                         break;
                 }
                 return false;
@@ -101,13 +116,13 @@ public class introactivity extends FragmentActivity {
                 initialDate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        pressed = true;
-                        Log.e("user touch","on touch" + pressed);
+                        touched = true;
+                        Log.e("user touch","on touch" + touched);
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        pressed = false;
-                        Log.e("on touch end ","on touch end" + pressed);
+                        touched = false;
+                        Log.e("on touch end ","on touch end" + touched);
                         break;
                 }
                 return false;
@@ -133,12 +148,14 @@ public class introactivity extends FragmentActivity {
                             if(currentselected == 0)
                                 currentselected++;
 
+                            slidebytime=true;
                             setviewpager(currentselected);
                             currentselected++;
                         }
                         else if(currentselected == viewpager_header.getAdapter().getCount())
                         {
                             currentselected=0;
+                            slidebytime=true;
                             setviewpager(currentselected);
                         }
                     }
@@ -150,60 +167,15 @@ public class introactivity extends FragmentActivity {
 
 
         viewpager_header.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            float positionandoffset=0;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-               // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
-                if(pressed)
-                    return;
-/*
-                if ( position == currentselected )
-                {
-                    // We are moving to next screen on right side
-                    if ( positionOffset > 0.4 )
-                    {
-                        // Closer to next screen than to current
-                        if ( position + 1 != nextselection )
-                        {
-                            nextselection = position + 1;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
-                        }
-                    }
-                    else
-                    {
-                        // Closer to current screen than to next
-                        if ( position != nextselection )
-                        {
-                            nextselection = position;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
-                        }
-                    }
-                }
-                else
-                {
-                    // We are moving to next screen left side
-                    if ( positionOffset > 0.4 )
-                    {
-                        // Closer to current screen than to next
-                        if ( position + 1 != nextselection )
-                        {
-                            nextselection = position + 1;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
-                        }
-                    }
-                    else
-                    {
-                        // Closer to next screen than to current
-                        if ( position != nextselection )
-                        {
-                            nextselection = position;
-                            currentselected=nextselection;
-                            setviewpager( nextselection);
-                        }
-                    }
-                }*/
+                Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
+                isrighttoleft = position + positionOffset > positionandoffset;
+                positionandoffset = position + positionOffset;
+
+                positionoffset=positionOffset;
+              //  Log.e("isrighttoleft", " "+isrighttoleft);
 
             }
 
@@ -211,13 +183,49 @@ public class introactivity extends FragmentActivity {
             public void onPageSelected(int position) {
                 //Log.e("position", position+" ") ;
                 currentselected=position;
+                //slidebytime=false;
                 viewpager_footer.setCurrentItem(position, true);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
 
+                Log.e("scrollStateChanged ","" + state);
+                /*if(touchstate == 1 && state == 2)
+                {
+                    if(isrighttoleft)
+                    {
+                        if(positionoffset > 0.5)
+                        {
+                            Log.e("isrighttoleft", " 1") ;
+                            int newcount=currentselected+1;
+                            if(newcount < viewpager_header.getAdapter().getCount())
+                            {
+                                currentselected++;
+                                viewpager_header.setCurrentItem(currentselected, true);
+                                //setviewpager(currentselected);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(positionoffset < 0.5)
+                        {
+                            Log.e("islefttoright", " 2") ;
+                            int newcount=currentselected-1;
+                            if(newcount > -1)
+                            {
+                                currentselected--;
+                                viewpager_header.setCurrentItem(currentselected, true);
+                                //setviewpager(currentselected);
+                            }
+                        }
+                    }
+                }*/
                 touchstate=state;
+                /*onPageScrollStateChanged:        1             SCROLL_STATE_DRAGGING
+                onPageScrollStateChanged:        2             SCROLL_STATE_SETTLING
+                onPageScrollStateChanged:        0             SCROLL_STATE_IDLE*/
             }
         });
 

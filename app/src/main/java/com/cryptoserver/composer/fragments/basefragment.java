@@ -11,13 +11,11 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
-import android.graphics.drawable.GradientDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
-import android.media.audiofx.NoiseSuppressor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -45,9 +43,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 
-import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.utils.Noise;
+import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 
@@ -55,7 +52,6 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -71,7 +67,7 @@ public abstract class basefragment extends Fragment {
     public static final int my_permission_read_phone_state = 90;
     private static final int permission_location_request_code = 91;
     int gps_request_code =111;
-    Noise mNoise;
+    noise mNoise;
     LocationManager manager;
     private static final int PERMISSION_RECORD_AUDIO= 92;
     @Override
@@ -942,13 +938,25 @@ public abstract class basefragment extends Fragment {
 
     private void start() {
 
-        //Log.i("Noise", "==== start ===");
+        //Log.i("noise", "==== start ===");
 
-        if(mNoise != null)
-            mNoise.stop();
 
-        mNoise = new Noise();
-        mNoise.start();
+
+        try {
+
+            if(mNoise != null)
+                mNoise.stop();
+
+            mNoise = new noise();
+
+            if(mNoise != null)
+            {
+                if(mNoise != null)
+                    mNoise.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Thread thread = new Thread(){
             public void run(){
@@ -959,16 +967,34 @@ public abstract class basefragment extends Fragment {
                     e.printStackTrace();
                 }
                 //Do something after 100ms
-                double amp = mNoise.getAmplitude();
-                //Log.i("Noise", "runnable mPollTask");
-                updateDisplay("Monitoring Voice...", amp);
+
+                try {
+                    if(mNoise != null)
+                    {
+                        double amp = mNoise.getAmplitude();
+                        //Log.i("noise", "runnable mPollTask");
+                        updateDisplay("Monitoring Voice...", amp);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
             }
         };
         thread.start();
     }
     private void stop() {
-        Log.e("Noise", "==== Stop Noise Monitoring===");
-        mNoise.stop();
+        Log.e("noise", "==== Stop noise Monitoring===");
+        try {
+            if(mNoise != null)
+            {
+                mNoise.stop();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
     private void updateDisplay(String status, double signalEMA) {
 

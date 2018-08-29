@@ -14,7 +14,7 @@ import com.cryptoserver.composer.R;
  * Created by Devesh on 5/30/2017.
  */
 
-public class AppDialog
+public class appdialog
 {
     static android.app.AlertDialog dialog;
 

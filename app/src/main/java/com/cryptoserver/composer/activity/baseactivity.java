@@ -33,6 +33,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fullscreenvideofragment;
+import com.cryptoserver.composer.fragments.readervideofragment;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
@@ -106,6 +107,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if(getcurrentfragment() instanceof fullscreenvideofragment){
 
             ((fullscreenvideofragment) getcurrentfragment()).onRestart();
+        }
+        else if(getcurrentfragment() instanceof readervideofragment){
+
+            ((readervideofragment) getcurrentfragment()).onRestart();
         }
 
 

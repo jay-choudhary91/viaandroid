@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-class ListenerHelper {
+class listenerhelper {
     static void createListenerLog(LinearLayout messagesContainer, String text) {
         String currentDateTime = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(new Date());
         TextView textView = new TextView(messagesContainer.getContext());

@@ -2,10 +2,7 @@ package com.cryptoserver.composer.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,12 +21,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.FullScreenVideoActivity;
-import com.cryptoserver.composer.fragments.fullscreenvideofragment;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
-import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -179,7 +171,7 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
 
                 adapter.onItemClicked(arrayvideolist.get(position),4);
 
-                /*Intent in=new Intent(context, FullScreenVideoActivity.class);
+                /*Intent in=new Intent(context, fullscreenvideoactivity.class);
                 in.putExtra("videopath",arrayvideolist.get(position).getPath());
                 context.startActivity(in);*/
             }

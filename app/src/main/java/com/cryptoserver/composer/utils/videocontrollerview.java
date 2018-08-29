@@ -19,6 +19,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
 
 import java.lang.ref.WeakReference;
 import java.util.Formatter;
@@ -99,8 +100,9 @@ public class videocontrollerview extends FrameLayout {
      * This can for example be a VideoView, or your Activity's main view.
      * @param view The view to which to anchor the controller when it is visible.
      */
-    public void setAnchorView(ViewGroup view) {
+    public void setAnchorView(ViewGroup view,adapteritemclick mitemclick) {
         mAnchor = view;
+        this.mitemclick=mitemclick;
 
         FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -111,6 +113,18 @@ public class videocontrollerview extends FrameLayout {
         View v = makeControllerView();
         addView(v, frameParams);
     }
+
+    adapteritemclick mitemclick=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+
+        }
+
+        @Override
+        public void onItemClicked(Object object, int type) {
+
+        }
+    };
 
     /**
      * Create the view that holds the widgets that control playback.
@@ -397,6 +411,7 @@ public class videocontrollerview extends FrameLayout {
         public void onClick(View v) {
             doToggleFullscreen();
             show(sDefaultTimeout);
+            //mitemclick.onItemClicked(null);
         }
     };
 

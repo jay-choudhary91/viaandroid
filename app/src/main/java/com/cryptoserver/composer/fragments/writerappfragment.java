@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.SurfaceTexture;
@@ -16,6 +15,7 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -42,8 +42,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.FullScreenVideoActivity;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.ffmpeg.data.frametorecord;
 import com.cryptoserver.composer.ffmpeg.data.recordfragment;
@@ -70,10 +70,11 @@ import org.bytedeco.javacv.FrameFilter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ import butterknife.ButterKnife;
 import static java.lang.Thread.State.WAITING;
 
 public class writerappfragment extends basefragment implements
-        TextureView.SurfaceTextureListener, View.OnClickListener {
+        TextureView.SurfaceTextureListener, View.OnClickListener,Camera.OnZoomChangeListener {
     private static final String log_tag = writerappfragment.class.getSimpleName();
     private static final int request_permissions = 1;
 
@@ -191,25 +192,27 @@ public class writerappfragment extends basefragment implements
                 @Override
                 public boolean onTouch(View view, MotionEvent event) {
 
-                    Camera.Parameters params = mcamera.getParameters();
-                    int action = event.getAction();
+                    if(mcamera != null)
+                    {
+                        Camera.Parameters params = mcamera.getParameters();
+                        int action = event.getAction();
 
 
-                    if (event.getPointerCount() > 1) {
-                        // handle multi-touch events
-                        if (action == MotionEvent.ACTION_POINTER_DOWN) {
-                            mDist = getFingerSpacing(event);
-                        } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
-                            mcamera.cancelAutoFocus();
-                            handleZoom(event, params);
-                        }
-                    } else {
-                        // handle single touch events
-                        if (action == MotionEvent.ACTION_UP) {
-                            handleFocus(event, params);
+                        if (event.getPointerCount() > 1) {
+                            // handle multi-touch events
+                            if (action == MotionEvent.ACTION_POINTER_DOWN) {
+                                mDist = getFingerSpacing(event);
+                            } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
+                                mcamera.cancelAutoFocus();
+                                handleZoom(event, params);
+                            }
+                        } else {
+                            // handle single touch events
+                            if (action == MotionEvent.ACTION_UP) {
+                                handleFocus(event, params);
+                            }
                         }
                     }
-
                     return true;
                 }
             });
@@ -339,6 +342,20 @@ public class writerappfragment extends basefragment implements
             }
         }
         return rootview;
+    }
+
+
+
+
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid){
+            case R.id.img_menu:
+                fragmentvideolist frag=new fragmentvideolist();
+                gethelper().replaceFragment(frag, true, false);
+                break;
+        }
     }
 
     @Override
@@ -563,7 +580,7 @@ public class writerappfragment extends basefragment implements
 
     public void exportvideo()
     {
-        /*String sourcePath = mvideo.getAbsolutePath();
+        String sourcePath = mvideo.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
         File destinationDir = new File(Environment.getExternalStoragePublicDirectory(
@@ -602,7 +619,7 @@ public class writerappfragment extends basefragment implements
             try
             {
                 ContentValues values = new ContentValues(3);
-                values.put(MediaStore.Video.Media.TITLE, "Video hash");
+                values.put(MediaStore.Video.Media.TITLE, "Via composer");
                 values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
                 values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
                 getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
@@ -616,19 +633,6 @@ public class writerappfragment extends basefragment implements
         {
             e.printStackTrace();
             Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
-        }*/
-
-        try
-        {
-            ContentValues values = new ContentValues(3);
-            values.put(MediaStore.Video.Media.TITLE, "Via composer");
-            values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-            values.put(MediaStore.Video.Media.DATA, mvideo.getAbsolutePath());
-            getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
         }
 
         progressdialog.dismisswaitdialog();
@@ -963,6 +967,11 @@ public class writerappfragment extends basefragment implements
 
     public void setData(boolean autostartvideo) {
         this.autostartvideo = autostartvideo;
+    }
+
+    @Override
+    public void onZoomChange(int i, boolean b, Camera camera) {
+
     }
 
     class runningthread extends Thread {
@@ -1322,6 +1331,8 @@ public class writerappfragment extends basefragment implements
         }
         mDist = newDist;
         params.setZoom(zoom);
+        params.setVideoStabilization(false);
+       // mcamera.startSmoothZoom();
         mcamera.setParameters(params);
     }
 
@@ -1667,11 +1678,18 @@ public class writerappfragment extends basefragment implements
 
                 Uri selectedimageuri =Uri.fromFile(new File(mvideo.getAbsolutePath()));
 
-                int duration =  getmediaduration(selectedimageuri);
+               // int duration =  getmediaduration(selectedimageuri);
 
-                videoplayfragment videoplayfragment =new videoplayfragment();
-                videoplayfragment.setdata(mvideo.getAbsolutePath(), duration);
-                gethelper().replaceFragment(videoplayfragment, false, true);
+                final MediaPlayer mp = MediaPlayer.create(getActivity(),selectedimageuri);
+                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        int duration = mp.getDuration();
+                        videoplayfragment videoplayfragment =new videoplayfragment();
+                        videoplayfragment.setdata(mvideo.getAbsolutePath(), duration);
+                        gethelper().replaceFragment(videoplayfragment, false, true);
+                    }
+                });
 
             }
         });
@@ -1696,14 +1714,7 @@ public class writerappfragment extends basefragment implements
     {
         progressdialog.dismisswaitdialog();
         fragmentvideolist frag=new fragmentvideolist();
-        gethelper().replaceFragment(frag, false, true);
-    }
-
-
-    private int getmediaduration(Uri uriOfFile)  {
-        MediaPlayer mp = MediaPlayer.create(getActivity(),uriOfFile);
-        int duration = mp.getDuration();
-        return  duration;
+        gethelper().replaceFragment(frag, true, false);
     }
 
 }

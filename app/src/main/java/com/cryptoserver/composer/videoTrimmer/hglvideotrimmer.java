@@ -50,6 +50,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.videoTrimmer.interfaces.onhglvideolistener;
 import com.cryptoserver.composer.videoTrimmer.interfaces.onprogressvideolistener;
@@ -302,17 +303,6 @@ public class hglvideotrimmer extends FrameLayout {
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD_MR1)
     public void onSaveClicked() {
-        if (mstartposition <= 0 && mendposition >= mduration) {
-            if (montrimvideolistener != null)
-            {
-                File file = new File(msrc.getPath());
-                if(file.exists()) {
-                    montrimvideolistener.getresult(file.getAbsolutePath());
-                }
-            }
-
-        } else {
-
             mplayview.setBackgroundResource(R.drawable.play);
             mplayview.setVisibility(View.VISIBLE);
 
@@ -351,7 +341,6 @@ public class hglvideotrimmer extends FrameLayout {
                         }
                     }
             );
-        }
        // }
     }
 
@@ -747,22 +736,19 @@ public class hglvideotrimmer extends FrameLayout {
         Log.e("start time",""+startMs / 1000);
         Log.e("end time",""+endMs / 1000);
         Log.e("time",""+(endMs - startMs) / 1000);
-
-
-
-
-        //Toast.makeText(context, ""+(endMs - startMs) / 1000, Toast.LENGTH_SHORT).show();
-
-
-
-
-
-
         Log.d(tag, "starttrim: startMs: " + startMs);
         Log.d(tag, "starttrim: endMs: " + endMs);
         filePath = dest.getAbsolutePath();
 
-        String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + startMs / 1000, "-t", "" + (endMs - startMs) / 1000, "-c","copy", filePath};
+        //String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + startMs / 1000, "-t", "" + (endMs - startMs) / 1000, "-c","copy", filePath};
+
+       String  starttime = common.converttimeformate(new Long(startMs));
+       String endtime = common.converttimeformate(new Long(endMs - startMs));
+
+       Log.e("start time",starttime);
+       Log.e("end time",endtime);
+
+       String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", starttime , "-t", endtime , "-c","copy", filePath};
 
         execFFmpegBinary(complexCommand,dest);
     }
@@ -780,14 +766,11 @@ public class hglvideotrimmer extends FrameLayout {
                 public void onSuccess(String s) {
                     Log.e("SUCCESS with output : ","SUCCESS");
 
-
-
                 }
 
                 @Override
                 public void onProgress(String s) {
                     Log.e( "Progress bar : " , "In Progress");
-
 
                 }
 
@@ -795,7 +778,6 @@ public class hglvideotrimmer extends FrameLayout {
                 public void onStart() {
                     Log.e("Start with output : ","IN START");
                     Log.d(tag, "Started command : ffmpeg " + command);
-
                     //progressdialog.showwaitingdialog(getContext());
                 }
 

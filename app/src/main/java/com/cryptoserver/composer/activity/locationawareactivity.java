@@ -13,23 +13,20 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.utils.AppDialog;
-import com.cryptoserver.composer.utils.GoogleUtils;
+import com.cryptoserver.composer.utils.googleutils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 
-public abstract class LocationAwareActivity extends baseactivity implements
+public abstract class locationawareactivity extends baseactivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -54,9 +51,9 @@ public abstract class LocationAwareActivity extends baseactivity implements
         NewSavedInstanceState=savedInstanceState;
         /*if (!checkPermission(this))
         {
-            locationServiceAlert(LocationAwareActivity.this);
+            locationServiceAlert(locationawareactivity.this);
         } else {
-            enableGPS(LocationAwareActivity.this);
+            enableGPS(locationawareactivity.this);
         }*/
     }
 
@@ -71,7 +68,7 @@ public abstract class LocationAwareActivity extends baseactivity implements
         }
         else
         {
-            enableGPS(LocationAwareActivity.this);
+            enableGPS(locationawareactivity.this);
         }
     }
 
@@ -187,7 +184,7 @@ public abstract class LocationAwareActivity extends baseactivity implements
         //saving the user current location
         if(location != null)
         {
-            GoogleUtils.saveUserCurrentLocation(location);
+            googleutils.saveUserCurrentLocation(location);
 
             if(location.getLatitude() == 0.0)
                 return;
@@ -218,13 +215,13 @@ public abstract class LocationAwareActivity extends baseactivity implements
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // permission was granted, yay! Do the
                 // contacts-related task you need to do.
-                enableGPS(LocationAwareActivity.this);
+                enableGPS(locationawareactivity.this);
 
             } else {
                 // permission denied, boo! Disable the
                 // functionality that depends on this permission.
                 Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
-                enableGPS(LocationAwareActivity.this);
+                enableGPS(locationawareactivity.this);
             }
             return;
         }
@@ -269,7 +266,7 @@ public abstract class LocationAwareActivity extends baseactivity implements
 
     public void setNavigateWithLocation()
     {
-        if (LocationAwareActivity.checkLocationEnable(LocationAwareActivity.this))
+        if (locationawareactivity.checkLocationEnable(locationawareactivity.this))
         {
             initLocationAPIs(NewSavedInstanceState);
             if (getcurrentfragment() != null) {
@@ -281,7 +278,7 @@ public abstract class LocationAwareActivity extends baseactivity implements
 
     public void enableGPS(final Context context)
     {
-        if (!LocationAwareActivity.checkLocationEnable(context))
+        if (!locationawareactivity.checkLocationEnable(context))
         {
             showgpsalert(context);
         }
@@ -293,7 +290,7 @@ public abstract class LocationAwareActivity extends baseactivity implements
 
     public void showgpsalert(final Context context)
     {
-/*        AppDialog.showConfirmationDialog(context, "GPS", "GPS is disabled in your device. Would you like to enable it?","YES","NO", new DialogInterface.OnClickListener() {
+/*        appdialog.showConfirmationDialog(context, "GPS", "GPS is disabled in your device. Would you like to enable it?","YES","NO", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_REQUEST_CODE);

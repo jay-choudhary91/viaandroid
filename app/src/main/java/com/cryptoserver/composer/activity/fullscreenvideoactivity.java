@@ -1,33 +1,29 @@
 package com.cryptoserver.composer.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.utils.Listeners;
+import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.videocontrollerview;
 
 import java.io.IOException;
-
-import uk.co.jakelee.vidsta.VidstaPlayer;
 
 /**
  * Created by root on 13/8/18.
  */
 
-public class FullScreenVideoActivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
+public class fullscreenvideoactivity extends AppCompatActivity implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
 
     private String VIDEO_URL = null;
 
@@ -137,10 +133,30 @@ public class FullScreenVideoActivity extends AppCompatActivity implements Surfac
     @Override
     public void onPrepared(MediaPlayer mp) {
         controller.setMediaPlayer(this);
-        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
+        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer), mitemclick);
         player.start();
         controller.show();
     }
+
+    adapteritemclick mitemclick=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+            if(common.isDeviceInPortraitMode(applicationviavideocomposer.getactivity()))
+            {
+                common.setDevicePortraitMode(false);
+            }
+            else
+            {
+                common.setDevicePortraitMode(true);
+            }
+
+        }
+
+        @Override
+        public void onItemClicked(Object object, int type) {
+
+        }
+    };
     // End MediaPlayer.OnPreparedListener
 
     // Implement VideoMediaController.MediaPlayerControl
