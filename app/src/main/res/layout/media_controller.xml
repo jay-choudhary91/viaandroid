@@ -124,11 +124,18 @@
             android:background="@drawable/uparrow"
            android:layout_centerHorizontal="true"
             />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_below="@+id/img_uparrow"
-            android:background="@color/white"/>
+            android:background="@color/white">
+
+
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

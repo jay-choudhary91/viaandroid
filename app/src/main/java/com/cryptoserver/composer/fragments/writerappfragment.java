@@ -1678,7 +1678,7 @@ public class writerappfragment extends basefragment implements
 
                 Uri selectedimageuri =Uri.fromFile(new File(mvideo.getAbsolutePath()));
 
-               // int duration =  getmediaduration(selectedimageuri);
+               // int duration =  getmediaduration(selectedvideouri);
 
                 final MediaPlayer mp = MediaPlayer.create(getActivity(),selectedimageuri);
                 mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
