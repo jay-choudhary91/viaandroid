@@ -748,7 +748,9 @@ public class hglvideotrimmer extends FrameLayout {
        Log.e("start time",starttime);
        Log.e("end time",endtime);
 
-       String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", starttime , "-t", endtime , "-c","copy", filePath};
+       //String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", starttime , "-t", endtime , "-c","copy", filePath};"-preset", "ultrafast",
+
+        String[] complexCommand = { "-i" , yourRealPath, starttime, "-t" , endtime ,"-c","copy", filePath};
 
         execFFmpegBinary(complexCommand,dest);
     }
