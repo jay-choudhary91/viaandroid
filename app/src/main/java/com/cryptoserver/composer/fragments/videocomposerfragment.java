@@ -64,6 +64,7 @@ import android.widget.Toast;
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
@@ -132,17 +133,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture,
                                               int width, int height) {
+            Log.e("Surface  ","1");
             openCamera(width, height);
         }
 
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture,
                                                 int width, int height) {
+            Log.e("Surface  ","2");
             configureTransform(width, height);
         }
 
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+            Log.e("Surface  ","3");
             return true;
         }
 
@@ -151,7 +155,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(mIsRecordingVideo)
             {
                 counter++;
-                Log.e("Total frames ",""+counter);
+               // Log.e("Total frames ",""+counter);
                 //surfaceTexture.
             }
             else
@@ -730,9 +734,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }).start();
 
-                mrecordimagebutton.setEnabled(true);
-
-                showsharepopupmain();
+                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressdialog.dismisswaitdialog();
+                        mrecordimagebutton.setEnabled(true);
+                        showsharepopupmain();
+                    }
+                },2000);
             }
         },100);
 

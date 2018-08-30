@@ -272,7 +272,7 @@ public class fragmentvideolist extends basefragment {
                     videoobj.setName(file.getName());
                     videoobj.setCreatedate(outputDateStr);
 
-                    boolean isVideo=true;
+                    boolean isVideo=false;
                     MediaExtractor extractor = new MediaExtractor();
                     try {
                         //Adjust data source as per the requirement if file, URI, etc.
@@ -292,16 +292,15 @@ public class fragmentvideolist extends basefragment {
                                         long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
                                         long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
                                         videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                        if(hours > 0)
+                                        if(second > 0)
+                                        {
                                             videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                            isVideo=true;
+                                        }
 
                                     }
                                 }
                             }
-                        }
-                        else
-                        {
-                            isVideo=false;
                         }
 
                     } catch (IOException e) {
