@@ -69,6 +69,8 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
+    @BindView(R.id.layout_drawer)
+    LinearLayout layout_drawer;
     View scurraberverticalbar;
 
     private String VIDEO_URL = null;
@@ -683,6 +685,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             public void run() {
 
                 adapter.notifyDataSetChanged();
+                layout_drawer.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.whitetransparent));
             }
         });
     }
