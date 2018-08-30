@@ -3,40 +3,41 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#4D000000"
+    android:id="@+id/controller"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="4dip"
-        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="4dip"
+            android:orientation="horizontal">
 
-        <ImageButton android:id="@+id/prev"
-            style="@android:style/MediaButton.Previous"
-            android:contentDescription="@string/description"
-            android:visibility="gone" />
+            <ImageButton android:id="@+id/prev"
+                style="@android:style/MediaButton.Previous"
+                android:contentDescription="@string/description"
+                android:visibility="gone" />
 
-        <ImageButton android:id="@+id/rew"
-            style="@android:style/MediaButton.Rew"
-            android:contentDescription="@string/description"
-            android:visibility="gone"/>
+            <ImageButton android:id="@+id/rew"
+                style="@android:style/MediaButton.Rew"
+                android:contentDescription="@string/description"
+                android:visibility="gone"/>
 
-        <ImageButton android:id="@+id/pause"
-            style="@android:style/MediaButton.Play"
-            android:contentDescription="@string/description" />
+            <ImageButton android:id="@+id/pause"
+                style="@android:style/MediaButton.Play"
+                android:contentDescription="@string/description" />
 
-        <ImageButton android:id="@+id/ffwd"
-            style="@android:style/MediaButton.Ffwd"
-            android:contentDescription="@string/description"
-            android:visibility="gone"/>
+            <ImageButton android:id="@+id/ffwd"
+                style="@android:style/MediaButton.Ffwd"
+                android:contentDescription="@string/description"
+                android:visibility="gone"/>
 
-        <ImageButton android:id="@+id/next"
-            style="@android:style/MediaButton.Next"
-            android:contentDescription="@string/description"
-            android:visibility="gone"/>
+            <ImageButton android:id="@+id/next"
+                style="@android:style/MediaButton.Next"
+                android:contentDescription="@string/description"
+                android:visibility="gone"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -111,7 +112,6 @@
                 android:contentDescription="@string/description" />
 
         </RelativeLayout>
-
 
     <RelativeLayout
         android:layout_width="match_parent"

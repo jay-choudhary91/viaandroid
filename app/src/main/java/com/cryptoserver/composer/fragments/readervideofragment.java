@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
@@ -47,6 +49,7 @@ import com.cryptoserver.composer.views.pagercustomduration;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
+import org.jcodec.common.tools.MainUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -68,7 +71,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     RecyclerView recyview_frames;
 
     private String VIDEO_URL = null;
-
+    RelativeLayout showcontrollers;
     SurfaceView videoSurface;
     MediaPlayer player;
     videocontrollerview controller;
@@ -96,7 +99,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
@@ -106,6 +109,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             handleimageview=rootview.findViewById(R.id.handle);
             righthandle=rootview.findViewById(R.id.righthandle);
             recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
+            showcontrollers=rootview.findViewById(R.id.video_container);
 
             recyview_frames.post(new Runnable() {
                 @Override
@@ -130,6 +134,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             });
 
         }
+
 
         handleimageview.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,6 +206,30 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         recyviewitem.setItemAnimator(new DefaultItemAnimator());
         recyviewitem.setAdapter(madapter);
 
+        showcontrollers.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        /*touched = true;*/
+                        if(controller.controllersview.getVisibility()==View.GONE){
+                            controller.controllersview.setVisibility(View.VISIBLE);
+                            mmitemclick.onItemClicked(2);
+                        }
+
+                        Log.e("user touch","on touch" );
+
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        /*touched = false;*/
+                        Log.e("on touch end ","on touch end" );
+                        break;
+                }
+                return false;
+
+            }
+        });
         return rootview;
     }
 
@@ -292,40 +321,28 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         mp.seekTo(100);
         controller.show();
 
-        //Get the dimensions of the video
-        /*int videoWidth = mp.getVideoWidth();
-        int videoHeight = mp.getVideoHeight();
-
-        //Get the width of the screen
-        int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-
-        //Get the SurfaceView layout parameters
-        android.view.ViewGroup.LayoutParams lp = videoSurface.getLayoutParams();
-
-        //Set the width of the SurfaceView to the width of the screen
-        lp.width = screenWidth;
-
-        //Set the height of the SurfaceView to match the aspect ratio of the video
-        //be sure to cast these as floats otherwise the calculation will likely be 0
-        lp.height = screenHeight;
-
-        //Commit the layout parameters
-        videoSurface.setLayoutParams(lp);*/
     }
-
     adapteritemclick mitemclick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-            if(common.isDeviceInPortraitMode(applicationviavideocomposer.getactivity()))
-            {
-                common.setDevicePortraitMode(false);
-            }
-            else
-            {
-                common.setDevicePortraitMode(true);
-            }
+            if( recyview_frames.getVisibility()==View.VISIBLE){
+                recyview_frames.setVisibility(View.GONE);
 
+            }
+        }
+
+        @Override
+        public void onItemClicked(Object object, int type) {
+
+        }
+    };
+
+    adapteritemclick mmitemclick=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+            if( recyview_frames.getVisibility()==View.GONE){
+                recyview_frames.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
@@ -368,6 +385,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                     if(mbitmaplist.size() >= (second))
                     {
                         recyview_frames.scrollToPosition(second);
+                        recyview_frames.smoothScrollToPosition(second);
                         //recyview_frames.scrollTo((720/2)+(second*50),0);
                     }
 
