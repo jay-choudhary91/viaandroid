@@ -258,7 +258,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     videoframeadapter madapter;
     long currentframenumber =0;
     long frameduration =15, mframetorecordcount =0;
-    public boolean autostartvideo=false;
+    public boolean autostartvideo=false,camerastatusok=false;;
     File lastrecordedvideo=null;
     String selectedvideofile ="";
     @Override
@@ -710,11 +710,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 mMediaRecorder.reset();
 
                 lastrecordedvideo=new File(selectedvideofile);
-                Activity activity = getActivity();
+                /*Activity activity = getActivity();
                 if (null != activity) {
                     Toast.makeText(activity, "Video saved: " + getVideoFile(activity),
                             Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 startPreview();
 
                 stopvideotimer();
@@ -873,7 +873,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     @Override
                     public void run() {
                         Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
-                        gethelper().onBack();
+                        //gethelper().onBack();
                     }
                 };
             }
@@ -881,6 +881,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     private void doafterallpermissionsgranted() {
+
+        camerastatusok=true;
         layout_bottom.setVisibility(View.VISIBLE);
         mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
 
@@ -895,8 +897,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     @Override
     public void onPause() {
-        closeCamera();
-        stopBackgroundThread();
+        if(camerastatusok)
+        {
+            closeCamera();
+            stopBackgroundThread();
+        }
         super.onPause();
     }
 
