@@ -141,7 +141,7 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
 
                 if(mvideotrimmer != null)
                 {
-                    progressdialog.showwaitingdialog(getActivity());
+                    //progressdialog.showwaitingdialog(getActivity());
                     mvideotrimmer.onSaveClicked();
                 }
 

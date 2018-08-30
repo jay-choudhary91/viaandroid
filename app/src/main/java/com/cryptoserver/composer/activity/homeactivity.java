@@ -22,6 +22,7 @@ import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.fullscreenvideofragment;
 import com.cryptoserver.composer.fragments.readervideofragment;
+import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
 import com.cryptoserver.composer.fragments.writerappfragment;
 import com.cryptoserver.composer.services.callservice;
@@ -68,9 +69,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
-            writerappfragment frag=new writerappfragment();
-            frag.setData(true);
+            videocomposerfragment frag=new videocomposerfragment();
             replaceFragment(frag, false, true);
+            /*Intent in=new Intent(homeactivity.this,CameraActivity.class);
+            startActivity(in);*/
         }
 
         imgaddicon.setOnClickListener(this);
@@ -112,7 +114,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void updateheader(String txt) {
-        if((getcurrentfragment() instanceof writerappfragment))
+        if((getcurrentfragment() instanceof writerappfragment || getcurrentfragment() instanceof  videocomposerfragment))
         {
             txt_title.setText(txt);
         }

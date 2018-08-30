@@ -740,18 +740,7 @@ public class hglvideotrimmer extends FrameLayout {
         Log.d(tag, "starttrim: endMs: " + endMs);
         filePath = dest.getAbsolutePath();
 
-        //String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + startMs / 1000, "-t", "" + (endMs - startMs) / 1000, "-c","copy", filePath};
-
-       String  starttime = common.converttimeformate(new Long(startMs));
-       String endtime = common.converttimeformate(new Long(endMs - startMs));
-
-       Log.e("start time",starttime);
-       Log.e("end time",endtime);
-
-       //String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", starttime , "-t", endtime , "-c","copy", filePath};"-preset", "ultrafast",
-
-        String[] complexCommand = { "-i" , yourRealPath, starttime, "-t" , endtime ,"-c","copy", filePath};
-
+        String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + startMs / 1000, "-t", "" + (endMs - startMs) / 1000, "-c","copy", filePath};
         execFFmpegBinary(complexCommand,dest);
     }
 

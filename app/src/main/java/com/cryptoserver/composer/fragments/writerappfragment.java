@@ -166,7 +166,7 @@ public class writerappfragment extends basefragment implements
             ButterKnife.bind(this,rootview);
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-            mpreview = (fixedratiocroppedtextureview) rootview.findViewById(R.id.camera_preview);
+            //mpreview = (fixedratiocroppedtextureview) rootview.findViewById(R.id.camera_preview);
             mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
