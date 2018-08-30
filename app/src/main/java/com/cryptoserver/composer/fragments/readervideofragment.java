@@ -69,6 +69,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
+    View scurraberverticalbar;
 
     private String VIDEO_URL = null;
     RelativeLayout showcontrollers;
@@ -110,6 +111,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             righthandle=rootview.findViewById(R.id.righthandle);
             recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             showcontrollers=rootview.findViewById(R.id.video_container);
+            scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
 
             recyview_frames.post(new Runnable() {
                 @Override
@@ -388,9 +390,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                         recyview_frames.smoothScrollToPosition(second);
                         //recyview_frames.scrollTo((720/2)+(second*50),0);
                     }
-
                 }
-
                 return player.getCurrentPosition();
             }
         }catch (Exception e)
@@ -617,6 +617,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
+                scurraberverticalbar.setVisibility(View.VISIBLE);
 
                 setupVideoPlayer(selectedvideouri);
 
