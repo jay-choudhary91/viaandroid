@@ -3,6 +3,7 @@ package com.cryptoserver.composer.utils;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,9 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
@@ -34,6 +36,7 @@ public class videocontrollerview extends FrameLayout {
 
     private MediaPlayerControl  mPlayer;
     private Context mContext;
+    public LinearLayout controllersview;
     private ViewGroup mAnchor;
     private View mRoot;
     private ProgressBar mProgress;
@@ -57,6 +60,7 @@ public class videocontrollerview extends FrameLayout {
     private ImageButton         mFullscreenButton;
     private ImageButton         imgvolume;
     private Handler mHandler = new MessageHandler(this);
+    private RelativeLayout showcontrollers;
 
     public videocontrollerview(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -100,7 +104,7 @@ public class videocontrollerview extends FrameLayout {
      * This can for example be a VideoView, or your Activity's main view.
      * @param view The view to which to anchor the controller when it is visible.
      */
-    public void setAnchorView(ViewGroup view,adapteritemclick mitemclick) {
+    public void setAnchorView(ViewGroup view, adapteritemclick mitemclick) {
         mAnchor = view;
         this.mitemclick=mitemclick;
 
@@ -117,7 +121,6 @@ public class videocontrollerview extends FrameLayout {
     adapteritemclick mitemclick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-
         }
 
         @Override
@@ -142,6 +145,7 @@ public class videocontrollerview extends FrameLayout {
     }
 
     private void initControllerView(View v) {
+        controllersview =v.findViewById(R.id.controller);
         mPauseButton = (ImageButton) v.findViewById(R.id.pause);
         if (mPauseButton != null) {
             mPauseButton.requestFocus();
@@ -409,9 +413,11 @@ public class videocontrollerview extends FrameLayout {
 
     private View.OnClickListener mFullscreenListener = new View.OnClickListener() {
         public void onClick(View v) {
+            Log.d("click touch","icon touch");
+            controllersview.setVisibility(GONE);
             doToggleFullscreen();
             show(sDefaultTimeout);
-            //mitemclick.onItemClicked(null);
+            mitemclick.onItemClicked(1);
         }
     };
 
