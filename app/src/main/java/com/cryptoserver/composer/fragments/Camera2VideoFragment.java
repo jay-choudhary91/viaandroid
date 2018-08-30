@@ -41,10 +41,14 @@ import com.cryptoserver.composer.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -55,6 +59,7 @@ import java.util.concurrent.TimeUnit;
 public class Camera2VideoFragment extends Fragment implements View.OnClickListener {
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "Camera2VideoFragment";
+    int counter=0;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -104,6 +109,16 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
 
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+            if(mIsRecordingVideo)
+            {
+                counter++;
+                Log.e("Total frames ",""+counter);
+                //surfaceTexture.
+            }
+            else
+            {
+                counter=0;
+            }
         }
     };
     /**
@@ -491,7 +506,8 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
         mMediaRecorder.prepare();
     }
     private File getVideoFile(Context context) {
-        return new File(context.getExternalFilesDir(null), "video.mp4");
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        return new File(context.getExternalFilesDir(null), fileName+".mp4");
     }
     private void startRecordingVideo() {
         try {
@@ -508,15 +524,36 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
         // UI
         mIsRecordingVideo = false;
         mButtonVideo.setText(R.string.record);
-        // Stop recording
-        mMediaRecorder.stop();
-        mMediaRecorder.reset();
-        Activity activity = getActivity();
+
+        /*Activity activity = getActivity();
         if (null != activity) {
             Toast.makeText(activity, "Video saved: " + getVideoFile(activity),
                     Toast.LENGTH_SHORT).show();
+        }*/
+
+        try {
+            mPreviewSession.stopRepeating();
+            mPreviewSession.abortCaptures();
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
         }
-        startPreview();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mMediaRecorder.stop();
+                mMediaRecorder.reset();
+
+                Activity activity = getActivity();
+                if (null != activity) {
+                    Toast.makeText(activity, "Video saved: " + getVideoFile(activity),
+                            Toast.LENGTH_SHORT).show();
+                }
+                startPreview();
+            }
+        },500);
+
+
     }
     /**
      * Compares two {@code Size}s based on their areas.
