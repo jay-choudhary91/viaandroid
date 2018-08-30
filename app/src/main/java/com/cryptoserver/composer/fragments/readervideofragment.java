@@ -3,7 +3,9 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -26,11 +28,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.homeactivity;
+import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.CenterLayoutManager;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
@@ -38,6 +42,7 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
+import com.cryptoserver.composer.views.pagercustomduration;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -48,6 +53,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
@@ -57,6 +63,9 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class readervideofragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
+
+    @BindView(R.id.recyview_frames)
+    RecyclerView recyview_frames;
 
     private String VIDEO_URL = null;
 
@@ -73,10 +82,13 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     long frameduration =15, mframetorecordcount =0;
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<videomodel> mallframes =new ArrayList<>();
+    ArrayList<frame> mbitmaplist =new ArrayList<>();
     long videoduration =0;
     boolean ishashprocessing=false;
     public int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
+    framebitmapadapter adapter;
+    Uri selectedvideouri =null;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -95,6 +107,27 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             righthandle=rootview.findViewById(R.id.righthandle);
             recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
 
+            recyview_frames.post(new Runnable() {
+                @Override
+                public void run() {
+                    adapter = new framebitmapadapter(getActivity(), mbitmaplist,recyview_frames.getWidth(),
+                            new adapteritemclick() {
+                                @Override
+                                public void onItemClicked(Object object) {
+
+                                }
+
+                                @Override
+                                public void onItemClicked(Object object, int type) {
+
+                                }
+                            });
+                    RecyclerView.LayoutManager mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    recyview_frames.setLayoutManager(mLayoutManager);
+                    recyview_frames.setItemAnimator(new DefaultItemAnimator());
+                    recyview_frames.setAdapter(adapter);
+                }
+            });
 
         }
 
@@ -233,7 +266,11 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (player != null)
+        {
+            //holder.setFixedSize(1000,500);
             player.setDisplay(holder);
+        }
+
 
     }
 
@@ -251,8 +288,30 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     public void onPrepared(MediaPlayer mp) {
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer),mitemclick);
-        player.start();
+        //mp.start();
+        mp.seekTo(100);
         controller.show();
+
+        //Get the dimensions of the video
+        /*int videoWidth = mp.getVideoWidth();
+        int videoHeight = mp.getVideoHeight();
+
+        //Get the width of the screen
+        int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+
+        //Get the SurfaceView layout parameters
+        android.view.ViewGroup.LayoutParams lp = videoSurface.getLayoutParams();
+
+        //Set the width of the SurfaceView to the width of the screen
+        lp.width = screenWidth;
+
+        //Set the height of the SurfaceView to match the aspect ratio of the video
+        //be sure to cast these as floats otherwise the calculation will likely be 0
+        lp.height = screenHeight;
+
+        //Commit the layout parameters
+        videoSurface.setLayoutParams(lp);*/
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
@@ -301,7 +360,21 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     public int getCurrentPosition() {
         try {
             if(player != null)
+            {
+                Log.e("getCurrentPosition ",""+player.getCurrentPosition());
+                if(mbitmaplist.size() > 0)
+                {
+                    int second=player.getCurrentPosition()/1000;
+                    if(mbitmaplist.size() >= (second))
+                    {
+                        recyview_frames.scrollToPosition(second);
+                        //recyview_frames.scrollTo((720/2)+(second*50),0);
+                    }
+
+                }
+
                 return player.getCurrentPosition();
+            }
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -311,9 +384,10 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
     @Override
     public int getDuration() {
-        if(player != null && player.isPlaying())
+        if(player != null)
+        {
             return player.getDuration();
-
+        }
         return 0;
     }
 
@@ -334,7 +408,11 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     @Override
     public void seekTo(int i) {
         if(player != null)
+        {
+            Log.e("seek to  ",""+i);
             player.seekTo(i);
+        }
+
     }
 
     @Override
@@ -484,11 +562,11 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUESTCODE_PICK) {
-            Uri selectedimageuri;
+
             if (resultCode == RESULT_OK) {
-                selectedimageuri = data.getData();
+                selectedvideouri = data.getData();
                 // OI FILE Manager
-                VIDEO_URL = common.getpath(getActivity(), selectedimageuri);
+                VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
 
 
                 if(VIDEO_URL == null){
@@ -519,7 +597,10 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                     keytype=config.prefs_sha_salt;
                 }
 
-                setupVideoPlayer(selectedimageuri);
+                mbitmaplist.clear();
+                adapter.notifyDataSetChanged();
+
+                setupVideoPlayer(selectedvideouri);
 
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                     currentframenumber=0;
@@ -528,6 +609,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                     madapter.notifyDataSetChanged();
                     Thread thread = new Thread(){
                         public void run(){
+                            getFramesBitmap();
                             setVideoAdapter();
                         }
                     };
@@ -535,6 +617,55 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 }
             }
         }
+    }
+
+    public void getFramesBitmap()
+    {
+        mbitmaplist.add(new frame(0,null,true));
+        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
+        m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+        String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInmillisec = Long.parseLong( time );
+        long duration = timeInmillisec / 1000;
+        long hours = duration / 3600;
+        long minutes = (duration - hours * 3600) / 60;
+        long seconds = duration - (hours * 3600 + minutes * 60);
+
+
+        for(int i=1;i<=seconds;i++)
+        {
+
+            Bitmap m_bitmap = null;
+
+            try
+            {
+                m_mediaMetadataRetriever = new MediaMetadataRetriever();
+                m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+                m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
+                if(m_bitmap != null)
+                {
+                    Log.e("Bitmap on ",""+i);
+                    mbitmaplist.add(new frame(i,m_bitmap,false));
+                }
+            }
+            catch (Exception m_e)
+            {
+            }
+            finally
+            {
+                if (m_mediaMetadataRetriever != null)
+                    m_mediaMetadataRetriever.release();
+            }
+        }
+        mbitmaplist.add(new frame(0,null,true));
+
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public void setupVideoPlayer(Uri selectedimageuri)

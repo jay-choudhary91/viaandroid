@@ -409,9 +409,9 @@ public class videocontrollerview extends FrameLayout {
 
     private View.OnClickListener mFullscreenListener = new View.OnClickListener() {
         public void onClick(View v) {
-            //doToggleFullscreen();
-            //show(sDefaultTimeout);
-            mitemclick.onItemClicked(null);
+            doToggleFullscreen();
+            show(sDefaultTimeout);
+            //mitemclick.onItemClicked(null);
         }
     };
 
