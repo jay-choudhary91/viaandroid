@@ -133,7 +133,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void updateActionBar(int showHide) {
-
+        if(showHide == 0)
+        {
+            actionbar.setVisibility(View.GONE);
+        }
+        else
+        {
+            actionbar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -144,6 +151,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_cancel.setVisibility(View.GONE);
         img_menu.setVisibility(View.GONE);
         img_help.setVisibility(View.GONE);
+        actionbar.setVisibility(View.VISIBLE);
 
         if (fragment instanceof fragmentvideolist) {
             imgaddicon.setVisibility(View.VISIBLE);

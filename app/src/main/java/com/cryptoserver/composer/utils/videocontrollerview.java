@@ -510,14 +510,17 @@ public class videocontrollerview extends FrameLayout {
                 return;
             }
 
+            long duration = mPlayer.getDuration();
+            long newposition = (duration * progress) / 1000L;
+            Log.e("Duration Progress ",duration+" "+newposition);
+
             if (!fromuser) {
                 // We're not interested in programmatically generated changes to
                 // the progress bar's position.
                 return;
             }
 
-            long duration = mPlayer.getDuration();
-            long newposition = (duration * progress) / 1000L;
+
             mPlayer.seekTo( (int) newposition);
             if (mCurrentTime != null)
                 mCurrentTime.setText(stringForTime( (int) newposition));

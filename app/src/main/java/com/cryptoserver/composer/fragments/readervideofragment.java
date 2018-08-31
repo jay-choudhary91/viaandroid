@@ -87,7 +87,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     RecyclerView recyviewitem;
     String keytype ="md5";
     videoframeadapter madapter;
-    long currentframenumber =0;
+    long currentframenumber =0,playerposition=0;
     long frameduration =15, mframetorecordcount =0;
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<videomodel> mallframes =new ArrayList<>();
@@ -222,13 +222,13 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                         if(righthandle.getVisibility() == View.GONE)
                             hideshowcontroller();
 
-                        Log.e("user touch","on touch" );
+                      //  Log.e("user touch","on touch" );
 
                         break;
 
                     case MotionEvent.ACTION_UP:
                         /*touched = false;*/
-                        Log.e("on touch end ","on touch end" );
+                  //      Log.e("on touch end ","on touch end" );
                         break;
                 }
                 return false;
@@ -239,10 +239,11 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
     public void hideshowcontroller()
     {
-        if(righthandle.getVisibility() ==  (View.VISIBLE))
+        if(handleimageview.getVisibility() ==  (View.VISIBLE))
         {
             layout_scrubberview.setVisibility(View.GONE);
-            righthandle.setVisibility(View.GONE);
+            handleimageview.setVisibility(View.GONE);
+            gethelper().updateActionBar(0);
             try {
                 if(controller != null)
                 {
@@ -257,7 +258,8 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         else
         {
             layout_scrubberview.setVisibility(View.VISIBLE);
-            righthandle.setVisibility(View.VISIBLE);
+            handleimageview.setVisibility(View.VISIBLE);
+            gethelper().updateActionBar(1);
             try {
                 if(controller != null)
                 {
@@ -272,6 +274,31 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     }
 
     public void onRestart() {
+        gethelper().updateActionBar(1);
+        handleimageview.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(player != null && player.isPlaying())
+        {
+            player.pause();
+            //player.release();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        progressdialog.dismisswaitdialog();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
         try {
             player = new MediaPlayer();
             if(controller != null)
@@ -295,28 +322,28 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        /*try {
+            if(player != null && player.getDuration() > 0)
+            {
+                int a=player.getDuration();
+                int b=player.getCurrentPosition();
 
-        if(player != null && player.isPlaying())
+
+                if(player.getCurrentPosition() == 0)
+                {
+                    player.seekTo(player.getCurrentPosition());
+                }
+                else
+                {
+                    player.seekTo(100);
+                }
+            }
+        }catch (Exception e)
         {
-            player.pause();
-            //player.release();
-        }
-    }
+            e.printStackTrace();
+        }*/
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        progressdialog.dismisswaitdialog();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -343,11 +370,10 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        playerposition=0;
         if (player != null) {
+                playerposition=player.getCurrentPosition();
             player.pause();
-         //   player.reset();
-           // player.release();
-            //player = null;
         }
     }
 
@@ -356,7 +382,20 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
         //mp.start();
-        mp.seekTo(100);
+        try {
+            if(playerposition > 0)
+            {
+                mp.seekTo((int)playerposition);
+            }
+            else
+            {
+                mp.seekTo(100);
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         controller.show();
 
     }
@@ -398,7 +437,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         try {
             if(player != null)
             {
-                Log.e("getCurrentPosition ",""+player.getCurrentPosition());
+               // Log.e("getCurrentPosition ",""+player.getCurrentPosition());
                 if(mbitmaplist.size() > 0)
                 {
                     int second=player.getCurrentPosition()/1000;
@@ -534,7 +573,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         switch (btnid){
             case R.id.img_share_icon:
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())) {
-                    progressdialog.showwaitingdialog(getActivity());
+                    //progressdialog.showwaitingdialog(getActivity());
                     common.shareMedia(getActivity(),VIDEO_URL);
                 }
                 break;

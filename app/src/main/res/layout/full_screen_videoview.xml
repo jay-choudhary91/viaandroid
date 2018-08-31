@@ -37,7 +37,6 @@
 
         <View
             android:layout_width="1dp"
-            android:visibility="gone"
             android:id="@+id/scrubberverticalbar"
             android:layout_above="@id/recyview_frames"
             android:background="@color/blue_button"
