@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -84,6 +85,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -98,6 +100,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "Camera2VideoFragment";
     int counter=0;
+    int counter2=0;
 
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
@@ -163,6 +166,29 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
             if(mIsRecordingVideo)
             {
+
+              Thread thread =new Thread(new Runnable() {
+                  @Override
+                  public void run() {
+                      Bitmap bitmap = mTextureView.getBitmap(1,1);
+                      bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), mTextureView.getTransform( null ), true );
+
+                      ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                      bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                      byte[] byteArray = stream.toByteArray();
+
+                      //Log.e("bytearray = ", Arrays.toString(byteArray));
+
+
+                      bitmap.recycle();
+
+                      counter2 ++;
+                      Log.e("Total bitmap ",""+counter2);
+                  }
+              });
+              thread.start();
+              counter++;
+                Log.e("Total frames ",""+counter);
                 counter++;
 
                // Log.e("Total frames ",""+counter);
@@ -171,6 +197,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             else
             {
                 counter=0;
+                counter2=0;
             }
         }
     };
@@ -1549,8 +1576,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
     }
-
-
 
 }
 
