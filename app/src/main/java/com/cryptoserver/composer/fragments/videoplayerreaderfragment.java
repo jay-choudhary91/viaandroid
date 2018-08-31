@@ -98,6 +98,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     private static final int request_read_external_storage = 1;
     framebitmapadapter adapter;
     Uri selectedvideouri =null;
+    boolean issurafcedestroyed=false;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -303,6 +304,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         super.onResume();
 
         try {
+            if(! issurafcedestroyed)
+                return;
+
             player = new MediaPlayer();
             if(controller != null)
                 controller.removeAllViews();
@@ -383,7 +387,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             //holder.setFixedSize(1000,500);
             player.setDisplay(holder);
         }
-
+        issurafcedestroyed=false;
 
     }
 
@@ -394,6 +398,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 playerposition=player.getCurrentPosition();
             player.pause();
         }
+        issurafcedestroyed=true;
     }
 
     @Override

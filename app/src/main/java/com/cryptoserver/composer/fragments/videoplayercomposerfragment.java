@@ -91,6 +91,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     public int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
     Uri selectedvideouri =null;
+    boolean issurafcedestroyed=false;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -272,6 +273,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         super.onResume();
 
         try {
+            if(! issurafcedestroyed)
+                return;
+
             player = new MediaPlayer();
             if(controller != null)
                 controller.removeAllViews();
@@ -314,15 +318,18 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             //holder.setFixedSize(1000,500);
             player.setDisplay(holder);
         }
+        issurafcedestroyed=false;
+
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         playerposition=0;
         if (player != null) {
-                playerposition=player.getCurrentPosition();
+            playerposition=player.getCurrentPosition();
             player.pause();
         }
+        issurafcedestroyed=true;
     }
 
     @Override
