@@ -287,7 +287,17 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity());
+            controller = new videocontrollerview(getActivity(), new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+
+                }
+
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
 
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -682,7 +692,17 @@ public class fullscreenvideofragment extends basefragment implements SurfaceHold
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity());
+            controller = new videocontrollerview(getActivity(), new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+
+                }
+
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
 
             if(VIDEO_URL!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);

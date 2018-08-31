@@ -159,6 +159,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(mIsRecordingVideo)
             {
                 counter++;
+
                // Log.e("Total frames ",""+counter);
                 //surfaceTexture.
             }

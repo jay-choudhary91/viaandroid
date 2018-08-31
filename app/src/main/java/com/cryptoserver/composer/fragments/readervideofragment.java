@@ -71,6 +71,9 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     RecyclerView recyview_frames;
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
+    @BindView(R.id.layout_scrubberview)
+    RelativeLayout layout_scrubberview;
+
     View scurraberverticalbar;
 
     private String VIDEO_URL = null;
@@ -210,16 +213,14 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         recyviewitem.setItemAnimator(new DefaultItemAnimator());
         recyviewitem.setAdapter(madapter);
 
-        showcontrollers.setOnTouchListener(new View.OnTouchListener() {
+        videoSurface.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         /*touched = true;*/
-                        /*if(controller.controllersview.getVisibility()==View.GONE){
-                            controller.controllersview.setVisibility(View.VISIBLE);
-                            mmitemclick.onItemClicked(2);
-                        }*/
+                        if(righthandle.getVisibility() == View.GONE)
+                            hideshowcontroller();
 
                         Log.e("user touch","on touch" );
 
@@ -231,10 +232,43 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                         break;
                 }
                 return false;
-
             }
         });
         return rootview;
+    }
+
+    public void hideshowcontroller()
+    {
+        if(righthandle.getVisibility() ==  (View.VISIBLE))
+        {
+            layout_scrubberview.setVisibility(View.GONE);
+            righthandle.setVisibility(View.GONE);
+            try {
+                if(controller != null)
+                {
+                    if(controller.controllersview.getVisibility() == View.VISIBLE)
+                        controller.controllersview.setVisibility(View.GONE);
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            layout_scrubberview.setVisibility(View.VISIBLE);
+            righthandle.setVisibility(View.VISIBLE);
+            try {
+                if(controller != null)
+                {
+                    if(controller.controllersview.getVisibility() == View.GONE)
+                        controller.controllersview.setVisibility(View.VISIBLE);
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void onRestart() {
@@ -243,7 +277,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity());
+            controller = new videocontrollerview(getActivity(),mitemclick);
 
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -320,7 +354,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onPrepared(MediaPlayer mp) {
         controller.setMediaPlayer(this);
-        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer),mitemclick);
+        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
         //mp.start();
         mp.seekTo(100);
         controller.show();
@@ -329,10 +363,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     adapteritemclick mitemclick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-            if( recyview_frames.getVisibility()==View.VISIBLE){
-                recyview_frames.setVisibility(View.GONE);
-
-            }
+            hideshowcontroller();
         }
 
         @Override
@@ -340,21 +371,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
         }
     };
-
-    adapteritemclick mmitemclick=new adapteritemclick() {
-        @Override
-        public void onItemClicked(Object object) {
-            if( recyview_frames.getVisibility()==View.GONE){
-                recyview_frames.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onItemClicked(Object object, int type) {
-
-        }
-    };
-    // End MediaPlayer.OnPreparedListener
 
     // Implement VideoMediaController.MediaPlayerControl
     @Override
@@ -685,7 +701,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             public void run() {
 
                 adapter.notifyDataSetChanged();
-                layout_drawer.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.whitetransparent));
             }
         });
     }
@@ -700,7 +715,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity());
+            controller = new videocontrollerview(getActivity(),mitemclick);
 
             if(selectedimageuri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);

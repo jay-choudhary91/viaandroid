@@ -93,7 +93,17 @@ public class fullscreenvideofragmentold extends basefragment implements SurfaceH
             videoHolder.addCallback(this);
 
             player = new MediaPlayer();
-            controller = new videocontrollerview(getActivity());
+            controller = new videocontrollerview(getActivity(), new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+
+                }
+
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
 
             try {
                 Uri videopath=Uri.parse(VIDEO_URL);
@@ -229,7 +239,17 @@ public class fullscreenvideofragmentold extends basefragment implements SurfaceH
         try {
             player = new MediaPlayer();
             controller.removeAllViews();
-            controller = new videocontrollerview(getActivity());
+            controller = new videocontrollerview(getActivity(), new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+
+                }
+
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
 
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
