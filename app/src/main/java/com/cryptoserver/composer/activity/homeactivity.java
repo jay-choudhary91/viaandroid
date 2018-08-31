@@ -120,7 +120,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else if((getcurrentfragment() instanceof fragmentvideolist) || getcurrentfragment() instanceof fragmentsettings
                 || getcurrentfragment() instanceof videoplayfragment
-                || getcurrentfragment() instanceof videoplayerreaderfragment)
+                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof videoplayercomposerfragment)
         {
             txt_title.setText("");
         }
