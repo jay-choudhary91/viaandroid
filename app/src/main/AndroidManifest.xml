@@ -79,10 +79,7 @@
         </activity>
 
         <activity android:name=".activity.homeactivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|screenSize"/>
-
-        <activity android:name=".activity.fullscreenvideoactivity"/>
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".services.locationservice"

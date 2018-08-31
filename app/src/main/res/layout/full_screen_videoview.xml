@@ -3,7 +3,7 @@
     android:id="@+id/video_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:background="@android:color/white">
 
     <FrameLayout
         android:id="@+id/videoSurfaceContainer"
@@ -17,30 +17,36 @@
             android:layout_height="wrap_content" />
     </FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyview_frames"
+    <RelativeLayout
+        android:id="@+id/layout_scrubberview"
         android:layout_width="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyview_frames"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            >
 
-    <View
-        android:layout_width="1dp"
-        android:visibility="gone"
-        android:id="@+id/scrubberverticalbar"
-        android:layout_above="@id/recyview_frames"
-        android:background="@color/blue_button"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_height="50dp">
+        </android.support.v7.widget.RecyclerView>
 
-    </View>
+        <View
+            android:layout_width="2dp"
+            android:id="@+id/scrubberverticalbar"
+            android:background="@color/blue_button"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"
+            android:layout_height="50dp">
+
+        </View>
+
+    </RelativeLayout>
+
+
 
 
     <RelativeLayout
@@ -71,6 +77,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="0.9"
                 android:layout_height="match_parent"
+                android:background="@color/whitetransparent"
                 >
 
 

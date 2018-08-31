@@ -20,7 +20,7 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
-import com.cryptoserver.composer.fragments.fullscreenvideofragmentold;
+import com.cryptoserver.composer.fragments.fullscreenvideofragment;
 import com.cryptoserver.composer.fragments.readervideofragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
@@ -119,7 +119,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             txt_title.setText(txt);
         }
         else if((getcurrentfragment() instanceof fragmentvideolist) || getcurrentfragment() instanceof fragmentsettings
-                || getcurrentfragment() instanceof fullscreenvideofragmentold || getcurrentfragment() instanceof videoplayfragment
+                || getcurrentfragment() instanceof fullscreenvideofragment || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof readervideofragment)
         {
             txt_title.setText("");
@@ -133,7 +133,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void updateActionBar(int showHide) {
-
+        if(showHide == 0)
+        {
+            actionbar.setVisibility(View.GONE);
+        }
+        else
+        {
+            actionbar.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -144,6 +151,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_cancel.setVisibility(View.GONE);
         img_menu.setVisibility(View.GONE);
         img_help.setVisibility(View.GONE);
+        actionbar.setVisibility(View.VISIBLE);
 
         if (fragment instanceof fragmentvideolist) {
             imgaddicon.setVisibility(View.VISIBLE);
@@ -171,7 +179,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgshareicon.setVisibility(View.GONE);
             updateheader("");
 
-        }else if(fragment instanceof fullscreenvideofragmentold){
+        }else if(fragment instanceof fullscreenvideofragment){
             img_back.setVisibility(View.GONE);
             img_cancel.setVisibility(View.GONE);
             imgaddicon.setVisibility(View.GONE);
@@ -225,7 +233,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 }
                 break;
             case R.id.img_setting:
-                imgsettingsicon.setEnabled(false);
+                //imgsettingsicon.setEnabled(false);
                 getcurrentfragment().onHeaderBtnClick(R.id.img_setting);
                 break;
             case R.id.img_upload_icon:

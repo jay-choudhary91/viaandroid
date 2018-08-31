@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -61,6 +62,7 @@ import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.camerautil;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
@@ -83,6 +85,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -97,14 +100,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "Camera2VideoFragment";
     int counter=0;
+    int counter2=0;
 
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
     protected float maximumZoomLevel;
     protected Rect zoom;
 
-    public float finger_spacing = 0;
-    public int zoom_level = 1;
+    public static final String CAMERA_FRONT = "1";
+    public static final String CAMERA_BACK = "0";
+
+    private String cameraId = CAMERA_BACK;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -112,6 +118,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
+
+    boolean upsideDown = false;
 
     /**
      * An {@link AutoFitTextureView} for camera preview.
@@ -158,13 +166,38 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
             if(mIsRecordingVideo)
             {
-                counter++;
-               // Log.e("Total frames ",""+counter);
-                //surfaceTexture.
-            }
-            else
-            {
-                counter=0;
+                if(mTextureView == null)
+                    return;
+
+              Thread thread =new Thread(new Runnable() {
+                  @Override
+                  public void run() {
+
+                      try {
+                          if(mIsRecordingVideo)
+                          {
+                              if(mframetorecordcount == currentframenumber)
+                              {
+                                  Bitmap bitmap = mTextureView.getBitmap(10,10);
+                                  bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
+                                          bitmap.getHeight(), mTextureView.getTransform( null ), true );
+                                  ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                  bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                                  byte[] byteArray = stream.toByteArray();
+                                  updatelistitemnotify(byteArray,currentframenumber,"Frame");
+                                  currentframenumber = currentframenumber + frameduration;
+                                  bitmap.recycle();
+                              }
+                              mframetorecordcount++;
+                          }
+                      }catch (Exception e)
+                      {
+                          e.printStackTrace();
+                      }
+
+                  }
+              });
+              thread.start();
             }
         }
     };
@@ -235,6 +268,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     private static final String log_tag = videocomposerfragment.class.getSimpleName();
     private static final int request_permissions = 1;
+
+
+
 
     /* The sides of width and height are based on camera orientation.
     That is, the preview size is the size before it is rotated. */
@@ -484,20 +520,30 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
-            String cameraId = manager.getCameraIdList()[0];
+           // cameraId = manager.getCameraIdList()[0];
             // Choose the sizes for camera preview and video recording
             characteristics = manager.getCameraCharacteristics(cameraId);
+
+            maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
             StreamConfigurationMap map = characteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
             mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
                     width, height, mVideoSize);
             int orientation = getResources().getConfiguration().orientation;
+
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 mTextureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
             } else {
                 mTextureView.setAspectRatio(mPreviewSize.getHeight(), mPreviewSize.getWidth());
             }
+
+            int sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+            if (sensorOrientation == 270) {
+                // Camera is mounted the wrong way...
+                upsideDown = true;
+            }
+
             configureTransform(width, height);
             mMediaRecorder = new MediaRecorder();
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -622,6 +668,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             return;
         }
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+
+
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());
@@ -638,6 +686,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
         mTextureView.setTransform(matrix);
     }
+
+
     private void setUpMediaRecorder() throws IOException {
         final Activity activity = getActivity();
         if (null == activity) {
@@ -654,7 +704,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        int orientation = ORIENTATIONS.get(rotation);
+       // int orientation = ORIENTATIONS.get(rotation);
+        int orientation =  camerautil.getOrientation(rotation, upsideDown);
+
         mMediaRecorder.setOrientationHint(orientation);
         mMediaRecorder.prepare();
     }
@@ -755,9 +807,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 navigateflash();
                 break;
 
-            /*case R.id.img_rotate_camera:
-                setrotatecamera();
-                break;*/
+            case R.id.img_rotate_camera:
+                switchCamera();
+                break;
         }
     }
 
@@ -893,6 +945,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
             }
         }
+        gethelper().updateheader("00:00:00");
     }
 
     @Override
@@ -1344,7 +1397,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                fullscreenvideofragmentold fullvdofragmnet=new fullscreenvideofragmentold();
+                fullscreenvideofragment fullvdofragmnet=new fullscreenvideofragment();
                 fullvdofragmnet.setdata(lastrecordedvideo.getAbsolutePath());
                 gethelper().addFragment(fullvdofragmnet,false,true);
             }
@@ -1504,6 +1557,26 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
 
+    public void switchCamera() {
+        if (cameraId.equals(CAMERA_FRONT)) {
+            cameraId = CAMERA_BACK;
+            closeCamera();
+            reopenCamera();
+
+        } else if (cameraId.equals(CAMERA_BACK)) {
+            cameraId = CAMERA_FRONT;
+            closeCamera();
+            reopenCamera();
+        }
+    }
+
+    public void reopenCamera() {
+        if (mTextureView.isAvailable()) {
+            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+        } else {
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+        }
+    }
 
 }
 

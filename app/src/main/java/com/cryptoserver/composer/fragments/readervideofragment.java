@@ -71,6 +71,9 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     RecyclerView recyview_frames;
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
+    @BindView(R.id.layout_scrubberview)
+    RelativeLayout layout_scrubberview;
+
     View scurraberverticalbar;
 
     private String VIDEO_URL = null;
@@ -84,7 +87,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     RecyclerView recyviewitem;
     String keytype ="md5";
     videoframeadapter madapter;
-    long currentframenumber =0;
+    long currentframenumber =0,playerposition=0;
     long frameduration =15, mframetorecordcount =0;
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<videomodel> mallframes =new ArrayList<>();
@@ -114,6 +117,9 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
+
+            frameduration=checkframeduration();
+            keytype=checkkey();
 
             recyview_frames.post(new Runnable() {
                 @Override
@@ -210,57 +216,69 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         recyviewitem.setItemAnimator(new DefaultItemAnimator());
         recyviewitem.setAdapter(madapter);
 
-        showcontrollers.setOnTouchListener(new View.OnTouchListener() {
+        videoSurface.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         /*touched = true;*/
-                        /*if(controller.controllersview.getVisibility()==View.GONE){
-                            controller.controllersview.setVisibility(View.VISIBLE);
-                            mmitemclick.onItemClicked(2);
-                        }*/
+                        if(handleimageview.getVisibility() == View.GONE)
+                            hideshowcontroller();
 
-                        Log.e("user touch","on touch" );
+                      //  Log.e("user touch","on touch" );
 
                         break;
 
                     case MotionEvent.ACTION_UP:
                         /*touched = false;*/
-                        Log.e("on touch end ","on touch end" );
+                  //      Log.e("on touch end ","on touch end" );
                         break;
                 }
                 return false;
-
             }
         });
         return rootview;
     }
 
-    public void onRestart() {
-        try {
-            player = new MediaPlayer();
-            if(controller != null)
-                controller.removeAllViews();
-
-            controller = new videocontrollerview(getActivity());
-
-            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
-                player.prepareAsync();
-                player.setOnPreparedListener(this);
+    public void hideshowcontroller()
+    {
+        if(handleimageview.getVisibility() ==  (View.VISIBLE))
+        {
+            layout_scrubberview.setVisibility(View.GONE);
+            handleimageview.setVisibility(View.GONE);
+            gethelper().updateActionBar(0);
+            try {
+                if(controller != null)
+                {
+                    if(controller.controllersview.getVisibility() == View.VISIBLE)
+                        controller.controllersview.setVisibility(View.GONE);
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
             }
-
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        else
+        {
+            layout_scrubberview.setVisibility(View.VISIBLE);
+            handleimageview.setVisibility(View.VISIBLE);
+            gethelper().updateActionBar(1);
+            try {
+                if(controller != null)
+                {
+                    if(controller.controllersview.getVisibility() == View.GONE)
+                        controller.controllersview.setVisibility(View.VISIBLE);
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void onRestart() {
+        gethelper().updateActionBar(1);
+        handleimageview.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -283,6 +301,68 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onResume() {
         super.onResume();
+
+        try {
+            player = new MediaPlayer();
+            if(controller != null)
+                controller.removeAllViews();
+
+            controller = new videocontrollerview(getActivity(),mitemclick);
+
+            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
+                player.prepareAsync();
+                player.setOnPreparedListener(this);
+
+                if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
+                {
+                    frameduration=checkframeduration();
+                    keytype=checkkey();
+
+                    mvideoframes.clear();
+                    mallframes.clear();
+                    madapter.notifyDataSetChanged();
+                    Thread thread = new Thread(){
+                        public void run(){
+                            setVideoAdapter();
+                        }
+                    };
+                    thread.start();
+                }
+            }
+
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*try {
+            if(player != null && player.getDuration() > 0)
+            {
+                int a=player.getDuration();
+                int b=player.getCurrentPosition();
+
+
+                if(player.getCurrentPosition() == 0)
+                {
+                    player.seekTo(player.getCurrentPosition());
+                }
+                else
+                {
+                    player.seekTo(100);
+                }
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
+
     }
 
     @Override
@@ -309,30 +389,39 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        playerposition=0;
         if (player != null) {
+                playerposition=player.getCurrentPosition();
             player.pause();
-         //   player.reset();
-           // player.release();
-            //player = null;
         }
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
         controller.setMediaPlayer(this);
-        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer),mitemclick);
+        controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
         //mp.start();
-        mp.seekTo(100);
+        try {
+            if(playerposition > 0)
+            {
+                mp.seekTo((int)playerposition);
+            }
+            else
+            {
+                mp.seekTo(100);
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         controller.show();
 
     }
     adapteritemclick mitemclick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-            if( recyview_frames.getVisibility()==View.VISIBLE){
-                recyview_frames.setVisibility(View.GONE);
-
-            }
+            hideshowcontroller();
         }
 
         @Override
@@ -340,21 +429,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
         }
     };
-
-    adapteritemclick mmitemclick=new adapteritemclick() {
-        @Override
-        public void onItemClicked(Object object) {
-            if( recyview_frames.getVisibility()==View.GONE){
-                recyview_frames.setVisibility(View.VISIBLE);
-            }
-        }
-
-        @Override
-        public void onItemClicked(Object object, int type) {
-
-        }
-    };
-    // End MediaPlayer.OnPreparedListener
 
     // Implement VideoMediaController.MediaPlayerControl
     @Override
@@ -382,7 +456,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         try {
             if(player != null)
             {
-                Log.e("getCurrentPosition ",""+player.getCurrentPosition());
+               // Log.e("getCurrentPosition ",""+player.getCurrentPosition());
                 if(mbitmaplist.size() > 0)
                 {
                     int second=player.getCurrentPosition()/1000;
@@ -518,7 +592,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         switch (btnid){
             case R.id.img_share_icon:
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())) {
-                    progressdialog.showwaitingdialog(getActivity());
+                    //progressdialog.showwaitingdialog(getActivity());
                     common.shareMedia(getActivity(),VIDEO_URL);
                 }
                 break;
@@ -526,6 +600,11 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 checkwritestoragepermission();
                 break;
             case R.id.img_setting:
+                if(ishashprocessing)
+                {
+                    Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
@@ -595,36 +674,17 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                     return;
                 }
 
-                if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-                    frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
-
-                if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                        xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-                {
-                    keytype=config.prefs_md5;
-                }
-                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-                {
-                    keytype=config.prefs_md5_salt;
-                }
-                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-                {
-                    keytype=config.prefs_sha;
-                }
-                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-                {
-                    keytype=config.prefs_sha_salt;
-                }
+                frameduration=checkframeduration();
+                keytype=checkkey();
 
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
-                scurraberverticalbar.setVisibility(View.VISIBLE);
 
+                playerposition=0;
                 setupVideoPlayer(selectedvideouri);
 
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
-                    currentframenumber=0;
                     mvideoframes.clear();
                     mallframes.clear();
                     madapter.notifyDataSetChanged();
@@ -638,6 +698,39 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 }
             }
         }
+    }
+
+    public int checkframeduration()
+    {
+        int frameduration=15;
+
+        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+        return frameduration;
+    }
+
+    public String checkkey()
+    {
+        String key="";
+        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+        {
+            key=config.prefs_md5;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+        {
+            key=config.prefs_md5_salt;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+        {
+            key=config.prefs_sha;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+        {
+            key=config.prefs_sha_salt;
+        }
+        return key;
     }
 
     public void getFramesBitmap()
@@ -685,7 +778,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             public void run() {
 
                 adapter.notifyDataSetChanged();
-                layout_drawer.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.whitetransparent));
+                scurraberverticalbar.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -700,7 +793,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity());
+            controller = new videocontrollerview(getActivity(),mitemclick);
 
             if(selectedimageuri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -726,6 +819,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     public void setVideoAdapter() {
         int count = 1;
         ishashprocessing=true;
+        currentframenumber=0;
         currentframenumber = currentframenumber + frameduration;
        try
         {

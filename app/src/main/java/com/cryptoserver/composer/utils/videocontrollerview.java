@@ -80,9 +80,9 @@ public class videocontrollerview extends FrameLayout {
         Log.i(TAG, TAG);
     }
 
-    public videocontrollerview(Context context) {
+    public videocontrollerview(Context context,adapteritemclick mitemclick) {
         this(context, true);
-
+        this.mitemclick=mitemclick;
         Log.i(TAG, TAG);
     }
 
@@ -107,6 +107,19 @@ public class videocontrollerview extends FrameLayout {
     public void setAnchorView(ViewGroup view, adapteritemclick mitemclick) {
         mAnchor = view;
         this.mitemclick=mitemclick;
+
+        FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
+
+        removeAllViews();
+        View v = makeControllerView();
+        addView(v, frameParams);
+    }
+
+    public void setAnchorView(ViewGroup view) {
+        mAnchor = view;
 
         FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -161,7 +174,7 @@ public class videocontrollerview extends FrameLayout {
         imgvolume = (ImageButton) v.findViewById(R.id.img_volume);
         if (mFullscreenButton != null) {
             mFullscreenButton.requestFocus();
-            mFullscreenButton.setOnClickListener(mFullscreenListener);
+            //mFullscreenButton.setOnClickListener(mFullscreenListener);
         }
 
         mFfwdButton = (ImageButton) v.findViewById(R.id.ffwd);
@@ -417,7 +430,7 @@ public class videocontrollerview extends FrameLayout {
             //controllersview.setVisibility(GONE);
             doToggleFullscreen();
             show(sDefaultTimeout);
-            //mitemclick.onItemClicked(1);
+            mitemclick.onItemClicked(1);
         }
     };
 
@@ -497,14 +510,17 @@ public class videocontrollerview extends FrameLayout {
                 return;
             }
 
+            long duration = mPlayer.getDuration();
+            long newposition = (duration * progress) / 1000L;
+            Log.e("Duration Progress ",duration+" "+newposition);
+
             if (!fromuser) {
                 // We're not interested in programmatically generated changes to
                 // the progress bar's position.
                 return;
             }
 
-            long duration = mPlayer.getDuration();
-            long newposition = (duration * progress) / 1000L;
+
             mPlayer.seekTo( (int) newposition);
             if (mCurrentTime != null)
                 mCurrentTime.setText(stringForTime( (int) newposition));

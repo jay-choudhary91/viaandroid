@@ -79,8 +79,6 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
     protected float maximumZoomLevel;
     protected Rect zoom;
 
-    public float finger_spacing = 0;
-    public int zoom_level = 1;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -508,6 +506,10 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
             return;
         }
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+
+
+
+
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());
