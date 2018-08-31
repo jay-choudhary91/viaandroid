@@ -10,8 +10,10 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -30,14 +32,21 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.applicationviavideocomposer;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,10 +65,22 @@ import java.util.concurrent.TimeUnit;
  * Created by devesh on 29/8/18.
  */
 
-public class Camera2VideoFragment extends Fragment implements View.OnClickListener {
+public class Camera2VideoFragment extends Fragment implements View.OnClickListener,View.OnTouchListener {
+
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "Camera2VideoFragment";
     int counter=0;
+
+    Switch flashButton;
+
+    //Zooming
+    protected float fingerSpacing = 0;
+    protected float zoomLevel = 1f;
+    protected float maximumZoomLevel;
+    protected Rect zoom;
+
+    public float finger_spacing = 0;
+    public int zoom_level = 1;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -76,6 +97,9 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
      * Button to record video
      */
     private Button mButtonVideo;
+
+
+    CameraCharacteristics characteristics;
     /**
      * A refernce to the opened {@link android.hardware.camera2.CameraDevice}.
      */
@@ -192,6 +216,8 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
         return fragment;
     }
 
+
+
     /**
      * In this sample, we choose a video size with 3x4 aspect ratio. Also, we don't use sizes larger
      * than 1080p, since MediaRecorder cannot handle such a high-resolution video.
@@ -251,7 +277,10 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
         mButtonVideo = (Button) view.findViewById(R.id.video);
         mButtonVideo.setOnClickListener(this);
-        view.findViewById(R.id.info).setOnClickListener(this);
+        flashButton = (Switch) view.findViewById(R.id.info);
+
+        flashButton.setOnClickListener(this);
+        mTextureView.setOnTouchListener(this);
     }
 
     @Override
@@ -284,13 +313,19 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
                 break;
             }
             case R.id.info: {
-                Activity activity = getActivity();
+
+                flashButton.setChecked(false);
+                flashButton.setOnCheckedChangeListener(new MyCheckedChangeListener());
+
+
+
+              /*  Activity activity = getActivity();
                 if (null != activity) {
                     new AlertDialog.Builder(activity)
                             .setMessage(R.string.description_info)
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
-                }
+                }*/
                 break;
             }
         }
@@ -334,7 +369,10 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
             }
             String cameraId = manager.getCameraIdList()[0];
             // Choose the sizes for camera preview and video recording
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+            characteristics = manager.getCameraCharacteristics(cameraId);
+
+            maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+
             StreamConfigurationMap map = characteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
@@ -555,6 +593,105 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
 
 
     }
+
+
+    /*@
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        Activity activity = getActivity();
+        float maxzoom = (characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM))*10;
+
+        Rect m = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+        int action = motionEvent.getAction();
+        float current_finger_spacing;
+
+        if (motionEvent.getPointerCount() > 1) {
+            // Multi touch logic
+            current_finger_spacing = getFingerSpacing(motionEvent);
+            if(finger_spacing != 0){
+                if(current_finger_spacing > finger_spacing && maxzoom > zoom_level){
+                    zoom_level++;
+                } else if (current_finger_spacing < finger_spacing && zoom_level > 1){
+                    zoom_level--;
+                }
+                int minW = (int) (m.width() / maxzoom);
+                int minH = (int) (m.height() / maxzoom);
+                int difW = m.width() - minW;
+                int difH = m.height() - minH;
+                int cropW = difW /100 *(int)zoom_level;
+                int cropH = difH /100 *(int)zoom_level;
+                cropW -= cropW & 3;
+                cropH -= cropH & 3;
+                Rect zoom = new Rect(cropW, cropH, m.width() - cropW, m.height() - cropH);
+                mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+            }
+            finger_spacing = current_finger_spacing;
+        } else{
+            if (action == MotionEvent.ACTION_UP) {
+                //single touch logic
+            }
+        }
+
+        try {
+            mPreviewSession
+                    .setRepeatingRequest(mPreviewBuilder.build(), null, null);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
+        return true;
+    }*/
+
+
+   /* private float getFingerSpacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }*/
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        try {
+            Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+            if (rect == null) return false;
+            float currentFingerSpacing;
+
+            if (motionEvent.getPointerCount() == 2) { //Multi touch.
+                currentFingerSpacing = getFingerSpacing(motionEvent);
+                float delta = 0.05f;
+                if (fingerSpacing != 0) {
+                    if (currentFingerSpacing > fingerSpacing) {
+                        if ((maximumZoomLevel - zoomLevel) <= delta) {
+                            delta = maximumZoomLevel - zoomLevel;
+                        }
+                        zoomLevel = zoomLevel + delta;
+                    } else if (currentFingerSpacing < fingerSpacing){
+                        if ((zoomLevel - delta) < 1f) {
+                            delta = zoomLevel - 1f;
+                        }
+                        zoomLevel = zoomLevel - delta;
+                    }
+                    float ratio = (float) 1 / zoomLevel;
+                    int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
+                    int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
+                    zoom = new Rect(croppedWidth/2, croppedHeight/2,
+                            rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
+                    mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+                }
+                fingerSpacing = currentFingerSpacing;
+            } else { //Single touch point, needs to return true in order to detect one more touch point
+                return true;
+            }
+            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+            return true;
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
+            return true;
+        }
+
     /**
      * Compares two {@code Size}s based on their areas.
      */
@@ -581,4 +718,50 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
                     .create();
         }
     }
+
+    class MyCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            try {
+                if (isChecked) {
+                    mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+                    mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                } else {
+                    mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
+                    mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*// Turning Off flash
+    private void navigateflash() {
+        if (mcamera == null || parameters == null) {
+            return;
+        }
+        parameters = mcamera.getParameters();
+        if(isflashon)
+        {
+            imgflashon.setImageResource(R.drawable.flash_off);
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            isflashon = false;
+        }
+        else
+        {
+            imgflashon.setImageResource(R.drawable.flash_on);
+            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            isflashon = true;
+        }
+        mcamera.setParameters(parameters);
+    }*/
+
+    private float getFingerSpacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
 }

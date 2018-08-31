@@ -26,13 +26,12 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
-import com.cryptoserver.composer.fragments.fullscreenvideofragment;
+import com.cryptoserver.composer.fragments.fullscreenvideofragmentold;
 import com.cryptoserver.composer.fragments.readervideofragment;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -104,9 +103,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     protected void onRestart() {
         super.onRestart();
 
-        if(getcurrentfragment() instanceof fullscreenvideofragment){
+        if(getcurrentfragment() instanceof fullscreenvideofragmentold){
 
-            ((fullscreenvideofragment) getcurrentfragment()).onRestart();
+            ((fullscreenvideofragmentold) getcurrentfragment()).onRestart();
         }
         else if(getcurrentfragment() instanceof readervideofragment){
 

@@ -1,8 +1,6 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.homeactivity;
 import com.cryptoserver.composer.adapter.adaptervideolist;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
@@ -41,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,7 +190,7 @@ public class fragmentvideolist extends basefragment {
 
                     }else if(type == 4){
 
-                        fullscreenvideofragment fullscreenvideofragment = new fullscreenvideofragment();
+                        fullscreenvideofragmentold fullscreenvideofragment = new fullscreenvideofragmentold();
                         fullscreenvideofragment.setdata(videoobj.getPath());
                         gethelper().replaceFragment(fullscreenvideofragment, false, true);
 

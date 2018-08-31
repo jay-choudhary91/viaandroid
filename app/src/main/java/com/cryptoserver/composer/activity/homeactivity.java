@@ -20,11 +20,10 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
-import com.cryptoserver.composer.fragments.fullscreenvideofragment;
+import com.cryptoserver.composer.fragments.fullscreenvideofragmentold;
 import com.cryptoserver.composer.fragments.readervideofragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
-import com.cryptoserver.composer.fragments.writerappfragment;
 import com.cryptoserver.composer.services.callservice;
 import com.cryptoserver.composer.utils.config;
 
@@ -70,6 +69,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         else
         {
             videocomposerfragment frag=new videocomposerfragment();
+            frag.setData(true);
             replaceFragment(frag, false, true);
             /*Intent in=new Intent(homeactivity.this,CameraActivity.class);
             startActivity(in);*/
@@ -114,12 +114,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void updateheader(String txt) {
-        if((getcurrentfragment() instanceof writerappfragment || getcurrentfragment() instanceof  videocomposerfragment))
+        if((getcurrentfragment() instanceof  videocomposerfragment))
         {
             txt_title.setText(txt);
         }
         else if((getcurrentfragment() instanceof fragmentvideolist) || getcurrentfragment() instanceof fragmentsettings
-                || getcurrentfragment() instanceof fullscreenvideofragment  || getcurrentfragment() instanceof videoplayfragment
+                || getcurrentfragment() instanceof fullscreenvideofragmentold || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof readervideofragment)
         {
             txt_title.setText("");
@@ -153,7 +153,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgshareicon.setVisibility(View.GONE);
             updateheader("");
         }
-        else if (fragment instanceof writerappfragment) {
+        else if (fragment instanceof videocomposerfragment) {
             imgaddicon.setVisibility(View.GONE);
             imgsettingsicon.setVisibility(View.GONE);
             imguploadicon.setVisibility(View.GONE);
@@ -171,7 +171,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgshareicon.setVisibility(View.GONE);
             updateheader("");
 
-        }else if(fragment instanceof fullscreenvideofragment){
+        }else if(fragment instanceof fullscreenvideofragmentold){
             img_back.setVisibility(View.GONE);
             img_cancel.setVisibility(View.GONE);
             imgaddicon.setVisibility(View.GONE);
@@ -220,7 +220,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 break;
             case R.id.img_add_icon:
                 {
-                    writerappfragment fragment=new writerappfragment();
+                    videocomposerfragment fragment=new videocomposerfragment();
                     addFragment(fragment, false, true);
                 }
                 break;

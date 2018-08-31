@@ -9,11 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -22,12 +21,9 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -41,7 +37,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -55,7 +50,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -87,7 +81,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -99,11 +92,19 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 
-public class videocomposerfragment extends basefragment implements View.OnClickListener {
+public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "Camera2VideoFragment";
     int counter=0;
+
+    protected float fingerSpacing = 0;
+    protected float zoomLevel = 1f;
+    protected float maximumZoomLevel;
+    protected Rect zoom;
+
+    public float finger_spacing = 0;
+    public int zoom_level = 1;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -124,6 +125,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
      * A reference to the current {@link android.hardware.camera2.CameraCaptureSession} for preview.
      */
     private CameraCaptureSession mPreviewSession;
+
+
+    private CameraCharacteristics characteristics;
     /**
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
      * {@link TextureView}.
@@ -237,8 +241,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     // Output video size
     private Runnable doafterallpermissionsgranted;
 
-    TextView txt_save;
-    TextView txt_clear;
     LinearLayout layout_bottom;
 
     RecyclerView recyviewitem;
@@ -284,8 +286,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
             handle = (ImageView) rootview.findViewById(R.id.handle);
-            txt_save = (TextView) rootview.findViewById(R.id.txt_save);
-            txt_clear = (TextView) rootview.findViewById(R.id.txt_clear);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
           //  simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
             linearLayout=rootview.findViewById(R.id.content);
@@ -296,7 +296,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mrecordimagebutton.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             rotatecamera.setOnClickListener(this);
-
+            mTextureView.setOnTouchListener(this);
 
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
@@ -355,12 +355,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
             });
 
-
-            common.changefocusstyle(txt_save, Color.parseColor("#006495"),Color.parseColor("#006495"),30);
-            common.changefocusstyle(txt_clear, Color.parseColor("#006495"),Color.parseColor("#006495"),30);
-
-            txt_save.setOnClickListener(this);
-            txt_clear.setOnClickListener(this);
 
             timerhandler = new Handler() ;
             gethelper().updateheader("00:00:00");
@@ -492,7 +486,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
             String cameraId = manager.getCameraIdList()[0];
             // Choose the sizes for camera preview and video recording
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+            characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
@@ -753,44 +747,95 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_video_capture: {
-                if (mIsRecordingVideo) {
-                    mrecordimagebutton.setEnabled(false);
-
-                    stopRecordingVideo();
-                } else {
-
-                    mrecordimagebutton.setEnabled(false);
-                    mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
-                    imgflashon.setVisibility(View.VISIBLE);
-                    rotatecamera.setVisibility(View.INVISIBLE);
-
-                    currentframenumber =0;
-                    mframetorecordcount =0;
-                    currentframenumber = currentframenumber + frameduration;
-
-                    mvideoframes.clear();
-                    madapter.notifyDataSetChanged();
-
-                    startRecordingVideo();
-                }
+                startstopvideo();
                 break;
             }
-            case R.id.txt_save:
-
-                break;
-            /*case R.id.txt_clear:
-                resetvideotimer();
-                clearvideolist();
-                break;
 
             case R.id.img_flash_on:
                 navigateflash();
                 break;
 
-            case R.id.img_rotate_camera:
+            /*case R.id.img_rotate_camera:
                 setrotatecamera();
                 break;*/
         }
+    }
+
+    public void startstopvideo()
+    {
+        if (mIsRecordingVideo) {
+            mrecordimagebutton.setEnabled(false);
+
+            stopRecordingVideo();
+        } else {
+
+            mrecordimagebutton.setEnabled(false);
+            mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
+            imgflashon.setVisibility(View.VISIBLE);
+            rotatecamera.setVisibility(View.INVISIBLE);
+
+            currentframenumber =0;
+            mframetorecordcount =0;
+            currentframenumber = currentframenumber + frameduration;
+
+            mvideoframes.clear();
+            madapter.notifyDataSetChanged();
+
+            startRecordingVideo();
+        }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        try {
+            Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+            if (rect == null) return false;
+            float currentFingerSpacing;
+
+            if (motionEvent.getPointerCount() == 2) { //Multi touch.
+                currentFingerSpacing = getFingerSpacing(motionEvent);
+                float delta = 0.05f;
+                if (fingerSpacing != 0) {
+                    if (currentFingerSpacing > fingerSpacing) {
+                        if ((maximumZoomLevel - zoomLevel) <= delta) {
+                            delta = maximumZoomLevel - zoomLevel;
+                        }
+                        zoomLevel = zoomLevel + delta;
+                    } else if (currentFingerSpacing < fingerSpacing){
+                        if ((zoomLevel - delta) < 1f) {
+                            delta = zoomLevel - 1f;
+                        }
+                        zoomLevel = zoomLevel - delta;
+                    }
+                    float ratio = (float) 1 / zoomLevel;
+                    int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
+                    int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
+                    zoom = new Rect(croppedWidth/2, croppedHeight/2,
+                            rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
+                    mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+                }
+                fingerSpacing = currentFingerSpacing;
+            } else { //Single touch point, needs to return true in order to detect one more touch point
+                return true;
+            }
+            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+            return true;
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
+        return true;
+    }
+
+    private float getFingerSpacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
+    public void setData(boolean autostartvideo) {
+        this.autostartvideo = autostartvideo;
     }
 
     /**
@@ -894,6 +939,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(autostartvideo)
+                {
+                    autostartvideo=false;
+                    startstopvideo();
+                }
+            }
+        },1000);
+
+
     }
 
     @Override
@@ -958,7 +1015,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     Seconds = Seconds % 60;
                     MilliSeconds = (int) (UpdateTime % 1000);
 
-                    getActivity().runOnUiThread(new Runnable() {
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if(mIsRecordingVideo)
@@ -1020,7 +1077,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 values.put(MediaStore.Video.Media.TITLE, "Via composer");
                 values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
                 values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
-                getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                applicationviavideocomposer.getactivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
 
             }catch (Exception e)
             {
@@ -1030,7 +1087,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }catch (Exception e)
         {
             e.printStackTrace();
-            Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationviavideocomposer.getactivity(),"An error occured!",Toast.LENGTH_SHORT).show();
         }
 
         progressdialog.dismisswaitdialog();
@@ -1038,14 +1095,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void clearvideolist()
     {
-        getActivity().runOnUiThread(new Runnable() {
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                // mvideoframes.clear();
-                //madapter.notifyDataSetChanged();
-                txt_save.setVisibility(View.GONE);
-                txt_clear.setVisibility(View.GONE);
                 layout_bottom.setVisibility(View.VISIBLE);
                 imgflashon.setVisibility(View.VISIBLE);
                 rotatecamera.setVisibility(View.VISIBLE);
@@ -1108,7 +1161,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             grabber.flush();
 
-            getActivity().runOnUiThread(new Runnable() {
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mvideoframes.clear();
@@ -1148,7 +1201,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     return;
                 String keyvalue= getkeyvalue(array);
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
-                getActivity().runOnUiThread(new Runnable() {
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if(mvideoframes.size() > 0)
@@ -1291,7 +1344,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                fullscreenvideofragment fullvdofragmnet=new fullscreenvideofragment();
+                fullscreenvideofragmentold fullvdofragmnet=new fullscreenvideofragmentold();
                 fullvdofragmnet.setdata(lastrecordedvideo.getAbsolutePath());
                 gethelper().addFragment(fullvdofragmnet,false,true);
             }
@@ -1373,16 +1426,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 // int duration =  getmediaduration(selectedvideouri);
 
                 final MediaPlayer mp = MediaPlayer.create(getActivity(),selectedimageuri);
-                mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        int duration = mp.getDuration();
-                        videoplayfragment videoplayfragment =new videoplayfragment();
-                        videoplayfragment.setdata(lastrecordedvideo.getAbsolutePath(), duration);
-                        gethelper().replaceFragment(videoplayfragment, false, true);
-                    }
-                });
-
+                if(mp != null)
+                {
+                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            int duration = mp.getDuration();
+                            videoplayfragment videoplayfragment =new videoplayfragment();
+                            videoplayfragment.setdata(lastrecordedvideo.getAbsolutePath(), duration);
+                            gethelper().replaceFragment(videoplayfragment, false, true);
+                        }
+                    });
+                }
             }
         });
 
@@ -1408,6 +1463,47 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         fragmentvideolist frag=new fragmentvideolist();
         gethelper().replaceFragment(frag, true, false);
     }
+
+    /*class MyCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            try {
+                if(isflashon) {
+                    mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+                    mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                    isflashon = false;
+                } else {
+                    mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
+                    mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                    isflashon = true;
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }*/
+
+    private void navigateflash() {
+        try {
+            if(isflashon) {
+                imgflashon.setImageResource(R.drawable.flash_off);
+                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
+                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                isflashon = false;
+            } else {
+                imgflashon.setImageResource(R.drawable.flash_on);
+                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                isflashon = true;
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }
 
