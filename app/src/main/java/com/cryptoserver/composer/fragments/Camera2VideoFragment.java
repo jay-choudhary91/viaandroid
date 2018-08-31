@@ -508,6 +508,10 @@ public class Camera2VideoFragment extends Fragment implements View.OnClickListen
             return;
         }
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+
+
+
+
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());

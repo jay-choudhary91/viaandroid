@@ -114,6 +114,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public float finger_spacing = 0;
     public int zoom_level = 1;
 
+    public static final String CAMERA_FRONT = "1";
+    public static final String CAMERA_BACK = "0";
+
+    private String cameraId = CAMERA_BACK;
+
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
@@ -499,7 +504,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
-            String cameraId = manager.getCameraIdList()[0];
+           // cameraId = manager.getCameraIdList()[0];
             // Choose the sizes for camera preview and video recording
             characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics
@@ -508,6 +513,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
                     width, height, mVideoSize);
             int orientation = getResources().getConfiguration().orientation;
+
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 mTextureView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.getHeight());
             } else {
@@ -637,6 +643,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             return;
         }
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+
+
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());
@@ -790,9 +798,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 navigateflash();
                 break;
 
-            /*case R.id.img_rotate_camera:
-                setrotatecamera();
-                break;*/
+            case R.id.img_rotate_camera:
+                switchCamera();
+                break;
         }
     }
 
@@ -1489,6 +1497,28 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         } catch (CameraAccessException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public void switchCamera() {
+        if (cameraId.equals(CAMERA_FRONT)) {
+            cameraId = CAMERA_BACK;
+            closeCamera();
+            reopenCamera();
+
+        } else if (cameraId.equals(CAMERA_BACK)) {
+            cameraId = CAMERA_FRONT;
+            closeCamera();
+            reopenCamera();
+        }
+    }
+
+    public void reopenCamera() {
+        if (mTextureView.isAvailable()) {
+            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+        } else {
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
     }
 
