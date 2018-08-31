@@ -3,7 +3,7 @@
     android:id="@+id/video_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/black">
 
     <FrameLayout
         android:id="@+id/videoSurfaceContainer"
@@ -16,44 +16,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </FrameLayout>
-
-    <RelativeLayout
-        android:id="@+id/layout_scrubberview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyview_frames"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            >
-
-        </android.support.v7.widget.RecyclerView>
-
-        <RelativeLayout
-            android:layout_width="20dp"
-            android:id="@+id/scrubberverticalbar"
-            android:layout_centerHorizontal="true"
-            android:background="@color/whitetransparent"
-            android:visibility="gone"
-            android:layout_height="50dp">
-
-            <View
-                android:layout_width="2dp"
-                android:background="@color/blue_button"
-                android:layout_centerHorizontal="true"
-                android:layout_height="50dp">
-
-            </View>
-        </RelativeLayout>
-
-    </RelativeLayout>
-
-
 
 
     <RelativeLayout

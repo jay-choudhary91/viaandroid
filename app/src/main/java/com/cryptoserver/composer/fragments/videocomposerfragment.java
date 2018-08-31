@@ -85,7 +85,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -1397,7 +1396,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                fullscreenvideofragment fullvdofragmnet=new fullscreenvideofragment();
+                videoplayercomposerfragment fullvdofragmnet=new videoplayercomposerfragment();
                 fullvdofragmnet.setdata(lastrecordedvideo.getAbsolutePath());
                 gethelper().addFragment(fullvdofragmnet,false,true);
             }

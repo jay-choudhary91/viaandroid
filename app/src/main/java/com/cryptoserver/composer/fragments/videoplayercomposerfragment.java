@@ -44,12 +44,10 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
-import com.cryptoserver.composer.views.pagercustomduration;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
-import org.jcodec.common.tools.MainUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -65,16 +63,12 @@ import static android.app.Activity.RESULT_OK;
  * Created by devesh on 21/8/18.
  */
 
-public class readervideofragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
+public class videoplayercomposerfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
 
-    @BindView(R.id.recyview_frames)
-    RecyclerView recyview_frames;
+
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
-    @BindView(R.id.layout_scrubberview)
-    RelativeLayout layout_scrubberview;
 
-    RelativeLayout scurraberverticalbar;
 
     private String VIDEO_URL = null;
     RelativeLayout showcontrollers;
@@ -96,11 +90,10 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     boolean ishashprocessing=false;
     public int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
-    framebitmapadapter adapter;
     Uri selectedvideouri =null;
     @Override
     public int getlayoutid() {
-        return R.layout.full_screen_videoview;
+        return R.layout.full_screen_video_composer;
     }
 
 
@@ -116,32 +109,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             righthandle=rootview.findViewById(R.id.righthandle);
             recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             showcontrollers=rootview.findViewById(R.id.video_container);
-            scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
-
-            frameduration=checkframeduration();
-            keytype=checkkey();
-
-            recyview_frames.post(new Runnable() {
-                @Override
-                public void run() {
-                    adapter = new framebitmapadapter(getActivity(), mbitmaplist,recyview_frames.getWidth(),
-                            new adapteritemclick() {
-                                @Override
-                                public void onItemClicked(Object object) {
-
-                                }
-
-                                @Override
-                                public void onItemClicked(Object object, int type) {
-
-                                }
-                            });
-                    RecyclerView.LayoutManager mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                    recyview_frames.setLayoutManager(mLayoutManager);
-                    recyview_frames.setItemAnimator(new DefaultItemAnimator());
-                    recyview_frames.setAdapter(adapter);
-                }
-            });
 
         }
 
@@ -200,6 +167,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 });
             }
         });
+
         madapter = new videoframeadapter(getActivity(), mvideoframes, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
@@ -237,6 +205,9 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 return false;
             }
         });
+
+        setupVideoPlayer();
+        gethash();
         return rootview;
     }
 
@@ -244,7 +215,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     {
         if(handleimageview.getVisibility() ==  (View.VISIBLE))
         {
-            layout_scrubberview.setVisibility(View.GONE);
             handleimageview.setVisibility(View.GONE);
             gethelper().updateActionBar(0);
             try {
@@ -260,7 +230,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         }
         else
         {
-            layout_scrubberview.setVisibility(View.VISIBLE);
             handleimageview.setVisibility(View.VISIBLE);
             gethelper().updateActionBar(1);
             try {
@@ -311,25 +280,9 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
+                player.setDataSource(VIDEO_URL);
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
-
-                if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
-                {
-                    frameduration=checkframeduration();
-                    keytype=checkkey();
-
-                    mvideoframes.clear();
-                    mallframes.clear();
-                    madapter.notifyDataSetChanged();
-                    Thread thread = new Thread(){
-                        public void run(){
-                            setVideoAdapter();
-                        }
-                    };
-                    thread.start();
-                }
             }
 
         } catch (IllegalArgumentException e) {
@@ -341,28 +294,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /*try {
-            if(player != null && player.getDuration() > 0)
-            {
-                int a=player.getDuration();
-                int b=player.getCurrentPosition();
-
-
-                if(player.getCurrentPosition() == 0)
-                {
-                    player.seekTo(player.getCurrentPosition());
-                }
-                else
-                {
-                    player.seekTo(100);
-                }
-            }
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }*/
-
     }
 
     @Override
@@ -383,8 +314,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             //holder.setFixedSize(1000,500);
             player.setDisplay(holder);
         }
-
-
     }
 
     @Override
@@ -456,17 +385,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         try {
             if(player != null)
             {
-               // Log.e("getCurrentPosition ",""+player.getCurrentPosition());
-                if(mbitmaplist.size() > 0)
-                {
-                    int second=player.getCurrentPosition()/1000;
-                    if(mbitmaplist.size() >= (second))
-                    {
-                        recyview_frames.scrollToPosition(second);
-                        recyview_frames.smoothScrollToPosition(second);
-                        //recyview_frames.scrollTo((720/2)+(second*50),0);
-                    }
-                }
+
                 return player.getCurrentPosition();
             }
         }catch (Exception e)
@@ -592,198 +511,14 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
         switch (btnid){
             case R.id.img_share_icon:
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())) {
-                    //progressdialog.showwaitingdialog(getActivity());
                     common.shareMedia(getActivity(),VIDEO_URL);
                 }
                 break;
-            case R.id.img_menu:
-                checkwritestoragepermission();
-                break;
-            case R.id.img_setting:
-                if(ishashprocessing)
-                {
-                    Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                fragmentsettings fragmatriclist=new fragmentsettings();
-                gethelper().replaceFragment(fragmatriclist, false, true);
-                break;
+
         }
     }
 
-
-    private void checkwritestoragepermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED ) {
-                opengallery();
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        request_read_external_storage);
-            }
-        }
-        else
-        {
-            opengallery();
-        }
-    }
-
-    public  void opengallery()
-    {
-        if(ishashprocessing)
-        {
-            Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if(player != null)
-            player.pause();
-
-        Intent intent;
-        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-        {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        }
-        else
-        {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
-        }
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent,REQUESTCODE_PICK);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUESTCODE_PICK) {
-
-            if (resultCode == RESULT_OK) {
-                selectedvideouri = data.getData();
-                // OI FILE Manager
-                VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
-
-
-                if(VIDEO_URL == null){
-                    common.showalert(getActivity(),getResources().getString(R.string.file_not_supported));
-
-                    return;
-                }
-
-
-                frameduration=checkframeduration();
-                keytype=checkkey();
-
-                mbitmaplist.clear();
-                adapter.notifyDataSetChanged();
-
-                playerposition=0;
-                setupVideoPlayer(selectedvideouri);
-
-                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
-                    mvideoframes.clear();
-                    mallframes.clear();
-                    madapter.notifyDataSetChanged();
-                    Thread thread = new Thread(){
-                        public void run(){
-                            getFramesBitmap();
-                            setVideoAdapter();
-                        }
-                    };
-                    thread.start();
-                }
-            }
-        }
-    }
-
-    public int checkframeduration()
-    {
-        int frameduration=15;
-
-        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
-
-        return frameduration;
-    }
-
-    public String checkkey()
-    {
-        String key="";
-        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-        {
-            key=config.prefs_md5;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-        {
-            key=config.prefs_md5_salt;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-        {
-            key=config.prefs_sha;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-        {
-            key=config.prefs_sha_salt;
-        }
-        return key;
-    }
-
-    public void getFramesBitmap()
-    {
-        mbitmaplist.add(new frame(0,null,true));
-        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
-        String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long timeInmillisec = Long.parseLong( time );
-        long duration = timeInmillisec / 1000;
-        long hours = duration / 3600;
-        long minutes = (duration - hours * 3600) / 60;
-        long seconds = duration - (hours * 3600 + minutes * 60);
-
-
-        for(int i=1;i<=seconds;i++)
-        {
-
-            Bitmap m_bitmap = null;
-
-            try
-            {
-                m_mediaMetadataRetriever = new MediaMetadataRetriever();
-                m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
-                m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
-                if(m_bitmap != null)
-                {
-                    Log.e("Bitmap on ",""+i);
-                    mbitmaplist.add(new frame(i,m_bitmap,false));
-                }
-            }
-            catch (Exception m_e)
-            {
-            }
-            finally
-            {
-                if (m_mediaMetadataRetriever != null)
-                    m_mediaMetadataRetriever.release();
-            }
-        }
-        mbitmaplist.add(new frame(0,null,true));
-
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                adapter.notifyDataSetChanged();
-                scurraberverticalbar.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    public void setupVideoPlayer(Uri selectedimageuri)
+    public void setupVideoPlayer()
     {
         try {
             SurfaceHolder videoHolder = videoSurface.getHolder();
@@ -795,9 +530,9 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
 
             controller = new videocontrollerview(getActivity(),mitemclick);
 
-            if(selectedimageuri!=null){
+            if(VIDEO_URL!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(getActivity(), selectedimageuri);
+                player.setDataSource(VIDEO_URL);
 
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
@@ -819,7 +554,6 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     public void setVideoAdapter() {
         int count = 1;
         ishashprocessing=true;
-        currentframenumber=0;
         currentframenumber = currentframenumber + frameduration;
        try
         {
@@ -884,6 +618,51 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                     madapter.notifyItemChanged(mvideoframes.size()-1);
             }
         });
+    }
+
+
+    public void setdata(String VIDEO_URL){
+        this.VIDEO_URL = VIDEO_URL;
+    }
+
+    public void gethash(){
+        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+
+        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+        {
+            keytype=config.prefs_md5;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+        {
+            keytype=config.prefs_md5_salt;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+        {
+            keytype=config.prefs_sha;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+        {
+            keytype=config.prefs_sha_salt;
+        }
+
+        mbitmaplist.clear();
+
+
+
+        if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+            currentframenumber=0;
+            mvideoframes.clear();
+            mallframes.clear();
+            Thread thread = new Thread(){
+                public void run(){
+                    setVideoAdapter();
+                }
+            };
+            thread.start();
+        }
     }
 
 }
