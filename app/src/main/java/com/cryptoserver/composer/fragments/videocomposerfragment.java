@@ -1369,7 +1369,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                fullscreenvideofragmentold fullvdofragmnet=new fullscreenvideofragmentold();
+                fullscreenvideofragment fullvdofragmnet=new fullscreenvideofragment();
                 fullvdofragmnet.setdata(lastrecordedvideo.getAbsolutePath());
                 gethelper().addFragment(fullvdofragmnet,false,true);
             }
