@@ -190,7 +190,7 @@ public class fragmentvideolist extends basefragment {
 
                     }else if(type == 4){
 
-                        fullscreenvideofragmentold fullscreenvideofragment = new fullscreenvideofragmentold();
+                        fullscreenvideofragment fullscreenvideofragment = new fullscreenvideofragment();
                         fullscreenvideofragment.setdata(videoobj.getPath());
                         gethelper().replaceFragment(fullscreenvideofragment, false, true);
 
