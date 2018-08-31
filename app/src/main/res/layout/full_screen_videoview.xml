@@ -21,6 +21,7 @@
         android:id="@+id/layout_scrubberview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true">
 
@@ -28,19 +29,16 @@
             android:id="@+id/recyview_frames"
             android:layout_width="match_parent"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             >
 
         </android.support.v7.widget.RecyclerView>
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="2dp"
             android:id="@+id/scrubberverticalbar"
             android:background="@color/blue_button"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
             android:visibility="gone"
             android:layout_height="50dp">
 
