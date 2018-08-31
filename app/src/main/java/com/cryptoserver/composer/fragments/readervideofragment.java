@@ -118,6 +118,9 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
 
+            frameduration=checkframeduration();
+            keytype=checkkey();
+
             recyview_frames.post(new Runnable() {
                 @Override
                 public void run() {
@@ -219,7 +222,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         /*touched = true;*/
-                        if(righthandle.getVisibility() == View.GONE)
+                        if(handleimageview.getVisibility() == View.GONE)
                             hideshowcontroller();
 
                       //  Log.e("user touch","on touch" );
@@ -311,6 +314,22 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
+
+                if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
+                {
+                    frameduration=checkframeduration();
+                    keytype=checkkey();
+
+                    mvideoframes.clear();
+                    mallframes.clear();
+                    madapter.notifyDataSetChanged();
+                    Thread thread = new Thread(){
+                        public void run(){
+                            setVideoAdapter();
+                        }
+                    };
+                    thread.start();
+                }
             }
 
         } catch (IllegalArgumentException e) {
@@ -581,6 +600,11 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 checkwritestoragepermission();
                 break;
             case R.id.img_setting:
+                if(ishashprocessing)
+                {
+                    Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
@@ -650,36 +674,17 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                     return;
                 }
 
-                if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-                    frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
-
-                if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                        xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-                {
-                    keytype=config.prefs_md5;
-                }
-                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-                {
-                    keytype=config.prefs_md5_salt;
-                }
-                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-                {
-                    keytype=config.prefs_sha;
-                }
-                else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-                {
-                    keytype=config.prefs_sha_salt;
-                }
+                frameduration=checkframeduration();
+                keytype=checkkey();
 
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
-                scurraberverticalbar.setVisibility(View.VISIBLE);
 
+                playerposition=0;
                 setupVideoPlayer(selectedvideouri);
 
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
-                    currentframenumber=0;
                     mvideoframes.clear();
                     mallframes.clear();
                     madapter.notifyDataSetChanged();
@@ -693,6 +698,39 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 }
             }
         }
+    }
+
+    public int checkframeduration()
+    {
+        int frameduration=15;
+
+        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+        return frameduration;
+    }
+
+    public String checkkey()
+    {
+        String key="";
+        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+        {
+            key=config.prefs_md5;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+        {
+            key=config.prefs_md5_salt;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+        {
+            key=config.prefs_sha;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+        {
+            key=config.prefs_sha_salt;
+        }
+        return key;
     }
 
     public void getFramesBitmap()
@@ -740,6 +778,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
             public void run() {
 
                 adapter.notifyDataSetChanged();
+                scurraberverticalbar.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -780,6 +819,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     public void setVideoAdapter() {
         int count = 1;
         ishashprocessing=true;
+        currentframenumber=0;
         currentframenumber = currentframenumber + frameduration;
        try
         {

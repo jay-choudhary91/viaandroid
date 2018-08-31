@@ -166,38 +166,38 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
             if(mIsRecordingVideo)
             {
+                if(mTextureView == null)
+                    return;
 
               Thread thread =new Thread(new Runnable() {
                   @Override
                   public void run() {
-                      Bitmap bitmap = mTextureView.getBitmap(1,1);
-                      bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), mTextureView.getTransform( null ), true );
 
-                      ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                      bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                      byte[] byteArray = stream.toByteArray();
+                      try {
+                          if(mIsRecordingVideo)
+                          {
+                              if(mframetorecordcount == currentframenumber)
+                              {
+                                  Bitmap bitmap = mTextureView.getBitmap(10,10);
+                                  bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
+                                          bitmap.getHeight(), mTextureView.getTransform( null ), true );
+                                  ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                  bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
+                                  byte[] byteArray = stream.toByteArray();
+                                  updatelistitemnotify(byteArray,currentframenumber,"Frame");
+                                  currentframenumber = currentframenumber + frameduration;
+                                  bitmap.recycle();
+                              }
+                              mframetorecordcount++;
+                          }
+                      }catch (Exception e)
+                      {
+                          e.printStackTrace();
+                      }
 
-                      //Log.e("bytearray = ", Arrays.toString(byteArray));
-
-
-                      bitmap.recycle();
-
-                      counter2 ++;
-                      Log.e("Total bitmap ",""+counter2);
                   }
               });
               thread.start();
-              counter++;
-                Log.e("Total frames ",""+counter);
-                counter++;
-
-               // Log.e("Total frames ",""+counter);
-                //surfaceTexture.
-            }
-            else
-            {
-                counter=0;
-                counter2=0;
             }
         }
     };
@@ -945,6 +945,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
             }
         }
+        gethelper().updateheader("00:00:00");
     }
 
     @Override

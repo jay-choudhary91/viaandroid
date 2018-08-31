@@ -233,7 +233,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 }
                 break;
             case R.id.img_setting:
-                imgsettingsicon.setEnabled(false);
+                //imgsettingsicon.setEnabled(false);
                 getcurrentfragment().onHeaderBtnClick(R.id.img_setting);
                 break;
             case R.id.img_upload_icon:
