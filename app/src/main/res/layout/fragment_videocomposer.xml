@@ -14,69 +14,8 @@
         <com.cryptoserver.composer.fragments.AutoFitTextureView
             android:id="@+id/texture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true" />
-
-        <LinearLayout
-            android:id="@+id/layout_top"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:background="@color/black"
-            android:padding="10dp"
-            android:visibility="gone"
-            android:alpha="0.7"
-            >
-
-            <Chronometer
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:id="@+id/timer"
-                android:layout_alignParentTop="true"
-                android:textColor="@color/white"/>
-
-        </LinearLayout>
-
-
-
-        <com.cryptoserver.composer.views.customfonttextview
-            android:id="@+id/txt_save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textSize="17sp"
-            android:layout_below="@id/layout_top"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_centerHorizontal="true"
-            android:text="@string/save"
-            android:visibility="gone"
-            android:textColor="@color/white"
-            app:fontType="OpenSans_Regular"/>
-
-        <com.cryptoserver.composer.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            android:id="@+id/txt_clear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_marginTop="5dp"
-            android:textSize="17sp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/txt_save"
-            android:text="@string/clear"
-            android:visibility="gone"
-            android:textColor="@color/white"
-            />
-
 
         <LinearLayout
             android:id="@+id/layout_bottom"
@@ -84,8 +23,8 @@
             android:weightSum="1"
             android:gravity="center_vertical"
             android:padding="5dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_height="match_parent"
+            android:layout_below="@id/texture"
             android:background="@color/black"
             android:visibility="gone"
             android:alpha="0.7"
@@ -194,45 +133,4 @@
 
 
     </RelativeLayout>
-    <!--<SlidingDrawer
-        android:id="@+id/simpleSlidingDrawer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:content="@+id/content"
-        android:handle="@+id/handle"
-        android:orientation="horizontal"
-        android:rotation="180"
-        >
-
-        <ImageView
-            android:id="@id/handle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/lefthandle"
-            android:rotation="360"
-            />
-        <LinearLayout
-            android:id="@id/content"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal"
-            android:rotation="180">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:padding="10dp">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyview_item"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    >
-
-                </android.support.v7.widget.RecyclerView>
-
-            </LinearLayout>
-        </LinearLayout>
-    </SlidingDrawer>-->
 </RelativeLayout>

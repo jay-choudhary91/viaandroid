@@ -1,8 +1,6 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -25,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.homeactivity;
 import com.cryptoserver.composer.adapter.adaptervideolist;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
@@ -41,7 +38,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,7 +190,7 @@ public class fragmentvideolist extends basefragment {
 
                     }else if(type == 4){
 
-                        fullscreenvideofragment fullscreenvideofragment = new fullscreenvideofragment();
+                        fullscreenvideofragmentold fullscreenvideofragment = new fullscreenvideofragmentold();
                         fullscreenvideofragment.setdata(videoobj.getPath());
                         gethelper().replaceFragment(fullscreenvideofragment, false, true);
 
@@ -272,7 +268,7 @@ public class fragmentvideolist extends basefragment {
                     videoobj.setName(file.getName());
                     videoobj.setCreatedate(outputDateStr);
 
-                    boolean isVideo=true;
+                    boolean isVideo=false;
                     MediaExtractor extractor = new MediaExtractor();
                     try {
                         //Adjust data source as per the requirement if file, URI, etc.
@@ -292,16 +288,15 @@ public class fragmentvideolist extends basefragment {
                                         long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
                                         long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
                                         videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                        if(hours > 0)
+                                        if(second > 0)
+                                        {
                                             videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                            isVideo=true;
+                                        }
 
                                     }
                                 }
                             }
-                        }
-                        else
-                        {
-                            isVideo=false;
                         }
 
                     } catch (IOException e) {
