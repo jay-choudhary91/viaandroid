@@ -74,7 +74,7 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.layout_scrubberview)
     RelativeLayout layout_scrubberview;
 
-    View scurraberverticalbar;
+    RelativeLayout scurraberverticalbar;
 
     private String VIDEO_URL = null;
     RelativeLayout showcontrollers;

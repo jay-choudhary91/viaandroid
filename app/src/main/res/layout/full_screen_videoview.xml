@@ -34,7 +34,32 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <View
+        <RelativeLayout
+            android:layout_width="20dp"
+            android:id="@+id/scrubberverticalbar"
+            android:layout_centerHorizontal="true"
+            android:background="@color/whitetransparent"
+            android:visibility="gone"
+            android:layout_height="50dp">
+           <!-- <View
+                android:layout_width="1dp"
+                android:id="@+id/scrubberverticalbar"
+                android:background="@color/blue_button"
+                android:layout_centerInParent="true"
+                android:visibility="visible"
+                android:layout_height="50dp">
+
+            </View>-->
+            <View
+                android:layout_width="2dp"
+                android:background="@color/blue_button"
+                android:layout_centerHorizontal="true"
+                android:layout_height="50dp">
+
+            </View>
+        </RelativeLayout>
+
+        <!--<View
             android:layout_width="2dp"
             android:id="@+id/scrubberverticalbar"
             android:background="@color/blue_button"
@@ -42,7 +67,7 @@
             android:visibility="gone"
             android:layout_height="50dp">
 
-        </View>
+        </View>-->
 
     </RelativeLayout>
 
