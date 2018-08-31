@@ -414,10 +414,10 @@ public class videocontrollerview extends FrameLayout {
     private View.OnClickListener mFullscreenListener = new View.OnClickListener() {
         public void onClick(View v) {
             Log.d("click touch","icon touch");
-            controllersview.setVisibility(GONE);
+            //controllersview.setVisibility(GONE);
             doToggleFullscreen();
             show(sDefaultTimeout);
-            mitemclick.onItemClicked(1);
+            //mitemclick.onItemClicked(1);
         }
     };
 

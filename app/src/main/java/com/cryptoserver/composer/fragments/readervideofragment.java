@@ -216,10 +216,10 @@ public class readervideofragment extends basefragment implements SurfaceHolder.C
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         /*touched = true;*/
-                        if(controller.controllersview.getVisibility()==View.GONE){
+                        /*if(controller.controllersview.getVisibility()==View.GONE){
                             controller.controllersview.setVisibility(View.VISIBLE);
                             mmitemclick.onItemClicked(2);
-                        }
+                        }*/
 
                         Log.e("user touch","on touch" );
 
