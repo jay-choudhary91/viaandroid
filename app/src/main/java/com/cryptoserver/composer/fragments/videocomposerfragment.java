@@ -919,6 +919,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 stopvideotimer();
 
+                exportvideo(false);
+
                 mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
                 layout_bottom.setVisibility(View.GONE);
 
@@ -1034,6 +1036,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void onResume() {
         super.onResume();
 
+        stopvideotimer();
+        resetvideotimer();
         if (doafterallpermissionsgranted != null) {
             doafterallpermissionsgranted.run();
             doafterallpermissionsgranted = null;
@@ -1125,6 +1129,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         {
             closeCamera();
             stopBackgroundThread();
+            stopvideotimer();
+            mIsRecordingVideo=false;
         }
         super.onPause();
     }
@@ -1199,21 +1205,28 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     };
 
-    public void exportvideo()
+    public void exportvideo(boolean savetohome)
     {
         String sourcePath = lastrecordedvideo.getAbsolutePath();
         File sourceFile = new File(sourcePath);
 
-        File destinationDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_MOVIES), BuildConfig.APPLICATION_ID);
+        File destinationDir=null;
+
+        if(savetohome)
+        {
+            destinationDir = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_MOVIES), BuildConfig.APPLICATION_ID);
+        }
+        else
+        {
+            destinationDir=new File(config.videodir);
+        }
 
         if (!destinationDir.exists())
             destinationDir.mkdirs();
 
         File mediaFile = new File(destinationDir.getPath() + File.separator +
                 sourceFile.getName());
-
-
         try
         {
             if (!mediaFile.getParentFile().exists())
@@ -1562,7 +1575,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     @Override
                     public void run() {
 
-                        exportvideo();
+                        exportvideo(true);
 
                         if(maindialogshare != null && maindialogshare.isShowing())
                             maindialogshare.dismiss();
