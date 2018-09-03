@@ -10,7 +10,7 @@
         android:id="@+id/view_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/whitetransparent"></View>
+        android:background="@color/transparent"></View>
 
     <ImageView
         android:id="@+id/img_item"

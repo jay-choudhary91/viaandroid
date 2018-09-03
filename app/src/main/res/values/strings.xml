@@ -38,7 +38,7 @@
     <string name="frames_per_second">Frames per second</string>
     <string name="metric_list">Metric List</string>
     <string name="delete_confirm">Are you sure you want to delete this video?</string>
-    
+
     <string name="share">Share</string>
     <string name="new_video">New Video</string>
     <string name="watch">Watch Video</string>
@@ -60,7 +60,6 @@
     <string name="record">Record</string>
     <string name="stop">Stop</string>
     <string name="description_info">Info</string>
-
 
 
 </resources>

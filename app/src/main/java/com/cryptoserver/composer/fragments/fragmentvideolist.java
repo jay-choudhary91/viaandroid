@@ -234,6 +234,7 @@ public class fragmentvideolist extends basefragment {
     public void getVideoList()
     {
         arrayvideolist.clear();
+        adapter.notifyDataSetChanged();
 
         new Thread(new Runnable() {
             @Override
