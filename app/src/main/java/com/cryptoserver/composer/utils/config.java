@@ -10,8 +10,10 @@ import java.io.File;
 public class config {
 
 
-    public static final String videodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
+    public static final String tempvideodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID+File.separator+"files";
+    public static final String videodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
+            BuildConfig.APPLICATION_ID+File.separator+"videos";
 
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";

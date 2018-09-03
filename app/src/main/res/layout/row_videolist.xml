@@ -107,6 +107,7 @@
                 android:background="@drawable/edittext_shap"
                 android:textColor="@color/black"
                 android:visibility="visible"
+                android:imeOptions="actionDone"
                 />
 
             <com.cryptoserver.composer.views.customfonttextview
