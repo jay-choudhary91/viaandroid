@@ -10,9 +10,11 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -177,6 +179,43 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
             }
         });
 
+        holder.edtvideoname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
+                  /*  Log.i(TAG,"Here you can write the code");*/
+                  if(arrayvideolist.size()>0){
+                      String renamevalue = holder.edtvideoname.getText().toString();
+                      String path = arrayvideolist.get(position).getPath();
+
+                      File sourceFile = new File(path);
+                      File filedirectory = sourceFile.getParentFile();
+                      String filename = sourceFile.getName();
+
+                      if(renamevalue.toString().trim().length() > 0)
+                      {
+                          if(!filename.equalsIgnoreCase(renamevalue)){
+                              File from = new File(filedirectory,filename);
+                              File to = new File(filedirectory,renamevalue + ".mp4");
+                              from.renameTo(to);
+
+                              adapter.onItemClicked(arrayvideolist.get(position),3);
+                          }
+                      }
+                      else
+                      {
+                          holder.edtvideoname.setText(filename);
+                      }
+
+                      return true;
+                  }
+
+                }
+                return false;
+            }
+        });
+
         holder.edtvideoname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -185,28 +224,30 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                     v.setFocusable(false);
                     InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(holder.edtvideoname.getWindowToken(), 0);
-
-                    String renamevalue = holder.edtvideoname.getText().toString();
-                    String path = arrayvideolist.get(position).getPath();
+                    if(arrayvideolist.size()>0){
+                        String renamevalue = holder.edtvideoname.getText().toString();
+                        String path = arrayvideolist.get(position).getPath();
 
                         File sourceFile = new File(path);
                         File filedirectory = sourceFile.getParentFile();
                         String filename = sourceFile.getName();
 
-                    if(renamevalue.toString().trim().length() > 0)
-                    {
-                        if(!filename.equalsIgnoreCase(renamevalue)){
-                            File from = new File(filedirectory,filename);
-                            File to = new File(filedirectory,renamevalue + ".mp4");
-                            from.renameTo(to);
+                        if(renamevalue.toString().trim().length() > 0)
+                        {
+                            if(!filename.equalsIgnoreCase(renamevalue)){
+                                File from = new File(filedirectory,filename);
+                                File to = new File(filedirectory,renamevalue + ".mp4");
+                                from.renameTo(to);
 
-                            adapter.onItemClicked(arrayvideolist.get(position),3);
+                                adapter.onItemClicked(arrayvideolist.get(position),3);
+                            }
+                        }
+                        else
+                        {
+                            holder.edtvideoname.setText(filename);
                         }
                     }
-                    else
-                    {
-                        holder.edtvideoname.setText(filename);
-                    }
+
 
 
                     Log.e("Focaus change ", "Focus change");
