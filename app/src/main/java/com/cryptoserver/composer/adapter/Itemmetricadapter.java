@@ -1,6 +1,7 @@
 package com.cryptoserver.composer.adapter;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +72,7 @@ public class Itemmetricadapter extends RecyclerView.Adapter<Itemmetricadapter.Co
                     metricModel.setSelected(false);
                     metricModel.setTag("unchecked");
                     holder.imgSelected.setImageResource(metricModel.isSelected() ? R.drawable.selectedicon : R.drawable.unselectedicon);
+
                     holder.tv_itemValue.setVisibility(View.GONE);
                 }
                 else if(metricModel.getMetricTrackValue().trim().isEmpty())

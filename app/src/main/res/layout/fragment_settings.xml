@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
@@ -25,9 +26,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/headinghashlist"
                 android:padding="5dp"
-                android:background="@color/lightgray"
+                android:background="@color/lightgrayheader"
                 android:text="@string/hash_list"
-                android:gravity="center_horizontal"/>
+                android:gravity="left"
+                app:fontType="OpenSans_Regular"/>
         </RelativeLayout>
 
 
@@ -46,9 +48,12 @@
                 android:id="@+id/heading"
                 android:padding="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/lightgray"
+                android:background="@color/lightgrayheader"
                 android:text="@string/frames_per_second"
-                android:gravity="center_horizontal"/>
+                android:gravity="left"
+                app:fontType="OpenSans_Regular"
+
+                />
         </RelativeLayout>
 
         <include
@@ -68,10 +73,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/headingmatriclist"
                 android:padding="5dp"
-                android:background="@color/lightgray"
+                android:background="@color/lightgrayheader"
                 android:text="@string/metric_list"
                 android:layout_marginTop="10dp"
-                android:gravity="center_horizontal"/>
+                android:gravity="left"
+                app:fontType="OpenSans_Regular"/>
         </RelativeLayout>
 
 

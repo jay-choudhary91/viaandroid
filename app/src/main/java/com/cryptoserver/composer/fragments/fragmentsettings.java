@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -214,6 +215,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
     public void showselectedunselected(ImageView img1, ImageView img2, ImageView img3, ImageView img4,String keyname)
     {
         img1.setImageResource(R.drawable.selectedicon);
+
         img2.setImageResource(R.drawable.unselectedicon);
         img3.setImageResource(R.drawable.unselectedicon);
         img4.setImageResource(R.drawable.unselectedicon);
