@@ -67,6 +67,7 @@ import static android.app.Activity.RESULT_OK;
  */
 
 public class videoplayerreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl, View.OnTouchListener {
+public class videoplayerreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, videocontrollerview.MediaPlayerControl {
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
@@ -370,6 +371,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
+                player.setOnCompletionListener(this);
 
                 if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
                 {
@@ -560,7 +562,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     public void seekTo(int i) {
         if(player != null)
         {
-            Log.e("seek to  ",""+i);
+            Log.e("seek to ",""+i);
             player.seekTo(i);
         }
 
@@ -858,6 +860,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
+                player.setOnCompletionListener(this);
+
             }
 
 
@@ -943,5 +947,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         });
     }
 
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        controller.setplaypauuse();
+    }
 
 }

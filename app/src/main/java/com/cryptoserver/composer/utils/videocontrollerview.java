@@ -1,6 +1,8 @@
 package com.cryptoserver.composer.utils;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
@@ -510,6 +512,8 @@ public class videocontrollerview extends FrameLayout {
                 return;
             }
 
+            Log.e("fromuser" , ""+ fromuser);
+
             long duration = mPlayer.getDuration();
             long newposition = (duration * progress) / 1000L;
             Log.e("Duration Progress ",duration+" "+newposition);
@@ -520,8 +524,8 @@ public class videocontrollerview extends FrameLayout {
                 return;
             }
 
+            mPlayer.seekTo((int) newposition);
 
-            mPlayer.seekTo( (int) newposition);
             if (mCurrentTime != null)
                 mCurrentTime.setText(stringForTime( (int) newposition));
         }
@@ -538,6 +542,19 @@ public class videocontrollerview extends FrameLayout {
             mHandler.sendEmptyMessage(SHOW_PROGRESS);
         }
     };
+
+    public void setplaypauuse(){
+        mDragging = false;
+        setProgress();
+        updatePausePlay();
+        show(sDefaultTimeout);
+
+        // Ensure that progress is properly updated in the future,
+        // the call to show() does not guarantee this because it is a
+        // no-op if we are already showing.
+        mHandler.sendEmptyMessage(SHOW_PROGRESS);
+    }
+
 
     @Override
     public void setEnabled(boolean enabled) {
