@@ -64,7 +64,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by devesh on 21/8/18.
  */
 
-public class videoplayercomposerfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl, View.OnTouchListener {
+public class videoplayercomposerfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, videocontrollerview.MediaPlayerControl, View.OnTouchListener {
 
 
     @BindView(R.id.layout_drawer)
@@ -357,6 +357,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 player.setDataSource(VIDEO_URL);
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
+                player.setOnCompletionListener(this);
             }
 
         } catch (IllegalArgumentException e) {
@@ -613,6 +614,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
+                player.setOnCompletionListener(this);
             }
 
 
@@ -740,6 +742,11 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             };
             thread.start();
         }
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        controller.setplaypauuse();
     }
 
 }
