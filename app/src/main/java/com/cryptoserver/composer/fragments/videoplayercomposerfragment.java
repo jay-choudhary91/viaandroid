@@ -15,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -63,7 +64,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by devesh on 21/8/18.
  */
 
-public class videoplayercomposerfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
+public class videoplayercomposerfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl, View.OnTouchListener {
 
 
     @BindView(R.id.layout_drawer)
@@ -113,62 +114,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
         }
 
-
-        handleimageview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
-                linearLayout.startAnimation(rightswipe);
-                handleimageview.setVisibility(View.GONE);
-                linearLayout.setVisibility(View.VISIBLE);
-                rightswipe.start();
-                righthandle.setVisibility(View.VISIBLE);
-                rightswipe.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        righthandle.setImageResource(R.drawable.righthandle);
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        righthandle.setImageResource(R.drawable.lefthandle);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
-        });
-
-        righthandle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
-                linearLayout.startAnimation(leftswipe);
-                linearLayout.setVisibility(View.INVISIBLE);
-                righthandle.setVisibility(View.VISIBLE);
-                handleimageview.setVisibility(View.GONE);
-                leftswipe.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        handleimageview.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
-        });
-
         madapter = new videoframeadapter(getActivity(), mvideoframes, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
@@ -209,7 +154,132 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
         setupVideoPlayer();
         gethash();
+
+        handleimageview.setOnTouchListener(this);
+        righthandle.setOnTouchListener(this);
+        videoSurface.setOnTouchListener(this);
+
         return rootview;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (view.getId())
+        {
+            case  R.id.handle:
+                flingswipe.onTouchEvent(motionEvent);
+                break;
+
+            case  R.id.righthandle:
+                flingswipe.onTouchEvent(motionEvent);
+                break;
+            case  R.id.videoSurface:
+            {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        if(handleimageview.getVisibility() == View.GONE)
+                            hideshowcontroller();
+                        break;
+                }
+            }
+            break;
+        }
+
+
+        return true;
+    }
+
+    GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
+    {
+        private static final int flingactionmindstvac = 60;
+        private static final int flingactionmindspdvac = 100;
+
+        @Override
+        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
+                               float flingActionYcoSpdPsgVal)
+        {
+            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Right to Left fling
+                swiperighttoleft();
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Left to Right fling
+                swipelefttoright();
+                return false;
+            }
+
+            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Bottom to Top fling
+
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Top to Bottom fling
+
+                return false;
+            }
+            return false;
+        }
+    });
+
+    public void swipelefttoright()
+    {
+        Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+        linearLayout.startAnimation(rightswipe);
+        handleimageview.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.VISIBLE);
+        rightswipe.start();
+        righthandle.setVisibility(View.VISIBLE);
+        rightswipe.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                righthandle.setImageResource(R.drawable.righthandle);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                righthandle.setImageResource(R.drawable.lefthandle);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void swiperighttoleft()
+    {
+        Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+        linearLayout.startAnimation(leftswipe);
+        linearLayout.setVisibility(View.INVISIBLE);
+        righthandle.setVisibility(View.VISIBLE);
+        handleimageview.setVisibility(View.GONE);
+        leftswipe.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                handleimageview.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     public void hideshowcontroller()

@@ -41,6 +41,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -331,7 +332,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mrecordimagebutton.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             rotatecamera.setOnClickListener(this);
-            mTextureView.setOnTouchListener(this);
+
 
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
@@ -429,10 +430,164 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             {
                 keytype=config.prefs_sha_salt;
             }
+
+            mTextureView.setOnTouchListener(this);
+            handleimageview.setOnTouchListener(this);
+            righthandle.setOnTouchListener(this);
         }
         return rootview;
     }
 
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        switch (view.getId())
+        {
+            case  R.id.handle:
+                flingswipe.onTouchEvent(motionEvent);
+                break;
+
+            case  R.id.righthandle:
+                flingswipe.onTouchEvent(motionEvent);
+                break;
+
+            case  R.id.texture:
+                try {
+                    Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+                    if (rect == null) return false;
+                    float currentFingerSpacing;
+
+                    if (motionEvent.getPointerCount() == 2) { //Multi touch.
+                        currentFingerSpacing = getFingerSpacing(motionEvent);
+                        float delta = 0.05f;
+                        if (fingerSpacing != 0) {
+                            if (currentFingerSpacing > fingerSpacing) {
+                                if ((maximumZoomLevel - zoomLevel) <= delta) {
+                                    delta = maximumZoomLevel - zoomLevel;
+                                }
+                                zoomLevel = zoomLevel + delta;
+                            } else if (currentFingerSpacing < fingerSpacing){
+                                if ((zoomLevel - delta) < 1f) {
+                                    delta = zoomLevel - 1f;
+                                }
+                                zoomLevel = zoomLevel - delta;
+                            }
+                            float ratio = (float) 1 / zoomLevel;
+                            int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
+                            int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
+                            zoom = new Rect(croppedWidth/2, croppedHeight/2,
+                                    rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
+                            mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+                        }
+                        fingerSpacing = currentFingerSpacing;
+                    } else { //Single touch point, needs to return true in order to detect one more touch point
+                        return true;
+                    }
+                    mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                    return true;
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+        }
+        return true;
+    }
+
+    GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
+    {
+        private static final int flingactionmindstvac = 60;
+        private static final int flingactionmindspdvac = 100;
+
+        @Override
+        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
+                               float flingActionYcoSpdPsgVal)
+        {
+            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Right to Left fling
+                swiperighttoleft();
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Left to Right fling
+                swipelefttoright();
+                return false;
+            }
+
+            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Bottom to Top fling
+
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Top to Bottom fling
+
+                return false;
+            }
+            return false;
+        }
+    });
+
+    public void swipelefttoright()
+    {
+        Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+        linearLayout.startAnimation(rightswipe);
+        handleimageview.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.VISIBLE);
+        rightswipe.start();
+        righthandle.setVisibility(View.VISIBLE);
+        rightswipe.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                righthandle.setImageResource(R.drawable.righthandle);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                righthandle.setImageResource(R.drawable.lefthandle);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void swiperighttoleft()
+    {
+        Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+        linearLayout.startAnimation(leftswipe);
+        linearLayout.setVisibility(View.INVISIBLE);
+        righthandle.setVisibility(View.VISIBLE);
+        handleimageview.setVisibility(View.GONE);
+        leftswipe.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                handleimageview.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
 
     /**
      * In this sample, we choose a video size with 3x4 aspect ratio. Also, we don't use sizes larger
@@ -836,48 +991,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        try {
-            Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
-            if (rect == null) return false;
-            float currentFingerSpacing;
 
-            if (motionEvent.getPointerCount() == 2) { //Multi touch.
-                currentFingerSpacing = getFingerSpacing(motionEvent);
-                float delta = 0.05f;
-                if (fingerSpacing != 0) {
-                    if (currentFingerSpacing > fingerSpacing) {
-                        if ((maximumZoomLevel - zoomLevel) <= delta) {
-                            delta = maximumZoomLevel - zoomLevel;
-                        }
-                        zoomLevel = zoomLevel + delta;
-                    } else if (currentFingerSpacing < fingerSpacing){
-                        if ((zoomLevel - delta) < 1f) {
-                            delta = zoomLevel - 1f;
-                        }
-                        zoomLevel = zoomLevel - delta;
-                    }
-                    float ratio = (float) 1 / zoomLevel;
-                    int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
-                    int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
-                    zoom = new Rect(croppedWidth/2, croppedHeight/2,
-                            rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
-                    mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
-                }
-                fingerSpacing = currentFingerSpacing;
-            } else { //Single touch point, needs to return true in order to detect one more touch point
-                return true;
-            }
-            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-            return true;
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        } catch (NullPointerException ex) {
-            ex.printStackTrace();
-        }
-        return true;
-    }
 
     private float getFingerSpacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
