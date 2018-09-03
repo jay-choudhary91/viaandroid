@@ -9,6 +9,7 @@
     <color name="recorder_btn_color">#19c6aa</color>
     <color name="lightblue">#79B5F4</color>
     <color name="lightgray">#aab8bd</color>
+    <color name="lightgrayheader">#D3D3D3</color>
     <color name="dark_x">#918e8e</color>
     <color name="txt_color_icons">#005274</color>
     <color name="red">#FF0000</color>
@@ -25,6 +26,8 @@
     <color name="uvv_gray">#ffbbbbbb</color>
     <color name="whitetransparent">#A6ffffff</color>
     <color name="transparent">#00000000</color>
+    <color name="selectedimagehash">#005A78</color>
+
 
     <!-- VIDEO TRIMMER -->
     <color name="background_video_color">#2f3031</color>

@@ -630,7 +630,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
         // Pick the smallest of those, assuming we found any
         if (bigEnough.size() > 0) {
-            return Collections.min(bigEnough, new Camera2VideoFragment.CompareSizesByArea());
+            return Collections.min(bigEnough, new CompareSizesByArea());
         } else {
             Log.e(TAG, "Couldn't find any suitable preview size");
             return choices[0];
