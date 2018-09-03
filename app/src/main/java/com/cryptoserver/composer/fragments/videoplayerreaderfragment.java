@@ -15,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -65,7 +66,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by devesh on 21/8/18.
  */
 
-public class videoplayerreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener, videocontrollerview.MediaPlayerControl {
+public class videoplayerreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener,videocontrollerview.MediaPlayerControl {
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
@@ -147,60 +148,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
 
 
-        handleimageview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
-                linearLayout.startAnimation(rightswipe);
-                handleimageview.setVisibility(View.GONE);
-                linearLayout.setVisibility(View.VISIBLE);
-                rightswipe.start();
-                righthandle.setVisibility(View.VISIBLE);
-                rightswipe.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        righthandle.setImageResource(R.drawable.righthandle);
-                    }
 
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        righthandle.setImageResource(R.drawable.lefthandle);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
-        });
-
-        righthandle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
-                linearLayout.startAnimation(leftswipe);
-                linearLayout.setVisibility(View.INVISIBLE);
-                righthandle.setVisibility(View.VISIBLE);
-                handleimageview.setVisibility(View.GONE);
-                leftswipe.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        handleimageview.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-            }
-        });
         madapter = new videoframeadapter(getActivity(), mvideoframes, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
@@ -217,29 +165,133 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         recyviewitem.setItemAnimator(new DefaultItemAnimator());
         recyviewitem.setAdapter(madapter);
 
-        videoSurface.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        /*touched = true;*/
-                        if(handleimageview.getVisibility() == View.GONE)
-                            hideshowcontroller();
+        handleimageview.setOnTouchListener(this);
+        righthandle.setOnTouchListener(this);
+        videoSurface.setOnTouchListener(this);
 
-                      //  Log.e("user touch","on touch" );
-
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        /*touched = false;*/
-                  //      Log.e("on touch end ","on touch end" );
-                        break;
-                }
-                return false;
-            }
-        });
         return rootview;
     }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (view.getId())
+        {
+            case  R.id.handle:
+                flingswipe.onTouchEvent(motionEvent);
+                break;
+
+            case  R.id.righthandle:
+                flingswipe.onTouchEvent(motionEvent);
+                break;
+            case  R.id.videoSurface:
+                {
+                    switch (motionEvent.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            if(handleimageview.getVisibility() == View.GONE)
+                                hideshowcontroller();
+                            break;
+                    }
+                }
+                break;
+        }
+
+
+        return true;
+    }
+
+    GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
+    {
+        private static final int flingactionmindstvac = 60;
+        private static final int flingactionmindspdvac = 100;
+
+        @Override
+        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
+                               float flingActionYcoSpdPsgVal)
+        {
+            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Right to Left fling
+                swiperighttoleft();
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Left to Right fling
+                swipelefttoright();
+                return false;
+            }
+
+            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Bottom to Top fling
+
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Top to Bottom fling
+
+                return false;
+            }
+            return false;
+        }
+    });
+
+    public void swipelefttoright()
+    {
+        Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+        linearLayout.startAnimation(rightswipe);
+        handleimageview.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.VISIBLE);
+        rightswipe.start();
+        righthandle.setVisibility(View.VISIBLE);
+        rightswipe.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                righthandle.setImageResource(R.drawable.righthandle);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                righthandle.setImageResource(R.drawable.lefthandle);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void swiperighttoleft()
+    {
+        Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+        linearLayout.startAnimation(leftswipe);
+        linearLayout.setVisibility(View.INVISIBLE);
+        righthandle.setVisibility(View.VISIBLE);
+        handleimageview.setVisibility(View.GONE);
+        leftswipe.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                handleimageview.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
 
     public void hideshowcontroller()
     {
@@ -318,6 +370,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
+                player.setOnCompletionListener(this);
 
                 if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
                 {
@@ -508,7 +561,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     public void seekTo(int i) {
         if(player != null)
         {
-            Log.e("seek to  ",""+i);
+            Log.e("seek to ",""+i);
             player.seekTo(i);
         }
 
@@ -806,6 +859,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
+                player.setOnCompletionListener(this);
+
             }
 
 
@@ -889,6 +944,12 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     madapter.notifyItemChanged(mvideoframes.size()-1);
             }
         });
+    }
+
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        controller.setplaypauuse();
     }
 
 }
