@@ -167,6 +167,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         recyviewitem.setItemAnimator(new DefaultItemAnimator());
         recyviewitem.setAdapter(madapter);
 
+        righthandle.setVisibility(View.GONE);
+
         handleimageview.setOnTouchListener(this);
         righthandle.setOnTouchListener(this);
         videoSurface.setOnTouchListener(this);
@@ -703,7 +705,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             return;
         }
 
-        if(player != null)
+        if(player != null && player.isPlaying())
             player.pause();
 
         Intent intent;
@@ -734,8 +736,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
                 }catch (Exception e)
                 {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_uri_parse_error));
                     e.printStackTrace();
+                    common.showalert(getActivity(),getResources().getString(R.string.file_uri_parse_error));
+                    return;
                 }
 
                 if(VIDEO_URL == null || (VIDEO_URL.trim().isEmpty()))
@@ -743,6 +746,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
+
+                if(! (new File(VIDEO_URL).exists()))
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                    return;
+                }
+
 
 
                 frameduration=checkframeduration();
@@ -760,6 +770,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 }*/
                 playerposition=0;
                 setupVideoPlayer(selectedvideouri);
+                righthandle.setVisibility(View.VISIBLE);
 
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                     mvideoframes.clear();
