@@ -146,6 +146,9 @@ public class hglvideotrimmer extends FrameLayout {
         mtexttime = ((TextView) findViewById(R.id.textTime));
         mtimelineview = ((timelineview) findViewById(R.id.timeLineView));
 
+
+        mholdertopview.setEnabled(false);
+
         setuplisteners();
         setupmargins();
 
@@ -391,6 +394,8 @@ public class hglvideotrimmer extends FrameLayout {
                 setProgressBarPosition(mendposition);
                 duration = mendposition;
             }
+
+
             setTimeVideo(duration);
         }
     }
