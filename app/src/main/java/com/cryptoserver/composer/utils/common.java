@@ -57,14 +57,19 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Currency;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.USB_SERVICE;
@@ -1304,7 +1309,7 @@ public class common
         return false;
     }
 
-    public static String converttimeformate(long millis){
+    public static String converttimeformates(long millis){
 
       String hms =   String.format("%02d:%02d:%02d",
                 TimeUnit.MILLISECONDS.toHours(millis),
@@ -1312,12 +1317,16 @@ public class common
                         TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
                 TimeUnit.MILLISECONDS.toSeconds(millis) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-
-
-
-
         return hms;
     }
 
 
+    public static String converttimeformate(long milliSeconds)
+        {
+            // Create a DateFormatter object for displaying date in specified format.
+            Date date = new Date(milliSeconds);
+            DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return formatter.format(date);
+        }
 }
