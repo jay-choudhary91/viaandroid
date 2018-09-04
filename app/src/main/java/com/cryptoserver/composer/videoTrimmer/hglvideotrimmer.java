@@ -94,7 +94,7 @@ public class hglvideotrimmer extends FrameLayout {
     private TextView mtexttime;
     private timelineview mtimelineview;
 
-    private progressbarview mvideoprogressindicator;
+    private progressbarview mvideoprogressindicator,mvideoprogressindicatorbottom;
     private Uri msrc;
     private String mfinalpath;
 
@@ -135,6 +135,7 @@ public class hglvideotrimmer extends FrameLayout {
 
         mholdertopview = ((SeekBar) findViewById(R.id.handlerTop));
         mvideoprogressindicator = ((progressbarview) findViewById(R.id.timeVideoView));
+        mvideoprogressindicatorbottom = ((progressbarview) findViewById(R.id.timeVideoView1));
         mrangeseekbarview = ((rangeseekbarview) findViewById(R.id.timeLineBar));
         mlinearvideo = ((RelativeLayout) findViewById(R.id.layout_surface_view));
         mvideoview = ((VideoView) findViewById(R.id.video_loader));
@@ -144,6 +145,9 @@ public class hglvideotrimmer extends FrameLayout {
         mtexttimeframe = ((TextView) findViewById(R.id.textTimeSelection));
         mtexttime = ((TextView) findViewById(R.id.textTime));
         mtimelineview = ((timelineview) findViewById(R.id.timeLineView));
+
+
+        mholdertopview.setEnabled(false);
 
         setuplisteners();
         setupmargins();
@@ -160,6 +164,7 @@ public class hglvideotrimmer extends FrameLayout {
             }
         });
         mlisteners.add(mvideoprogressindicator);
+        mlisteners.add(mvideoprogressindicatorbottom);
 
         findViewById(R.id.btCancel)
                 .setOnClickListener(
@@ -219,11 +224,9 @@ public class hglvideotrimmer extends FrameLayout {
             }
         });
 
-
-
-
-
         mrangeseekbarview.addonrangeseekbarlistener(mvideoprogressindicator);
+
+        mrangeseekbarview.addonrangeseekbarlistener(mvideoprogressindicatorbottom);
 
         mrangeseekbarview.addonrangeseekbarlistener(new onrangeseekbarlistener() {
         @Override
@@ -297,6 +300,10 @@ public class hglvideotrimmer extends FrameLayout {
         lp = (RelativeLayout.LayoutParams) mvideoprogressindicator.getLayoutParams();
         lp.setMargins(marge, 0, marge, 0);
         mvideoprogressindicator.setLayoutParams(lp);
+
+        lp = (RelativeLayout.LayoutParams) mvideoprogressindicatorbottom.getLayoutParams();
+        lp.setMargins(marge, 0, marge, 0);
+        mvideoprogressindicatorbottom.setLayoutParams(lp);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD_MR1)
@@ -387,6 +394,8 @@ public class hglvideotrimmer extends FrameLayout {
                 setProgressBarPosition(mendposition);
                 duration = mendposition;
             }
+
+
             setTimeVideo(duration);
         }
     }

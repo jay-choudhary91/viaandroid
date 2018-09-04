@@ -37,7 +37,41 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/play"/>
+
+
+
+        <com.cryptoserver.composer.videoTrimmer.view.progressbarview
+            android:id="@+id/timeVideoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_marginTop="1dp"
+            android:layout_below="@+id/icon_video_play"
+            />
+
+        <com.cryptoserver.composer.videoTrimmer.view.timelineview
+            android:id="@+id/timeLineView"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:visibility="visible"
+            android:layout_marginTop="4dp"
+            android:layout_below="@+id/icon_video_play"/>
+
+        <com.cryptoserver.composer.videoTrimmer.view.progressbarview
+            android:id="@+id/timeVideoView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_below="@+id/timeLineView"/>
+
+        <com.cryptoserver.composer.videoTrimmer.view.rangeseekbarview
+            android:id="@+id/timeLineBar"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:visibility="visible"
+            android:layout_below="@+id/icon_video_play"/>
 
         <SeekBar
             android:id="@+id/handlerTop"
@@ -47,31 +81,13 @@
             android:layout_below="@+id/icon_video_play"
             android:max="1000"
             android:layout_marginTop="5dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:progressDrawable="@android:color/transparent"
             android:secondaryProgress="0"
-           />
+            android:thumb="@drawable/line"
+            />
 
-        <com.cryptoserver.composer.videoTrimmer.view.progressbarview
-            android:id="@+id/timeVideoView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_below="@+id/handlerTop"/>
 
-        <com.cryptoserver.composer.videoTrimmer.view.timelineview
-            android:id="@+id/timeLineView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:layout_below="@+id/timeVideoView"/>
-
-        <com.cryptoserver.composer.videoTrimmer.view.rangeseekbarview
-            android:id="@+id/timeLineBar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:visibility="visible"
-            android:layout_alignTop="@+id/timeLineView"/>
 
         <View
             android:id="@+id/lineTop"
