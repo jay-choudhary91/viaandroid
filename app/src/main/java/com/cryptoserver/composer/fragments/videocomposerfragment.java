@@ -54,6 +54,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,12 +94,13 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    private static final String TAG = "Camera2VideoFragment";
+    private static final String TAG = "videocomposerfragment";
     int counter=0;
     int counter2=0;
 
@@ -973,7 +975,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         if (mIsRecordingVideo) {
             mrecordimagebutton.setEnabled(false);
-
+            gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+            layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             stopRecordingVideo();
         } else {
 
@@ -988,7 +991,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             mvideoframes.clear();
             madapter.notifyDataSetChanged();
-
+            gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
+            layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
             startRecordingVideo();
         }
     }

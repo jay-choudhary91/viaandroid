@@ -8,8 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,6 +55,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     ImageView img_help;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
+    @BindView(R.id.fragment_container)
+    FrameLayout fragment_container;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,12 +131,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     }
 
     @Override
-    public void updateActionBar(int showHide, String color) {
-
+    public void updateactionbar(int showHide, int color) {
+        actionbar.setBackgroundColor(color);
     }
 
     @Override
-    public void updateActionBar(int showHide) {
+    public void updateactionbar(int showHide) {
         if(showHide == 0)
         {
             actionbar.setVisibility(View.GONE);
@@ -142,6 +146,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             actionbar.setVisibility(View.VISIBLE);
         }
     }
+
 
     @Override
     public void onfragmentbackstackchanged() {
@@ -153,6 +158,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_help.setVisibility(View.GONE);
         actionbar.setVisibility(View.VISIBLE);
 
+        {
+            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.BELOW, R.id.actionbar);
+            fragment_container.setLayoutParams(params);
+        }
+
+
         if (fragment instanceof fragmentvideolist) {
             imgaddicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setVisibility(View.VISIBLE);
@@ -160,6 +173,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgsettingsicon.setEnabled(true);
             imgshareicon.setVisibility(View.GONE);
             updateheader("");
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
         }
         else if (fragment instanceof videocomposerfragment) {
             imgaddicon.setVisibility(View.GONE);
@@ -168,6 +182,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             img_menu.setVisibility(View.VISIBLE);
             img_help.setVisibility(View.VISIBLE);
             imgshareicon.setVisibility(View.GONE);
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+
+            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            fragment_container.setLayoutParams(params);
 
         }
         else if(fragment instanceof fragmentsettings){
@@ -178,6 +197,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imguploadicon.setVisibility(View.GONE);
             imgshareicon.setVisibility(View.GONE);
             updateheader("");
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
 
         }
         else if(fragment instanceof videoplayfragment){
@@ -189,6 +209,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             img_menu.setVisibility(View.VISIBLE);
             imgshareicon.setVisibility(View.VISIBLE);
             updateheader("");
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
 
         }
         else if(fragment instanceof videoplayerreaderfragment){
@@ -201,6 +222,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgshareicon.setVisibility(View.VISIBLE);
             updateheader("");
             imgsettingsicon.setEnabled(true);
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
 
         }else if(fragment instanceof videoplayercomposerfragment){
             img_back.setVisibility(View.GONE);
@@ -210,6 +232,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imguploadicon.setVisibility(View.GONE);
             imgshareicon.setVisibility(View.VISIBLE);
             updateheader("");
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
         }
     }
 

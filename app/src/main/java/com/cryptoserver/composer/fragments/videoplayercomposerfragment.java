@@ -1,16 +1,9 @@
 package com.cryptoserver.composer.fragments;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,16 +21,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
-import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.videomodel;
-import com.cryptoserver.composer.utils.CenterLayoutManager;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
@@ -57,8 +46,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by devesh on 21/8/18.
@@ -287,7 +274,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         if(handleimageview.getVisibility() ==  (View.VISIBLE))
         {
             handleimageview.setVisibility(View.GONE);
-            gethelper().updateActionBar(0);
+            gethelper().updateactionbar(0);
             try {
                 if(controller != null)
                 {
@@ -302,7 +289,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         else
         {
             handleimageview.setVisibility(View.VISIBLE);
-            gethelper().updateActionBar(1);
+            gethelper().updateactionbar(1);
             try {
                 if(controller != null)
                 {
@@ -317,7 +304,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     }
 
     public void onRestart() {
-        gethelper().updateActionBar(1);
+        gethelper().updateactionbar(1);
         handleimageview.setVisibility(View.VISIBLE);
     }
 

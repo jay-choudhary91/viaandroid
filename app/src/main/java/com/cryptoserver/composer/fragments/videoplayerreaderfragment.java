@@ -45,12 +45,10 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
-import com.cryptoserver.composer.views.pagercustomduration;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
-import org.jcodec.common.tools.MainUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -299,7 +297,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         {
             layout_scrubberview.setVisibility(View.GONE);
             handleimageview.setVisibility(View.GONE);
-            gethelper().updateActionBar(0);
+            gethelper().updateactionbar(0);
             try {
                 if(controller != null)
                 {
@@ -315,7 +313,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         {
             layout_scrubberview.setVisibility(View.VISIBLE);
             handleimageview.setVisibility(View.VISIBLE);
-            gethelper().updateActionBar(1);
+            gethelper().updateactionbar(1);
             try {
                 if(controller != null)
                 {
@@ -330,7 +328,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     }
 
     public void onRestart() {
-        gethelper().updateActionBar(1);
+        gethelper().updateactionbar(1);
         handleimageview.setVisibility(View.VISIBLE);
     }
 
