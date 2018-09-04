@@ -24,7 +24,6 @@
 package com.cryptoserver.composer.videoTrimmer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -46,7 +45,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.cryptoserver.composer.R;
@@ -714,7 +712,6 @@ public class hglvideotrimmer extends FrameLayout {
                 Environment.DIRECTORY_MOVIES
         );
 
-
         final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         final String fileName = "MP4_" + timeStamp + ".mp4";
         String filePath = getDestinationPath() + fileName;
@@ -730,17 +727,10 @@ public class hglvideotrimmer extends FrameLayout {
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
 
-        Log.d(tag, "starttrim: src: " + yourRealPath);
-        Log.d(tag, "starttrim: dest: " + dest.getAbsolutePath());
+        String starttime = common.converttimeformate(startMs);
+        String endtime = common.converttimeformate((endMs - startMs));
 
-        Log.e("start time",""+startMs / 1000);
-        Log.e("end time",""+endMs / 1000);
-        Log.e("time",""+(endMs - startMs) / 1000);
-        Log.d(tag, "starttrim: startMs: " + startMs);
-        Log.d(tag, "starttrim: endMs: " + endMs);
-        filePath = dest.getAbsolutePath();
-
-        String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + startMs / 1000, "-t", "" + (endMs - startMs) / 1000, "-c","copy", filePath};
+        String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + starttime, "-t", "" + endtime, "-c","copy", filePath};
         execFFmpegBinary(complexCommand,dest);
     }
 
