@@ -1105,9 +1105,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
-        } else {
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
+
+        mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -1697,11 +1697,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     public void reopenCamera() {
-        if (mTextureView.isAvailable()) {
+        if (mTextureView.isAvailable())
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
-        } else {
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        }
+
     }
 
 }
