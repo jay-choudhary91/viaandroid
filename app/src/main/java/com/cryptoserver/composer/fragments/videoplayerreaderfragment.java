@@ -51,6 +51,7 @@ import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -142,6 +143,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     recyview_frames.setAdapter(adapter);
                 }
             });
+
+            SurfaceHolder videoHolder = videoSurface.getHolder();
+            videoHolder.addCallback(this);
 
         }
 
@@ -724,13 +728,19 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
             if (resultCode == RESULT_OK) {
                 selectedvideouri = data.getData();
-                // OI FILE Manager
-                VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
 
+                try {
+                    //VIDEO_URL=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
+                    VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
+                }catch (Exception e)
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_uri_parse_error));
+                    e.printStackTrace();
+                }
 
-                if(VIDEO_URL == null){
-                    common.showalert(getActivity(),getResources().getString(R.string.file_not_supported));
-
+                if(VIDEO_URL == null || (VIDEO_URL.trim().isEmpty()))
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
 
@@ -741,6 +751,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
 
+                /*if(player != null)
+                {
+                    player.pause();
+                    player.stop();
+                    player.release();
+                    player=null;
+                }*/
                 playerposition=0;
                 setupVideoPlayer(selectedvideouri);
 
@@ -750,7 +767,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     madapter.notifyDataSetChanged();
                     Thread thread = new Thread(){
                         public void run(){
-                            getFramesBitmap();
+                            try {
+                                getFramesBitmap();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
                             setVideoAdapter();
                         }
                     };
@@ -846,9 +869,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     public void setupVideoPlayer(Uri selectedimageuri)
     {
         try {
-            SurfaceHolder videoHolder = videoSurface.getHolder();
-            videoHolder.addCallback(this);
-
             player = new MediaPlayer();
             if(controller != null)
                 controller.removeAllViews();

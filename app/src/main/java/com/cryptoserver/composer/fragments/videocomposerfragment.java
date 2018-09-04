@@ -1256,11 +1256,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             try
             {
-                ContentValues values = new ContentValues(3);
-                values.put(MediaStore.Video.Media.TITLE, "Via composer");
-                values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
-                applicationviavideocomposer.getactivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                if(savetohome)
+                {
+                    ContentValues values = new ContentValues(3);
+                    values.put(MediaStore.Video.Media.TITLE, "Via composer");
+                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                    values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
+                    applicationviavideocomposer.getactivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                }
+
 
             }catch (Exception e)
             {
