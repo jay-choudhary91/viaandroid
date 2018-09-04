@@ -152,7 +152,7 @@ public class timelineview extends View {
                 Bitmap bitmap = mbitmaplist.get(i);
 
                 if (bitmap != null) {
-                    canvas.drawBitmap(bitmap, x, 0, null);
+                    canvas.drawBitmap(bitmap, x, 5, null);
                     x = x + bitmap.getWidth();
                 }
             }

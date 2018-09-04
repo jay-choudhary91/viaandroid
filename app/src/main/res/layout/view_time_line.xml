@@ -37,6 +37,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/play"/>
 
         <SeekBar
@@ -56,22 +57,33 @@
             android:id="@+id/timeVideoView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_below="@+id/handlerTop"/>
+            android:visibility="visible"
+            android:layout_marginTop="1dp"
+            android:layout_below="@+id/icon_video_play"
+            />
 
         <com.cryptoserver.composer.videoTrimmer.view.timelineview
             android:id="@+id/timeLineView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:visibility="visible"
-            android:layout_below="@+id/timeVideoView"/>
+            android:layout_marginTop="4dp"
+            android:layout_below="@+id/icon_video_play"/>
 
         <com.cryptoserver.composer.videoTrimmer.view.rangeseekbarview
             android:id="@+id/timeLineBar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="45dp"
             android:visibility="visible"
-            android:layout_alignTop="@+id/timeLineView"/>
+            android:layout_below="@+id/icon_video_play"/>
+
+
+        <com.cryptoserver.composer.videoTrimmer.view.progressbarview
+            android:id="@+id/timeVideoView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_below="@+id/timeLineView"/>
 
         <View
             android:id="@+id/lineTop"
