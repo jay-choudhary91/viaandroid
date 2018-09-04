@@ -325,9 +325,13 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     public void onDestroy() {
         super.onDestroy();
 
-        if(player != null && player.isPlaying())
+        if(player != null)
         {
             player.pause();
+            player.stop();
+            player.release();
+            player=null;
+
             //player.release();
         }
     }
