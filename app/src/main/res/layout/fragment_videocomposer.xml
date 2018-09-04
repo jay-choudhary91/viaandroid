@@ -20,7 +20,7 @@
             android:padding="5dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/whitetransparent"
+            android:background="@color/actionbar_solid_normal"
             android:visibility="gone"
             android:alpha="0.7"
             >
@@ -79,7 +79,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_above="@id/layout_bottom"/>
-
 
     </RelativeLayout>
 
