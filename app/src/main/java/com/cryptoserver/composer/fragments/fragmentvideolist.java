@@ -87,7 +87,10 @@ public class fragmentvideolist extends basefragment {
     @Override
     public void onResume() {
         super.onResume();
-        deletetempdirectory();
+        if (getdeniedpermissions().isEmpty()) {
+            // All permissions are granted
+            deletetempdirectory();
+        }
     }
 
     public void requestpremission()

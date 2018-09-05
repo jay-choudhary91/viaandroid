@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -32,6 +33,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -65,6 +67,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
 
     @BindView(R.id.recyview_itemmetric)
     RecyclerView recyviewItem;
+    LinearLayoutManager mLayoutManager;
     View rootview = null;
     public fragmentsettings() {
         // Required empty public constructor
@@ -288,6 +291,8 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
     private void prepareData() {
 
         metricItemArraylist.clear();
+        itemMetricAdapter.notifyDataSetChanged();;
+
         ArrayList<metricmodel> mlist = new ArrayList<>();
         mlist.addAll(getMetricList());
         if(mlist.size() > 0)
@@ -296,6 +301,25 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             {
                 metricItemArraylist.add(mlist.get(i));
             }
+
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    /*try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }*/
+                   // setvalueadapter();
+                    itemMetricAdapter.notifyDataSetChanged();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            setvalueadapter();
+                        }
+                    },2000);
+                }
+            });
             //metricItemArraylist.addAll(getMetricList());
         }
         else
@@ -375,6 +399,12 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             metricItemArraylist.add(new metricmodel("phonetime","",true));
             metricItemArraylist.add(new metricmodel("syncphonetime","",true));
 
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setvalueadapter();
+                }
+            });
         }
     }
 
@@ -471,7 +501,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             }
         });
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager = new LinearLayoutManager(getActivity());
         recyviewItem.setNestedScrollingEnabled(false);
         recyviewItem.setLayoutManager(mLayoutManager);
         recyviewItem.setItemAnimator(new DefaultItemAnimator());
@@ -479,7 +509,6 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
 
         recyviewItem.setAdapter(itemMetricAdapter);
     }
-
 
     @Override
     public void getAccurateLocation() {
@@ -809,6 +838,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
            }
 
        }
+       itemMetricAdapter.notifyDataSetChanged();
    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -875,17 +905,13 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
 
     private void doafterallpermissionsgranted(){
 
+        setAdapter();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 prepareData();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setAdapter();
-                        setvalueadapter();
-                    }
-                });
+
             }
         }).start();
 
