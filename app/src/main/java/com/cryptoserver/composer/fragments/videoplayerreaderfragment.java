@@ -73,7 +73,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
     RelativeLayout layout_scrubberview;
-
+    @BindView(R.id.frontview)
+    RelativeLayout frontview;
     RelativeLayout scurraberverticalbar;
 
     private String VIDEO_URL = null;
@@ -110,7 +111,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
+            frontview.setVisibility(View.VISIBLE);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
@@ -482,6 +483,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             e.printStackTrace();
         }
         controller.show();
+        frontview.setVisibility(View.GONE);
 
     }
     adapteritemclick mitemclick=new adapteritemclick() {
@@ -753,8 +755,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     return;
                 }
 
-
-
                 frameduration=checkframeduration();
                 keytype=checkkey();
 
@@ -893,7 +893,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
-
             }
 
 
