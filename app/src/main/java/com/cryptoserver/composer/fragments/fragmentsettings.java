@@ -312,12 +312,12 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
                     }*/
                    // setvalueadapter();
                     itemMetricAdapter.notifyDataSetChanged();
-                    new Handler().postDelayed(new Runnable() {
+                    /*new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             setvalueadapter();
                         }
-                    },2000);
+                    },2000);*/
                 }
             });
             //metricItemArraylist.addAll(getMetricList());

@@ -32,6 +32,7 @@ import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
 import com.cryptoserver.composer.services.callservice;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.xdata;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -93,6 +94,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_cancel.setOnClickListener(this);
         imgshareicon.setOnClickListener(this);
         img_menu.setOnClickListener(this);
+
+        actionbar.post(new Runnable() {
+            @Override
+            public void run() {
+                xdata.getinstance().saveSetting("actionbarheight",""+actionbar.getHeight());
+            }
+        });
 
         callservice mService = new callservice();
         Intent mIntent = new Intent(homeactivity.this, callservice.class);

@@ -334,6 +334,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             imgflashon.setOnClickListener(this);
             rotatecamera.setOnClickListener(this);
 
+            layout_bottom.post(new Runnable() {
+                @Override
+                public void run() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            String actionbarheight=xdata.getinstance().getSetting("actionbarheight");
+                            if(! actionbarheight.trim().isEmpty())
+                            {
+                                LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                        ViewGroup.LayoutParams.MATCH_PARENT);
+                                params.setMargins(0,Integer.parseInt(actionbarheight)+20,0,layout_bottom.getHeight());
+                                recyviewitem.setLayoutParams(params);
+                            }
+                        }
+                    },500);
+                }
+            });
+
 
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
@@ -854,7 +873,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mMediaRecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
         mMediaRecorder.setVideoEncodingBitRate(10000000);
-        mMediaRecorder.setVideoFrameRate(30);
+        mMediaRecorder.setVideoFrameRate(15);
         mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);

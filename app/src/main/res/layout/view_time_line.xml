@@ -121,7 +121,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_below="@+id/img_uparrow"
-                    android:background="@color/white"/>
+                    android:background="#4DFFFFFF"/>
 
             </RelativeLayout>
 

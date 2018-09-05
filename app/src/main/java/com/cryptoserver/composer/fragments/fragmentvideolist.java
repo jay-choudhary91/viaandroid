@@ -87,6 +87,7 @@ public class fragmentvideolist extends basefragment {
     @Override
     public void onResume() {
         super.onResume();
+        recyrviewvideolist.addOnItemTouchListener(onTouchListener);
         if (getdeniedpermissions().isEmpty()) {
             // All permissions are granted
             deletetempdirectory();
@@ -170,8 +171,6 @@ public class fragmentvideolist extends basefragment {
                     Log.e("selected Position = " ,""+ position);
                 }
             });
-
-            recyrviewvideolist.addOnItemTouchListener(onTouchListener);
 
             launchvideocomposer(true);
             if (getdeniedpermissions().isEmpty()) {
