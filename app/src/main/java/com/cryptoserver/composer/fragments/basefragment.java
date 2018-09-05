@@ -220,9 +220,9 @@ public abstract class basefragment extends Fragment {
 
         public void updateheader(String txt);
 
-        public void updateActionBar(int showHide, String color);
+        public void updateactionbar(int showHide, int color);
 
-        public void updateActionBar(int showHide);
+        public void updateactionbar(int showHide);
 
         public void showPermissionDialog();
 
