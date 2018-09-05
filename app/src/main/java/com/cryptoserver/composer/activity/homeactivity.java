@@ -72,8 +72,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
-            videocomposerfragment frag=new videocomposerfragment();
-            frag.setData(true);
+            fragmentvideolist frag=new fragmentvideolist();
             replaceFragment(frag, false, true);
             /*Intent in=new Intent(homeactivity.this,CameraActivity.class);
             startActivity(in);*/
@@ -249,11 +248,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 getcurrentfragment().onHeaderBtnClick(R.id.img_share_icon);
                 break;
             case R.id.img_add_icon:
-            {
-                videocomposerfragment fragment=new videocomposerfragment();
-                addFragment(fragment, false, true);
-            }
-            break;
+                getcurrentfragment().onHeaderBtnClick(R.id.img_add_icon);
+                break;
             case R.id.img_setting:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_setting);
                 break;

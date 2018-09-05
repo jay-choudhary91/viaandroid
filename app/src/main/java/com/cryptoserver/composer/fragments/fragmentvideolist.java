@@ -87,11 +87,22 @@ public class fragmentvideolist extends basefragment {
     @Override
     public void onResume() {
         super.onResume();
-        requestPremission();
-        recyrviewvideolist.addOnItemTouchListener(onTouchListener);
+        deletetempdirectory();
     }
 
-    public void requestPremission()
+    public void requestpremission()
+    {
+        if (getdeniedpermissions().isEmpty()) {
+            // All permissions are granted
+            getVideoList();
+        } else {
+            String[] array = new String[getdeniedpermissions().size()];
+            array = getdeniedpermissions().toArray(array);
+            ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+        }
+    }
+
+    public List<String> getdeniedpermissions()
     {
         String[] neededpermissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -103,14 +114,7 @@ public class fragmentvideolist extends basefragment {
                 deniedpermissions.add(permission);
             }
         }
-        if (deniedpermissions.isEmpty()) {
-            // All permissions are granted
-            getVideoList();
-        } else {
-            String[] array = new String[deniedpermissions.size()];
-            array = deniedpermissions.toArray(array);
-            ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
-        }
+        return deniedpermissions;
     }
 
     @Override
@@ -126,8 +130,6 @@ public class fragmentvideolist extends basefragment {
             }
             if (permissionsallgranted) {
                 getVideoList();
-            } else {
-                Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -141,93 +143,39 @@ public class fragmentvideolist extends basefragment {
             adapter = new adaptervideolist(getActivity(),arrayvideolist, new adapteritemclick() {
                 @Override
                 public void onItemClicked(Object object) {
-
                 }
-
                 @Override
                 public void onItemClicked(Object object, int type) {
-                    final video videoobj=(video)object;
-                    if(type == 1)
-                    {
-                        Uri uri = Uri.parse("file://"+videoobj.getPath());
-                        Intent share = new Intent(Intent.ACTION_SEND);
-                        share.putExtra(Intent.EXTRA_STREAM, uri);
-                        share.setType("video/*");
-                        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        getActivity().startActivity(Intent.createChooser(share, "Share video"));
-                    }
-                    else if(type == 2)
-                    {
-                        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-                                .setTitle("Alert!!")
-                                .setMessage(getActivity().getResources().getString(R.string.delete_confirm))
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        File fdelete = new File(videoobj.getPath());
-                                        if (fdelete.exists()) {
-                                            if (fdelete.delete()) {
-                                                System.out.println("file Deleted :" + videoobj.getPath());
-                                                arrayvideolist.remove(videoobj);
-                                                dialog.dismiss();
-                                            } else {
-                                                System.out.println("file not Deleted :" + videoobj.getPath());
-                                            }
-                                        }
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .show();
-                    }else if(type == 3){
-
-                        getVideoList();
-
-                    }else if(type == 4){
-
-                        videoplayercomposerfragment videoplayercomposerfragment = new videoplayercomposerfragment();
-                        videoplayercomposerfragment.setdata(videoobj.getPath());
-                        gethelper().replaceFragment(videoplayercomposerfragment, false, true);
-
-                    }
+                    video videoobj=(video)object;
+                    setAdapter(videoobj,type);
                 }
             });
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-            recyrviewvideolist.setLayoutManager(mLayoutManager);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+            layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyrviewvideolist.setLayoutManager(layoutManager);
             ((DefaultItemAnimator) recyrviewvideolist.getItemAnimator()).setSupportsChangeAnimations(false);
             recyrviewvideolist.getItemAnimator().setChangeDuration(0);
             recyrviewvideolist.setAdapter(adapter);
-        }
 
-        onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
-        onTouchListener
-                .setSwipeOptionViews(R.id.btn_edit)
-                .setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper, new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-                    @Override
-                    public void onSwipeOptionClicked(int viewID, int position) {
+            onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
+            onTouchListener.setSwipeOptionViews(R.id.btn_edit).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
+            new RecyclerTouchListener.OnSwipeOptionsClickListener() {
+                @Override
+                public void onSwipeOptionClicked(int viewID, int position) {
+                    arrayvideolist.get(position).setSelected(true);
+                    adapter.notifyDataSetChanged();
+                    Log.e("selected Position = " ,""+ position);
+                }
+            });
 
+            recyrviewvideolist.addOnItemTouchListener(onTouchListener);
 
-                        arrayvideolist.get(position).setSelected(true);
-                        adapter.notifyDataSetChanged();
-                        Log.e("selected Position = " ,""+ position);
-
-                    }
-                });
-
-
-        /*recyrviewvideolist.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hidekeyboard();
-                return false;
+            launchvideocomposer(true);
+            if (getdeniedpermissions().isEmpty()) {
+                // All permissions are granted
+                getVideoList();
             }
-        });*/
-
+        }
         return rootview;
     }
 
@@ -342,6 +290,24 @@ public class fragmentvideolist extends basefragment {
         }
     }
 
+    public void deletetempdirectory()
+    {
+        try {
+            File dir = new File(config.tempvideodir);
+            if (dir.isDirectory())
+            {
+                String[] children = dir.list();
+                for (int i = 0; i < children.length; i++)
+                {
+                    new File(dir, children[i]).delete();
+                }
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
@@ -353,7 +319,30 @@ public class fragmentvideolist extends basefragment {
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
+            case R.id.img_add_icon:
+                launchvideocomposer(false);
+                break;
         }
+    }
+
+    public void launchvideocomposer(boolean autostart)
+    {
+        videocomposerfragment fragment=new videocomposerfragment();
+        fragment.setData(autostart, new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+
+            }
+
+            @Override
+            public void onItemClicked(Object object, int type) {
+                if(type == 1)
+                {
+                    requestpremission();
+                }
+            }
+        });
+        gethelper().replaceFragment(fragment, false, true);
     }
 
     public  void opengallery()
@@ -373,7 +362,6 @@ public class fragmentvideolist extends basefragment {
         startActivityForResult(intent,request_take_gallery_video);
     }
 
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == request_take_gallery_video) {
             if (resultCode == RESULT_OK) {
@@ -387,6 +375,7 @@ public class fragmentvideolist extends basefragment {
                     return;
                 }
                 setcopyvideo(selectedvideopath);
+                requestpremission();
                 }
             }
         }
@@ -459,5 +448,52 @@ public class fragmentvideolist extends basefragment {
     public void onPause() {
         super.onPause();
         recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
+    }
+
+    public void setAdapter(final video videoobj,int type)
+    {
+        if(type == 1)
+        {
+            Uri uri = Uri.parse("file://"+videoobj.getPath());
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.putExtra(Intent.EXTRA_STREAM, uri);
+            share.setType("video/*");
+            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            getActivity().startActivity(Intent.createChooser(share, "Share video"));
+        }
+        else if(type == 2)
+        {
+            new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+            .setTitle("Alert!!")
+            .setMessage(getActivity().getResources().getString(R.string.delete_confirm))
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+            File fdelete = new File(videoobj.getPath());
+            if (fdelete.exists()) {
+                if (fdelete.delete()) {
+                    System.out.println("file Deleted :" + videoobj.getPath());
+                    arrayvideolist.remove(videoobj);
+                    dialog.dismiss();
+                } else {
+                    System.out.println("file not Deleted :" + videoobj.getPath());
+                }
+            }
+            adapter.notifyDataSetChanged();
+                }
+            })
+            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
+        }else if(type == 3){
+            getVideoList();
+        }else if(type == 4){
+            videoplayercomposerfragment videoplayercomposerfragment = new videoplayercomposerfragment();
+            videoplayercomposerfragment.setdata(videoobj.getPath());
+            gethelper().replaceFragment(videoplayercomposerfragment, false, true);
+        }
     }
 }

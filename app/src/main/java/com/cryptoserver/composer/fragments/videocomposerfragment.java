@@ -54,7 +54,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,7 +93,6 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
@@ -298,7 +296,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     videoframeadapter madapter;
     long currentframenumber =0;
     long frameduration =15, mframetorecordcount =0;
-    public boolean autostartvideo=false,camerastatusok=false;;
+    public boolean autostartvideo=false,camerastatusok=false;
+    adapteritemclick madapterclick;
     File lastrecordedvideo=null;
     String selectedvideofile ="";
     @Override
@@ -912,17 +911,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 mMediaRecorder.reset();
 
                 lastrecordedvideo=new File(selectedvideofile);
-                /*Activity activity = getActivity();
-                if (null != activity) {
-                    Toast.makeText(activity, "Video saved: " + getVideoFile(activity),
-                            Toast.LENGTH_SHORT).show();
-                }*/
                 startPreview();
-
                 stopvideotimer();
-
                 exportvideo(false);
 
+                madapterclick.onItemClicked(null,1);
                 mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
                 layout_bottom.setVisibility(View.GONE);
 
@@ -1005,8 +998,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void setData(boolean autostartvideo) {
+    public void setData(boolean autostartvideo,adapteritemclick madapterclick) {
         this.autostartvideo = autostartvideo;
+        this.madapterclick = madapterclick;
     }
 
     /**
@@ -1147,8 +1141,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         super.onHeaderBtnClick(btnid);
         switch (btnid){
             case R.id.img_menu:
-                fragmentvideolist frag=new fragmentvideolist();
-                gethelper().replaceFragment(frag, true, false);
+                gethelper().onBack();
                 break;
         }
     }
@@ -1594,7 +1587,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         if(maindialogshare != null && maindialogshare.isShowing())
                             maindialogshare.dismiss();
 
+                      //  updatevideolistdata(true);
                         launchvideolist();
+
                     }
                 },2000);
             }
@@ -1638,17 +1633,24 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
+              //  updatevideolistdata(true);
                 launchvideolist();
             }
         });
         subdialogshare.show();
     }
 
-    public void launchvideolist()
+/*    public void updatevideolistdata(boolean shouldupdatelist)
     {
         progressdialog.dismisswaitdialog();
-        fragmentvideolist frag=new fragmentvideolist();
-        gethelper().replaceFragment(frag, true, false);
+        int updatelist=(shouldupdatelist)?1:0;
+        madapterclick.onItemClicked(null,updatelist);
+
+    }*/
+
+    public void launchvideolist()
+    {
+        gethelper().onBack();
     }
 
     /*class MyCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
