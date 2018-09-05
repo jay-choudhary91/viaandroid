@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#297BB5</color>
+    <color name="colorPrimary">#524a4a</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffff</color>
@@ -27,6 +27,7 @@
     <color name="whitetransparent">#A6ffffff</color>
     <color name="transparent">#00000000</color>
     <color name="selectedimagehash">#005A78</color>
+    <color name="videolist_background">#297BB5</color>
 
 
     <!-- VIDEO TRIMMER -->

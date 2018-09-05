@@ -1,14 +1,18 @@
 package com.cryptoserver.composer.activity;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -78,7 +82,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             /*Intent in=new Intent(homeactivity.this,CameraActivity.class);
             startActivity(in);*/
         }
-
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        }*/
         imgaddicon.setOnClickListener(this);
         imgsettingsicon.setOnClickListener(this);
         img_back.setOnClickListener(this);
@@ -93,7 +101,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         if (!isMyServiceRunning(mService.getClass()))
             startService(mIntent);
 
-    }
+        }
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -133,6 +141,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @Override
     public void updateactionbar(int showHide, int color) {
         actionbar.setBackgroundColor(color);
+        getWindow().setStatusBarColor(color);
     }
 
     @Override
