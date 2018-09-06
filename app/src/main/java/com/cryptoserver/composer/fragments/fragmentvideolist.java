@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -159,6 +160,9 @@ public class fragmentvideolist extends basefragment {
             recyrviewvideolist.setLayoutManager(layoutManager);
             ((DefaultItemAnimator) recyrviewvideolist.getItemAnimator()).setSupportsChangeAnimations(false);
             recyrviewvideolist.getItemAnimator().setChangeDuration(0);
+            DividerItemDecoration itemDecor = new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
+            itemDecor.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.devidercolor));
+            recyrviewvideolist.addItemDecoration(itemDecor);
             recyrviewvideolist.setAdapter(adapter);
 
             onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
