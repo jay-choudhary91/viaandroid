@@ -338,6 +338,7 @@ public class videocontrollerview extends FrameLayout {
 
         int position = mPlayer.getCurrentPosition();
         int duration = mPlayer.getDuration();
+        Log.e("current duration ",""+position);
         if (mProgress != null) {
             if (duration > 0) {
                 // use long to avoid overflow
@@ -514,15 +515,15 @@ public class videocontrollerview extends FrameLayout {
 
             Log.e("fromuser" , ""+ fromuser);
 
-            long duration = mPlayer.getDuration();
-            long newposition = (duration * progress) / 1000L;
-            Log.e("Duration Progress ",duration+" "+newposition);
-
             if (!fromuser) {
                 // We're not interested in programmatically generated changes to
                 // the progress bar's position.
                 return;
             }
+
+            long duration = mPlayer.getDuration();
+            long newposition = (duration * progress) / 1000L;
+            Log.e("Duration Progress ",duration+" "+newposition);
 
             mPlayer.seekTo((int) newposition);
 
@@ -654,7 +655,7 @@ public class videocontrollerview extends FrameLayout {
         void    toggleFullScreen();
     }
 
-    private static class MessageHandler extends Handler {
+    private class MessageHandler extends Handler {
         private final WeakReference<videocontrollerview> mView;
 
         MessageHandler(videocontrollerview view) {
@@ -662,6 +663,10 @@ public class videocontrollerview extends FrameLayout {
         }
         @Override
         public void handleMessage(Message msg) {
+
+            /*if(mPlayer != null && (! mPlayer.isPlaying()))
+                return;*/
+
             videocontrollerview view = mView.get();
             if (view == null || view.mPlayer == null) {
                 return;
