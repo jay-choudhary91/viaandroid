@@ -139,7 +139,7 @@ public class introactivity extends FragmentActivity {
                 {
                     Date currentDate=new Date();
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
-                    if(secondDifference > 4)
+                    if(secondDifference > 3)
                     {
                         initialDate = new Date();
 
@@ -160,7 +160,7 @@ public class introactivity extends FragmentActivity {
                         }
                     }
                 }
-                myHandler.postDelayed(this, 500);
+                myHandler.postDelayed(this, 300);
             }
         };
         myHandler.post(myRunnable);
