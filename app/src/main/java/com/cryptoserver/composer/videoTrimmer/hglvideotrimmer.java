@@ -239,6 +239,7 @@ public class hglvideotrimmer extends FrameLayout {
         @Override
         public void onseek(rangeseekbarview rangeseekbarview, int index, float value) {
             onSeekThumbs(index, value);
+
         }
 
         @Override
@@ -464,8 +465,11 @@ public class hglvideotrimmer extends FrameLayout {
             mrangeseekbarview.setThumbValue(0, (mstartposition * 100) / mduration);
             mrangeseekbarview.setThumbValue(1, (mendposition * 100) / mduration);
 
+            lasttime = 0;
+
         } else {
             mstartposition = 0;
+            lasttime = 0;
             mendposition = mduration;
         }
 
