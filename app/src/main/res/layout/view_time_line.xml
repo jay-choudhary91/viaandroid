@@ -80,14 +80,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_below="@+id/icon_video_play"
             android:max="1000"
-            android:layout_marginTop="5dp"
             android:visibility="visible"
             android:progressDrawable="@android:color/transparent"
             android:secondaryProgress="0"
             android:thumb="@drawable/line"
             />
-
-
 
         <View
             android:id="@+id/lineTop"
@@ -121,7 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_below="@+id/img_uparrow"
-                    android:background="@color/white"/>
+                    android:background="#4Dffffff"/>
 
             </RelativeLayout>
 

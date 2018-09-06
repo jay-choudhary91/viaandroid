@@ -108,6 +108,7 @@ public class hglvideotrimmer extends FrameLayout {
     private int mtimevideo = 0;
     private int mstartposition = 0;
     private int mendposition = 0;
+    private long lasttime=0;
     Context context;
 
     FFmpeg ffmpeg;
@@ -160,11 +161,12 @@ public class hglvideotrimmer extends FrameLayout {
         mlisteners.add(new onprogressvideolistener() {
             @Override
             public void updateprogress(int time, int max, float scale) {
+               // Log.e("updated progress time","" + time);
                 updateVideoProgress(time);
             }
         });
-        mlisteners.add(mvideoprogressindicator);
-        mlisteners.add(mvideoprogressindicatorbottom);
+       // mlisteners.add(mvideoprogressindicator);
+        //mlisteners.add(mvideoprogressindicatorbottom);
 
         findViewById(R.id.btCancel)
                 .setOnClickListener(
@@ -394,8 +396,6 @@ public class hglvideotrimmer extends FrameLayout {
                 setProgressBarPosition(mendposition);
                 duration = mendposition;
             }
-
-
             setTimeVideo(duration);
         }
     }
@@ -415,6 +415,7 @@ public class hglvideotrimmer extends FrameLayout {
         mplayview.setVisibility(View.VISIBLE);
 
         int duration = (int) ((mduration * seekBar.getProgress()) / 1000L);
+
         mvideoview.seekTo(duration);
         setTimeVideo(duration);
         notifyProgressUpdate(false);
@@ -479,8 +480,6 @@ public class hglvideotrimmer extends FrameLayout {
         String seconds = getContext().getString(R.string.short_seconds);
         mtexttimeframe.setText(String.format("%s %s - %s %s", stringfortime(mstartposition), seconds, stringfortime(mendposition), seconds));
         mtexttimeframe.setVisibility(GONE);
-
-
     }
 
     private void setTimeVideo(int position) {
@@ -491,7 +490,6 @@ public class hglvideotrimmer extends FrameLayout {
 
     public String stringfortime(int timeMs) {
         int totalseconds = timeMs / 1000;
-
         int seconds = totalseconds % 60;
         int minutes = (totalseconds / 60) % 60;
         int hours = totalseconds / 3600;
@@ -509,6 +507,7 @@ public class hglvideotrimmer extends FrameLayout {
             case thumb.left: {
                 mstartposition = (int) ((mduration * value) / 100L);
                 mvideoview.seekTo(mstartposition);
+                lasttime=mstartposition;
                 break;
             }
             case thumb.right: {
@@ -531,6 +530,8 @@ public class hglvideotrimmer extends FrameLayout {
 
     private void onVideoCompleted() {
         mplayview.setBackgroundResource(R.drawable.play);
+
+       // Log.e("onComplete =", ""+ mstartposition);
         mvideoview.seekTo(mstartposition);
     }
 
@@ -538,11 +539,14 @@ public class hglvideotrimmer extends FrameLayout {
         if (mduration == 0) return;
 
         int position = mvideoview.getCurrentPosition();
+        Log.e("videoview position2 = ","" + position);
+
         if (all) {
             for (onprogressvideolistener item : mlisteners) {
                 item.updateprogress(position, mduration, ((position * 100) / mduration));
             }
         } else {
+
             mlisteners.get(1).updateprogress(position, mduration, ((position * 100) / mduration));
         }
     }
@@ -561,9 +565,21 @@ public class hglvideotrimmer extends FrameLayout {
             return;
         }
 
+        Log.e("Player current pos ",""+time);
+
         if (mholdertopview != null) {
             // use long to avoid overflow
-            setProgressBarPosition(time);
+
+            if(time >= lasttime)
+            {
+                setProgressBarPosition(time);
+            }
+            else if(lasttime > 0)
+            {
+                setProgressBarPosition((int)lasttime);
+            }
+
+
         }
         setTimeVideo(time);
     }
@@ -571,7 +587,7 @@ public class hglvideotrimmer extends FrameLayout {
     private void setProgressBarPosition(int position) {
         if (mduration > 0) {
             long pos = 1000L * position / mduration;
-            mholdertopview.setProgress((int) pos);
+              mholdertopview.setProgress((int) pos);
         }
     }
 
@@ -684,6 +700,7 @@ public class hglvideotrimmer extends FrameLayout {
             }
 
             view.notifyProgressUpdate(true);
+
             if (view.mvideoview.isPlaying()) {
                 sendEmptyMessageDelayed(0, 10);
             }
