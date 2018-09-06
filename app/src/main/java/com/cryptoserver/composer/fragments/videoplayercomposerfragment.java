@@ -624,21 +624,22 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     public void setVideoAdapter() {
         int count = 1;
         ishashprocessing=true;
+        currentframenumber=0;
         currentframenumber = currentframenumber + frameduration;
-       try
+        try
         {
             FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(VIDEO_URL);
 
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
             String format= common.getvideoformat(VIDEO_URL);
             if(format.equalsIgnoreCase("mp4"))
-               grabber.setFormat(format);
+                grabber.setFormat(format);
 
 
-           grabber.start();
-
-           for(int i = 0; i<grabber.getLengthInFrames(); i++){
-               Frame frame = grabber.grabImage();
+            grabber.start();
+            videomodel lastframehash=null;
+            for(int i = 0; i<grabber.getLengthInFrames(); i++){
+                Frame frame = grabber.grabImage();
                 if (frame == null)
                     break;
 
@@ -651,23 +652,30 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
 
                 if (count == currentframenumber) {
+                    lastframehash=null;
                     mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
                     notifydata();
 
                     currentframenumber = currentframenumber + frameduration;
                 }
+                else
+                {
+                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                }
                 count++;
             }
 
-            if(mallframes.size() > 0 && mvideoframes.size() > 0)
+            if(lastframehash != null)
             {
-                if(! mvideoframes.get(mvideoframes.size()-1).getkeyvalue().equals(mallframes.get(mallframes.size()-1).getkeyvalue()))
-                {
-                    mvideoframes.add(new videomodel("Last Frame ", mallframes.get(mallframes.size()-1).getkeytype()
-                            , mallframes.get(mallframes.size()-1).getcurrentframenumber(), mallframes.get(mallframes.size()-1).getkeyvalue()));
-                    notifydata();
-                }
+                mvideoframes.add(lastframehash);
             }
+            else
+            {
+                if(mvideoframes.size() > 0)
+                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+            }
+
+            notifydata();
 
             ishashprocessing=false;
             grabber.flush();

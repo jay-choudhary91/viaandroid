@@ -342,15 +342,18 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public void onDestroy() {
         super.onDestroy();
+        destroyvideoplayer();
+    }
 
+    public void destroyvideoplayer()
+    {
         if(player != null)
         {
+            playerposition=player.getCurrentPosition();
             player.pause();
             player.stop();
             player.release();
             player=null;
-
-            //player.release();
         }
     }
 
@@ -455,7 +458,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        playerposition=0;
+     //   playerposition=0;
         if (player != null) {
                 playerposition=player.getCurrentPosition();
             player.pause();
@@ -472,6 +475,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if(playerposition > 0)
             {
                 mp.seekTo((int)playerposition);
+                player.seekTo((int)playerposition);
             }
             else
             {
@@ -673,6 +677,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
                     return;
                 }
+                destroyvideoplayer();
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
@@ -707,8 +712,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             return;
         }
 
-        if(player != null && player.isPlaying())
-            player.pause();
+        destroyvideoplayer();
 
         Intent intent;
         if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
@@ -762,13 +766,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
 
-                /*if(player != null)
-                {
-                    player.pause();
-                    player.stop();
-                    player.release();
-                    player=null;
-                }*/
                 layout_scrubberview.setVisibility(View.VISIBLE);
                 playerposition=0;
                 setupVideoPlayer(selectedvideouri);
@@ -926,7 +923,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
 
            grabber.start();
-
+            videomodel lastframehash=null;
            for(int i = 0; i<grabber.getLengthInFrames(); i++){
                Frame frame = grabber.grabImage();
                 if (frame == null)
@@ -941,23 +938,30 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
 
                 if (count == currentframenumber) {
+                    lastframehash=null;
                     mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
                     notifydata();
 
                     currentframenumber = currentframenumber + frameduration;
                 }
+                else
+                {
+                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                }
                 count++;
             }
 
-            if(mallframes.size() > 0 && mvideoframes.size() > 0)
+            if(lastframehash != null)
             {
-                if(! mvideoframes.get(mvideoframes.size()-1).getkeyvalue().equals(mallframes.get(mallframes.size()-1).getkeyvalue()))
-                {
-                    mvideoframes.add(new videomodel("Last Frame ", mallframes.get(mallframes.size()-1).getkeytype()
-                            , mallframes.get(mallframes.size()-1).getcurrentframenumber(), mallframes.get(mallframes.size()-1).getkeyvalue()));
-                    notifydata();
-                }
+                mvideoframes.add(lastframehash);
             }
+            else
+            {
+                if(mvideoframes.size() > 0)
+                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+            }
+
+            notifydata();
 
             ishashprocessing=false;
             grabber.flush();
