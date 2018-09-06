@@ -70,15 +70,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
-    implementation 'uk.co.jakelee:vidsta:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.kaopiz:kprogresshud:1.1.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    implementation 'org.jcodec:jcodec:0.2.3'
-    implementation 'org.jcodec:jcodec-android:0.2.3'
-    //implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     compile(group: 'org.bytedeco', name: 'javacv-platform', version: '1.4.1') {
         exclude group: 'org.bytedeco.javacpp-presets'
     }
