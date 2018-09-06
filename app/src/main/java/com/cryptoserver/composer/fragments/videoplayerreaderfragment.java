@@ -756,8 +756,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUESTCODE_PICK) {
 
-            layout_scrubberview.setVisibility(View.GONE);
             if (resultCode == RESULT_OK) {
+                layout_scrubberview.setVisibility(View.GONE);
+
                 selectedvideouri = data.getData();
 
                 try {

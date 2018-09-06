@@ -1350,13 +1350,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 count++;
             }
 
-            if(isFrameRemain && (buffer != null))
+            /*if(isFrameRemain && (buffer != null))
             {
                 currentframenumber =count;
                 byte[] arr = new byte[buffer.remaining()];
                 buffer.get(arr);
                 arrayList.add(updatelistitem(arr,"Last Frame"));
-            }
+            }*/
 
             grabber.flush();
 
@@ -1367,6 +1367,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     madapter.notifyDataSetChanged();
 
                     mvideoframes.addAll(arrayList);
+                    if(mvideoframes.size() > 0)
+                    {
+                        String info=mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+                        info=info.replace("Frame","Last Frame");
+                        mvideoframes.get(mvideoframes.size()-1).setframeinfo(info);
+                    }
+
                     madapter.notifyDataSetChanged();
                     recyviewitem.getLayoutManager().scrollToPosition(0);
                     progressdialog.dismisswaitdialog();
