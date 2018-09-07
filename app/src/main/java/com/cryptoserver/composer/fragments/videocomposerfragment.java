@@ -291,7 +291,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
     int Seconds, Minutes, MilliSeconds ;
-    String keytype ="md5";
+    String keytype =config.prefs_md5;
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     videoframeadapter madapter;
     long currentframenumber =0;

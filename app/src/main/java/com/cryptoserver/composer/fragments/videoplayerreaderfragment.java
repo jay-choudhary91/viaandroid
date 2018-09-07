@@ -87,7 +87,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     ImageView handleimageview,righthandle;
     LinearLayout linearLayout;
     RecyclerView recyviewitem;
-    String keytype ="md5";
+    String keytype =config.prefs_md5;
     videoframeadapter madapter;
     long currentframenumber =0,playerposition=0;
     long frameduration =15, mframetorecordcount =0;

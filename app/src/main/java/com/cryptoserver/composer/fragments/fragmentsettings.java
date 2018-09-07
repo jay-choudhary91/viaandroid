@@ -99,8 +99,10 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
     EditText edt_md_salt;
     EditText edt_sha_salt;
     EditText edt_framescount;
-    String keytype ="md5";
+    EditText edt_update_every;
+    String keytype =config.prefs_md5;
     int framecount=15;
+    int updateevery=5;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,6 +121,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             img_sha =(ImageView)rootview.findViewById(R.id.img_sha);
             img_sha_salt =(ImageView)rootview.findViewById(R.id.img_sha_salt);
 
+            edt_update_every =(EditText) rootview.findViewById(R.id.edt_update_every);
             edt_framescount =(EditText) rootview.findViewById(R.id.edt_framescount);
             edt_md_salt =(EditText) rootview.findViewById(R.id.edt_md_salt);
             edt_sha_salt =(EditText) rootview.findViewById(R.id.edt_sha_salt);
@@ -142,6 +145,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             edt_framescount.setText(""+framecount);
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                 edt_framescount.setText(xdata.getinstance().getSetting(config.framecount));
+
             edt_framescount.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -160,6 +164,29 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
             });
 
             edt_framescount.setFilters(new InputFilter[]{ new minmaxfilter("1", "1000")});
+
+            edt_update_every.setText(""+updateevery);
+            if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
+                edt_update_every.setText(xdata.getinstance().getSetting(config.frameupdateevery));
+
+            edt_update_every.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
+
+            edt_update_every.setFilters(new InputFilter[]{ new minmaxfilter("1", "1000")});
             if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
                     xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
             {

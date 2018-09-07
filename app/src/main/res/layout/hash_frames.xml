@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/ll_root"
-        android:gravity="center">
-
-
-        <com.cryptoserver.composer.views.customfonttextview
-            android:id="@+id/txt_hash_label"
-            style="@style/textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/hash_every"
-            app:fontType="OpenSans_Regular"/>
+        >
 
         <EditText
             android:id="@+id/edt_framescount"
@@ -29,7 +19,49 @@
             android:inputType="number"
             android:imeOptions="actionDone"
             android:gravity="center"
-            android:paddingLeft="5dp"
+            android:layout_centerInParent="true"
+            android:paddingRight="5dp"
+            android:background="@drawable/rectangle_edittext"
+            />
+
+        <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_hash_label"
+            style="@style/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hash_every"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/edt_framescount"
+            app:fontType="OpenSans_Regular"/>
+
+        <com.cryptoserver.composer.views.customfonttextview
+            style="@style/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/frames"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/edt_framescount"
+            app:fontType="OpenSans_Regular"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+
+        <EditText
+            android:id="@+id/edt_update_every"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:maxLength="4"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:paddingRight="5dp"
             android:background="@drawable/rectangle_edittext"
             />
 
@@ -37,9 +69,21 @@
             style="@style/textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/frames"
+            android:text="Update every"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/edt_update_every"
             app:fontType="OpenSans_Regular"/>
 
-    </LinearLayout>
+        <com.cryptoserver.composer.views.customfonttextview
+            style="@style/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/frames"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/edt_update_every"
+            app:fontType="OpenSans_Regular"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

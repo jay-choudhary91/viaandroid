@@ -26,9 +26,10 @@ public class config {
 
     public static final String metriclist = "metriclist";
     public static final String framecount = "framecount";
+    public static final String frameupdateevery = "frameupdateevery";
     public static final String hashtype = "hashtype";
     public static final String prefs_md5 = "md5";
-    public static final String prefs_md5_salt = "md5-salt";
+    public static final String prefs_md5_salt = "md5salt";
     public static final String prefs_sha = "sha";
-    public static final String prefs_sha_salt = "sha-salt";
+    public static final String prefs_sha_salt = "shasalt";
 }
