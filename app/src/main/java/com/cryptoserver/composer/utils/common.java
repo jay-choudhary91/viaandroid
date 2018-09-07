@@ -25,6 +25,8 @@ import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -111,6 +113,18 @@ public class common
         drawable.setCornerRadius(borderradius);
         drawable.setColor(fullbackcolor);
     }
+
+    public static boolean isnetworkconnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo ni = cm.getActiveNetworkInfo();
+        if (ni == null) {
+            // There are no active networks.
+            return false;
+        } else
+            return true;
+    }
+
 
     public static void hidekeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);

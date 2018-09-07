@@ -8,11 +8,6 @@ import com.cryptoserver.composer.utils.xdata;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
-
-/**
- * Created by devesh on 26/4/18.
- */
-
 public class applicationviavideocomposer extends Application {
     public static Context mcontext;
     public static Activity mactvitiy;
@@ -21,10 +16,9 @@ public class applicationviavideocomposer extends Application {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-       /* Fabric.with(this, new Crashlytics());
         mcontext = this;
-        xdata.getinstance().init(this);*/
         xdata.getinstance().init(this);
+        xdata.getinstance().saveSetting(xdata.keybaseurl, "http://console.dev.crypto-servers.com/xapi.php?");
     }
 
     public static Context getappcontext() {

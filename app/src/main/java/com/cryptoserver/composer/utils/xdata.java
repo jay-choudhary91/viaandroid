@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 
 public class xdata {
     public final String prefname = "prefname";
+    public static String keybaseurl = "keybaseurl";
 
     private static xdata ourInstance;
     private Context mContext;

@@ -33,12 +33,17 @@ import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
+import com.cryptoserver.composer.interfaces.ApiResponseListener;
+import com.cryptoserver.composer.netutils.xapi;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
@@ -558,21 +563,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     public void registerCompassSensor() {
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        /*if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-
-            mAccelereometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mSensorManager.registerListener(this, mAccelereometer, SensorManager.SENSOR_DELAY_GAME);
-        }
-        if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null){
-            mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-            mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_GAME);
-        }*/
-
-       /* mSensorManager.registerListener(mCompassListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-                48,SensorManager.SENSOR_DELAY_GAME);*/
-
-
         Thread thread = new Thread(){
             public void run(){
                 Sensor accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -724,15 +714,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         CALL_DURATION=intent.getStringExtra("CALL_DURATION");
                         CALL_REMOTE_NUMBER=intent.getStringExtra("CALL_REMOTE_NUMBER");
                         CALL_START_TIME=intent.getStringExtra("CALL_START_TIME");
-
-                        /*try
-                        {
-                            if(getCurrentFragment() instanceof HomeFragment)
-                                getCurrentFragment().updateCallInfo(CALL_STATUS,CALL_DURATION,CALL_REMOTE_NUMBER);
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }*/
                     }
 
                 }catch (Exception e)
@@ -760,8 +741,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             }
         };
+    }
 
-
+    @Override
+    public void xapi_send(Context mContext, String Action, HashMap<String,String> mPairList, ApiResponseListener mListener) {
+        xapi api = new xapi(mContext,Action,mListener);
+        Set keys = mPairList.keySet();
+        Iterator itr = keys.iterator();
+        while (itr.hasNext()) {
+            String key = (String)itr.next();
+            String argvalue = (String)mPairList.get(key);
+            api.add(key,argvalue);
+        }
+        api.execute();
     }
 
 

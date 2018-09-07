@@ -44,6 +44,7 @@ import android.widget.EditText;
 
 
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.interfaces.ApiResponseListener;
 import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -52,6 +53,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -246,6 +248,7 @@ public abstract class basefragment extends Fragment {
 
         public void getairplanemodeon();
 
+        public void xapi_send(Context mContext, String Action, HashMap<String, String> mPairList, ApiResponseListener mListener);
 
 
     }
