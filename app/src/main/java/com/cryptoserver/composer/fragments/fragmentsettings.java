@@ -457,6 +457,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
 
         xdata.getinstance().saveSetting(config.hashtype,keytype);
         xdata.getinstance().saveSetting(config.framecount,edt_framescount.getText().toString().trim());
+        xdata.getinstance().saveSetting(config.frameupdateevery,edt_update_every.getText().toString().trim());
         xdata.getinstance().saveSetting(config.prefs_sha_salt,edt_sha_salt.getText().toString());
         xdata.getinstance().saveSetting(config.prefs_md5_salt,edt_md_salt.getText().toString());
 
