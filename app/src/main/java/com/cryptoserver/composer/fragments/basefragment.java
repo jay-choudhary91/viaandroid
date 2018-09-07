@@ -44,7 +44,7 @@ import android.widget.EditText;
 
 
 import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.interfaces.ApiResponseListener;
+import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -248,7 +248,7 @@ public abstract class basefragment extends Fragment {
 
         public void getairplanemodeon();
 
-        public void xapi_send(Context mContext, String Action, HashMap<String, String> mPairList, ApiResponseListener mListener);
+        public void xapi_send(Context mContext, String Action, HashMap<String, String> mPairList, apiresponselistener mListener);
 
 
     }

@@ -4,7 +4,7 @@ package com.cryptoserver.composer.utils;
  * Created by Ejaz on 2/3/2017.
  */
 
-public class TaskResult {
+public class taskresult {
     public String message;
     public Object data;
 

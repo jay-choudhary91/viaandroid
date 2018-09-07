@@ -61,8 +61,11 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.camerautil;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -75,6 +78,8 @@ import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.AndroidFrameConverter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -89,6 +94,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -99,8 +105,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "videocomposerfragment";
-    int counter=0;
-    int counter2=0;
 
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
@@ -176,7 +180,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                       try {
                           if(mIsRecordingVideo)
                           {
-                              if(mframetorecordcount == currentframenumber)
+                              if(mframetorecordcount == currentframenumber || (videokey.trim().isEmpty()))
                               {
                                   Bitmap bitmap = mTextureView.getBitmap(10,10);
                                   bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
@@ -184,10 +188,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                   ByteArrayOutputStream stream = new ByteArrayOutputStream();
                                   bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
                                   byte[] byteArray = stream.toByteArray();
-                                  updatelistitemnotify(byteArray,currentframenumber,"Frame");
-                                  currentframenumber = currentframenumber + frameduration;
+                                  if(videokey.trim().isEmpty())
+                                  {
+                                      videokey="initial";
+                                      String keyvalue= getkeyvalue(byteArray);
+                                      xapistartvideo(keyvalue);
+                                  }
+
+                                  if(mframetorecordcount == currentframenumber)
+                                  {
+                                      updatelistitemnotify(byteArray,currentframenumber,"Frame");
+                                      currentframenumber = currentframenumber + frameduration;
+                                  }
                                   bitmap.recycle();
                               }
+
                               mframetorecordcount++;
                           }
                       }catch (Exception e)
@@ -293,13 +308,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     int Seconds, Minutes, MilliSeconds ;
     String keytype =config.prefs_md5;
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    ArrayList<frameinfo> muploadframelist =new ArrayList<>();
     videoframeadapter madapter;
     long currentframenumber =0;
-    long frameduration =15, mframetorecordcount =0;
+    long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
     File lastrecordedvideo=null;
-    String selectedvideofile ="";
+    String selectedvideofile ="",videokey="";
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -353,7 +369,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
             });
 
-
+            if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
+                apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -997,6 +1014,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             imgflashon.setVisibility(View.VISIBLE);
             rotatecamera.setVisibility(View.INVISIBLE);
 
+            apicurrentduration =0;
             currentframenumber =0;
             mframetorecordcount =0;
             currentframenumber = currentframenumber + frameduration;
@@ -1388,6 +1406,83 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
+    public void xapistartvideo(String hashvalue)
+    {
+        HashMap<String,String> mpairslist=new HashMap<String, String>();
+        mpairslist.put("html","0");
+        mpairslist.put("hashmethod",""+keytype);
+        mpairslist.put("hashvalue",""+hashvalue);
+        mpairslist.put("title","xx");
+        gethelper().xapi_send(getActivity(),"video_start",mpairslist, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                if(response.isSuccess())
+                {
+                    try {
+                        JSONObject object = (JSONObject) response.getData();
+                        videokey=object.getString("key");
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    videokey="";
+                }
+            }
+        });
+    }
+
+    public void xapiupdatevideo()
+    {
+
+        if(videokey.trim().isEmpty() || videokey.equalsIgnoreCase("initial"))
+            return;
+
+        JSONArray array=new JSONArray();
+        for(int i=0;i<muploadframelist.size();i++)
+        {
+            JSONObject object=new JSONObject();
+            try {
+                object.put("framenumber",muploadframelist.get(i).getFramenumber());
+                object.put("meta",muploadframelist.get(i).getMeta());
+                object.put("hashvalue",muploadframelist.get(i).getHashvalue());
+                object.put("hashmethod",muploadframelist.get(i).getHashmethod());
+                array.put(object);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            //Log.e("upload frame ",muploadframelist.get(i).getFramenumber()+" "+muploadframelist.get(i).getHashvalue());
+        }
+        muploadframelist.clear();
+        Log.e("Json array ",""+array.toString());
+
+        HashMap<String,String> mpairslist=new HashMap<String, String>();
+        mpairslist.put("html","0");
+        mpairslist.put("updatelist",""+array);
+        mpairslist.put("key",""+videokey);
+
+        gethelper().xapi_send(getActivity(),"video_update",mpairslist, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                if(response.isSuccess())
+                {
+                    try {
+                        JSONObject object = (JSONObject) response.getData();
+                        JSONObject object1 = (JSONObject) response.getData();
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     public videomodel updatelistitem(byte[] array, String message)
     {
         if(array == null || array.length == 0)
@@ -1406,14 +1501,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(array == null || array.length == 0)
                     return;
                 String keyvalue= getkeyvalue(array);
+                apicurrentduration++;
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
+                muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false));
+
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if(mvideoframes.size() > 0)
                             madapter.notifyItemChanged(mvideoframes.size()-1);
 
-                        //recyviewitem.getLayoutManager().scrollToPosition(mvideoframes.size()-1);
+                        if(apicurrentduration == apicallduration)
+                        {
+                            apicurrentduration=0;
+                            xapiupdatevideo();
+                        }
                     }
                 });
             }

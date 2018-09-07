@@ -4,8 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.cryptoserver.composer.interfaces.ApiResponseListener;
-import com.cryptoserver.composer.utils.TaskResult;
+import com.cryptoserver.composer.interfaces.apiresponselistener;
+import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.logs;
 import com.cryptoserver.composer.utils.xdata;
@@ -30,10 +30,10 @@ public class xapi extends AsyncTask<Void, Void, String> {
     String action;
     Context mcontext;
     String useurl = "";
-    ApiResponseListener listner;
+    apiresponselistener listner;
 
 
-    public xapi(Context context, String action, ApiResponseListener responseListner) {
+    public xapi(Context context, String action, apiresponselistener responseListner) {
         this.action = action;
         this.mcontext = context;
         this.listner = responseListner;
@@ -101,7 +101,7 @@ public class xapi extends AsyncTask<Void, Void, String> {
         try
         {
             if (!common.isnetworkconnected(mcontext)) {
-                return TaskResult.NO_INTERNET;
+                return taskresult.NO_INTERNET;
             }
         }catch (Exception e)
         {
@@ -145,74 +145,24 @@ public class xapi extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String aVoid) {
         super.onPostExecute(aVoid);
-        TaskResult result = new TaskResult();
+        taskresult result = new taskresult();
         JSONObject jsonObject = null;
         Log.d("Response>> ", aVoid);
         try {
-            jsonObject = new JSONObject(aVoid);
-        } catch (JSONException e) {
+            result.success(false);
+            jsonObject=new JSONObject(aVoid);
+            if (jsonObject != null && jsonObject.has("result"))
+            {
+                JSONObject object = jsonObject.optJSONObject("result");
+                result.success(true);
+                result.setData(object);
+            }
+            if (listner != null)
+                listner.onResponse(result);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        if (jsonObject != null && jsonObject.has("error")) {
-
-            if (jsonObject != null && jsonObject.has("result")) {
-
-                try
-                {
-                    String errormsg = jsonObject.getString("error");
-                    result.success(false);
-                    result.setMessage(errormsg);
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            else if(jsonObject.has("error"))
-            {
-                result.success(false);
-                try {
-                    result.setMessage((jsonObject.has("errormessage"))?jsonObject.getString("errormessage"):jsonObject.getString("error"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            if (listner != null) {
-                listner.onResponse(result);
-            }
-        } else if (jsonObject != null && jsonObject.has("result")) {
-            JSONObject object = jsonObject.optJSONObject("result");
-
-            if (object != null) {
-                if (object.has("savesetting")) {
-                    try {
-                        JSONObject saveSetting = object.getJSONObject("savesetting");
-                        Iterator<String> myIter = saveSetting.keys();
-                        while (myIter.hasNext()) {
-                            String key = myIter.next();
-                            String value = saveSetting.optString(key);
-                            xdata.getinstance().saveSetting(key, value);
-                        }
-                    } catch (JSONException ex2) {
-                        ex2.printStackTrace();
-                    }
-
-                }
-            } else {
-
-                sendServerNotResponding();
-            }
-        }
-    }
-
-    private void sendServerNotResponding() {
-        TaskResult result = new TaskResult();
-        result.success(false);
-        result.code = TaskResult.CODE_SERVER_DOWN;
-        result.setData(this.useurl);
-        if(listner != null)
-            listner.onResponse(result);
     }
 }
 
