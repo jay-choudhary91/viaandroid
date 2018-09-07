@@ -225,8 +225,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             img_menu.setVisibility(View.VISIBLE);
             imgshareicon.setVisibility(View.VISIBLE);
             updateheader("");
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
-
+           // updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            fragment_container.setLayoutParams(params);
         }
         else if(fragment instanceof videoplayerreaderfragment){
             img_back.setVisibility(View.GONE);
@@ -238,7 +240,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgshareicon.setVisibility(View.VISIBLE);
             updateheader("");
             imgsettingsicon.setEnabled(true);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+            //updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            fragment_container.setLayoutParams(params);
+
 
         }else if(fragment instanceof videoplayercomposerfragment){
             img_back.setVisibility(View.GONE);
@@ -247,8 +253,15 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgsettingsicon.setVisibility(View.GONE);
             imguploadicon.setVisibility(View.GONE);
             imgshareicon.setVisibility(View.VISIBLE);
+            img_menu.setVisibility(View.VISIBLE);
+
             updateheader("");
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+            //updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            fragment_container.setLayoutParams(params);
+
         }
     }
 

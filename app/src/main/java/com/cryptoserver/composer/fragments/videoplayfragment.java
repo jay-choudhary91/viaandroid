@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.videoTrimmer.hglvideotrimmer;
@@ -57,7 +58,9 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-           // videoduration = (int)common.getvideoduration(videopath);
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.videoPlayer_header));
+
+            // videoduration = (int)common.getvideoduration(videopath);
             if (mvideotrimmer != null) {
                 mvideotrimmer.setMaxDuration(videoduration);
                 mvideotrimmer.setOnTrimVideoListener(this);

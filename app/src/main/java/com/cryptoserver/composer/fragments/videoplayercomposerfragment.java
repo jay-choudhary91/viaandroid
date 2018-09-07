@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.videomodel;
@@ -92,6 +93,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.videoPlayer_header));
+
+            //gethelper().updateactionbar(0);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
@@ -149,6 +153,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         return rootview;
     }
 
+
+
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId())
@@ -175,6 +182,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
         return true;
     }
+
+
 
     GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
     {
@@ -217,6 +226,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             return false;
         }
     });
+
+
+
 
     public void swipelefttoright()
     {
@@ -582,6 +594,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())) {
                     common.shareMedia(getActivity(),VIDEO_URL);
                 }
+                break;
+
+            case R.id.img_menu:
+                gethelper().onBack();
                 break;
 
         }

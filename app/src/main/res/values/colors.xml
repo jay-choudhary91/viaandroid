@@ -28,6 +28,8 @@
     <color name="transparent">#00000000</color>
     <color name="selectedimagehash">#005A78</color>
     <color name="videolist_background">#297BB5</color>
+    <color name="videoPlayer_header">#4D000000</color>
+
 
 
     <!-- VIDEO TRIMMER -->

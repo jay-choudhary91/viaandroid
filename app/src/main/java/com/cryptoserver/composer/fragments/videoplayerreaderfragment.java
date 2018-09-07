@@ -112,6 +112,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.videoPlayer_header));
+
             frontview.setVisibility(View.VISIBLE);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
             linearLayout=rootview.findViewById(R.id.content);
