@@ -33,7 +33,7 @@ import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
-import com.cryptoserver.composer.interfaces.ApiResponseListener;
+import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.netutils.xapi;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -744,7 +744,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     @Override
-    public void xapi_send(Context mContext, String Action, HashMap<String,String> mPairList, ApiResponseListener mListener) {
+    public void xapi_send(Context mContext, String Action, HashMap<String,String> mPairList, apiresponselistener mListener) {
         xapi api = new xapi(mContext,Action,mListener);
         Set keys = mPairList.keySet();
         Iterator itr = keys.iterator();
