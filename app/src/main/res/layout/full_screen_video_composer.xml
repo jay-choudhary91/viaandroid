@@ -46,6 +46,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="0.9"
                 android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:background="@color/whitetransparent"
                 >
 
@@ -53,9 +54,19 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyview_item"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_weight="0.5"
+                    android:layout_height="0dp">
 
                 </android.support.v7.widget.RecyclerView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyview_metrices"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.5"
+                    android:layout_height="0dp">
+
+                </android.support.v7.widget.RecyclerView>
+
             </LinearLayout>
 
             <ImageView

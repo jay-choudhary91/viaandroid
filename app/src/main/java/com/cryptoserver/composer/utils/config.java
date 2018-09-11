@@ -32,4 +32,21 @@ public class config {
     public static final String prefs_md5_salt = "md5salt";
     public static final String prefs_sha = "sha";
     public static final String prefs_sha_salt = "shasalt";
+
+    public static final String cpuusageuser = "cpuusageuser";
+    public static final String cpuusagesystem = "cpuusagesystem";
+    public static final String cpuusageiow = "cpuusageiow";
+    public static final String cpuusageirq = "cpuusageirq";
+    public static final String barometer = "barometer";
+    public static final String acceleration_x = "acceleration.x";
+    public static final String acceleration_y = "acceleration.y";
+    public static final String acceleration_z = "acceleration.z";
+    public static final String connectedphonenetworkquality = "connectedphonenetworkquality";
+    public static final String compass = "compass";
+    public static final String airplanemode = "airplanemode";
+    public static final String currentcallinprogress = "currentcallinprogress";
+    public static final String currentcalldurationseconds = "currentcalldurationseconds";
+    public static final String currentcallremotenumber = "currentcallremotenumber";
+    public static final String decibel = "decibel";
+    public static final String currentcalldecibel = "currentcalldecibel";
 }
