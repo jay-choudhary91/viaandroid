@@ -30,9 +30,12 @@ import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.services.callservice;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,7 +71,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        applicationviavideocomposer.setActivity(homeactivity.this);
+        //applicationviavideocomposer.setActivity(homeactivity.this);
 
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
@@ -161,6 +164,21 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             actionbar.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void registerUsageSystem() {
+
+    }
+
+    @Override
+    public void registerUsageIow() {
+
+    }
+
+    @Override
+    public void registerUsageIrq() {
+
     }
 
 
@@ -282,6 +300,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 break;
             case R.id.img_setting:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_setting);
+                //ArrayList<metricmodel> array= getmetricarraylist();
                 break;
             case R.id.img_upload_icon:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_upload_icon);

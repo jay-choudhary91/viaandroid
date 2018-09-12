@@ -23,10 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.drawermetricesadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frame;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -57,7 +59,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
-
+    @BindView(R.id.recyview_metrices)
+    RecyclerView recyview_metrices;
 
     private String VIDEO_URL = null;
     RelativeLayout showcontrollers;
@@ -81,6 +84,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     private static final int request_read_external_storage = 1;
     Uri selectedvideouri =null;
     boolean issurafcedestroyed=false;
+    drawermetricesadapter itemMetricAdapter;
+    private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -149,6 +155,13 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         handleimageview.setOnTouchListener(this);
         righthandle.setOnTouchListener(this);
         videoSurface.setOnTouchListener(this);
+
+        metricItemArraylist= gethelper().getmetricarraylist();
+        itemMetricAdapter = new drawermetricesadapter(getActivity(), metricItemArraylist);
+        RecyclerView.LayoutManager mManager= new LinearLayoutManager(getActivity());
+        recyview_metrices.setLayoutManager(mManager);
+        recyview_metrices.setItemAnimator(new DefaultItemAnimator());
+        recyview_metrices.setAdapter(itemMetricAdapter);
 
         return rootview;
     }

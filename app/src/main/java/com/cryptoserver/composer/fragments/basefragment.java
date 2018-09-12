@@ -45,6 +45,7 @@ import android.widget.EditText;
 
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -52,6 +53,7 @@ import com.cryptoserver.composer.utils.config;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -248,11 +250,17 @@ public abstract class basefragment extends Fragment {
 
         public void getairplanemodeon();
 
+        public ArrayList<metricmodel> getmetricarraylist();
+
         public void xapi_send(Context mContext, String Action, HashMap<String, String> mPairList, apiresponselistener mListener);
 
 
     }
     public void onHeaderBtnClick(int btnid) {
+
+    }
+
+    public void setmetriceslistitems(ArrayList<metricmodel> mitems) {
 
     }
 

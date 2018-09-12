@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -32,11 +33,14 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.Itemmetricadapter;
+import com.cryptoserver.composer.adapter.drawermetricesadapter;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frame;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.CenterLayoutManager;
 import com.cryptoserver.composer.utils.common;
@@ -70,6 +74,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
+    @BindView(R.id.recyview_metrices)
+    RecyclerView recyview_metrices;
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
@@ -101,6 +107,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     framebitmapadapter adapter;
     Uri selectedvideouri =null;
     boolean issurafcedestroyed=false;
+    drawermetricesadapter itemMetricAdapter;
+    private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -149,6 +157,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 }
             });
 
+            itemMetricAdapter = new drawermetricesadapter(getActivity(), metricItemArraylist);
+
+            RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(getActivity());
+            recyview_metrices.setLayoutManager(mLayoutManager);
+            recyview_metrices.setItemAnimator(new DefaultItemAnimator());
+            recyview_metrices.setAdapter(itemMetricAdapter);
+
             SurfaceHolder videoHolder = videoSurface.getHolder();
             videoHolder.addCallback(this);
 
@@ -179,6 +194,15 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         videoSurface.setOnTouchListener(this);
 
         return rootview;
+    }
+
+    @Override
+    public void setmetriceslistitems(ArrayList<metricmodel> mitems) {
+        super.setmetriceslistitems(mitems);
+        /*metricItemArraylist.clear();
+        metricItemArraylist.addAll(mitems);
+        itemMetricAdapter.notifyDataSetChanged();*/
+
     }
 
     @Override
@@ -788,6 +812,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 frameduration=checkframeduration();
                 keytype=checkkey();
+
+                metricItemArraylist.clear();
+                ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
+                metricItemArraylist.addAll(mlist);
+                itemMetricAdapter.notifyDataSetChanged();
 
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();

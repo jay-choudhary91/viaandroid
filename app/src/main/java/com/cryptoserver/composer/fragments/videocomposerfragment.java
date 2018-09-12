@@ -59,11 +59,13 @@ import android.widget.Toast;
 
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.drawermetricesadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frameinfo;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.camerautil;
@@ -99,6 +101,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
@@ -292,9 +295,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     // Output video size
     private Runnable doafterallpermissionsgranted;
 
-    LinearLayout layout_bottom;
+    LinearLayout layout_bottom,layout_drawer;
 
     RecyclerView recyviewitem;
+    RecyclerView recyview_metrices;
     ImageView handleimageview,righthandle;
     LinearLayout linearLayout;
     boolean isflashon = false,inPreview = true;
@@ -310,12 +314,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
     videoframeadapter madapter;
+    drawermetricesadapter itemMetricAdapter;
     long currentframenumber =0;
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
     File lastrecordedvideo=null;
     String selectedvideofile ="",videokey="";
+    int metriceslastupdatedposition=0;
+    private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -340,17 +347,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
+            layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
           //  simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
             righthandle=rootview.findViewById(R.id.righthandle);
 
             recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
+            recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
             mrecordimagebutton.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             rotatecamera.setOnClickListener(this);
 
-            layout_bottom.post(new Runnable() {
+            /*layout_drawer.post(new Runnable() {
                 @Override
                 public void run() {
                     new Handler().postDelayed(new Runnable() {
@@ -361,13 +370,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             {
                                 LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                         ViewGroup.LayoutParams.MATCH_PARENT);
-                                params.setMargins(0,Integer.parseInt(actionbarheight)+20,0,layout_bottom.getHeight());
-                                recyviewitem.setLayoutParams(params);
+                                params.setMargins(0,Integer.parseInt(actionbarheight),0,0);
+                                layout_drawer.setLayoutParams(params);
                             }
                         }
                     },500);
                 }
-            });
+            });*/
 
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
                 apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
@@ -445,6 +454,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             recyviewitem.setLayoutManager(mLayoutManager);
             recyviewitem.setItemAnimator(new DefaultItemAnimator());
             recyviewitem.setAdapter(madapter);
+
+
+            itemMetricAdapter = new drawermetricesadapter(getActivity(), metricItemArraylist);
+            RecyclerView.LayoutManager mManager= new LinearLayoutManager(getActivity());
+            recyview_metrices.setLayoutManager(mManager);
+            recyview_metrices.setItemAnimator(new DefaultItemAnimator());
+            recyview_metrices.setAdapter(itemMetricAdapter);
 
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                 frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
@@ -1504,6 +1520,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 apicurrentduration++;
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false));
+                if(apicurrentduration == apicallduration)
+                {
+                    metriceslastupdatedposition=metricItemArraylist.size();
+                    ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
+                    metricItemArraylist.addAll(mlist);
+                }
 
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
@@ -1513,6 +1535,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         if(apicurrentduration == apicallduration)
                         {
+                            if(metriceslastupdatedposition == 0)
+                            {
+                                itemMetricAdapter.notifyDataSetChanged();
+                            }
+                            else
+                            {
+                                itemMetricAdapter.notifyItemRangeChanged(metriceslastupdatedposition,
+                                        metricItemArraylist.size()-1);
+                            }
+
                             apicurrentduration=0;
                             xapiupdatevideo();
                         }

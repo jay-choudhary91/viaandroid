@@ -156,6 +156,7 @@ public class introactivity extends FragmentActivity {
                         {
                             currentselected=0;
                             slidebytime=true;
+                            viewpager_header.offsetLeftAndRight(0);
                             setviewpager(currentselected);
                         }
                     }
