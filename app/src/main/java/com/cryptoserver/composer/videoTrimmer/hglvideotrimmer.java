@@ -293,7 +293,8 @@ public class hglvideotrimmer extends FrameLayout {
         int widthSeek = mholdertopview.getThumb().getMinimumWidth() / 2;
 
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mholdertopview.getLayoutParams();
-        lp.setMargins(marge - widthSeek, 0, marge - widthSeek, 0);
+        Log.e("margine Right","" + (marge - widthSeek));
+        lp.setMargins(marge - widthSeek, 0, 15, 0);
         mholdertopview.setLayoutParams(lp);
 
         lp = (RelativeLayout.LayoutParams) mtimelineview.getLayoutParams();
