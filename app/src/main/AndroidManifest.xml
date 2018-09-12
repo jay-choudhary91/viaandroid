@@ -80,6 +80,15 @@
         <service
             android:name=".services.callservice"
             android:enabled="true"></service>
+
+        <receiver
+            android:name="com.cryptoserver.composer.netutils.connectivityreceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="42d19fb0e2e5d57caf4b1257310ca64e6f19cade" />

@@ -25,7 +25,7 @@ public class connectivityreceiver extends BroadcastReceiver
                 && activenetwork.isConnectedOrConnecting();
 
         if (connectivityreceiverlistener != null) {
-            connectivityreceiverlistener.onNetworkConnectionChanged(isconnected);
+            connectivityreceiverlistener.onnetworkconnectionchanged(isconnected);
         }
     }
 
@@ -38,6 +38,6 @@ public class connectivityreceiver extends BroadcastReceiver
 
 
     public interface ConnectivityReceiverListener {
-        void onNetworkConnectionChanged(boolean isconnected);
+        void onnetworkconnectionchanged(boolean isconnected);
     }
 }

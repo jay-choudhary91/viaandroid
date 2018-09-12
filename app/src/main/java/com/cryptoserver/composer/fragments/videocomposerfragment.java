@@ -62,11 +62,13 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.drawermetricesadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.camerautil;
 import com.cryptoserver.composer.utils.common;
@@ -93,15 +95,16 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
@@ -193,7 +196,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                   byte[] byteArray = stream.toByteArray();
                                   if(videokey.trim().isEmpty())
                                   {
-                                      videokey="initial";
+                                      randomstring gen = new randomstring(20, ThreadLocalRandom.current());
+                                      videokey=gen.nextString();
                                       String keyvalue= getkeyvalue(byteArray);
                                       xapistartvideo(keyvalue);
                                   }
@@ -238,7 +242,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     /**
      * Whether the app is recording video now
      */
-    private boolean mIsRecordingVideo;
+    public boolean mIsRecordingVideo=false;
     /**
      * An additional thread for running tasks that shouldn't block the UI.
      */
@@ -323,6 +327,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     String selectedvideofile ="",videokey="";
     int metriceslastupdatedposition=0;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+    databasemanager mdbhelper;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -490,6 +495,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
         return rootview;
     }
+
+
+    public boolean isvideorecording()
+    {
+        return mIsRecordingVideo;
+    }
+
 
 
     @Override
@@ -1424,12 +1436,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void xapistartvideo(String hashvalue)
     {
+        Log.e("videokey"," videokey "+videokey);
+
         HashMap<String,String> mpairslist=new HashMap<String, String>();
         mpairslist.put("html","0");
         mpairslist.put("hashmethod",""+keytype);
         mpairslist.put("hashvalue",""+hashvalue);
         mpairslist.put("title","xx");
-        gethelper().xapi_send(getActivity(),"video_start",mpairslist, new apiresponselistener() {
+        gethelper().xapipost_send(getActivity(),"video_start",mpairslist, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 if(response.isSuccess())
@@ -1442,10 +1456,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         e.printStackTrace();
                     }
                 }
-                else
-                {
-                    videokey="";
-                }
             }
         });
     }
@@ -1453,7 +1463,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void xapiupdatevideo()
     {
 
-        if(videokey.trim().isEmpty() || videokey.equalsIgnoreCase("initial"))
+
+        if(! videokey.trim().isEmpty())
             return;
 
         JSONArray array=new JSONArray();
@@ -1520,11 +1531,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 apicurrentduration++;
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false));
+
+
                 if(apicurrentduration == apicallduration)
                 {
                     metriceslastupdatedposition=metricItemArraylist.size();
                     ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
                     metricItemArraylist.addAll(mlist);
+                    saveindb(mlist,muploadframelist);
                 }
 
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -1533,8 +1547,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         if(mvideoframes.size() > 0)
                             madapter.notifyItemChanged(mvideoframes.size()-1);
 
+                        Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
                         if(apicurrentduration == apicallduration)
                         {
+                            apicurrentduration=0;
                             if(metriceslastupdatedposition == 0)
                             {
                                 itemMetricAdapter.notifyDataSetChanged();
@@ -1545,8 +1561,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                         metricItemArraylist.size()-1);
                             }
 
-                            apicurrentduration=0;
-                            xapiupdatevideo();
+
+                            //xapiupdatevideo();
                         }
                     }
                 });
@@ -1554,6 +1570,75 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }).start();
 
 
+    }
+
+    public void saveindb(ArrayList<metricmodel> mmetriceslist,ArrayList<frameinfo> mframelist)
+    {
+        JSONArray hasharray=new JSONArray();
+        JSONArray metricesarray=new JSONArray();
+
+        {
+
+            for(int i=0;i<muploadframelist.size();i++)
+            {
+                JSONObject object=new JSONObject();
+                try {
+                    object.put("framenumber",muploadframelist.get(i).getFramenumber());
+                    object.put("meta",muploadframelist.get(i).getMeta());
+                    object.put("hashvalue",muploadframelist.get(i).getHashvalue());
+                    object.put("hashmethod",muploadframelist.get(i).getHashmethod());
+                    hasharray.put(object);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                //Log.e("upload frame ",muploadframelist.get(i).getFramenumber()+" "+muploadframelist.get(i).getHashvalue());
+            }
+            muploadframelist.clear();
+            Log.e("Json array ",""+hasharray.toString());
+
+
+
+
+        }
+
+        {
+
+            for(int i=0;i<mmetriceslist.size();i++)
+            {
+                JSONObject object=new JSONObject();
+                try {
+                    object.put(mmetriceslist.get(i).getMetricTrackKeyName(),mmetriceslist.get(i).getMetricTrackValue());
+                    metricesarray.put(object);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(getActivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            mdbhelper.insertframemetricesinfo(videokey,"metrickeyname","metrickeyvalue",
+                    "1",""+hasharray.toString(),
+                    "0",""+metricesarray.toString());
+
+            mdbhelper.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getkeyvalue(byte[] data)

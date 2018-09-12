@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -45,6 +46,7 @@ import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.utils.common;
@@ -65,8 +67,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -109,7 +113,7 @@ public abstract class locationawareactivity extends baseactivity implements
     private BroadcastReceiver mBroadcast;
     String CALL_STATUS="",CALL_DURATION="",CALL_REMOTE_NUMBER="",CALL_START_TIME="";
     MyPhoneStateListener mPhoneStatelistener;
-    int mSignalStrength = 0;
+    int mSignalStrength = 0,dbtoxapiupdatecounter=0;
 
     noise mNoise;
     private static final int PERMISSION_RECORD_AUDIO= 92;
@@ -119,7 +123,6 @@ public abstract class locationawareactivity extends baseactivity implements
     private Location oldlocation;
     private Handler myHandler;
     private Runnable myRunnable;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,13 +133,6 @@ public abstract class locationawareactivity extends baseactivity implements
         manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE );
 
         getallpermissions();
-
-        /*if (!checkPermission(this))
-        {
-            locationServiceAlert(locationawareactivity.this);
-        } else {
-            enableGPS(locationawareactivity.this);
-        }*/
     }
 
     public void getallpermissions()
@@ -586,6 +582,13 @@ public abstract class locationawareactivity extends baseactivity implements
                             String value=metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
                             if(! value.trim().isEmpty())
                                 metricItemArraylist.get(i).setMetricTrackValue(value);
+                        }
+
+                        dbtoxapiupdatecounter++;
+                        if(dbtoxapiupdatecounter > 10)
+                        {
+                            dbtoxapiupdatecounter=0;
+                            fetchmetadatadb();
                         }
                     }
                 }).start();
@@ -1218,6 +1221,7 @@ public abstract class locationawareactivity extends baseactivity implements
         }
 
     }
+
 
     private void updateDisplay(String status, double signalEMA) {
 
