@@ -36,21 +36,14 @@ public class footerpagerfragment extends Fragment {
             rootview = inflater.inflate(R.layout.fragment_pager_footer, container, false);
             TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
             TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
-            TextView btn_start_record = (TextView) rootview.findViewById(R.id.btn_start_record);
+
 
             introobject=(intro)getArguments().getParcelable("object");
 
             txt_title.setText(introobject.getTitle());
             txt_description.setText(introobject.getDescription());
 
-            btn_start_record.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent in=new Intent(getActivity(),homeactivity.class);
-                    getActivity().startActivity(in);
-                    getActivity().finish();
-                }
-            });
+
         }
 
         return rootview;

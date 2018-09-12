@@ -69,6 +69,7 @@
 
         </activity>
 
+
         <activity android:name=".activity.homeactivity"
             android:screenOrientation="portrait"/>
 
