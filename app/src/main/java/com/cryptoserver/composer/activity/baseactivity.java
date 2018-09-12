@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -29,16 +30,23 @@ import android.view.inputmethod.InputMethodManager;
 
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
+import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
+import com.cryptoserver.composer.netutils.connectivityreceiver;
 import com.cryptoserver.composer.netutils.xapi;
+import com.cryptoserver.composer.netutils.xapipost;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
+import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.xdata;
+
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -47,15 +55,15 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
-public abstract class baseactivity extends AppCompatActivity implements basefragment.fragmentnavigationhelper {
-
+public abstract class baseactivity extends AppCompatActivity implements basefragment.fragmentnavigationhelper,
+        connectivityreceiver.ConnectivityReceiverListener{
     public static baseactivity instance;
     public boolean isapprunning = false;
     private basefragment mcurrentfragment;
     private SharedPreferences prefs;
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
-
+    private databasemanager mdbhelper;
     public boolean isisapprunning() {
         return isapprunning;
     }
@@ -84,6 +92,14 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     }
 
+    @Override
+    public void onnetworkconnectionchanged(boolean isconnected) {
+        if(isconnected)
+        {
+
+        }
+    }
+
     public basefragment getcurrentfragment() {
         return mcurrentfragment;
     }
@@ -100,8 +116,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             ((videoplayerreaderfragment) getcurrentfragment()).onRestart();
         }
-
-
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -281,6 +295,109 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         getinstance().isapprunning(false);
     }
 
+    public void fetchmetadatadb() {
+
+        if(getcurrentfragment() instanceof videocomposerfragment)
+        {
+            boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
+            if(isrecording)
+                return;
+        }
+
+        if(! common.isnetworkconnected(baseactivity.this))
+            return;
+
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(baseactivity.this);
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String selectedid="",videokey="",hashvalue="";
+
+        try {
+            Cursor cur = mdbhelper.fetchallmetadata();
+            if (cur != null) {
+                while (!cur.isAfterLast()) {
+
+                    selectedid= "" + cur.getString(cur.getColumnIndex("id"));
+                    videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
+                    String metrickeyname = "" + cur.getString(cur.getColumnIndex("metrickeyname"));
+                    String metrickeyvalue = "" + cur.getString(cur.getColumnIndex("metrickeyvalue"));
+                    String selected = "" + cur.getString(cur.getColumnIndex("selected"));
+                    hashvalue = "" + cur.getString(cur.getColumnIndex("hashvalue"));
+                    String framenumber = "" + cur.getString(cur.getColumnIndex("framenumber"));
+                    String metricdata = "" + cur.getString(cur.getColumnIndex("metricdata"));
+
+                  //  cur.moveToLast();
+
+                    break;
+                }
+            }
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        if(! selectedid.trim().isEmpty())
+        {
+            HashMap<String,String> mpairslist=new HashMap<String, String>();
+            mpairslist.put("html","0");
+            mpairslist.put("updatelist",""+hashvalue);
+            mpairslist.put("key",""+videokey);
+
+            final String finalSelectedid = selectedid;
+            xapipost_send(baseactivity.this,"video_update",mpairslist, new apiresponselistener() {
+                @Override
+                public void onResponse(taskresult response) {
+                    deletemetadatarecord(finalSelectedid);
+                    fetchmetadatadb();
+                    /*if(response.isSuccess())
+                    {
+                        try {
+
+
+                            //JSONObject object = (JSONObject) response.getData();
+                            //JSONObject object1 = (JSONObject) response.getData();
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }*/
+                }
+            });
+        }
+    }
+
+    public void deletemetadatarecord(String selectedid)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(baseactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.deletemetadata(selectedid);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void xapi_send(Context mContext, String Action, HashMap<String,String> mPairList, apiresponselistener mListener) {
         xapi api = new xapi(mContext,Action,mListener);
@@ -294,5 +411,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         api.execute();
     }
 
-
+    @Override
+    public void xapipost_send(Context mContext, String Action, HashMap<String,String> mPairList, apiresponselistener mListener) {
+        xapipost api = new xapipost(mContext,Action,mListener);
+        Set keys = mPairList.keySet();
+        Iterator itr = keys.iterator();
+        while (itr.hasNext()) {
+            String key = (String)itr.next();
+            String argvalue = (String)mPairList.get(key);
+            api.add(key,argvalue);
+        }
+        api.execute();
+    }
 }

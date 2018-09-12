@@ -13,23 +13,23 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 
-public class DatabaseManager {
-    protected static final String TAG = "DatabaseManager";
+public class databasemanager {
+    protected static final String TAG = "databasemanager";
 
     private final Context mContext;
     private SQLiteDatabase mDb;
-    private DataBaseHelper mDbHelper;
+    private databasehelper mDbHelper;
 
 
     private ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
     private Lock lock = rwl.writeLock();
 
-    public DatabaseManager(Context context) {
+    public databasemanager(Context context) {
         this.mContext = context;
-        mDbHelper = new DataBaseHelper(mContext);
+        mDbHelper = new databasehelper(mContext);
     }
 
-    public DatabaseManager createDatabase() throws SQLException {
+    public databasemanager createDatabase() throws SQLException {
         try {
             mDbHelper.createDataBase();
         } catch (IOException mIOException) {
@@ -39,7 +39,7 @@ public class DatabaseManager {
         return this;
     }
 
-    public DatabaseManager open() throws SQLException {
+    public databasemanager open() throws SQLException {
         try {
             mDbHelper.openDataBase();
             mDbHelper.close();
@@ -56,37 +56,39 @@ public class DatabaseManager {
     }
 
 
-    public void insertLog(String datetime, String logitem, String logvalue, String timestamp,String selected)
+    public void insertframemetricesinfo(String videokey,String metrickeyname,String metrickeyvalue,String selected,String hashvalue,
+                                        String framenumber,String metricdata)
     {
         try {
             lock.lock();
 
             ContentValues values = new ContentValues();
-            values.put("datetime", ""+datetime);
-            values.put("logitem", ""+logitem);
-            values.put("logvalue", ""+logvalue);
-            values.put("timestamp", ""+timestamp);
+            values.put("videokey", ""+videokey);
+            values.put("metrickeyname", ""+metrickeyname);
+            values.put("metrickeyvalue", ""+metrickeyvalue);
             values.put("selected", ""+selected);
+            values.put("hashvalue", ""+hashvalue);
+            values.put("framenumber", ""+framenumber);
+            values.put("metricdata", ""+metricdata);
 
-            long l=mDb.insert("tbllog", null, values);
-            long a=l;
+            long l=mDb.insert("tblmetadata", null, values);
+            Log.e("Id ",""+l);
 
         } catch (SQLException mSQLException) {
-            Log.e(TAG, "getTestData >>" + mSQLException.toString());
+            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
             throw mSQLException;
         } finally {
             lock.unlock();
         }
     }
 
-
-    public Cursor fetchAllLogData() {
+    public Cursor fetchallmetadata() {
 
         Cursor mCur=null;
         try {
             lock.lock();
 
-            String sql = "SELECT * FROM tbllog;";
+            String sql = "SELECT * FROM tblmetadata;";
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
                 mCur.moveToNext();
@@ -94,11 +96,39 @@ public class DatabaseManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        finally {
+            lock.unlock();
+        }
 
         return  mCur;
     }
 
-    public Cursor fetchLogData(String user_id,String to_user_id,int limit) {
+    public Cursor deletemetadata(String id) {
+
+        Cursor mCur=null;
+        try {
+            lock.lock();
+
+           // String sql = "SELECT * FROM tblmetadata;";
+          //  mCur = mDb.rawQuery(sql, null);
+
+            mDb.execSQL("delete from tblmetadata where id='"+id+"'");
+
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+
+        return  mCur;
+    }
+
+
+    public Cursor fetchlogdata(String user_id, String to_user_id, int limit) {
 
         Cursor mCur=null;
         try {

@@ -13,16 +13,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class DataBaseHelper extends SQLiteOpenHelper
+public class databasehelper extends SQLiteOpenHelper
 {
-    private static String TAG = "DataBaseHelper"; // Tag just for the LogCat window
+    private static String TAG = "databasehelper"; // Tag just for the LogCat window
     //destination path (location) of our database on device
     private static String DB_PATH = "";
     private static String DB_NAME ="viavideoappdb.sqlite";// Database name
     private SQLiteDatabase mDataBase;
     private final Context mContext;
 
-    public DataBaseHelper(Context context)
+    public databasehelper(Context context)
     {
         super(context, DB_NAME, null, 1);// 1? its Database Version
         DB_PATH = "/data/data/" + context.getPackageName() + "/databases/";
