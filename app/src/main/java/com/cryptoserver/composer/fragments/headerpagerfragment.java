@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,10 @@ public class headerpagerfragment extends Fragment {
                     try {
                         gifDrawable = new GifDrawable(getResources(), introobject.getImage());
                         //gifDrawable.setLoopCount(1000);
-                        gifDrawable.setSpeed(0.55f);
+                        gifDrawable.setSpeed(2.0f);
+                       int i= gifDrawable.getDuration();
+                       Log.e("duration",""+i+ "........"+introobject.getTitle());
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
@@ -39,6 +40,7 @@ public class videocontrollerview extends FrameLayout {
     private MediaPlayerControl  mPlayer;
     private Context mContext;
     public LinearLayout controllersview;
+    public RelativeLayout scrubberlayout;
     private ViewGroup mAnchor;
     private View mRoot;
     private ProgressBar mProgress;
@@ -50,7 +52,7 @@ public class videocontrollerview extends FrameLayout {
     private static final int    SHOW_PROGRESS = 2;
     private boolean             mUseFastForward;
     private boolean             mFromXml;
-    private boolean             mListenersSet;
+    private boolean             mListenersSet,isscurbbing;
     private View.OnClickListener mNextListener, mPrevListener;
     StringBuilder               mFormatBuilder;
     Formatter mFormatter;
@@ -82,9 +84,10 @@ public class videocontrollerview extends FrameLayout {
         Log.i(TAG, TAG);
     }
 
-    public videocontrollerview(Context context,adapteritemclick mitemclick) {
+    public videocontrollerview(Context context,adapteritemclick mitemclick,boolean issubbing) {
         this(context, true);
         this.mitemclick=mitemclick;
+        this.isscurbbing=issubbing;
         Log.i(TAG, TAG);
     }
 
@@ -161,7 +164,13 @@ public class videocontrollerview extends FrameLayout {
 
     private void initControllerView(View v) {
         controllersview =v.findViewById(R.id.controller);
+         scrubberlayout=v.findViewById(R.id.scrubberlayout);
         mPauseButton = (ImageButton) v.findViewById(R.id.pause);
+        if(isscurbbing==false){
+         scrubberlayout.setVisibility(VISIBLE);
+        }else {
+            scrubberlayout.setVisibility(GONE);
+        }
         if (mPauseButton != null) {
             mPauseButton.requestFocus();
             mPauseButton.setOnClickListener(mPauseListener);
