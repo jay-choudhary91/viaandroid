@@ -95,6 +95,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     private static final int request_read_external_storage = 1;
     Uri selectedvideouri =null;
     boolean issurafcedestroyed=false;
+    boolean isscrubbing=true;
     drawermetricesadapter itemMetricAdapter;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
 
@@ -238,8 +239,12 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             {
                 switch (motionEvent.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        if(handleimageview.getVisibility() == View.GONE)
+                        if(handleimageview.getVisibility() == View.GONE){
                             hideshowcontroller();
+                        }else{
+                            hideshowcontroller();
+                        }
+
                         break;
                 }
             }
@@ -420,7 +425,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity(),mitemclick);
+            controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
 
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -680,7 +685,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity(),mitemclick);
+            controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
 
             if(VIDEO_URL!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);

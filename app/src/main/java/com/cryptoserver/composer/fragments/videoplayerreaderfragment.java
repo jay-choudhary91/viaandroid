@@ -108,6 +108,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     Uri selectedvideouri =null;
     boolean issurafcedestroyed=false;
     drawermetricesadapter itemMetricAdapter;
+    boolean isscrubbing=false;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     @Override
     public int getlayoutid() {
@@ -166,7 +167,12 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
             SurfaceHolder videoHolder = videoSurface.getHolder();
             videoHolder.addCallback(this);
-
+            frontview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gethelper().updateactionbar(1);
+                }
+            });
         }
 
 
@@ -220,8 +226,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 {
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
-                            if(handleimageview.getVisibility() == View.GONE)
+                            if(handleimageview.getVisibility() == View.GONE) {
                                 hideshowcontroller();
+                            }else{
+                                hideshowcontroller();
+                            }
                             break;
                     }
                 }
@@ -403,7 +412,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity(),mitemclick);
+            controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
 
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -938,7 +947,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity(),mitemclick);
+            controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
 
             if(selectedimageuri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);

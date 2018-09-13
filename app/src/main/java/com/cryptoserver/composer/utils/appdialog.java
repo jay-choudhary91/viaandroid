@@ -1,10 +1,18 @@
 package com.cryptoserver.composer.utils;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
 
@@ -93,4 +101,26 @@ public class appdialog
 
     }
 
+
+    public static void showeggfeaturedialog(Context activity){
+
+
+        final Dialog dialog=new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.egg_dialog);
+
+        final EditText edtInputData1 = (EditText)dialog.findViewById(R.id.edt_inputdata_1);
+        TextView txtTitle = (TextView)dialog.findViewById(R.id.txt_title);
+
+        TextView TxtPositiveButton = (TextView)dialog.findViewById(R.id.tv_positive);
+        final TextView TxtNegativeButton = (TextView)dialog.findViewById(R.id.tv_negative);
+        TxtPositiveButton.setVisibility(View.GONE);
+        TxtNegativeButton.setVisibility(View.GONE);
+
+        dialog.show();
+
+    }
 }

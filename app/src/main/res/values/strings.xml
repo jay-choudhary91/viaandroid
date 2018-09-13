@@ -66,4 +66,7 @@
     <string name="item_hashes">hashes</string>
     <string name="item_graphical">graphical</string>
 
+
+    <string name="developermode_description">App entered in developer mode</string>
+
 </resources>
