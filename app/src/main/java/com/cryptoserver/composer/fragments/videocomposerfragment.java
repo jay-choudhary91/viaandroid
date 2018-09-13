@@ -105,6 +105,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
@@ -307,6 +308,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     LinearLayout linearLayout;
     boolean isflashon = false,inPreview = true;
 
+    TextView txtSlot1;
+    TextView txtSlot2;
+    TextView txtSlot3,txt_metrics;
+
     ImageView mrecordimagebutton,imgflashon,rotatecamera,handle;
 
     public Dialog maindialogshare,subdialogshare;
@@ -318,13 +323,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
     videoframeadapter madapter;
-    drawermetricesadapter itemMetricAdapter;
+   // drawermetricesadapter itemMetricAdapter;
     long currentframenumber =0;
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
     File lastrecordedvideo=null;
-    String selectedvideofile ="",videokey="";
+    String selectedvideofile ="",videokey="",selectedmetrices="";
     int metriceslastupdatedposition=0;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     databasemanager mdbhelper;
@@ -353,6 +358,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
+            txtSlot1 = (TextView) rootview.findViewById(R.id.txt_slot1);
+            txtSlot2 = (TextView) rootview.findViewById(R.id.txt_slot2);
+            txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
+            txt_metrics = (TextView) rootview.findViewById(R.id.txt_metrics);
           //  simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
@@ -461,11 +470,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             recyviewitem.setAdapter(madapter);
 
 
-            itemMetricAdapter = new drawermetricesadapter(getActivity(), metricItemArraylist);
+            /*itemMetricAdapter = new drawermetricesadapter(getActivity(), metricItemArraylist);
             RecyclerView.LayoutManager mManager= new LinearLayoutManager(getActivity());
             recyview_metrices.setLayoutManager(mManager);
             recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-            recyview_metrices.setAdapter(itemMetricAdapter);
+            recyview_metrices.setAdapter(itemMetricAdapter);*/
 
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                 frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
@@ -492,10 +501,29 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mTextureView.setOnTouchListener(this);
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
+
+            txtSlot1.setOnClickListener(this);
+            txtSlot2.setOnClickListener(this);
+            txtSlot3.setOnClickListener(this);
+
+            recyview_metrices.setVisibility(View.VISIBLE);
+            recyviewitem.setVisibility(View.INVISIBLE);
+            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
         }
         return rootview;
     }
 
+    public void resetButtonViews(TextView view1, TextView view2, TextView view3)
+    {
+        view1.setBackgroundResource(R.color.videolist_background);
+        view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
+
+        view2.setBackgroundResource(R.color.white);
+        view2.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+
+        view3.setBackgroundResource(R.color.white);
+        view3.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+    }
 
     public boolean isvideorecording()
     {
@@ -1025,6 +1053,26 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             case R.id.img_rotate_camera:
                 switchCamera();
                 break;
+            case R.id.txt_slot1:
+                txt_metrics.setVisibility(View.VISIBLE);
+                recyview_metrices.setVisibility(View.INVISIBLE);
+                recyviewitem.setVisibility(View.INVISIBLE);
+                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+                break;
+
+            case R.id.txt_slot2:
+                txt_metrics.setVisibility(View.INVISIBLE);
+                recyview_metrices.setVisibility(View.INVISIBLE);
+                recyviewitem.setVisibility(View.VISIBLE);
+                resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
+                break;
+
+            case R.id.txt_slot3:
+                recyview_metrices.setVisibility(View.INVISIBLE);
+                recyviewitem.setVisibility(View.INVISIBLE);
+                txt_metrics.setVisibility(View.INVISIBLE);
+                resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+                break;
         }
     }
 
@@ -1491,22 +1539,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(mvideoframes.size() > 0)
-                            madapter.notifyItemChanged(mvideoframes.size()-1);
+                      //  if(mvideoframes.size() > 0)
+                        //    madapter.notifyItemChanged(mvideoframes.size()-1);
 
                         Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
                         if(apicurrentduration == apicallduration)
                         {
                             apicurrentduration=0;
-                            if(metriceslastupdatedposition == 0)
+
+                            while (metriceslastupdatedposition < metricItemArraylist.size())
                             {
-                                itemMetricAdapter.notifyDataSetChanged();
+                                selectedmetrices=selectedmetrices+"\n"+metricItemArraylist.get(metriceslastupdatedposition).getMetricTrackKeyName()+" - "
+                                        +metricItemArraylist.get(metriceslastupdatedposition).getMetricTrackValue();
+
+                                metriceslastupdatedposition++;
+
                             }
-                            else
-                            {
-                                itemMetricAdapter.notifyItemRangeChanged(metriceslastupdatedposition,
-                                        metricItemArraylist.size()-1);
-                            }
+                            txt_metrics.append(selectedmetrices);
+                            selectedmetrices="";
+
                         }
                     }
                 });

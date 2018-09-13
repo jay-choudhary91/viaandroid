@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
@@ -70,7 +71,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by devesh on 21/8/18.
  */
 
-public class videoplayerreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener,videocontrollerview.MediaPlayerControl {
+public class videoplayerreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener,videocontrollerview.MediaPlayerControl, View.OnClickListener {
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
@@ -82,6 +83,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     RelativeLayout layout_scrubberview;
     @BindView(R.id.frontview)
     RelativeLayout frontview;
+    @BindView(R.id.txt_slot1)
+    TextView txtSlot1;
+    @BindView(R.id.txt_slot2)
+    TextView txtSlot2;
+    @BindView(R.id.txt_slot3)
+    TextView txtSlot3;
+
     RelativeLayout scurraberverticalbar;
 
     private String VIDEO_URL = null;
@@ -122,7 +130,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.videoPlayer_header));
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
+                    (R.color.videoPlayer_header));
 
             frontview.setVisibility(View.VISIBLE);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
@@ -199,7 +208,51 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         righthandle.setOnTouchListener(this);
         videoSurface.setOnTouchListener(this);
 
+        txtSlot1.setOnClickListener(this);
+        txtSlot2.setOnClickListener(this);
+        txtSlot3.setOnClickListener(this);
+
+        recyview_metrices.setVisibility(View.VISIBLE);
+        recyviewitem.setVisibility(View.GONE);
+        resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+
         return rootview;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
+        {
+            case R.id.txt_slot1:
+                recyview_metrices.setVisibility(View.VISIBLE);
+                recyviewitem.setVisibility(View.GONE);
+                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+                break;
+
+            case R.id.txt_slot2:
+                recyview_metrices.setVisibility(View.GONE);
+                recyviewitem.setVisibility(View.VISIBLE);
+                resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
+                break;
+
+            case R.id.txt_slot3:
+                recyview_metrices.setVisibility(View.GONE);
+                recyviewitem.setVisibility(View.GONE);
+                resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+                break;
+        }
+    }
+
+    public void resetButtonViews(TextView view1, TextView view2, TextView view3)
+    {
+        view1.setBackgroundResource(R.color.videolist_background);
+        view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
+
+        view2.setBackgroundResource(R.color.white);
+        view2.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+
+        view3.setBackgroundResource(R.color.white);
+        view3.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
     }
 
     @Override
@@ -227,8 +280,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
                             if(handleimageview.getVisibility() == View.GONE) {
-                                hideshowcontroller();
-                            }else{
                                 hideshowcontroller();
                             }
                             break;
