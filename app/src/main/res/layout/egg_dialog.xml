@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_DialogChangePassword"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_corner"
+    >
+
+    <com.cryptoserver.composer.views.customfonttextview
+        android:id="@+id/txt_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="ALERT"
+        android:textSize="15dp"
+        android:textColor="@color/black"
+        app:fontType="OpenSans_Semibold"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"/>
+
+    <com.cryptoserver.composer.views.customfonttextview
+        android:id="@+id/txt_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/developermode_description"
+        android:textSize="12dp"
+        android:textColor="@color/black"
+        app:fontType="OpenSans_Semibold"
+        android:layout_marginTop="7dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/txt_title"
+        android:textStyle="bold"/>
+
+
+    <EditText
+        android:id="@+id/edt_inputdata_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_edittext"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:singleLine="true"
+        android:visibility="gone"
+        android:hint="Enter Pin"
+        android:padding="5dp"
+
+        android:layout_below="@+id/txt_title"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/lay_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_inputdata_1"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@color/grey_x"
+            android:layout_marginTop="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            >
+
+            <com.cryptoserver.composer.views.customfonttextview
+                android:id="@+id/tv_negative"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_toLeftOf="@+id/view_vertical"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="cancel"
+                app:fontType="OpenSans_Semibold"
+                android:padding="10dp"
+                android:textSize="15dp" />
+
+            <View
+                android:id="@+id/view_vertical"
+                android:layout_width="0.7dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:background="@color/grey_x" />
+
+            <com.cryptoserver.composer.views.customfonttextview
+                android:id="@+id/tv_positive"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:padding="10dp"
+                app:fontType="OpenSans_Semibold"
+                android:text="ok"
+                android:textSize="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/tv_negative"
+                android:layout_toEndOf="@+id/tv_negative" />
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
