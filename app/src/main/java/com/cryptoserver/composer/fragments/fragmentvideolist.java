@@ -9,6 +9,7 @@ import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -19,8 +20,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
@@ -28,6 +31,7 @@ import com.cryptoserver.composer.adapter.adaptervideolist;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
+import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
@@ -61,6 +65,13 @@ public class fragmentvideolist extends basefragment {
     @BindView(R.id.rv_videolist)
     RecyclerView recyrviewvideolist;
 
+    RelativeLayout listlayout;
+    boolean touched =false;
+    private Handler myHandler;
+    private Runnable myRunnable;
+    boolean isinbackground=false;
+    Date initialDate;
+
     View rootview = null;
     private static final int request_permissions = 1;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
@@ -84,10 +95,23 @@ public class fragmentvideolist extends basefragment {
         super.initviews(parent, savedInstanceState);
         ButterKnife.bind(this,parent);
     }
+    @Override
+    public void onStop() {
+        super.onStop();
+        isinbackground=true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+        isinbackground=false;
         recyrviewvideolist.addOnItemTouchListener(onTouchListener);
         if (getdeniedpermissions().isEmpty()) {
             // All permissions are granted
@@ -144,6 +168,8 @@ public class fragmentvideolist extends basefragment {
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
+            listlayout=rootview.findViewById(R.id.listlayout);
+
 
             adapter = new adaptervideolist(getActivity(),arrayvideolist, new adapteritemclick() {
                 @Override
@@ -181,6 +207,50 @@ public class fragmentvideolist extends basefragment {
                 // All permissions are granted
                 getVideoList();
             }
+
+
+            listlayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+
+                    switch (event.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            touched = true;
+                            initialDate = new Date();
+                            Log.e("user touch","on touch" + touched);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            touched = false;
+                            Log.e("on touch end ","on touch end" + touched);
+                            break;
+                    }
+                    return false;
+                }
+            });
+            myHandler=new Handler();
+            myRunnable = new Runnable() {
+                @Override
+                public void run() {
+
+                    if(! isinbackground)
+                    {
+
+                        if(touched==true){
+                            Date currentDate=new Date();
+                            int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
+                            if(secondDifference > 4)
+                            {
+                                initialDate = new Date();
+                                appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
+                            }
+                        }
+
+                    }
+                    myHandler.postDelayed(this, 400);
+                }
+            };
+            myHandler.post(myRunnable);
         }
         return rootview;
     }
