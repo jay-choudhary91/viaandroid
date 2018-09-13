@@ -176,7 +176,7 @@ public class fragmentvideolist extends basefragment {
                 }
             });
 
-            launchvideocomposer(true);
+            launchvideocomposer(false);
             if (getdeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();

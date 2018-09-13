@@ -1,5 +1,7 @@
 package com.cryptoserver.composer.models;
 
+import java.util.ArrayList;
+
 /**
  * Created by root on 2/5/18.
  */
@@ -12,15 +14,25 @@ public class frameinfo
     public String hashvalue ="";
     public String hashmethod ="";
     public boolean isuploaded=false;
+    public ArrayList<metricmodel> metriceslist=new ArrayList<metricmodel>();
 
 
-    public frameinfo(String framenumber, String meta, String hashvalue, String hashmethod,boolean isuploaded)
+    public frameinfo(String framenumber, String meta, String hashvalue, String hashmethod,boolean isuploaded,ArrayList<metricmodel> metriceslist)
     {
         setFramenumber(framenumber);
         setMeta(meta);
         setHashvalue(hashvalue);
         setHashmethod(hashmethod);
         setIsuploaded(isuploaded);
+        setMetriceslist(metriceslist);
+    }
+
+    public ArrayList<metricmodel> getMetriceslist() {
+        return metriceslist;
+    }
+
+    public void setMetriceslist(ArrayList<metricmodel> metriceslist) {
+        this.metriceslist = metriceslist;
     }
 
     public String getTitle() {

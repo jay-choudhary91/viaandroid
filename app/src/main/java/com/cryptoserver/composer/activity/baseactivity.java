@@ -340,6 +340,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     break;
                 }
             }
+
             mdbhelper.close();
         }catch (Exception e)
         {

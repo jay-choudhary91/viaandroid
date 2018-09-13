@@ -62,5 +62,8 @@
     <string name="record">Record</string>
     <string name="stop">Stop</string>
     <string name="description_info">Info</string>
+    <string name="item_metrics">metrics</string>
+    <string name="item_hashes">hashes</string>
+    <string name="item_graphical">graphical</string>
 
 </resources>

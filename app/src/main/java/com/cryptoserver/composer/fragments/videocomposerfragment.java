@@ -1460,56 +1460,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         });
     }
 
-    public void xapiupdatevideo()
-    {
-
-
-        if(! videokey.trim().isEmpty())
-            return;
-
-        JSONArray array=new JSONArray();
-        for(int i=0;i<muploadframelist.size();i++)
-        {
-            JSONObject object=new JSONObject();
-            try {
-                object.put("framenumber",muploadframelist.get(i).getFramenumber());
-                object.put("meta",muploadframelist.get(i).getMeta());
-                object.put("hashvalue",muploadframelist.get(i).getHashvalue());
-                object.put("hashmethod",muploadframelist.get(i).getHashmethod());
-                array.put(object);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            //Log.e("upload frame ",muploadframelist.get(i).getFramenumber()+" "+muploadframelist.get(i).getHashvalue());
-        }
-        muploadframelist.clear();
-        Log.e("Json array ",""+array.toString());
-
-        HashMap<String,String> mpairslist=new HashMap<String, String>();
-        mpairslist.put("html","0");
-        mpairslist.put("updatelist",""+array);
-        mpairslist.put("key",""+videokey);
-
-        gethelper().xapi_send(getActivity(),"video_update",mpairslist, new apiresponselistener() {
-            @Override
-            public void onResponse(taskresult response) {
-                if(response.isSuccess())
-                {
-                    try {
-                        JSONObject object = (JSONObject) response.getData();
-                        JSONObject object1 = (JSONObject) response.getData();
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-    }
-
     public videomodel updatelistitem(byte[] array, String message)
     {
         if(array == null || array.length == 0)
@@ -1529,17 +1479,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     return;
                 String keyvalue= getkeyvalue(array);
                 apicurrentduration++;
+                metriceslastupdatedposition=metricItemArraylist.size();
+                ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
+                metricItemArraylist.addAll(mlist);
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
-                muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false));
-
+                muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
 
                 if(apicurrentduration == apicallduration)
-                {
-                    metriceslastupdatedposition=metricItemArraylist.size();
-                    ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-                    metricItemArraylist.addAll(mlist);
                     saveindb(mlist,muploadframelist);
-                }
 
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
@@ -1560,9 +1507,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 itemMetricAdapter.notifyItemRangeChanged(metriceslastupdatedposition,
                                         metricItemArraylist.size()-1);
                             }
-
-
-                            //xapiupdatevideo();
                         }
                     }
                 });
@@ -1576,7 +1520,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         JSONArray hasharray=new JSONArray();
         JSONArray metricesarray=new JSONArray();
-
         {
 
             for(int i=0;i<muploadframelist.size();i++)
@@ -1592,15 +1535,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     e.printStackTrace();
                 }
-
-                //Log.e("upload frame ",muploadframelist.get(i).getFramenumber()+" "+muploadframelist.get(i).getHashvalue());
             }
             muploadframelist.clear();
             Log.e("Json array ",""+hasharray.toString());
-
-
-
-
         }
 
         {
