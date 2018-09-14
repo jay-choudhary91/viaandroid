@@ -10,6 +10,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -62,6 +63,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,6 +123,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     drawermetricesadapter itemMetricAdapter;
     boolean isscrubbing=true;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+    private Handler myHandler;
+    private Runnable myRunnable;
+    long framecount=0;
+
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -434,6 +440,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
         destroyvideoplayer();
     }
 
@@ -895,7 +903,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 playerposition=0;
                 setupVideoPlayer(selectedvideouri);
                 righthandle.setVisibility(View.VISIBLE);
-
+                framecount=0;
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                     mvideoframes.clear();
                     mallframes.clear();
@@ -1061,11 +1069,15 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if(format.equalsIgnoreCase("mp4"))
                grabber.setFormat(format);
 
+            grabber.start();
 
-           grabber.start();
+            framecount=grabber.getLengthInFrames();   // suppose its 500
+            videoduration=grabber.getLengthInTime();   // suppose its 10000
+
             videomodel lastframehash=null;
            for(int i = 0; i<grabber.getLengthInFrames(); i++){
                Frame frame = grabber.grabImage();
+
                 if (frame == null)
                     break;
 
@@ -1125,6 +1137,59 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     }
 
 
+    public void checkfornewframe()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if(videoduration > 0 && framecount > 0)
+                {
+                    long actualduration=videoduration/1000;    // its 10 seconds
+                    long framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
+
+                    if(player != null)
+                    {
+                        long currentvideoduration=player.getCurrentPosition();  // suppose its on 4th pos means 4000
+                        currentvideoduration=currentvideoduration/1000;  // Its 4
+
+                        long toframe=framesegment*currentvideoduration;
+
+
+
+
+                    }
+
+
+
+
+
+
+                }
+
+
+
+                int i=0;
+                while(i<framecount)
+                {
+
+
+
+
+
+
+                    i++;
+                }
+
+                myHandler.postDelayed(this, 100);
+            }
+        };
+        myHandler.post(myRunnable);
+    }
 
 
 

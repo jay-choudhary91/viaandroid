@@ -23,6 +23,7 @@ import com.cryptoserver.composer.fragments.headerpagerfragment;
 import com.cryptoserver.composer.models.intro;
 
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.views.pageranimation;
 import com.cryptoserver.composer.views.pagercustomduration;
 
@@ -81,7 +82,7 @@ public class introactivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intro_pager);
-
+        xdata.getinstance().saveSetting(xdata.developermode,"");
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             Intent in=new Intent(introactivity.this,homeactivity.class);

@@ -1737,7 +1737,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(maindialogshare != null && maindialogshare.isShowing())
             maindialogshare.dismiss();
 
-        maindialogshare=new Dialog(getActivity());
+        maindialogshare=new Dialog(applicationviavideocomposer.getactivity());
         maindialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
         maindialogshare.setCanceledOnTouchOutside(true);
         maindialogshare.setContentView(R.layout.popup_sharescreen);
@@ -1812,7 +1812,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(subdialogshare != null && subdialogshare.isShowing())
             subdialogshare.dismiss();
 
-        subdialogshare=new Dialog(getActivity());
+        subdialogshare=new Dialog(applicationviavideocomposer.getactivity());
         subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
         subdialogshare.setCanceledOnTouchOutside(true);
 
