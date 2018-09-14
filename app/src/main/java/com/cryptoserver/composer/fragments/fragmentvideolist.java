@@ -34,6 +34,7 @@ import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.xdata;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -104,8 +105,7 @@ public class fragmentvideolist extends basefragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
+        removehandler();
     }
 
     @Override
@@ -209,7 +209,7 @@ public class fragmentvideolist extends basefragment {
             }
 
 
-            listlayout.setOnTouchListener(new View.OnTouchListener() {
+            recyrviewvideolist.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
 
@@ -228,31 +228,46 @@ public class fragmentvideolist extends basefragment {
                     return false;
                 }
             });
+
+            detectdevelopermode();
+
+        }
+        return rootview;
+    }
+
+    public void detectdevelopermode()
+    {
+        if(! common.isdevelopermodeenable())
+        {
             myHandler=new Handler();
             myRunnable = new Runnable() {
                 @Override
                 public void run() {
 
-                    if(! isinbackground)
+                    if(! isinbackground && (! common.isdevelopermodeenable()))
                     {
-
                         if(touched==true){
                             Date currentDate=new Date();
                             int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
                             if(secondDifference > 4)
                             {
                                 initialDate = new Date();
-                                appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
+                                if(! appdialog.isdialogshowing())
+                                    appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
                             }
                         }
-
                     }
-                    myHandler.postDelayed(this, 400);
+                    myHandler.postDelayed(this, 100);
                 }
             };
             myHandler.post(myRunnable);
         }
-        return rootview;
+    }
+
+    public void removehandler()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
     }
 
     public void getVideoList()

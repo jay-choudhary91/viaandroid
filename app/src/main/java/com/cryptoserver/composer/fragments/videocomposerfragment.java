@@ -310,7 +310,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     TextView txtSlot1;
     TextView txtSlot2;
-    TextView txtSlot3,txt_metrics;
+    TextView txtSlot3,txt_metrics,txt_hashes;
 
     ImageView mrecordimagebutton,imgflashon,rotatecamera,handle;
 
@@ -329,7 +329,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
     File lastrecordedvideo=null;
-    String selectedvideofile ="",videokey="",selectedmetrices="";
+    String selectedvideofile ="",videokey="",selectedmetrices="",selectedhashesh="";
     int metriceslastupdatedposition=0;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     databasemanager mdbhelper;
@@ -362,6 +362,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txtSlot2 = (TextView) rootview.findViewById(R.id.txt_slot2);
             txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
             txt_metrics = (TextView) rootview.findViewById(R.id.txt_metrics);
+            txt_hashes = (TextView) rootview.findViewById(R.id.txt_hashes);
           //  simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
@@ -506,9 +507,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
 
-            recyview_metrices.setVisibility(View.VISIBLE);
-            recyviewitem.setVisibility(View.INVISIBLE);
-            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+            if(! common.isdevelopermodeenable())
+            {
+                resetButtonViews(txtSlot3,txtSlot2,txtSlot1);
+                txtSlot1.setVisibility(View.GONE);
+                txtSlot2.setVisibility(View.GONE);
+                txtSlot3.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                recyview_metrices.setVisibility(View.VISIBLE);
+                recyviewitem.setVisibility(View.INVISIBLE);
+                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+            }
+
         }
         return rootview;
     }
@@ -1055,6 +1067,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
             case R.id.txt_slot1:
                 txt_metrics.setVisibility(View.VISIBLE);
+                txt_hashes.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
                 recyviewitem.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
@@ -1063,11 +1076,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             case R.id.txt_slot2:
                 txt_metrics.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
-                recyviewitem.setVisibility(View.VISIBLE);
+                recyviewitem.setVisibility(View.INVISIBLE);
+                txt_hashes.setVisibility(View.VISIBLE);
                 resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
                 break;
 
             case R.id.txt_slot3:
+                txt_hashes.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
                 recyviewitem.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
@@ -1533,8 +1548,38 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
 
+                selectedhashesh="";
+                for(int i=0;i<mvideoframes.size();i++)
+                {
+                    selectedhashesh=selectedhashesh+"\n"+mvideoframes.get(i).getframeinfo();
+                }
+
+                if(apicurrentduration > apicallduration)
+                    apicurrentduration=apicallduration;
+
                 if(apicurrentduration == apicallduration)
                     saveindb(mlist,muploadframelist);
+
+                Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
+                if(apicurrentduration == apicallduration)
+                {
+                    apicurrentduration=0;
+                    selectedmetrices="";
+                    for(int i=0;i<mlist.size();i++)
+                    {
+                        selectedmetrices=selectedmetrices+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "
+                                +mlist.get(i).getMetricTrackValue();
+                    }
+
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                          //  Log.e("Metrices content ",""+selectedmetrices);
+                          //  txt_metrics.append(selectedmetrices);
+
+                        }
+                    });
+                }
 
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
@@ -1542,23 +1587,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                       //  if(mvideoframes.size() > 0)
                         //    madapter.notifyItemChanged(mvideoframes.size()-1);
 
-                        Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
-                        if(apicurrentduration == apicallduration)
-                        {
-                            apicurrentduration=0;
 
-                            while (metriceslastupdatedposition < metricItemArraylist.size())
-                            {
-                                selectedmetrices=selectedmetrices+"\n"+metricItemArraylist.get(metriceslastupdatedposition).getMetricTrackKeyName()+" - "
-                                        +metricItemArraylist.get(metriceslastupdatedposition).getMetricTrackValue();
+                        txt_hashes.setText(selectedhashesh);
+                      //  txt_metrics.append(selectedmetrices);
 
-                                metriceslastupdatedposition++;
-
-                            }
-                            txt_metrics.append(selectedmetrices);
-                            selectedmetrices="";
-
-                        }
                     }
                 });
             }

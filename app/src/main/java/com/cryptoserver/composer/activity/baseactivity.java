@@ -347,6 +347,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
+        Log.e("video_updateid ",""+selectedid);
         if(! selectedid.trim().isEmpty())
         {
             HashMap<String,String> mpairslist=new HashMap<String, String>();
