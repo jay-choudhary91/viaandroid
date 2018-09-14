@@ -95,7 +95,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     private static final int request_read_external_storage = 1;
     Uri selectedvideouri =null;
     boolean issurafcedestroyed=false;
-    boolean isscrubbing=true;
+    boolean isscrubbing=false;
     drawermetricesadapter itemMetricAdapter;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
 
@@ -144,17 +144,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        /*touched = true;*/
-                        if(handleimageview.getVisibility() == View.GONE)
+                        if(player !=null)
                             hideshowcontroller();
-
-                      //  Log.e("user touch","on touch" );
-
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        /*touched = false;*/
-                  //      Log.e("on touch end ","on touch end" );
                         break;
                 }
                 return false;

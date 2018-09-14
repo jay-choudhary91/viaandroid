@@ -116,7 +116,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     Uri selectedvideouri =null;
     boolean issurafcedestroyed=false;
     drawermetricesadapter itemMetricAdapter;
-    boolean isscrubbing=false;
+    boolean isscrubbing=true;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     @Override
     public int getlayoutid() {
@@ -129,9 +129,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
-            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
-                    (R.color.videoPlayer_header));
 
             frontview.setVisibility(View.VISIBLE);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
@@ -180,6 +177,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 @Override
                 public void onClick(View v) {
                     gethelper().updateactionbar(1);
+
                 }
             });
         }
@@ -279,7 +277,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 {
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
-                            if(handleimageview.getVisibility() == View.GONE) {
+                            if(player != null) {
                                 hideshowcontroller();
                             }
                             break;
@@ -359,6 +357,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
         });
     }
+
+
 
     public void swiperighttoleft()
     {
@@ -442,6 +442,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             player.stop();
             player.release();
             player=null;
+           // changeactionbarcolor(player);
+
         }
     }
 
@@ -471,6 +473,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
+
+               if(player!=null){
+                   changeactionbarcolor();
+               }
 
                 if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
                 {
@@ -1007,6 +1013,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
+                if(player!=null)
+                    changeactionbarcolor();
             }
 
 
@@ -1019,6 +1027,19 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    public void  changeactionbarcolor(){
+
+
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
+                    (R.color.videoPlayer_header));
+        /*else{
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
+                    (R.color.actionbar_solid));
+        }*/
     }
 
 
@@ -1098,6 +1119,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
         });
     }
+
+
+
 
 
     @Override

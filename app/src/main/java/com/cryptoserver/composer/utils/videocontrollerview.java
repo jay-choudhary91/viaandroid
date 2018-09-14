@@ -166,11 +166,13 @@ public class videocontrollerview extends FrameLayout {
         controllersview =v.findViewById(R.id.controller);
          scrubberlayout=v.findViewById(R.id.scrubberlayout);
         mPauseButton = (ImageButton) v.findViewById(R.id.pause);
-        if(isscurbbing==false){
-         scrubberlayout.setVisibility(VISIBLE);
+
+        if(isscurbbing == true){
+            scrubberlayout.setVisibility(VISIBLE);
         }else {
             scrubberlayout.setVisibility(GONE);
         }
+
         if (mPauseButton != null) {
             mPauseButton.requestFocus();
             mPauseButton.setOnClickListener(mPauseListener);
