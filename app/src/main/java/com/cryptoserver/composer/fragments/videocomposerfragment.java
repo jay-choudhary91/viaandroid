@@ -518,6 +518,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             {
                 recyview_metrices.setVisibility(View.VISIBLE);
                 recyviewitem.setVisibility(View.INVISIBLE);
+                txt_metrics.setVisibility(View.VISIBLE);
+                txt_hashes.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             }
 
@@ -1031,7 +1033,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        setvideoadapter();
+                        /*if(common.isdevelopermodeenable())
+                        {
+                            setvideoadapter();
+                        }*/
+
                     }
                 }).start();
 
@@ -1075,9 +1081,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             case R.id.txt_slot2:
                 txt_metrics.setVisibility(View.INVISIBLE);
+                txt_hashes.setVisibility(View.INVISIBLE);
+
                 recyview_metrices.setVisibility(View.INVISIBLE);
-                recyviewitem.setVisibility(View.INVISIBLE);
-                txt_hashes.setVisibility(View.VISIBLE);
+                recyviewitem.setVisibility(View.VISIBLE);
                 resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
                 break;
 
@@ -1232,6 +1239,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if (mTextureView.isAvailable()) {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
         }
+
 
         mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
 
@@ -1548,11 +1556,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
 
-                selectedhashesh="";
-                for(int i=0;i<mvideoframes.size();i++)
+                selectedhashesh=mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+                /*for(int i=0;i<mvideoframes.size();i++)
                 {
                     selectedhashesh=selectedhashesh+"\n"+mvideoframes.get(i).getframeinfo();
-                }
+                }*/
 
                 if(apicurrentduration > apicallduration)
                     apicurrentduration=apicallduration;
@@ -1575,7 +1583,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         @Override
                         public void run() {
                           //  Log.e("Metrices content ",""+selectedmetrices);
-                          //  txt_metrics.append(selectedmetrices);
+
+                           /*if(common.isdevelopermodeenable())
+                               txt_metrics.append(selectedmetrices);*/
+
 
                         }
                     });
@@ -1584,12 +1595,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                      //  if(mvideoframes.size() > 0)
-                        //    madapter.notifyItemChanged(mvideoframes.size()-1);
-
-
-                        txt_hashes.setText(selectedhashesh);
-                      //  txt_metrics.append(selectedmetrices);
+                     //   if(mvideoframes.size() > 0)
+                       //     madapter.notifyItemChanged(madapter.getItemCount(),mvideoframes.size()-1);
+                        /*if(common.isdevelopermodeenable())
+                            txt_hashes.append(selectedhashesh);*/
 
                     }
                 });

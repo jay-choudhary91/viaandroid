@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
@@ -64,6 +65,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
+    @BindView(R.id.layout_metrices_hashes)
+    ScrollView layout_metrices_hashes;
     @BindView(R.id.recyview_metrices)
     RecyclerView recyview_metrices;
     @BindView(R.id.txt_slot1)
@@ -174,6 +177,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         recyview_metrices.setVisibility(View.VISIBLE);
         recyviewitem.setVisibility(View.GONE);
         resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+        layout_metrices_hashes.setVisibility(View.GONE);
 
         return rootview;
     }

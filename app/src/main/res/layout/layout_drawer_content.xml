@@ -107,6 +107,7 @@
         </android.support.v7.widget.RecyclerView>
 
         <ScrollView
+            android:id="@+id/layout_metrices_hashes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">

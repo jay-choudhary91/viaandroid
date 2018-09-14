@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +80,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     RecyclerView recyview_metrices;
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
+    @BindView(R.id.layout_metrices_hashes)
+    ScrollView layout_metrices_hashes;
     @BindView(R.id.layout_scrubberview)
     RelativeLayout layout_scrubberview;
     @BindView(R.id.frontview)
@@ -213,6 +216,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         recyview_metrices.setVisibility(View.VISIBLE);
         recyviewitem.setVisibility(View.GONE);
         resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+        layout_metrices_hashes.setVisibility(View.GONE);
 
         return rootview;
     }
