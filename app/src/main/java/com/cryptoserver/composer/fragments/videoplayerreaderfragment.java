@@ -94,6 +94,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     TextView txtSlot2;
     @BindView(R.id.txt_slot3)
     TextView txtSlot3;
+    @BindView(R.id.txt_hashes)
+    TextView txt_hashes;
+    @BindView(R.id.txt_metrics)
+    TextView txt_metrics;
 
     RelativeLayout scurraberverticalbar;
 
@@ -110,10 +114,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     videoframeadapter madapter;
     long currentframenumber =0,playerposition=0;
     long frameduration =15, mframetorecordcount =0;
+    ArrayList<videomodel> mainvideoframes =new ArrayList<>();
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<videomodel> mallframes =new ArrayList<>();
     ArrayList<frame> mbitmaplist =new ArrayList<>();
-    long videoduration =0;
+    long videoduration =0,actualduration=0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,
+    lastgetframe=0;
+    boolean frameprocess=false;
     boolean ishashprocessing=false;
     public int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
@@ -211,6 +218,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
         righthandle.setVisibility(View.GONE);
 
+        /*recyview_metrices.setVisibility(View.VISIBLE);
+        recyviewitem.setVisibility(View.GONE);
+        txt_hashes.setVisibility(View.VISIBLE);*/
+
         handleimageview.setOnTouchListener(this);
         righthandle.setOnTouchListener(this);
         videoSurface.setOnTouchListener(this);
@@ -219,10 +230,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         txtSlot2.setOnClickListener(this);
         txtSlot3.setOnClickListener(this);
 
-        recyview_metrices.setVisibility(View.VISIBLE);
+        recyview_metrices.setVisibility(View.GONE);
         recyviewitem.setVisibility(View.GONE);
+        txt_hashes.setVisibility(View.VISIBLE);
+        txt_metrics.setVisibility(View.INVISIBLE);
         resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-        layout_metrices_hashes.setVisibility(View.GONE);
 
         return rootview;
     }
@@ -232,20 +244,20 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         switch (view.getId())
         {
             case R.id.txt_slot1:
-                recyview_metrices.setVisibility(View.VISIBLE);
-                recyviewitem.setVisibility(View.GONE);
+                txt_hashes.setVisibility(View.VISIBLE);
+                txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
                 break;
 
             case R.id.txt_slot2:
-                recyview_metrices.setVisibility(View.GONE);
-                recyviewitem.setVisibility(View.VISIBLE);
+                txt_hashes.setVisibility(View.INVISIBLE);
+                txt_metrics.setVisibility(View.VISIBLE);
                 resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
                 break;
 
             case R.id.txt_slot3:
-                recyview_metrices.setVisibility(View.GONE);
-                recyviewitem.setVisibility(View.GONE);
+                txt_hashes.setVisibility(View.INVISIBLE);
+                txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
                 break;
         }
@@ -496,6 +508,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     keytype=checkkey();
 
                     mvideoframes.clear();
+                    mainvideoframes.clear();
                     mallframes.clear();
                     madapter.notifyDataSetChanged();
                     Thread thread = new Thread(){
@@ -635,6 +648,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if(player != null)
             {
                // Log.e("getCurrentPosition ",""+player.getCurrentPosition());
+                if(currentvideoduration == 0 || (player.getCurrentPosition() > currentvideoduration))
+                {
+                    currentvideoduration=player.getCurrentPosition();  // suppose its on 4th pos means 4000
+                    currentvideodurationseconds=currentvideoduration/1000;  // Its 4
+                }
+
+
                 if(mbitmaplist.size() > 0)
                 {
                     int second=player.getCurrentPosition()/1000;
@@ -893,8 +913,14 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 metricItemArraylist.clear();
                 ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-                metricItemArraylist.addAll(mlist);
-                itemMetricAdapter.notifyDataSetChanged();
+                String selectedmetrics="";
+                for(int i=0;i<mlist.size();i++)
+                {
+                    selectedmetrics=selectedmetrics+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "+mlist.get(i).getMetricTrackValue();
+                }
+                txt_metrics.setText(selectedmetrics);
+                //metricItemArraylist.addAll(mlist);
+                //itemMetricAdapter.notifyDataSetChanged();
 
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
@@ -906,6 +932,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 framecount=0;
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                     mvideoframes.clear();
+                    mainvideoframes.clear();
                     mallframes.clear();
                     madapter.notifyDataSetChanged();
                     Thread thread = new Thread(){
@@ -1073,6 +1100,16 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
             framecount=grabber.getLengthInFrames();   // suppose its 500
             videoduration=grabber.getLengthInTime();   // suppose its 10000
+            videoduration=videoduration/1000;
+            long actualduration=videoduration/1000;    // its 10 seconds
+            framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    checkfornewframe();
+                }
+            });
 
             videomodel lastframehash=null;
            for(int i = 0; i<grabber.getLengthInFrames(); i++){
@@ -1089,31 +1126,33 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
 
-                if (count == currentframenumber) {
+                /*if (count == currentframenumber) {
                     lastframehash=null;
                     mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-                    notifydata();
+
 
                     currentframenumber = currentframenumber + frameduration;
                 }
                 else
                 {
                     lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                }
+                }*/
+               lastframehash=null;
+               mainvideoframes.add(new videomodel("Frame ", keytype, count,keyValue));
+
                 count++;
             }
 
             if(lastframehash != null)
             {
-                mvideoframes.add(lastframehash);
+                mainvideoframes.add(lastframehash);
             }
             else
             {
-                if(mvideoframes.size() > 0)
-                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                if(mainvideoframes.size() > 0)
+                    mainvideoframes.get(mainvideoframes.size()-1).settitle("Last Frame ");
             }
 
-            notifydata();
 
             ishashprocessing=false;
             grabber.flush();
@@ -1149,31 +1188,47 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 if(videoduration > 0 && framecount > 0)
                 {
-                    long actualduration=videoduration/1000;    // its 10 seconds
-                    long framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
-
-                    if(player != null)
+                    long toframe=framesegment*currentvideodurationseconds;
+                    if(toframe <= mainvideoframes.size() && toframe >0)
                     {
-                        long currentvideoduration=player.getCurrentPosition();  // suppose its on 4th pos means 4000
-                        currentvideoduration=currentvideoduration/1000;  // Its 4
+                        if(! frameprocess)
+                        {
+                            String selectedhaeshes="";
+                            boolean flag=false;
+                            while (lastgetframe <= toframe)
+                            {
+                                if(lastgetframe < mainvideoframes.size())
+                                {
+                                 //   Log.e("Current frame number ",""+mainvideoframes.get((int)lastgetframe).getcurrentframenumber());
+                                  //  mvideoframes.add(mainvideoframes.get((int)lastgetframe));
+                                    //Log.e("getItemCount ",""+madapter.getItemCount());
+                                    selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe).gettitle()+" "+ mainvideoframes.get((int)lastgetframe).getcurrentframenumber()+" "+
+                                            mainvideoframes.get((int)lastgetframe).getkeytype()+":"+" "+ mainvideoframes.get((int)lastgetframe).getkeyvalue();
+                                    lastgetframe++;
+                                    frameprocess=true;
+                                    flag=true;
+                                }
+                                else
+                                {
+                                    if(lastgetframe == framecount)
+                                    {
+                                        if(myHandler != null && myRunnable != null)
+                                            myHandler.removeCallbacks(myRunnable);
+                                        break;
+                                    }
+                                }
+                            }
 
-                        long toframe=framesegment*currentvideoduration;
+                            if(flag)
+                                txt_hashes.append(selectedhaeshes);
 
-
-
+                            frameprocess=false;
+                        }
 
                     }
-
-
-
-
-
-
                 }
 
-
-
-                int i=0;
+                /*int i=0;
                 while(i<framecount)
                 {
 
@@ -1183,9 +1238,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
 
                     i++;
-                }
+                }*/
 
-                myHandler.postDelayed(this, 100);
+                myHandler.postDelayed(this, 1000);
             }
         };
         myHandler.post(myRunnable);
