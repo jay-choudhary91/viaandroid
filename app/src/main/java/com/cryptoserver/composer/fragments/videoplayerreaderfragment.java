@@ -17,6 +17,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -78,8 +79,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
-    @BindView(R.id.recyview_metrices)
-    RecyclerView recyview_metrices;
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
     @BindView(R.id.layout_metrices_hashes)
@@ -109,30 +108,28 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     View rootview = null;
     ImageView handleimageview,righthandle;
     LinearLayout linearLayout;
-    RecyclerView recyviewitem;
     String keytype =config.prefs_md5;
-    videoframeadapter madapter;
     long currentframenumber =0,playerposition=0;
     long frameduration =15, mframetorecordcount =0;
     ArrayList<videomodel> mainvideoframes =new ArrayList<>();
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<videomodel> mallframes =new ArrayList<>();
     ArrayList<frame> mbitmaplist =new ArrayList<>();
-    long videoduration =0,actualduration=0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,
-    lastgetframe=0;
-    boolean frameprocess=false;
+
     boolean ishashprocessing=false;
     public int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
     framebitmapadapter adapter;
     Uri selectedvideouri =null;
     boolean issurafcedestroyed=false;
-    drawermetricesadapter itemMetricAdapter;
     boolean isscrubbing=true;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     private Handler myHandler;
     private Runnable myRunnable;
     long framecount=0;
+    long videoduration =0,actualduration=0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,
+            lastgetframe=0;
+    boolean frameprocess=false;
 
     @Override
     public int getlayoutid() {
@@ -151,7 +148,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
             righthandle=rootview.findViewById(R.id.righthandle);
-            recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
 
@@ -173,19 +169,28 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                                 }
                             });
-                    RecyclerView.LayoutManager mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    final LinearLayoutManager mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyview_frames.setLayoutManager(mLayoutManager);
                     recyview_frames.setItemAnimator(new DefaultItemAnimator());
                     recyview_frames.setAdapter(adapter);
+                    /*recyview_frames.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+                        }
+
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+                            int totalVisibleItems = mLayoutManager.findLastVisibleItemPosition() -
+                                    mLayoutManager.findFirstVisibleItemPosition();
+                            int centeredItemPosition = totalVisibleItems / 2;
+                            Log.e("Center items ",""+centeredItemPosition);
+                            //int centeredItemPosition1 = totalVisibleItems / 2;
+                        }
+                    });*/
                 }
             });
-
-            itemMetricAdapter = new drawermetricesadapter(getActivity(), metricItemArraylist);
-
-            RecyclerView.LayoutManager mLayoutManager= new LinearLayoutManager(getActivity());
-            recyview_metrices.setLayoutManager(mLayoutManager);
-            recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-            recyview_metrices.setAdapter(itemMetricAdapter);
 
             SurfaceHolder videoHolder = videoSurface.getHolder();
             videoHolder.addCallback(this);
@@ -198,23 +203,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             });
         }
 
-
-
-        madapter = new videoframeadapter(getActivity(), mvideoframes, new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        });
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        recyviewitem.setLayoutManager(mLayoutManager);
-        recyviewitem.setItemAnimator(new DefaultItemAnimator());
-        recyviewitem.setAdapter(madapter);
 
         righthandle.setVisibility(View.GONE);
 
@@ -230,8 +218,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         txtSlot2.setOnClickListener(this);
         txtSlot3.setOnClickListener(this);
 
-        recyview_metrices.setVisibility(View.GONE);
-        recyviewitem.setVisibility(View.GONE);
         txt_hashes.setVisibility(View.VISIBLE);
         txt_metrics.setVisibility(View.INVISIBLE);
         resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
@@ -410,43 +396,26 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     public void hideshowcontroller()
     {
-        if(handleimageview.getVisibility() ==  (View.VISIBLE))
+        if(controller != null)
         {
-            layout_scrubberview.setVisibility(View.GONE);
-            handleimageview.setVisibility(View.GONE);
-            gethelper().updateactionbar(0);
-            try {
-                if(controller != null)
-                {
-                    if(controller.controllersview.getVisibility() == View.VISIBLE)
-                        controller.controllersview.setVisibility(View.GONE);
-                }
-            }catch (Exception e)
+            if(controller.controllersview.getVisibility() == View.VISIBLE)
             {
-                e.printStackTrace();
+                layout_scrubberview.setVisibility(View.GONE);
+                handleimageview.setVisibility(View.GONE);
+                gethelper().updateactionbar(0);
+                controller.controllersview.setVisibility(View.GONE);
             }
-        }
-        else
-        {
-            layout_scrubberview.setVisibility(View.VISIBLE);
-            handleimageview.setVisibility(View.VISIBLE);
-            gethelper().updateactionbar(1);
-            try {
-                if(controller != null)
-                {
-                    if(controller.controllersview.getVisibility() == View.GONE)
-                        controller.controllersview.setVisibility(View.VISIBLE);
-                }
-            }catch (Exception e)
+            else
             {
-                e.printStackTrace();
+                layout_scrubberview.setVisibility(View.VISIBLE);
+                handleimageview.setVisibility(View.VISIBLE);
+                gethelper().updateactionbar(1);
+                controller.controllersview.setVisibility(View.VISIBLE);
             }
         }
     }
 
     public void onRestart() {
-        gethelper().updateactionbar(1);
-        handleimageview.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -502,6 +471,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                    changeactionbarcolor();
                }
 
+                setmetriceshashesdata();
+
                 if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
                 {
                     frameduration=checkframeduration();
@@ -510,7 +481,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
-                    madapter.notifyDataSetChanged();
+
                     Thread thread = new Thread(){
                         public void run(){
                             setVideoAdapter();
@@ -529,28 +500,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /*try {
-            if(player != null && player.getDuration() > 0)
-            {
-                int a=player.getDuration();
-                int b=player.getCurrentPosition();
-
-
-                if(player.getCurrentPosition() == 0)
-                {
-                    player.seekTo(player.getCurrentPosition());
-                }
-                else
-                {
-                    player.seekTo(100);
-                }
-            }
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }*/
-
     }
 
     @Override
@@ -911,19 +860,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 frameduration=checkframeduration();
                 keytype=checkkey();
 
-                metricItemArraylist.clear();
-                ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-                String selectedmetrics="";
-                for(int i=0;i<mlist.size();i++)
-                {
-                    selectedmetrics=selectedmetrics+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "+mlist.get(i).getMetricTrackValue();
-                }
-                txt_metrics.setText(selectedmetrics);
-                //metricItemArraylist.addAll(mlist);
-                //itemMetricAdapter.notifyDataSetChanged();
-
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
+                setmetriceshashesdata();
+                //metricItemArraylist.addAll(mlist);
+                //itemMetricAdapter.notifyDataSetChanged();
 
                 layout_scrubberview.setVisibility(View.VISIBLE);
                 playerposition=0;
@@ -934,7 +875,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
-                    madapter.notifyDataSetChanged();
                     Thread thread = new Thread(){
                         public void run(){
                             try {
@@ -951,6 +891,23 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 }
             }
         }
+    }
+
+    public void setmetriceshashesdata()
+    {
+        txt_metrics.setText("");
+        txt_hashes.setText("");
+        metricItemArraylist.clear();
+        ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
+        String selectedmetrics="";
+        for(int i=0;i<mlist.size();i++)
+        {
+            if(mlist.get(i).isSelected())
+            {
+                selectedmetrics=selectedmetrics+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "+mlist.get(i).getMetricTrackValue();
+            }
+        }
+        txt_metrics.setText(selectedmetrics);
     }
 
     public int checkframeduration()
@@ -1111,7 +1068,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 }
             });
 
-            videomodel lastframehash=null;
            for(int i = 0; i<grabber.getLengthInFrames(); i++){
                Frame frame = grabber.grabImage();
 
@@ -1126,33 +1082,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
 
-                /*if (count == currentframenumber) {
-                    lastframehash=null;
-                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-
-
-                    currentframenumber = currentframenumber + frameduration;
-                }
-                else
-                {
-                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                }*/
-               lastframehash=null;
                mainvideoframes.add(new videomodel("Frame ", keytype, count,keyValue));
 
                 count++;
             }
 
-            if(lastframehash != null)
-            {
-                mainvideoframes.add(lastframehash);
-            }
-            else
-            {
-                if(mainvideoframes.size() > 0)
-                    mainvideoframes.get(mainvideoframes.size()-1).settitle("Last Frame ");
-            }
-
+            if(mainvideoframes.size() > 0)
+                mainvideoframes.get(mainvideoframes.size()-1).settitle("Last Frame ");
 
             ishashprocessing=false;
             grabber.flush();
@@ -1163,18 +1099,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             ishashprocessing=false;
         }
     }
-
-    public void notifydata()
-    {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(mvideoframes.size() > 0)
-                    madapter.notifyItemChanged(mvideoframes.size()-1);
-            }
-        });
-    }
-
 
     public void checkfornewframe()
     {
@@ -1197,6 +1121,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                             boolean flag=false;
                             while (lastgetframe <= toframe)
                             {
+                                selectedhaeshes="";
                                 if(lastgetframe < mainvideoframes.size())
                                 {
                                  //   Log.e("Current frame number ",""+mainvideoframes.get((int)lastgetframe).getcurrentframenumber());
@@ -1217,28 +1142,18 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                         break;
                                     }
                                 }
+                                if(flag)
+                                    txt_hashes.append(selectedhaeshes);
                             }
 
-                            if(flag)
-                                txt_hashes.append(selectedhaeshes);
+                            /*if(flag)
+                                txt_hashes.append(selectedhaeshes);*/
 
                             frameprocess=false;
                         }
 
                     }
                 }
-
-                /*int i=0;
-                while(i<framecount)
-                {
-
-
-
-
-
-
-                    i++;
-                }*/
 
                 myHandler.postDelayed(this, 1000);
             }

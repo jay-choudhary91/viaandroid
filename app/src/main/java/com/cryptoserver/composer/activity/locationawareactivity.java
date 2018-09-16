@@ -59,8 +59,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -579,11 +582,13 @@ public abstract class locationawareactivity extends baseactivity implements
                     public void run() {
                         for(int i=0;i<metricItemArraylist.size();i++)
                         {
-                            String value=metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
-                            if(! value.trim().isEmpty())
-                                metricItemArraylist.get(i).setMetricTrackValue(value);
+                            if(metricItemArraylist.get(i).isSelected())
+                            {
+                                String value=metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
+                                if(! value.trim().isEmpty())
+                                    metricItemArraylist.get(i).setMetricTrackValue(value);
+                            }
                         }
-
                         dbtoxapiupdatecounter++;
                         if(dbtoxapiupdatecounter > 10)
                         {
@@ -603,13 +608,47 @@ public abstract class locationawareactivity extends baseactivity implements
 
     public ArrayList<metricmodel> getmetricarraylist()
     {
-        /*for(int i=0;i<metricItemArraylist.size();i++)
+        List<metricmodel> settingupdatedlist=getMetricList();
+        if(settingupdatedlist == null || settingupdatedlist.size() == 0)
         {
-            String value=metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
-            if(! value.trim().isEmpty())
-                metricItemArraylist.get(i).setMetricTrackValue(value);
-        }*/
+            for(int i=0;i<metricItemArraylist.size();i++)
+            {
+                String value=metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
+                if(! value.trim().isEmpty())
+                    metricItemArraylist.get(i).setMetricTrackValue(value);
+            }
+        }
+        else
+        {
+            for(int i=0;i<settingupdatedlist.size();i++)
+            {
+                if(settingupdatedlist.get(i).isSelected())
+                {
+                    metricItemArraylist.get(i).setSelected(true);
+                }
+                else
+                {
+                    metricItemArraylist.get(i).setSelected(false);
+                }
+            }
+        }
+
+
         return metricItemArraylist;
+    }
+
+    public List<metricmodel> getMetricList() {
+        Gson gson = new Gson();
+        List<metricmodel> metricList=new ArrayList<>();
+
+        String value = xdata.getinstance().getSetting(config.metriclist);
+        if(value.trim().length() > 0)
+        {
+            Type type = new TypeToken<List<metricmodel>>() {
+            }.getType();
+            metricList = gson.fromJson(value, type);
+        }
+        return metricList;
     }
 
     @SuppressLint("MissingPermission")

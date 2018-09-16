@@ -38,6 +38,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -1551,8 +1552,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 String keyvalue= getkeyvalue(array);
                 apicurrentduration++;
                 metriceslastupdatedposition=metricItemArraylist.size();
-                ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-                metricItemArraylist.addAll(mlist);
+                ArrayList<metricmodel> mlist= gethelper().getmetricarraylist();
+                for(int i=0;i<mlist.size();i++)
+                {
+                    if(mlist.get(i).isSelected())
+                        metricItemArraylist.add(mlist.get(i));
+                }
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
 
