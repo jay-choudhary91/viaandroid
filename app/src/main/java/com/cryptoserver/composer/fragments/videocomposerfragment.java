@@ -562,6 +562,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             case  R.id.texture:
                 try {
+                    hideshowcontroller(false);
                     Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
                     if (rect == null) return false;
                     float currentFingerSpacing;
@@ -590,7 +591,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
                         fingerSpacing = currentFingerSpacing;
                     } else { //Single touch point, needs to return true in order to detect one more touch point
-                        return true;
+                        switch (motionEvent.getAction()){
+                            case MotionEvent.ACTION_DOWN:
+                                if(mIsRecordingVideo)
+                                {
+                                    if(layout_bottom.getVisibility() == View.VISIBLE)
+                                    {
+                                        hideshowcontroller(false);
+                                    }
+                                    else
+                                    {
+                                        hideshowcontroller(true);
+                                    }
+                                }
+                        }
                     }
                     mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                     return true;
@@ -602,6 +616,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
         }
         return true;
+    }
+
+    public void hideshowcontroller(boolean shouldshow)
+    {
+        /*if(shouldshow)
+        {
+            gethelper().updateactionbar(1);
+            layout_bottom.setVisibility(View.VISIBLE);
+            handleimageview.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            gethelper().updateactionbar(0);
+            layout_bottom.setVisibility(View.GONE);
+            handleimageview.setVisibility(View.GONE);
+        }*/
     }
 
     GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
@@ -1170,6 +1200,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void onResume() {
         super.onResume();
 
+        hideshowcontroller(true);
         stopvideotimer();
         resetvideotimer();
         if (doafterallpermissionsgranted != null) {
