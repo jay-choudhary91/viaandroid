@@ -101,7 +101,7 @@ public abstract class locationawareactivity extends baseactivity implements
     private SensorManager mSensorManager;
     private Sensor mAccelereometer;
     private BroadcastReceiver flightmodebroadcast ;
-    IntentFilter filter;
+    IntentFilter aeroplacemodefilter;
 
     private float[] mGData = new float[3];
     private float[] mMData = new float[3];
@@ -1480,10 +1480,12 @@ public abstract class locationawareactivity extends baseactivity implements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                filter= new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-                filter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-                registerReceiver(flightmodebroadcast,filter);
-
+                if(aeroplacemodefilter == null)
+                {
+                    aeroplacemodefilter= new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+                    aeroplacemodefilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+                    registerReceiver(flightmodebroadcast,aeroplacemodefilter);
+                }
             }
         });
     }

@@ -108,25 +108,35 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <ScrollView
-            android:id="@+id/layout_metrices_hashes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/txt_metrics"
+                <ScrollView
+                    android:id="@+id/scrollview_metrices"
                     android:layout_width="match_parent"
-                    android:text=""
-                    android:gravity="left"
-                    android:textSize="10sp"
-                    android:textColor="@color/black"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:layout_height="match_parent"
+                    android:fillViewport="true">
+
+                    <TextView
+                        android:id="@+id/txt_metrics"
+                        android:layout_width="match_parent"
+                        android:text=""
+                        android:gravity="left"
+                        android:textSize="10sp"
+                        android:textColor="@color/black"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"/>
+
+                </ScrollView>
+
+
+                <ScrollView
+                    android:id="@+id/scrollview_hashes"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true">
 
                 <TextView
                     android:id="@+id/txt_hashes"
@@ -137,13 +147,8 @@
                     android:textColor="@color/black"
                     android:layout_height="wrap_content" />
 
+                </ScrollView>
             </RelativeLayout>
-
-
-
-        </ScrollView>
-
-
 
     </RelativeLayout>
 

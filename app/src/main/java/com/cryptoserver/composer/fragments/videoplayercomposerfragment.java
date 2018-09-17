@@ -77,6 +77,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     TextView txt_hashes;
     @BindView(R.id.txt_metrics)
     TextView txt_metrics;
+    @BindView(R.id.scrollview_metrices)
+    ScrollView scrollview_metrices;
+    @BindView(R.id.scrollview_hashes)
+    ScrollView scrollview_hashes;
 
     private String VIDEO_URL = null;
     RelativeLayout showcontrollers;
@@ -100,9 +104,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     private Handler myHandler;
     private Runnable myRunnable;
     long framecount=0;
-    long videoduration =0,actualduration=0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,
-            lastgetframe=0;
+    long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,lastgetframe=0;
     boolean frameprocess=false;
+    private boolean isdraweropen=false;
+    String selectedhaeshes="";
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -131,7 +136,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        if(player !=null)
+                        if(player !=null && (! isdraweropen))
                             hideshowcontroller();
                         break;
                 }
@@ -164,18 +169,28 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         switch (view.getId())
         {
             case R.id.txt_slot1:
+                scrollview_metrices.setVisibility(View.INVISIBLE);
+                scrollview_hashes.setVisibility(View.VISIBLE);
+
                 txt_hashes.setVisibility(View.VISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
                 break;
 
             case R.id.txt_slot2:
+                scrollview_metrices.setVisibility(View.VISIBLE);
+                scrollview_hashes.setVisibility(View.INVISIBLE);
+
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.VISIBLE);
+
                 resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
                 break;
 
             case R.id.txt_slot3:
+                scrollview_metrices.setVisibility(View.INVISIBLE);
+                scrollview_hashes.setVisibility(View.INVISIBLE);
+
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
@@ -293,6 +308,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
     public void swipelefttoright()
     {
+        isdraweropen=true;
         Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
         linearLayout.startAnimation(rightswipe);
         handleimageview.setVisibility(View.GONE);
@@ -319,6 +335,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
     public void swiperighttoleft()
     {
+        isdraweropen=false;
         Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
@@ -776,21 +793,27 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                 if(videoduration > 0 && framecount > 0)
                 {
-                    long toframe=framesegment*currentvideodurationseconds;
+                    long toframe=0;
+                    if(videoduration == currentvideoduration)
+                    {
+                        toframe=mainvideoframes.size()-1;
+                    }
+                    else
+                    {
+                        toframe=framesegment*currentvideodurationseconds;
+                    }
+
                     if(toframe <= mainvideoframes.size() && toframe >0)
                     {
                         if(! frameprocess)
                         {
-                            String selectedhaeshes="";
+
                             boolean flag=false;
                             while (lastgetframe <= toframe)
                             {
-                                selectedhaeshes="";
+
                                 if(lastgetframe < mainvideoframes.size())
                                 {
-                                    //   Log.e("Current frame number ",""+mainvideoframes.get((int)lastgetframe).getcurrentframenumber());
-                                    //  mvideoframes.add(mainvideoframes.get((int)lastgetframe));
-                                    //Log.e("getItemCount ",""+madapter.getItemCount());
                                     selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe).gettitle()+" "+ mainvideoframes.get((int)lastgetframe).getcurrentframenumber()+" "+
                                             mainvideoframes.get((int)lastgetframe).getkeytype()+":"+" "+ mainvideoframes.get((int)lastgetframe).getkeyvalue();
                                     lastgetframe++;
@@ -806,8 +829,12 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                         break;
                                     }
                                 }
-                                if(flag)
+                                if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
+                                {
                                     txt_hashes.append(selectedhaeshes);
+                                    selectedhaeshes="";
+                                }
+
                             }
 
                             /*if(flag)
@@ -872,6 +899,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         controller.setplaypauuse();
+        if(mediaPlayer != null) {
+            currentvideoduration = videoduration; // suppose its on 4th pos means 4000
+            currentvideodurationseconds = currentvideoduration / 1000;  // Its 4
+        }
     }
 
 
