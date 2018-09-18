@@ -342,7 +342,7 @@ public class videocontrollerview extends FrameLayout {
         }
     }
 
-    private int setProgress() {
+    public int setProgress() {
         if (mPlayer == null || mDragging) {
             return 0;
         }
@@ -364,6 +364,9 @@ public class videocontrollerview extends FrameLayout {
             mEndTime.setText(stringForTime(duration));
         if (mCurrentTime != null)
             mCurrentTime.setText(stringForTime(position));
+
+
+     //   mProgress.
 
         return position;
     }
