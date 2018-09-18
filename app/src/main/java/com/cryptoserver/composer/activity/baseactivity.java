@@ -48,6 +48,7 @@ import com.cryptoserver.composer.utils.xdata;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -319,7 +320,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
-        String selectedid="",videokey="",hashvalue="";
+        String selectedid="",videokey="",videolist="",action_type="";
 
         try {
             Cursor cur = mdbhelper.fetchallmetadata();
@@ -328,12 +329,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                     selectedid= "" + cur.getString(cur.getColumnIndex("id"));
                     videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
-                    String metrickeyname = "" + cur.getString(cur.getColumnIndex("metrickeyname"));
-                    String metrickeyvalue = "" + cur.getString(cur.getColumnIndex("metrickeyvalue"));
-                    String selected = "" + cur.getString(cur.getColumnIndex("selected"));
-                    hashvalue = "" + cur.getString(cur.getColumnIndex("hashvalue"));
-                    String framenumber = "" + cur.getString(cur.getColumnIndex("framenumber"));
-                    String metricdata = "" + cur.getString(cur.getColumnIndex("metricdata"));
+                    videolist = "" + cur.getString(cur.getColumnIndex("videolist"));
+                    action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
 
                   //  cur.moveToLast();
 
@@ -347,15 +344,25 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
+        Log.e("video_updateid ",""+selectedid);
         if(! selectedid.trim().isEmpty())
         {
             HashMap<String,String> mpairslist=new HashMap<String, String>();
-            mpairslist.put("html","0");
-            mpairslist.put("updatelist",""+hashvalue);
             mpairslist.put("key",""+videokey);
+            if(action_type.equalsIgnoreCase(config.type_video_update))
+            {
+                mpairslist.put("html","0");
+                mpairslist.put("updatelist",""+videolist);
+            }
+            else if(action_type.equalsIgnoreCase(config.type_video_complete))
+            {
+                String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+                mpairslist.put("completedatetime",""+datetime);
+            }
+
 
             final String finalSelectedid = selectedid;
-            xapipost_send(baseactivity.this,"video_update",mpairslist, new apiresponselistener() {
+            xapipost_send(baseactivity.this,action_type,mpairslist, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response) {
                     deletemetadatarecord(finalSelectedid);

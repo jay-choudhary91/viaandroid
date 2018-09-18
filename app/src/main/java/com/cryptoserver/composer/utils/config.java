@@ -24,6 +24,10 @@ public class config {
     public static final String build_flavor_reader = "reader";
     public static final String build_flavor_composer = "composer";
 
+    public static final String type_video_update = "video_update";
+    public static final String type_video_start = "video_start";
+    public static final String type_video_complete = "video_complete";
+
     public static final String metriclist = "metriclist";
     public static final String framecount = "framecount";
     public static final String frameupdateevery = "frameupdateevery";

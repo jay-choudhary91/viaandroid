@@ -56,20 +56,16 @@ public class databasemanager {
     }
 
 
-    public void insertframemetricesinfo(String videokey,String metrickeyname,String metrickeyvalue,String selected,String hashvalue,
-                                        String framenumber,String metricdata)
+    public void insertframemetricesinfo(String videokey,String videolist,String metricdata,String action_type)
     {
         try {
             lock.lock();
 
             ContentValues values = new ContentValues();
             values.put("videokey", ""+videokey);
-            values.put("metrickeyname", ""+metrickeyname);
-            values.put("metrickeyvalue", ""+metrickeyvalue);
-            values.put("selected", ""+selected);
-            values.put("hashvalue", ""+hashvalue);
-            values.put("framenumber", ""+framenumber);
+            values.put("videolist", ""+videolist);
             values.put("metricdata", ""+metricdata);
+            values.put("action_type", ""+action_type);
 
             long l=mDb.insert("tblmetadata", null, values);
             Log.e("Id ",""+l);

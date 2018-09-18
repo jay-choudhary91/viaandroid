@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,6 +24,7 @@ import com.cryptoserver.composer.R;
 public class appdialog
 {
     static android.app.AlertDialog dialog;
+    static Dialog developerdialog;
 
     public static AlertDialog showDialog(Context ctx, String tag, String msg,
                                          String btn1, String btn2,
@@ -104,23 +104,43 @@ public class appdialog
 
     public static void showeggfeaturedialog(Context activity){
 
+        developerdialog =new Dialog(activity);
+        developerdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        developerdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        developerdialog.setCanceledOnTouchOutside(false);
+        developerdialog.setCancelable(false);
+        developerdialog.setContentView(R.layout.egg_dialog);
 
-        final Dialog dialog=new Dialog(activity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.egg_dialog);
+        final EditText edtInputData1 = (EditText) developerdialog.findViewById(R.id.edt_inputdata_1);
+        TextView txtTitle = (TextView) developerdialog.findViewById(R.id.txt_title);
 
-        final EditText edtInputData1 = (EditText)dialog.findViewById(R.id.edt_inputdata_1);
-        TextView txtTitle = (TextView)dialog.findViewById(R.id.txt_title);
+        TextView TxtPositiveButton = (TextView) developerdialog.findViewById(R.id.tv_positive);
+        TxtPositiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(edtInputData1.getText().toString().trim().length() > 0)
+                {
+                    if(edtInputData1.getText().toString().trim().equalsIgnoreCase("8813"))
+                    {
+                        xdata.getinstance().saveSetting(xdata.developermode,"1");
+                        if(developerdialog != null && developerdialog.isShowing())
+                            developerdialog.dismiss();
+                    }
+                }
+            }
+        });
 
-        TextView TxtPositiveButton = (TextView)dialog.findViewById(R.id.tv_positive);
-        final TextView TxtNegativeButton = (TextView)dialog.findViewById(R.id.tv_negative);
-        TxtPositiveButton.setVisibility(View.GONE);
-        TxtNegativeButton.setVisibility(View.GONE);
+        developerdialog.show();
 
-        dialog.show();
+    }
 
+    public static boolean isdialogshowing()
+    {
+        if(developerdialog != null)
+        {
+            if(developerdialog.isShowing())
+                return true;
+        }
+        return false;
     }
 }

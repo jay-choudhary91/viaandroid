@@ -54,12 +54,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.adapter.drawermetricesadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
@@ -95,7 +95,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -105,7 +104,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
@@ -310,7 +308,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     TextView txtSlot1;
     TextView txtSlot2;
-    TextView txtSlot3,txt_metrics;
+    TextView txtSlot3,txt_metrics,txt_hashes;
+    ScrollView scrollview_metrices,scrollview_hashes;
 
     ImageView mrecordimagebutton,imgflashon,rotatecamera,handle;
 
@@ -329,10 +328,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
     File lastrecordedvideo=null;
-    String selectedvideofile ="",videokey="",selectedmetrices="";
+    String selectedvideofile ="",videokey="",selectedmetrices="", selectedhashes ="";
     int metriceslastupdatedposition=0;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     databasemanager mdbhelper;
+    private boolean isdraweropen=false;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -362,6 +362,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txtSlot2 = (TextView) rootview.findViewById(R.id.txt_slot2);
             txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
             txt_metrics = (TextView) rootview.findViewById(R.id.txt_metrics);
+            txt_hashes = (TextView) rootview.findViewById(R.id.txt_hashes);
+            scrollview_metrices = (ScrollView) rootview.findViewById(R.id.scrollview_metrices);
+            scrollview_hashes = (ScrollView) rootview.findViewById(R.id.scrollview_hashes);
           //  simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
@@ -506,9 +509,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
 
-            recyview_metrices.setVisibility(View.VISIBLE);
-            recyviewitem.setVisibility(View.INVISIBLE);
-            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+            if(! common.isdevelopermodeenable())
+            {
+                resetButtonViews(txtSlot3,txtSlot2,txtSlot1);
+                txtSlot1.setVisibility(View.GONE);
+                txtSlot2.setVisibility(View.GONE);
+                txtSlot3.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                recyview_metrices.setVisibility(View.VISIBLE);
+                recyviewitem.setVisibility(View.INVISIBLE);
+                txt_metrics.setVisibility(View.INVISIBLE);
+                txt_hashes.setVisibility(View.VISIBLE);
+                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+            }
+
         }
         return rootview;
     }
@@ -547,6 +563,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             case  R.id.texture:
                 try {
+                    hideshowcontroller(false);
                     Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
                     if (rect == null) return false;
                     float currentFingerSpacing;
@@ -575,7 +592,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
                         fingerSpacing = currentFingerSpacing;
                     } else { //Single touch point, needs to return true in order to detect one more touch point
-                        return true;
+                        switch (motionEvent.getAction()){
+                            case MotionEvent.ACTION_DOWN:
+                                if(mIsRecordingVideo && (!(isdraweropen)))
+                                {
+                                    if(layout_bottom.getVisibility() == View.VISIBLE)
+                                    {
+                                        hideshowcontroller(false);
+                                    }
+                                    else
+                                    {
+                                        hideshowcontroller(true);
+                                    }
+                                }
+                        }
                     }
                     mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                     return true;
@@ -587,6 +617,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
         }
         return true;
+    }
+
+    public void hideshowcontroller(boolean shouldshow)
+    {
+        /*if(shouldshow)
+        {
+            gethelper().updateactionbar(1);
+            layout_bottom.setVisibility(View.VISIBLE);
+            handleimageview.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            gethelper().updateactionbar(0);
+            layout_bottom.setVisibility(View.GONE);
+            handleimageview.setVisibility(View.GONE);
+        }*/
     }
 
     GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
@@ -633,6 +679,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void swipelefttoright()
     {
+        isdraweropen=true;
         Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
         linearLayout.startAnimation(rightswipe);
         handleimageview.setVisibility(View.GONE);
@@ -659,6 +706,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void swiperighttoleft()
     {
+        isdraweropen=false;
         Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
@@ -1019,7 +1067,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        setvideoadapter();
+                        /*if(common.isdevelopermodeenable())
+                        {
+                            setvideoadapter();
+                        }*/
+
+                        savevideocomplete();
                     }
                 }).start();
 
@@ -1054,20 +1107,33 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 switchCamera();
                 break;
             case R.id.txt_slot1:
-                txt_metrics.setVisibility(View.VISIBLE);
+                scrollview_metrices.setVisibility(View.INVISIBLE);
+                scrollview_hashes.setVisibility(View.VISIBLE);
+
+                txt_hashes.setVisibility(View.VISIBLE);
+                txt_metrics.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
                 recyviewitem.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
                 break;
 
             case R.id.txt_slot2:
-                txt_metrics.setVisibility(View.INVISIBLE);
+                scrollview_metrices.setVisibility(View.VISIBLE);
+                scrollview_hashes.setVisibility(View.INVISIBLE);
+
+                txt_hashes.setVisibility(View.INVISIBLE);
+                txt_metrics.setVisibility(View.VISIBLE);
+
                 recyview_metrices.setVisibility(View.INVISIBLE);
-                recyviewitem.setVisibility(View.VISIBLE);
+                recyviewitem.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
                 break;
 
             case R.id.txt_slot3:
+                scrollview_metrices.setVisibility(View.INVISIBLE);
+                scrollview_hashes.setVisibility(View.INVISIBLE);
+
+                txt_hashes.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
                 recyviewitem.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
@@ -1147,6 +1213,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void onResume() {
         super.onResume();
 
+        hideshowcontroller(true);
         stopvideotimer();
         resetvideotimer();
         if (doafterallpermissionsgranted != null) {
@@ -1217,6 +1284,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if (mTextureView.isAvailable()) {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
         }
+
 
         mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
 
@@ -1491,7 +1559,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mpairslist.put("hashmethod",""+keytype);
         mpairslist.put("hashvalue",""+hashvalue);
         mpairslist.put("title","xx");
-        gethelper().xapipost_send(getActivity(),"video_start",mpairslist, new apiresponselistener() {
+        gethelper().xapipost_send(getActivity(),config.type_video_start,mpairslist, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 if(response.isSuccess())
@@ -1527,36 +1595,62 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     return;
                 String keyvalue= getkeyvalue(array);
                 apicurrentduration++;
-                metriceslastupdatedposition=metricItemArraylist.size();
-                ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-                metricItemArraylist.addAll(mlist);
+
+                ArrayList<metricmodel> mlist= gethelper().getmetricarraylist();
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
 
+                selectedhashes =selectedhashes+"\n"+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+                if(apicurrentduration > apicallduration)
+                    apicurrentduration=apicallduration;
+
                 if(apicurrentduration == apicallduration)
-                    saveindb(mlist,muploadframelist);
+                    savevideoupdate(mlist);
+
+                Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
+                if(apicurrentduration == apicallduration)
+                {
+                    apicurrentduration=0;
+
+                    for(int i=0;i<mlist.size();i++)
+                    {
+                        if(mlist.get(i).isSelected())
+                        {
+                            selectedmetrices=selectedmetrices+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "
+                                    +mlist.get(i).getMetricTrackValue();
+                        }
+
+                    }
+
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                          //  Log.e("Metrices content ",""+selectedmetrices);
+                           if((txt_metrics.getVisibility() == View.VISIBLE))
+                           {
+                               if(common.isdevelopermodeenable() && (isdraweropen) )
+                               {
+                                   txt_metrics.append(selectedmetrices);
+                                   selectedmetrices="";
+                               }
+
+                           }
+                        }
+                    });
+                }
 
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                      //  if(mvideoframes.size() > 0)
-                        //    madapter.notifyItemChanged(mvideoframes.size()-1);
-
-                        Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
-                        if(apicurrentduration == apicallduration)
+                     //   if(mvideoframes.size() > 0)
+                       //     madapter.notifyItemChanged(madapter.getItemCount(),mvideoframes.size()-1);
+                        if((txt_hashes.getVisibility() == View.VISIBLE))
                         {
-                            apicurrentduration=0;
-
-                            while (metriceslastupdatedposition < metricItemArraylist.size())
+                            if(common.isdevelopermodeenable() && (isdraweropen))
                             {
-                                selectedmetrices=selectedmetrices+"\n"+metricItemArraylist.get(metriceslastupdatedposition).getMetricTrackKeyName()+" - "
-                                        +metricItemArraylist.get(metriceslastupdatedposition).getMetricTrackValue();
-
-                                metriceslastupdatedposition++;
-
+                                txt_hashes.append(selectedhashes);
+                                selectedhashes="";
                             }
-                            txt_metrics.append(selectedmetrices);
-                            selectedmetrices="";
 
                         }
                     }
@@ -1567,7 +1661,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     }
 
-    public void saveindb(ArrayList<metricmodel> mmetriceslist,ArrayList<frameinfo> mframelist)
+    public void savevideoupdate(ArrayList<metricmodel> mmetriceslist)
     {
         JSONArray hasharray=new JSONArray();
         JSONArray metricesarray=new JSONArray();
@@ -1618,12 +1712,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-            mdbhelper.insertframemetricesinfo(videokey,"metrickeyname","metrickeyvalue",
-                    "1",""+hasharray.toString(),
-                    "0",""+metricesarray.toString());
+            mdbhelper.insertframemetricesinfo(videokey,hasharray.toString(),""+metricesarray.toString(),config.type_video_update);
 
             mdbhelper.close();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void savevideocomplete()
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(getActivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            mdbhelper.insertframemetricesinfo(videokey,"","",config.type_video_complete);
+
+            mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1696,7 +1810,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(maindialogshare != null && maindialogshare.isShowing())
             maindialogshare.dismiss();
 
-        maindialogshare=new Dialog(getActivity());
+        maindialogshare=new Dialog(applicationviavideocomposer.getactivity());
         maindialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
         maindialogshare.setCanceledOnTouchOutside(true);
         maindialogshare.setContentView(R.layout.popup_sharescreen);
@@ -1771,7 +1885,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(subdialogshare != null && subdialogshare.isShowing())
             subdialogshare.dismiss();
 
-        subdialogshare=new Dialog(getActivity());
+        subdialogshare=new Dialog(applicationviavideocomposer.getactivity());
         subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
         subdialogshare.setCanceledOnTouchOutside(true);
 

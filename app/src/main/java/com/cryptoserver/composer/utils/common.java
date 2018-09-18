@@ -1343,4 +1343,13 @@ public class common
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             return formatter.format(date);
         }
+    public static boolean isdevelopermodeenable()
+    {
+        if(xdata.getinstance().getSetting(xdata.developermode).toString().trim().isEmpty() ||
+                xdata.getinstance().getSetting(xdata.developermode).toString().equalsIgnoreCase("0"))
+        {
+            return false;
+        }
+        return true;
+    }
 }

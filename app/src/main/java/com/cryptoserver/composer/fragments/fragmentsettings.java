@@ -335,20 +335,6 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
         }
     }
 
-    public List<metricmodel> getMetricList() {
-        Gson gson = new Gson();
-        List<metricmodel> metricList=new ArrayList<>();
-
-        String value = xdata.getinstance().getSetting(config.metriclist);
-        if(value.trim().length() > 0)
-        {
-            Type type = new TypeToken<List<metricmodel>>() {
-            }.getType();
-            metricList = gson.fromJson(value, type);
-        }
-        return metricList;
-    }
-
     public void clearfocus(){
         edt_framescount.clearFocus();
         edt_md_salt.clearFocus();
