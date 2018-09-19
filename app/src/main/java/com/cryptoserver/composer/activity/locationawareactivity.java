@@ -48,6 +48,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.fragmentsettings;
+import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -580,6 +581,13 @@ public abstract class locationawareactivity extends baseactivity implements
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+
+                        if(getcurrentfragment() instanceof videocomposerfragment)
+                        {
+                            boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
+                            if(isrecording)
+                                return;
+                        }
                         for(int i=0;i<metricItemArraylist.size();i++)
                         {
                             if(metricItemArraylist.get(i).isSelected())
@@ -589,8 +597,9 @@ public abstract class locationawareactivity extends baseactivity implements
                                     metricItemArraylist.get(i).setMetricTrackValue(value);
                             }
                         }
+
                         dbtoxapiupdatecounter++;
-                        if(dbtoxapiupdatecounter > 10)
+                        if(dbtoxapiupdatecounter > 5)
                         {
                             dbtoxapiupdatecounter=0;
                             fetchmetadatadb();
@@ -598,7 +607,7 @@ public abstract class locationawareactivity extends baseactivity implements
                     }
                 }).start();
 
-                myHandler.postDelayed(this, 2000);
+                myHandler.postDelayed(this, 5000);
             }
         };
         myHandler.post(myRunnable);

@@ -349,7 +349,7 @@ public class videocontrollerview extends FrameLayout {
 
         int position = mPlayer.getCurrentPosition();
         int duration = mPlayer.getDuration();
-        Log.e("current duration ",""+position);
+    //    Log.e("current duration ",""+position);
         if (mProgress != null) {
             if (duration > 0) {
                 // use long to avoid overflow
@@ -495,6 +495,14 @@ public class videocontrollerview extends FrameLayout {
         }
 
         mPlayer.toggleFullScreen();
+    }
+
+    public void seektime(long newposition)
+    {
+        mPlayer.seekTo((int) newposition);
+
+        if (mCurrentTime != null)
+            mCurrentTime.setText(stringForTime( (int) newposition));
     }
 
     // There are two scenarios that can trigger the seekbar listener to trigger:
