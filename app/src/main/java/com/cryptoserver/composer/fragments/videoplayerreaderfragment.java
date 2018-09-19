@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,9 +60,12 @@ import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -120,6 +124,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     ArrayList<frame> mbitmaplist =new ArrayList<>();
 
     boolean ishashprocessing=false;
+    boolean islisttouched=false;
     public int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
     framebitmapadapter adapter;
@@ -178,7 +183,23 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     recyview_frames.setLayoutManager(mLayoutManager);
                     recyview_frames.setItemAnimator(new DefaultItemAnimator());
                     recyview_frames.setAdapter(adapter);
-                    /*recyview_frames.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                    recyview_frames.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View view, MotionEvent motionEvent) {
+                            switch (motionEvent.getAction()){
+                                case MotionEvent.ACTION_DOWN:
+                                    islisttouched = true;
+                                    break;
+                                case MotionEvent.ACTION_UP:
+                                    islisttouched = false;
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+
+                    recyview_frames.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
                         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                             super.onScrollStateChanged(recyclerView, newState);
@@ -187,13 +208,41 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         @Override
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
-                            int totalVisibleItems = mLayoutManager.findLastVisibleItemPosition() -
-                                    mLayoutManager.findFirstVisibleItemPosition();
-                            int centeredItemPosition = totalVisibleItems / 2;
-                            Log.e("Center items ",""+centeredItemPosition);
-                            //int centeredItemPosition1 = totalVisibleItems / 2;
+                            /*int firstVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
+                            int lastVisibleItems = mLayoutManager.findLastVisibleItemPosition();
+                            int firstcompleted=mLayoutManager.findFirstCompletelyVisibleItemPosition();
+                            Log.e("first last",""+firstVisibleItems+" "+lastVisibleItems+" "+firstcompleted);*/
+
+                            if(islisttouched)
+                            {
+                                int center = recyview_frames.getWidth() / 2;
+                                View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
+                                int centerPos = recyview_frames.getChildAdapterPosition(centerView);
+                                Log.e("centerPos  ",""+centerPos);
+                                if(centerPos > 0)
+                                    centerPos=centerPos-1;
+
+                                try {
+                                    int currentduration=centerPos*1000;
+
+                                    if(player !=null && controller != null)
+                                    {
+                                        try {
+                                            player.seekTo(currentduration);
+                                            controller.setProgress();
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
-                    });*/
+                    });
                 }
             });
 
@@ -621,7 +670,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 }
 
 
-                if(mbitmaplist.size() > 0)
+                if(mbitmaplist.size() > 0 && (! islisttouched))
                 {
                     int second=player.getCurrentPosition()/1000;
                     if(mbitmaplist.size() >= (second))
@@ -986,7 +1035,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 if(m_bitmap != null)
                 {
                     Log.e("Bitmap on ",""+i);
-                    mbitmaplist.add(new frame(i,m_bitmap,false));
+                    Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
+
+                    mbitmaplist.add(new frame(i,bitmap,false));
                 }
             }
             catch (Exception m_e)
@@ -1009,6 +1060,49 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
         });
     }
+
+    /*private class Decoder extends AsyncTask<File, Integer, Integer> {
+        private static final String TAG = "DECODER";
+
+        protected Integer doInBackground(File... params) {
+            FileChannelWrapper ch = null;
+            try {
+                ch = NIOUtils.readableFileChannel(params[0]);
+                FrameGrab frameGrab = new FrameGrab(ch);
+                MediaInfo mi = frameGrab.getMediaInfo();
+                Bitmap frame = Bitmap.createBitmap(mi.getDim().getWidth(), mi.getDim().getHeight(), Bitmap.Config.ARGB_8888);
+
+                for (int i = 0; !flag; i++) {
+
+                    frameGrab.getFrame(frame);
+                    if (frame == null)
+                        break;
+                    OutputStream os = null;
+                    try {
+                        os = new BufferedOutputStream(new FileOutputStream(new File(params[0].getParentFile(), String.format("img%08d.jpg", i))));
+                        frame.compress(Bitmap.CompressFormat.JPEG, 90, os);
+                    } finally {
+                        if (os != null)
+                            os.close();
+                    }
+                    publishProgress(i);
+
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "IO", e);
+            } catch (JCodecException e) {
+                Log.e(TAG, "JCodec", e);
+            } finally {
+                NIOUtils.closeQuietly(ch);
+            }
+            return 0;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progress.setText(String.valueOf(values[0]));
+        }
+    }*/
 
     public void setupVideoPlayer(Uri selectedimageuri)
     {
@@ -1197,6 +1291,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     public void onCompletion(MediaPlayer mediaPlayer) {
         controller.setplaypauuse();
         if(mediaPlayer != null) {
+            /*try {
+                player.seekTo((int)videoduration);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }*/
+
             currentvideoduration = videoduration; // suppose its on 4th pos means 4000
             currentvideodurationseconds = currentvideoduration / 1000;  // Its 4
         }

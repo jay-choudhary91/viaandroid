@@ -157,9 +157,19 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         txtSlot2.setOnClickListener(this);
         txtSlot3.setOnClickListener(this);
 
-        txt_hashes.setVisibility(View.VISIBLE);
-        txt_metrics.setVisibility(View.INVISIBLE);
-        resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+        if(! common.isdevelopermodeenable())
+        {
+            resetButtonViews(txtSlot3,txtSlot2,txtSlot1);
+            txtSlot1.setVisibility(View.GONE);
+            txtSlot2.setVisibility(View.GONE);
+            txtSlot3.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            txt_metrics.setVisibility(View.INVISIBLE);
+            txt_hashes.setVisibility(View.VISIBLE);
+            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+        }
 
         return rootview;
     }

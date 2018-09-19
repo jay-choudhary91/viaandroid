@@ -1815,7 +1815,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         maindialogshare.setCanceledOnTouchOutside(true);
         maindialogshare.setContentView(R.layout.popup_sharescreen);
         //maindialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        int[] widthHeight=common.getScreenWidthHeight(getActivity());
+        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
         int width=widthHeight[0];
         double height=widthHeight[1]/1.6;
         maindialogshare.getWindow().setLayout(width-20, (int)height);
@@ -1892,7 +1892,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         subdialogshare.setContentView(R.layout.popup_sharescreen);
         //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        int[] widthHeight=common.getScreenWidthHeight(getActivity());
+        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
         int width=widthHeight[0];
         double height=widthHeight[1]/1.6;
         subdialogshare.getWindow().setLayout(width-20, (int)height);
@@ -1923,16 +1923,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     @Override
                     public void run() {
 
-                        exportvideo(true);
-
-                        if(maindialogshare != null && maindialogshare.isShowing())
-                            maindialogshare.dismiss();
-
                         if(subdialogshare != null && subdialogshare.isShowing())
                             subdialogshare.dismiss();
 
-                        if(maindialogshare != null && maindialogshare.isShowing())
-                            maindialogshare.dismiss();
+                        exportvideo(true);
 
                       //  updatevideolistdata(true);
                         launchvideolist();
@@ -1976,10 +1970,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             public void onClick(View v) {
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
-
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
-
               //  updatevideolistdata(true);
                 launchvideolist();
             }
