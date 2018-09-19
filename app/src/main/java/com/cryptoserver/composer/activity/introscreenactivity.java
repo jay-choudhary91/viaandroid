@@ -102,6 +102,8 @@ public class introscreenactivity extends AppCompatActivity {
         view_pagerfooter = new introscreenactivity.footerpageradapter(getSupportFragmentManager());
         viewpager_header.setAdapter(view_pagerheader);
         viewpager_footer.setAdapter(view_pagerfooter);
+        viewpager_header.setOffscreenPageLimit(4);
+        viewpager_footer.setOffscreenPageLimit(4);
 
         // viewpager_header.setAdapter(new headerpageradapter(getSupportFragmentManager()));
         //viewpager_footer.setAdapter(new footerpageradapter(getSupportFragmentManager()));
@@ -194,7 +196,7 @@ public class introscreenactivity extends AppCompatActivity {
                         }*/
                     }
                 }
-                myHandler.postDelayed(this, 300);
+                myHandler.postDelayed(this, 200);
             }
         };
         myHandler.post(myRunnable);
@@ -218,6 +220,7 @@ public class introscreenactivity extends AppCompatActivity {
                 //Log.e("position", position+" ") ;
                 currentselected=position;
                 //slidebytime=false;
+
                 viewpager_footer.setCurrentItem(position, true);
             }
 
@@ -324,7 +327,7 @@ public class introscreenactivity extends AppCompatActivity {
                 case 1: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
                         getResources().getString(R.string.video_manager),R.drawable.mobile_newgif));
                 case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.gloab_newgif));
+                        getResources().getString(R.string.varifiable),R.drawable.globe_newgif));
                 case 3: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
                         getResources().getString(R.string.varifiable),R.drawable.key_newgif));
 
@@ -335,7 +338,7 @@ public class introscreenactivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return Integer.MAX_VALUE;
+            return 40;
         }
 
     }
@@ -356,7 +359,7 @@ public class introscreenactivity extends AppCompatActivity {
                 case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
                         getResources().getString(R.string.video_manager),R.drawable.mobile_newgif));
                 case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.gloab_newgif));
+                        getResources().getString(R.string.varifiable),R.drawable.globe_newgif));
                 case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
                         getResources().getString(R.string.varifiable),R.drawable.key_newgif));
 
@@ -367,7 +370,7 @@ public class introscreenactivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return Integer.MAX_VALUE;
+            return 40;
         }
 
         @Override
@@ -380,8 +383,6 @@ public class introscreenactivity extends AppCompatActivity {
                 trans.remove((Fragment) object);
                 trans.commit();
             }*/
-
-
         }
     }
 }
