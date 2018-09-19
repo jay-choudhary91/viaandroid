@@ -820,22 +820,22 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                         {
                             if(! frameprocess)
                             {
-
+                                boolean flag=false;
                                 while (lastgetframe <= toframe)
                                 {
-                                    boolean flag=false;
+                                    lastgetframe++;
+
                                     if(lastgetframe < mainvideoframes.size())
                                     {
                                         if (lastgetframe == currentframenumber)
                                         {
-                                            selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe-1).gettitle()+" "+
-                                                    mainvideoframes.get((int)lastgetframe-1).getcurrentframenumber()+" "+
+                                            selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe-1).gettitle()
+                                                    +" "+ mainvideoframes.get((int)lastgetframe-1).getcurrentframenumber()+" "+
                                                     mainvideoframes.get((int)lastgetframe-1).getkeytype()+":"+" "+
                                                     mainvideoframes.get((int)lastgetframe-1).getkeyvalue();
 
                                             currentframenumber = currentframenumber + frameduration;
                                         }
-                                        lastgetframe++;
                                         frameprocess=true;
                                         flag=true;
                                     }
@@ -843,21 +843,18 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                     {
                                         if(lastgetframe == framecount)
                                         {
-                                            if(! txt_hashes.getText().toString().contains("Last Frame"))
-                                            {
-                                                txt_hashes.append("\n"+mainvideoframes.get((int)mainvideoframes.size()-1).gettitle()+" "+
-                                                        mainvideoframes.get((int)mainvideoframes.size()-1).getcurrentframenumber()+" "+
-                                                        mainvideoframes.get((int)mainvideoframes.size()-1).getkeytype()+":"+" "+
-                                                        mainvideoframes.get((int)mainvideoframes.size()-1).getkeyvalue());
-                                            }
-                                            break;
+                                            if(myHandler != null && myRunnable != null)
+                                                myHandler.removeCallbacks(myRunnable);
+
                                         }
+                                        break;
                                     }
                                     if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
                                     {
                                         txt_hashes.append(selectedhaeshes);
                                         selectedhaeshes="";
                                     }
+
 
                                 }
 
@@ -868,6 +865,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                             }
 
                         }
+
+                        // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
                     }
                 }
 
@@ -925,11 +924,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         controller.setplaypauuse();
-        if(mediaPlayer != null) {
-            currentvideoduration = videoduration; // suppose its on 4th pos means 4000
-            currentvideodurationseconds = currentvideoduration / 1000;  // Its 4
-        }
+        currentvideoduration = videoduration;
+        currentvideodurationseconds = currentvideoduration / 1000;
     }
-
-
 }
