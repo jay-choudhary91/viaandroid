@@ -215,6 +215,12 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                             if(islisttouched)
                             {
+                                if(player != null && player.isPlaying())
+                                {
+                                    player.pause();
+                                    controller.setplaypauuse();
+                                }
+
                                 int center = recyview_frames.getWidth() / 2;
                                 View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
                                 int centerPos = recyview_frames.getChildAdapterPosition(centerView);
@@ -605,6 +611,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
         //mp.start();
+
+        videoduration=mp.getDuration();
+
+
         try {
             if(playerposition > 0)
             {
@@ -932,6 +942,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 //metricItemArraylist.addAll(mlist);
                 //itemMetricAdapter.notifyDataSetChanged();
 
+                videoduration=0;
                 layout_scrubberview.setVisibility(View.VISIBLE);
                 playerposition=0;
                 setupVideoPlayer(selectedvideouri);
@@ -1170,10 +1181,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             currentvideoduration=0;
             currentvideodurationseconds=0;
             framecount=grabber.getLengthInFrames();   // suppose its 500
-            videoduration=grabber.getLengthInTime();   // suppose its 10000
-            videoduration=videoduration/1000;
+            //videoduration=grabber.getLengthInTime();   // suppose its 10000
+            /*videoduration=videoduration/1000;
             long actualduration=videoduration/1000;    // its 10 seconds
-            framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
+            framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)*/
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -1224,60 +1235,77 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             @Override
             public void run() {
 
-                if(videoduration > 0 && framecount > 0)
+                if(videoduration > 0)
                 {
-                    long toframe=0;
-                    if(videoduration == currentvideoduration)
-                    {
-                        toframe=mainvideoframes.size()-1;
-                    }
-                    else
-                    {
-                        toframe=framesegment*currentvideodurationseconds;
-                    }
+                    long actualduration=videoduration/1000;    // its 10 seconds
+                    framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
 
-                    if(toframe <= mainvideoframes.size() && toframe >0)
+                    if(videoduration > 0 && framecount > 0)
                     {
-                        if(! frameprocess)
+                        long toframe=0;
+                        if(videoduration == currentvideoduration)
                         {
+                            toframe=mainvideoframes.size();
+                        }
+                        else
+                        {
+                            toframe=framesegment*currentvideodurationseconds;
+                        }
 
-                            boolean flag=false;
-                            while (lastgetframe <= toframe)
+                        if(toframe <= mainvideoframes.size() && toframe >0)
+                        {
+                            if(! frameprocess)
                             {
-
-                                if(lastgetframe < mainvideoframes.size())
+                                boolean flag=false;
+                                while (lastgetframe <= toframe)
                                 {
-                                    selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe).gettitle()+" "+ mainvideoframes.get((int)lastgetframe).getcurrentframenumber()+" "+
-                                            mainvideoframes.get((int)lastgetframe).getkeytype()+":"+" "+ mainvideoframes.get((int)lastgetframe).getkeyvalue();
                                     lastgetframe++;
-                                    frameprocess=true;
-                                    flag=true;
-                                }
-                                else
-                                {
-                                    if(lastgetframe == framecount)
+
+                                    if(lastgetframe < mainvideoframes.size())
                                     {
-                                        if(myHandler != null && myRunnable != null)
-                                            myHandler.removeCallbacks(myRunnable);
+                                        if (lastgetframe == currentframenumber)
+                                        {
+                                            selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe-1).gettitle()
+                                                    +" "+ mainvideoframes.get((int)lastgetframe-1).getcurrentframenumber()+" "+
+                                                    mainvideoframes.get((int)lastgetframe-1).getkeytype()+":"+" "+
+                                                    mainvideoframes.get((int)lastgetframe-1).getkeyvalue();
+
+                                            currentframenumber = currentframenumber + frameduration;
+                                        }
+                                        frameprocess=true;
+                                        flag=true;
+                                    }
+                                    else
+                                    {
+                                        if(lastgetframe == framecount)
+                                        {
+                                            if(myHandler != null && myRunnable != null)
+                                                myHandler.removeCallbacks(myRunnable);
+
+                                        }
                                         break;
                                     }
-                                }
-                                if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
-                                {
-                                    txt_hashes.append(selectedhaeshes);
-                                    selectedhaeshes="";
-                                }
+                                    if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
+                                    {
+                                        txt_hashes.append(selectedhaeshes);
+                                        selectedhaeshes="";
+                                    }
 
-                            }
+
+                                }
 
                             /*if(flag)
                                 txt_hashes.append(selectedhaeshes);*/
 
-                            frameprocess=false;
+                                frameprocess=false;
+                            }
+
                         }
 
+                       // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
                     }
                 }
+
 
                 myHandler.postDelayed(this, 1000);
             }
@@ -1290,17 +1318,25 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         controller.setplaypauuse();
-        if(mediaPlayer != null) {
-            /*try {
-                player.seekTo((int)videoduration);
+        currentvideoduration = videoduration;
+        currentvideodurationseconds = currentvideoduration / 1000;
+
+        /*if(mediaPlayer != null) {
+            *//*try {
+                mediaPlayer.seekTo((int)videoduration);
+                //player.seekTo((int)videoduration);
             }catch (Exception e)
             {
                 e.printStackTrace();
-            }*/
+            }*//*
+            long dura=mediaPlayer.getDuration();
+            long duraaa=mediaPlayer.getCurrentPosition();
+
+            controller.setProgress();
 
             currentvideoduration = videoduration; // suppose its on 4th pos means 4000
             currentvideodurationseconds = currentvideoduration / 1000;  // Its 4
-        }
+        }*/
     }
 
 }

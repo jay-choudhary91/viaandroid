@@ -1076,7 +1076,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }).start();
 
-                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                mrecordimagebutton.setEnabled(true);
+                showsharepopupmain();
+
+               /* progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1084,7 +1087,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         mrecordimagebutton.setEnabled(true);
                         showsharepopupmain();
                     }
-                },2000);
+                },2000);*/
             }
         },100);
 
