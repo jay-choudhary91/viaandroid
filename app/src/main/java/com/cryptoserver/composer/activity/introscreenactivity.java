@@ -161,7 +161,7 @@ public class introscreenactivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                if(! isinbackground)
+                if(! isinbackground && (! touched))
                 {
                     Date currentDate=new Date();
                     int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
@@ -323,9 +323,9 @@ public class introscreenactivity extends AppCompatActivity {
             switch(fragmentPos) {
 
                 case 0: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.shield_newgif));
+                        getResources().getString(R.string.modern_security),R.drawable.mobile_newgif));
                 case 1: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
-                        getResources().getString(R.string.video_manager),R.drawable.mobile_newgif));
+                        getResources().getString(R.string.video_manager),R.drawable.shield_newgif));
                 case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
                         getResources().getString(R.string.varifiable),R.drawable.globe_newgif));
                 case 3: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
@@ -338,7 +338,7 @@ public class introscreenactivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 40;
+            return Integer.MAX_VALUE;
         }
 
     }
@@ -355,9 +355,9 @@ public class introscreenactivity extends AppCompatActivity {
             switch(fragmentPos) {
 
                 case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.shield_newgif));
+                        getResources().getString(R.string.modern_security),R.drawable.mobile_newgif));
                 case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
-                        getResources().getString(R.string.video_manager),R.drawable.mobile_newgif));
+                        getResources().getString(R.string.video_manager),R.drawable.shield_newgif));
                 case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
                         getResources().getString(R.string.varifiable),R.drawable.globe_newgif));
                 case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
@@ -370,19 +370,7 @@ public class introscreenactivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 40;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
-
-          /*  if (position <= getCount()) {
-                FragmentManager manager = ((Fragment) object).getFragmentManager();
-                FragmentTransaction trans = manager.beginTransaction();
-                trans.remove((Fragment) object);
-                trans.commit();
-            }*/
+            return Integer.MAX_VALUE;
         }
     }
 }
