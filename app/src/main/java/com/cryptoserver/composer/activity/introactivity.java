@@ -275,7 +275,7 @@ public class introactivity extends FragmentActivity {
             public void onPageSelected(int position) {
                 //Log.e("position", position+" ") ;
                 currentselected=position;
-                viewpager_header.setCurrentItem(position, true);
+                viewpager_header.setCurrentItem(position%3, true);
 
                 radioGroup.check(radioGroup.getChildAt(position%3).getId());
 
@@ -305,8 +305,8 @@ public class introactivity extends FragmentActivity {
     {
         Log.e("Positions ", position+" ") ;
         initialDate = new Date();
-        viewpager_header.setCurrentItem(position, true);
-        viewpager_footer.setCurrentItem(position, true);
+        viewpager_header.setCurrentItem(position%3, true);
+        viewpager_footer.setCurrentItem(position%3, true);
         radioGroup.check(radioGroup.getChildAt(position%3).getId());
     }
 

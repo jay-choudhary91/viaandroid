@@ -59,7 +59,7 @@ public class headerpagerfragment extends Fragment {
                     GifDrawable gifDrawable = null;
                     try {
                         gifDrawable = new GifDrawable(getResources(), introobject.getImage());
-                        //gifDrawable.setLoopCount(1000);
+                        gifDrawable.setLoopCount(1);
                         gifDrawable.setSpeed(2.0f);
                        int i= gifDrawable.getDuration();
                        Log.e("duration",""+i+ "........"+introobject.getTitle());
