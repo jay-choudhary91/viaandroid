@@ -105,7 +105,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     private Runnable myRunnable;
     long framecount=0;
     long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,lastgetframe=0;
-    boolean frameprocess=false;
+    boolean frameprocess=false,showlastframe = false;
     private boolean isdraweropen=false;
     String selectedhaeshes="";
     @Override
@@ -256,8 +256,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         return true;
     }
 
-
-
     GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
     {
         private static final int flingactionmindstvac = 60;
@@ -299,8 +297,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             return false;
         }
     });
-
-
 
 
     public void swipelefttoright()
@@ -766,8 +762,13 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 count++;
             }
 
-            if(mainvideoframes.size() > 0)
-                mainvideoframes.get(mainvideoframes.size()-1).settitle("Last Frame ");
+            Log.e("mainvideoframes",""+framecount);
+
+            if(mainvideoframes.size() > 0){
+                mainvideoframes.get(mainvideoframes.size()-2).settitle("Last Frame ");
+
+            }
+
 
             ishashprocessing=false;
             grabber.flush();
@@ -815,8 +816,11 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                 {
                                     lastgetframe++;
 
-                                    if(lastgetframe < mainvideoframes.size())
+                                    if(lastgetframe < (mainvideoframes.size()-1))
                                     {
+                                        Log.e("lastgetframe", ""+ mainvideoframes.size() );
+                                        Log.e("mainvideoframes ", ""+ mainvideoframes.size() );
+
                                         if (lastgetframe == currentframenumber)
                                         {
                                             selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe-1).gettitle()
@@ -833,19 +837,20 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                     {
                                         if(lastgetframe == framecount)
                                         {
+
+                                            showlastframe = true;
+                                            sethashesdata();
                                             if(myHandler != null && myRunnable != null)
                                                 myHandler.removeCallbacks(myRunnable);
-
                                         }
                                         break;
                                     }
+
                                     if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
                                     {
                                         sethashesdata();
                                         selectedhaeshes="";
                                     }
-
-
                                 }
 
                             /*if(flag)
@@ -871,12 +876,24 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     {
         if((txt_hashes.getVisibility() == View.VISIBLE))
         {
-            if(common.isdevelopermodeenable() && (isdraweropen) )
+            if(common.isdevelopermodeenable() && (isdraweropen))
             {
-                txt_hashes.append(selectedhaeshes);
-                selectedhaeshes="";
-            }
 
+                if(showlastframe){
+
+                    selectedhaeshes = selectedhaeshes+"\n"+ mainvideoframes.get(mainvideoframes.size()-2).gettitle()
+                            +" "+ mainvideoframes.get(mainvideoframes.size()-2).getcurrentframenumber()+" "+
+                            mainvideoframes.get(mainvideoframes.size()-2).getkeytype()+":"+" "+
+                            mainvideoframes.get(mainvideoframes.size()-2).getkeyvalue();
+
+                    txt_hashes.append(selectedhaeshes);
+                    selectedhaeshes="";
+
+                }else{
+                    txt_hashes.append(selectedhaeshes);
+                    selectedhaeshes="";
+                }
+            }
         }
     }
 
@@ -886,6 +903,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
     public void gethash(){
         if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+
             frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
 

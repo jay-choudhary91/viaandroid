@@ -565,7 +565,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             case  R.id.texture:
                 try {
-                    hideshowcontroller(false);
+                   // hideshowcontroller(false);
                     Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
                     if (rect == null) return false;
                     float currentFingerSpacing;
@@ -601,10 +601,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                     if(layout_bottom.getVisibility() == View.VISIBLE)
                                     {
                                         hideshowcontroller(false);
+                                        Log.e("layout visibale","layout visibale");
                                     }
                                     else
                                     {
                                         hideshowcontroller(true);
+
+                                        Log.e("layout hide","layout hide");
+
                                     }
                                 }
                         }
@@ -623,7 +627,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void hideshowcontroller(boolean shouldshow)
     {
-        /*if(shouldshow)
+        if(shouldshow)
         {
             gethelper().updateactionbar(1);
             layout_bottom.setVisibility(View.VISIBLE);
@@ -634,7 +638,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             gethelper().updateactionbar(0);
             layout_bottom.setVisibility(View.GONE);
             handleimageview.setVisibility(View.GONE);
-        }*/
+        }
     }
 
     GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()

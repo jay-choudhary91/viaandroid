@@ -17,6 +17,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -137,9 +138,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     long framecount=0;
     long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,
             lastgetframe=0;
-    boolean frameprocess=false;
+    boolean frameprocess=false,showlastframe = false;
     private boolean isdraweropen=false;
     String selectedhaeshes="";
+    LinearLayoutManager mLayoutManager;
 
     @Override
     public int getlayoutid() {
@@ -161,6 +163,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
 
+            final LinearSnapHelper layoutManagaer = new LinearSnapHelper();
+
             frameduration=checkframeduration();
             keytype=checkkey();
 
@@ -179,7 +183,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                                 }
                             });
-                    final LinearLayoutManager mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyview_frames.setLayoutManager(mLayoutManager);
                     recyview_frames.setItemAnimator(new DefaultItemAnimator());
                     recyview_frames.setAdapter(adapter);
@@ -222,9 +226,19 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                 }
 
                                 int center = recyview_frames.getWidth() / 2;
+
+                                Log.e("center = ",""+ center);
+
                                 View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
+
+                                //View view =  layoutManagaer.findSnapView(mLayoutManager);
+
                                 int centerPos = recyview_frames.getChildAdapterPosition(centerView);
-                                Log.e("centerPos  ",""+centerPos);
+
+                                Log.e("centerPos = ",""+ centerPos);
+
+                                mLayoutManager.findLastVisibleItemPosition();
+
                                 if(centerPos > 0)
                                     centerPos=centerPos-1;
 
@@ -363,8 +377,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 }
                 break;
         }
-
-
         return true;
     }
 
@@ -1216,7 +1228,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
 
             if(mainvideoframes.size() > 0)
-                mainvideoframes.get(mainvideoframes.size()-1).settitle("Last Frame ");
+                mainvideoframes.get(mainvideoframes.size()-2).settitle("Last Frame ");
 
             ishashprocessing=false;
             grabber.flush();
@@ -1228,6 +1240,63 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
     }
 
+
+   /* public void checkfornewframe()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if(videoduration > 0)
+                {
+                    long actualduration=videoduration/1000;    // its 10 seconds
+                    framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
+
+                    if(videoduration > 0 && framecount > 0)
+                    {
+                        long toframe=0;
+                        if(videoduration == currentvideoduration)
+                        {
+                            toframe=mainvideoframes.size();
+                        }
+                        else
+                        {
+                            toframe=framesegment*currentvideodurationseconds;
+                        }
+
+                        if(toframe <= mainvideoframes.size() && toframe >0)
+                        {
+                            if(! frameprocess)
+                            {
+                                boolean flag=false;
+                                while (lastgetframe <= toframe)
+                                {
+                                    lastgetframe++;
+
+                                }
+
+                            if(flag)
+                                txt_hashes.append(selectedhaeshes);
+
+                                frameprocess=false;
+                            }
+
+                        }
+
+                        // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
+                    }
+                }
+
+
+                myHandler.postDelayed(this, 1000);
+            }
+        };
+        myHandler.post(myRunnable);
+    }*/
 
     public void checkfornewframe()
     {
@@ -1265,6 +1334,44 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                 {
                                     lastgetframe++;
 
+                                    if(lastgetframe < (mainvideoframes.size()-1))
+                                    {
+                                        if (lastgetframe == currentframenumber)
+                                        {
+
+
+                                            selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe-1).gettitle()
+                                                    +" "+ mainvideoframes.get((int)lastgetframe-1).getcurrentframenumber()+" "+
+                                                    mainvideoframes.get((int)lastgetframe-1).getkeytype()+":"+" "+
+                                                    mainvideoframes.get((int)lastgetframe-1).getkeyvalue();
+
+                                            currentframenumber = currentframenumber + frameduration;
+                                        }
+
+                                        frameprocess=true;
+                                        flag=true;
+                                    }
+                                    else
+                                    {
+                                        if(lastgetframe == framecount)
+                                        {
+                                            showlastframe = true;
+                                            sethashesdata();
+
+                                            if(myHandler != null && myRunnable != null)
+                                                myHandler.removeCallbacks(myRunnable);
+
+                                        }
+                                        break;
+                                    }
+
+                                    if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
+                                    {
+                                       /* sethashesdata();
+                                        selectedhaeshes="";*/
+                                        txt_hashes.append(selectedhaeshes);
+                                        selectedhaeshes="";
+                                    }
                                 }
 
                             /*if(flag)
@@ -1272,10 +1379,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                                 frameprocess=false;
                             }
-
                         }
-
-                        // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
+                       // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
                     }
                 }
 
@@ -1286,93 +1391,29 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         myHandler.post(myRunnable);
     }
 
-    /*public void checkfornewframe()
+
+    public void sethashesdata()
     {
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
+        if((txt_hashes.getVisibility() == View.VISIBLE))
+        {
+            if(isdraweropen)
+            {
+                if(showlastframe){
+                    selectedhaeshes = selectedhaeshes+"\n"+ mainvideoframes.get(mainvideoframes.size()-2).gettitle()
+                            +" "+ mainvideoframes.get(mainvideoframes.size()-2).getcurrentframenumber()+" "+
+                            mainvideoframes.get(mainvideoframes.size()-2).getkeytype()+":"+" "+
+                            mainvideoframes.get(mainvideoframes.size()-2).getkeyvalue();
 
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
-            @Override
-            public void run() {
+                    txt_hashes.append(selectedhaeshes);
+                    selectedhaeshes="";
 
-                if(videoduration > 0)
-                {
-                    long actualduration=videoduration/1000;    // its 10 seconds
-                    framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
-
-                    if(videoduration > 0 && framecount > 0)
-                    {
-                        long toframe=0;
-                        if(videoduration == currentvideoduration)
-                        {
-                            toframe=mainvideoframes.size();
-                        }
-                        else
-                        {
-                            toframe=framesegment*currentvideodurationseconds;
-                        }
-
-                        if(toframe <= mainvideoframes.size() && toframe >0)
-                        {
-                            if(! frameprocess)
-                            {
-                                boolean flag=false;
-                                while (lastgetframe <= toframe)
-                                {
-                                    lastgetframe++;
-
-                                    if(lastgetframe < mainvideoframes.size())
-                                    {
-                                        if (lastgetframe == currentframenumber)
-                                        {
-                                            selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe-1).gettitle()
-                                                    +" "+ mainvideoframes.get((int)lastgetframe-1).getcurrentframenumber()+" "+
-                                                    mainvideoframes.get((int)lastgetframe-1).getkeytype()+":"+" "+
-                                                    mainvideoframes.get((int)lastgetframe-1).getkeyvalue();
-
-                                            currentframenumber = currentframenumber + frameduration;
-                                        }
-                                        frameprocess=true;
-                                        flag=true;
-                                    }
-                                    else
-                                    {
-                                        if(lastgetframe == framecount)
-                                        {
-                                            if(myHandler != null && myRunnable != null)
-                                                myHandler.removeCallbacks(myRunnable);
-
-                                        }
-                                        break;
-                                    }
-                                    if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
-                                    {
-                                        txt_hashes.append(selectedhaeshes);
-                                        selectedhaeshes="";
-                                    }
-
-
-                                }
-
-                            *//*if(flag)
-                                txt_hashes.append(selectedhaeshes);*//*
-
-                                frameprocess=false;
-                            }
-
-                        }
-
-                       // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
-                    }
+                }else{
+                    txt_hashes.append(selectedhaeshes);
+                    selectedhaeshes="";
                 }
-
-
-                myHandler.postDelayed(this, 1000);
             }
-        };
-        myHandler.post(myRunnable);
-    }*/
+        }
+    }
 
 
 
