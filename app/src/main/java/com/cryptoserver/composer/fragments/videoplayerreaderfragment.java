@@ -468,6 +468,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     public void hideshowcontroller()
     {
+        if(isdraweropen)
+            return;
+
         if(controller != null)
         {
             if(controller.controllersview.getVisibility() == View.VISIBLE)
@@ -1225,7 +1228,65 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
     }
 
+
     public void checkfornewframe()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if(videoduration > 0)
+                {
+                    long actualduration=videoduration/1000;    // its 10 seconds
+                    framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
+
+                    if(videoduration > 0 && framecount > 0)
+                    {
+                        long toframe=0;
+                        if(videoduration == currentvideoduration)
+                        {
+                            toframe=mainvideoframes.size();
+                        }
+                        else
+                        {
+                            toframe=framesegment*currentvideodurationseconds;
+                        }
+
+                        if(toframe <= mainvideoframes.size() && toframe >0)
+                        {
+                            if(! frameprocess)
+                            {
+                                boolean flag=false;
+                                while (lastgetframe <= toframe)
+                                {
+                                    lastgetframe++;
+
+                                }
+
+                            /*if(flag)
+                                txt_hashes.append(selectedhaeshes);*/
+
+                                frameprocess=false;
+                            }
+
+                        }
+
+                        // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
+                    }
+                }
+
+
+                myHandler.postDelayed(this, 1000);
+            }
+        };
+        myHandler.post(myRunnable);
+    }
+
+    /*public void checkfornewframe()
     {
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
@@ -1294,8 +1355,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                                 }
 
-                            /*if(flag)
-                                txt_hashes.append(selectedhaeshes);*/
+                            *//*if(flag)
+                                txt_hashes.append(selectedhaeshes);*//*
 
                                 frameprocess=false;
                             }
@@ -1311,7 +1372,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
         };
         myHandler.post(myRunnable);
-    }
+    }*/
 
 
 

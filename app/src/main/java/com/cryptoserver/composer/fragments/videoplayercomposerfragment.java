@@ -149,7 +149,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
         handleimageview.setOnTouchListener(this);
         righthandle.setOnTouchListener(this);
-        videoSurface.setOnTouchListener(this);
 
         setmetriceshashesdata();
 
@@ -163,6 +162,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             txtSlot1.setVisibility(View.GONE);
             txtSlot2.setVisibility(View.GONE);
             txtSlot3.setVisibility(View.VISIBLE);
+            txt_metrics.setVisibility(View.INVISIBLE);
+            txt_hashes.setVisibility(View.INVISIBLE);
         }
         else
         {
@@ -249,20 +250,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 flingswipe.onTouchEvent(motionEvent);
                 break;
 
-            case  R.id.videoSurface:
-            {
-                switch (motionEvent.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        if(handleimageview.getVisibility() == View.GONE){
-                            hideshowcontroller();
-                        }else{
-                            hideshowcontroller();
-                        }
-
-                        break;
-                }
-            }
-            break;
         }
 
 
@@ -371,6 +358,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
     public void hideshowcontroller()
     {
+        if(isdraweropen)
+            return;
+
         if(handleimageview.getVisibility() ==  (View.VISIBLE))
         {
             handleimageview.setVisibility(View.GONE);
@@ -851,7 +841,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                     }
                                     if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
                                     {
-                                        txt_hashes.append(selectedhaeshes);
+                                        sethashesdata();
                                         selectedhaeshes="";
                                     }
 
@@ -875,6 +865,19 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             }
         };
         myHandler.post(myRunnable);
+    }
+
+    public void sethashesdata()
+    {
+        if((txt_hashes.getVisibility() == View.VISIBLE))
+        {
+            if(common.isdevelopermodeenable() && (isdraweropen) )
+            {
+                txt_hashes.append(selectedhaeshes);
+                selectedhaeshes="";
+            }
+
+        }
     }
 
     public void setdata(String VIDEO_URL){
