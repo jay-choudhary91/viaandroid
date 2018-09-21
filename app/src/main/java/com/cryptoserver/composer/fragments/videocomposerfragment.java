@@ -1659,7 +1659,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                    txt_metrics.append(selectedmetrices);
                                    selectedmetrices="";
                                }
-
                            }
                         }
                     });
