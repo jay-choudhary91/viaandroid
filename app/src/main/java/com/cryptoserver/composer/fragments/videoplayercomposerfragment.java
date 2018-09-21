@@ -244,14 +244,14 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             @Override
             public void run() {
                 //  Log.e("Metrices content ",""+selectedmetrices);
-                if ((txt_metrics.getVisibility() == View.VISIBLE)) {
+                //if ((txt_metrics.getVisibility() == View.VISIBLE)) {
                     //    if(common.isdevelopermodeenable() && (isdraweropen) )
                     {
                         txt_metrics.append(selectedmetrics);
                         selectedmetrics = "";
                     }
 
-                }
+                //}
             }
         });
     }
@@ -889,12 +889,40 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         myHandler.post(myRunnable);
     }*/
 
-    public void sethashesdata()
+    public void sethashesdata() {
+
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                /*if ((txt_hashes.getVisibility() == View.VISIBLE)) {*/
+                if (isdraweropen) {
+                    if (showlastframe) {
+                        selectedhaeshes = selectedhaeshes + "\n" + mainvideoframes.get(mainvideoframes.size() - 2).gettitle()
+                                + " " + mainvideoframes.get(mainvideoframes.size() - 2).getcurrentframenumber() + " " +
+                                mainvideoframes.get(mainvideoframes.size() - 2).getkeytype() + ":" + " " +
+                                mainvideoframes.get(mainvideoframes.size() - 2).getkeyvalue();
+
+                        txt_hashes.append(selectedhaeshes);
+                        selectedhaeshes = "";
+
+                    }
+                }
+               /* }*/
+            }
+        });
+
+    }
+
+
+
+   /* public void sethashesdata()
     {
+
+
         if((txt_hashes.getVisibility() == View.VISIBLE))
         {
-            if(common.isdevelopermodeenable() && (isdraweropen))
-            {
+            *//*if(common.isdevelopermodeenable() && (isdraweropen))
+            {*//*
 
                 if(showlastframe){
 
@@ -910,9 +938,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                     txt_hashes.append(selectedhaeshes);
                     selectedhaeshes="";
                 }
-            }
+           // }
         }
-    }
+    }*/
 
     public void setdata(String VIDEO_URL){
         this.VIDEO_URL = VIDEO_URL;
@@ -1004,7 +1032,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                         {
                                             lastgetframe++;
 
-                                            if(lastgetframe < (mainvideoframes.size()-1))
+                                            if(lastgetframe < (mainvideoframes.size()-2))
                                             {
                                                 if (lastgetframe == currentframenumber)
                                                 {
@@ -1034,14 +1062,11 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                             }
                                             else
                                             {
-                                                if(lastgetframe == framecount)
+                                                if(lastgetframe <= framecount)
                                                 {
 
                                                     showlastframe = true;
                                                     sethashesdata();
-
-
-
                                                     if(myHandler != null && myRunnable != null)
                                                         myHandler.removeCallbacks(myRunnable);
 

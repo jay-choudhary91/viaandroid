@@ -512,7 +512,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(! common.isdevelopermodeenable())
             {
                 //changes txtslot1,txtslot2 gone to visible and metrices to invisible to visible
-                resetButtonViews(txtSlot3,txtSlot2,txtSlot1);
+                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
                 txtSlot1.setVisibility(View.VISIBLE);
                 txtSlot2.setVisibility(View.VISIBLE);
                 txtSlot3.setVisibility(View.VISIBLE);
