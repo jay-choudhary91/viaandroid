@@ -513,8 +513,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             {
                 //changes txtslot1,txtslot2 gone to visible and metrices to invisible to visible
                 resetButtonViews(txtSlot3,txtSlot2,txtSlot1);
-                txtSlot1.setVisibility(View.GONE);
-                txtSlot2.setVisibility(View.GONE);
+                txtSlot1.setVisibility(View.VISIBLE);
+                txtSlot2.setVisibility(View.VISIBLE);
                 txtSlot3.setVisibility(View.VISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 txt_hashes.setVisibility(View.INVISIBLE);
@@ -1654,7 +1654,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                           //  Log.e("Metrices content ",""+selectedmetrices);
                            if((txt_metrics.getVisibility() == View.VISIBLE))
                            {
-                               if(common.isdevelopermodeenable() && (isdraweropen) )
+                           //    if(common.isdevelopermodeenable() && (isdraweropen) )
                                {
                                    txt_metrics.append(selectedmetrices);
                                    selectedmetrices="";
@@ -1672,7 +1672,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                        //     madapter.notifyItemChanged(madapter.getItemCount(),mvideoframes.size()-1);
                         if((txt_hashes.getVisibility() == View.VISIBLE))
                         {
-                            if(common.isdevelopermodeenable() && (isdraweropen))
+                           // if(common.isdevelopermodeenable() && (isdraweropen))
                             {
                                 txt_hashes.append(selectedhashes);
                                 selectedhashes="";
