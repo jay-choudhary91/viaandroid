@@ -511,6 +511,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             if(! common.isdevelopermodeenable())
             {
+                //changes txtslot1,txtslot2 gone to visible and metrices to invisible to visible
                 resetButtonViews(txtSlot3,txtSlot2,txtSlot1);
                 txtSlot1.setVisibility(View.GONE);
                 txtSlot2.setVisibility(View.GONE);
@@ -593,7 +594,23 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
                         }
                         fingerSpacing = currentFingerSpacing;
-                    } else { //Single touch point, needs to return true in order to detect one more touch point
+                    } else if(!mIsRecordingVideo){
+                        switch (motionEvent.getAction()){
+                            case MotionEvent.ACTION_DOWN:
+                                    if(layout_bottom.getVisibility() == View.VISIBLE) {
+                                        hideshowcontroller(false);
+                                        Log.e("layout visibale","layout visibale");
+                                    }
+                                    else {
+                                        hideshowcontroller(true);
+
+                                        Log.e("layout hide","layout hide");
+                                    }
+                        }
+                    }
+
+                    else { //Single touch point, needs to return true in order to detect one more touch point
+
                         switch (motionEvent.getAction()){
                             case MotionEvent.ACTION_DOWN:
                                 if(mIsRecordingVideo && (!(isdraweropen)))
@@ -1839,6 +1856,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         TextView txt_share_btn3 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn3);
         TextView txt_title1 = (TextView)maindialogshare.findViewById(R.id.txt_title1);
         TextView txt_title2 = (TextView)maindialogshare.findViewById(R.id.txt_title2);
+        ImageView img_cancel=maindialogshare.findViewById(R.id.img_cancelicon);
 
         txt_share_btn1.setText(getResources().getString(R.string.share));
         txt_share_btn2.setText(getResources().getString(R.string.new_video));
@@ -1885,6 +1903,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 gethelper().addFragment(fullvdofragmnet,false,true);
             }
         });
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+
+            }
+        });
         maindialogshare.show();
     }
 
@@ -1911,6 +1937,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         TextView txt_share_btn3 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn3);
         TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
         TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
+        ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
 
         txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
         txt_share_btn2.setText(getResources().getString(R.string.share_partial_video));
@@ -1981,6 +2008,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     subdialogshare.dismiss();
               //  updatevideolistdata(true);
                 launchvideolist();
+            }
+        });
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
             }
         });
         subdialogshare.show();
