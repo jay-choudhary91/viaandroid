@@ -8,18 +8,15 @@ import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -39,16 +36,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.adapter.Itemmetricadapter;
-import com.cryptoserver.composer.adapter.drawermetricesadapter;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
-import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.CenterLayoutManager;
+import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
@@ -58,19 +53,13 @@ import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,7 +115,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     ArrayList<frame> mbitmaplist =new ArrayList<>();
 
     boolean ishashprocessing=false;
-    boolean islisttouched=false;
+    boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
     public int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
     framebitmapadapter adapter;
@@ -189,7 +178,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     recyview_frames.setItemAnimator(new DefaultItemAnimator());
                     recyview_frames.setAdapter(adapter);
 
-                    recyview_frames.setOnTouchListener(new View.OnTouchListener() {
+                    /*recyview_frames.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View view, MotionEvent motionEvent) {
                             switch (motionEvent.getAction()){
@@ -202,23 +191,46 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                             }
                             return false;
                         }
-                    });
+                    });*/
 
                     recyview_frames.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
                         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                             super.onScrollStateChanged(recyclerView, newState);
+                            switch (newState) {
+                                case RecyclerView.SCROLL_STATE_IDLE:
+                                    System.out.println("The RecyclerView is not scrolling");
+                                    disabletouchedevents();
+                                    break;
+                                case RecyclerView.SCROLL_STATE_DRAGGING:
+                                    System.out.println("Scrolling now");
+                                    islisttouched = true;
+                                    islistdragging = true;
+                                    break;
+                                case RecyclerView.SCROLL_STATE_SETTLING:
+                                    System.out.println("Scroll Settling");
+                                    disabletouchedevents();
+                                    break;
+
+                            }
                         }
 
                         @Override
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
-                            /*int firstVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
-                            int lastVisibleItems = mLayoutManager.findLastVisibleItemPosition();
-                            int firstcompleted=mLayoutManager.findFirstCompletelyVisibleItemPosition();
-                            Log.e("first last",""+firstVisibleItems+" "+lastVisibleItems+" "+firstcompleted);*/
 
-                            if(islisttouched)
+                            /*{
+                                int center = recyview_frames.getWidth() / 2;
+                                View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
+                                int centerPos = recyview_frames.getChildAdapterPosition(centerView);
+                                mLayoutManager.findLastVisibleItemPosition();
+                                if(centerPos > 0)
+                                    centerPos=centerPos-1;
+
+                                Log.e("center pos ",""+centerPos+" "+islisttouched+" "+
+                                        islistdragging);
+                            }*/
+                            if(islisttouched && islistdragging)
                             {
                                 if(player != null && player.isPlaying())
                                 {
@@ -227,19 +239,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                 }
 
                                 int center = recyview_frames.getWidth() / 2;
-
-                                Log.e("center = ",""+ center);
-
                                 View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
-
-                                //View view =  layoutManagaer.findSnapView(mLayoutManager);
-
                                 int centerPos = recyview_frames.getChildAdapterPosition(centerView);
-
-                                Log.e("centerPos = ",""+ centerPos);
-
                                 mLayoutManager.findLastVisibleItemPosition();
-
                                 if(centerPos > 0)
                                     centerPos=centerPos-1;
 
@@ -249,8 +251,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                     if(player !=null && controller != null)
                                     {
                                         try {
-                                           // player.seekTo(currentduration);
-                                           // controller.setProgress();
+                                            player.seekTo(currentduration);
+                                            controller.setProgress();
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
@@ -278,7 +280,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             });
         }
 
-
         righthandle.setVisibility(View.GONE);
 
         /*recyview_metrices.setVisibility(View.VISIBLE);
@@ -299,6 +300,18 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
         return rootview;
     }
+
+    public void disabletouchedevents()
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                islisttouched = false;
+                islistdragging = false;
+            }
+        },500);
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -695,7 +708,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     currentvideodurationseconds=currentvideoduration/1000;  // Its 4
                 }
 
-
                 if(mbitmaplist.size() > 0 && (! islisttouched))
                 {
                     int second=player.getCurrentPosition()/1000;
@@ -703,9 +715,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     {
                         recyview_frames.scrollToPosition(second);
                         recyview_frames.smoothScrollToPosition(second);
-                        //recyview_frames.scrollTo((720/2)+(second*50),0);
                     }
                 }
+
                 return player.getCurrentPosition();
             }
         }catch (Exception e)
@@ -1211,15 +1223,106 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }*/
     }
 
-
     public void setVideoAdapter() {
+        int count = 1;
+        ishashprocessing=true;
+        currentframenumber=0;
+        currentframenumber = currentframenumber + frameduration;
+        try
+        {
+            customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
+
+            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+            String format= common.getvideoformat(VIDEO_URL);
+            if(format.equalsIgnoreCase("mp4"))
+                grabber.setFormat(format);
+
+
+            grabber.start();
+            videomodel lastframehash=null;
+            for(int i = 0; i<grabber.getLengthInFrames(); i++){
+                Frame frame = grabber.grabImage();
+                if (frame == null)
+                    break;
+
+                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
+                byte[] byteData = new byte[buffer.remaining()];
+                buffer.get(byteData);
+
+                String keyValue= getkeyvalue(byteData);
+
+                mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
+
+                if (count == currentframenumber) {
+                    lastframehash=null;
+                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
+
+                    String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                    sethashesvalue(hash);
+                    currentframenumber = currentframenumber + frameduration;
+                }
+                else
+                {
+                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                }
+                count++;
+            }
+
+            if(lastframehash != null)
+            {
+                mvideoframes.add(lastframehash);
+                String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                        +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                        mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                sethashesvalue(hash);
+            }
+            else
+            {
+                if(mvideoframes.size() > 0)
+                {
+                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                    String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                    sethashesvalue(hash);
+                }
+            }
+
+            ishashprocessing=false;
+            grabber.flush();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            ishashprocessing=false;
+        }
+    }
+
+    public void sethashesvalue(final String hash)
+    {
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                txt_hashes.append(hash);
+            }
+        });
+    }
+
+
+
+    /*public void setVideoAdapter() {
         int count = 1;
         ishashprocessing=true;
         currentframenumber=0;
         currentframenumber = currentframenumber + frameduration;
        try
         {
-            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(VIDEO_URL);
+            customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
 
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
             String format= common.getvideoformat(VIDEO_URL);
@@ -1233,9 +1336,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             currentvideodurationseconds=0;
             framecount=grabber.getLengthInFrames();   // suppose its 500
             //videoduration=grabber.getLengthInTime();   // suppose its 10000
-            /*videoduration=videoduration/1000;
+            *//*videoduration=videoduration/1000;
             long actualduration=videoduration/1000;    // its 10 seconds
-            framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)*/
+            framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)*//*
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -1248,7 +1351,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                Frame frame = grabber.grabImage();
 
                 if (frame == null)
-                    break;
+                    return;
 
                 ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
                 byte[] byteData = new byte[buffer.remaining()];
@@ -1274,7 +1377,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             e.printStackTrace();
             ishashprocessing=false;
         }
-    }
+    }*/
 
 
    /* public void checkfornewframe()

@@ -535,7 +535,7 @@ public class videocontrollerview extends FrameLayout {
                 return;
             }
 
-            Log.e("fromuser" , ""+ fromuser);
+//            Log.e("fromuser" , ""+ fromuser);
 
             if (!fromuser) {
                 // We're not interested in programmatically generated changes to
@@ -545,7 +545,7 @@ public class videocontrollerview extends FrameLayout {
 
             long duration = mPlayer.getDuration();
             long newposition = (duration * progress) / 1000L;
-            Log.e("Duration Progress ",duration+" "+newposition);
+  //          Log.e("Duration Progress ",duration+" "+newposition);
 
             mPlayer.seekTo((int) newposition);
 
