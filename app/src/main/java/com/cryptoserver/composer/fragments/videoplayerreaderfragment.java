@@ -1285,6 +1285,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                txt_hashes.setVisibility(View.VISIBLE);
                 txt_hashes.append(hash);
             }
         });
