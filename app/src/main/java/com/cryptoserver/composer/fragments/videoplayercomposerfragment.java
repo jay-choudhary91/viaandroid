@@ -40,6 +40,7 @@ import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
@@ -222,39 +223,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         view3.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
     }
 
-    /*public void setmetriceshashesdata()
-    {
-        txt_metrics.setText("");
-        txt_hashes.setText("");
-        metricItemArraylist.clear();
-        ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-        String selectedmetrics="";
-        for(int i=0;i<mlist.size();i++)
-        {
-            if(mlist.get(i).isSelected())
-            {
-                selectedmetrics=selectedmetrics+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "+mlist.get(i).getMetricTrackValue();
-            }
-        }
-        txt_metrics.setText(selectedmetrics);
-    }*/
-    public void setmetriceshashesdata() {
 
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //  Log.e("Metrices content ",""+selectedmetrices);
-                //if ((txt_metrics.getVisibility() == View.VISIBLE)) {
-                    //    if(common.isdevelopermodeenable() && (isdraweropen) )
-                    {
-                        txt_metrics.append(selectedmetrics);
-                        selectedmetrics = "";
-                    }
-
-                //}
-            }
-        });
-    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -742,28 +711,20 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         currentframenumber = currentframenumber + frameduration;
         try
         {
-            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(VIDEO_URL);
+            setmetriceshashesdata();
+
+            customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
 
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
             String format= common.getvideoformat(VIDEO_URL);
             if(format.equalsIgnoreCase("mp4"))
                 grabber.setFormat(format);
 
+
             grabber.start();
-
-            framecount=grabber.getLengthInFrames();   // suppose its 500
-
-
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    checkfornewframe();
-                }
-            });
-
+            videomodel lastframehash=null;
             for(int i = 0; i<grabber.getLengthInFrames(); i++){
                 Frame frame = grabber.grabImage();
-
                 if (frame == null)
                     break;
 
@@ -775,18 +736,49 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
 
-                mainvideoframes.add(new videomodel("Frame ", keytype, count,keyValue));
+                if (count == currentframenumber) {
+                    lastframehash=null;
+                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
 
+                    String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+
+                    sethashesvalue(hash);
+
+
+                    currentframenumber = currentframenumber + frameduration;
+
+                }
+                else
+                {
+                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                }
                 count++;
             }
 
-            Log.e("mainvideoframes",""+framecount);
-
-            if(mainvideoframes.size() > 0){
-                mainvideoframes.get(mainvideoframes.size()-2).settitle("Last Frame ");
-
+            if(lastframehash != null)
+            {
+                mvideoframes.add(lastframehash);
+                String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                        +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                        mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                sethashesvalue(hash);
             }
-
+            else
+            {
+                if(mvideoframes.size() > 1)
+                {
+                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                    String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                    sethashesvalue(hash);
+                }
+            }
 
             ishashprocessing=false;
             grabber.flush();
@@ -798,96 +790,36 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         }
     }
 
-    /*public void checkfornewframe()
-    {
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
 
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
+    public void setmetriceshashesdata()
+    {
+        metricItemArraylist.clear();
+        ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
+
+        for(int i=0;i<mlist.size();i++)
+        {
+            if(mlist.get(i).isSelected())
+                selectedmetrics=selectedmetrics+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "+mlist.get(i).getMetricTrackValue();
+        }
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(videoduration > 0)
-                {
-                    long actualduration=videoduration/1000;    // its 10 seconds
-                    framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
-
-                    if(videoduration > 0 && framecount > 0)
-                    {
-                        long toframe=0;
-                        if(videoduration == currentvideoduration)
-                        {
-                            toframe=mainvideoframes.size();
-                        }
-                        else
-                        {
-                            toframe=framesegment*currentvideodurationseconds;
-                        }
-
-                        if(toframe <= mainvideoframes.size() && toframe >0)
-                        {
-                            if(! frameprocess)
-                            {
-                                boolean flag=false;
-                                while (lastgetframe <= toframe)
-                                {
-                                    lastgetframe++;
-
-                                    if(lastgetframe < (mainvideoframes.size()-1))
-                                    {
-                                        Log.e("lastgetframe", ""+ mainvideoframes.size() );
-                                        Log.e("mainvideoframes ", ""+ mainvideoframes.size() );
-
-                                        if (lastgetframe == currentframenumber)
-                                        {
-                                            selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe-1).gettitle()
-                                                    +" "+ mainvideoframes.get((int)lastgetframe-1).getcurrentframenumber()+" "+
-                                                    mainvideoframes.get((int)lastgetframe-1).getkeytype()+":"+" "+
-                                                    mainvideoframes.get((int)lastgetframe-1).getkeyvalue();
-
-                                            currentframenumber = currentframenumber + frameduration;
-                                        }
-                                        frameprocess=true;
-                                        flag=true;
-                                    }
-                                    else
-                                    {
-                                        if(lastgetframe == framecount)
-                                        {
-
-                                            showlastframe = true;
-                                            sethashesdata();
-                                            if(myHandler != null && myRunnable != null)
-                                                myHandler.removeCallbacks(myRunnable);
-                                        }
-                                        break;
-                                    }
-
-                                    if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
-                                    {
-                                        sethashesdata();
-                                        selectedhaeshes="";
-                                    }
-                                }
-
-                            *//*if(flag)
-                                txt_hashes.append(selectedhaeshes);*//*
-
-                                frameprocess=false;
-                            }
-
-                        }
-
-                        // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
-                    }
-                }
-
-
-                myHandler.postDelayed(this, 1000);
+                txt_metrics.append(selectedmetrics);
+                selectedmetrics="";
             }
-        };
-        myHandler.post(myRunnable);
-    }*/
+        });
+    }
+
+    public void sethashesvalue(final String hash)
+    {
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                txt_hashes.setVisibility(View.VISIBLE);
+                txt_hashes.append(hash);
+            }
+        });
+    }
 
     public void sethashesdata() {
 
