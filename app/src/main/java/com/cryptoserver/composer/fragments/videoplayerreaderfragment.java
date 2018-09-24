@@ -1004,50 +1004,21 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     public void setmetriceshashesdata()
     {
-        /*txt_metrics.setText("");
-        txt_hashes.setText("");
         metricItemArraylist.clear();
         ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
 
         for(int i=0;i<mlist.size();i++)
         {
             if(mlist.get(i).isSelected())
-            {
                 selectedmetrics=selectedmetrics+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "+mlist.get(i).getMetricTrackValue();
-            }
         }
-*/
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //  Log.e("Metrices content ",""+selectedmetrices);
-               /* if((txt_metrics.getVisibility() == View.VISIBLE))
-                {*/
-                    //    if(common.isdevelopermodeenable() && (isdraweropen) )
-                    {
-                        txt_metrics.append(selectedmetrics);
-                        selectedmetrics="";
-                    }
-
-               // }
+                txt_metrics.append(selectedmetrics);
+                selectedmetrics="";
             }
         });
-        /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                //  Log.e("Metrices content ",""+selectedmetrices);
-                if((txt_metrics.getVisibility() == View.VISIBLE))
-                {
-                    //    if(common.isdevelopermodeenable() && (isdraweropen) )
-                    {
-                        txt_metrics.append(selectedmetrics);
-                        selectedmetrics="";
-                    }
-
-                }
-            }
-        });*/
-      //  txt_metrics.append(selectedmetrics);
     }
 
     public int checkframeduration()
@@ -1230,6 +1201,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         currentframenumber = currentframenumber + frameduration;
         try
         {
+            setmetriceshashesdata();
+
             customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
 
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
@@ -1261,8 +1234,12 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+
                     sethashesvalue(hash);
+
+
                     currentframenumber = currentframenumber + frameduration;
+
                 }
                 else
                 {
@@ -1282,7 +1259,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
             else
             {
-                if(mvideoframes.size() > 0)
+                if(mvideoframes.size() > 1)
                 {
                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
                     String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
