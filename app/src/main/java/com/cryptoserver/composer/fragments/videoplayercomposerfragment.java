@@ -159,7 +159,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
         if(! common.isdevelopermodeenable())
         {
-            resetButtonViews(txtSlot3,txtSlot2,txtSlot1);
+            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
             txtSlot2.setVisibility(View.VISIBLE);
             txtSlot3.setVisibility(View.VISIBLE);
@@ -897,10 +897,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 /*if ((txt_hashes.getVisibility() == View.VISIBLE)) {*/
                 if (isdraweropen) {
                     if (showlastframe) {
-                        selectedhaeshes = selectedhaeshes + "\n" + mainvideoframes.get(mainvideoframes.size() - 2).gettitle()
-                                + " " + mainvideoframes.get(mainvideoframes.size() - 2).getcurrentframenumber() + " " +
-                                mainvideoframes.get(mainvideoframes.size() - 2).getkeytype() + ":" + " " +
-                                mainvideoframes.get(mainvideoframes.size() - 2).getkeyvalue();
+                        selectedhaeshes = selectedhaeshes + "\n" + mainvideoframes.get(mainvideoframes.size() - 1).gettitle()
+                                + " " + mainvideoframes.get(mainvideoframes.size() - 1).getcurrentframenumber() + " " +
+                                mainvideoframes.get(mainvideoframes.size() - 1).getkeytype() + ":" + " " +
+                                mainvideoframes.get(mainvideoframes.size() - 1).getkeyvalue();
 
                         txt_hashes.append(selectedhaeshes);
                         selectedhaeshes = "";
@@ -1032,7 +1032,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                         {
                                             lastgetframe++;
 
-                                            if(lastgetframe < (mainvideoframes.size()-2))
+                                            if(lastgetframe < (mainvideoframes.size()-1))
                                             {
                                                 if (lastgetframe == currentframenumber)
                                                 {

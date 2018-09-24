@@ -1264,7 +1264,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
 
             if(mainvideoframes.size() > 0)
-                mainvideoframes.get(mainvideoframes.size()-2).settitle("Last Frame ");
+                mainvideoframes.get(mainvideoframes.size()-1).settitle("Last Frame ");
 
             ishashprocessing=false;
             grabber.flush();
@@ -1461,10 +1461,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 /*if ((txt_hashes.getVisibility() == View.VISIBLE)) {*/
                     if (isdraweropen) {
                         if (showlastframe) {
-                            selectedhaeshes = selectedhaeshes + "\n" + mainvideoframes.get(mainvideoframes.size() - 2).gettitle()
-                                    + " " + mainvideoframes.get(mainvideoframes.size() - 2).getcurrentframenumber() + " " +
-                                    mainvideoframes.get(mainvideoframes.size() - 2).getkeytype() + ":" + " " +
-                                    mainvideoframes.get(mainvideoframes.size() - 2).getkeyvalue();
+                            selectedhaeshes = selectedhaeshes + "\n" + mainvideoframes.get(mainvideoframes.size() - 1).gettitle()
+                                    + " " + mainvideoframes.get(mainvideoframes.size() - 1).getcurrentframenumber() + " " +
+                                    mainvideoframes.get(mainvideoframes.size() - 1).getkeytype() + ":" + " " +
+                                    mainvideoframes.get(mainvideoframes.size() - 1).getkeyvalue();
 
                             txt_hashes.append(selectedhaeshes);
                             selectedhaeshes = "";
