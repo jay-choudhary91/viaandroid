@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -19,6 +20,7 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -133,6 +135,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     LinearLayoutManager mLayoutManager;
     String selectedhaeshes="";
     private int lastmetricescount=0;
+    SurfaceHolder holder;
 
     @Override
     public int getlayoutid() {
@@ -153,6 +156,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             righthandle=rootview.findViewById(R.id.righthandle);
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
+
+           /* holder = videoSurface.getHolder();
+            holder.addCallback(this);
+            holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);*/
 
             final LinearSnapHelper layoutManagaer = new LinearSnapHelper();
 
@@ -639,12 +646,34 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+
+
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
         //mp.start();
 
         videoduration=mp.getDuration();
 
+        /*int videoWidth = player.getVideoWidth();
+        int videoHeight = player.getVideoHeight();
+        float videoProportion = (float) videoWidth / (float) videoHeight;
+        int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+        float screenProportion = (float) screenWidth / (float) screenHeight;
+
+        android.widget.FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) videoSurface.getLayoutParams();
+
+
+        if (videoProportion > screenProportion) {
+            params.width = screenWidth;
+            params.height = (int) ((float) screenWidth / videoProportion);
+        } else {
+            params.width = (int) (videoProportion * (float) screenHeight);
+            params.height = screenHeight;
+        }
+
+        params.gravity = Gravity.CENTER;
+        videoSurface.setLayoutParams(params);*/
 
         try {
             if(playerposition > 0)
@@ -1040,6 +1069,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     public void getFramesBitmap()
     {
         mbitmaplist.add(new frame(0,null,true));
+
+       // mbitmaplist.clear();
+
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
         m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
         String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
@@ -1049,12 +1081,15 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         long minutes = (duration - hours * 3600) / 60;
         long seconds = duration - (hours * 3600 + minutes * 60);
 
+        if(minutes!=0)
+            minutes = minutes*60;
+
+        seconds = seconds + minutes;
+
 
         for(int i=1;i<=seconds;i++)
         {
-
             Bitmap m_bitmap = null;
-
             try
             {
                 m_mediaMetadataRetriever = new MediaMetadataRetriever();
