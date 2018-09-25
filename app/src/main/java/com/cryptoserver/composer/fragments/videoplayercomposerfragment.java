@@ -110,6 +110,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     boolean frameprocess=false,showlastframe = false;
     private boolean isdraweropen=false;
     String selectedhaeshes="";
+    private int lastmetricescount=0;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -734,6 +735,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
 
                     ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
+                    //metricItemArraylist.addAll(mlist);
 
                     for(int j=0;j<mlist.size();j++)
                     {
@@ -808,6 +810,20 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                         txt_metrics.append(selectedmetrics);
                         selectedmetrics="";
                     }
+
+                    /*int localcounter=1;
+                    while (lastmetricescount < metricItemArraylist.size())
+                    {
+
+                        txt_metrics.append("\n"+metricItemArraylist.get(lastmetricescount).getMetricTrackKeyName()+" - "+metricItemArraylist
+                        .get(lastmetricescount).getMetricTrackValue());
+
+                        if(localcounter == 20)
+                            break;
+
+                        lastmetricescount++;
+                        localcounter++;
+                    }*/
                 }
                 myHandler.postDelayed(this, 1000);
             }

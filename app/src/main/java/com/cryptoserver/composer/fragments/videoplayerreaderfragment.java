@@ -130,8 +130,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             lastgetframe=0;
     boolean frameprocess=false,showlastframe = false;
     private boolean isdraweropen=false;
-    String selectedhaeshes="";
     LinearLayoutManager mLayoutManager;
+    String selectedhaeshes="";
+    private int lastmetricescount=0;
 
     @Override
     public int getlayoutid() {
@@ -298,6 +299,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         txt_metrics.setVisibility(View.INVISIBLE);
         resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
 
+        setmetriceshashesdata();
         return rootview;
     }
 
@@ -1002,25 +1004,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
     }
 
-    public void setmetriceshashesdata()
-    {
-        metricItemArraylist.clear();
-        ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-
-        for(int i=0;i<mlist.size();i++)
-        {
-            if(mlist.get(i).isSelected())
-                selectedmetrics=selectedmetrics+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "+mlist.get(i).getMetricTrackValue();
-        }
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                txt_metrics.append(selectedmetrics);
-                selectedmetrics="";
-            }
-        });
-    }
-
     public int checkframeduration()
     {
         int frameduration=15;
@@ -1201,8 +1184,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         currentframenumber = currentframenumber + frameduration;
         try
         {
-            setmetriceshashesdata();
-
             customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
 
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
@@ -1230,13 +1211,23 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     lastframehash=null;
                     mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
 
-                    String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                    selectedhaeshes=selectedhaeshes+"\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
 
-                    sethashesvalue(hash);
+                    ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
+                    //metricItemArraylist.addAll(mlist);
 
+                    for(int j=0;j<mlist.size();j++)
+                    {
+                        if(mlist.get(j).isSelected())
+                        {
+                            selectedmetrics=selectedmetrics+"\n"+mlist.get(j).getMetricTrackKeyName()+" - "
+                                    +mlist.get(j).getMetricTrackValue();
+
+                        }
+                    }
 
                     currentframenumber = currentframenumber + frameduration;
 
@@ -1251,22 +1242,20 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if(lastframehash != null)
             {
                 mvideoframes.add(lastframehash);
-                String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                selectedhaeshes=selectedhaeshes+"\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
                         +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                         mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                         mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-                sethashesvalue(hash);
             }
             else
             {
                 if(mvideoframes.size() > 1)
                 {
                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-                    String hash="\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                    selectedhaeshes=selectedhaeshes+"\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-                    sethashesvalue(hash);
                 }
             }
 
@@ -1280,85 +1269,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
     }
 
-    public void sethashesvalue(final String hash)
-    {
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                txt_hashes.setVisibility(View.VISIBLE);
-                txt_hashes.append(hash);
-            }
-        });
-    }
-
-
-
-    /*public void setVideoAdapter() {
-        int count = 1;
-        ishashprocessing=true;
-        currentframenumber=0;
-        currentframenumber = currentframenumber + frameduration;
-       try
-        {
-            customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
-
-            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-            String format= common.getvideoformat(VIDEO_URL);
-            if(format.equalsIgnoreCase("mp4"))
-               grabber.setFormat(format);
-
-            grabber.start();
-
-            lastgetframe=0;
-            currentvideoduration=0;
-            currentvideodurationseconds=0;
-            framecount=grabber.getLengthInFrames();   // suppose its 500
-            //videoduration=grabber.getLengthInTime();   // suppose its 10000
-            *//*videoduration=videoduration/1000;
-            long actualduration=videoduration/1000;    // its 10 seconds
-            framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)*//*
-
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    checkfornewframe();
-                }
-            });
-
-           for(int i = 0; i<grabber.getLengthInFrames(); i++){
-               Frame frame = grabber.grabImage();
-
-                if (frame == null)
-                    return;
-
-                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
-
-                String keyValue= getkeyvalue(byteData);
-
-                mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
-
-               mainvideoframes.add(new videomodel("Frame ", keytype, count,keyValue));
-
-                count++;
-            }
-
-            if(mainvideoframes.size() > 0)
-                mainvideoframes.get(mainvideoframes.size()-1).settitle("Last Frame ");
-
-            ishashprocessing=false;
-            grabber.flush();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            ishashprocessing=false;
-        }
-    }*/
-
-
-   /* public void checkfornewframe()
+    public void setmetriceshashesdata()
     {
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
@@ -1368,194 +1279,27 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             @Override
             public void run() {
 
-                if(videoduration > 0)
+                if(isdraweropen)
                 {
-                    long actualduration=videoduration/1000;    // its 10 seconds
-                    framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
+                    //    madapter.notifyItemChanged(mvideoframes.size()-1);
 
-                    if(videoduration > 0 && framecount > 0)
+                    if((txt_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
                     {
-                        long toframe=0;
-                        if(videoduration == currentvideoduration)
-                        {
-                            toframe=mainvideoframes.size();
-                        }
-                        else
-                        {
-                            toframe=framesegment*currentvideodurationseconds;
-                        }
-
-                        if(toframe <= mainvideoframes.size() && toframe >0)
-                        {
-                            if(! frameprocess)
-                            {
-                                boolean flag=false;
-                                while (lastgetframe <= toframe)
-                                {
-                                    lastgetframe++;
-
-                                }
-
-                            if(flag)
-                                txt_hashes.append(selectedhaeshes);
-
-                                frameprocess=false;
-                            }
-
-                        }
-
-                        // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
+                        txt_hashes.append(selectedhaeshes);
+                        selectedhaeshes="";
                     }
+
+                    if((txt_metrics.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
+                    {
+                        txt_metrics.append(selectedmetrics);
+                        selectedmetrics="";
+                    }
+
                 }
-
-
                 myHandler.postDelayed(this, 1000);
             }
         };
         myHandler.post(myRunnable);
-    }*/
-
-    public void checkfornewframe()
-    {
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
-
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
-            @Override
-            public void run() {
-
-         new Thread(new Runnable() {
-                   @Override
-                   public void run() {
-                       if(videoduration > 0)
-                       {
-                           long actualduration=videoduration/1000;    // its 10 seconds
-                           framesegment=framecount/actualduration;   //  500/10=> 50 (50 frames in 1 second)
-
-                           if(videoduration > 0 && framecount > 0)
-                           {
-                               long toframe=0;
-                               if(videoduration == currentvideoduration)
-                               {
-                                   toframe=mainvideoframes.size();
-                               }
-                               else
-                               {
-                                   toframe=framesegment*currentvideodurationseconds;
-                               }
-
-                               if(toframe <= mainvideoframes.size() && toframe >0)
-                               {
-                                   if(! frameprocess)
-                                   {
-                                       boolean flag=false;
-                                       while (lastgetframe <= toframe)
-                                       {
-                                           lastgetframe++;
-
-                                           if(lastgetframe < (mainvideoframes.size()-1))
-                                           {
-                                               if (lastgetframe == currentframenumber)
-                                               {
-                                                   ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-
-                                                   for(int i=0;i<mlist.size();i++)
-                                                   {
-                                                       if(mlist.get(i).isSelected())
-                                                       {
-                                                           selectedmetrics=selectedmetrics+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "
-                                                                   +mlist.get(i).getMetricTrackValue();
-
-                                                       }
-                                                   }
-                                                   setmetriceshashesdata();
-                                                   selectedhaeshes=selectedhaeshes+"\n"+ mainvideoframes.get((int)lastgetframe-1).gettitle()
-                                                           +" "+ mainvideoframes.get((int)lastgetframe-1).getcurrentframenumber()+" "+
-                                                           mainvideoframes.get((int)lastgetframe-1).getkeytype()+":"+" "+
-                                                           mainvideoframes.get((int)lastgetframe-1).getkeyvalue();
-
-                                                   currentframenumber = currentframenumber + frameduration;
-
-                                               }
-
-                                               frameprocess=true;
-                                               flag=true;
-                                           }
-                                           else
-                                           {
-                                               if(lastgetframe <= framecount)
-                                               {
-
-                                                   showlastframe = true;
-                                                   sethashesdata();
-                                                   if(myHandler != null && myRunnable != null)
-                                                       myHandler.removeCallbacks(myRunnable);
-
-                                               }
-                                               break;
-                                           }
-
-                                           if(flag && (scrollview_hashes.getVisibility() == View.VISIBLE))
-                                           {
-                                                   /* sethashesdata();
-                                                    selectedhaeshes="";*/
-                                              applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                                  @Override
-                                                  public void run() {
-
-                                                      //sethashesdata();
-                                                      txt_hashes.append(selectedhaeshes);
-                                                      selectedhaeshes="";
-                                                  }
-                                              });
-
-                                           }
-                                       }
-
-                                        /*if(flag)
-                                            txt_hashes.append(selectedhaeshes);*/
-
-                                       frameprocess=false;
-                                   }
-                               }
-                               // if(lastgetframe > 0 && mainvideoframes.size() > 0 )
-                           }
-                       }
-
-                   }
-               }).start();
-
-
-                myHandler.postDelayed(this, 1000);
-            }
-        };
-        myHandler.post(myRunnable);
-    }
-
-
-    public void sethashesdata() {
-
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                /*if ((txt_hashes.getVisibility() == View.VISIBLE)) {*/
-                    if (isdraweropen) {
-                        if (showlastframe) {
-                            selectedhaeshes = selectedhaeshes + "\n" + mainvideoframes.get(mainvideoframes.size() - 1).gettitle()
-                                    + " " + mainvideoframes.get(mainvideoframes.size() - 1).getcurrentframenumber() + " " +
-                                    mainvideoframes.get(mainvideoframes.size() - 1).getkeytype() + ":" + " " +
-                                    mainvideoframes.get(mainvideoframes.size() - 1).getkeyvalue();
-
-                            txt_hashes.append(selectedhaeshes);
-                            selectedhaeshes = "";
-
-                        }
-                    }
-               /* }*/
-            }
-        });
-
     }
 
     @Override

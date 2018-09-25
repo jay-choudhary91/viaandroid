@@ -335,7 +335,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private boolean isdraweropen=false;
     private Handler myHandler;
     private Runnable myRunnable;
-
+    private int lastmetricescount=0;
 
     @Override
     public int getlayoutid() {
@@ -1629,6 +1629,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 apicurrentduration++;
 
                 ArrayList<metricmodel> mlist= gethelper().getmetricarraylist();
+                metricItemArraylist.addAll(mlist);
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
 
@@ -1671,7 +1672,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(isdraweropen)
                 {
                 //    madapter.notifyItemChanged(mvideoframes.size()-1);
-                    //recyviewitem.getLayoutManager().scrollToPosition(mvideoframes.size()-1);
 
                     if((txt_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
                     {
@@ -1684,6 +1684,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         txt_metrics.append(selectedmetrices);
                         selectedmetrices="";
                     }
+
                 }
                 myHandler.postDelayed(this, 1000);
             }
