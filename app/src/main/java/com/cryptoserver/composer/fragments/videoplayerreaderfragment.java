@@ -1013,6 +1013,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     mallframes.clear();
                     txt_metrics.setText("");
                     txt_hashes.setText("");
+                    selectedhaeshes="";
+                    selectedmetrics="";
                     metricItemArraylist.clear();
 
                     Thread thread = new Thread(){
