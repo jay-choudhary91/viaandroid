@@ -333,6 +333,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     databasemanager mdbhelper;
     private boolean isdraweropen=false;
+    private Handler myHandler;
+    private Runnable myRunnable;
+
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -509,7 +513,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
 
-            if(! common.isdevelopermodeenable())
+            /*if(! common.isdevelopermodeenable())
             {
                 //changes txtslot1,txtslot2 gone to visible and metrices to invisible to visible
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
@@ -526,7 +530,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 txt_metrics.setVisibility(View.INVISIBLE);
                 txt_hashes.setVisibility(View.VISIBLE);
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-            }
+            }*/
+
+            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+            txtSlot1.setVisibility(View.VISIBLE);
+            txtSlot2.setVisibility(View.VISIBLE);
+            txtSlot3.setVisibility(View.VISIBLE);
+            txt_metrics.setVisibility(View.INVISIBLE);
+            txt_hashes.setVisibility(View.VISIBLE);
+            recyviewitem.setVisibility(View.INVISIBLE);
+
+            setmetriceshashesdata();
 
         }
         return rootview;
@@ -874,16 +888,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
             manager.openCamera(cameraId, mStateCallback, null);
         } catch (CameraAccessException e) {
             Toast.makeText(activity, "Cannot access the camera.", Toast.LENGTH_SHORT).show();
@@ -1177,6 +1181,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             stopRecordingVideo();
         } else {
 
+            txt_hashes.setText("");
+            txt_metrics.setText("");
             mrecordimagebutton.setEnabled(false);
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
             imgflashon.setVisibility(View.VISIBLE);
@@ -1647,43 +1653,49 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
 
                     }
-
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                          //  Log.e("Metrices content ",""+selectedmetrices);
-                           if((txt_metrics.getVisibility() == View.VISIBLE))
-                           {
-                           //    if(common.isdevelopermodeenable() && (isdraweropen) )
-                               {
-                                   txt_metrics.append(selectedmetrices);
-                                   selectedmetrices="";
-                               }
-                           }
-                        }
-                    });
                 }
-
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                     //   if(mvideoframes.size() > 0)
-                       //     madapter.notifyItemChanged(madapter.getItemCount(),mvideoframes.size()-1);
-                        if((txt_hashes.getVisibility() == View.VISIBLE))
-                        {
-                           // if(common.isdevelopermodeenable() && (isdraweropen))
-                            {
-                                txt_hashes.append(selectedhashes);
-                                selectedhashes="";
-                            }
-
-                        }
-                    }
-                });
             }
         }).start();
+    }
 
+    public void setmetriceshashesdata()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
 
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if(isdraweropen)
+                {
+                //    madapter.notifyItemChanged(mvideoframes.size()-1);
+                    //recyviewitem.getLayoutManager().scrollToPosition(mvideoframes.size()-1);
+
+                    if((txt_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
+                    {
+                        txt_hashes.append(selectedhashes);
+                        selectedhashes="";
+                    }
+
+                    if((txt_metrics.getVisibility() == View.VISIBLE) && (! selectedmetrices.trim().isEmpty()))
+                    {
+                        txt_metrics.append(selectedmetrices);
+                        selectedmetrices="";
+                    }
+                }
+                myHandler.postDelayed(this, 1000);
+            }
+        };
+        myHandler.post(myRunnable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
     }
 
     public void savevideoupdate(ArrayList<metricmodel> mmetriceslist)
@@ -1745,6 +1757,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             e.printStackTrace();
         }
     }
+
 
     public void savevideocomplete()
     {
