@@ -80,6 +80,9 @@ public class Itemmetricadapter extends RecyclerView.Adapter<Itemmetricadapter.Co
                 else if(metricModel.getMetricTrackValue().trim().isEmpty())
                 {
                     metricModel.setTag("checked");
+                    metricModel.setSelected(true);
+                    holder.imgSelected.setImageResource(metricModel.isSelected() ? R.drawable.selectedicon : R.drawable.unselectedicon);
+                    holder.tv_itemValue.setVisibility(View.VISIBLE);
                     mItemClick.onItemClicked(metricModel.getMetricTrackKeyName());
                 }
                 else

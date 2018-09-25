@@ -1478,9 +1478,14 @@ public abstract class locationawareactivity extends baseactivity implements
 
     @Override
     public void registerMobileNetworkStrength() {
-        mPhoneStatelistener = new MyPhoneStateListener();
-        mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mTelephonyManager.listen(mPhoneStatelistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mPhoneStatelistener = new MyPhoneStateListener();
+                mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                mTelephonyManager.listen(mPhoneStatelistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+            }
+        });
     }
 
     @Override
