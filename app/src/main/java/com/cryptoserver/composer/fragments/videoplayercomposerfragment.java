@@ -747,6 +747,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                         }
                     }
 
+                    if(selectedmetrics.toString().trim().length() > 0)
+                        selectedmetrics=selectedmetrics+"\n\n";
+
                     currentframenumber = currentframenumber + frameduration;
 
                 }
@@ -807,6 +810,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                     if((txt_metrics.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
                     {
+                        /*if(txt_metrics.getText().toString().trim().length() > 0)
+                            txt_metrics.append("\n\n");*/
+
                         txt_metrics.append(selectedmetrics);
                         selectedmetrics="";
                     }

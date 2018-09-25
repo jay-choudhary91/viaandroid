@@ -658,6 +658,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void hideshowcontroller(boolean shouldshow)
     {
+        if(isdraweropen)
+            return;
+
         if(shouldshow)
         {
             gethelper().updateactionbar(1);
@@ -1654,6 +1657,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
 
                     }
+
+                    if(selectedmetrices.toString().trim().length() > 0)
+                        selectedmetrices=selectedmetrices+"\n\n";
                 }
             }
         }).start();
@@ -1681,6 +1687,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     if((txt_metrics.getVisibility() == View.VISIBLE) && (! selectedmetrices.trim().isEmpty()))
                     {
+                        /*if(txt_metrics.getText().toString().trim().length() > 0)
+                            txt_metrics.append("\n\n");*/
+
                         txt_metrics.append(selectedmetrices);
                         selectedmetrices="";
                     }
