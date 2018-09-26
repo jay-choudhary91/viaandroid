@@ -320,7 +320,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
-        String selectedid="",videokey="",videolist="",action_type="";
+        String selectedid="",videokey="",videolist="",action_type="",hashmethod="",hashvalue="";
 
         try {
             Cursor cur = mdbhelper.fetchallmetadata();
@@ -330,6 +330,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     selectedid= "" + cur.getString(cur.getColumnIndex("id"));
                     videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
                     videolist = "" + cur.getString(cur.getColumnIndex("videolist"));
+                    hashmethod = "" + cur.getString(cur.getColumnIndex("hashmethod"));
+                    hashvalue = "" + cur.getString(cur.getColumnIndex("hashvalue"));
                     action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
 
                   //  cur.moveToLast();
@@ -348,9 +350,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if(! selectedid.trim().isEmpty())
         {
             HashMap<String,String> mpairslist=new HashMap<String, String>();
-            mpairslist.put("key",""+videokey);
-            if(action_type.equalsIgnoreCase(config.type_video_update))
+            if(action_type.equalsIgnoreCase(config.type_video_start))
             {
+                mpairslist.put("html","0");
+                mpairslist.put("hashmethod",""+hashmethod);
+                mpairslist.put("hashvalue",""+hashvalue);
+                mpairslist.put("title","xx");
+            }
+            else if(action_type.equalsIgnoreCase(config.type_video_update))
+            {
+                mpairslist.put("key",""+videokey);
                 mpairslist.put("html","0");
                 mpairslist.put("updatelist",""+videolist);
             }
@@ -358,6 +367,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             {
                 String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 mpairslist.put("completedatetime",""+datetime);
+                mpairslist.put("key",""+videokey);
             }
 
 

@@ -116,7 +116,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     ArrayList<videomodel> mallframes =new ArrayList<>();
     ArrayList<frame> mbitmaplist =new ArrayList<>();
 
-    boolean ishashprocessing=false;
+    boolean ishashprocessing=false,isbitmapprocessing=false;
     boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
     public int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
@@ -130,7 +130,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     long framecount=0;
     long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,
             lastgetframe=0;
-    boolean frameprocess=false,showlastframe = false;
+    boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
     private boolean isdraweropen=false;
     LinearLayoutManager mLayoutManager;
     String selectedhaeshes="";
@@ -592,12 +592,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     mainvideoframes.clear();
                     mallframes.clear();
 
-                    Thread thread = new Thread(){
-                        public void run(){
-                            setVideoAdapter();
-                        }
-                    };
-                    thread.start();
+                    isnewvideofound=true;
                 }
             }
 
@@ -882,11 +877,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 checkwritestoragepermission();
                 break;
             case R.id.img_setting:
-                if(ishashprocessing)
+                /*if(ishashprocessing)
                 {
                     Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
                 /*if(player != null)
                     player.pause();*/
 
@@ -937,11 +932,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     public  void opengallery()
     {
-        if(ishashprocessing)
+        /*if(ishashprocessing)
         {
             Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
 
         destroyvideoplayer();
 
@@ -1016,20 +1011,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     selectedhaeshes="";
                     selectedmetrics="";
                     metricItemArraylist.clear();
+                    isnewvideofound=true;
 
-                    Thread thread = new Thread(){
-                        public void run(){
-                            try {
-                                getFramesBitmap();
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-
-                            setVideoAdapter();
-                        }
-                    };
-                    thread.start();
                 }
             }
         }
@@ -1070,6 +1053,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     public void getFramesBitmap()
     {
+        isbitmapprocessing=true;
         mbitmaplist.add(new frame(0,null,true));
 
        // mbitmaplist.clear();
@@ -1094,6 +1078,14 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             Bitmap m_bitmap = null;
             try
             {
+                if(suspendbitmapqueue)
+                {
+                    mbitmaplist.clear();
+                    adapter.notifyDataSetChanged();
+                    break;
+                }
+
+
                 m_mediaMetadataRetriever = new MediaMetadataRetriever();
                 m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
                 m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
@@ -1114,6 +1106,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     m_mediaMetadataRetriever.release();
             }
         }
+        isbitmapprocessing=false;
         mbitmaplist.add(new frame(0,null,true));
 
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -1125,49 +1118,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
         });
     }
-
-    /*private class Decoder extends AsyncTask<File, Integer, Integer> {
-        private static final String TAG = "DECODER";
-
-        protected Integer doInBackground(File... params) {
-            FileChannelWrapper ch = null;
-            try {
-                ch = NIOUtils.readableFileChannel(params[0]);
-                FrameGrab frameGrab = new FrameGrab(ch);
-                MediaInfo mi = frameGrab.getMediaInfo();
-                Bitmap frame = Bitmap.createBitmap(mi.getDim().getWidth(), mi.getDim().getHeight(), Bitmap.Config.ARGB_8888);
-
-                for (int i = 0; !flag; i++) {
-
-                    frameGrab.getFrame(frame);
-                    if (frame == null)
-                        break;
-                    OutputStream os = null;
-                    try {
-                        os = new BufferedOutputStream(new FileOutputStream(new File(params[0].getParentFile(), String.format("img%08d.jpg", i))));
-                        frame.compress(Bitmap.CompressFormat.JPEG, 90, os);
-                    } finally {
-                        if (os != null)
-                            os.close();
-                    }
-                    publishProgress(i);
-
-                }
-            } catch (IOException e) {
-                Log.e(TAG, "IO", e);
-            } catch (JCodecException e) {
-                Log.e(TAG, "JCodec", e);
-            } finally {
-                NIOUtils.closeQuietly(ch);
-            }
-            return 0;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            progress.setText(String.valueOf(values[0]));
-        }
-    }*/
 
     public void setupVideoPlayer(Uri selectedimageuri)
     {
@@ -1270,12 +1220,19 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         selectedmetrics=selectedmetrics+"\n\n";
 
                     currentframenumber = currentframenumber + frameduration;
-
                 }
                 else
                 {
                     lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
                 }
+
+                if(suspendframequeue)
+                {
+                    selectedmetrics="";
+                    selectedhaeshes="";
+                    break;
+                }
+
                 count++;
             }
 
@@ -1319,6 +1276,34 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             @Override
             public void run() {
 
+                if(isnewvideofound)
+                {
+                    if(ishashprocessing || isbitmapprocessing)
+                    {
+                        suspendframequeue=true;
+                        suspendbitmapqueue=true;
+                    }
+                    else
+                    {
+                        isnewvideofound=false;
+                        suspendframequeue=false;
+                        suspendbitmapqueue=false;
+
+                        txt_metrics.setText("");
+                        txt_hashes.setText("");
+                        selectedmetrics="";
+                        selectedhaeshes="";
+
+                        Thread thread = new Thread(){
+                            public void run(){
+                                getFramesBitmap();
+                                setVideoAdapter();
+                            }
+                        };
+                        thread.start();
+                    }
+                }
+
                 if(isdraweropen)
                 {
                     //    madapter.notifyItemChanged(mvideoframes.size()-1);
@@ -1350,23 +1335,5 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         controller.setplaypauuse();
         currentvideoduration = videoduration;
         currentvideodurationseconds = currentvideoduration / 1000;
-
-        /*if(mediaPlayer != null) {
-            *//*try {
-                mediaPlayer.seekTo((int)videoduration);
-                //player.seekTo((int)videoduration);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }*//*
-            long dura=mediaPlayer.getDuration();
-            long duraaa=mediaPlayer.getCurrentPosition();
-
-            controller.setProgress();
-
-            currentvideoduration = videoduration; // suppose its on 4th pos means 4000
-            currentvideodurationseconds = currentvideoduration / 1000;  // Its 4
-        }*/
     }
-
 }

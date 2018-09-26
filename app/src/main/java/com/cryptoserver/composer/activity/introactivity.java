@@ -3,7 +3,6 @@ package com.cryptoserver.composer.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.BuildConfig;
@@ -33,25 +31,19 @@ import java.util.Date;
 
 public class introactivity extends FragmentActivity {
 
-    int currentselected,currentselectedheader,nextselection;
+    int currentselected;
     pagercustomduration viewpager_header,viewpager_footer;
     int touchstate=0;
-    float positionoffset=0;
     boolean touched =false;
     boolean isinbackground=false;
     boolean slidebytime=false;
-    boolean isrighttoleft=false;
-    Date initialDate;
-    private Handler myHandler;
-    private Runnable myRunnable;
-    RelativeLayout rootview;
-
-    headerpageradapter view_pagerheader;
-    footerpageradapter view_pagerfooter;
-    TextView btn_start_record;
-
-    RadioGroup radioGroup;
-
+    Date initialdate;
+    private Handler myhandler;
+    private Runnable myrunnable;
+    headerpageradapter headerpageradapter;
+    footerpageradapter footerpageradapter;
+    TextView btnstartrecord;
+    RadioGroup radiogroup;
 
     @Override
     public void onStop() {
@@ -62,8 +54,8 @@ public class introactivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
     }
 
     @Override
@@ -90,24 +82,21 @@ public class introactivity extends FragmentActivity {
             finish();
         }
 
-        initialDate=new Date();
+        initialdate =new Date();
         viewpager_header = (pagercustomduration) findViewById(R.id.viewpager_header);
         viewpager_footer = (pagercustomduration) findViewById(R.id.viewpager_footer);
-        btn_start_record = (TextView) findViewById(R.id.btn_start_record);
-        radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
+        btnstartrecord = (TextView) findViewById(R.id.btn_start_record);
+        radiogroup = (RadioGroup)findViewById(R.id.radioGroup);
 
         viewpager_header.setPageTransformer(false, new pageranimation());
         viewpager_footer.setPageTransformer(false, new pageranimation());
 
-        view_pagerheader = new headerpageradapter(getSupportFragmentManager());
-        view_pagerfooter = new footerpageradapter(getSupportFragmentManager());
-        viewpager_header.setAdapter(view_pagerheader);
-        viewpager_footer.setAdapter(view_pagerfooter);
+        headerpageradapter = new headerpageradapter(getSupportFragmentManager());
+        footerpageradapter = new footerpageradapter(getSupportFragmentManager());
+        viewpager_header.setAdapter(headerpageradapter);
+        viewpager_footer.setAdapter(footerpageradapter);
 
-       // viewpager_header.setAdapter(new headerpageradapter(getSupportFragmentManager()));
-        //viewpager_footer.setAdapter(new footerpageradapter(getSupportFragmentManager()));
-
-        btn_start_record.setOnClickListener(new View.OnClickListener() {
+        btnstartrecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent in=new Intent(introactivity.this,homeactivity.class);
@@ -119,7 +108,7 @@ public class introactivity extends FragmentActivity {
         viewpager_header.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                initialDate = new Date();
+                initialdate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         touched = true;
@@ -138,7 +127,7 @@ public class introactivity extends FragmentActivity {
         viewpager_footer.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                initialDate = new Date();
+                initialdate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         touched = true;
@@ -155,18 +144,18 @@ public class introactivity extends FragmentActivity {
         });
 
 
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
             @Override
             public void run() {
 
                 if(! isinbackground)
                 {
                     Date currentDate=new Date();
-                    int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
+                    int secondDifference= (int) (Math.abs(initialdate.getTime()-currentDate.getTime())/1000);
                     if(secondDifference > 3)
                     {
-                        initialDate = new Date();
+                        initialdate = new Date();
 
                         if(currentselected < viewpager_footer.getAdapter().getCount())
                         {
@@ -178,7 +167,7 @@ public class introactivity extends FragmentActivity {
                             currentselected++;
                         }
 
-                        /*if(currentselectedheader < viewpager_header.getAdapter().getCount())
+                        /*if(currentselectedheader < viewpagerheader.getAdapter().getCount())
                         {
                             if(currentselectedheader == 0)
                                 currentselectedheader++;
@@ -187,7 +176,7 @@ public class introactivity extends FragmentActivity {
                             setviewpagerheader(currentselectedheader);
                             currentselectedheader++;
                         }*/
-                        /*if(currentselected == viewpager_header.getAdapter().getCount())
+                        /*if(currentselected == viewpagerheader.getAdapter().getCount())
                         {
                             currentselected=0;
                             slidebytime=true;
@@ -195,10 +184,10 @@ public class introactivity extends FragmentActivity {
                         }*/
                     }
                 }
-                myHandler.postDelayed(this, 300);
+                myhandler.postDelayed(this, 300);
             }
         };
-        myHandler.post(myRunnable);
+        myhandler.post(myrunnable);
 
 
         viewpager_header.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -234,10 +223,10 @@ public class introactivity extends FragmentActivity {
                         {
                             Log.e("isrighttoleft", " 1") ;
                             int newcount=currentselected+1;
-                            if(newcount < viewpager_header.getAdapter().getCount())
+                            if(newcount < viewpagerheader.getAdapter().getCount())
                             {
                                 currentselected++;
-                                viewpager_header.setCurrentItem(currentselected, true);
+                                viewpagerheader.setCurrentItem(currentselected, true);
                                 //setviewpager(currentselected);
                             }
                         }
@@ -251,7 +240,7 @@ public class introactivity extends FragmentActivity {
                             if(newcount > -1)
                             {
                                 currentselected--;
-                                viewpager_header.setCurrentItem(currentselected, true);
+                                viewpagerheader.setCurrentItem(currentselected, true);
                                 //setviewpager(currentselected);
                             }
                         }
@@ -277,7 +266,7 @@ public class introactivity extends FragmentActivity {
                 currentselected=position;
                 viewpager_header.setCurrentItem(position%3, true);
 
-                radioGroup.check(radioGroup.getChildAt(position%3).getId());
+                radiogroup.check(radiogroup.getChildAt(position%3).getId());
 
               //  tabLayout.setCurrentItem(position);
             }
@@ -287,12 +276,12 @@ public class introactivity extends FragmentActivity {
 
 
                /* if (currentselected == 0)
-                    viewpager_header.setCurrentItem(3 - 1, false); // lastPageIndex is the index of the last item, in this case is pointing to the 2nd A on the list. This variable should be declared and initialzed as a global variable
+                    viewpagerheader.setCurrentItem(3 - 1, false); // lastPageIndex is the index of the last item, in this case is pointing to the 2nd A on the list. This variable should be declared and initialzed as a global variable
 
                 // For going from the last item to the first item, when the 2nd C goes to the 2nd A on the right, we let the ViewPager do it's job for us, once the movement is completed, we set the current item to the 1st A.
                 // Set the current item to the second item if the current position is on the last
                 if (currentselected == 3)
-                    viewpager_header.setCurrentItem(0, false);*/
+                    viewpagerheader.setCurrentItem(0, false);*/
 
 
                 touchstate=state;
@@ -304,10 +293,10 @@ public class introactivity extends FragmentActivity {
     public void setviewpager(int position)
     {
         Log.e("Positions ", position+" ") ;
-        initialDate = new Date();
+        initialdate = new Date();
         viewpager_header.setCurrentItem(position%3, true);
         viewpager_footer.setCurrentItem(position%3, true);
-        radioGroup.check(radioGroup.getChildAt(position%3).getId());
+        radiogroup.check(radiogroup.getChildAt(position%3).getId());
     }
 
     private class headerpageradapter extends FragmentPagerAdapter {

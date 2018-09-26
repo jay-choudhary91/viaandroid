@@ -804,8 +804,14 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 {
                     if((txt_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
                     {
-                        txt_hashes.append(selectedhaeshes);
-                        selectedhaeshes="";
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                txt_hashes.append(selectedhaeshes);
+                                selectedhaeshes="";
+                            }
+                        });
+
                     }
 
                     if((txt_metrics.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
@@ -813,8 +819,14 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                         /*if(txt_metrics.getText().toString().trim().length() > 0)
                             txt_metrics.append("\n\n");*/
 
-                        txt_metrics.append(selectedmetrics);
-                        selectedmetrics="";
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                txt_metrics.append(selectedmetrics);
+                                selectedmetrics="";
+                            }
+                        });
+
                     }
 
                     /*int localcounter=1;

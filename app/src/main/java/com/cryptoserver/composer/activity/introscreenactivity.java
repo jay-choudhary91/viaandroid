@@ -4,18 +4,14 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.BuildConfig;
@@ -32,25 +28,19 @@ import java.util.Date;
 
 public class introscreenactivity extends AppCompatActivity {
 
-    int currentselected,currentselectedheader,nextselection;
-    pagercustomduration viewpager_header,viewpager_footer;
-    int touchstate=0;
-    float positionoffset=0;
+    int currentselected;
+    pagercustomduration viewpagerheader, viewpagerfooter;
+    int touchstate=0,currentselectedduration=3;
     boolean touched =false;
     boolean isinbackground=false;
     boolean slidebytime=false;
-    boolean isrighttoleft=false;
-    Date initialDate;
-    private Handler myHandler;
-    private Runnable myRunnable;
-    RelativeLayout rootview;
-
-    introscreenactivity.headerpageradapter view_pagerheader;
-    introscreenactivity.footerpageradapter view_pagerfooter;
-    TextView btn_start_record;
-
-    RadioGroup radioGroup;
-
+    Date initialdate;
+    private Handler myhandler;
+    private Runnable myrunnable;
+    introscreenactivity.headerpageradapter headerpageradapter;
+    introscreenactivity.footerpageradapter footerpageradapter;
+    TextView btnstartrecord;
+    RadioGroup radiogroup;
 
     @Override
     public void onStop() {
@@ -61,8 +51,8 @@ public class introscreenactivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
     }
 
     @Override
@@ -89,26 +79,21 @@ public class introscreenactivity extends AppCompatActivity {
             finish();
         }
 
-        initialDate=new Date();
-        viewpager_header = (pagercustomduration) findViewById(R.id.viewpager_header);
-        viewpager_footer = (pagercustomduration) findViewById(R.id.viewpager_footer);
-        btn_start_record = (TextView) findViewById(R.id.btn_start_record);
-        radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
+        initialdate =new Date();
+        viewpagerheader = (pagercustomduration) findViewById(R.id.viewpager_header);
+        viewpagerfooter = (pagercustomduration) findViewById(R.id.viewpager_footer);
+        btnstartrecord = (TextView) findViewById(R.id.btn_start_record);
+        radiogroup = (RadioGroup)findViewById(R.id.radioGroup);
+        viewpagerheader.setPageTransformer(false, new pageranimation());
+        viewpagerfooter.setPageTransformer(false, new pageranimation());
+        headerpageradapter = new introscreenactivity.headerpageradapter(getSupportFragmentManager());
+        footerpageradapter = new introscreenactivity.footerpageradapter(getSupportFragmentManager());
+        viewpagerheader.setAdapter(headerpageradapter);
+        viewpagerfooter.setAdapter(footerpageradapter);
+        viewpagerheader.setOffscreenPageLimit(4);
+        viewpagerfooter.setOffscreenPageLimit(4);
 
-        viewpager_header.setPageTransformer(false, new pageranimation());
-        viewpager_footer.setPageTransformer(false, new pageranimation());
-
-        view_pagerheader = new introscreenactivity.headerpageradapter(getSupportFragmentManager());
-        view_pagerfooter = new introscreenactivity.footerpageradapter(getSupportFragmentManager());
-        viewpager_header.setAdapter(view_pagerheader);
-        viewpager_footer.setAdapter(view_pagerfooter);
-        viewpager_header.setOffscreenPageLimit(4);
-        viewpager_footer.setOffscreenPageLimit(4);
-
-        // viewpager_header.setAdapter(new headerpageradapter(getSupportFragmentManager()));
-        //viewpager_footer.setAdapter(new footerpageradapter(getSupportFragmentManager()));
-
-        btn_start_record.setOnClickListener(new View.OnClickListener() {
+        btnstartrecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent in=new Intent(introscreenactivity.this,homeactivity.class);
@@ -117,10 +102,10 @@ public class introscreenactivity extends AppCompatActivity {
             }
         });
 
-        viewpager_header.setOnTouchListener(new View.OnTouchListener() {
+        viewpagerheader.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                initialDate = new Date();
+                initialdate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         touched = true;
@@ -136,10 +121,10 @@ public class introscreenactivity extends AppCompatActivity {
             }
         });
 
-        viewpager_footer.setOnTouchListener(new View.OnTouchListener() {
+        viewpagerfooter.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                initialDate = new Date();
+                initialdate = new Date();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         touched = true;
@@ -156,20 +141,20 @@ public class introscreenactivity extends AppCompatActivity {
         });
 
 
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
             @Override
             public void run() {
 
                 if(! isinbackground && (! touched))
                 {
-                    Date currentDate=new Date();
-                    int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
-                    if(secondDifference > 3)
+                    Date currentdate=new Date();
+                    int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
+                    if(seconddifference > currentselectedduration)
                     {
-                        initialDate = new Date();
+                        initialdate = new Date();
 
-                        if(currentselected < viewpager_footer.getAdapter().getCount())
+                        if(currentselected < viewpagerfooter.getAdapter().getCount())
                         {
                             if(currentselected == 0)
                                 currentselected++;
@@ -178,87 +163,28 @@ public class introscreenactivity extends AppCompatActivity {
                             setviewpager(currentselected);
                             currentselected++;
                         }
-
-                        /*if(currentselectedheader < viewpager_header.getAdapter().getCount())
-                        {
-                            if(currentselectedheader == 0)
-                                currentselectedheader++;
-
-                            slidebytime=true;
-                            setviewpagerheader(currentselectedheader);
-                            currentselectedheader++;
-                        }*/
-                        /*if(currentselected == viewpager_header.getAdapter().getCount())
-                        {
-                            currentselected=0;
-                            slidebytime=true;
-                            setviewpager(currentselected);
-                        }*/
                     }
                 }
-                myHandler.postDelayed(this, 200);
+                myhandler.postDelayed(this, 200);
             }
         };
-        myHandler.post(myRunnable);
+        myhandler.post(myrunnable);
 
 
-        viewpager_header.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            float positionandoffset=0;
+        viewpagerheader.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-             //   Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
-               /* isrighttoleft = position + positionOffset > positionandoffset;
-                positionandoffset = position + positionOffset;
-
-                positionoffset=positionOffset;*/
-                //  Log.e("isrighttoleft", " "+isrighttoleft);
-
             }
 
             @Override
             public void onPageSelected(int position) {
-                //Log.e("position", position+" ") ;
                 currentselected=position;
-                //slidebytime=false;
-
-                viewpager_footer.setCurrentItem(position, true);
+                viewpagerfooter.setCurrentItem(position, true);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
                 Log.e("scrollChangedheader ","" + state);
-                /*if(touchstate == 1 && state == 2)
-                {
-                    if(isrighttoleft)
-                    {
-                        if(positionoffset > 0.5)
-                        {
-                            Log.e("isrighttoleft", " 1") ;
-                            int newcount=currentselected+1;
-                            if(newcount < viewpager_header.getAdapter().getCount())
-                            {
-                                currentselected++;
-                                viewpager_header.setCurrentItem(currentselected, true);
-                                //setviewpager(currentselected);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if(positionoffset < 0.5)
-                        {
-                            Log.e("islefttoright", " 2") ;
-                            int newcount=currentselected-1;
-                            if(newcount > -1)
-                            {
-                                currentselected--;
-                                viewpager_header.setCurrentItem(currentselected, true);
-                                //setviewpager(currentselected);
-                            }
-                        }
-                    }
-                }*/
                 touchstate=state;
                 /*onPageScrollStateChanged:        1             SCROLL_STATE_DRAGGING
                 onPageScrollStateChanged:        2             SCROLL_STATE_SETTLING
@@ -266,7 +192,7 @@ public class introscreenactivity extends AppCompatActivity {
             }
         });
 
-        viewpager_footer.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewpagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
@@ -275,28 +201,13 @@ public class introscreenactivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //Log.e("position", position+" ") ;
                 currentselected=position;
-                viewpager_header.setCurrentItem(position, true);
-
-                radioGroup.check(radioGroup.getChildAt(position%4).getId());
-
-                //  tabLayout.setCurrentItem(position);
+                viewpagerheader.setCurrentItem(position, true);
+                radiogroup.check(radiogroup.getChildAt(position%4).getId());
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
-
-               /* if (currentselected == 0)
-                    viewpager_header.setCurrentItem(3 - 1, false); // lastPageIndex is the index of the last item, in this case is pointing to the 2nd A on the list. This variable should be declared and initialzed as a global variable
-
-                // For going from the last item to the first item, when the 2nd C goes to the 2nd A on the right, we let the ViewPager do it's job for us, once the movement is completed, we set the current item to the 1st A.
-                // Set the current item to the second item if the current position is on the last
-                if (currentselected == 3)
-                    viewpager_header.setCurrentItem(0, false);*/
-
-
                 touchstate=state;
             }
         });
@@ -305,10 +216,10 @@ public class introscreenactivity extends AppCompatActivity {
     public void setviewpager(int position)
     {
         Log.e("Positions ", position+" ") ;
-        initialDate = new Date();
-        viewpager_header.setCurrentItem(position, true);
-        viewpager_footer.setCurrentItem(position, true);
-        radioGroup.check(radioGroup.getChildAt(position%4).getId());
+        initialdate = new Date();
+        viewpagerheader.setCurrentItem(position, true);
+        viewpagerfooter.setCurrentItem(position, true);
+        radiogroup.check(radiogroup.getChildAt(position%4).getId());
     }
 
     private class headerpageradapter extends FragmentStatePagerAdapter {

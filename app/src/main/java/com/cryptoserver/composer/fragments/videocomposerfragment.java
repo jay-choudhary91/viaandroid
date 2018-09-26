@@ -1585,7 +1585,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
-    public void xapistartvideo(String hashvalue)
+    public void xapistartvideo(final String hashvalue)
     {
         Log.e("videokey"," videokey "+videokey);
 
@@ -1606,6 +1606,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         e.printStackTrace();
                     }
+                }
+                else
+                {
+                    savevideostart(videokey,keytype,hashvalue);
                 }
             }
         });
@@ -1759,7 +1763,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-            mdbhelper.insertframemetricesinfo(videokey,hasharray.toString(),""+metricesarray.toString(),config.type_video_update);
+            mdbhelper.insertframemetricesinfo(videokey,hasharray.toString(),""+metricesarray.toString(),
+                    "","",config.type_video_update);
 
             mdbhelper.close();
 
@@ -1768,6 +1773,27 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
+    public void savevideostart(String videokey,String hashmethod,String hashvalue)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(getActivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            mdbhelper.insertframemetricesinfo(videokey,hashmethod,hashvalue,hashmethod,hashvalue,config.type_video_start);
+
+            mdbhelper.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void savevideocomplete()
     {
@@ -1783,7 +1809,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-            mdbhelper.insertframemetricesinfo(videokey,"","",config.type_video_complete);
+            mdbhelper.insertframemetricesinfo(videokey,"","","","",config.type_video_complete);
 
             mdbhelper.close();
         } catch (Exception e) {

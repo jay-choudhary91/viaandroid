@@ -111,12 +111,12 @@ public class xapipost extends AsyncTask<Void, Void, String> {
                 result.success(true);
                 result.setData(object);
             }
-            if (listner != null)
-                listner.onResponse(result);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (listner != null)
+            listner.onResponse(result);
     }
 }
 

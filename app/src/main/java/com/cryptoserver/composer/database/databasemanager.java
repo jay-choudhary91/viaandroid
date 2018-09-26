@@ -56,7 +56,8 @@ public class databasemanager {
     }
 
 
-    public void insertframemetricesinfo(String videokey,String videolist,String metricdata,String action_type)
+    public void insertframemetricesinfo(String videokey,String videolist,String metricdata,String hashmethod,
+                                        String hashvalue,String action_type)
     {
         try {
             lock.lock();
@@ -65,6 +66,8 @@ public class databasemanager {
             values.put("videokey", ""+videokey);
             values.put("videolist", ""+videolist);
             values.put("metricdata", ""+metricdata);
+            values.put("hashmethod", ""+hashmethod);
+            values.put("hashvalue", ""+hashvalue);
             values.put("action_type", ""+action_type);
 
             long l=mDb.insert("tblmetadata", null, values);
