@@ -288,7 +288,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             });
         }
 
-        righthandle.setVisibility(View.GONE);
+        //
+        // righthandle.setVisibility(View.GONE);
 
         /*recyview_metrices.setVisibility(View.VISIBLE);
         recyviewitem.setVisibility(View.GONE);
