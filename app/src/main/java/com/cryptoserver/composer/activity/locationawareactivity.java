@@ -671,9 +671,9 @@ public abstract class locationawareactivity extends baseactivity implements
                         new String[]{Manifest.permission.RECORD_AUDIO},
                         PERMISSION_RECORD_AUDIO);
             }else{
-                start();
+                //start();
             }
-            return "";
+            return "N/A";
         }
         else if(key.equalsIgnoreCase(config.acceleration_x) || key.equalsIgnoreCase(config.acceleration_y) ||
                 key.equalsIgnoreCase(config.acceleration_z))

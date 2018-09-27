@@ -300,7 +300,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     LinearLayout layout_bottom,layout_drawer;
 
-    RecyclerView recyviewitem;
+    RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     ImageView handleimageview,righthandle;
     LinearLayout linearLayout;
@@ -321,8 +321,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     String keytype =config.prefs_md5;
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
-    videoframeadapter madapter;
-   // drawermetricesadapter itemMetricAdapter;
     long currentframenumber =0;
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
@@ -331,6 +329,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     String selectedvideofile ="",videokey="",selectedmetrices="", selectedhashes ="";
     int metriceslastupdatedposition=0;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+    ArrayList<videomodel> mmetricsitems =new ArrayList<>();
+    ArrayList<videomodel> mhashesitems =new ArrayList<>();
+    videoframeadapter mmetricesadapter,mhashesadapter;
+
     databasemanager mdbhelper;
     private boolean isdraweropen=false;
     private Handler myHandler;
@@ -374,30 +376,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             handleimageview=rootview.findViewById(R.id.handle);
             righthandle=rootview.findViewById(R.id.righthandle);
 
-            recyviewitem = (RecyclerView) rootview.findViewById(R.id.recyview_item);
+            recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
             mrecordimagebutton.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             rotatecamera.setOnClickListener(this);
-
-            /*layout_drawer.post(new Runnable() {
-                @Override
-                public void run() {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            String actionbarheight=xdata.getinstance().getSetting("actionbarheight");
-                            if(! actionbarheight.trim().isEmpty())
-                            {
-                                LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                        ViewGroup.LayoutParams.MATCH_PARENT);
-                                params.setMargins(0,Integer.parseInt(actionbarheight),0,0);
-                                layout_drawer.setLayoutParams(params);
-                            }
-                        }
-                    },500);
-                }
-            });*/
 
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
                 apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
@@ -462,26 +445,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             timerhandler = new Handler() ;
             gethelper().updateheader("00:00:00");
 
-            madapter = new videoframeadapter(getActivity(), mvideoframes, new adapteritemclick() {
-                @Override
-                public void onItemClicked(Object object) {
-                }
 
-                @Override
-                public void onItemClicked(Object object, int type) {
-                }
-            });
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-            recyviewitem.setLayoutManager(mLayoutManager);
-            recyviewitem.setItemAnimator(new DefaultItemAnimator());
-            recyviewitem.setAdapter(madapter);
-
-
-            /*itemMetricAdapter = new drawermetricesadapter(getActivity(), metricItemArraylist);
-            RecyclerView.LayoutManager mManager= new LinearLayoutManager(getActivity());
-            recyview_metrices.setLayoutManager(mManager);
-            recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-            recyview_metrices.setAdapter(itemMetricAdapter);*/
 
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                 frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
@@ -513,32 +477,51 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
 
-            /*if(! common.isdevelopermodeenable())
-            {
-                //changes txtslot1,txtslot2 gone to visible and metrices to invisible to visible
-                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-                txtSlot1.setVisibility(View.VISIBLE);
-                txtSlot2.setVisibility(View.VISIBLE);
-                txtSlot3.setVisibility(View.VISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
-                txt_hashes.setVisibility(View.INVISIBLE);
-            }
-            else
-            {
-                recyview_metrices.setVisibility(View.VISIBLE);
-                recyviewitem.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
-                txt_hashes.setVisibility(View.VISIBLE);
-                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-            }*/
-
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
             txtSlot2.setVisibility(View.VISIBLE);
             txtSlot3.setVisibility(View.VISIBLE);
             txt_metrics.setVisibility(View.INVISIBLE);
-            txt_hashes.setVisibility(View.VISIBLE);
-            recyviewitem.setVisibility(View.INVISIBLE);
+            txt_hashes.setVisibility(View.INVISIBLE);
+            recyview_hashes.setVisibility(View.VISIBLE);
+            recyview_metrices.setVisibility(View.INVISIBLE);
+
+            {
+
+                mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+
+                    }
+
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+
+                    }
+                });
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                recyview_metrices.setLayoutManager(mLayoutManager);
+                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
+                recyview_metrices.setAdapter(mhashesadapter);
+            }
+
+            {
+                mmetricesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+
+                    }
+
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+
+                    }
+                });
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                recyview_hashes.setLayoutManager(mLayoutManager);
+                recyview_hashes.setItemAnimator(new DefaultItemAnimator());
+                recyview_hashes.setAdapter(mmetricesadapter);
+            }
 
             setmetriceshashesdata();
 
@@ -1141,34 +1124,36 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
             case R.id.txt_slot1:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
-                scrollview_hashes.setVisibility(View.VISIBLE);
+                scrollview_hashes.setVisibility(View.INVISIBLE);
 
-                txt_hashes.setVisibility(View.VISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
+                recyview_hashes.setVisibility(View.VISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
-                recyviewitem.setVisibility(View.INVISIBLE);
+
+                txt_metrics.setVisibility(View.INVISIBLE);
+                txt_hashes.setVisibility(View.INVISIBLE);
+                txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
                 break;
 
             case R.id.txt_slot2:
-                scrollview_metrices.setVisibility(View.VISIBLE);
+                scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
 
                 txt_hashes.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.VISIBLE);
+                txt_metrics.setVisibility(View.INVISIBLE);
 
-                recyview_metrices.setVisibility(View.INVISIBLE);
-                recyviewitem.setVisibility(View.INVISIBLE);
+                recyview_metrices.setVisibility(View.VISIBLE);
+                recyview_hashes.setVisibility(View.INVISIBLE);
+
                 resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
                 break;
 
             case R.id.txt_slot3:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
-
-                txt_hashes.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
-                recyviewitem.setVisibility(View.INVISIBLE);
+                recyview_hashes.setVisibility(View.INVISIBLE);
+                txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
                 break;
@@ -1186,6 +1171,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             txt_hashes.setText("");
             txt_metrics.setText("");
+            selectedhashes="";
+            selectedmetrices="";
+            mmetricsitems.clear();
+            mhashesitems.clear();
+            mmetricesadapter.notifyDataSetChanged();
+            mhashesadapter.notifyDataSetChanged();
+
             mrecordimagebutton.setEnabled(false);
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
             imgflashon.setVisibility(View.VISIBLE);
@@ -1197,7 +1189,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             currentframenumber = currentframenumber + frameduration;
 
             mvideoframes.clear();
-            madapter.notifyDataSetChanged();
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
             layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
             startRecordingVideo();
@@ -1503,87 +1494,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         });
     }
 
-    public void setvideoadapter() {
-
-        int count = 1;
-        currentframenumber =0;
-        currentframenumber = currentframenumber + frameduration;
-        final ArrayList<videomodel> arrayList=new ArrayList<videomodel>();
-        try
-        {
-            FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(lastrecordedvideo.getAbsolutePath());
-            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-            String format= common.getvideoformat(lastrecordedvideo.getAbsolutePath());
-            if(format.equalsIgnoreCase("mp4"))
-                grabber.setFormat(format);
-
-            grabber.start();
-            boolean isFrameRemain=true;
-            ByteBuffer buffer=null;
-            AndroidFrameConverter bitmapConverter = new AndroidFrameConverter();
-            Log.e("Total frames ",""+grabber.getLengthInFrames());
-            for(int i = 0; i<grabber.getLengthInFrames(); i++){
-                //grabber.setFrameNumber(count);
-
-                Frame frame = grabber.grabImage();
-
-                if (count == currentframenumber) {
-                    isFrameRemain = false;
-                    if (frame != null)
-                    {
-                        //final Bitmap currentImage = bitmapConverter.convert(frame);
-                        buffer= ((ByteBuffer) frame.image[0].position(0));
-
-                        byte[] arr = new byte[buffer.remaining()];
-                        buffer.get(arr);
-                        arrayList.add(updatelistitem(arr,"Frame"));
-                    }
-                    else
-                    {
-                        Log.e("Frame ","null");
-                    }
-                    currentframenumber = currentframenumber + frameduration;
-                }
-                count++;
-            }
-
-            /*if(isFrameRemain && (buffer != null))
-            {
-                currentframenumber =count;
-                byte[] arr = new byte[buffer.remaining()];
-                buffer.get(arr);
-                arrayList.add(updatelistitem(arr,"Last Frame"));
-            }*/
-
-            grabber.flush();
-
-            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mvideoframes.clear();
-                    madapter.notifyDataSetChanged();
-
-                    mvideoframes.addAll(arrayList);
-                    if(mvideoframes.size() > 0)
-                    {
-                        String info=mvideoframes.get(mvideoframes.size()-1).getframeinfo();
-                        info=info.replace("Frame","Last Frame");
-                        mvideoframes.get(mvideoframes.size()-1).setframeinfo(info);
-                    }
-
-                    madapter.notifyDataSetChanged();
-                    recyviewitem.getLayoutManager().scrollToPosition(0);
-                    progressdialog.dismisswaitdialog();
-                }
-            });
-
-        }
-        catch (Exception e)
-        {
-            progressdialog.dismisswaitdialog();
-            e.printStackTrace();
-        }
-    }
 
     public void xapistartvideo(final String hashvalue)
     {
@@ -1640,30 +1550,31 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
 
-                selectedhashes =selectedhashes+"\n"+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+                if(! selectedhashes.trim().isEmpty())
+                    selectedhashes=selectedhashes+"\n";
+
+                selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
                 if(apicurrentduration > apicallduration)
                     apicurrentduration=apicallduration;
 
                 if(apicurrentduration == apicallduration)
                     savevideoupdate(mlist);
 
+                for(int j=0;j<mlist.size();j++)
+                {
+                    if(mlist.get(j).isSelected())
+                    {
+                        selectedmetrices=selectedmetrices+"\n"+mlist.get(j).getMetricTrackKeyName()+" - "
+                                +mlist.get(j).getMetricTrackValue();
+                    }
+                }
+                if(! selectedmetrices.trim().isEmpty())
+                    selectedmetrices=selectedmetrices+"\n\n";
+
                 Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
                 if(apicurrentduration == apicallduration)
                 {
                     apicurrentduration=0;
-
-                    for(int i=0;i<mlist.size();i++)
-                    {
-                        if(mlist.get(i).isSelected())
-                        {
-                            selectedmetrices=selectedmetrices+"\n"+mlist.get(i).getMetricTrackKeyName()+" - "
-                                    +mlist.get(i).getMetricTrackValue();
-                        }
-
-                    }
-
-                    if(selectedmetrices.toString().trim().length() > 0)
-                        selectedmetrices=selectedmetrices+"\n\n";
                 }
             }
         }).start();
@@ -1681,23 +1592,30 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 if(isdraweropen)
                 {
-                //    madapter.notifyItemChanged(mvideoframes.size()-1);
-
-                    if((txt_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
+                    if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
                     {
-                        txt_hashes.append(selectedhashes);
-                        selectedhashes="";
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mhashesitems.add(new videomodel(selectedhashes));
+                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                                selectedhashes="";
+                            }
+                        });
+
                     }
 
-                    if((txt_metrics.getVisibility() == View.VISIBLE) && (! selectedmetrices.trim().isEmpty()))
+                    if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrices.trim().isEmpty()))
                     {
-                        /*if(txt_metrics.getText().toString().trim().length() > 0)
-                            txt_metrics.append("\n\n");*/
-
-                        txt_metrics.append(selectedmetrices);
-                        selectedmetrices="";
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mmetricsitems.add(new videomodel(selectedmetrices));
+                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                                selectedmetrices="";
+                            }
+                        });
                     }
-
                 }
                 myHandler.postDelayed(this, 1000);
             }

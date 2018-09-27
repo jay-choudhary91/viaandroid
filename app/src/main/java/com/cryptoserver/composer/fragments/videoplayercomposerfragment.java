@@ -1,16 +1,13 @@
 package com.cryptoserver.composer.fragments;
 
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -24,14 +21,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.adapter.drawermetricesadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
@@ -48,7 +42,6 @@ import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
 import java.io.ByteArrayOutputStream;
@@ -68,6 +61,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
+    @BindView(R.id.recyview_metrices)
+    RecyclerView recyview_metrices;
+    @BindView(R.id.recyview_item)
+    RecyclerView recyview_hashes;
     @BindView(R.id.txt_slot1)
     TextView txtSlot1;
     @BindView(R.id.txt_slot2)
@@ -95,6 +92,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     String keytype =config.prefs_md5;
     long currentframenumber =0,playerposition=0;
     long frameduration =15, mframetorecordcount =0;
+    ArrayList<videomodel> mmetricsitems =new ArrayList<>();
+    ArrayList<videomodel> mhashesitems =new ArrayList<>();
+
+
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<videomodel> mallframes =new ArrayList<>();
     ArrayList<frame> mbitmaplist =new ArrayList<>();
@@ -111,6 +112,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     private boolean isdraweropen=false;
     String selectedhaeshes="";
     private int lastmetricescount=0;
+    videoframeadapter mmetricesadapter,mhashesadapter;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -133,6 +135,45 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             showcontrollers=rootview.findViewById(R.id.video_container);
 
         }
+
+        {
+
+            mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+
+                }
+
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            recyview_metrices.setLayoutManager(mLayoutManager);
+            recyview_metrices.setItemAnimator(new DefaultItemAnimator());
+            recyview_metrices.setAdapter(mhashesadapter);
+        }
+
+        {
+            mmetricesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
+                @Override
+                public void onItemClicked(Object object) {
+
+                }
+
+                @Override
+                public void onItemClicked(Object object, int type) {
+
+                }
+            });
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            recyview_hashes.setLayoutManager(mLayoutManager);
+            recyview_hashes.setItemAnimator(new DefaultItemAnimator());
+            recyview_hashes.setAdapter(mmetricesadapter);
+        }
+
+
 
         videoSurface.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -162,7 +203,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         txtSlot2.setVisibility(View.VISIBLE);
         txtSlot3.setVisibility(View.VISIBLE);
         txt_metrics.setVisibility(View.INVISIBLE);
-        txt_hashes.setVisibility(View.VISIBLE);
+        txt_hashes.setVisibility(View.INVISIBLE);
+        recyview_hashes.setVisibility(View.VISIBLE);
+        recyview_metrices.setVisibility(View.INVISIBLE);
 
         setmetriceshashesdata();
         return rootview;
@@ -174,19 +217,26 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         {
             case R.id.txt_slot1:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
-                scrollview_hashes.setVisibility(View.VISIBLE);
+                scrollview_hashes.setVisibility(View.INVISIBLE);
 
-                txt_hashes.setVisibility(View.VISIBLE);
+                recyview_hashes.setVisibility(View.VISIBLE);
+                recyview_metrices.setVisibility(View.INVISIBLE);
+
+                txt_metrics.setVisibility(View.INVISIBLE);
+                txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
                 break;
 
             case R.id.txt_slot2:
-                scrollview_metrices.setVisibility(View.VISIBLE);
+                scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
 
                 txt_hashes.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.VISIBLE);
+                txt_metrics.setVisibility(View.INVISIBLE);
+
+                recyview_metrices.setVisibility(View.VISIBLE);
+                recyview_hashes.setVisibility(View.INVISIBLE);
 
                 resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
                 break;
@@ -194,7 +244,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             case R.id.txt_slot3:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
-
+                recyview_metrices.setVisibility(View.INVISIBLE);
+                recyview_hashes.setVisibility(View.INVISIBLE);
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
@@ -729,7 +780,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                     lastframehash=null;
                     mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
 
-                    selectedhaeshes=selectedhaeshes+"\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                    if(! selectedhaeshes.trim().isEmpty())
+                        selectedhaeshes=selectedhaeshes+"\n";
+
+                    selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
@@ -743,11 +797,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                         {
                             selectedmetrics=selectedmetrics+"\n"+mlist.get(j).getMetricTrackKeyName()+" - "
                                     +mlist.get(j).getMetricTrackValue();
-
                         }
                     }
-
-                    if(selectedmetrics.toString().trim().length() > 0)
+                    if(! selectedmetrics.trim().isEmpty())
                         selectedmetrics=selectedmetrics+"\n\n";
 
                     currentframenumber = currentframenumber + frameduration;
@@ -763,7 +815,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             if(lastframehash != null)
             {
                 mvideoframes.add(lastframehash);
-                selectedhaeshes=selectedhaeshes+"\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                if(! selectedhaeshes.trim().isEmpty())
+                    selectedhaeshes=selectedhaeshes+"\n";
+
+                selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
                         +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                         mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                         mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
@@ -773,7 +828,10 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 if(mvideoframes.size() > 1)
                 {
                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-                    selectedhaeshes=selectedhaeshes+"\n"+ mvideoframes.get(mvideoframes.size()-1).gettitle()
+                    if(! selectedhaeshes.trim().isEmpty())
+                        selectedhaeshes=selectedhaeshes+"\n";
+
+                    selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
@@ -802,46 +860,32 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                 if(isdraweropen)
                 {
-                    if((txt_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
+                    if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
                     {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                txt_hashes.append(selectedhaeshes);
+                                //txt_hashes.append(selectedhaeshes);
+                                mhashesitems.add(new videomodel(selectedhaeshes));
+                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                                 selectedhaeshes="";
                             }
                         });
 
                     }
 
-                    if((txt_metrics.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
+                    if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
                     {
-                        /*if(txt_metrics.getText().toString().trim().length() > 0)
-                            txt_metrics.append("\n\n");*/
-
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                txt_metrics.append(selectedmetrics);
+                                //txt_metrics.append(selectedmetrics);
+                                mmetricsitems.add(new videomodel(selectedmetrics));
+                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                                 selectedmetrics="";
                             }
                         });
-
                     }
-
-                    /*int localcounter=1;
-                    while (lastmetricescount < metricItemArraylist.size())
-                    {
-
-                        txt_metrics.append("\n"+metricItemArraylist.get(lastmetricescount).getMetricTrackKeyName()+" - "+metricItemArraylist
-                        .get(lastmetricescount).getMetricTrackValue());
-
-                        if(localcounter == 20)
-                            break;
-
-                        lastmetricescount++;
-                        localcounter++;
-                    }*/
                 }
                 myHandler.postDelayed(this, 1000);
             }
