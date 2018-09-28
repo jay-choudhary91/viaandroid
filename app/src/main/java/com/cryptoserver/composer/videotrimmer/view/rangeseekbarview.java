@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.cryptoserver.composer.videoTrimmer.view;
+package com.cryptoserver.composer.videotrimmer.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -35,7 +35,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.videoTrimmer.interfaces.onrangeseekbarlistener;
+import com.cryptoserver.composer.videotrimmer.interfaces.onrangeseekbarlistener;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.cryptoserver.composer.videoTrimmer.utils;
+package com.cryptoserver.composer.videotrimmer.utils;
 
 import android.util.Log;
 

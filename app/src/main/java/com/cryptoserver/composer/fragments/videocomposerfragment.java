@@ -485,6 +485,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_hashes.setVisibility(View.INVISIBLE);
             recyview_hashes.setVisibility(View.VISIBLE);
             recyview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_hashes.setVisibility(View.INVISIBLE);
 
             {
 

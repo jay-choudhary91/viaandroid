@@ -10,17 +10,17 @@ import android.util.AttributeSet;
  * Created by root on 29/8/18.
  */
 
-public class CenterLayoutManager extends LinearLayoutManager {
+public class centerlayoutmanager extends LinearLayoutManager {
 
-    public CenterLayoutManager(Context context) {
+    public centerlayoutmanager(Context context) {
         super(context);
     }
 
-    public CenterLayoutManager(Context context, int orientation, boolean reverseLayout) {
+    public centerlayoutmanager(Context context, int orientation, boolean reverseLayout) {
         super(context, orientation, reverseLayout);
     }
 
-    public CenterLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public centerlayoutmanager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

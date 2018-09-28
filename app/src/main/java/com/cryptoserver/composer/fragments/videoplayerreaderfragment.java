@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -20,7 +19,6 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -45,7 +43,7 @@ import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
-import com.cryptoserver.composer.utils.CenterLayoutManager;
+import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -226,7 +224,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                                 }
                             });
-                    mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    mLayoutManager = new centerlayoutmanager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyview_frames.setLayoutManager(mLayoutManager);
                     recyview_frames.setItemAnimator(new DefaultItemAnimator());
                     recyview_frames.setAdapter(adapter);
@@ -356,6 +354,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         txt_hashes.setVisibility(View.INVISIBLE);
         recyview_hashes.setVisibility(View.VISIBLE);
         recyview_metrices.setVisibility(View.INVISIBLE);
+        scrollview_metrices.setVisibility(View.INVISIBLE);
+        scrollview_hashes.setVisibility(View.INVISIBLE);
 
         setmetriceshashesdata();
         return rootview;

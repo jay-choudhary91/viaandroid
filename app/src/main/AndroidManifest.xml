@@ -53,12 +53,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".activity.introactivity">
-
-            <!--<meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />-->
-        </activity>
         <activity
             android:name=".activity.homeactivity"
             android:screenOrientation="portrait" />

@@ -1,10 +1,7 @@
 package com.cryptoserver.composer.fragments;
 
-import android.content.ContentValues;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +11,9 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.progressdialog;
-import com.cryptoserver.composer.videoTrimmer.hglvideotrimmer;
-import com.cryptoserver.composer.videoTrimmer.interfaces.onhglvideolistener;
-import com.cryptoserver.composer.videoTrimmer.interfaces.ontrimvideolistener;
+import com.cryptoserver.composer.videotrimmer.hglvideotrimmer;
+import com.cryptoserver.composer.videotrimmer.interfaces.onhglvideolistener;
+import com.cryptoserver.composer.videotrimmer.interfaces.ontrimvideolistener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
