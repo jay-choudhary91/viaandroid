@@ -1286,24 +1286,24 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
                 }
                 count++;
-            }
 
-            if(lastframehash != null)
-            {
-                mvideoframes.add(lastframehash);
-                if(! selectedhaeshes.trim().isEmpty())
-                    selectedhaeshes=selectedhaeshes+"\n";
-
-                selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                        +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-            }
-            else
-            {
-                if(mvideoframes.size() > 1)
+                if(suspendframequeue)
                 {
-                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                    selectedmetrics="";
+                    selectedhaeshes="";
+                    mhashesitems.clear();
+                    mmetricsitems.clear();
+                    mhashesadapter.notifyDataSetChanged();
+                    mmetricesadapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+
+            if(! suspendframequeue)
+            {
+                if(lastframehash != null)
+                {
+                    mvideoframes.add(lastframehash);
                     if(! selectedhaeshes.trim().isEmpty())
                         selectedhaeshes=selectedhaeshes+"\n";
 
@@ -1311,6 +1311,20 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                }
+                else
+                {
+                    if(mvideoframes.size() > 1)
+                    {
+                        mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                        if(! selectedhaeshes.trim().isEmpty())
+                            selectedhaeshes=selectedhaeshes+"\n";
+
+                        selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
+                                +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                                mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                                mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                    }
                 }
             }
 
