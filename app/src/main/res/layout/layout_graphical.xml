@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="5dp"
+            android:id="@+id/layout_graphical"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:text="@string/locationtracking"/>
+
+            <FrameLayout
+                android:id="@+id/googlemap"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:visibility="gone">
+
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="700dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/locationanalytics"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1"
+                    android:id="@+id/layout_locationAna">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyview_location_analytics"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="0.5"
+                        android:visibility="visible">
+
+                    </android.support.v7.widget.RecyclerView>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="150dp"
+                        android:src="@drawable/locationanalytics"/>
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="@string/orientation"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1"
+                    android:id="@+id/layout_orenAna">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyview_orentation"
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="0.5"
+                        android:visibility="visible">
+
+                    </android.support.v7.widget.RecyclerView>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/orientationimage"/>
+                </LinearLayout>
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="@string/Phoneanalytics" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyview_phoneanalytics"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.4"
+                    android:visibility="visible">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+</LinearLayout>
