@@ -1155,12 +1155,10 @@ public class customffmpegframegrabber extends FrameGrabber {
                         && (!keyFrames || picture.pict_type() == AV_PICTURE_TYPE_I)) {
                     long pts = av_frame_get_best_effort_timestamp(picture);
 
-                    Log.e("best effert timestemp",""+pts);
                     avutil.AVRational time_base = video_st.time_base();
                     timestamp = 1000000L * pts * time_base.num() / time_base.den();
                     // best guess, AVCodecContext.frame_number = number of decoded frames...
                     frameNumber = (int)Math.round(timestamp * getFrameRate() / 1000000L);
-                    Log.e("frameNumber ",""+frameNumber);
                     frame.image = image_buf;
                     if (doProcessing) {
                         processImage();

@@ -45,12 +45,11 @@ public class custompageradapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.row_frame, container, false);
-        //itemView.getLayoutParams().width=screenWidth/10;
         ImageView img_item = (ImageView) itemView.findViewById(R.id.img_item);
-        img_item.setImageBitmap(mItemList.get(position).getBitmap());
+        if(mItemList.get(position).getBitmap() != null)
+            img_item.setImageBitmap(mItemList.get(position).getBitmap());
 
         container.addView(itemView);
-
         return itemView;
     }
 
@@ -59,8 +58,8 @@ public class custompageradapter extends PagerAdapter {
         container.removeView((LinearLayout) object);
     }
 
-    /*@Override
+    @Override
     public float getPageWidth(int position) {
-        return (0.5f);
-    }*/
+        return (0.2f);
+    }
 }
