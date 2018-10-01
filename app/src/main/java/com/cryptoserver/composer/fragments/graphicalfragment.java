@@ -57,7 +57,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     FrameLayout googlemap;
     MediaPlayer player;
     @BindView(R.id.scrollview_graphical)
-            ScrollView scrollview_graphical;
+    ScrollView scrollview_graphical;
     View rootview;
 
     //graphical

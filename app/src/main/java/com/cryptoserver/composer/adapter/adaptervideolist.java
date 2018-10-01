@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
+import com.cryptoserver.composer.utils.common;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -205,7 +206,7 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                       }
                       else
                       {
-                          holder.edtvideoname.setText(filename);
+                          holder.edtvideoname.setText(common.removeextension(filename));
                       }
 
                       return true;
@@ -244,14 +245,10 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                         }
                         else
                         {
-                            holder.edtvideoname.setText(filename);
+                            holder.edtvideoname.setText(common.removeextension(filename));
                         }
                     }
-
-
-
                     Log.e("Focaus change ", "Focus change");
-
                 }
             }
         });

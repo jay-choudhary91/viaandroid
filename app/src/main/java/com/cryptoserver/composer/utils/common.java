@@ -627,6 +627,16 @@ public class common {
         return returnString;
     }
 
+    public static String removeextension(String str)
+    {
+        if(str.contains("."))
+        {
+            String str1=str.substring(0,str.indexOf("."));
+            return str1;
+        }
+        return str;
+    }
+
     public static String getGpsDirection(float degree) {
         String direction_text = "";
         if (degree == 0 && degree < 45 || degree >= 315
