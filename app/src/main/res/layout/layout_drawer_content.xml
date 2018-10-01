@@ -107,8 +107,6 @@
             android:visibility="gone">
 
         </android.support.v7.widget.RecyclerView>
-
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -148,6 +146,18 @@
                     android:layout_height="wrap_content" />
 
                 </ScrollView>
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:id="@+id/scrollview_graphical"
+                    android:visibility="gone"
+                    android:layout_height="match_parent">
+
+                   <include layout="@layout/layout_graphical"></include>
+
+                </ScrollView>
+
+
             </RelativeLayout>
 
     </RelativeLayout>

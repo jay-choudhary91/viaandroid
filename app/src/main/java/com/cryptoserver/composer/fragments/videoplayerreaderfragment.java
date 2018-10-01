@@ -227,7 +227,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     recyview_frames.setAdapter(adapter);
 
 
-                    /*recyview_frames.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    recyview_frames.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
                         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                             super.onScrollStateChanged(recyclerView, newState);
@@ -292,7 +292,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                 }
                             }
                         }
-                    });*/
+                    });
                 }
             });
 

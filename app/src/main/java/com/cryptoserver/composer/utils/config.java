@@ -1,6 +1,7 @@
 package com.cryptoserver.composer.utils;
 
 
+import android.location.Location;
 import android.os.Environment;
 
 import com.cryptoserver.composer.BuildConfig;
@@ -15,6 +16,9 @@ public class config {
     public static final String videodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID+File.separator+"videos";
 
+    public static final double STATIC_LAT = 43.65844179931329;
+    public static final double STATIC_LNG = -116.69653460383417;
+
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";
     public static final String date_time_format = "MM-dd-yyyy hh:mm:ss";
@@ -23,6 +27,7 @@ public class config {
     public static final String broadcast_call = "com.matraex.call_broadcast";
     public static final String build_flavor_reader = "reader";
     public static final String build_flavor_composer = "composer";
+    public static Location MyLastLocation = null;
 
     public static final String type_video_update = "video_update";
     public static final String type_video_start = "video_start";
@@ -53,4 +58,35 @@ public class config {
     public static final String currentcallremotenumber = "currentcallremotenumber";
     public static final String decibel = "decibel";
     public static final String currentcalldecibel = "currentcalldecibel";
+
+    //graphicaldata
+    public static final String Latitude="Latitude";
+    public static final String Longitude="Longitude";
+    public static final String Altitude="Altitude";
+    public static final String Speed="Speed";
+    public static final String Heading="Heading";
+    public static final String Orientation="Orientation";
+    public static final String MarillastDallas="1500 Marilla St Dallas";
+    public static final String Xaxis="X-axis";
+    public static final String Yaxis="Y-axis";
+    public static final String Zaxis="Z-axis";
+    public static final String PhoneType="Phone Type";
+    public static final String CellProvider="Cell Provider" ;
+    public static final String Connectionspeed="Connection Speed";
+    public static final String OSversion="OS version" ;
+    public static final String WIFINetwork="WIFI Network";
+    public static final String GPSAccuracy="GPS Accuracy";
+    public static final String ScreenSize="Screen Size";
+    public static final String Country="Country";
+    public static final String CPUUsage="CPU Usage";
+    public static final String Brightness="Brightness";
+    public static final String TimeZone="Time Zone";
+    public static final String MemoryUsage="Memory Usage";
+    public static final String Bluetooth="Bluetooth";
+    public static final String LocalTime="Local Time";
+    public static final String StorageAvailable="Storage Available";
+    public static final String Language="Language";
+    public static final String SystemUptime="System Uptime";
+    public static final String Battery="Battery";
+
 }

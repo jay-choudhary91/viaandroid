@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,7 +15,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-feature android:name="android.hardware.usb.host" />
 
     <uses-permission android:name="android.permission.USB_PERMISSION" />
@@ -73,6 +71,9 @@
             </intent-filter>
         </receiver>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDPoZJinB-VFdViZST5kRggT92m3qOrh7w" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="42d19fb0e2e5d57caf4b1257310ca64e6f19cade" />
