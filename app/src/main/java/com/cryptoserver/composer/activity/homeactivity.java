@@ -26,6 +26,7 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
+import com.cryptoserver.composer.fragments.graphicalfragment;
 import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
@@ -80,7 +81,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
-            fragmentvideolist frag=new fragmentvideolist();
+            //fragmentvideolist frag=new fragmentvideolist();
+            graphicalfragment frag=new graphicalfragment();
             replaceFragment(frag, false, true);
             /*Intent in=new Intent(homeactivity.this,CameraActivity.class);
             startActivity(in);*/

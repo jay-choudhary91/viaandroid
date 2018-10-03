@@ -16,6 +16,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
@@ -64,6 +66,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -343,6 +346,7 @@ public abstract class locationawareactivity extends baseactivity implements
             if (getcurrentfragment() != null) {
                 getcurrentfragment().oncurrentlocationchanged(location);
                 updatelocationsparams(location);
+                getCompleteAddressString(location);
             }
             //stopLocationUpdates();
         }
@@ -562,6 +566,10 @@ public abstract class locationawareactivity extends baseactivity implements
         metricItemArraylist.add(new metricmodel(config.airplanemode,"",true));
         metricItemArraylist.add(new metricmodel("phonetime","",true));
         metricItemArraylist.add(new metricmodel("syncphonetime","",true));
+        metricItemArraylist.add(new metricmodel("country","",true));
+        metricItemArraylist.add(new metricmodel("connectionspeed","",true));
+        metricItemArraylist.add(new metricmodel("gpsaccuracy","",true));
+        metricItemArraylist.add(new metricmodel("address","",true));
 
        // getmetricarraylist();
         startmetrices();
@@ -975,7 +983,7 @@ public abstract class locationawareactivity extends baseactivity implements
         else if(key.equalsIgnoreCase("gpslatitude")|| key.equalsIgnoreCase("gpslongitude") || key.equalsIgnoreCase("gpsaltittude") ||
                 key.equalsIgnoreCase("gpsverticalaccuracy")
                 || key.equalsIgnoreCase("gpsquality") || key.equalsIgnoreCase("heading")
-                || key.equalsIgnoreCase("speed"))
+                || key.equalsIgnoreCase("speed") || key.equalsIgnoreCase("gpsaccuracy"))
         {
             metricItemValue="";
         }
@@ -1203,6 +1211,21 @@ public abstract class locationawareactivity extends baseactivity implements
             } else if((android.provider.Settings.Global.getInt(getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 0)==1)){
                 metricItemValue="OFF";
             }
+        }else if(key.equalsIgnoreCase("country")) {
+            String locale = this.getResources().getConfiguration().locale.getCountry();
+            metricItemValue = locale;
+        }else if(key.equalsIgnoreCase("connectionspeed")){
+            String linkSpeed = null;
+            final WifiManager wifiManager = (WifiManager)locationawareactivity.this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            if (wifiInfo != null) {
+
+                 linkSpeed = String.valueOf(wifiInfo.getLinkSpeed()) +""+wifiInfo.LINK_SPEED_UNITS; //measured using WifiInfo.LINK_SPEED_UNITS
+                 Log.e("linkspeed",wifiInfo.LINK_SPEED_UNITS);
+            }
+            metricItemValue=String.valueOf(linkSpeed);
+        }else if(key.equalsIgnoreCase("address")){
+            metricItemValue="";
         }
 
         if(metricItemValue == null)
@@ -1717,6 +1740,9 @@ public abstract class locationawareactivity extends baseactivity implements
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("distancetraveled")) {
                 metricItemArraylist.get(i).setMetricTrackValue("" + ((int)doubleTotalDistance));
             }
+            if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
+                metricItemArraylist.get(i).setMetricTrackValue("" +location.getAccuracy());
+            }
         }
 
         if(! xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty())
@@ -1745,4 +1771,36 @@ public abstract class locationawareactivity extends baseactivity implements
             }
         }
     }
+
+    //get complete address
+    private String getCompleteAddressString(Location location) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+                for(int i= 0;i<metricItemArraylist.size();i++){
+                    if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
+                        metricItemArraylist.get(i).setMetricTrackValue(strAdd);
+                    }
+                }
+
+                Log.e("Myaddress", strReturnedAddress.toString());
+            } else {
+                Log.e("My address", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w("Myaddress", "Canont get Address!");
+        }
+        return strAdd;
+    }
+
 }

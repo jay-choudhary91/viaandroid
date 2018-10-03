@@ -842,6 +842,14 @@ public class common {
             metricItemName = "gpsonoff";
         } else if (key.equalsIgnoreCase("syncphonetime")) {
             metricItemName = "syncphonetime";
+        } else if(key.equalsIgnoreCase("country")){
+            metricItemName ="country";
+        } else if(key.equalsIgnoreCase("gpsaccuracy")){
+            metricItemName ="gpsaccuracy";
+        } else if(key.equalsIgnoreCase("connectionspeed")){
+            metricItemName ="connectionspeed";
+        } else if(key.equalsIgnoreCase("address")){
+            metricItemName ="address";
         }
         return metricItemName;
     }
@@ -1178,7 +1186,7 @@ public class common {
                 try {
                     String metrictracklatitude=metricItemArraylist.get(i).getMetricTrackValue();
                     double latitude = Double.valueOf(metrictracklatitude);
-                    locationanalytics.add(new graphicalmodel(config.Latitude, String.valueOf(convertlatitude(latitude))));
+                    locationanalytics.add(new graphicalmodel(config.Latitude, convertlatitude(latitude)));
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
@@ -1187,7 +1195,7 @@ public class common {
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
                 try {
                     double longitude = Double.valueOf(String.valueOf(metricItemArraylist.get(i).getMetricTrackValue()));
-                    locationanalytics.add(new graphicalmodel(config.Longitude, String.valueOf(convertlongitude(longitude))));
+                    locationanalytics.add(new graphicalmodel(config.Longitude, convertlongitude(longitude)));
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
@@ -1199,8 +1207,8 @@ public class common {
                 locationanalytics.add(new graphicalmodel(config.Heading, metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.compass)) {
                 locationanalytics.add(new graphicalmodel(config.Orientation, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("1500 Marilla St Dallas")) {
-                locationanalytics.add(new graphicalmodel(config.MarillastDallas, metricItemArraylist.get(i).getMetricTrackValue()));
+            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")) {
+                locationanalytics.add(new graphicalmodel("", metricItemArraylist.get(i).getMetricTrackValue()));
             }
         }
 
@@ -1225,7 +1233,7 @@ public class common {
                 phoneanalytics.add(new graphicalmodel(config.OSversion, metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("wifiname")) {
                 phoneanalytics.add(new graphicalmodel(config.WIFINetwork, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("orientation")) {
+            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
                 phoneanalytics.add(new graphicalmodel(config.GPSAccuracy, metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")) {//+"*"+metricItemArraylist.get(i).getMetricTrackValue())
                 phoneanalytics.add(new graphicalmodel(config.ScreenSize, metricItemArraylist.get(i).getMetricTrackValue()));
