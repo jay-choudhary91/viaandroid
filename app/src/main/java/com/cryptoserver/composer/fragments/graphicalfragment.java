@@ -90,20 +90,18 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            // Inflate the layout for this fragment
-           // rootview = inflater.inflate(R.layout.layout_graphical, container, false);
             scrollview_graphical.setVisibility(View.VISIBLE);
             recyview_locationanalytics=rootview.findViewById(R.id.recyview_location_analytics);
             recyview_orientation=rootview.findViewById(R.id.recyview_orentation);
             recyview_phoneanalytics=rootview.findViewById(R.id.recyview_phoneanalytics);
             myvisualizerview = (WaveFromView)rootview.findViewById(R.id.myvisualizerview);
-
-
             player = new MediaPlayer();
-
-            start();
-
-            //initAudio();
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    start();
+                }
+            });
             layout_locationanalytics=rootview.findViewById(R.id.layout_locationAna);
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
 
@@ -133,8 +131,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         }
         return rootview;
     }
-
-
 
     @Override
     public int getlayoutid() {
@@ -283,8 +279,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     private void start() {
 
-        //Log.i("noise", "==== start ===");
-
         try {
 
             if(mNoise != null)
@@ -300,105 +294,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
             try {
                 if(mNoise != null)
-                {
-
                     getaudiowave();
-
-                    // AudioManager audioManager = (AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE);
-                    // getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-                    /*Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            double amp = mNoise.getAmplitude();
-                            Log.e("amplitude value =", ""+ amp);
-
-                            myvisualizerview.updateAmplitude((float) amp,true);
-
-                        }
-                    },50);*/
-
-                   /* Thread thread = new Thread(){
-                        public void run(){
-
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            //Do something after 100ms
-
-                            try {
-                                if(mNoise != null)
-                                {
-
-                                    //Log.i("noise", "runnable mPollTask");
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-                    };
-                    thread.start();*/
-
-
-                    // double amp = mNoise.getAmplitudeVoice();
-
-
-
-
-                   /* visualizer = new Visualizer(0);
-                    visualizer.setEnabled(false);
-
-
-                    visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
-                    //visualizer.setCaptureSize(2);
-                    // Pass through Visualizer data to VisualizerView
-
-                    Visualizer.OnDataCaptureListener captureListener = new Visualizer.OnDataCaptureListener() {
-
-                        @Override
-                        public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-
-                           Log.e("Raw daouble array = ", Arrays.toString(bytes));
-
-
-                        }
-
-                        @Override
-                        public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-                           // updateVisualizerFFT(bytes);
-                        }
-                    };
-                    visualizer.setDataCaptureListener(captureListener, Visualizer.getMaxCaptureRate() / 2, true, true);*/
-                    // Enabled Visualizer and disable when we're done with the stream
-                    //visualizer.setEnabled(true);
-
-                   /* visualizer = new Visualizer(0);
-                    visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-                    //visualizer.setCaptureSize(66);
-                    visualizer.setDataCaptureListener(
-                            new Visualizer.OnDataCaptureListener() {
-                                public void onWaveFormDataCapture(Visualizer visualizer,
-                                                                  byte[] bytes, int samplingRate) {
-
-                                        myvisualizerview.updateVisualizer(bytes);
-
-                                }
-
-                                public void onFftDataCapture(Visualizer visualizer,
-                                                             byte[] bytes, int samplingRate) {
-                                }
-                            }, Visualizer.getMaxCaptureRate() / 2, true, false);*/
-
-
-
-                    // double amp = mNoise.getAmplitude();
-                    //Log.i("noise", "runnable mPollTask");
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
