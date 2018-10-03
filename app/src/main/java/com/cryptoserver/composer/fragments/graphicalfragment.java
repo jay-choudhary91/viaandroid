@@ -138,7 +138,25 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                     recyview_phoneanalytics.setLayoutManager(mphoneALayoutmanager);
                     recyview_phoneanalytics.setAdapter(graphicalphoneadapter);
 
-                    RecyclerView.LayoutManager mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
+                    GridLayoutManager mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
+                    mlocationALayoutmanager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                        @Override
+                        public int getSpanSize(int position) {
+                            // 5 is the sum of items in one repeated section
+                            switch (position % 5) {
+                                // first 3 items span 2 columns each
+                                case 0:
+                                case 1:
+                                case 2:
+                                case 3:
+                                    return 1;
+                                // next 2 items span 1 columns each
+                                case 4:
+                                    return 2;
+                            }
+                            throw new IllegalStateException("internal error");
+                        }
+                    });
                     recyview_locationanalytics.setLayoutManager(mlocationALayoutmanager);
                     recyview_locationanalytics.setAdapter(graphicallocationadapter);
 
