@@ -21,9 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.cryptoserver.composer.videoTrimmer.interfaces;
+package com.cryptoserver.composer.videotrimmer.interfaces;
 
-public interface onhglvideolistener {
 
-    void onvideoprepared();
+import com.cryptoserver.composer.videotrimmer.view.rangeseekbarview;
+
+public interface onrangeseekbarlistener {
+    void oncreate(rangeseekbarview rangeseekbarview, int index, float value);
+
+    void onseek(rangeseekbarview rangeseekbarview, int index, float value);
+
+    void onseekstart(rangeseekbarview rangeseekbarview, int index, float value);
+
+    void onseekstop(rangeseekbarview rangeseekbarview, int index, float value);
 }

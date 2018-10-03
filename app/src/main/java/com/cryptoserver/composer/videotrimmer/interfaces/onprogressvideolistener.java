@@ -21,19 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.cryptoserver.composer.videoTrimmer.interfaces;
+package com.cryptoserver.composer.videotrimmer.interfaces;
 
-import android.net.Uri;
+public interface onprogressvideolistener {
 
-public interface ontrimvideolistener {
-
-    void ontrimstarted();
-
-    void getresult(final Uri uri);
-
-    void getresult(final String path);
-
-    void cancelaction();
-
-    void onerror(final String message);
+    void updateprogress(int time, int max, float scale);
 }

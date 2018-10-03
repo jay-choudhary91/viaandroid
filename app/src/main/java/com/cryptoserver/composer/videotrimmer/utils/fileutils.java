@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.cryptoserver.composer.videoTrimmer.utils;
+package com.cryptoserver.composer.videotrimmer.utils;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;

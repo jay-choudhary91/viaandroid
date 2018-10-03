@@ -21,17 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.cryptoserver.composer.videoTrimmer.interfaces;
+package com.cryptoserver.composer.videotrimmer.interfaces;
 
+import android.net.Uri;
 
-import com.cryptoserver.composer.videoTrimmer.view.rangeseekbarview;
+public interface ontrimvideolistener {
 
-public interface onrangeseekbarlistener {
-    void oncreate(rangeseekbarview rangeseekbarview, int index, float value);
+    void ontrimstarted();
 
-    void onseek(rangeseekbarview rangeseekbarview, int index, float value);
+    void getresult(final Uri uri);
 
-    void onseekstart(rangeseekbarview rangeseekbarview, int index, float value);
+    void getresult(final String path);
 
-    void onseekstop(rangeseekbarview rangeseekbarview, int index, float value);
+    void cancelaction();
+
+    void onerror(final String message);
 }

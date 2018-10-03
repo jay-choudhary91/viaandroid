@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.cryptoserver.composer.videoTrimmer.interfaces;
+package com.cryptoserver.composer.videotrimmer.interfaces;
 
-public interface onprogressvideolistener {
+public interface onhglvideolistener {
 
-    void updateprogress(int time, int max, float scale);
+    void onvideoprepared();
 }

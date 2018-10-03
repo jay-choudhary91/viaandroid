@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.cryptoserver.composer.videoTrimmer;
+package com.cryptoserver.composer.videotrimmer;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
@@ -50,16 +50,16 @@ import android.widget.VideoView;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.progressdialog;
-import com.cryptoserver.composer.videoTrimmer.interfaces.onhglvideolistener;
-import com.cryptoserver.composer.videoTrimmer.interfaces.onprogressvideolistener;
-import com.cryptoserver.composer.videoTrimmer.interfaces.onrangeseekbarlistener;
-import com.cryptoserver.composer.videoTrimmer.interfaces.ontrimvideolistener;
-import com.cryptoserver.composer.videoTrimmer.utils.backgroundexecutor;
-import com.cryptoserver.composer.videoTrimmer.utils.uithreadexecutor;
-import com.cryptoserver.composer.videoTrimmer.view.progressbarview;
-import com.cryptoserver.composer.videoTrimmer.view.rangeseekbarview;
-import com.cryptoserver.composer.videoTrimmer.view.thumb;
-import com.cryptoserver.composer.videoTrimmer.view.timelineview;
+import com.cryptoserver.composer.videotrimmer.interfaces.onhglvideolistener;
+import com.cryptoserver.composer.videotrimmer.interfaces.onprogressvideolistener;
+import com.cryptoserver.composer.videotrimmer.interfaces.onrangeseekbarlistener;
+import com.cryptoserver.composer.videotrimmer.interfaces.ontrimvideolistener;
+import com.cryptoserver.composer.videotrimmer.utils.backgroundexecutor;
+import com.cryptoserver.composer.videotrimmer.utils.uithreadexecutor;
+import com.cryptoserver.composer.videotrimmer.view.progressbarview;
+import com.cryptoserver.composer.videotrimmer.view.rangeseekbarview;
+import com.cryptoserver.composer.videotrimmer.view.thumb;
+import com.cryptoserver.composer.videotrimmer.view.timelineview;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;

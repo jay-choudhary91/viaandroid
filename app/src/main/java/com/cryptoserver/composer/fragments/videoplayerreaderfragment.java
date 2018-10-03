@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -14,13 +13,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -38,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.custompageradapter;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -45,7 +45,7 @@ import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
-import com.cryptoserver.composer.utils.CenterLayoutManager;
+import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -54,6 +54,8 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
+import com.cryptoserver.composer.views.pageranimation;
+import com.cryptoserver.composer.views.pagercustomduration;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
@@ -102,48 +104,45 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @BindView(R.id.recyview_item)
     RecyclerView recyview_hashes;
 
-    RelativeLayout scurraberverticalbar;
-
+    private RelativeLayout scurraberverticalbar;
     private String VIDEO_URL = null;
-    RelativeLayout showcontrollers;
-    SurfaceView videoSurface;
-    MediaPlayer player;
-    videocontrollerview controller;
-    View rootview = null;
-    String selectedmetrics="";
-    ImageView handleimageview,righthandle;
-    LinearLayout linearLayout;
-    String keytype =config.prefs_md5;
-    long currentframenumber =0,playerposition=0;
-    long frameduration =15, mframetorecordcount =0;
-    ArrayList<videomodel> mainvideoframes =new ArrayList<>();
-    ArrayList<videomodel> mvideoframes =new ArrayList<>();
-    ArrayList<videomodel> mallframes =new ArrayList<>();
-    ArrayList<frame> mbitmaplist =new ArrayList<>();
-
-    boolean ishashprocessing=false,isbitmapprocessing=false;
-    boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
-    public int REQUESTCODE_PICK=201;
+    private RelativeLayout showcontrollers;
+    private SurfaceView videoSurface;
+    private MediaPlayer player;
+    private videocontrollerview controller;
+    private View rootview = null;
+    private String selectedmetrics="";
+    private ImageView handleimageview,righthandle;
+    private LinearLayout linearLayout;
+    private String keytype =config.prefs_md5;
+    private long currentframenumber =0,playerposition=0;
+    private long frameduration =15, mframetorecordcount =0;
+    private boolean ishashprocessing=false,isbitmapprocessing=false;
+    private boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
+    private int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
-    framebitmapadapter adapter;
-    Uri selectedvideouri =null;
-    boolean issurafcedestroyed=false;
-    boolean isscrubbing=true;
+    private Uri selectedvideouri =null;
+    private boolean issurafcedestroyed=false;
+    private boolean isscrubbing=true;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-    private Handler myHandler;
-    private Runnable myRunnable;
-    long framecount=0;
-    long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,
-            lastgetframe=0;
-    boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
+    private Handler myHandler,handlerrecycler;
+    private Runnable myRunnable,runnablerecycler;
+    private long framecount=0;
+    private long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,lastgetframe=0;
+    private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
     private boolean isdraweropen=false;
-    LinearLayoutManager mLayoutManager;
-    String selectedhaeshes="";
+    private LinearLayoutManager mlinearlayoutmanager;
+    private String selectedhaeshes="";
     private int lastmetricescount=0;
-    SurfaceHolder holder;
-    ArrayList<videomodel> mmetricsitems =new ArrayList<>();
-    ArrayList<videomodel> mhashesitems =new ArrayList<>();
-    videoframeadapter mmetricesadapter,mhashesadapter;
+    private SurfaceHolder holder;
+    private ArrayList<videomodel> mainvideoframes =new ArrayList<>();
+    private ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    private ArrayList<videomodel> mallframes =new ArrayList<>();
+    private ArrayList<frame> mbitmaplist =new ArrayList<>();
+    private ArrayList<videomodel> mmetricsitems =new ArrayList<>();
+    private ArrayList<videomodel> mhashesitems =new ArrayList<>();
+    private videoframeadapter mmetricesadapter,mhashesadapter;
+    private framebitmapadapter adapter;
 
     @Override
     public int getlayoutid() {
@@ -164,10 +163,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             righthandle=rootview.findViewById(R.id.righthandle);
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
-
-           /* holder = videoSurface.getHolder();
-            holder.addCallback(this);
-            holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);*/
 
             {
 
@@ -206,45 +201,27 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 recyview_hashes.setAdapter(mmetricesadapter);
             }
 
-            final LinearSnapHelper layoutManagaer = new LinearSnapHelper();
-
             frameduration=checkframeduration();
             keytype=checkkey();
-
             recyview_frames.post(new Runnable() {
                 @Override
                 public void run() {
                     adapter = new framebitmapadapter(getActivity(), mbitmaplist,recyview_frames.getWidth(),
-                            new adapteritemclick() {
-                                @Override
-                                public void onItemClicked(Object object) {
+                    new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
 
-                                }
+                        }
 
-                                @Override
-                                public void onItemClicked(Object object, int type) {
+                        @Override
+                        public void onItemClicked(Object object, int type) {
 
-                                }
-                            });
-                    mLayoutManager = new CenterLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                    recyview_frames.setLayoutManager(mLayoutManager);
+                        }
+                    });
+                    mlinearlayoutmanager = new centerlayoutmanager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    recyview_frames.setLayoutManager(mlinearlayoutmanager);
                     recyview_frames.setItemAnimator(new DefaultItemAnimator());
                     recyview_frames.setAdapter(adapter);
-
-                    /*recyview_frames.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View view, MotionEvent motionEvent) {
-                            switch (motionEvent.getAction()){
-                                case MotionEvent.ACTION_DOWN:
-                                    islisttouched = true;
-                                    break;
-                                case MotionEvent.ACTION_UP:
-                                    islisttouched = false;
-                                    break;
-                            }
-                            return false;
-                        }
-                    });*/
 
                     recyview_frames.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -257,6 +234,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                     break;
                                 case RecyclerView.SCROLL_STATE_DRAGGING:
                                     System.out.println("Scrolling now");
+                                    if(handlerrecycler != null && runnablerecycler != null)
+                                        handlerrecycler.removeCallbacks(runnablerecycler);
+
                                     islisttouched = true;
                                     islistdragging = true;
                                     break;
@@ -272,17 +252,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
 
-                            /*{
-                                int center = recyview_frames.getWidth() / 2;
-                                View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
-                                int centerPos = recyview_frames.getChildAdapterPosition(centerView);
-                                mLayoutManager.findLastVisibleItemPosition();
-                                if(centerPos > 0)
-                                    centerPos=centerPos-1;
-
-                                Log.e("center pos ",""+centerPos+" "+islisttouched+" "+
-                                        islistdragging);
-                            }*/
+                            Log.e("listtouched  dragging",""+islisttouched+" "+islistdragging);
                             if(islisttouched && islistdragging)
                             {
                                 if(player != null && player.isPlaying())
@@ -294,13 +264,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                 int center = recyview_frames.getWidth() / 2;
                                 View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
                                 int centerPos = recyview_frames.getChildAdapterPosition(centerView);
-                                mLayoutManager.findLastVisibleItemPosition();
+                                Log.e("centerPos ",""+centerPos);
+                                mlinearlayoutmanager.findLastVisibleItemPosition();
                                 if(centerPos > 0)
                                     centerPos=centerPos-1;
 
                                 try {
                                     int currentduration=centerPos*1000;
-
                                     if(player !=null && controller != null)
                                     {
                                         try {
@@ -333,13 +303,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             });
         }
 
-        //
-        // righthandle.setVisibility(View.GONE);
-
-        /*recyview_metrices.setVisibility(View.VISIBLE);
-        recyviewitem.setVisibility(View.GONE);
-        txt_hashes.setVisibility(View.VISIBLE);*/
-
         handleimageview.setOnTouchListener(this);
         righthandle.setOnTouchListener(this);
         videoSurface.setOnTouchListener(this);
@@ -356,6 +319,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         txt_hashes.setVisibility(View.INVISIBLE);
         recyview_hashes.setVisibility(View.VISIBLE);
         recyview_metrices.setVisibility(View.INVISIBLE);
+        scrollview_metrices.setVisibility(View.INVISIBLE);
+        scrollview_hashes.setVisibility(View.INVISIBLE);
 
         setmetriceshashesdata();
         return rootview;
@@ -363,14 +328,20 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     public void disabletouchedevents()
     {
-        new Handler().postDelayed(new Runnable() {
+        if(handlerrecycler != null && runnablerecycler != null)
+            handlerrecycler.removeCallbacks(runnablerecycler);
+
+        handlerrecycler=new Handler();
+        runnablerecycler = new Runnable() {
             @Override
             public void run() {
                 islisttouched = false;
                 islistdragging = false;
             }
-        },500);
+        };
+        handlerrecycler.postDelayed(runnablerecycler,1000);
     }
+
 
 
     @Override
@@ -530,8 +501,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         });
     }
 
-
-
     public void swiperighttoleft()
     {
         isdraweropen=false;
@@ -557,7 +526,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
         });
     }
-
 
     public void hideshowcontroller()
     {
@@ -603,8 +571,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             player.stop();
             player.release();
             player=null;
-           // changeactionbarcolor(player);
-
         }
     }
 
@@ -627,33 +593,26 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 controller.removeAllViews();
 
             controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
-
-            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
+            {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
-
-               if(player!=null){
+                if(player!=null)
                    changeactionbarcolor();
-               }
-
-              //  setmetriceshashesdata();
 
                 if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
                 {
                     frameduration=checkframeduration();
                     keytype=checkkey();
-
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
-
                     isnewvideofound=true;
                 }
             }
-
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (SecurityException e) {
@@ -698,13 +657,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
-
-
+    public void onPrepared(MediaPlayer mp)
+    {
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
-        //mp.start();
-
         videoduration=mp.getDuration();
 
         /*int videoWidth = player.getVideoWidth();
@@ -745,8 +701,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
         controller.show();
         frontview.setVisibility(View.GONE);
-
     }
+
     adapteritemclick mitemclick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
@@ -785,7 +741,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         try {
             if(player != null)
             {
-               // Log.e("getCurrentPosition ",""+player.getCurrentPosition());
                 if(currentvideoduration == 0 || (player.getCurrentPosition() > currentvideoduration))
                 {
                     currentvideoduration=player.getCurrentPosition();  // suppose its on 4th pos means 4000
@@ -797,7 +752,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     int second=player.getCurrentPosition()/1000;
                     if(mbitmaplist.size() >= (second))
                     {
-                        recyview_frames.scrollToPosition(second);
+                        //Log.e("getCurrentPosition ",""+player.getCurrentPosition());
+                   //     recyview_frames.scrollToPosition(second);
                         recyview_frames.smoothScrollToPosition(second);
                     }
                 }
@@ -814,9 +770,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public int getDuration() {
         if(player != null)
-        {
             return player.getDuration();
-        }
         return 0;
     }
 
@@ -841,7 +795,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             Log.e("seek to ",""+i);
             player.seekTo(i);
         }
-
     }
 
     @Override
@@ -856,9 +809,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     }
 
     @Override
-    public void toggleFullScreen() {
-
-    }
+    public void toggleFullScreen() {}
     public String getkeyvalue(byte[] data)
     {
         String value="";
@@ -926,24 +877,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         super.onHeaderBtnClick(btnid);
         switch (btnid){
             case R.id.img_share_icon:
-                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())) {
-                    //progressdialog.showwaitingdialog(getActivity());
+                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
                     common.shareMedia(getActivity(),VIDEO_URL);
-                }
                 break;
             case R.id.img_menu:
                 checkwritestoragepermission();
                 break;
             case R.id.img_setting:
-                /*if(ishashprocessing)
-                {
-                    Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
-                    return;
-                }*/
-                /*if(player != null)
-                    player.pause();*/
-
-
                 destroyvideoplayer();
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
@@ -990,14 +930,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     public  void opengallery()
     {
-        /*if(ishashprocessing)
-        {
-            Toast.makeText(getActivity(),"Currently hash process is running...",Toast.LENGTH_SHORT).show();
-            return;
-        }*/
-
         destroyvideoplayer();
-
         Intent intent;
         if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
         {
@@ -1020,9 +953,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
             if (resultCode == RESULT_OK) {
                 layout_scrubberview.setVisibility(View.GONE);
-
                 selectedvideouri = data.getData();
-
                 try {
                     //VIDEO_URL=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
                     VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
@@ -1113,9 +1044,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     {
         isbitmapprocessing=true;
         mbitmaplist.add(new frame(0,null,true));
-
-       // mbitmaplist.clear();
-
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
         m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
         String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
@@ -1129,8 +1057,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             minutes = minutes*60;
 
         seconds = seconds + minutes;
-
-
         for(int i=1;i<=seconds;i++)
         {
             Bitmap m_bitmap = null;
@@ -1143,7 +1069,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     break;
                 }
 
-
                 m_mediaMetadataRetriever = new MediaMetadataRetriever();
                 m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
                 m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
@@ -1151,12 +1076,12 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 {
                     Log.e("Bitmap on ",""+i);
                     Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
-
                     mbitmaplist.add(new frame(i,bitmap,false));
                 }
             }
-            catch (Exception m_e)
+            catch (Exception e)
             {
+                e.printStackTrace();
             }
             finally
             {
@@ -1166,11 +1091,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
         isbitmapprocessing=false;
         mbitmaplist.add(new frame(0,null,true));
-
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 adapter.notifyDataSetChanged();
                 scurraberverticalbar.setVisibility(View.VISIBLE);
             }
@@ -1209,17 +1132,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
     }
 
-
-
     public void  changeactionbarcolor(){
-
-
             gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
                     (R.color.videoPlayer_header));
-        /*else{
-            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
-                    (R.color.actionbar_solid));
-        }*/
     }
 
     public void setVideoAdapter() {
@@ -1230,12 +1145,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         try
         {
             customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
-
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
             String format= common.getvideoformat(VIDEO_URL);
             if(format.equalsIgnoreCase("mp4"))
                 grabber.setFormat(format);
-
 
             grabber.start();
             videomodel lastframehash=null;
@@ -1247,15 +1160,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
                 byte[] byteData = new byte[buffer.remaining()];
                 buffer.get(byteData);
-
                 String keyValue= getkeyvalue(byteData);
-
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
-
                 if (count == currentframenumber) {
                     lastframehash=null;
                     mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-
                     if(! selectedhaeshes.trim().isEmpty())
                         selectedhaeshes=selectedhaeshes+"\n";
 
@@ -1263,10 +1172,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-
                     ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
                     //metricItemArraylist.addAll(mlist);
-
                     for(int j=0;j<mlist.size();j++)
                     {
                         if(mlist.get(j).isSelected())
@@ -1279,31 +1186,29 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         selectedmetrics=selectedmetrics+"\n\n";
 
                     currentframenumber = currentframenumber + frameduration;
-
                 }
                 else
                 {
                     lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
                 }
                 count++;
-            }
-
-            if(lastframehash != null)
-            {
-                mvideoframes.add(lastframehash);
-                if(! selectedhaeshes.trim().isEmpty())
-                    selectedhaeshes=selectedhaeshes+"\n";
-
-                selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                        +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-            }
-            else
-            {
-                if(mvideoframes.size() > 1)
+                if(suspendframequeue)
                 {
-                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                    selectedmetrics="";
+                    selectedhaeshes="";
+                    mhashesitems.clear();
+                    mmetricsitems.clear();
+                    mhashesadapter.notifyDataSetChanged();
+                    mmetricesadapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+
+            if(! suspendframequeue)
+            {
+                if(lastframehash != null)
+                {
+                    mvideoframes.add(lastframehash);
                     if(! selectedhaeshes.trim().isEmpty())
                         selectedhaeshes=selectedhaeshes+"\n";
 
@@ -1311,6 +1216,20 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                }
+                else
+                {
+                    if(mvideoframes.size() > 1)
+                    {
+                        mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                        if(! selectedhaeshes.trim().isEmpty())
+                            selectedhaeshes=selectedhaeshes+"\n";
+
+                        selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
+                                +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                                mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                                mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                    }
                 }
             }
 
@@ -1373,7 +1292,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //txt_hashes.append(selectedhaeshes);
                                 mhashesitems.add(new videomodel(selectedhaeshes));
                                 mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                                 selectedhaeshes="";
@@ -1387,7 +1305,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //txt_metrics.append(selectedmetrics);
                                 mmetricsitems.add(new videomodel(selectedmetrics));
                                 mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                                 selectedmetrics="";

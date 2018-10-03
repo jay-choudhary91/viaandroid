@@ -68,6 +68,7 @@ import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.camerautil;
@@ -210,6 +211,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                               }
 
                               mframetorecordcount++;
+                         //     Log.e("Frame no ",""+mframetorecordcount);
                           }
                       }catch (Exception e)
                       {
@@ -485,28 +487,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_hashes.setVisibility(View.INVISIBLE);
             recyview_hashes.setVisibility(View.VISIBLE);
             recyview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_hashes.setVisibility(View.INVISIBLE);
 
             {
 
-                mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                recyview_metrices.setLayoutManager(mLayoutManager);
-                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-                recyview_metrices.setAdapter(mhashesadapter);
-            }
-
-            {
-                mmetricesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
+                mhashesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
 
@@ -520,7 +506,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
                 recyview_hashes.setLayoutManager(mLayoutManager);
                 recyview_hashes.setItemAnimator(new DefaultItemAnimator());
-                recyview_hashes.setAdapter(mmetricesadapter);
+                recyview_hashes.setAdapter(mhashesadapter);
+            }
+
+            {
+                mmetricesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+
+                    }
+
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+
+                    }
+                });
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                recyview_metrices.setLayoutManager(mLayoutManager);
+                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
+                recyview_metrices.setAdapter(mmetricesadapter);
             }
 
             setmetriceshashesdata();
@@ -1080,11 +1084,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        /*if(common.isdevelopermodeenable())
-                        {
-                            setvideoadapter();
-                        }*/
-
+                        setvideoadapter();
                         savevideocomplete();
                     }
                 }).start();
@@ -1105,6 +1105,73 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         },100);
 
 
+    }
+
+    public void setvideoadapter() {
+        int count = 1;
+        currentframenumber=0;
+        mvideoframes.clear();
+        currentframenumber = currentframenumber + frameduration;
+        try
+        {
+            customffmpegframegrabber grabber = new customffmpegframegrabber(lastrecordedvideo.getAbsolutePath());
+
+            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+            String format= common.getvideoformat(lastrecordedvideo.getAbsolutePath());
+            if(format.equalsIgnoreCase("mp4"))
+                grabber.setFormat(format);
+
+
+            grabber.start();
+            videomodel lastframehash=null;
+            for(int i = 0; i<grabber.getLengthInFrames(); i++){
+                Frame frame = grabber.grabImage();
+                if (frame == null)
+                    break;
+
+                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
+                byte[] byteData = new byte[buffer.remaining()];
+                buffer.get(byteData);
+                String keyValue= getkeyvalue(byteData);
+                if (count == currentframenumber) {
+                    lastframehash=null;
+                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
+                    currentframenumber = currentframenumber + frameduration;
+                }
+                else
+                {
+                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                }
+                count++;
+            }
+
+            if(lastframehash != null)
+            {
+                mvideoframes.add(lastframehash);
+            }
+            else
+            {
+                if(mvideoframes.size() > 1)
+                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+            }
+
+            grabber.flush();
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mhashesitems.clear();
+                    mhashesadapter.notifyDataSetChanged();
+                    for(int i=0;i<mvideoframes.size();i++)
+                        mhashesitems.add(mvideoframes.get(i));
+                    mhashesadapter.notifyDataSetChanged();
+                    recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+                }
+            });
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -1929,8 +1996,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             subdialogshare.dismiss();
 
                         exportvideo(true);
-
-                      //  updatevideolistdata(true);
                         launchvideolist();
 
                     }
@@ -1947,8 +2012,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     subdialogshare.dismiss();
 
                 Uri selectedimageuri =Uri.fromFile(new File(lastrecordedvideo.getAbsolutePath()));
-
-                // int duration =  getmediaduration(selectedvideouri);
 
                 final MediaPlayer mp = MediaPlayer.create(getActivity(),selectedimageuri);
                 if(mp != null)
@@ -1972,7 +2035,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             public void onClick(View v) {
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
-              //  updatevideolistdata(true);
                 launchvideolist();
             }
         });
@@ -1986,39 +2048,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         subdialogshare.show();
     }
 
-/*    public void updatevideolistdata(boolean shouldupdatelist)
-    {
-        progressdialog.dismisswaitdialog();
-        int updatelist=(shouldupdatelist)?1:0;
-        madapterclick.onItemClicked(null,updatelist);
-
-    }*/
-
     public void launchvideolist()
     {
         gethelper().onBack();
     }
-
-    /*class MyCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            try {
-                if(isflashon) {
-                    mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
-                    mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-                    isflashon = false;
-                } else {
-                    mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
-                    mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-                    isflashon = true;
-                }
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }*/
 
     private void navigateflash() {
         try {

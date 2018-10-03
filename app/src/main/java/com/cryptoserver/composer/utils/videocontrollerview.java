@@ -703,7 +703,7 @@ public class videocontrollerview extends FrameLayout {
                     pos = view.setProgress();
                     if (!view.mDragging && view.mShowing && view.mPlayer.isPlaying()) {
                         msg = obtainMessage(SHOW_PROGRESS);
-                        sendMessageDelayed(msg, 1000 - (pos % 1000));
+                        sendMessageDelayed(msg, 0);
                     }
                     break;
             }

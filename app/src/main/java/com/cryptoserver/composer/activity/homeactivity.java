@@ -26,6 +26,7 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
+import com.cryptoserver.composer.fragments.graphicalfragment;
 import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
@@ -71,8 +72,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        //applicationviavideocomposer.setActivity(homeactivity.this);
-
+        applicationviavideocomposer.setActivity(homeactivity.this);
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             videoplayerreaderfragment frag=new videoplayerreaderfragment();
@@ -82,14 +82,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             fragmentvideolist frag=new fragmentvideolist();
             replaceFragment(frag, false, true);
-            /*Intent in=new Intent(homeactivity.this,CameraActivity.class);
-            startActivity(in);*/
         }
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }*/
+
         imgaddicon.setOnClickListener(this);
         imgsettingsicon.setOnClickListener(this);
         img_back.setOnClickListener(this);
