@@ -104,48 +104,45 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @BindView(R.id.recyview_item)
     RecyclerView recyview_hashes;
 
-    RelativeLayout scurraberverticalbar;
-
+    private RelativeLayout scurraberverticalbar;
     private String VIDEO_URL = null;
-    RelativeLayout showcontrollers;
-    SurfaceView videoSurface;
-    MediaPlayer player;
-    videocontrollerview controller;
-    View rootview = null;
-    String selectedmetrics="";
-    ImageView handleimageview,righthandle;
-    LinearLayout linearLayout;
-    String keytype =config.prefs_md5;
-    long currentframenumber =0,playerposition=0;
-    long frameduration =15, mframetorecordcount =0;
-    ArrayList<videomodel> mainvideoframes =new ArrayList<>();
-    ArrayList<videomodel> mvideoframes =new ArrayList<>();
-    ArrayList<videomodel> mallframes =new ArrayList<>();
-    ArrayList<frame> mbitmaplist =new ArrayList<>();
-
-    boolean ishashprocessing=false,isbitmapprocessing=false;
-    boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
-    public int REQUESTCODE_PICK=201;
+    private RelativeLayout showcontrollers;
+    private SurfaceView videoSurface;
+    private MediaPlayer player;
+    private videocontrollerview controller;
+    private View rootview = null;
+    private String selectedmetrics="";
+    private ImageView handleimageview,righthandle;
+    private LinearLayout linearLayout;
+    private String keytype =config.prefs_md5;
+    private long currentframenumber =0,playerposition=0;
+    private long frameduration =15, mframetorecordcount =0;
+    private boolean ishashprocessing=false,isbitmapprocessing=false;
+    private boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
+    private int REQUESTCODE_PICK=201;
     private static final int request_read_external_storage = 1;
-    framebitmapadapter adapter;
-    Uri selectedvideouri =null;
-    boolean issurafcedestroyed=false;
-    boolean isscrubbing=true;
+    private Uri selectedvideouri =null;
+    private boolean issurafcedestroyed=false;
+    private boolean isscrubbing=true;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     private Handler myHandler,handlerrecycler;
     private Runnable myRunnable,runnablerecycler;
-    long framecount=0;
-    long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,
-            lastgetframe=0;
-    boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
+    private long framecount=0;
+    private long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,lastgetframe=0;
+    private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
     private boolean isdraweropen=false;
-    LinearLayoutManager mlinearlayoutmanager;
-    String selectedhaeshes="";
+    private LinearLayoutManager mlinearlayoutmanager;
+    private String selectedhaeshes="";
     private int lastmetricescount=0;
-    SurfaceHolder holder;
-    ArrayList<videomodel> mmetricsitems =new ArrayList<>();
-    ArrayList<videomodel> mhashesitems =new ArrayList<>();
-    videoframeadapter mmetricesadapter,mhashesadapter;
+    private SurfaceHolder holder;
+    private ArrayList<videomodel> mainvideoframes =new ArrayList<>();
+    private ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    private ArrayList<videomodel> mallframes =new ArrayList<>();
+    private ArrayList<frame> mbitmaplist =new ArrayList<>();
+    private ArrayList<videomodel> mmetricsitems =new ArrayList<>();
+    private ArrayList<videomodel> mhashesitems =new ArrayList<>();
+    private videoframeadapter mmetricesadapter,mhashesadapter;
+    private framebitmapadapter adapter;
 
     @Override
     public int getlayoutid() {
@@ -210,22 +207,21 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 @Override
                 public void run() {
                     adapter = new framebitmapadapter(getActivity(), mbitmaplist,recyview_frames.getWidth(),
-                            new adapteritemclick() {
-                                @Override
-                                public void onItemClicked(Object object) {
+                    new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
 
-                                }
+                        }
 
-                                @Override
-                                public void onItemClicked(Object object, int type) {
+                        @Override
+                        public void onItemClicked(Object object, int type) {
 
-                                }
-                            });
+                        }
+                    });
                     mlinearlayoutmanager = new centerlayoutmanager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyview_frames.setLayoutManager(mlinearlayoutmanager);
                     recyview_frames.setItemAnimator(new DefaultItemAnimator());
                     recyview_frames.setAdapter(adapter);
-
 
                     recyview_frames.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -757,7 +753,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     if(mbitmaplist.size() >= (second))
                     {
                         //Log.e("getCurrentPosition ",""+player.getCurrentPosition());
-                        recyview_frames.scrollToPosition(second);
+                   //     recyview_frames.scrollToPosition(second);
                         recyview_frames.smoothScrollToPosition(second);
                     }
                 }
@@ -774,9 +770,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public int getDuration() {
         if(player != null)
-        {
             return player.getDuration();
-        }
         return 0;
     }
 
@@ -1141,10 +1135,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     public void  changeactionbarcolor(){
             gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
                     (R.color.videoPlayer_header));
-        /*else{
-            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
-                    (R.color.actionbar_solid));
-        }*/
     }
 
     public void setVideoAdapter() {
@@ -1302,7 +1292,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //txt_hashes.append(selectedhaeshes);
                                 mhashesitems.add(new videomodel(selectedhaeshes));
                                 mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                                 selectedhaeshes="";
@@ -1316,7 +1305,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //txt_metrics.append(selectedmetrics);
                                 mmetricsitems.add(new videomodel(selectedmetrics));
                                 mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                                 selectedmetrics="";
