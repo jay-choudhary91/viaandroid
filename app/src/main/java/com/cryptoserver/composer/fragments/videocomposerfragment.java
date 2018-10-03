@@ -22,6 +22,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.location.Location;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -343,7 +344,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private Handler myHandler;
     private Runnable myRunnable;
     private int lastmetricescount=0;
-
+    graphicalfragment fragmentgraphic;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -1231,24 +1232,23 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                if(! isgraphicalshown)
+                if(fragmentgraphic == null)
                 {
-                    isgraphicalshown=true;
-                    try {
-                        graphicalfragment fragment  = new graphicalfragment();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.add(R.id.fragment_graphic_container,fragment);
-                        transaction.commit();
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    fragmentgraphic  = new graphicalfragment();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
+                    transaction.commit();
                 }
-
-
 
                 break;
         }
+    }
+
+    @Override
+    public void oncurrentlocationchanged(Location location) {
+        super.oncurrentlocationchanged(location);
+        if(fragmentgraphic != null)
+            fragmentgraphic.locationupdate(location);
     }
 
     public void startstopvideo()

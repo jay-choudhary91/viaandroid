@@ -118,6 +118,11 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_locationanalytics=rootview.findViewById(R.id.recyview_location_analytics);
             recyview_orientation=rootview.findViewById(R.id.recyview_orentation);
             recyview_phoneanalytics=rootview.findViewById(R.id.recyview_phoneanalytics);
+
+            recyview_locationanalytics.setNestedScrollingEnabled(false);
+            recyview_orientation.setNestedScrollingEnabled(false);
+            recyview_phoneanalytics.setNestedScrollingEnabled(false);
+
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
 
             player = new MediaPlayer();
@@ -285,8 +290,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     }
 
-    @Override
-    public void oncurrentlocationchanged(Location location) {
+    public void locationupdate(Location location) {
         super.oncurrentlocationchanged(location);
         if (location == null) {
             return;
