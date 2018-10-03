@@ -25,8 +25,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
 
             <TextView
                 style="@style/txt_drawer_graphical_title"
@@ -55,94 +56,115 @@
                     android:layout_gravity="center"
                     android:layout_weight="0.5"
                     android:src="@drawable/locationanalytics" />
+
             </LinearLayout>
 
 
-            <TextView
-                style="@style/txt_drawer_graphical_title"
-                android:text="@string/orientation" />
-
             <LinearLayout
-                android:id="@+id/layout_orenAna"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1">
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/txt_drawer_graphical_title"
+                    android:text="@string/orientation" />
+
+                <LinearLayout
+                    android:id="@+id/layout_orenAna"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyview_orentation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:visibility="visible">
+
+                    </android.support.v7.widget.RecyclerView>
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="0.5"
+                        android:src="@drawable/orientationimage" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/txt_drawer_graphical_title"
+                    android:text="@string/Phoneanalytics" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyview_orentation"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/recyview_phoneanalytics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:visibility="visible">
 
                 </android.support.v7.widget.RecyclerView>
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_weight="0.5"
-                    android:src="@drawable/orientationimage" />
             </LinearLayout>
 
 
-            <TextView
-                style="@style/txt_drawer_graphical_title"
-                android:text="@string/Phoneanalytics" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyview_phoneanalytics"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:visibility="visible">
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
-            </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:id="@+id/text_sound"
+                    style="@style/txt_drawer_graphical_title"
+                    android:text="@string/soundinformation" />
 
-
-            <TextView
-                android:id="@+id/text_sound"
-                style="@style/txt_drawer_graphical_title"
-                android:text="@string/soundinformation" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@color/progress_color">
-
-                <com.cryptoserver.composer.utils.WaveFromView
-                    android:id="@+id/myvisualizerview"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="200dp"
+                    android:background="@color/progress_color">
+
+                    <com.cryptoserver.composer.utils.WaveFromView
+                        android:id="@+id/myvisualizerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <TextView
-                style="@style/txt_drawer_graphical_title"
-                android:text="@string/data_latency" />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:background="@color/red">
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/text_dataletency"
+                    style="@style/txt_drawer_graphical_title"
+                    android:text="@string/data_latency" />
 
-            <TextView
-                style="@style/txt_drawer_graphical_title"
-                android:text="@string/encryption_information" />
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/linechart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:background="@color/colorPrimary">
+
 
             </LinearLayout>
 
 
         </LinearLayout>
 
-
     </LinearLayout>
-
 </LinearLayout>
