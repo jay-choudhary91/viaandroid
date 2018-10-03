@@ -72,8 +72,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
 
-        //applicationviavideocomposer.setActivity(homeactivity.this);
-
+        applicationviavideocomposer.setActivity(homeactivity.this);
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             videoplayerreaderfragment frag=new videoplayerreaderfragment();
@@ -81,17 +80,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
-            //fragmentvideolist frag=new fragmentvideolist();
-            graphicalfragment frag=new graphicalfragment();
+            fragmentvideolist frag=new fragmentvideolist();
             replaceFragment(frag, false, true);
-            /*Intent in=new Intent(homeactivity.this,CameraActivity.class);
-            startActivity(in);*/
         }
-       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }*/
+
         imgaddicon.setOnClickListener(this);
         imgsettingsicon.setOnClickListener(this);
         img_back.setOnClickListener(this);
