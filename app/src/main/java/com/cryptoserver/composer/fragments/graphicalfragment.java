@@ -120,61 +120,68 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_phoneanalytics=rootview.findViewById(R.id.recyview_phoneanalytics);
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
 
-
             player = new MediaPlayer();
-            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mediaPlayer) {
-                    start();
-                }
-            });
+            start();
+
             layout_locationanalytics=rootview.findViewById(R.id.layout_locationAna);
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+            if(gethelper().getmetricarraylist().size() > 0)
+            {
+                loadarraydata();
+            }
+            else
+            {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadarraydata();
+                    }
+                },5000);
+            }
 
-                    graphicallocationadapter=new graphicaldataadapter(common.locationAnalyticsdata(gethelper().getmetricarraylist()),getActivity());
-                    graphicalphoneadapter=new graphicaldataadapter(common.phoneAnalytics(gethelper().getmetricarraylist()),getActivity());
-                    graphicalorientationadapter=new graphicaldataadapter(common.orientationarraylist(gethelper().getmetricarraylist()),getActivity());
-
-                    RecyclerView.LayoutManager mphoneALayoutmanager=new GridLayoutManager(getActivity(),3);
-                    recyview_phoneanalytics.setLayoutManager(mphoneALayoutmanager);
-                    recyview_phoneanalytics.setAdapter(graphicalphoneadapter);
-
-                    GridLayoutManager mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
-                    mlocationALayoutmanager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                        @Override
-                        public int getSpanSize(int position) {
-                            // 5 is the sum of items in one repeated section
-                            switch (position % 5) {
-                                // first 3 items span 2 columns each
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                    return 1;
-                                // next 2 items span 1 columns each
-                                case 4:
-                                    return 2;
-                            }
-                            throw new IllegalStateException("internal error");
-                        }
-                    });
-                    recyview_locationanalytics.setLayoutManager(mlocationALayoutmanager);
-                    recyview_locationanalytics.setAdapter(graphicallocationadapter);
-
-
-                    RecyclerView.LayoutManager morientationLayoutmanager=new GridLayoutManager(getActivity(),1);
-                    recyview_orientation.setLayoutManager(morientationLayoutmanager);
-                    recyview_orientation.setAdapter(graphicalorientationadapter);
-                    setchartdata();
-                }
-            },5000);
+            setchartdata();
             loadMap();
         }
         return rootview;
+    }
+
+    public void loadarraydata()
+    {
+        graphicallocationadapter=new graphicaldataadapter(common.locationAnalyticsdata(gethelper().getmetricarraylist()),getActivity());
+        graphicalphoneadapter=new graphicaldataadapter(common.phoneAnalytics(gethelper().getmetricarraylist()),getActivity());
+        graphicalorientationadapter=new graphicaldataadapter(common.orientationarraylist(gethelper().getmetricarraylist()),getActivity());
+
+        RecyclerView.LayoutManager mphoneALayoutmanager=new GridLayoutManager(getActivity(),3);
+        recyview_phoneanalytics.setLayoutManager(mphoneALayoutmanager);
+        recyview_phoneanalytics.setAdapter(graphicalphoneadapter);
+
+        GridLayoutManager mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
+        mlocationALayoutmanager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                // 5 is the sum of items in one repeated section
+                switch (position % 5) {
+                    // first 3 items span 2 columns each
+                    case 0:
+                    case 1:
+                    case 2:
+                    case 3:
+                        return 1;
+                    // next 2 items span 1 columns each
+                    case 4:
+                        return 2;
+                }
+                throw new IllegalStateException("internal error");
+            }
+        });
+        recyview_locationanalytics.setLayoutManager(mlocationALayoutmanager);
+        recyview_locationanalytics.setAdapter(graphicallocationadapter);
+
+
+        RecyclerView.LayoutManager morientationLayoutmanager=new GridLayoutManager(getActivity(),1);
+        recyview_orientation.setLayoutManager(morientationLayoutmanager);
+        recyview_orientation.setAdapter(graphicalorientationadapter);
     }
 
 
@@ -323,31 +330,28 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
         try {
 
-            if(mNoise != null)
+            if (mNoise != null)
                 mNoise.stop();
 
             mNoise = new noise();
 
-            if(mNoise != null)
-            {
-                if(mNoise != null)
+            if (mNoise != null) {
+                if (mNoise != null)
                     mNoise.start();
             }
 
             try {
-                if(mNoise != null)
+                if (mNoise != null)
                     getaudiowave();
 
-
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //visualizer.setEnabled(true);
+        }catch (Exception e)
+        {
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
     private void stop() {
