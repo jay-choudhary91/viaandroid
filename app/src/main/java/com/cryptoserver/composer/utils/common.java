@@ -1185,17 +1185,20 @@ public class common {
 
                 try {
                     String metrictracklatitude=metricItemArraylist.get(i).getMetricTrackValue();
-                    double latitude = Double.valueOf(metrictracklatitude);
-                    locationanalytics.add(new graphicalmodel(config.Latitude, convertlatitude(latitude)));
+                    if(metrictracklatitude!=null){
+                        double latitude = Double.valueOf(metrictracklatitude);
+                        locationanalytics.add(new graphicalmodel(config.Latitude, convertlatitude(latitude)));
+                    }
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
-
-
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
                 try {
-                    double longitude = Double.valueOf(String.valueOf(metricItemArraylist.get(i).getMetricTrackValue()));
-                    locationanalytics.add(new graphicalmodel(config.Longitude, convertlongitude(longitude)));
+                    String metrictracklongitude=metricItemArraylist.get(i).getMetricTrackValue();
+                    if(metrictracklongitude!=null){
+                        double longitude = Double.valueOf(metrictracklongitude);
+                        locationanalytics.add(new graphicalmodel(config.Longitude, convertlongitude(longitude)));
+                    }
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
