@@ -11,6 +11,7 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
+        android:id="@+id/layout_metric_item"
         android:layout_height="wrap_content"
         android:padding="5dp">
 
@@ -35,9 +36,11 @@
 
         <TextView
             android:id="@+id/tv_itemValue"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/item_text_size_12"
+            android:layout_toRightOf="@+id/layout_metric_item"
+            android:gravity="right|center_vertical|end"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:textColor="#000000"

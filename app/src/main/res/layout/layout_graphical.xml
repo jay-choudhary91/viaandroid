@@ -28,7 +28,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="700dp"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
@@ -41,7 +41,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:weightSum="1"
                     android:id="@+id/layout_locationAna">
@@ -49,8 +49,9 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyview_location_analytics"
                         android:layout_width="0dp"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.5"
+                        android:layout_gravity="center"
                         android:visibility="visible">
 
                     </android.support.v7.widget.RecyclerView>
@@ -58,6 +59,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="0.5"
                         android:layout_height="150dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/locationanalytics"/>
                 </LinearLayout>
 
@@ -72,7 +74,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:weightSum="1"
                     android:id="@+id/layout_orenAna">
@@ -80,7 +82,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyview_orentation"
                         android:layout_width="0dp"
-                        android:layout_height="150dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.5"
                         android:visibility="visible">
 
@@ -88,7 +90,7 @@
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_weight="0.5"
-                        android:layout_height="wrap_content"
+                        android:layout_height="150dp"
                         android:src="@drawable/orientationimage"/>
                 </LinearLayout>
 
@@ -105,8 +107,8 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyview_phoneanalytics"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.4"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
                     android:visibility="visible">
 
                 </android.support.v7.widget.RecyclerView>
