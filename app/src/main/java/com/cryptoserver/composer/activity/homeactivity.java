@@ -80,6 +80,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
+            /*graphicalfragment frag=new graphicalfragment();
+            replaceFragment(frag, false, true);*/
             fragmentvideolist frag=new fragmentvideolist();
             replaceFragment(frag, false, true);
         }

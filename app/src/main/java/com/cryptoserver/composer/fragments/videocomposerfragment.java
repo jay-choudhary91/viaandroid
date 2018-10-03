@@ -33,6 +33,7 @@ import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -52,6 +53,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -306,6 +308,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     RecyclerView recyview_metrices;
     ImageView handleimageview,righthandle;
     LinearLayout linearLayout;
+    FrameLayout fragment_graphic_container;
     boolean isflashon = false,inPreview = true;
 
     TextView txtSlot1;
@@ -336,7 +339,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     videoframeadapter mmetricesadapter,mhashesadapter;
 
     databasemanager mdbhelper;
-    private boolean isdraweropen=false;
+    private boolean isdraweropen=false,isgraphicalshown=false;
     private Handler myHandler;
     private Runnable myRunnable;
     private int lastmetricescount=0;
@@ -373,7 +376,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_hashes = (TextView) rootview.findViewById(R.id.txt_hashes);
             scrollview_metrices = (ScrollView) rootview.findViewById(R.id.scrollview_metrices);
             scrollview_hashes = (ScrollView) rootview.findViewById(R.id.scrollview_hashes);
-          //  simpleSlidingDrawer = (SlidingDrawer) rootview.findViewById(R.id.simpleSlidingDrawer);
+            fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_container);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
             righthandle=rootview.findViewById(R.id.righthandle);
@@ -489,6 +492,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             recyview_metrices.setVisibility(View.INVISIBLE);
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
+            fragment_graphic_container.setVisibility(View.INVISIBLE);
 
             {
 
@@ -1195,6 +1199,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 recyview_hashes.setVisibility(View.VISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
+                fragment_graphic_container.setVisibility(View.INVISIBLE);
 
                 txt_metrics.setVisibility(View.INVISIBLE);
                 txt_hashes.setVisibility(View.INVISIBLE);
@@ -1205,6 +1210,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             case R.id.txt_slot2:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
+                fragment_graphic_container.setVisibility(View.INVISIBLE);
 
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
@@ -1216,6 +1222,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
 
             case R.id.txt_slot3:
+                fragment_graphic_container.setVisibility(View.VISIBLE);
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
@@ -1223,6 +1230,23 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+
+                if(! isgraphicalshown)
+                {
+                    isgraphicalshown=true;
+                    try {
+                        graphicalfragment fragment  = new graphicalfragment();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.add(R.id.fragment_graphic_container,fragment);
+                        transaction.commit();
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+
+
                 break;
         }
     }
