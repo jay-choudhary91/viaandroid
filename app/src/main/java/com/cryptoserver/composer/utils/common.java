@@ -1365,4 +1365,26 @@ public class common {
         return builder.toString();
     }
 
+    public static float getamplitudevalue(double amp){
+
+        if(amp >= 45){
+            return 0.0f;
+        }else if (amp >= 40 && amp < 45){
+            return 0.1f;
+        }else if (amp >= 30 && amp < 40){
+            return 0.2f;
+        }else if (amp >=25 && amp < 30){
+            return 0.3f;
+        }else if (amp >= 15 && amp < 25){
+            return 0.5f;
+        }else if (amp >= 10 && amp < 15){
+            return 0.7f;
+        }else if (amp >= 5 && amp < 10){
+            return 0.8f;
+        }else if (amp >= 0 && amp < 5){
+            return 1.0f;
+        }
+        return 0.0f;
+    }
+
 }

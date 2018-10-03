@@ -25,8 +25,10 @@ import android.widget.ScrollView;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.graphicaldataadapter;
+import com.cryptoserver.composer.utils.WaveFromView;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.noise;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -73,6 +75,12 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     Location CurrentLocationChange = null;
     LatLng lastlocationchange = null;
 
+    WaveFromView myvisualizerview;
+
+    private Handler waveHandler;
+    private Runnable waveRunnable;
+    noise mNoise;
+
     RelativeLayout relativeLayout;
 
     @Override
@@ -88,9 +96,12 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_locationanalytics=rootview.findViewById(R.id.recyview_location_analytics);
             recyview_orientation=rootview.findViewById(R.id.recyview_orentation);
             recyview_phoneanalytics=rootview.findViewById(R.id.recyview_phoneanalytics);
+            myvisualizerview = (WaveFromView)rootview.findViewById(R.id.myvisualizerview);
 
 
             player = new MediaPlayer();
+
+            start();
 
             //initAudio();
             layout_locationanalytics=rootview.findViewById(R.id.layout_locationAna);
@@ -122,6 +133,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         }
         return rootview;
     }
+
+
 
     @Override
     public int getlayoutid() {
@@ -242,5 +255,181 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     }
 
+    public void getaudiowave() {
+        waveHandler=new Handler();
+        waveRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                    try {
+                        double amp = mNoise.getAmplitude();
+                        amp = Math.abs(amp);
+                        //text_sound.setText("" +(float) amp);
+
+                        float ampvalue = common.getamplitudevalue((double)amp);
+
+                        Log.e("amplitude value =", "" + ampvalue);
+                        myvisualizerview.updateAmplitude( ampvalue, true);
+                        //myvisualizerview.updateAmplitude(1f , true);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                waveHandler.postDelayed(this, 800);
+            }
+        };
+        waveHandler.post(waveRunnable);
+    }
+
+    private void start() {
+
+        //Log.i("noise", "==== start ===");
+
+        try {
+
+            if(mNoise != null)
+                mNoise.stop();
+
+            mNoise = new noise();
+
+            if(mNoise != null)
+            {
+                if(mNoise != null)
+                    mNoise.start();
+            }
+
+            try {
+                if(mNoise != null)
+                {
+
+                    getaudiowave();
+
+                    // AudioManager audioManager = (AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE);
+                    // getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
+                    /*Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            double amp = mNoise.getAmplitude();
+                            Log.e("amplitude value =", ""+ amp);
+
+                            myvisualizerview.updateAmplitude((float) amp,true);
+
+                        }
+                    },50);*/
+
+                   /* Thread thread = new Thread(){
+                        public void run(){
+
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            //Do something after 100ms
+
+                            try {
+                                if(mNoise != null)
+                                {
+
+                                    //Log.i("noise", "runnable mPollTask");
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+                    };
+                    thread.start();*/
+
+
+                    // double amp = mNoise.getAmplitudeVoice();
+
+
+
+
+                   /* visualizer = new Visualizer(0);
+                    visualizer.setEnabled(false);
+
+
+                    visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]);
+                    //visualizer.setCaptureSize(2);
+                    // Pass through Visualizer data to VisualizerView
+
+                    Visualizer.OnDataCaptureListener captureListener = new Visualizer.OnDataCaptureListener() {
+
+                        @Override
+                        public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+
+                           Log.e("Raw daouble array = ", Arrays.toString(bytes));
+
+
+                        }
+
+                        @Override
+                        public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+                           // updateVisualizerFFT(bytes);
+                        }
+                    };
+                    visualizer.setDataCaptureListener(captureListener, Visualizer.getMaxCaptureRate() / 2, true, true);*/
+                    // Enabled Visualizer and disable when we're done with the stream
+                    //visualizer.setEnabled(true);
+
+                   /* visualizer = new Visualizer(0);
+                    visualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+                    //visualizer.setCaptureSize(66);
+                    visualizer.setDataCaptureListener(
+                            new Visualizer.OnDataCaptureListener() {
+                                public void onWaveFormDataCapture(Visualizer visualizer,
+                                                                  byte[] bytes, int samplingRate) {
+
+                                        myvisualizerview.updateVisualizer(bytes);
+
+                                }
+
+                                public void onFftDataCapture(Visualizer visualizer,
+                                                             byte[] bytes, int samplingRate) {
+                                }
+                            }, Visualizer.getMaxCaptureRate() / 2, true, false);*/
+
+
+
+                    // double amp = mNoise.getAmplitude();
+                    //Log.i("noise", "runnable mPollTask");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //visualizer.setEnabled(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void stop() {
+        Log.e("noise", "==== Stop noise Monitoring===");
+        try {
+            if(mNoise != null)
+            {
+                mNoise.stop();
+                myvisualizerview.updateAmplitude((float) 0,false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(waveHandler != null && waveRunnable != null)
+            waveHandler.removeCallbacks(waveRunnable);
+
+        stop();
+    }
 }
 
