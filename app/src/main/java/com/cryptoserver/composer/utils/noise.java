@@ -68,6 +68,19 @@ public class noise extends Activity {
 
     }
 
+    public int getAmplitudevoice() {
+        if (mRecorder != null){
+
+            int amplitude = mRecorder.getMaxAmplitude();
+            Log.e("Max Amplitude = ", "" + amplitude);
+
+           // return 20 * Math.log10(amplitude / 32767.0);
+            return amplitude;
+        } else
+            return 0;
+
+    }
+
     public double getAmplitudeEMA() {
         double amp = getAmplitude();
         mEMA = EMA_FILTER * amp + (1.0 - EMA_FILTER) * mEMA;

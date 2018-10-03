@@ -127,17 +127,18 @@
                     style="@style/txt_drawer_graphical_title"
                     android:text="@string/soundinformation" />
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/transparent">
+
+                <com.cryptoserver.composer.utils.VisualizerView
+                    android:id="@+id/myvisualizerview"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:background="@color/progress_color">
+                    android:layout_height="match_parent" />
 
-                    <com.cryptoserver.composer.utils.WaveFromView
-                        android:id="@+id/myvisualizerview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </LinearLayout>
+            </LinearLayout>
 
             </LinearLayout>
 

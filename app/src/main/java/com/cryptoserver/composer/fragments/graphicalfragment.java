@@ -29,6 +29,7 @@ import android.widget.ScrollView;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.graphicaldataadapter;
+import com.cryptoserver.composer.utils.VisualizerView;
 import com.cryptoserver.composer.utils.WaveFromView;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -96,7 +97,9 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     Location CurrentLocationChange = null;
     LatLng lastlocationchange = null;
 
-    WaveFromView myvisualizerview;
+    //WaveFromView myvisualizerview;
+
+    VisualizerView myvisualizerview;
 
     private Handler waveHandler;
     private Runnable waveRunnable;
@@ -115,7 +118,9 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_locationanalytics=rootview.findViewById(R.id.recyview_location_analytics);
             recyview_orientation=rootview.findViewById(R.id.recyview_orentation);
             recyview_phoneanalytics=rootview.findViewById(R.id.recyview_phoneanalytics);
-            myvisualizerview = (WaveFromView)rootview.findViewById(R.id.myvisualizerview);
+            myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
+
+
             player = new MediaPlayer();
             player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -300,20 +305,15 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             public void run() {
 
                     try {
-                        double amp = mNoise.getAmplitude();
-                        amp = Math.abs(amp);
-                        //text_sound.setText("" +(float) amp);
-
-                        float ampvalue = common.getamplitudevalue((double)amp);
-
-                        Log.e("amplitude value =", "" + ampvalue);
-                        myvisualizerview.updateAmplitude( ampvalue, true);
+                        int x = mNoise.getAmplitudevoice();
+                        myvisualizerview.addAmplitude(x); // update the VisualizeView
+                        myvisualizerview.invalidate();
                         //myvisualizerview.updateAmplitude(1f , true);
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                waveHandler.postDelayed(this, 800);
+                waveHandler.postDelayed(this, 40);
             }
         };
         waveHandler.post(waveRunnable);
@@ -337,6 +337,9 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             try {
                 if(mNoise != null)
                     getaudiowave();
+
+
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -353,7 +356,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             if(mNoise != null)
             {
                 mNoise.stop();
-                myvisualizerview.updateAmplitude((float) 0,false);
+                //myvisualizerview.updateAmplitude((float) 0,false);
             }
         } catch (Exception e) {
             e.printStackTrace();
