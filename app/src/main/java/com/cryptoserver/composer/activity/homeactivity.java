@@ -80,8 +80,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
-            fragmentvideolist frag=new fragmentvideolist();
-            replaceFragment(frag, false, true);
+
+           graphicalfragment graphicalfragment = new graphicalfragment();
+           replaceFragment(graphicalfragment, false, true);
+
+            /*fragmentvideolist frag=new fragmentvideolist();
+            replaceFragment(frag, false, true);*/
         }
 
         imgaddicon.setOnClickListener(this);

@@ -108,10 +108,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:background="@color/progress_color">
+                android:background="@color/transparent">
 
-                <com.cryptoserver.composer.utils.WaveFromView
+                <com.cryptoserver.composer.utils.VisualizerView
                     android:id="@+id/myvisualizerview"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
