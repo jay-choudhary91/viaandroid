@@ -157,6 +157,14 @@
 
                 </ScrollView>
 
+                <FrameLayout
+                    android:id="@+id/fragment_graphic_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                </FrameLayout>
+
 
             </RelativeLayout>
 
