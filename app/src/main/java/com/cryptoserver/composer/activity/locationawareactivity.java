@@ -1795,9 +1795,8 @@ public abstract class locationawareactivity extends baseactivity implements
                             doubleTotalDistance=doubleTotalDistance+meter;
                             double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
                             double speed=meter/timeDifferance;
-                            metricItemArraylist.get(i).setMetricTrackValue("" +new DecimalFormat("##.##").format(speed));
-                            Log.e("meter",meter+".........time........"+timeDifferance+".........." +new DecimalFormat("##.##").format(speed));
-                            Log.e("speed",""+speed);
+                            DecimalFormat dec = new DecimalFormat("0.00");
+                            metricItemArraylist.get(i).setMetricTrackValue("" +dec.format(speed));
                         }
                     }
 
