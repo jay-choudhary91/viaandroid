@@ -2,10 +2,15 @@ package com.cryptoserver.composer.fragments;
 
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -23,7 +28,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -39,6 +47,7 @@ import com.cryptoserver.composer.utils.WaveFromView;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.noise;
+import com.cryptoserver.composer.utils.xdata;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
@@ -73,7 +82,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class graphicalfragment extends basefragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
-        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraChangeListener, OnChartValueSelectedListener, OnChartGestureListener {
+        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraChangeListener, OnChartValueSelectedListener, OnChartGestureListener,SensorEventListener {
 
 
     public graphicalfragment() {
@@ -90,6 +99,10 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     @BindView(R.id.linechart)
     LineChart mChart;
     View rootview;
+    private float currentDegree = 0f;
+
+    // device sensor manager
+    private SensorManager mSensorManager;
 
     //graphical
     RecyclerView recyview_locationanalytics;
@@ -103,6 +116,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     GridLayoutManager mlocationALayoutmanager;
     RecyclerView.LayoutManager mphoneALayoutmanager;
     RecyclerView.LayoutManager encryptionmanager;
+    ImageView img_compass;
     //google map
     GoogleMap mGoogleMap;
     Location currentLocation = null;
@@ -136,6 +150,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
             layout_locationanalytics=rootview.findViewById(R.id.layout_locationAna);
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
+            img_compass = (ImageView) rootview.findViewById(R.id.img_compass);
 
             recyview_locationanalytics.setNestedScrollingEnabled(false);
             recyview_orientation.setNestedScrollingEnabled(false);
@@ -150,6 +165,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             encryptionmanager=new LinearLayoutManager(getActivity());
             mphoneALayoutmanager=new GridLayoutManager(getActivity(),3);
             recyview_phoneanalytics.setLayoutManager(mphoneALayoutmanager);
+            mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
 
             mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
             mlocationALayoutmanager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -652,5 +668,55 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     public void onChartTranslate(MotionEvent me, float dX, float dY) {
 
     }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        int degree = Math.round(event.values[0]);
+        RotateAnimation ra = new RotateAnimation(
+                currentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+
+       /* for (int i=0;i<locationanalyticslist.size();i++){
+            if (locationanalyticslist.get(i).getGraphicalkeyname().equalsIgnoreCase("heading")) {
+              //  locationanalyticslist.get(i).setGraphicalvalue("" + degree);
+            }
+            graphicallocationadapter.notifyDataSetChanged();
+        }*/
+
+        // set the animation after the end of the reservation status
+        ra.setFillAfter(true);
+
+        // Start the animation
+        img_compass.startAnimation(ra);
+        currentDegree = -degree;
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // for the system's orientation sensor registered listeners
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // to stop the listener and save battery
+        mSensorManager.unregisterListener(this);
+    }
+
 }
 
