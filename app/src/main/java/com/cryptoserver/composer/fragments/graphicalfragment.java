@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.encryptiondataadapter;
 import com.cryptoserver.composer.adapter.graphicaldataadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
@@ -80,6 +82,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
+    @BindView(R.id.recyview_encryption)
+    RecyclerView recyview_encryption;
     MediaPlayer player;
     @BindView(R.id.scrollview_graphical)
     ScrollView scrollview_graphical;
@@ -91,11 +95,14 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     RecyclerView recyview_locationanalytics;
     RecyclerView recyview_orientation;
     RecyclerView recyview_phoneanalytics;
+
     graphicaldataadapter graphicallocationadapter,graphicalphoneadapter,graphicalorientationadapter;
+    encryptiondataadapter encryptionadapter;
     LinearLayout layout_locationanalytics,layout_orientation;
     RecyclerView.LayoutManager morientationLayoutmanager;
     GridLayoutManager mlocationALayoutmanager;
     RecyclerView.LayoutManager mphoneALayoutmanager;
+    RecyclerView.LayoutManager encryptionmanager;
     //google map
     GoogleMap mGoogleMap;
     Location currentLocation = null;
@@ -104,6 +111,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     private ArrayList<graphicalmodel> locationanalyticslist = new ArrayList<>();
     private ArrayList<graphicalmodel> phoneanalyticslist = new ArrayList<>();
     private ArrayList<graphicalmodel> orientationlist = new ArrayList<>();
+    private ArrayList<graphicalmodel> frameslist = new ArrayList<>();
     //WaveFromView myvisualizerview;
 
     VisualizerView myvisualizerview;
@@ -125,20 +133,23 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_locationanalytics=rootview.findViewById(R.id.recyview_location_analytics);
             recyview_orientation=rootview.findViewById(R.id.recyview_orentation);
             recyview_phoneanalytics=rootview.findViewById(R.id.recyview_phoneanalytics);
-            recyview_locationanalytics.setNestedScrollingEnabled(false);
-            recyview_orientation.setNestedScrollingEnabled(false);
-            recyview_phoneanalytics.setNestedScrollingEnabled(false);
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
             layout_locationanalytics=rootview.findViewById(R.id.layout_locationAna);
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
 
+            recyview_locationanalytics.setNestedScrollingEnabled(false);
+            recyview_orientation.setNestedScrollingEnabled(false);
+            recyview_phoneanalytics.setNestedScrollingEnabled(false);
+            recyview_encryption.setNestedScrollingEnabled(false);
+
+            encryptionadapter=new encryptiondataadapter(frameslist,getActivity());
             graphicallocationadapter=new graphicaldataadapter(locationanalyticslist,getActivity());
             graphicalphoneadapter=new graphicaldataadapter(phoneanalyticslist,getActivity());
             graphicalorientationadapter=new graphicaldataadapter(orientationlist,getActivity());
 
+            encryptionmanager=new LinearLayoutManager(getActivity());
             mphoneALayoutmanager=new GridLayoutManager(getActivity(),3);
             recyview_phoneanalytics.setLayoutManager(mphoneALayoutmanager);
-
 
             mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
             mlocationALayoutmanager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -163,10 +174,12 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_locationanalytics.setLayoutManager(mlocationALayoutmanager);
             morientationLayoutmanager=new GridLayoutManager(getActivity(),1);
             recyview_orientation.setLayoutManager(morientationLayoutmanager);
+            recyview_encryption.setLayoutManager(encryptionmanager);
 
             recyview_orientation.setAdapter(graphicalorientationadapter);
             recyview_locationanalytics.setAdapter(graphicallocationadapter);
             recyview_phoneanalytics.setAdapter(graphicalphoneadapter);
+            recyview_encryption.setAdapter(encryptionadapter);
 
             Thread thread=new Thread(new Runnable() {
                 @Override
@@ -198,12 +211,10 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     public void loadarraydata()
     {
-
         /*if(gethelper().getrecordingrunning())
         {
 
         }*/
-
         Thread thread=new Thread(new Runnable() {
             @Override
             public void run() {
@@ -330,8 +341,21 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     }
 
-    public void locationupdate(Location location) {
+    public void locationupdate(Location location,String currenthashvalue) {
         super.oncurrentlocationchanged(location);
+
+        try {
+            if(gethelper().getrecordingrunning())
+            {
+                frameslist.clear();
+                frameslist.add(new graphicalmodel("",currenthashvalue));
+                encryptionadapter.notifyDataSetChanged();
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         if (location == null) {
             return;
         }

@@ -324,7 +324,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
     int Seconds, Minutes, MilliSeconds ;
-    String keytype =config.prefs_md5;
+    String keytype =config.prefs_md5,currenthashvalue="";
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
     long currentframenumber =0;
@@ -1248,7 +1248,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void oncurrentlocationchanged(Location location) {
         super.oncurrentlocationchanged(location);
         if(fragmentgraphic != null)
-            fragmentgraphic.locationupdate(location);
+            fragmentgraphic.locationupdate(location,currenthashvalue);
     }
 
     public void startstopvideo()
@@ -1634,6 +1634,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(array == null || array.length == 0)
                     return;
                 String keyvalue= getkeyvalue(array);
+                currenthashvalue=keyvalue;
                 apicurrentduration++;
 
                 ArrayList<metricmodel> mlist= gethelper().getmetricarraylist();

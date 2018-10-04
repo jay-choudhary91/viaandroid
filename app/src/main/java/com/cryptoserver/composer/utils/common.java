@@ -1214,7 +1214,7 @@ public class common {
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.compass)) {
                 locationanalytics.add(new graphicalmodel(config.Orientation, metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")) {
-                locationanalytics.add(new graphicalmodel("", metricItemArraylist.get(i).getMetricTrackValue()));
+                locationanalytics.add(new graphicalmodel("", xdata.getinstance().getSetting("address")));
             }
         }
 

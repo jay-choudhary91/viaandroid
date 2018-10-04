@@ -23,4 +23,8 @@ public class googleutils {
         xdata.getinstance().saveSetting("heading", ""+ location.getBearing());
 
     }
+    public static void saveuseraddress(String address) {
+        xdata.getinstance().saveSetting("address", "" + address);
+
+    }
 }

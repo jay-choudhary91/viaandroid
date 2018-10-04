@@ -1832,6 +1832,7 @@ public abstract class locationawareactivity extends baseactivity implements
                             strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
                         }
                         currentaddress = strReturnedAddress.toString();
+                        googleutils.saveuseraddress(currentaddress);
                         Log.e("Myaddress", strReturnedAddress.toString());
                     } else {
                         Log.e("My address", "No Address returned!");
