@@ -172,16 +172,19 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 @Override
                 public int getSpanSize(int position) {
                     // 5 is the sum of items in one repeated section
-                    switch (position % 5) {
+                 //   Log.e("Position ",""+position % 5);
+                    switch (position % 7) {
                         // first 3 items span 2 columns each
                         case 0:
                         case 1:
                         case 2:
                         case 3:
+                        case 4:
+                        case 5:
                             // case 4:
                             return 1;
                         // next 2 items span 1 columns each
-                        case 4:
+                        case 6:
                             return 2;
                     }
                     throw new IllegalStateException("internal error");

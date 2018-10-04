@@ -580,9 +580,9 @@ public abstract class locationawareactivity extends baseactivity implements
         metricItemArraylist.add(new metricmodel("country","",true));
         metricItemArraylist.add(new metricmodel("connectionspeed","",true));
         metricItemArraylist.add(new metricmodel("gpsaccuracy","",true));
-        metricItemArraylist.add(new metricmodel("address","",true));
         metricItemArraylist.add(new metricmodel("speed","",true));
         metricItemArraylist.add(new metricmodel("heading","",true));
+        metricItemArraylist.add(new metricmodel("address","",true));
 
        // getmetricarraylist();
         startmetrices();
