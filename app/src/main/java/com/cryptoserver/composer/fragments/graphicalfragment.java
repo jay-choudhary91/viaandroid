@@ -29,6 +29,7 @@ import android.widget.ScrollView;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.graphicaldataadapter;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.utils.VisualizerView;
 import com.cryptoserver.composer.utils.WaveFromView;
 import com.cryptoserver.composer.utils.common;
@@ -118,20 +119,40 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_locationanalytics=rootview.findViewById(R.id.recyview_location_analytics);
             recyview_orientation=rootview.findViewById(R.id.recyview_orentation);
             recyview_phoneanalytics=rootview.findViewById(R.id.recyview_phoneanalytics);
-
             recyview_locationanalytics.setNestedScrollingEnabled(false);
             recyview_orientation.setNestedScrollingEnabled(false);
             recyview_phoneanalytics.setNestedScrollingEnabled(false);
-
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
-
-            player = new MediaPlayer();
-            start();
-
             layout_locationanalytics=rootview.findViewById(R.id.layout_locationAna);
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
 
-            if(gethelper().getmetricarraylist().size() > 0)
+            Thread thread=new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if(gethelper().getmetricarraylist().size() > 0)
+                                    loadarraydata();
+
+                                loadMap();
+                                player = new MediaPlayer();
+                                start();
+                                setchartdata();
+
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            });
+            thread.start();
+
+
+            /*if(gethelper().getmetricarraylist().size() > 0)
             {
                 loadarraydata();
             }
@@ -143,10 +164,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                         loadarraydata();
                     }
                 },5000);
-            }
-
-            setchartdata();
-            loadMap();
+            }*/
         }
         return rootview;
     }
