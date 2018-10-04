@@ -43,6 +43,7 @@ public class graphicaldataadapter extends RecyclerView.Adapter<graphicaldataadap
         final graphicalmodel graphicalmodeldata = graphicaldataArrayList.get(position);
         holder.tv_graphicaltitle.setText(graphicalmodeldata.getGraphicalkeyname());
         holder.tv_graphicalvalue.setText(graphicalmodeldata.getGraphicalvalue());
+        //Log.e("Values ",graphicalmodeldata.getGraphicalvalue());
 
         if(graphicalmodeldata.getGraphicalvalue().trim().isEmpty() || graphicalmodeldata.getGraphicalvalue().equalsIgnoreCase("null"))
             holder.tv_graphicalvalue.setText("N/A");

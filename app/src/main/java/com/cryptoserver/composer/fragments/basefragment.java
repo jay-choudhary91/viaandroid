@@ -251,6 +251,8 @@ public abstract class basefragment extends Fragment {
         public void getairplanemodeon();
 
         public ArrayList<metricmodel> getmetricarraylist();
+        public void setrecordingrunning(boolean toggle);
+        public boolean getrecordingrunning();
 
         public void xapi_send(Context mContext, String Action, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_send(Context mContext, String Action, HashMap<String, String> mPairList, apiresponselistener mListener);

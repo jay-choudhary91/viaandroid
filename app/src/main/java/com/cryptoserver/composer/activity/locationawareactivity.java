@@ -118,7 +118,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
     private IntentFilter intentFilter;
     private BroadcastReceiver mBroadcast;
-    String CALL_STATUS="",CALL_DURATION="",CALL_REMOTE_NUMBER="",CALL_START_TIME="";
+    String CALL_STATUS="",CALL_DURATION="",CALL_REMOTE_NUMBER="",CALL_START_TIME="",currentaddress="";
     MyPhoneStateListener mPhoneStatelistener;
     int mSignalStrength = 0,dbtoxapiupdatecounter=0;
 
@@ -130,6 +130,7 @@ public abstract class locationawareactivity extends baseactivity implements
     private Location oldlocation;
     private Handler myHandler;
     private Runnable myRunnable;
+    public boolean isrecording=false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +170,16 @@ public abstract class locationawareactivity extends baseactivity implements
                 ActivityCompat.requestPermissions(locationawareactivity.this, array, request_permissions);
             }
         }
+    }
+
+    @Override
+    public void setrecordingrunning(boolean toggle) {
+        isrecording=toggle;
+    }
+
+    @Override
+    public boolean getrecordingrunning() {
+        return isrecording;
     }
 
     @Override
@@ -346,7 +357,7 @@ public abstract class locationawareactivity extends baseactivity implements
             if (getcurrentfragment() != null) {
                 getcurrentfragment().oncurrentlocationchanged(location);
                 updatelocationsparams(location);
-                getCompleteAddressString(location);
+                fetchcompleteaddress(location);
             }
             //stopLocationUpdates();
         }
@@ -592,9 +603,13 @@ public abstract class locationawareactivity extends baseactivity implements
 
                         if(getcurrentfragment() instanceof videocomposerfragment)
                         {
-                            boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
+                            isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
                             if(isrecording)
                                 return;
+                        }
+                        else
+                        {
+                            isrecording=false;
                         }
                         for(int i=0;i<metricItemArraylist.size();i++)
                         {
@@ -1743,6 +1758,9 @@ public abstract class locationawareactivity extends baseactivity implements
             if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
                 metricItemArraylist.get(i).setMetricTrackValue("" +location.getAccuracy());
             }
+            if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
+                metricItemArraylist.get(i).setMetricTrackValue("" +currentaddress);
+            }
         }
 
         if(! xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty())
@@ -1773,34 +1791,33 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
     //get complete address
-    private String getCompleteAddressString(Location location) {
-        String strAdd = "";
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            if (addresses != null) {
-                Address returnedAddress = addresses.get(0);
-                StringBuilder strReturnedAddress = new StringBuilder("");
+    private void fetchcompleteaddress(final Location location) {
+        Thread thread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String strAdd = "";
+                Geocoder geocoder = new Geocoder(locationawareactivity.this, Locale.getDefault());
+                try {
+                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    if (addresses != null) {
+                        Address returnedAddress = addresses.get(0);
+                        StringBuilder strReturnedAddress = new StringBuilder("");
 
-                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
-                }
-                strAdd = strReturnedAddress.toString();
-                for(int i= 0;i<metricItemArraylist.size();i++){
-                    if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
-                        metricItemArraylist.get(i).setMetricTrackValue(strAdd);
+                        for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
+                            strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                        }
+                        currentaddress = strReturnedAddress.toString();
+                        Log.e("Myaddress", strReturnedAddress.toString());
+                    } else {
+                        Log.e("My address", "No Address returned!");
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.w("Myaddress", "Canont get Address!");
                 }
-
-                Log.e("Myaddress", strReturnedAddress.toString());
-            } else {
-                Log.e("My address", "No Address returned!");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.w("Myaddress", "Canont get Address!");
-        }
-        return strAdd;
+        });
+        thread.start();
     }
 
 }

@@ -1174,8 +1174,7 @@ public class common {
         return true;
     }
 
-    public static ArrayList<graphicalmodel> locationAnalyticsdata(ArrayList<metricmodel> metricItemArraylist) {
-        ArrayList<graphicalmodel> locationanalytics = new ArrayList<>();
+    public static ArrayList<graphicalmodel> locationAnalyticsdata(ArrayList<metricmodel> metricItemArraylist,ArrayList<graphicalmodel> locationanalytics) {
         Log.e("commonmetriclist", "" + metricItemArraylist.size());
 
         for (int i = 0; i < metricItemArraylist.size(); i++) {
@@ -1217,9 +1216,7 @@ public class common {
         return locationanalytics;
     }
 
-    public static ArrayList<graphicalmodel> phoneAnalytics(ArrayList<metricmodel> metricItemArraylist) {
-
-        ArrayList<graphicalmodel> phoneanalytics = new ArrayList<>();
+    public static ArrayList<graphicalmodel> phoneAnalytics(ArrayList<metricmodel> metricItemArraylist,ArrayList<graphicalmodel> phoneanalytics) {
 
         for (int i = 0; i < metricItemArraylist.size(); i++) {
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("model")) {
@@ -1267,9 +1264,7 @@ public class common {
         return phoneanalytics;
     }
 
-    public static ArrayList<graphicalmodel> orientationarraylist(ArrayList<metricmodel> metricItemArraylist) {
-
-        ArrayList<graphicalmodel> orientationarraylist = new ArrayList<>();
+    public static ArrayList<graphicalmodel> orientationarraylist(ArrayList<metricmodel> metricItemArraylist,ArrayList<graphicalmodel> orientationarraylist) {
 
         for (int i = 0; i < metricItemArraylist.size(); i++) {
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)) {

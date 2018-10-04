@@ -66,7 +66,7 @@ public class VisualizerView  extends View {
         for (float power : amplitudes) {
             float scaledHeight = power / LINE_SCALE; // scale the power
 
-            Log.e("wave scale",""+scaledHeight);
+          //  Log.e("wave scale",""+scaledHeight);
             curX += LINE_WIDTH; // increase X by LINE_WIDTH
 
             // draw a line representing this item in the amplitudes ArrayList

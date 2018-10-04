@@ -30,6 +30,8 @@ import android.widget.ScrollView;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.graphicaldataadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.models.graphicalmodel;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.utils.VisualizerView;
 import com.cryptoserver.composer.utils.WaveFromView;
 import com.cryptoserver.composer.utils.common;
@@ -91,13 +93,17 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     RecyclerView recyview_phoneanalytics;
     graphicaldataadapter graphicallocationadapter,graphicalphoneadapter,graphicalorientationadapter;
     LinearLayout layout_locationanalytics,layout_orientation;
-
+    RecyclerView.LayoutManager morientationLayoutmanager;
+    GridLayoutManager mlocationALayoutmanager;
+    RecyclerView.LayoutManager mphoneALayoutmanager;
     //google map
     GoogleMap mGoogleMap;
     Location currentLocation = null;
     Location CurrentLocationChange = null;
     LatLng lastlocationchange = null;
-
+    private ArrayList<graphicalmodel> locationanalyticslist = new ArrayList<>();
+    private ArrayList<graphicalmodel> phoneanalyticslist = new ArrayList<>();
+    private ArrayList<graphicalmodel> orientationlist = new ArrayList<>();
     //WaveFromView myvisualizerview;
 
     VisualizerView myvisualizerview;
@@ -126,6 +132,42 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             layout_locationanalytics=rootview.findViewById(R.id.layout_locationAna);
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
 
+            graphicallocationadapter=new graphicaldataadapter(locationanalyticslist,getActivity());
+            graphicalphoneadapter=new graphicaldataadapter(phoneanalyticslist,getActivity());
+            graphicalorientationadapter=new graphicaldataadapter(orientationlist,getActivity());
+
+            mphoneALayoutmanager=new GridLayoutManager(getActivity(),3);
+            recyview_phoneanalytics.setLayoutManager(mphoneALayoutmanager);
+
+
+            mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
+            mlocationALayoutmanager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    // 5 is the sum of items in one repeated section
+                    switch (position % 5) {
+                        // first 3 items span 2 columns each
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            // case 4:
+                            return 1;
+                        // next 2 items span 1 columns each
+                        case 4:
+                            return 2;
+                    }
+                    throw new IllegalStateException("internal error");
+                }
+            });
+            recyview_locationanalytics.setLayoutManager(mlocationALayoutmanager);
+            morientationLayoutmanager=new GridLayoutManager(getActivity(),1);
+            recyview_orientation.setLayoutManager(morientationLayoutmanager);
+
+            recyview_orientation.setAdapter(graphicalorientationadapter);
+            recyview_locationanalytics.setAdapter(graphicallocationadapter);
+            recyview_phoneanalytics.setAdapter(graphicalphoneadapter);
+
             Thread thread=new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -150,64 +192,40 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 }
             });
             thread.start();
-
-
-            /*if(gethelper().getmetricarraylist().size() > 0)
-            {
-                loadarraydata();
-            }
-            else
-            {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadarraydata();
-                    }
-                },5000);
-            }*/
         }
         return rootview;
     }
 
     public void loadarraydata()
     {
-        graphicallocationadapter=new graphicaldataadapter(common.locationAnalyticsdata(gethelper().getmetricarraylist()),getActivity());
-        graphicalphoneadapter=new graphicaldataadapter(common.phoneAnalytics(gethelper().getmetricarraylist()),getActivity());
-        graphicalorientationadapter=new graphicaldataadapter(common.orientationarraylist(gethelper().getmetricarraylist()),getActivity());
 
-        RecyclerView.LayoutManager mphoneALayoutmanager=new GridLayoutManager(getActivity(),3);
-        recyview_phoneanalytics.setLayoutManager(mphoneALayoutmanager);
-        recyview_phoneanalytics.setAdapter(graphicalphoneadapter);
+        if(gethelper().getrecordingrunning())
+        {
+            Thread thread=new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-        GridLayoutManager mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
-        mlocationALayoutmanager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                // 5 is the sum of items in one repeated section
-                switch (position % 5) {
-                    // first 3 items span 2 columns each
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        return 1;
-                    // next 2 items span 1 columns each
-                    case 4:
-                        return 2;
+                    locationanalyticslist.clear();
+                    phoneanalyticslist.clear();
+                    orientationlist.clear();
+
+                    common.locationAnalyticsdata(gethelper().getmetricarraylist(),locationanalyticslist);
+                    common.phoneAnalytics(gethelper().getmetricarraylist(),phoneanalyticslist);
+                    common.orientationarraylist(gethelper().getmetricarraylist(),orientationlist);
+
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            graphicalorientationadapter.notifyDataSetChanged();
+                            graphicallocationadapter.notifyDataSetChanged();
+                            graphicalphoneadapter.notifyDataSetChanged();
+                        }
+                    });
                 }
-                throw new IllegalStateException("internal error");
-            }
-        });
-        recyview_locationanalytics.setLayoutManager(mlocationALayoutmanager);
-        recyview_locationanalytics.setAdapter(graphicallocationadapter);
-
-
-        RecyclerView.LayoutManager morientationLayoutmanager=new GridLayoutManager(getActivity(),1);
-        recyview_orientation.setLayoutManager(morientationLayoutmanager);
-        recyview_orientation.setAdapter(graphicalorientationadapter);
+            });
+            thread.start();
+        }
     }
-
-
 
     @Override
     public int getlayoutid() {
@@ -334,6 +352,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             public void run() {
 
                     try {
+                        loadarraydata();
                         int x = mNoise.getAmplitudevoice();
                         myvisualizerview.addAmplitude(x); // update the VisualizeView
                         myvisualizerview.invalidate();
@@ -342,7 +361,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                waveHandler.postDelayed(this, 40);
+                waveHandler.postDelayed(this, 3000);
             }
         };
         waveHandler.post(waveRunnable);

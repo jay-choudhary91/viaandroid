@@ -60,7 +60,7 @@ public class noise extends Activity {
         if (mRecorder != null){
 
             double amplitude = mRecorder.getMaxAmplitude();
-            Log.e("Max Amplitude = ", "" + amplitude);
+          //  Log.e("Max Amplitude = ", "" + amplitude);
 
             return 20 * Math.log10(amplitude / 32767.0);
         } else
@@ -72,7 +72,7 @@ public class noise extends Activity {
         if (mRecorder != null){
 
             int amplitude = mRecorder.getMaxAmplitude();
-            Log.e("Max Amplitude = ", "" + amplitude);
+          //  Log.e("Max Amplitude = ", "" + amplitude);
 
            // return 20 * Math.log10(amplitude / 32767.0);
             return amplitude;
