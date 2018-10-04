@@ -182,7 +182,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                                 player = new MediaPlayer();
                                 start();
                                 setchartdata();
-
+                             //   loadarraydata();
                             }catch (Exception e)
                             {
                                 e.printStackTrace();
@@ -199,32 +199,36 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     public void loadarraydata()
     {
 
-        if(gethelper().getrecordingrunning())
+        /*if(gethelper().getrecordingrunning())
         {
-            Thread thread=new Thread(new Runnable() {
-                @Override
-                public void run() {
 
-                    locationanalyticslist.clear();
-                    phoneanalyticslist.clear();
-                    orientationlist.clear();
+        }*/
 
-                    common.locationAnalyticsdata(gethelper().getmetricarraylist(),locationanalyticslist);
-                    common.phoneAnalytics(gethelper().getmetricarraylist(),phoneanalyticslist);
-                    common.orientationarraylist(gethelper().getmetricarraylist(),orientationlist);
+        Thread thread=new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            graphicalorientationadapter.notifyDataSetChanged();
-                            graphicallocationadapter.notifyDataSetChanged();
-                            graphicalphoneadapter.notifyDataSetChanged();
-                        }
-                    });
-                }
-            });
-            thread.start();
-        }
+                locationanalyticslist.clear();
+                phoneanalyticslist.clear();
+                orientationlist.clear();
+
+                ArrayList<metricmodel> metricarraylist=gethelper().getmetricarraylist();
+
+                common.locationAnalyticsdata(metricarraylist,locationanalyticslist);
+                common.phoneAnalytics(metricarraylist,phoneanalyticslist);
+                common.orientationarraylist(metricarraylist,orientationlist);
+
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        graphicalorientationadapter.notifyDataSetChanged();
+                        graphicallocationadapter.notifyDataSetChanged();
+                        graphicalphoneadapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+        thread.start();
     }
 
     @Override
@@ -352,16 +356,20 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             public void run() {
 
                     try {
-                        loadarraydata();
-                        int x = mNoise.getAmplitudevoice();
-                        myvisualizerview.addAmplitude(x); // update the VisualizeView
-                        myvisualizerview.invalidate();
+
+                        if(gethelper().getrecordingrunning())
+                        {
+                            int x = mNoise.getAmplitudevoice();
+                            myvisualizerview.addAmplitude(x); // update the VisualizeView
+                            myvisualizerview.invalidate();
+                        }
+
                         //myvisualizerview.updateAmplitude(1f , true);
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                waveHandler.postDelayed(this, 3000);
+                waveHandler.postDelayed(this, 40);
             }
         };
         waveHandler.post(waveRunnable);
