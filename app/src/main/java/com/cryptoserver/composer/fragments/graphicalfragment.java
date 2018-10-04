@@ -35,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.encryptiondataadapter;
@@ -88,6 +89,19 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     public graphicalfragment() {
         // Required empty public constructor
     }
+
+    @BindView(R.id.txt_latitude)
+    TextView txt_latitude;
+    @BindView(R.id.txt_longitude)
+    TextView txt_longitude;
+    @BindView(R.id.txt_altitude)
+    TextView txt_altitude;
+    @BindView(R.id.txt_speed)
+    TextView txt_speed;
+    @BindView(R.id.txt_heading)
+    TextView txt_heading;
+    @BindView(R.id.txt_orientation)
+    TextView txt_orientation;
 
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
@@ -200,6 +214,10 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_phoneanalytics.setAdapter(graphicalphoneadapter);
             recyview_encryption.setAdapter(encryptionadapter);
 
+            frameslist.clear();
+            frameslist.add(new graphicalmodel("","9sdfdsf48jhodfoweirp1ookfspdf"));
+            encryptionadapter.notifyDataSetChanged();
+
             Thread thread=new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -243,8 +261,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 orientationlist.clear();
 
                 ArrayList<metricmodel> metricarraylist=gethelper().getmetricarraylist();
-
-                common.locationAnalyticsdata(metricarraylist,locationanalyticslist);
+                common.locationAnalyticsdata(metricarraylist,locationanalyticslist,txt_latitude,txt_longitude,
+                        txt_altitude,txt_heading,txt_orientation,txt_speed);
                 common.phoneAnalytics(metricarraylist,phoneanalyticslist);
                 common.orientationarraylist(metricarraylist,orientationlist);
 
@@ -254,6 +272,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                         graphicalorientationadapter.notifyDataSetChanged();
                         graphicallocationadapter.notifyDataSetChanged();
                         graphicalphoneadapter.notifyDataSetChanged();
+
                     }
                 });
             }
@@ -400,13 +419,16 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
                     try {
 
+/*                        if(gethelper().getmetricarraylist().size() > 0)
+                            loadarraydata();*/
+
                         if(gethelper().getrecordingrunning())
                         {
-                            int x = mNoise.getAmplitudevoice();
-                            myvisualizerview.addAmplitude(x); // update the VisualizeView
-                            myvisualizerview.invalidate();
-                        }
 
+                        }
+                        int x = mNoise.getAmplitudevoice();
+                        myvisualizerview.addAmplitude(x); // update the VisualizeView
+                        myvisualizerview.invalidate();
                         //myvisualizerview.updateAmplitude(1f , true);
 
                     } catch (Exception e) {
@@ -604,11 +626,18 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
             if (Utils.getSDKInt() >= 18) {
                 // fill drawable only supported on api level 18 and above
-                Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.fade_red);
-                set1.setFillDrawable(drawable);
+               // Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.fade_red);
+               // set1.setFillDrawable(drawable);
+                ArrayList<Integer> colors = new ArrayList<Integer>();
+                colors.add(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+                colors.add(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+                colors.add(ContextCompat.getColor(getActivity(), R.color.blue_button));
+                colors.add(ContextCompat.getColor(getActivity(), R.color.dark_x));
+                colors.add(ContextCompat.getColor(getActivity(), R.color.dark_x));
+                set1.setColors(colors);
             }
             else {
-                set1.setFillColor(Color.BLACK);
+                //set1.setFillColor(Color.BLACK);
             }
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();

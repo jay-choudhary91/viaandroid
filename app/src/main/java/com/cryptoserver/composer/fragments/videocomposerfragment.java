@@ -285,7 +285,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
-            Activity activity = getActivity();
+            Activity activity = applicationviavideocomposer.getactivity();
             if (null != activity) {
                 activity.finish();
             }
@@ -394,7 +394,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+                    Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
                     linearLayout.startAnimation(rightswipe);
                     handleimageview.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.VISIBLE);
@@ -423,7 +423,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             righthandle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+                    Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
                     linearLayout.startAnimation(leftswipe);
                     linearLayout.setVisibility(View.INVISIBLE);
                     righthandle.setVisibility(View.VISIBLE);
@@ -497,7 +497,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             {
 
-                mhashesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
+                mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
 
@@ -515,7 +515,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
 
             {
-                mmetricesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
+                mmetricesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mmetricsitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
 
@@ -526,7 +526,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     }
                 });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
                 recyview_metrices.setLayoutManager(mLayoutManager);
                 recyview_metrices.setItemAnimator(new DefaultItemAnimator());
                 recyview_metrices.setAdapter(mmetricesadapter);
@@ -541,13 +541,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
     {
         view1.setBackgroundResource(R.color.videolist_background);
-        view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
+        view1.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.white));
 
         view2.setBackgroundResource(R.color.white);
-        view2.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+        view2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
 
         view3.setBackgroundResource(R.color.white);
-        view3.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+        view3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
     }
 
     public boolean isvideorecording()
@@ -667,7 +667,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
-    GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
+    GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
         private static final int flingactionmindstvac = 60;
         private static final int flingactionmindspdvac = 100;
@@ -712,7 +712,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void swipelefttoright()
     {
         isdraweropen=true;
-        Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+        Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
         linearLayout.startAnimation(rightswipe);
         handleimageview.setVisibility(View.GONE);
         linearLayout.setVisibility(View.VISIBLE);
@@ -739,7 +739,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void swiperighttoleft()
     {
         isdraweropen=false;
-        Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+        Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
         righthandle.setVisibility(View.VISIBLE);
@@ -838,7 +838,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
      * Tries to open a {@link CameraDevice}. The result is listened by `mStateCallback`.
      */
     private void openCamera(int width, int height) {
-        final Activity activity = getActivity();
+        final Activity activity = applicationviavideocomposer.getactivity();
         if (null == activity || activity.isFinishing()) {
             return;
         }
@@ -1808,7 +1808,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void savevideocomplete()
     {
         if (mdbhelper == null) {
-            mdbhelper = new databasemanager(getActivity());
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
             mdbhelper.createDatabase();
         }
 
@@ -2012,7 +2012,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             @Override
             public void onClick(View v) {
-                progressdialog.showwaitingdialog(getActivity());
+                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -2038,7 +2038,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 Uri selectedimageuri =Uri.fromFile(new File(lastrecordedvideo.getAbsolutePath()));
 
-                final MediaPlayer mp = MediaPlayer.create(getActivity(),selectedimageuri);
+                final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(),selectedimageuri);
                 if(mp != null)
                 {
                     mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

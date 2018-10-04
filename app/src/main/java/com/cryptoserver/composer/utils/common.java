@@ -48,6 +48,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
@@ -1178,7 +1179,11 @@ public class common {
         return true;
     }
 
-    public static ArrayList<graphicalmodel> locationAnalyticsdata(ArrayList<metricmodel> metricItemArraylist,ArrayList<graphicalmodel> locationanalytics) {
+    public static ArrayList<graphicalmodel> locationAnalyticsdata(ArrayList<metricmodel> metricItemArraylist,
+                                                                  ArrayList<graphicalmodel> locationanalytics,
+                                                                  TextView txt_latitude, TextView txt_longitude,
+                                                                  TextView txt_altitude, TextView txt_heading,
+                                                                  TextView txt_orientation, TextView txt_speed) {
         Log.e("commonmetriclist", "" + metricItemArraylist.size());
 
         for (int i = 0; i < metricItemArraylist.size(); i++) {
@@ -1191,6 +1196,7 @@ public class common {
                     if(metrictracklatitude!=null){
                         double latitude = Double.valueOf(metrictracklatitude);
                         locationanalytics.add(new graphicalmodel(config.Latitude, convertlatitude(latitude)));
+                     //   txt_latitude.setText((config.Latitude+"\n"+convertlatitude(latitude)));
                     }
                 }catch (NumberFormatException e){
                     e.printStackTrace();
@@ -1201,20 +1207,26 @@ public class common {
                     if(metrictracklongitude!=null){
                         double longitude = Double.valueOf(metrictracklongitude);
                         locationanalytics.add(new graphicalmodel(config.Longitude, convertlongitude(longitude)));
+                    //    txt_longitude.setText((config.Longitude+"\n"+convertlatitude(longitude)));
                     }
                 }catch (NumberFormatException e){
                     e.printStackTrace();
                 }
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaltittude")) {
                 locationanalytics.add(new graphicalmodel(config.Altitude, metricItemArraylist.get(i).getMetricTrackValue()));
+            //    txt_altitude.setText((config.Altitude+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
                 locationanalytics.add(new graphicalmodel(config.Speed, metricItemArraylist.get(i).getMetricTrackValue()));
+           //     txt_speed.setText((config.Speed+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
                 locationanalytics.add(new graphicalmodel(config.Heading, metricItemArraylist.get(i).getMetricTrackValue()));
+            //    txt_heading.setText((config.Heading+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.compass)) {
                 locationanalytics.add(new graphicalmodel(config.Orientation, metricItemArraylist.get(i).getMetricTrackValue()));
+              //  txt_altitude.setText((config.Speed+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")) {
                 locationanalytics.add(new graphicalmodel("", xdata.getinstance().getSetting("address")));
+              //  txt_altitude.setText((config.Speed+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
             }
         }
 
