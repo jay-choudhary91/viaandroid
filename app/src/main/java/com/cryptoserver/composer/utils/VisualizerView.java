@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.cryptoserver.composer.R;
@@ -64,11 +65,13 @@ public class VisualizerView  extends View {
         // for each item in the amplitudes ArrayList
         for (float power : amplitudes) {
             float scaledHeight = power / LINE_SCALE; // scale the power
+
+            Log.e("wave scale",""+scaledHeight);
             curX += LINE_WIDTH; // increase X by LINE_WIDTH
 
             // draw a line representing this item in the amplitudes ArrayList
-            canvas.drawLine(curX, middle + scaledHeight / 2, curX, middle
-                    - scaledHeight / 2, linePaint);
+            canvas.drawLine(curX, middle + scaledHeight / 1, curX, middle
+                    - scaledHeight / 1, linePaint);
         }
     }
 
