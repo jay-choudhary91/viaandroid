@@ -850,6 +850,10 @@ public class common {
             metricItemName ="connectionspeed";
         } else if(key.equalsIgnoreCase("address")){
             metricItemName ="address";
+        }else if(key.equalsIgnoreCase("speed")){
+            metricItemName ="speed";
+        }else if(key.equalsIgnoreCase("heading")){
+            metricItemName ="heading";
         }
         return metricItemName;
     }
@@ -887,13 +891,13 @@ public class common {
         DecimalFormat dec = new DecimalFormat("0.00");
 
         if (t > 1) {
-            internalmermory = dec.format(t);
+            internalmermory = dec.format(t).concat(" TB");
         } else if (g > 1) {
-            internalmermory = dec.format(g);
+            internalmermory = dec.format(g).concat(" GB");
         } else if (m > 1) {
-            internalmermory = dec.format(m);
+            internalmermory = dec.format(m).concat(" MB");
         } else if (k > 1) {
-            internalmermory = dec.format(k);
+            internalmermory = dec.format(k).concat(" KB");
         } else {
 
             internalmermory = dec.format(b);

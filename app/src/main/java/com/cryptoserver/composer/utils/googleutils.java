@@ -1,6 +1,7 @@
 package com.cryptoserver.composer.utils;
 
 import android.location.Location;
+import android.util.Log;
 
 /**
  * Created by Ejaz on 2/14/2017.
@@ -18,6 +19,8 @@ public class googleutils {
         xdata.getinstance().saveSetting("lng", "" + location.getLongitude());
         xdata.getinstance().saveSetting("gpsaltittude", "" + location.getAltitude());
         xdata.getinstance().saveSetting("gpsquality", "" + location.getAccuracy());
+        xdata.getinstance().saveSetting("speed",""+ location.getSpeed());
+        xdata.getinstance().saveSetting("heading", ""+ location.getBearing());
 
     }
 }
