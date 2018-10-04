@@ -581,6 +581,8 @@ public abstract class locationawareactivity extends baseactivity implements
         metricItemArraylist.add(new metricmodel("connectionspeed","",true));
         metricItemArraylist.add(new metricmodel("gpsaccuracy","",true));
         metricItemArraylist.add(new metricmodel("address","",true));
+        metricItemArraylist.add(new metricmodel("speed","",true));
+        metricItemArraylist.add(new metricmodel("heading","",true));
 
        // getmetricarraylist();
         startmetrices();
@@ -1236,7 +1238,7 @@ public abstract class locationawareactivity extends baseactivity implements
             if (wifiInfo != null) {
 
                  linkSpeed = String.valueOf(wifiInfo.getLinkSpeed()) +""+wifiInfo.LINK_SPEED_UNITS; //measured using WifiInfo.LINK_SPEED_UNITS
-                 Log.e("linkspeed",wifiInfo.LINK_SPEED_UNITS);
+               //  Log.e("linkspeed",wifiInfo.LINK_SPEED_UNITS);
             }
             metricItemValue=String.valueOf(linkSpeed);
         }else if(key.equalsIgnoreCase("address")){
@@ -1736,13 +1738,19 @@ public abstract class locationawareactivity extends baseactivity implements
 
     public void updatelocationsparams(Location location) {
         double doubleTotalDistance=0.0;
+        double currenttime=0;
+
+        double newTime= System.currentTimeMillis();
         if(oldlocation != null)
         {
             long meter=common.calculateDistance(location.getLatitude(),location.getLongitude(),
                     oldlocation.getLatitude(),oldlocation.getLongitude());
             doubleTotalDistance=doubleTotalDistance+meter;
+          /*  double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
+            double speed=meter/timeDifferance;
+            Log.e("speed",""+speed+ "meter...."+meter);*/
         }
-        oldlocation=location;
+
 
         for (int i = 0; i < metricItemArraylist.size(); i++) {
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
@@ -1773,10 +1781,26 @@ public abstract class locationawareactivity extends baseactivity implements
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
                     metricItemArraylist.get(i).setMetricTrackValue("" + xdata.getinstance().getSetting("heading"));
+
                 }
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("speed")));
+                    if(location.hasSpeed()){
+                        metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("speed")));
+                    }else{
+                        if(oldlocation != null)
+                        {
+                            long meter=common.calculateDistance(location.getLatitude(),location.getLongitude(),
+                                    oldlocation.getLatitude(),oldlocation.getLongitude());
+                            doubleTotalDistance=doubleTotalDistance+meter;
+                            double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
+                            double speed=meter/timeDifferance;
+                            metricItemArraylist.get(i).setMetricTrackValue("" +new DecimalFormat("##.##").format(speed));
+                            Log.e("meter",meter+".........time........"+timeDifferance+".........." +new DecimalFormat("##.##").format(speed));
+                            Log.e("speed",""+speed);
+                        }
+                    }
+
                 }
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
@@ -1788,6 +1812,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 }
             }
         }
+        oldlocation=location;
     }
 
     //get complete address
