@@ -1251,8 +1251,9 @@ public class common {
                 phoneanalytics.add(new graphicalmodel(config.WIFINetwork, metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
                 phoneanalytics.add(new graphicalmodel(config.GPSAccuracy, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")) {//+"*"+metricItemArraylist.get(i).getMetricTrackValue())
-                phoneanalytics.add(new graphicalmodel(config.ScreenSize, metricItemArraylist.get(i).getMetricTrackValue()));
+            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")) {
+                int[] widthHeight= getScreenWidthHeight(applicationviavideocomposer.getactivity());
+                phoneanalytics.add(new graphicalmodel(config.ScreenSize, widthHeight[0] +" *" + widthHeight[1]));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("country")) {
                 phoneanalytics.add(new graphicalmodel(config.Country, metricItemArraylist.get(i).getMetricTrackValue()));
             } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.cpuusagesystem)) {

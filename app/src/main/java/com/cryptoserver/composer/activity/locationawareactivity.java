@@ -1393,6 +1393,7 @@ public abstract class locationawareactivity extends baseactivity implements
                         float deltaX = Math.abs(sensorEvent.values[0]);
                         float deltaY = Math.abs(sensorEvent.values[1]);
                         float deltaZ = Math.abs(sensorEvent.values[2]);
+                        Math.sin(deltaX);
 
                         updatearrayitem(config.acceleration_x,""+deltaX);
                         updatearrayitem(config.acceleration_y,""+deltaY);
@@ -1455,34 +1456,37 @@ public abstract class locationawareactivity extends baseactivity implements
 
         Thread thread = new Thread(){
             public void run(){
-                String system = common.executeTop();
-                String[] cpuArray = system.split(",");
-                final String[] value1 = {cpuArray[0]};
-                final String[] value2 = {cpuArray[1]};
-                final String[] value3 = {cpuArray[2]};
-                final String[] value4 = {cpuArray[3]};
+                try{
+                    String system = common.executeTop();
+                    String[] cpuArray = system.split(",");
+                    final String[] value1 = {cpuArray[0]};
+                    final String[] value2 = {cpuArray[1]};
+                    final String[] value3 = {cpuArray[2]};
+                    final String[] value4 = {cpuArray[3]};
 
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(getcurrentfragment() != null)
-                        {
-                            value1[0] = value1[0].replace("User","");
-                            updatearrayitem(config.cpuusageuser,value1[0]);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(getcurrentfragment() != null)
+                            {
+                                value1[0] = value1[0].replace("User","");
+                                updatearrayitem(config.cpuusageuser,value1[0]);
 
-                            value2[0] = value2[0].replace("System","");
-                            updatearrayitem(config.cpuusagesystem,value2[0]);
+                                value2[0] = value2[0].replace("System","");
+                                updatearrayitem(config.cpuusagesystem,value2[0]);
 
-                            value3[0] = value3[0].replace("IOW","");
-                            updatearrayitem(config.cpuusageiow,value3[0]);
+                                value3[0] = value3[0].replace("IOW","");
+                                updatearrayitem(config.cpuusageiow,value3[0]);
 
-                            value4[0] = value4[0].replace("IRQ","");
-                            updatearrayitem(config.cpuusageirq,value4[0]);
+                                value4[0] = value4[0].replace("IRQ","");
+                                updatearrayitem(config.cpuusageirq,value4[0]);
+                            }
                         }
-                    }
-                });
-
+                    });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         };
         thread.start();
@@ -1795,6 +1799,7 @@ public abstract class locationawareactivity extends baseactivity implements
                             doubleTotalDistance=doubleTotalDistance+meter;
                             double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
                             double speed=meter/timeDifferance;
+                            Log.e("speed inLocationAA",""+speed);
                             DecimalFormat dec = new DecimalFormat("0.00");
                             metricItemArraylist.get(i).setMetricTrackValue("" +dec.format(speed));
                         }
