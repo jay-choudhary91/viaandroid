@@ -1179,109 +1179,79 @@ public class common {
         return true;
     }
 
-    public static ArrayList<graphicalmodel> locationAnalyticsdata(ArrayList<metricmodel> metricItemArraylist,
-                                                                  ArrayList<graphicalmodel> locationanalytics,
-                                                                  TextView txt_latitude, TextView txt_longitude,
-                                                                  TextView txt_altitude, TextView txt_heading,
-                                                                  TextView txt_orientation, TextView txt_speed) {
-        Log.e("commonmetriclist", "" + metricItemArraylist.size());
+    public static void locationAnalyticsdata(TextView txt_latitude, TextView txt_longitude,TextView txt_altitude, TextView txt_heading,
+                                                                  TextView txt_orientation, TextView txt_speed,TextView txt_address) {
 
-        for (int i = 0; i < metricItemArraylist.size(); i++) {
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
-
-                Log.e("commonlatitude", metricItemArraylist.get(i).getMetricTrackValue());
-
-                try {
-                    String metrictracklatitude=metricItemArraylist.get(i).getMetricTrackValue();
-                    if(metrictracklatitude!=null){
-                        double latitude = Double.valueOf(metrictracklatitude);
-                        locationanalytics.add(new graphicalmodel(config.Latitude, convertlatitude(latitude)));
-                     //   txt_latitude.setText((config.Latitude+"\n"+convertlatitude(latitude)));
-                    }
-                }catch (NumberFormatException e){
-                    e.printStackTrace();
-                }
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
-                try {
-                    String metrictracklongitude=metricItemArraylist.get(i).getMetricTrackValue();
-                    if(metrictracklongitude!=null){
-                        double longitude = Double.valueOf(metrictracklongitude);
-                        locationanalytics.add(new graphicalmodel(config.Longitude, convertlongitude(longitude)));
-                    //    txt_longitude.setText((config.Longitude+"\n"+convertlatitude(longitude)));
-                    }
-                }catch (NumberFormatException e){
-                    e.printStackTrace();
-                }
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaltittude")) {
-                locationanalytics.add(new graphicalmodel(config.Altitude, metricItemArraylist.get(i).getMetricTrackValue()));
-            //    txt_altitude.setText((config.Altitude+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-                locationanalytics.add(new graphicalmodel(config.Speed, metricItemArraylist.get(i).getMetricTrackValue()));
-           //     txt_speed.setText((config.Speed+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
-                locationanalytics.add(new graphicalmodel(config.Heading, metricItemArraylist.get(i).getMetricTrackValue()));
-            //    txt_heading.setText((config.Heading+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.compass)) {
-                locationanalytics.add(new graphicalmodel(config.Orientation, metricItemArraylist.get(i).getMetricTrackValue()));
-              //  txt_altitude.setText((config.Speed+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")) {
-                locationanalytics.add(new graphicalmodel("", xdata.getinstance().getSetting("address")));
-              //  txt_altitude.setText((config.Speed+"\n"+metricItemArraylist.get(i).getMetricTrackValue()));
-            }
+        String latitude=xdata.getinstance().getSetting(config.Latitude);
+        if(! latitude.isEmpty())
+        {
+            double latt = Double.valueOf(latitude);
+            txt_latitude.setText(config.Latitude+"\n"+ convertlatitude(latt));
+        }
+        else
+        {
+            txt_latitude.setText(config.Latitude+"\n");
         }
 
-        Log.e("commonlocation", "" + locationanalytics.size());
+        String longitude=xdata.getinstance().getSetting(config.Longitude);
+        if(! longitude.isEmpty())
+        {
+            double longg = Double.valueOf(longitude);
+            txt_longitude.setText(config.Longitude+"\n"+ convertlongitude(longg));
+        }
+        else
+        {
+            txt_latitude.setText(config.Longitude+"\n");
+        }
 
-        return locationanalytics;
+        txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude)));
+        txt_heading.setText(config.Heading+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Heading)));
+        txt_orientation.setText(config.Orientation+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
+        txt_speed.setText(config.Speed+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
+        txt_address.setText(getxdatavalue(xdata.getinstance().getSetting(config.Address)));
+
+        /*locationanalytics.add(new graphicalmodel(config.Altitude, xdata.getinstance().getSetting(config.Altitude)));
+        locationanalytics.add(new graphicalmodel(config.Speed, xdata.getinstance().getSetting(config.Speed)));
+        locationanalytics.add(new graphicalmodel(config.Heading, xdata.getinstance().getSetting(config.Heading)));
+        locationanalytics.add(new graphicalmodel(config.Orientation, xdata.getinstance().getSetting(config.Orientation)));
+        locationanalytics.add(new graphicalmodel("", xdata.getinstance().getSetting(config.Address)));*/
+
     }
 
-    public static ArrayList<graphicalmodel> phoneAnalytics(ArrayList<metricmodel> metricItemArraylist,ArrayList<graphicalmodel> phoneanalytics) {
+    public  static String getxdatavalue(String value)
+    {
+        if(value == null || value.equalsIgnoreCase("null") || value.toString().trim().isEmpty())
+            value="N/A";
 
-        for (int i = 0; i < metricItemArraylist.size(); i++) {
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("model")) {
-                Log.e("commonlatitude", metricItemArraylist.get(i).getMetricTrackValue());
-                phoneanalytics.add(new graphicalmodel(config.PhoneType, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("carrier")) {
-                phoneanalytics.add(new graphicalmodel(config.CellProvider, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")) {
-                phoneanalytics.add(new graphicalmodel(config.Connectionspeed, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("osversion")) {
-                phoneanalytics.add(new graphicalmodel(config.OSversion, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("wifiname")) {
-                phoneanalytics.add(new graphicalmodel(config.WIFINetwork, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
-                phoneanalytics.add(new graphicalmodel(config.GPSAccuracy, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")) {
-                int[] widthHeight= getScreenWidthHeight(applicationviavideocomposer.getactivity());
-                phoneanalytics.add(new graphicalmodel(config.ScreenSize, widthHeight[0] +" *" + widthHeight[1]));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("country")) {
-                phoneanalytics.add(new graphicalmodel(config.Country, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.cpuusagesystem)) {
-                phoneanalytics.add(new graphicalmodel(config.CPUUsage, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("brightness")) {
-                phoneanalytics.add(new graphicalmodel(config.Brightness, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("timezone")) {
-                phoneanalytics.add(new graphicalmodel(config.TimeZone, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("usedspace")) {
-                phoneanalytics.add(new graphicalmodel(config.MemoryUsage, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")) {
-                phoneanalytics.add(new graphicalmodel(config.Bluetooth, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("phonetime")) {
-                phoneanalytics.add(new graphicalmodel(config.LocalTime, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("freespace")) {
-                phoneanalytics.add(new graphicalmodel(config.StorageAvailable, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")) {
-                phoneanalytics.add(new graphicalmodel(config.Language, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("systemuptime")) {
-                      String systemuptime=metricItemArraylist.get(i).getMetricTrackValue();
+        return value;
+    }
 
-                phoneanalytics.add(new graphicalmodel(config.SystemUptime, systemuptime(Long.parseLong(systemuptime))));
+    public static void phoneAnalytics(TextView txt_phonetype,TextView txt_cellprovider,TextView txt_connection_speed,TextView txt_osversion,
+                                      TextView txt_wifinetwork,TextView txt_gps_accuracy,TextView txt_screensize,TextView txt_country,
+                                      TextView txt_cpuusage,TextView txt_brightness,TextView txt_timezone,TextView txt_memoryusage,TextView txt_bluetooth,
+                                              TextView txt_localtime,TextView txt_storageavailable,TextView txt_language,
+                                      TextView txt_systemuptime,TextView txt_battery) {
 
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("battery")) {
-                phoneanalytics.add(new graphicalmodel(config.Battery, metricItemArraylist.get(i).getMetricTrackValue()));
-            }
-        }
-        return phoneanalytics;
+        int[] widthHeight= getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        txt_phonetype.setText(config.PhoneType+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)));
+        txt_cellprovider.setText(config.CellProvider+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
+        txt_connection_speed.setText(config.Connectionspeed+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)));
+        txt_osversion.setText(config.OSversion+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.OSversion)));
+        txt_wifinetwork.setText(config.WIFINetwork+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)));
+        txt_gps_accuracy.setText(config.GPSAccuracy+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)));
+        txt_screensize.setText(config.ScreenSize+"\n"+widthHeight[0] +" *" + widthHeight[1]);
+        txt_country.setText(config.Country+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Country)));
+        txt_cpuusage.setText(config.CPUUsage+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
+        txt_brightness.setText(config.Brightness+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Brightness)));
+        txt_timezone.setText(config.TimeZone+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.TimeZone)));
+        txt_memoryusage.setText(config.MemoryUsage+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
+        txt_bluetooth.setText(config.Bluetooth+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Bluetooth)));
+        txt_localtime.setText(config.LocalTime+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)));
+        txt_storageavailable.setText(config.StorageAvailable+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)));
+        txt_language.setText(config.Language+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Language)));
+        txt_systemuptime.setText(config.SystemUptime+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)));
+        txt_battery.setText(config.Battery+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
+
     }
 
     public static ArrayList<graphicalmodel> orientationarraylist(ArrayList<metricmodel> metricItemArraylist,ArrayList<graphicalmodel> orientationarraylist) {

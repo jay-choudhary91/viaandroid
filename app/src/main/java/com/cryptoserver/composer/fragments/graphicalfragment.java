@@ -43,6 +43,7 @@ import com.cryptoserver.composer.adapter.graphicaldataadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
 import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.VisualizerView;
 import com.cryptoserver.composer.utils.WaveFromView;
 import com.cryptoserver.composer.utils.common;
@@ -102,6 +103,50 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     TextView txt_heading;
     @BindView(R.id.txt_orientation)
     TextView txt_orientation;
+    @BindView(R.id.txt_address)
+    TextView txt_address;
+    @BindView(R.id.txt_xaxis)
+    TextView txt_xaxis;
+    @BindView(R.id.txt_yaxis)
+    TextView txt_yaxis;
+    @BindView(R.id.txt_zaxis)
+    TextView txt_zaxis;
+    @BindView(R.id.txt_phonetype)
+    TextView txt_phonetype;
+    @BindView(R.id.txt_cellprovider)
+    TextView txt_cellprovider;
+    @BindView(R.id.txt_connection_speed)
+    TextView txt_connection_speed;
+    @BindView(R.id.txt_osversion)
+    TextView txt_osversion;
+    @BindView(R.id.txt_wifinetwork)
+    TextView txt_wifinetwork;
+    @BindView(R.id.txt_gps_accuracy)
+    TextView txt_gps_accuracy;
+    @BindView(R.id.txt_screensize)
+    TextView txt_screensize;
+    @BindView(R.id.txt_country)
+    TextView txt_country;
+    @BindView(R.id.txt_cpuusage)
+    TextView txt_cpuusage;
+    @BindView(R.id.txt_brightness)
+    TextView txt_brightness;
+    @BindView(R.id.txt_timezone)
+    TextView txt_timezone;
+    @BindView(R.id.txt_memoryusage)
+    TextView txt_memoryusage;
+    @BindView(R.id.txt_bluetooth)
+    TextView txt_bluetooth;
+    @BindView(R.id.txt_localtime)
+    TextView txt_localtime;
+    @BindView(R.id.txt_storageavailable)
+    TextView txt_storageavailable;
+    @BindView(R.id.txt_language)
+    TextView txt_language;
+    @BindView(R.id.txt_systemuptime)
+    TextView txt_systemuptime;
+    @BindView(R.id.txt_battery)
+    TextView txt_battery;
 
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
@@ -116,39 +161,26 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     private float currentDegree = 0f;
 
     // device sensor manager
-    private SensorManager mSensorManager;
+    private SensorManager msensormanager;
+    private Sensor maccelerometersensormanager;
 
-    //graphical
-    RecyclerView recyview_locationanalytics;
-    RecyclerView recyview_orientation;
-    RecyclerView recyview_phoneanalytics;
-
-    graphicaldataadapter graphicallocationadapter,graphicalphoneadapter,graphicalorientationadapter;
     encryptiondataadapter encryptionadapter;
-    LinearLayout layout_locationanalytics,layout_orientation;
-    RecyclerView.LayoutManager morientationLayoutmanager;
-    GridLayoutManager mlocationALayoutmanager;
-    RecyclerView.LayoutManager mphoneALayoutmanager;
+    LinearLayout layout_orientation;
     RecyclerView.LayoutManager encryptionmanager;
     ImageView img_compass;
-    //google map
     GoogleMap mGoogleMap;
-    Location currentLocation = null;
     Location CurrentLocationChange = null;
     LatLng lastlocationchange = null;
-    private ArrayList<graphicalmodel> locationanalyticslist = new ArrayList<>();
-    private ArrayList<graphicalmodel> phoneanalyticslist = new ArrayList<>();
-    private ArrayList<graphicalmodel> orientationlist = new ArrayList<>();
     private ArrayList<graphicalmodel> frameslist = new ArrayList<>();
-    //WaveFromView myvisualizerview;
 
     VisualizerView myvisualizerview;
 
     private Handler waveHandler;
     private Runnable waveRunnable;
     noise mNoise;
-
-    RelativeLayout relativeLayout;
+    boolean isgraphicopen=false;
+    private Handler myhandler;
+    private Runnable myrunnable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -158,60 +190,14 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             ButterKnife.bind(this, rootview);
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             scrollview_graphical.setVisibility(View.VISIBLE);
-            recyview_locationanalytics=rootview.findViewById(R.id.recyview_location_analytics);
-            recyview_orientation=rootview.findViewById(R.id.recyview_orentation);
-            recyview_phoneanalytics=rootview.findViewById(R.id.recyview_phoneanalytics);
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
-            layout_locationanalytics=rootview.findViewById(R.id.layout_locationAna);
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
             img_compass = (ImageView) rootview.findViewById(R.id.img_compass);
-
-            recyview_locationanalytics.setNestedScrollingEnabled(false);
-            recyview_orientation.setNestedScrollingEnabled(false);
-            recyview_phoneanalytics.setNestedScrollingEnabled(false);
             recyview_encryption.setNestedScrollingEnabled(false);
-
             encryptionadapter=new encryptiondataadapter(frameslist,getActivity());
-            graphicallocationadapter=new graphicaldataadapter(locationanalyticslist,getActivity());
-            graphicalphoneadapter=new graphicaldataadapter(phoneanalyticslist,getActivity());
-            graphicalorientationadapter=new graphicaldataadapter(orientationlist,getActivity());
-
             encryptionmanager=new LinearLayoutManager(getActivity());
-            mphoneALayoutmanager=new GridLayoutManager(getActivity(),3);
-            recyview_phoneanalytics.setLayoutManager(mphoneALayoutmanager);
-            mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-
-            mlocationALayoutmanager=new GridLayoutManager(getActivity(),2);
-            mlocationALayoutmanager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    // 5 is the sum of items in one repeated section
-                 //   Log.e("Position ",""+position % 5);
-                    switch (position % 7) {
-                        // first 3 items span 2 columns each
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                            // case 4:
-                            return 1;
-                        // next 2 items span 1 columns each
-                        case 6:
-                            return 2;
-                    }
-                    throw new IllegalStateException("internal error");
-                }
-            });
-            recyview_locationanalytics.setLayoutManager(mlocationALayoutmanager);
-            morientationLayoutmanager=new GridLayoutManager(getActivity(),1);
-            recyview_orientation.setLayoutManager(morientationLayoutmanager);
+            msensormanager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
             recyview_encryption.setLayoutManager(encryptionmanager);
-
-            recyview_orientation.setAdapter(graphicalorientationadapter);
-            recyview_locationanalytics.setAdapter(graphicallocationadapter);
-            recyview_phoneanalytics.setAdapter(graphicalphoneadapter);
             recyview_encryption.setAdapter(encryptionadapter);
 
             frameslist.clear();
@@ -225,14 +211,11 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                         @Override
                         public void run() {
                             try {
-                                if(gethelper().getmetricarraylist().size() > 0)
-                                    loadarraydata();
-
+                                loaddata();
                                 loadMap();
                                 player = new MediaPlayer();
                                 start();
                                 setchartdata();
-                             //   loadarraydata();
                             }catch (Exception e)
                             {
                                 e.printStackTrace();
@@ -246,38 +229,27 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         return rootview;
     }
 
-    public void loadarraydata()
+    public void loaddata()
     {
-        /*if(gethelper().getrecordingrunning())
-        {
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
 
-        }*/
-        Thread thread=new Thread(new Runnable() {
+        myhandler=new Handler();
+        myrunnable = new Runnable() {
             @Override
             public void run() {
-
-                locationanalyticslist.clear();
-                phoneanalyticslist.clear();
-                orientationlist.clear();
-
-                ArrayList<metricmodel> metricarraylist=gethelper().getmetricarraylist();
-                common.locationAnalyticsdata(metricarraylist,locationanalyticslist,txt_latitude,txt_longitude,
-                        txt_altitude,txt_heading,txt_orientation,txt_speed);
-                common.phoneAnalytics(metricarraylist,phoneanalyticslist);
-                common.orientationarraylist(metricarraylist,orientationlist);
-
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        graphicalorientationadapter.notifyDataSetChanged();
-                        graphicallocationadapter.notifyDataSetChanged();
-                        graphicalphoneadapter.notifyDataSetChanged();
-
-                    }
-                });
+                if(isgraphicopen)
+                {
+                    common.locationAnalyticsdata(txt_latitude,txt_longitude,
+                            txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
+                    common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
+                            txt_gps_accuracy,txt_screensize,txt_country,txt_cpuusage,txt_brightness,txt_timezone,txt_memoryusage,txt_bluetooth,
+                            txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
+                }
+                myhandler.postDelayed(this, 4000);
             }
-        });
-        thread.start();
+        };
+        myhandler.post(myrunnable);
     }
 
     @Override
@@ -419,9 +391,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
                     try {
 
-/*                        if(gethelper().getmetricarraylist().size() > 0)
-                            loadarraydata();*/
-
                         if(gethelper().getrecordingrunning())
                         {
 
@@ -488,7 +457,21 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         if(waveHandler != null && waveRunnable != null)
             waveHandler.removeCallbacks(waveRunnable);
 
-        stop();
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
+
+        try {
+            stop();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void setdrawerproperty(boolean isgraphicopen)
+    {
+        this.isgraphicopen=isgraphicopen;
     }
 
     public void setchartdata()
@@ -703,30 +686,35 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        int degree = Math.round(event.values[0]);
-        RotateAnimation ra = new RotateAnimation(
-                currentDegree,
-                -degree,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
+        if (event.sensor == maccelerometersensormanager) {
+            float deltaX = Math.abs(event.values[0]);
+            float deltaY = Math.abs(event.values[1]);
+            float deltaZ = Math.abs(event.values[2]);
+            Math.sin(deltaX);
 
-        // how long the animation will take place
-        ra.setDuration(210);
+            txt_xaxis.setText("X-Axis \n"+deltaX);
+            txt_yaxis.setText("Y-Axis \n"+deltaY);
+            txt_zaxis.setText("Z-Axis \n"+deltaZ);
+        }
+        else
+        {
+            int degree = Math.round(event.values[0]);
+            RotateAnimation ra = new RotateAnimation(
+                    currentDegree,
+                    -degree,
+                    Animation.RELATIVE_TO_SELF, 0.5f,
+                    Animation.RELATIVE_TO_SELF,
+                    0.5f);
 
-       /* for (int i=0;i<locationanalyticslist.size();i++){
-            if (locationanalyticslist.get(i).getGraphicalkeyname().equalsIgnoreCase("heading")) {
-              //  locationanalyticslist.get(i).setGraphicalvalue("" + degree);
-            }
-            graphicallocationadapter.notifyDataSetChanged();
-        }*/
+            // how long the animation will take place
+            ra.setDuration(210);
 
-        // set the animation after the end of the reservation status
-        ra.setFillAfter(true);
+            ra.setFillAfter(true);
 
-        // Start the animation
-        img_compass.startAnimation(ra);
-        currentDegree = -degree;
+            img_compass.startAnimation(ra);
+            currentDegree = -degree;
+        }
+
     }
 
     @Override
@@ -738,8 +726,11 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         super.onResume();
 
         // for the system's orientation sensor registered listeners
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+        msensormanager.registerListener(this, msensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_GAME);
+
+        maccelerometersensormanager = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        msensormanager.registerListener(this, maccelerometersensormanager, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -747,7 +738,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         super.onPause();
 
         // to stop the listener and save battery
-        mSensorManager.unregisterListener(this);
+        msensormanager.unregisterListener(this);
     }
 
 }

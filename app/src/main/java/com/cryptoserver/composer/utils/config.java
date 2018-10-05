@@ -88,5 +88,6 @@ public class config {
     public static final String Language="Language";
     public static final String SystemUptime="System Uptime";
     public static final String Battery="Battery";
+    public static final String Address="address";
 
 }

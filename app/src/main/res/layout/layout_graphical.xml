@@ -41,44 +41,15 @@
                 android:text="@string/locationanalytics" />
 
             <LinearLayout
-                android:id="@+id/layout_locationAna"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/graphical_roundcorner"
-                android:weightSum="1">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyview_location_analytics"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.6"
-                    android:visibility="visible">
-
-                </android.support.v7.widget.RecyclerView>
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.4"
-                    android:id="@+id/img_compass"
-                    android:src="@drawable/locationanalytics" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone"
                 android:background="@drawable/graphical_roundcorner"
                 android:weightSum="1">
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.7"
+                    android:layout_weight="0.6"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -145,25 +116,96 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_address"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+
 
                 </LinearLayout>
-
-
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_gravity="center"
                     android:layout_weight="0.4"
+                    android:id="@+id/img_compass"
                     android:src="@drawable/locationanalytics" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/txt_drawer_graphical_title"
+                    android:text="@string/orientation" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/graphical_roundcorner"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="0.6"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_xaxis"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_normalview"
+                            android:text="X xais"/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_yaxis"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_normalview"
+                            android:text="X xais"/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_zaxis"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_normalview"
+                            android:text="X xais"/>
+
+                        </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="150dp"
+                        android:layout_weight="0.4"
+                        android:src="@drawable/orientationimage" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <TextView
@@ -201,6 +243,195 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/txt_drawer_graphical_title"
+                    android:text="@string/Phoneanalytics" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/graphical_roundcorner">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_phonetype"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_cellprovider"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_connection_speed"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_osversion"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_wifinetwork"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_gps_accuracy"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_screensize"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_country"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_cpuusage"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_brightness"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_timezone"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_memoryusage"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_bluetooth"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_localtime"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_storageavailable"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_language"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_systemuptime"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_battery"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_row_encryption"
+                            android:layout_weight="0.5"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <TextView

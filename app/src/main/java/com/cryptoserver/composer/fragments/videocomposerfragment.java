@@ -1682,6 +1682,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             @Override
             public void run() {
 
+                boolean graphicopen=false;
                 if(isdraweropen)
                 {
                     if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
@@ -1708,7 +1709,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             }
                         });
                     }
+
+
+                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+                        graphicopen=true;
                 }
+
+                if(fragmentgraphic != null)
+                    fragmentgraphic.setdrawerproperty(graphicopen);
+
                 myHandler.postDelayed(this, 1000);
             }
         };
