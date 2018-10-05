@@ -15,7 +15,7 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.3"
-            android:text="Blockcuain ID"/>
+            android:text="Blockchain ID"/>
 
         <com.cryptoserver.composer.views.customfonttextview
             app:fontType="OpenSans_Regular"

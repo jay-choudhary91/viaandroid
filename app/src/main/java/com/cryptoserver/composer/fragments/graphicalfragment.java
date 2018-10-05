@@ -544,6 +544,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         leftAxis.setDrawLimitLinesBehindData(false);
 
         mChart.getAxisRight().setEnabled(false);
+        mChart.getAxisLeft().setEnabled(false);
+        xAxis.setEnabled(false);
 
         //mChart.getViewPortHandler().setMaximumScaleY(2f);
         //mChart.getViewPortHandler().setMaximumScaleX(2f);
@@ -556,6 +558,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 //        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
 
         mChart.animateX(2500);
+
         //mChart.invalidate();
 
         // get the legend (only possible after setting data)
@@ -590,14 +593,16 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(values, "");
+            set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
             set1.setDrawIcons(false);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 0f, 0f);
             set1.enableDashedHighlightLine(10f, 0f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
+            //set1.setColor(Color.BLACK);
+            //set1.setCircleColor(Color.BLACK);
+            set1.setDrawCircles(false);
             set1.setLineWidth(1f);
             set1.setCircleRadius(0f);
             set1.setDrawCircleHole(false);
@@ -609,15 +614,15 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
             if (Utils.getSDKInt() >= 18) {
                 // fill drawable only supported on api level 18 and above
-               // Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.fade_red);
-               // set1.setFillDrawable(drawable);
-                ArrayList<Integer> colors = new ArrayList<Integer>();
+                Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.fade_red);
+                set1.setFillDrawable(drawable);
+                /*ArrayList<Integer> colors = new ArrayList<Integer>();
                 colors.add(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                 colors.add(ContextCompat.getColor(getActivity(), R.color.colorAccent));
                 colors.add(ContextCompat.getColor(getActivity(), R.color.blue_button));
                 colors.add(ContextCompat.getColor(getActivity(), R.color.dark_x));
                 colors.add(ContextCompat.getColor(getActivity(), R.color.dark_x));
-                set1.setColors(colors);
+                set1.setColors(colors);*/
             }
             else {
                 //set1.setFillColor(Color.BLACK);

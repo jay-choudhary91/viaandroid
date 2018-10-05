@@ -1846,11 +1846,16 @@ public abstract class locationawareactivity extends baseactivity implements
                             doubleTotalDistance=doubleTotalDistance+meter;
                             double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
                             double speed=meter/timeDifferance;
-                            Log.e("speed inLocationAA0",""+timeDifferance);
-                            Log.e("speed inLocationAA1",""+speed);
-                            DecimalFormat dec = new DecimalFormat("0.00");
-                            Log.e("speed inLocationAA2",""+String.format("Value of a: %.2f", speed));
-                            metricItemArraylist.get(i).setMetricTrackValue("" +String.format("Value of a: %.2f", speed));
+                            String strspeed=""+speed;
+                            if(strspeed.contains("."))
+                            {
+                                strspeed=strspeed.substring(0,strspeed.indexOf("."));
+                            }
+                          // Log.e("speed inLocationAA0",""+timeDifferance);
+                          //  Log.e("speed inLocationAA1",""+speed);
+                          //  DecimalFormat dec = new DecimalFormat("0.00");
+                         //   Log.e("speed inLocationAA2",""+String.format("Value of a: %.2f", speed));
+                            metricItemArraylist.get(i).setMetricTrackValue("" +strspeed);
                         }
                     }
                     xdata.getinstance().saveSetting(config.Speed,""+metricItemArraylist.get(i).getMetricTrackValue());
