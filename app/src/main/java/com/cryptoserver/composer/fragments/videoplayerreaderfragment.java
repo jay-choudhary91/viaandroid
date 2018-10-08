@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -103,6 +105,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     RecyclerView recyview_metrices;
     @BindView(R.id.recyview_item)
     RecyclerView recyview_hashes;
+    @BindView(R.id.fragment_graphic_container)
+    FrameLayout fragment_graphic_container;
 
     private RelativeLayout scurraberverticalbar;
     private String VIDEO_URL = null;
@@ -143,6 +147,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private videoframeadapter mmetricesadapter,mhashesadapter;
     private framebitmapadapter adapter;
+    private graphicalfragment fragmentgraphic;
 
     @Override
     public int getlayoutid() {
@@ -351,6 +356,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             case R.id.txt_slot1:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
+                fragment_graphic_container.setVisibility(View.INVISIBLE);
 
                 recyview_hashes.setVisibility(View.VISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
@@ -364,6 +370,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             case R.id.txt_slot2:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
+                fragment_graphic_container.setVisibility(View.INVISIBLE);
 
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
@@ -375,6 +382,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 break;
 
             case R.id.txt_slot3:
+                fragment_graphic_container.setVisibility(View.VISIBLE);
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
@@ -382,9 +390,25 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+
+                if(fragmentgraphic == null)
+                {
+                    fragmentgraphic  = new graphicalfragment();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
+                    transaction.commit();
+                }
                 break;
         }
     }
+
+    @Override
+    public void oncurrentlocationchanged(Location location) {
+        super.oncurrentlocationchanged(location);
+        if(fragmentgraphic != null)
+            fragmentgraphic.locationupdate(location,"");
+    }
+
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
     {
         view1.setBackgroundResource(R.color.videolist_background);
@@ -1252,7 +1276,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         myRunnable = new Runnable() {
             @Override
             public void run() {
-
+                boolean graphicopen=false;
                 if(isnewvideofound)
                 {
                     if(ishashprocessing || isbitmapprocessing)
@@ -1312,7 +1336,14 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         });
 
                     }
+
+                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+                        graphicopen=true;
                 }
+
+                if(fragmentgraphic != null)
+                    fragmentgraphic.setdrawerproperty(graphicopen);
+
                 myHandler.postDelayed(this, 1000);
             }
         };

@@ -1235,7 +1235,7 @@ public class common {
         int[] widthHeight= getScreenWidthHeight(applicationviavideocomposer.getactivity());
         txt_phonetype.setText(config.PhoneType+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)));
         txt_cellprovider.setText(config.CellProvider+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
-        txt_connection_speed.setText(config.Connectionspeed+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)));
+        //txt_connection_speed.setText(config.Connectionspeed+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)));
         txt_osversion.setText(config.OSversion+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.OSversion)));
         txt_wifinetwork.setText(config.WIFINetwork+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)));
         txt_gps_accuracy.setText(config.GPSAccuracy+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)));

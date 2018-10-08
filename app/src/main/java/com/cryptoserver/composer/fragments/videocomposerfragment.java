@@ -1637,6 +1637,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 currenthashvalue=keyvalue;
                 apicurrentduration++;
 
+                if(fragmentgraphic != null)
+                    fragmentgraphic.currenthashvalue=keyvalue;
+
                 ArrayList<metricmodel> mlist= gethelper().getmetricarraylist();
                 metricItemArraylist.addAll(mlist);
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));

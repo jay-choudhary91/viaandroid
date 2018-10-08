@@ -1,9 +1,11 @@
 package com.cryptoserver.composer.fragments;
 
+import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -79,6 +81,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     ScrollView scrollview_metrices;
     @BindView(R.id.scrollview_hashes)
     ScrollView scrollview_hashes;
+    @BindView(R.id.fragment_graphic_container)
+    FrameLayout fragment_graphic_container;
 
     private String VIDEO_URL = null;
     RelativeLayout showcontrollers;
@@ -113,6 +117,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     String selectedhaeshes="";
     private int lastmetricescount=0;
     videoframeadapter mmetricesadapter,mhashesadapter;
+    private graphicalfragment fragmentgraphic;
+
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -220,6 +226,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             case R.id.txt_slot1:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
+                fragment_graphic_container.setVisibility(View.INVISIBLE);
 
                 recyview_hashes.setVisibility(View.VISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
@@ -233,6 +240,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             case R.id.txt_slot2:
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
+                fragment_graphic_container.setVisibility(View.INVISIBLE);
 
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
@@ -244,6 +252,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 break;
 
             case R.id.txt_slot3:
+                fragment_graphic_container.setVisibility(View.VISIBLE);
                 scrollview_metrices.setVisibility(View.INVISIBLE);
                 scrollview_hashes.setVisibility(View.INVISIBLE);
                 recyview_metrices.setVisibility(View.INVISIBLE);
@@ -251,9 +260,25 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+
+                if(fragmentgraphic == null)
+                {
+                    fragmentgraphic  = new graphicalfragment();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
+                    transaction.commit();
+                }
                 break;
         }
     }
+
+    @Override
+    public void oncurrentlocationchanged(Location location) {
+        super.oncurrentlocationchanged(location);
+        if(fragmentgraphic != null)
+            fragmentgraphic.locationupdate(location,"");
+    }
+
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
     {
@@ -859,7 +884,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         myRunnable = new Runnable() {
             @Override
             public void run() {
-
+                boolean graphicopen=false;
                 if(isdraweropen)
                 {
                     if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
@@ -888,7 +913,12 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                             }
                         });
                     }
+
+                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+                        graphicopen=true;
                 }
+                if(fragmentgraphic != null)
+                    fragmentgraphic.setdrawerproperty(graphicopen);
                 myHandler.postDelayed(this, 1000);
             }
         };

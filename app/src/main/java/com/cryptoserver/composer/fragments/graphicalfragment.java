@@ -73,12 +73,21 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -147,6 +156,10 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     TextView txt_systemuptime;
     @BindView(R.id.txt_battery)
     TextView txt_battery;
+    @BindView(R.id.txt_data_hash)
+    TextView txt_data_hash;
+    @BindView(R.id.txt_hash_formula)
+    TextView txt_hash_formula;
 
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
@@ -181,6 +194,18 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     boolean isgraphicopen=false;
     private Handler myhandler;
     private Runnable myrunnable;
+    public String currenthashvalue="";
+
+
+    long startTime;
+    long endTime;
+    long fileSize;
+    OkHttpClient client = new OkHttpClient();
+
+    // bandwidth in kbps
+    private int POOR_BANDWIDTH = 150;
+    private int AVERAGE_BANDWIDTH = 550;
+    private int GOOD_BANDWIDTH = 2000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -200,31 +225,97 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_encryption.setLayoutManager(encryptionmanager);
             recyview_encryption.setAdapter(encryptionadapter);
 
-            frameslist.clear();
-            frameslist.add(new graphicalmodel("","9sdfdsf48jhodfoweirp1ookfspdf"));
-            encryptionadapter.notifyDataSetChanged();
+            txt_connection_speed.setText(config.Connectionspeed+"\n"+"N/A");
+            if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
+                xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
+
 
             Thread thread=new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                loaddata();
-                                loadMap();
-                                player = new MediaPlayer();
-                                start();
-                                setchartdata();
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
+                    //getconnectionspeed();
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            loaddata();
+                            loadMap();
+                            player = new MediaPlayer();
+                            start();
+                            setchartdata();
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
                         }
-                    });
+                    }
+                });
                 }
             });
             thread.start();
+
+            Request request = new Request.Builder()
+            .url("https://m.media-amazon.com/images/S/aplus-media/vc/6a9569ab-cb8e-46d9-8aea-a7022e58c74a.jpg")
+            .build();
+
+            startTime = System.currentTimeMillis();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                    Headers responseHeaders = response.headers();
+                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                        //  Log.d(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                    }
+
+                    InputStream input = response.body().byteStream();
+
+                    try {
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[1024];
+
+                        while (input.read(buffer) != -1) {
+                            bos.write(buffer);
+                        }
+                        byte[] docBuffer = bos.toByteArray();
+                        fileSize = bos.size();
+
+                    } finally {
+                        input.close();
+                    }
+
+                    endTime = System.currentTimeMillis();
+
+
+                    // calculate how long it took by subtracting endtime from starttime
+
+                    double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
+                    double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
+                    final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
+
+                    if(kilobytePerSec <= POOR_BANDWIDTH){
+                        // slow connection
+                    }
+
+                    // get the download speed by dividing the file size by time taken to download
+                    double speed = fileSize / timeTakenMills;
+                    int speedinmb=kilobytePerSec/1024;
+                    txt_connection_speed.setText(config.Connectionspeed+"\n"+speedinmb+" Mbps");
+
+                    Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
+                    Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
+                    Log.d("Case3 ", "Download Speed: " + speed);
+                    Log.d("Case4 ", "File size: " + fileSize);
+                }
+
+            });
+
         }
         return rootview;
     }
@@ -245,6 +336,12 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                     common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
                             txt_gps_accuracy,txt_screensize,txt_country,txt_cpuusage,txt_brightness,txt_timezone,txt_memoryusage,txt_bluetooth,
                             txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
+
+                    if(gethelper().getrecordingrunning())
+                    {
+                        txt_data_hash.setText(currenthashvalue);
+                        txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
+                    }
                 }
                 myhandler.postDelayed(this, 4000);
             }
@@ -353,19 +450,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     public void locationupdate(Location location,String currenthashvalue) {
         super.oncurrentlocationchanged(location);
-
-        try {
-            if(gethelper().getrecordingrunning())
-            {
-                frameslist.clear();
-                frameslist.add(new graphicalmodel("",currenthashvalue));
-                encryptionadapter.notifyDataSetChanged();
-            }
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
         if (location == null) {
             return;
         }
@@ -697,9 +781,13 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             float deltaZ = Math.abs(event.values[2]);
             Math.sin(deltaX);
 
-            txt_xaxis.setText("X-Axis \n"+deltaX);
-            txt_yaxis.setText("Y-Axis \n"+deltaY);
-            txt_zaxis.setText("Z-Axis \n"+deltaZ);
+            if(isgraphicopen)
+            {
+                txt_xaxis.setText("X-Axis \n"+deltaX);
+                txt_yaxis.setText("Y-Axis \n"+deltaY);
+                txt_zaxis.setText("Z-Axis \n"+deltaZ);
+            }
+
         }
         else
         {

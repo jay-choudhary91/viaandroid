@@ -96,6 +96,7 @@
             android:text="Hash Formula"/>
 
         <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_hash_formula"
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
@@ -138,7 +139,7 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
-            android:text="JFJFKHL64OPHFHP6KGFDGK3JF"/>
+            android:text=""/>
 
     </LinearLayout>
 

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffff</color>
-    <color name="black">#212121</color>
+    <color name="black">#000000</color>
     <color name="intro_bg">#62a6d6</color>
     <color name="recorder_btn_color">#19c6aa</color>
     <color name="lightblue">#79B5F4</color>

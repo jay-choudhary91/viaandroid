@@ -847,10 +847,7 @@ public abstract class locationawareactivity extends baseactivity implements
         {
             metricItemValue = ""+telephonymanager.getDeviceSoftwareVersion();
         }
-        else if(key.equalsIgnoreCase("networkcountry"))
-        {
-            metricItemValue = ""+telephonymanager.getNetworkCountryIso();
-        }else if(key.equalsIgnoreCase("deviceregion"))
+        else if(key.equalsIgnoreCase("deviceregion"))
         {
             metricItemValue = ""+ Locale.getDefault().getLanguage();
         }
@@ -1268,18 +1265,73 @@ public abstract class locationawareactivity extends baseactivity implements
                 metricItemValue="OFF";
             }
         }else if(key.equalsIgnoreCase("country")) {
-            String locale = this.getResources().getConfiguration().locale.getCountry();
-            metricItemValue = locale;
+            metricItemValue = xdata.getinstance().getSetting(config.Country);
         }else if(key.equalsIgnoreCase("connectionspeed")){
-            String linkSpeed = null;
-            final WifiManager wifiManager = (WifiManager)locationawareactivity.this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            if (wifiInfo != null) {
+            metricItemValue="N/A";
+            ConnectivityManager cm =(ConnectivityManager)locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+            if(isConnected)
+            {
+                boolean TYPE_MOBILE = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
+                boolean TYPE_WIFI = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
 
-                 linkSpeed = String.valueOf(wifiInfo.getLinkSpeed()) +""+wifiInfo.LINK_SPEED_UNITS; //measured using WifiInfo.LINK_SPEED_UNITS
-               //  Log.e("linkspeed",wifiInfo.LINK_SPEED_UNITS);
+                if(TYPE_WIFI){
+                    final WifiManager wifiManager = (WifiManager)locationawareactivity.this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                    if (wifiInfo != null) {
+                        metricItemValue=String.valueOf(wifiManager.getConnectionInfo().getLinkSpeed()+" "+wifiInfo.LINK_SPEED_UNITS); //measured using WifiInfo.LINK_SPEED_UNITS
+                    }
+                }
+                else if(TYPE_MOBILE){
+                    if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_GPRS){
+                        // Bandwidth between 100 kbps and below
+                        metricItemValue="100 Kbps";
+                    } else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_EDGE){
+                        // Bandwidth between 50-100 kbps
+                        metricItemValue="75 Kbps";
+                    } else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_EVDO_0){
+                        // Bandwidth between 400-1000 kbps
+                        metricItemValue="700 Kbps";
+                    } else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_EVDO_A){
+                        // Bandwidth between 600-1400 kbps
+                        metricItemValue="1.0 Mbps";
+                    }
+                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_1xRTT){
+                        // Bandwidth between 50-100 kbps
+                        metricItemValue="50 Kbps";
+                    }
+                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_CDMA){
+                        // 14-64 kbps
+                        metricItemValue="64 Kbps";
+                    }
+                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_HSDPA){
+                        // 2-14 Mbps
+                        metricItemValue="10 Kbps";
+                    }
+                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_HSPA){
+                        // 700-1700 kbps
+                        metricItemValue="1000 Kbps";
+                    }
+                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_HSUPA){
+                        // 1-23 Mbps
+                        metricItemValue="15 Mbps";
+                    }
+                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_UMTS){
+                        // 400-7000 kbps
+                        metricItemValue="5 Mbps";
+                    }
+                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_LTE){
+                        // 2 Mbps-4 Mbps
+                        metricItemValue="4 Mbps";
+                    }
+                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_UNKNOWN){
+                        // Unknown
+                        metricItemValue="N/A";
+                    }
+                }
             }
-            metricItemValue=String.valueOf(linkSpeed);
+
         }else if(key.equalsIgnoreCase("address")){
             metricItemValue="";
         }
@@ -1885,6 +1937,9 @@ public abstract class locationawareactivity extends baseactivity implements
                     List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                     if (addresses != null) {
                         Address returnedAddress = addresses.get(0);
+                        if(returnedAddress != null)
+                            xdata.getinstance().saveSetting(config.Country,returnedAddress.getCountryName());
+
                         StringBuilder strReturnedAddress = new StringBuilder("");
 
                         for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
