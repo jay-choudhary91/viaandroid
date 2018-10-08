@@ -719,16 +719,16 @@ public class common {
             metricItemName = "gpslongitude";
         } else if (key.equalsIgnoreCase("gpsquality")) {
             metricItemName = "gpsquality";
-        } else if (key.equalsIgnoreCase("gpsaltittude")) {
-            metricItemName = "gpsaltittude";
+        } else if (key.equalsIgnoreCase(config.gpsaltitude)) {
+            metricItemName = config.gpsaltitude;
         } else if (key.equalsIgnoreCase("gpsverticalaccuracy")) {
             metricItemName = "gpsverticalaccuracy";
         } else if (key.equalsIgnoreCase("brightness")) {
             metricItemName = "brightness";
         } else if (key.equalsIgnoreCase("wifi")) {
             metricItemName = "wifi";
-        } else if (key.equalsIgnoreCase("wifinetworksaveailable")) {
-            metricItemName = "wifinetworksaveailable";
+        } else if (key.equalsIgnoreCase(config.wifinetworkavailable)) {
+            metricItemName = config.wifinetworkavailable;
         } else if (key.equalsIgnoreCase("wificonnect")) {
             metricItemName = "wificonnect";
         } else if (key.equalsIgnoreCase("bluetoothonoff")) {
@@ -821,8 +821,8 @@ public class common {
             metricItemName = "decibel";
         } else if (key.equalsIgnoreCase("gpsnumberofsatelites")) {
             metricItemName = "gpsnumberofsatelites";
-        } else if (key.equalsIgnoreCase("distancetraveled")) {
-            metricItemName = "distancetraveled";
+        } else if (key.equalsIgnoreCase(config.distancetravelled)) {
+            metricItemName = config.distancetravelled;
         } else if (key.equalsIgnoreCase("debuggerattached")) {
             metricItemName = "debuggerattached";
         } else if (key.equalsIgnoreCase("currentcallinprogress")) {

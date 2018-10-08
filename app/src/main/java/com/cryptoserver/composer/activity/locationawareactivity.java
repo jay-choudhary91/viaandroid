@@ -514,7 +514,7 @@ public abstract class locationawareactivity extends baseactivity implements
         metricItemArraylist.add(new metricmodel("brightness", "",true));
         metricItemArraylist.add(new metricmodel("gpslatitude", "", true));
         metricItemArraylist.add(new metricmodel("gpslongitude", "", true));
-        metricItemArraylist.add(new metricmodel("gpsaltittude", "", true));
+        metricItemArraylist.add(new metricmodel(config.gpsaltitude, "", true));
         metricItemArraylist.add(new metricmodel("gpsquality", "", true));
         metricItemArraylist.add(new metricmodel("carrier", "", true));
         metricItemArraylist.add(new metricmodel("screenwidth", "", true));
@@ -552,7 +552,7 @@ public abstract class locationawareactivity extends baseactivity implements
         metricItemArraylist.add(new metricmodel("deviceid", "", true));
         metricItemArraylist.add(new metricmodel("bluetoothonoff", "", true));
         metricItemArraylist.add(new metricmodel("wifiname", "", true));
-        metricItemArraylist.add(new metricmodel("wifinetworksaveailable", "", true));
+        metricItemArraylist.add(new metricmodel(config.wifinetworkavailable, "", true));
         metricItemArraylist.add(new metricmodel("processorcount", "", true));
         metricItemArraylist.add(new metricmodel("activeprocessorcount", "", true));
         metricItemArraylist.add(new metricmodel(config.cpuusageuser, "", true));
@@ -566,7 +566,7 @@ public abstract class locationawareactivity extends baseactivity implements
         metricItemArraylist.add(new metricmodel(config.acceleration_x, "", true));
         metricItemArraylist.add(new metricmodel(config.acceleration_y, "", true));
         metricItemArraylist.add(new metricmodel(config.acceleration_z, "", true));
-        metricItemArraylist.add(new metricmodel("distancetraveled", "", true));
+        metricItemArraylist.add(new metricmodel(config.distancetravelled, "", true));
         metricItemArraylist.add(new metricmodel("dataconnection", "", true));
         metricItemArraylist.add(new metricmodel(config.currentcallinprogress, "", true));
         metricItemArraylist.add(new metricmodel(config.currentcalldurationseconds, "", true));
@@ -960,7 +960,7 @@ public abstract class locationawareactivity extends baseactivity implements
             int height = size.y;
             metricItemValue=""+height;
         }
-        else if(key.equalsIgnoreCase("wificonnect") || key.equalsIgnoreCase("wifinetworksaveailable") || key.equalsIgnoreCase("wifiname")
+        else if(key.equalsIgnoreCase("wificonnect") || key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wifiname")
                 || key.equalsIgnoreCase("connectedwifiquality") || key.equalsIgnoreCase("externalip"))
         {
             metricItemValue = "NO";
@@ -971,7 +971,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
                 if (connectionInfo != null && !TextUtils.isEmpty(connectionInfo.getSSID())) {
 
-                    if(key.equalsIgnoreCase("wifinetworksaveailable") || key.equalsIgnoreCase("wificonnect"))
+                    if(key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wificonnect"))
                         metricItemValue = "YES";
 
                     if(key.equalsIgnoreCase("externalip"))
@@ -1035,7 +1035,7 @@ public abstract class locationawareactivity extends baseactivity implements
             int percentage= (int) (batteryPct * 100);
             metricItemValue=""+percentage+"%";
         }
-        else if(key.equalsIgnoreCase("gpslatitude")|| key.equalsIgnoreCase("gpslongitude") || key.equalsIgnoreCase("gpsaltittude") ||
+        else if(key.equalsIgnoreCase("gpslatitude")|| key.equalsIgnoreCase("gpslongitude") || key.equalsIgnoreCase(config.gpsaltitude) ||
                 key.equalsIgnoreCase("gpsverticalaccuracy")
                 || key.equalsIgnoreCase("gpsquality") || key.equalsIgnoreCase("heading")
                 || key.equalsIgnoreCase("speed") || key.equalsIgnoreCase("gpsaccuracy"))
@@ -1808,7 +1808,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 xdata.getinstance().saveSetting(config.Longitude,""+location.getLongitude());
             }
 
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("distancetraveled")) {
+            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
                 metricItemArraylist.get(i).setMetricTrackValue("" + ((int)doubleTotalDistance));
             }
             if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
@@ -1820,13 +1820,13 @@ public abstract class locationawareactivity extends baseactivity implements
             }
         }
 
-        if(! xdata.getinstance().getSetting("gpsaltittude").trim().isEmpty())
+        if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
         {
             for (int i = 0; i < metricItemArraylist.size(); i++) {
 
-                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaltittude")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsaltittude")));
-                    xdata.getinstance().saveSetting(config.Altitude,""+xdata.getinstance().getSetting("gpsaltittude"));
+                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
+                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting(config.gpsaltitude)));
+                    xdata.getinstance().saveSetting(config.Altitude,""+xdata.getinstance().getSetting(config.gpsaltitude));
                 }
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
