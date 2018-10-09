@@ -65,8 +65,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -80,6 +82,13 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public abstract class locationawareactivity extends baseactivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -131,6 +140,15 @@ public abstract class locationawareactivity extends baseactivity implements
     private Handler myHandler;
     private Runnable myRunnable;
     public boolean isrecording=false;
+
+    long startTime;
+    long endTime;
+    long fileSize;
+    OkHttpClient client = new OkHttpClient();
+    // bandwidth in kbps
+    private int POOR_BANDWIDTH = 150;
+    private int AVERAGE_BANDWIDTH = 550;
+    private int GOOD_BANDWIDTH = 2000;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +159,77 @@ public abstract class locationawareactivity extends baseactivity implements
         manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE );
 
         getallpermissions();
+        getconnectionspeed();
+    }
+
+    public void getconnectionspeed()
+    {
+        if(! common.isnetworkconnected(locationawareactivity.this))
+        {
+            xdata.getinstance().saveSetting(config.Connectionspeed,"N/A");
+            return;
+        }
+
+
+        Request request = new Request.Builder()
+                .url("https://m.media-amazon.com/images/S/aplus-media/vc/6a9569ab-cb8e-46d9-8aea-a7022e58c74a.jpg")
+                .build();
+
+        startTime = System.currentTimeMillis();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                Headers responseHeaders = response.headers();
+                for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                    //  Log.d(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                }
+
+                InputStream input = response.body().byteStream();
+
+                try {
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+
+                    while (input.read(buffer) != -1) {
+                        bos.write(buffer);
+                    }
+                    byte[] docBuffer = bos.toByteArray();
+                    fileSize = bos.size();
+
+                } finally {
+                    input.close();
+                }
+
+                endTime = System.currentTimeMillis();
+
+                // calculate how long it took by subtracting endtime from starttime
+                double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
+                double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
+                final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
+
+                if(kilobytePerSec <= POOR_BANDWIDTH){
+                    // slow connection
+                }
+
+                // get the download speed by dividing the file size by time taken to download
+                double speed = fileSize / timeTakenMills;
+                double speedinmb=kilobytePerSec/1024;
+                xdata.getinstance().saveSetting(config.Connectionspeed,speedinmb+" Mbps");
+                /*Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
+                Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
+                Log.d("Case3 ", "Download Speed: " + speed);
+                Log.d("Case4 ", "File size: " + fileSize);*/
+            }
+
+        });
     }
 
     public void getallpermissions()
@@ -347,6 +436,15 @@ public abstract class locationawareactivity extends baseactivity implements
         //saving the user current location
         if(location != null)
         {
+            if(location.hasBearing())
+            {
+                Log.e("hasBearing ",""+location.getBearing());
+            }
+            else
+            {
+                Log.e("hasBearing ","none");
+            }
+
             googleutils.saveUserCurrentLocation(location);
 
             if(location.getLatitude() == 0.0)
@@ -625,8 +723,6 @@ public abstract class locationawareactivity extends baseactivity implements
                                     xdata.getinstance().saveSetting(config.PhoneType,value);
                                 } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("carrier")) {
                                     xdata.getinstance().saveSetting(config.CellProvider,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")) {
-                                    xdata.getinstance().saveSetting(config.Connectionspeed,value);
                                 } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("osversion")) {
                                     xdata.getinstance().saveSetting(config.OSversion,value);
                                 } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("wifiname")) {
@@ -666,6 +762,7 @@ public abstract class locationawareactivity extends baseactivity implements
                         {
                             dbtoxapiupdatecounter=0;
                             fetchmetadatadb();
+                            getconnectionspeed();
                         }
                     }
                 }).start();
@@ -1267,71 +1364,7 @@ public abstract class locationawareactivity extends baseactivity implements
         }else if(key.equalsIgnoreCase("country")) {
             metricItemValue = xdata.getinstance().getSetting(config.Country);
         }else if(key.equalsIgnoreCase("connectionspeed")){
-            metricItemValue="N/A";
-            ConnectivityManager cm =(ConnectivityManager)locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-            boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-            if(isConnected)
-            {
-                boolean TYPE_MOBILE = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
-                boolean TYPE_WIFI = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
-
-                if(TYPE_WIFI){
-                    final WifiManager wifiManager = (WifiManager)locationawareactivity.this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                    if (wifiInfo != null) {
-                        metricItemValue=String.valueOf(wifiManager.getConnectionInfo().getLinkSpeed()+" "+wifiInfo.LINK_SPEED_UNITS); //measured using WifiInfo.LINK_SPEED_UNITS
-                    }
-                }
-                else if(TYPE_MOBILE){
-                    if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_GPRS){
-                        // Bandwidth between 100 kbps and below
-                        metricItemValue="100 Kbps";
-                    } else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_EDGE){
-                        // Bandwidth between 50-100 kbps
-                        metricItemValue="75 Kbps";
-                    } else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_EVDO_0){
-                        // Bandwidth between 400-1000 kbps
-                        metricItemValue="700 Kbps";
-                    } else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_EVDO_A){
-                        // Bandwidth between 600-1400 kbps
-                        metricItemValue="1.0 Mbps";
-                    }
-                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_1xRTT){
-                        // Bandwidth between 50-100 kbps
-                        metricItemValue="50 Kbps";
-                    }
-                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_CDMA){
-                        // 14-64 kbps
-                        metricItemValue="64 Kbps";
-                    }
-                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_HSDPA){
-                        // 2-14 Mbps
-                        metricItemValue="10 Kbps";
-                    }
-                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_HSPA){
-                        // 700-1700 kbps
-                        metricItemValue="1000 Kbps";
-                    }
-                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_HSUPA){
-                        // 1-23 Mbps
-                        metricItemValue="15 Mbps";
-                    }
-                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_UMTS){
-                        // 400-7000 kbps
-                        metricItemValue="5 Mbps";
-                    }
-                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_LTE){
-                        // 2 Mbps-4 Mbps
-                        metricItemValue="4 Mbps";
-                    }
-                    else if(activeNetwork.getSubtype() == TelephonyManager.NETWORK_TYPE_UNKNOWN){
-                        // Unknown
-                        metricItemValue="N/A";
-                    }
-                }
-            }
-
+            metricItemValue=xdata.getinstance().getSetting(config.Connectionspeed);
         }else if(key.equalsIgnoreCase("address")){
             metricItemValue="";
         }
@@ -1870,6 +1903,37 @@ public abstract class locationawareactivity extends baseactivity implements
             if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
                 metricItemArraylist.get(i).setMetricTrackValue("" +currentaddress);
             }
+            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
+                metricItemArraylist.get(i).setMetricTrackValue("" + "N/A");
+                if(oldlocation != null)
+                {
+                    String angle=common.anglefromcoordinate(location.getLatitude(),location.getLongitude(),
+                            oldlocation.getLatitude(),oldlocation.getLongitude());
+                    xdata.getinstance().saveSetting(config.Heading,""+angle);
+                    metricItemArraylist.get(i).setMetricTrackValue("" + angle);
+                }
+            }
+            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
+                if(location.hasSpeed()){
+                    metricItemArraylist.get(i).setMetricTrackValue("" + location.getSpeed());
+                }else{
+                    if(oldlocation != null)
+                    {
+                        long meter=common.calculateDistance(location.getLatitude(),location.getLongitude(),
+                                oldlocation.getLatitude(),oldlocation.getLongitude());
+                        doubleTotalDistance=doubleTotalDistance+meter;
+                        double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
+                        double speed=meter/timeDifferance;
+                        String strspeed=""+speed;
+                        if(strspeed.contains("."))
+                            strspeed=strspeed.substring(0,strspeed.indexOf("."));
+
+                        metricItemArraylist.get(i).setMetricTrackValue("" +strspeed);
+                    }
+                }
+                xdata.getinstance().saveSetting(config.Speed,""+metricItemArraylist.get(i).getMetricTrackValue());
+
+            }
         }
 
         if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
@@ -1879,39 +1943,6 @@ public abstract class locationawareactivity extends baseactivity implements
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
                     metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting(config.gpsaltitude)));
                     xdata.getinstance().saveSetting(config.Altitude,""+xdata.getinstance().getSetting(config.gpsaltitude));
-                }
-
-                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + xdata.getinstance().getSetting("heading"));
-                    xdata.getinstance().saveSetting(config.Heading,""+xdata.getinstance().getSetting("heading"));
-
-                }
-
-                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-                    if(location.hasSpeed()){
-                        metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("speed")));
-                    }else{
-                        if(oldlocation != null)
-                        {
-                            long meter=common.calculateDistance(location.getLatitude(),location.getLongitude(),
-                                    oldlocation.getLatitude(),oldlocation.getLongitude());
-                            doubleTotalDistance=doubleTotalDistance+meter;
-                            double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
-                            double speed=meter/timeDifferance;
-                            String strspeed=""+speed;
-                            if(strspeed.contains("."))
-                            {
-                                strspeed=strspeed.substring(0,strspeed.indexOf("."));
-                            }
-                          // Log.e("speed inLocationAA0",""+timeDifferance);
-                          //  Log.e("speed inLocationAA1",""+speed);
-                          //  DecimalFormat dec = new DecimalFormat("0.00");
-                         //   Log.e("speed inLocationAA2",""+String.format("Value of a: %.2f", speed));
-                            metricItemArraylist.get(i).setMetricTrackValue("" +strspeed);
-                        }
-                    }
-                    xdata.getinstance().saveSetting(config.Speed,""+metricItemArraylist.get(i).getMetricTrackValue());
-
                 }
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
@@ -1948,13 +1979,13 @@ public abstract class locationawareactivity extends baseactivity implements
                         currentaddress = strReturnedAddress.toString();
                         googleutils.saveuseraddress(currentaddress);
                         xdata.getinstance().saveSetting(config.Address,currentaddress);
-                        Log.e("Myaddress", strReturnedAddress.toString());
+                   //     Log.e("Myaddress", strReturnedAddress.toString());
                     } else {
-                        Log.e("My address", "No Address returned!");
+                     //   Log.e("My address", "No Address returned!");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.w("Myaddress", "Canont get Address!");
+                //    Log.w("Myaddress", "Canont get Address!");
                 }
             }
         });
