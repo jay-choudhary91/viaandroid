@@ -12,7 +12,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.audiofx.Visualizer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -45,6 +48,7 @@ import com.cryptoserver.composer.models.graphicalmodel;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.VisualizerView;
+import com.cryptoserver.composer.utils.VisualizerViewMidea;
 import com.cryptoserver.composer.utils.WaveFromView;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -79,6 +83,7 @@ import java.io.InputStream;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -187,6 +192,11 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     private ArrayList<graphicalmodel> frameslist = new ArrayList<>();
 
     VisualizerView myvisualizerview;
+    VisualizerViewMidea myvisualizerviewmedia;
+
+    private MediaPlayer mMediaPlayer;
+    private Visualizer mVisualizer;
+    Uri videoUri = null;
 
     private Handler waveHandler;
     private Runnable waveRunnable;
@@ -195,8 +205,9 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     private Handler myhandler;
     private Runnable myrunnable;
     public String currenthashvalue="";
+    boolean ismideaplayer = false;
 
-
+    int counter = 0;
     long startTime;
     long endTime;
     long fileSize;
@@ -216,6 +227,9 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             scrollview_graphical.setVisibility(View.VISIBLE);
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
+            myvisualizerviewmedia = (VisualizerViewMidea) rootview.findViewById(R.id.myvisualizerviewmedia);
+
+
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
             img_compass = (ImageView) rootview.findViewById(R.id.img_compass);
             recyview_encryption.setNestedScrollingEnabled(false);
@@ -241,7 +255,11 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                             loaddata();
                             loadMap();
                             player = new MediaPlayer();
-                            start();
+                           if(ismideaplayer){
+                               initAudio();
+                           }else{
+                               start();
+                           }
                             setchartdata();
                         }catch (Exception e)
                         {
@@ -509,6 +527,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
             try {
                 if (mNoise != null)
+
+                    myvisualizerview.setVisibility(View.VISIBLE);
                     getaudiowave();
 
             } catch (Exception e) {
@@ -834,5 +854,66 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         msensormanager.unregisterListener(this);
     }
 
+    private void initAudio() {
+
+        if(mMediaPlayer != null){
+            getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            myvisualizerviewmedia.setVisibility(View.VISIBLE);
+
+            setupVisualizerFxAndUI();
+            // Make sure the visualizer is enabled only when you actually want to
+            // receive data, and
+            // when it makes sense to receive data.
+            mVisualizer.setEnabled(true);
+            // When the stream ends, we don't need to collect any more data. We
+            // don't do this in
+            // setupVisualizerFxAndUI because we likely want to have more,
+            // non-Visualizer related code
+            // in this callback.
+            mMediaPlayer
+                    .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            mVisualizer.setEnabled(false);
+                        }
+                    });
+            //mMediaPlayer.start();
+        }
+    }
+
+    private void setupVisualizerFxAndUI() {
+
+        // Create the Visualizer object and attach it to our media player.
+        mVisualizer = new Visualizer(mMediaPlayer.getAudioSessionId());
+
+        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+        mVisualizer.setDataCaptureListener(
+                new Visualizer.OnDataCaptureListener() {
+                    public void onWaveFormDataCapture(Visualizer visualizer,
+                                                      byte[] bytes, int samplingRate) {
+
+                        if(counter <25 ){
+                            Log.e("Sampling Rate", ""+ Arrays.toString(bytes));
+                            counter++;
+                        }
+                        myvisualizerviewmedia.updateVisualizer(bytes);
+
+                    }
+
+                    public void onFftDataCapture(Visualizer visualizer,
+                                                 byte[] bytes, int samplingRate) {
+                    }
+                }, Visualizer.getMaxCaptureRate() / 2, true, false);
+    }
+
+    public void setmideaplayerdata( boolean ismideaplayer , MediaPlayer mediaPlayer){
+        this.mMediaPlayer = mediaPlayer;
+        this.ismideaplayer = ismideaplayer;
+    }
+
+    public void setmideaplayerdata( boolean ismideaplayer){
+        this.ismideaplayer = ismideaplayer;
+    }
+
 }
+
 

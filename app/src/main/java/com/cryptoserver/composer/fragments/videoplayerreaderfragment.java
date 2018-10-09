@@ -394,6 +394,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 if(fragmentgraphic == null)
                 {
                     fragmentgraphic  = new graphicalfragment();
+                        if(selectedvideouri!= null)
+                            fragmentgraphic.setmideaplayerdata(true,player);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
                     transaction.commit();
@@ -978,6 +980,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if (resultCode == RESULT_OK) {
                 layout_scrubberview.setVisibility(View.GONE);
                 selectedvideouri = data.getData();
+
                 try {
                     //VIDEO_URL=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
                     VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
