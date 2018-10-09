@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.cryptoserver.composer.R;
+
 /**
  * Created by devesh on 9/10/18.
  */
@@ -19,6 +21,8 @@ public class VisualizerViewMidea extends View {
     private float[] mPoints;
     private Rect mRect = new Rect();
     private Paint mForePaint = new Paint();
+    private float density;
+    private int gap;
 
     public VisualizerViewMidea(Context context) {
         super(context);
@@ -37,6 +41,8 @@ public class VisualizerViewMidea extends View {
 
     private void init() {
         mBytes = null;
+        density = 200;
+        gap = 1;
         mForePaint.setStrokeWidth(1f);
         mForePaint.setAntiAlias(true);
         mForePaint.setColor(Color.rgb(0, 128, 255));
@@ -47,7 +53,7 @@ public class VisualizerViewMidea extends View {
         invalidate();
     }
 
-    @Override
+    /*@Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mBytes == null) {
@@ -67,6 +73,52 @@ public class VisualizerViewMidea extends View {
                     / 128;
         }
         canvas.drawLines(mPoints, mForePaint);
+    }*/
+
+    public void setDensity(float density) {
+        if (this.density > 180) {
+            this.mForePaint.setStrokeWidth(1);
+            this.gap = 1;
+        } else {
+            this.gap = 4;
+        }
+        this.density = density;
+        if (density > 256) {
+            this.density = 250;
+            this.gap = 0;
+        } else if (density <= 10) {
+            this.density = 10;
+        }
+    }
+
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (mForePaint.getColor() != Color.BLUE) {
+            mForePaint.setColor(getResources().getColor(R.color.soundwavecolor));
+        }
+        if (mBytes != null) {
+            float barWidth = getWidth() / density;
+            float div = mBytes.length / density;
+            canvas.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2, mForePaint);
+            mForePaint.setStrokeWidth(barWidth - gap);
+
+            for (int i = 0; i < density; i++) {
+                int x = (int) Math.ceil(i * div);
+
+                int top = canvas.getHeight() / 2
+                        + (128 - Math.abs(mBytes[x]))
+                        * (canvas.getHeight() / 2) / 128;
+
+                int bottom = canvas.getHeight() / 2
+                        - (128 - Math.abs(mBytes[x]))
+                        * (canvas.getHeight() / 2) / 128;
+
+                canvas.drawLine(i * barWidth, bottom, i * barWidth, getHeight() / 2, mForePaint);
+                canvas.drawLine(i * barWidth, top, i * barWidth, getHeight() / 2, mForePaint);
+            }
+            super.onDraw(canvas);
+        }
     }
 
 

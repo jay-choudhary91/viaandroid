@@ -498,6 +498,9 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
                         }
                         int x = mNoise.getAmplitudevoice();
+
+                        Log.e("Amplitude value",""+ x);
+
                         myvisualizerview.addAmplitude(x); // update the VisualizeView
                         myvisualizerview.invalidate();
                         //myvisualizerview.updateAmplitude(1f , true);
