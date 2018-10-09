@@ -210,9 +210,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
                 endTime = System.currentTimeMillis();
 
-
                 // calculate how long it took by subtracting endtime from starttime
-
                 double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
                 double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
                 final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
@@ -225,10 +223,10 @@ public abstract class locationawareactivity extends baseactivity implements
                 double speed = fileSize / timeTakenMills;
                 double speedinmb=kilobytePerSec/1024;
                 xdata.getinstance().saveSetting(config.Connectionspeed,speedinmb+" Mbps");
-                Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
+                /*Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
                 Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
                 Log.d("Case3 ", "Download Speed: " + speed);
-                Log.d("Case4 ", "File size: " + fileSize);
+                Log.d("Case4 ", "File size: " + fileSize);*/
             }
 
         });
