@@ -38,6 +38,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.activity.locationawareactivity;
 import com.cryptoserver.composer.adapter.encryptiondataadapter;
 import com.cryptoserver.composer.adapter.graphicaldataadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -196,17 +197,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     private Runnable myrunnable;
     public String currenthashvalue="";
 
-
-    long startTime;
-    long endTime;
-    long fileSize;
-    OkHttpClient client = new OkHttpClient();
-
-    // bandwidth in kbps
-    private int POOR_BANDWIDTH = 150;
-    private int AVERAGE_BANDWIDTH = 550;
-    private int GOOD_BANDWIDTH = 2000;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -252,70 +242,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 }
             });
             thread.start();
-
-            Request request = new Request.Builder()
-            .url("https://m.media-amazon.com/images/S/aplus-media/vc/6a9569ab-cb8e-46d9-8aea-a7022e58c74a.jpg")
-            .build();
-
-            startTime = System.currentTimeMillis();
-
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                    Headers responseHeaders = response.headers();
-                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
-                        //  Log.d(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                    }
-
-                    InputStream input = response.body().byteStream();
-
-                    try {
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        byte[] buffer = new byte[1024];
-
-                        while (input.read(buffer) != -1) {
-                            bos.write(buffer);
-                        }
-                        byte[] docBuffer = bos.toByteArray();
-                        fileSize = bos.size();
-
-                    } finally {
-                        input.close();
-                    }
-
-                    endTime = System.currentTimeMillis();
-
-
-                    // calculate how long it took by subtracting endtime from starttime
-
-                    double timeTakenMills = Math.floor(endTime - startTime);  // time taken in milliseconds
-                    double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
-                    final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
-
-                    if(kilobytePerSec <= POOR_BANDWIDTH){
-                        // slow connection
-                    }
-
-                    // get the download speed by dividing the file size by time taken to download
-                    double speed = fileSize / timeTakenMills;
-                    int speedinmb=kilobytePerSec/1024;
-                    txt_connection_speed.setText(config.Connectionspeed+"\n"+speedinmb+" Mbps");
-
-                    Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
-                    Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
-                    Log.d("Case3 ", "Download Speed: " + speed);
-                    Log.d("Case4 ", "File size: " + fileSize);
-                }
-
-            });
-
         }
         return rootview;
     }
@@ -336,6 +262,11 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                     common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
                             txt_gps_accuracy,txt_screensize,txt_country,txt_cpuusage,txt_brightness,txt_timezone,txt_memoryusage,txt_bluetooth,
                             txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
+
+                    if(! common.isnetworkconnected(applicationviavideocomposer.getactivity()))
+                        xdata.getinstance().saveSetting(config.Connectionspeed,"N/A");
+
+                    txt_connection_speed.setText(config.Connectionspeed+"\n"+xdata.getinstance().getSetting(config.Connectionspeed));
 
                     if(gethelper().getrecordingrunning())
                     {
