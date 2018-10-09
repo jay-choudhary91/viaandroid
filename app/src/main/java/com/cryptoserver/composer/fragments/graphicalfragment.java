@@ -825,10 +825,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                     public void onWaveFormDataCapture(Visualizer visualizer,
                                                       byte[] bytes, int samplingRate) {
 
-                        if(counter <25 ){
-                            Log.e("Sampling Rate", ""+ Arrays.toString(bytes));
-                            counter++;
-                        }
                         myvisualizerviewmedia.updateVisualizer(bytes);
 
                     }

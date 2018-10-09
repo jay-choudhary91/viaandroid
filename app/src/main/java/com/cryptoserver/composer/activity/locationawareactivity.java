@@ -701,6 +701,8 @@ public abstract class locationawareactivity extends baseactivity implements
                     @Override
                     public void run() {
 
+                        getconnectionspeed();
+
                         if(getcurrentfragment() instanceof videocomposerfragment)
                         {
                             isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
@@ -762,7 +764,6 @@ public abstract class locationawareactivity extends baseactivity implements
                         {
                             dbtoxapiupdatecounter=0;
                             fetchmetadatadb();
-                            getconnectionspeed();
                         }
                     }
                 }).start();
