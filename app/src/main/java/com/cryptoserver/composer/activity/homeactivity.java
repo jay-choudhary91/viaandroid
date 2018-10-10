@@ -2,8 +2,10 @@ package com.cryptoserver.composer.activity;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,9 +35,11 @@ import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.services.callservice;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -67,12 +71,16 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @BindView(R.id.fragment_container)
     FrameLayout fragment_container;
 
+    private IntentFilter intentfilter;
+    private BroadcastReceiver broadcast;
+    private fragmentvideolist fragvideolist;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
-
         applicationviavideocomposer.setActivity(homeactivity.this);
+
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             videoplayerreaderfragment frag=new videoplayerreaderfragment();
@@ -82,8 +90,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             /*graphicalfragment frag=new graphicalfragment();
             replaceFragment(frag, false, true);*/
-            fragmentvideolist frag=new fragmentvideolist();
-            replaceFragment(frag, false, true);
+            /*if (common.getdeniedpermissions().isEmpty())
+                deletetempdirectory();*/
+
+            fragvideolist=new fragmentvideolist();
+            replaceFragment(fragvideolist, false, true);
         }
 
         imgaddicon.setOnClickListener(this);
@@ -118,6 +129,32 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         Log.i ("isMyServiceRunning?", false+"");
         return false;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        intentfilter = new IntentFilter(common.broadcastreceivervideo);
+        broadcast = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+                if((fragvideolist != null))
+                    fragvideolist.getVideoList();
+            }
+        };
+        registerReceiver(broadcast, intentfilter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            unregisterReceiver(broadcast);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

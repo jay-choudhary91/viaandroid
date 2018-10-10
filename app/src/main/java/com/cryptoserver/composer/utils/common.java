@@ -1,6 +1,7 @@
 package com.cryptoserver.composer.utils;
 
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
@@ -14,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -40,6 +42,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
@@ -944,6 +947,43 @@ public class common {
         return String.valueOf(new DecimalFormat("#.#").format(brng));
     }
 
+    public static List<String> getdeniedpermissions()
+    {
+        String[] neededpermissions = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        };
+        List<String> deniedpermissions = new ArrayList<>();
+        for (String permission : neededpermissions) {
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                deniedpermissions.add(permission);
+            }
+        }
+        return deniedpermissions;
+    }
+
+    public static void deletevideofile(String filename)
+    {
+        File sourcefile=new File(filename);
+        try {
+            File dir = new File(config.videodir);
+            if (dir.isDirectory())
+            {
+                String[] children = dir.list();
+                for (int i = 0; i < children.length; i++)
+                {
+                    if(children[i].contains(sourcefile.getName()))
+                        new File(dir, children[i]).delete();
+                }
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+
     public static void exportvideo(File lastrecordedvideo,boolean savetohome)
     {
         String sourcePath = lastrecordedvideo.getAbsolutePath();
@@ -1012,12 +1052,13 @@ public class common {
             }catch (Exception e)
             {
                 e.printStackTrace();
+                Log.e("Video export ","Error1");
             }
 
         }catch (Exception e)
         {
             e.printStackTrace();
-            Toast.makeText(applicationviavideocomposer.getactivity(),"An error occured!",Toast.LENGTH_SHORT).show();
+            Log.e("Video export ","Error2");
         }
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override

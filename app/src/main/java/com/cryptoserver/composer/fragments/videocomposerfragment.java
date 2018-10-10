@@ -345,6 +345,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private Runnable myRunnable;
     private int lastmetricescount=0;
     graphicalfragment fragmentgraphic;
+    private boolean issavedtofolder=false;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -1030,13 +1031,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     private File getVideoFile(Context context) {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(context.getExternalFilesDir(null), fileName+".mp4");
+        File file=new File(config.videodir, fileName+".mp4");
+
+        File destinationDir=new File(config.videodir);
+        try {
+
+            if (!destinationDir.exists())
+                destinationDir.mkdirs();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         selectedvideofile=file.getAbsolutePath();
         return file;
     }
     private void startRecordingVideo() {
         try {
             // UI
+            issavedtofolder=false;
             mIsRecordingVideo = true;
             // Start recording
             mMediaRecorder.start();
@@ -1048,8 +1061,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     private void stopRecordingVideo() {
         // UI
+        issavedtofolder=true;
         mIsRecordingVideo = false;
-
+        lastrecordedvideo=new File(selectedvideofile);
         /*Activity activity = getActivity();
         if (null != activity) {
             Toast.makeText(activity, "Video saved: " + getVideoFile(activity),
@@ -1073,7 +1087,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
                 mMediaRecorder.reset();
 
-                lastrecordedvideo=new File(selectedvideofile);
                 startPreview();
                 stopvideotimer();
                 madapterclick.onItemClicked(null,1);
@@ -1087,7 +1100,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     @Override
                     public void run() {
                         savevideocomplete();
-                        common.exportvideo(lastrecordedvideo,false);
+                        //common.exportvideo(lastrecordedvideo,false);
                         setvideoadapter();
                     }
                 }).start();
@@ -1627,6 +1640,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        try {
+            if(! issavedtofolder && common.getdeniedpermissions().isEmpty() && (selectedvideofile != null )
+                    && new File(selectedvideofile).exists())
+                common.deletevideofile(selectedvideofile);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
     }
@@ -1933,7 +1957,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         launchvideolist();
 
                     }
-                },2000);
+                },100);
             }
         });
 

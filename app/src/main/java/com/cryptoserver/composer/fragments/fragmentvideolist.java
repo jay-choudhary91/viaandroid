@@ -86,8 +86,6 @@ public class fragmentvideolist extends basefragment {
     private static final int request_write_external_storage = 2;
     private Uri selectedimageuri =null;
     private String selectedvideopath ="";
-    private IntentFilter intentfilter;
-    private BroadcastReceiver broadcast;
 
     @Override
     public int getlayoutid() {
@@ -102,29 +100,9 @@ public class fragmentvideolist extends basefragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        intentfilter = new IntentFilter(common.broadcastreceivervideo);
-        broadcast = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent)
-            {
-
-            }
-        };
-        getActivity().registerReceiver(broadcast, intentfilter);
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         isinbackground=true;
-        try {
-            getActivity().unregisterReceiver(broadcast);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -138,38 +116,21 @@ public class fragmentvideolist extends basefragment {
         super.onResume();
         isinbackground=false;
         recyrviewvideolist.addOnItemTouchListener(onTouchListener);
-        if (getdeniedpermissions().isEmpty()) {
-            // All permissions are granted
-            deletetempdirectory();
-        }
     }
 
     public void requestpremission()
     {
-        if (getdeniedpermissions().isEmpty()) {
+        if (common.getdeniedpermissions().isEmpty()) {
             // All permissions are granted
             getVideoList();
         } else {
-            String[] array = new String[getdeniedpermissions().size()];
-            array = getdeniedpermissions().toArray(array);
+            String[] array = new String[common.getdeniedpermissions().size()];
+            array = common.getdeniedpermissions().toArray(array);
             ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
         }
     }
 
-    public List<String> getdeniedpermissions()
-    {
-        String[] neededpermissions = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        };
-        List<String> deniedpermissions = new ArrayList<>();
-        for (String permission : neededpermissions) {
-            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                deniedpermissions.add(permission);
-            }
-        }
-        return deniedpermissions;
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -228,7 +189,7 @@ public class fragmentvideolist extends basefragment {
             });
 
             launchvideocomposer(false);
-            if (getdeniedpermissions().isEmpty()) {
+            if (common.getdeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();
             }
@@ -406,23 +367,7 @@ public class fragmentvideolist extends basefragment {
         }
     }
 
-    public void deletetempdirectory()
-    {
-        try {
-            File dir = new File(config.tempvideodir);
-            if (dir.isDirectory())
-            {
-                String[] children = dir.list();
-                for (int i = 0; i < children.length; i++)
-                {
-                    new File(dir, children[i]).delete();
-                }
-            }
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
+
 
     @Override
     public void onHeaderBtnClick(int btnid) {
@@ -605,7 +550,7 @@ public class fragmentvideolist extends basefragment {
                 }
             }).show();
         }else if(type == 3){
-          //  getVideoList();
+            getVideoList();
         }else if(type == 4){
             videoplayercomposerfragment videoplayercomposerfragment = new videoplayercomposerfragment();
             videoplayercomposerfragment.setdata(videoobj.getPath());
