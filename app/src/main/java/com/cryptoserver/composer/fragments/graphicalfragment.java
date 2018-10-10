@@ -229,7 +229,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_encryption.setLayoutManager(encryptionmanager);
             recyview_encryption.setAdapter(encryptionadapter);
 
-            txt_connection_speed.setText(config.Connectionspeed+"\n"+"N/A");
             if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
 
@@ -269,13 +268,15 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         myrunnable = new Runnable() {
             @Override
             public void run() {
-                if(isgraphicopen && gethelper().getrecordingrunning())
+                if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
                 {
                     common.locationAnalyticsdata(txt_latitude,txt_longitude,
                             txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
                     common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
                             txt_gps_accuracy,txt_screensize,txt_country,txt_cpuusage,txt_brightness,txt_timezone,txt_memoryusage,txt_bluetooth,
                             txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
+
+                    txt_connection_speed.setText(config.Connectionspeed+"\n"+"N/A");
 
                     if(! common.isnetworkconnected(applicationviavideocomposer.getactivity()))
                         xdata.getinstance().saveSetting(config.Connectionspeed,"N/A");
@@ -285,7 +286,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                     txt_data_hash.setText(currenthashvalue);
                     txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
                 }
-                myhandler.postDelayed(this, 4000);
+                myhandler.postDelayed(this, 2500);
             }
         };
         myhandler.post(myrunnable);
@@ -417,7 +418,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
                     try {
 
-                        if(gethelper().getrecordingrunning())
+                        if((gethelper().getrecordingrunning() || ismideaplayer))
                         {
                             int x = mNoise.getAmplitudevoice();
                             Log.e("Amplitude value",""+ x);
@@ -444,16 +445,16 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
             mNoise = new noise();
 
-            if (mNoise != null) {
-                if (mNoise != null)
-                    mNoise.start();
-            }
+            if (mNoise != null)
+                mNoise.start();
 
             try {
                 if (mNoise != null)
-
+                {
                     myvisualizerview.setVisibility(View.VISIBLE);
                     getaudiowave();
+                }
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -725,7 +726,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             float deltaZ = Math.abs(event.values[2]);
             Math.sin(deltaX);
 
-            if(isgraphicopen && gethelper().getrecordingrunning())
+            if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
             {
                 txt_xaxis.setText("X-Axis \n"+deltaX);
                 txt_yaxis.setText("Y-Axis \n"+deltaY);
@@ -794,7 +795,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             mMediaPlayer
                     .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         public void onCompletion(MediaPlayer mediaPlayer) {
-                            mVisualizer.setEnabled(false);
+                            //mVisualizer.setEnabled(false);
                         }
                     });
             //mMediaPlayer.start();
