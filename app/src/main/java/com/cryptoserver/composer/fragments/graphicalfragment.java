@@ -269,7 +269,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         myrunnable = new Runnable() {
             @Override
             public void run() {
-                if(isgraphicopen)
+                if(isgraphicopen && gethelper().getrecordingrunning())
                 {
                     common.locationAnalyticsdata(txt_latitude,txt_longitude,
                             txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
@@ -282,11 +282,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
                     txt_connection_speed.setText(config.Connectionspeed+"\n"+xdata.getinstance().getSetting(config.Connectionspeed));
 
-                    if(gethelper().getrecordingrunning())
-                    {
-                        txt_data_hash.setText(currenthashvalue);
-                        txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
-                    }
+                    txt_data_hash.setText(currenthashvalue);
+                    txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
                 }
                 myhandler.postDelayed(this, 4000);
             }
@@ -422,15 +419,12 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
                         if(gethelper().getrecordingrunning())
                         {
-
+                            int x = mNoise.getAmplitudevoice();
+                            Log.e("Amplitude value",""+ x);
+                            myvisualizerview.addAmplitude(x); // update the VisualizeView
+                            myvisualizerview.invalidate();
+                            //myvisualizerview.updateAmplitude(1f , true);
                         }
-                        int x = mNoise.getAmplitudevoice();
-
-                        Log.e("Amplitude value",""+ x);
-
-                        myvisualizerview.addAmplitude(x); // update the VisualizeView
-                        myvisualizerview.invalidate();
-                        //myvisualizerview.updateAmplitude(1f , true);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -731,7 +725,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             float deltaZ = Math.abs(event.values[2]);
             Math.sin(deltaX);
 
-            if(isgraphicopen)
+            if(isgraphicopen && gethelper().getrecordingrunning())
             {
                 txt_xaxis.setText("X-Axis \n"+deltaX);
                 txt_yaxis.setText("Y-Axis \n"+deltaY);

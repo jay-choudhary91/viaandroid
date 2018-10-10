@@ -173,21 +173,24 @@
                             android:id="@+id/txt_xaxis"
                             app:fontType="OpenSans_Regular"
                             style="@style/txt_normalview"
+                            android:gravity="center"
                             android:text=""/>
 
                         <com.cryptoserver.composer.views.customfonttextview
                             android:id="@+id/txt_yaxis"
                             app:fontType="OpenSans_Regular"
                             style="@style/txt_normalview"
+                            android:gravity="center"
                             android:text=""/>
 
                         <com.cryptoserver.composer.views.customfonttextview
                             android:id="@+id/txt_zaxis"
                             app:fontType="OpenSans_Regular"
                             style="@style/txt_normalview"
+                            android:gravity="center"
                             android:text=""/>
 
-                        </LinearLayout>
+                    </LinearLayout>
 
                     <ImageView
                         android:layout_width="0dp"
@@ -198,6 +201,7 @@
 
 
             </LinearLayout>
+
 
 
 
