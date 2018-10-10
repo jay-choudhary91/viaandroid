@@ -148,6 +148,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     private videoframeadapter mmetricesadapter,mhashesadapter;
     private framebitmapadapter adapter;
     private graphicalfragment fragmentgraphic;
+    private Handler waveHandler;
+    private Runnable waveRunnable;
+    boolean runmethod = false;
 
     @Override
     public int getlayoutid() {
@@ -566,6 +569,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 handleimageview.setVisibility(View.GONE);
                 gethelper().updateactionbar(0);
                 controller.controllersview.setVisibility(View.GONE);
+
             }
             else
             {
@@ -626,6 +630,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
+
                 if(player!=null)
                    changeactionbarcolor();
 
@@ -725,8 +730,16 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         {
             e.printStackTrace();
         }
+
         controller.show();
         frontview.setVisibility(View.GONE);
+
+        if(fragmentgraphic != null && selectedvideouri!=null){
+
+            fragmentgraphic.setmideaplayerdata(true,player);
+        }
+
+
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
@@ -979,6 +992,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
             if (resultCode == RESULT_OK) {
                 layout_scrubberview.setVisibility(View.GONE);
+                Log.e("responce time","Video picin gallery ====" );
                 selectedvideouri = data.getData();
 
                 try {
@@ -1127,7 +1141,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         });
     }
 
-    public void setupVideoPlayer(Uri selectedimageuri)
+    public void setupVideoPlayer(final Uri selectedimageuri)
     {
         try {
             player = new MediaPlayer();
@@ -1145,6 +1159,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 player.setOnCompletionListener(this);
                 if(player!=null)
                     changeactionbarcolor();
+
             }
 
 
@@ -1304,7 +1319,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                         Thread thread = new Thread(){
                             public void run(){
-                                getFramesBitmap();
+                               // getFramesBitmap();
                                 setVideoAdapter();
                             }
                         };

@@ -244,12 +244,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                         try {
                             loaddata();
                             loadMap();
-                            player = new MediaPlayer();
-                           if(ismideaplayer){
-                               initAudio();
-                           }else{
-                               start();
-                           }
+                          //  player = new MediaPlayer();
+                            setvisualizer();
                             setchartdata();
                         }catch (Exception e)
                         {
@@ -787,6 +783,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     private void initAudio() {
 
         if(mMediaPlayer != null){
+
             getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
             myvisualizerviewmedia.setVisibility(View.VISIBLE);
 
@@ -813,6 +810,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     private void setupVisualizerFxAndUI() {
 
         // Create the Visualizer object and attach it to our media player.
+
         mVisualizer = new Visualizer(mMediaPlayer.getAudioSessionId());
 
         mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
@@ -832,12 +830,27 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     }
 
     public void setmideaplayerdata( boolean ismideaplayer , MediaPlayer mediaPlayer){
+
         this.mMediaPlayer = mediaPlayer;
         this.ismideaplayer = ismideaplayer;
+        if(mVisualizer != null){
+            mVisualizer.setEnabled(false);
+            setvisualizer();
+        }
+
     }
 
     public void setmideaplayerdata( boolean ismideaplayer){
         this.ismideaplayer = ismideaplayer;
+    }
+
+
+    public void setvisualizer(){
+        if(ismideaplayer){
+            initAudio();
+        }else{
+            start();
+        }
     }
 
 }
