@@ -903,13 +903,13 @@ public class common {
         DecimalFormat dec = new DecimalFormat("0.00");
 
         if (t > 1) {
-            internalmermory = dec.format(t).concat(" TB");
+            internalmermory = dec.format(t).concat(" tb");
         } else if (g > 1) {
-            internalmermory = dec.format(g).concat(" GB");
+            internalmermory = dec.format(g).concat(" gb");
         } else if (m > 1) {
-            internalmermory = dec.format(m).concat(" MB");
+            internalmermory = dec.format(m).concat(" mb");
         } else if (k > 1) {
-            internalmermory = dec.format(k).concat(" KB");
+            internalmermory = dec.format(k).concat(" kb");
         } else {
 
             internalmermory = dec.format(b);
