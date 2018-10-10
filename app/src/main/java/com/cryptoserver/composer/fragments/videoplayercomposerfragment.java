@@ -264,6 +264,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 if(fragmentgraphic == null)
                 {
                     fragmentgraphic  = new graphicalfragment();
+                    fragmentgraphic.setmideaplayerdata(true,player);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
                     transaction.commit();
@@ -551,6 +552,12 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             else
             {
                 mp.seekTo(100);
+            }
+
+
+            if(fragmentgraphic != null){
+
+                fragmentgraphic.setmideaplayerdata(true,player);
             }
 
         }catch (Exception e)
