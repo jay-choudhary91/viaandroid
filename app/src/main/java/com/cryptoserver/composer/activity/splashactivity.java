@@ -34,24 +34,22 @@ public class splashactivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         //ImageView img_image=(ImageView)findViewById(R.id.img_image);
-
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-            Intent in=new Intent(splashactivity.this,homeactivity.class);
-            startActivity(in);
-            finish();
-        }
-        else
-        {
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                {
+                    Intent in=new Intent(splashactivity.this,homeactivity.class);
+                    startActivity(in);
+                    finish();
+                }
+                else
+                {
                     Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
                     startActivity(intent);
                     finish();
                 }
-            },1500);
-        }
+            }
+        },1500);
     }
 }

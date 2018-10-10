@@ -741,7 +741,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 txt_yaxis.setText("Y-Axis \n"+deltaY);
                 txt_zaxis.setText("Z-Axis \n"+deltaZ);
             }
-
         }
         else
         {
@@ -755,13 +754,10 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
             // how long the animation will take place
             ra.setDuration(210);
-
             ra.setFillAfter(true);
-
             img_compass.startAnimation(ra);
             currentDegree = -degree;
         }
-
     }
 
     @Override

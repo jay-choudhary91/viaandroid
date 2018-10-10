@@ -42,8 +42,8 @@ public class introscreenactivity extends AppCompatActivity {
     Date initialdate;
     private Handler myhandler;
     private Runnable myrunnable;
-    introscreenactivity.headerpageradapter headerpageradapter;
-    introscreenactivity.footerpageradapter footerpageradapter;
+    headerpageradapter headerpageradapter;
+    footerpageradapter footerpageradapter;
     TextView btnstartrecord;
     RadioGroup radiogroup;
 
@@ -212,35 +212,6 @@ public class introscreenactivity extends AppCompatActivity {
         });
 
     }
-
-    public void getconnectionspeed()
-    {
-        SpeedTestSocket speedTestSocket = new SpeedTestSocket();
-        speedTestSocket.addSpeedTestListener(new ISpeedTestListener() {
-
-            @Override
-            public void onCompletion(SpeedTestReport report) {
-                // called when download/upload is complete
-                System.out.println("[COMPLETED] rate in octet/s : " + report.getTransferRateOctet());
-                System.out.println("[COMPLETED] rate in bit/s   : " + report.getTransferRateBit());
-            }
-
-            @Override
-            public void onError(SpeedTestError speedTestError, String errorMessage) {
-                // called when a download/upload error occur
-                System.out.println("[ERROR]: " + errorMessage + "");
-            }
-
-            @Override
-            public void onProgress(float percent, SpeedTestReport report) {
-                // called to notify download/upload progress
-                System.out.println("[PROGRESS] progress : " + percent + "%");
-                System.out.println("[PROGRESS] rate in octet/s : " + report.getTransferRateOctet());
-                System.out.println("[PROGRESS] rate in bit/s   : " + report.getTransferRateBit());
-            }
-        });
-    }
-
 
     public void setviewpager(int position)
     {

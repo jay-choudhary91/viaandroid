@@ -8,6 +8,7 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +52,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
@@ -58,8 +60,12 @@ import com.cryptoserver.composer.models.metricmodel;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -103,6 +109,8 @@ public class common {
     public static final String NETWORK_EHRPD = "EHRPD (3G)";
     public static final String NETWORK_HSPAP = "HSPAP (3G)";
     public static final String NETWORK_UNKOWN = "Unknown";
+
+    public static final String broadcastreceivervideo = "broadcastreceivervideo";
 
     private static final String ACTION_USB_PERMISSION =
             "com.android.example.USB_PERMISSION";
@@ -934,6 +942,89 @@ public class common {
         brng = 360 - brng;
 
         return String.valueOf(new DecimalFormat("#.#").format(brng));
+    }
+
+    public static void exportvideo(File lastrecordedvideo,boolean savetohome)
+    {
+        String sourcePath = lastrecordedvideo.getAbsolutePath();
+        File sourceFile = new File(sourcePath);
+
+        File destinationDir=null;
+
+        if(savetohome)
+        {
+            destinationDir = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_MOVIES), BuildConfig.APPLICATION_ID);
+        }
+        else
+        {
+            destinationDir=new File(config.videodir);
+        }
+
+        if (!destinationDir.exists())
+            destinationDir.mkdirs();
+
+        final File mediaFile = new File(destinationDir.getPath() + File.separator +
+                sourceFile.getName());
+        try
+        {
+            if (!mediaFile.getParentFile().exists())
+                mediaFile.getParentFile().mkdirs();
+
+            if (!mediaFile.exists()) {
+                mediaFile.createNewFile();
+            }
+
+            InputStream in = new FileInputStream(sourceFile);
+            OutputStream out = new FileOutputStream(mediaFile);
+
+            // Copy the bits from instream to outstream
+            byte[] buf = new byte[1024];
+            int len;
+
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            in.close();
+            out.close();
+
+            try
+            {
+                if(savetohome)
+                {
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentValues values = new ContentValues(3);
+                            values.put(MediaStore.Video.Media.TITLE, "Via composer");
+                            values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                            values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
+                            applicationviavideocomposer.getactivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                        }
+                    });
+                }
+                else
+                {
+                    Intent Broadcastintent = new Intent(common.broadcastreceivervideo);
+                    applicationviavideocomposer.getactivity().sendBroadcast(Broadcastintent);
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            Toast.makeText(applicationviavideocomposer.getactivity(),"An error occured!",Toast.LENGTH_SHORT).show();
+        }
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressdialog.dismisswaitdialog();
+            }
+        });
     }
 
 

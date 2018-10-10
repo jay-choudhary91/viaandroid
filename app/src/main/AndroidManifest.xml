@@ -91,6 +91,7 @@
                 android:resource="@xml/device_filter" />
         </activity>
         <activity android:name=".activity.introscreenactivity"/>
+
     </application>
 
 </manifest>

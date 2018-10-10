@@ -1075,8 +1075,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 lastrecordedvideo=new File(selectedvideofile);
                 startPreview();
                 stopvideotimer();
-                exportvideo(false);
-
                 madapterclick.onItemClicked(null,1);
                 mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
                 layout_bottom.setVisibility(View.GONE);
@@ -1084,32 +1082,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 resetvideotimer();
                 clearvideolist();
 
-                progressdialog.dismisswaitdialog();
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        setvideoadapter();
                         savevideocomplete();
+                        common.exportvideo(lastrecordedvideo,false);
+                        setvideoadapter();
                     }
                 }).start();
 
                 mrecordimagebutton.setEnabled(true);
                 showsharepopupmain();
-
-               /* progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressdialog.dismisswaitdialog();
-                        mrecordimagebutton.setEnabled(true);
-                        showsharepopupmain();
-                    }
-                },2000);*/
             }
         },100);
-
-
     }
 
     public void setvideoadapter() {
@@ -1500,87 +1485,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     };
 
-    public void exportvideo(boolean savetohome)
-    {
-        String sourcePath = lastrecordedvideo.getAbsolutePath();
-        File sourceFile = new File(sourcePath);
 
-        File destinationDir=null;
-
-        if(savetohome)
-        {
-            destinationDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_MOVIES), BuildConfig.APPLICATION_ID);
-        }
-        else
-        {
-            destinationDir=new File(config.videodir);
-        }
-
-        if (!destinationDir.exists())
-            destinationDir.mkdirs();
-
-        File mediaFile = new File(destinationDir.getPath() + File.separator +
-                sourceFile.getName());
-        try
-        {
-            if (!mediaFile.getParentFile().exists())
-                mediaFile.getParentFile().mkdirs();
-
-            if (!mediaFile.exists()) {
-                mediaFile.createNewFile();
-            }
-
-            InputStream in = new FileInputStream(sourceFile);
-            OutputStream out = new FileOutputStream(mediaFile);
-
-            // Copy the bits from instream to outstream
-            byte[] buf = new byte[1024];
-            int len;
-
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-
-            in.close();
-            out.close();
-
-            try
-            {
-                if(savetohome)
-                {
-                    ContentValues values = new ContentValues(3);
-                    values.put(MediaStore.Video.Media.TITLE, "Via composer");
-                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                    values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
-                    applicationviavideocomposer.getactivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-                }
-
-
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            Toast.makeText(applicationviavideocomposer.getactivity(),"An error occured!",Toast.LENGTH_SHORT).show();
-        }
-
-        progressdialog.dismisswaitdialog();
-    }
 
     public void clearvideolist()
     {
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 layout_bottom.setVisibility(View.VISIBLE);
                 imgflashon.setVisibility(View.VISIBLE);
                 rotatecamera.setVisibility(View.VISIBLE);
-
             }
         });
     }
@@ -2032,7 +1946,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         if(subdialogshare != null && subdialogshare.isShowing())
                             subdialogshare.dismiss();
 
-                        exportvideo(true);
+                        common.exportvideo(lastrecordedvideo,true);
                         launchvideolist();
 
                     }

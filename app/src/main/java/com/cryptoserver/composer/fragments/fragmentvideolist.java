@@ -1,8 +1,11 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -34,7 +37,6 @@ import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.xdata;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -82,8 +84,10 @@ public class fragmentvideolist extends basefragment {
 
     private static final int request_read_external_storage = 1;
     private static final int request_write_external_storage = 2;
-    Uri selectedimageuri =null;
+    private Uri selectedimageuri =null;
     private String selectedvideopath ="";
+    private IntentFilter intentfilter;
+    private BroadcastReceiver broadcast;
 
     @Override
     public int getlayoutid() {
@@ -96,10 +100,31 @@ public class fragmentvideolist extends basefragment {
         super.initviews(parent, savedInstanceState);
         ButterKnife.bind(this,parent);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        intentfilter = new IntentFilter(common.broadcastreceivervideo);
+        broadcast = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent)
+            {
+
+            }
+        };
+        getActivity().registerReceiver(broadcast, intentfilter);
+    }
+
     @Override
     public void onStop() {
         super.onStop();
         isinbackground=true;
+        try {
+            getActivity().unregisterReceiver(broadcast);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -580,7 +605,7 @@ public class fragmentvideolist extends basefragment {
                 }
             }).show();
         }else if(type == 3){
-            getVideoList();
+          //  getVideoList();
         }else if(type == 4){
             videoplayercomposerfragment videoplayercomposerfragment = new videoplayercomposerfragment();
             videoplayercomposerfragment.setdata(videoobj.getPath());
