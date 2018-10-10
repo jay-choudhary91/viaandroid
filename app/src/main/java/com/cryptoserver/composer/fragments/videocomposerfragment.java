@@ -447,15 +447,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
             });
 
-
             timerhandler = new Handler() ;
             gethelper().updateheader("00:00:00");
-
-
-
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                 frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
-
 
             if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
                     xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
@@ -534,6 +529,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             setmetriceshashesdata();
 
+            if(fragmentgraphic == null)
+            {
+                fragmentgraphic  = new graphicalfragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
+                transaction.commit();
+            }
         }
         return rootview;
     }
@@ -572,7 +574,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             case  R.id.texture:
                 try {
-                   // hideshowcontroller(false);
                     Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
                     if (rect == null) return false;
                     float currentFingerSpacing;
@@ -615,7 +616,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
                     }
 
-                    else { //Single touch point, needs to return true in order to detect one more touch point
+                    else {
 
                         switch (motionEvent.getAction()){
                             case MotionEvent.ACTION_DOWN:
@@ -1217,14 +1218,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                if(fragmentgraphic == null)
-                {
-                    fragmentgraphic  = new graphicalfragment();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
-                    transaction.commit();
-                }
-
                 break;
         }
     }
@@ -1528,16 +1521,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
             }
         });
-    }
-
-    public videomodel updatelistitem(byte[] array, String message)
-    {
-        if(array == null || array.length == 0)
-            return null;
-
-        String keyvalue= getkeyvalue(array);
-        Log.e("number ",""+currentframenumber);
-        return new videomodel(message+" "+ keytype +" "+ currentframenumber + ": " + keyvalue);
     }
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
