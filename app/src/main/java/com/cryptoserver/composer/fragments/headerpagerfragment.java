@@ -50,31 +50,32 @@ public class headerpagerfragment extends Fragment {
 
     public void loadAnimation()
     {
-        new Handler().postDelayed(new Runnable() {
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 isgifloaded =true;
 
-                try {
-                    GifDrawable gifDrawable = null;
-                    try {
-                        gifDrawable = new GifDrawable(getResources(), introobject.getImage());
-                        gifDrawable.setLoopCount(1);
-                        gifDrawable.setSpeed(2.0f);
-                       int i= gifDrawable.getDuration();
-                       Log.e("duration",""+i+ "........"+introobject.getTitle());
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    imggif.setImageDrawable(gifDrawable);
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
 
             }
-        },100);
+        },100);*/
+        try {
+            GifDrawable gifDrawable = null;
+            try {
+                gifDrawable = new GifDrawable(getResources(), introobject.getImage());
+                gifDrawable.setLoopCount(1);
+                gifDrawable.setSpeed(2.0f);
+                int i= gifDrawable.getDuration();
+                Log.e("duration",""+i+ "........"+introobject.getTitle());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            imggif.setImageDrawable(gifDrawable);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

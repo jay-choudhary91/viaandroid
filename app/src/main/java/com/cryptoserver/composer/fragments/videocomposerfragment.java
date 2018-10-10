@@ -529,14 +529,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
 
             setmetriceshashesdata();
-
-            if(fragmentgraphic == null)
-            {
-                fragmentgraphic  = new graphicalfragment();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
-                transaction.commit();
-            }
         }
         return rootview;
     }
@@ -1382,6 +1374,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     private void doafterallpermissionsgranted() {
+
+        if(fragmentgraphic == null)
+        {
+            fragmentgraphic  = new graphicalfragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
+            transaction.commit();
+        }
 
         camerastatusok=true;
         layout_bottom.setVisibility(View.VISIBLE);
