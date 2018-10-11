@@ -1020,6 +1020,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 frameduration=checkframeduration();
                 keytype=checkkey();
 
+
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
                // setmetriceshashesdata();
@@ -1083,6 +1084,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     public void getFramesBitmap()
     {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         isbitmapprocessing=true;
         mbitmaplist.add(new frame(0,null,true));
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -1105,8 +1111,14 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             {
                 if(suspendbitmapqueue)
                 {
-                    mbitmaplist.clear();
-                    adapter.notifyDataSetChanged();
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mbitmaplist.clear();
+                            adapter.notifyDataSetChanged();
+                            scurraberverticalbar.setVisibility(View.VISIBLE);
+                        }
+                    });
                     break;
                 }
 
