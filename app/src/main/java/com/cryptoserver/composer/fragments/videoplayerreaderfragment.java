@@ -1118,6 +1118,14 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     Log.e("Bitmap on ",""+i);
                     Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
                     mbitmaplist.add(new frame(i,bitmap,false));
+
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            scurraberverticalbar.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
             }
             catch (Exception e)
@@ -1132,13 +1140,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         }
         isbitmapprocessing=false;
         mbitmaplist.add(new frame(0,null,true));
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                adapter.notifyDataSetChanged();
-                scurraberverticalbar.setVisibility(View.VISIBLE);
-            }
-        });
+
     }
 
     public void setupVideoPlayer(final Uri selectedimageuri)
@@ -1319,7 +1321,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                         Thread thread = new Thread(){
                             public void run(){
-                               // getFramesBitmap();
+                                getFramesBitmap();
                                 setVideoAdapter();
                             }
                         };
