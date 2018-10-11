@@ -140,82 +140,80 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             righthandle=rootview.findViewById(R.id.righthandle);
             showcontrollers=rootview.findViewById(R.id.video_container);
 
-        }
+            {
 
-        {
+                mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
 
-            mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
-                @Override
-                public void onItemClicked(Object object) {
+                    }
 
-                }
+                    @Override
+                    public void onItemClicked(Object object, int type) {
 
-                @Override
-                public void onItemClicked(Object object, int type) {
-
-                }
-            });
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-            recyview_metrices.setLayoutManager(mLayoutManager);
-            recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-            recyview_metrices.setAdapter(mhashesadapter);
-        }
-
-        {
-            mmetricesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
-                @Override
-                public void onItemClicked(Object object) {
-
-                }
-
-                @Override
-                public void onItemClicked(Object object, int type) {
-
-                }
-            });
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-            recyview_hashes.setLayoutManager(mLayoutManager);
-            recyview_hashes.setItemAnimator(new DefaultItemAnimator());
-            recyview_hashes.setAdapter(mmetricesadapter);
-        }
-
-
-
-        videoSurface.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        if(player !=null && (! isdraweropen))
-                            hideshowcontroller();
-                        break;
-                }
-                return false;
+                    }
+                });
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                recyview_metrices.setLayoutManager(mLayoutManager);
+                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
+                recyview_metrices.setAdapter(mhashesadapter);
             }
-        });
 
-        setupVideoPlayer();
-        gethash();
+            {
+                mmetricesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
 
-        handleimageview.setOnTouchListener(this);
-        righthandle.setOnTouchListener(this);
+                    }
 
-        txtSlot1.setOnClickListener(this);
-        txtSlot2.setOnClickListener(this);
-        txtSlot3.setOnClickListener(this);
+                    @Override
+                    public void onItemClicked(Object object, int type) {
 
-        resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-        txtSlot1.setVisibility(View.VISIBLE);
-        txtSlot2.setVisibility(View.VISIBLE);
-        txtSlot3.setVisibility(View.VISIBLE);
-        txt_metrics.setVisibility(View.INVISIBLE);
-        txt_hashes.setVisibility(View.INVISIBLE);
-        recyview_hashes.setVisibility(View.VISIBLE);
-        recyview_metrices.setVisibility(View.INVISIBLE);
-        scrollview_metrices.setVisibility(View.INVISIBLE);
-        scrollview_hashes.setVisibility(View.INVISIBLE);
+                    }
+                });
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                recyview_hashes.setLayoutManager(mLayoutManager);
+                recyview_hashes.setItemAnimator(new DefaultItemAnimator());
+                recyview_hashes.setAdapter(mmetricesadapter);
+            }
 
-        setmetriceshashesdata();
+            videoSurface.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    switch (event.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            if(player !=null && (! isdraweropen))
+                                hideshowcontroller();
+                            break;
+                    }
+                    return false;
+                }
+            });
+
+            setupVideoPlayer();
+            gethash();
+
+            handleimageview.setOnTouchListener(this);
+            righthandle.setOnTouchListener(this);
+
+            txtSlot1.setOnClickListener(this);
+            txtSlot2.setOnClickListener(this);
+            txtSlot3.setOnClickListener(this);
+
+            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+            txtSlot1.setVisibility(View.VISIBLE);
+            txtSlot2.setVisibility(View.VISIBLE);
+            txtSlot3.setVisibility(View.VISIBLE);
+            txt_metrics.setVisibility(View.INVISIBLE);
+            txt_hashes.setVisibility(View.INVISIBLE);
+            recyview_hashes.setVisibility(View.VISIBLE);
+            recyview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_hashes.setVisibility(View.INVISIBLE);
+
+            setmetriceshashesdata();
+
+        }
         return rootview;
     }
 

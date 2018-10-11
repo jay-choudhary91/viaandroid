@@ -721,16 +721,20 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor == maccelerometersensormanager) {
-            float deltaX = Math.abs(event.values[0]);
-            float deltaY = Math.abs(event.values[1]);
-            float deltaZ = Math.abs(event.values[2]);
-            Math.sin(deltaX);
+            double deltaX = Math.abs(event.values[0]);
+            double deltaY = Math.abs(event.values[1]);
+            double deltaZ = Math.abs(event.values[2]);
+
 
             if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
             {
-                txt_xaxis.setText("X-Axis \n"+deltaX);
-                txt_yaxis.setText("Y-Axis \n"+deltaY);
-                txt_zaxis.setText("Z-Axis \n"+deltaZ);
+                String x = String.valueOf(new DecimalFormat("#.#").format(deltaX));
+                String y = String.valueOf(new DecimalFormat("#.#").format(deltaY));
+                String z = String.valueOf(new DecimalFormat("#.#").format(deltaZ));
+
+                txt_xaxis.setText("X-Axis \n"+x);
+                txt_yaxis.setText("Y-Axis \n"+y);
+                txt_zaxis.setText("Z-Axis \n"+z);
             }
         }
         else

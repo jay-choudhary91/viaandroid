@@ -309,28 +309,28 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 }
             });
+
+            handleimageview.setOnTouchListener(this);
+            righthandle.setOnTouchListener(this);
+            videoSurface.setOnTouchListener(this);
+
+            txtSlot1.setOnClickListener(this);
+            txtSlot2.setOnClickListener(this);
+            txtSlot3.setOnClickListener(this);
+
+            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+            txtSlot1.setVisibility(View.VISIBLE);
+            txtSlot2.setVisibility(View.VISIBLE);
+            txtSlot3.setVisibility(View.VISIBLE);
+            txt_metrics.setVisibility(View.INVISIBLE);
+            txt_hashes.setVisibility(View.INVISIBLE);
+            recyview_hashes.setVisibility(View.VISIBLE);
+            recyview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_hashes.setVisibility(View.INVISIBLE);
+
+            setmetriceshashesdata();
         }
-
-        handleimageview.setOnTouchListener(this);
-        righthandle.setOnTouchListener(this);
-        videoSurface.setOnTouchListener(this);
-
-        txtSlot1.setOnClickListener(this);
-        txtSlot2.setOnClickListener(this);
-        txtSlot3.setOnClickListener(this);
-
-        resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-        txtSlot1.setVisibility(View.VISIBLE);
-        txtSlot2.setVisibility(View.VISIBLE);
-        txtSlot3.setVisibility(View.VISIBLE);
-        txt_metrics.setVisibility(View.INVISIBLE);
-        txt_hashes.setVisibility(View.INVISIBLE);
-        recyview_hashes.setVisibility(View.VISIBLE);
-        recyview_metrices.setVisibility(View.INVISIBLE);
-        scrollview_metrices.setVisibility(View.INVISIBLE);
-        scrollview_hashes.setVisibility(View.INVISIBLE);
-
-        setmetriceshashesdata();
         return rootview;
     }
 
