@@ -63,7 +63,9 @@ public class databasemanager {
             lock.lock();
 
             ContentValues values = new ContentValues();
-            values.put("videokey", ""+videokey);
+            values.put("videoid", ""+videokey);
+            values.put("hassync", ""+"0");
+            values.put("videokey", "");
             values.put("videolist", ""+videolist);
             values.put("metricdata", ""+metricdata);
             values.put("hashmethod", ""+hashmethod);
@@ -81,13 +83,14 @@ public class databasemanager {
         }
     }
 
-    public Cursor fetchallmetadata() {
+    public Cursor fetchmetadata() {
 
         Cursor mCur=null;
         try {
             lock.lock();
 
-            String sql = "SELECT * FROM tblmetadata;";
+            String sql = "SELECT * FROM tblmetadata where hassync=0";
+            //String sql = "SELECT * FROM tblmetadata";
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
                 mCur.moveToNext();
@@ -99,6 +102,38 @@ public class databasemanager {
             lock.unlock();
         }
 
+        return  mCur;
+    }
+
+    public Cursor updatevideokey(String videoid,String videokey) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            mDb.execSQL("update tblmetadata set videokey='"+videokey+"' where videoid='"+videoid+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
+    public Cursor updatesyncstatus(String id) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            mDb.execSQL("update tblmetadata set hassync=1 where id='"+id+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
         return  mCur;
     }
 

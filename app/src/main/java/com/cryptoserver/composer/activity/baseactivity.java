@@ -1,27 +1,16 @@
 package com.cryptoserver.composer.activity;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.PhoneStateListener;
-import android.telephony.SignalStrength;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,11 +21,11 @@ import android.view.inputmethod.InputMethodManager;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.basefragment;
-import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
+import com.cryptoserver.composer.models.videogroup;
 import com.cryptoserver.composer.netutils.connectivityreceiver;
 import com.cryptoserver.composer.netutils.xapi;
 import com.cryptoserver.composer.netutils.xapipost;
@@ -44,17 +33,16 @@ import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.taskresult;
-import com.cryptoserver.composer.utils.xdata;
 
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
-import java.util.concurrent.TimeUnit;
 
 public abstract class baseactivity extends AppCompatActivity implements basefragment.fragmentnavigationhelper,
         connectivityreceiver.ConnectivityReceiverListener{
@@ -298,6 +286,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void fetchmetadatadb() {
 
+        String selectedid="",videokey="",videolist="",action_type="",hashmethod="",hashvalue="",videoid="",hassync="";
+
         if(getcurrentfragment() instanceof videocomposerfragment)
         {
             boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
@@ -320,20 +310,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
-        String selectedid="",videokey="",videolist="",action_type="",hashmethod="",hashvalue="";
+        ArrayList<videogroup> marray=new ArrayList<>();
 
         try {
-            Cursor cur = mdbhelper.fetchallmetadata();
+            Cursor cur = mdbhelper.fetchmetadata();
             if (cur != null) {
                 while (!cur.isAfterLast()) {
 
                     selectedid= "" + cur.getString(cur.getColumnIndex("id"));
                     videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
+                    videoid = "" + cur.getString(cur.getColumnIndex("videoid"));
+                    hassync = "" + cur.getString(cur.getColumnIndex("hassync"));
                     videolist = "" + cur.getString(cur.getColumnIndex("videolist"));
                     hashmethod = "" + cur.getString(cur.getColumnIndex("hashmethod"));
                     hashvalue = "" + cur.getString(cur.getColumnIndex("hashvalue"));
                     action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
 
+                    marray.add(new videogroup(selectedid,videoid,hassync,videokey,action_type));
                   //  cur.moveToLast();
 
                     break;
@@ -372,24 +365,38 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
 
             final String finalSelectedid = selectedid;
+            final String finalAction_type = action_type;
+            final String finalVideoid = videoid;
             xapipost_send(baseactivity.this,action_type,mpairslist, new apiresponselistener() {
                 @Override
-                public void onResponse(taskresult response) {
-                    deletemetadatarecord(finalSelectedid);
-                    fetchmetadatadb();
-                    /*if(response.isSuccess())
+                public void onResponse(taskresult response)
+                {
+                    if(response.isSuccess())
                     {
-                        try {
-
-
-                            //JSONObject object = (JSONObject) response.getData();
-                            //JSONObject object1 = (JSONObject) response.getData();
-
-                        }catch (Exception e)
+                        if(finalAction_type.equalsIgnoreCase(config.type_video_start))
                         {
-                            e.printStackTrace();
+                            try {
+                                JSONObject object = (JSONObject) response.getData();
+                                String videokey=object.getString("key");
+                                updatevideokey(finalVideoid,videokey);
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
                         }
-                    }*/
+                    }
+
+                    if(finalAction_type.equalsIgnoreCase(config.type_video_update))
+                    {
+
+                    }
+                    else if(finalAction_type.equalsIgnoreCase(config.type_video_complete))
+                    {
+
+                    }
+
+                    updatedatasync(finalSelectedid);
+                    fetchmetadatadb();
                 }
             });
         }
@@ -409,6 +416,48 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         try {
             mdbhelper.deletemetadata(selectedid);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatedatasync(String selectedid)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(baseactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatesyncstatus(selectedid);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatevideokey(String videoid,String videokey)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(baseactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatevideokey(videoid,videokey);
             mdbhelper.close();
         }catch (Exception e)
         {

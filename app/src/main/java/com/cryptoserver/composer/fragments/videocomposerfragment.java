@@ -202,7 +202,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                       randomstring gen = new randomstring(20, ThreadLocalRandom.current());
                                       videokey=gen.nextString();
                                       String keyvalue= getkeyvalue(byteArray);
-                                      xapistartvideo(keyvalue);
+                                      savevideostart(videokey,keytype,keyvalue);
+                                    //  xapistartvideo(keyvalue);
                                   }
 
                                   if(mframetorecordcount == currentframenumber)
@@ -1041,6 +1042,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void startRecordingVideo() {
         try {
             // UI
+            videokey="";
             issavedtofolder=false;
             mIsRecordingVideo = true;
             // Start recording
