@@ -53,13 +53,12 @@ public class headerpagerfragment extends Fragment {
         /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                isgifloaded =true;
-
 
 
             }
         },100);*/
         try {
+            isgifloaded =true;
             GifDrawable gifDrawable = null;
             try {
                 gifDrawable = new GifDrawable(getResources(), introobject.getImage());
@@ -72,6 +71,13 @@ public class headerpagerfragment extends Fragment {
                 e.printStackTrace();
             }
             imggif.setImageDrawable(gifDrawable);
+            imggif.setAlpha(0f);
+            imggif.setVisibility(View.VISIBLE);
+            imggif.animate()
+                    .alpha(1.0f)
+                    .setDuration(100)
+                    .setListener(null);
+
         }catch (Exception e)
         {
             e.printStackTrace();

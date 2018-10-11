@@ -18,6 +18,7 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.fragments.footerpagerfragment;
 import com.cryptoserver.composer.fragments.headerpagerfragment;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.intro;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
@@ -253,6 +254,8 @@ public class introscreenactivity extends AppCompatActivity {
         }
 
     }
+
+
 
     private class footerpageradapter extends FragmentStatePagerAdapter{
 
