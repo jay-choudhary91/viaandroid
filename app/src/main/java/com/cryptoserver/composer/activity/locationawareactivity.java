@@ -222,7 +222,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 // get the download speed by dividing the file size by time taken to download
                 double speed = fileSize / timeTakenMills;
                 double speedinmb=kilobytePerSec/1024;
-                xdata.getinstance().saveSetting(config.Connectionspeed,speedinmb+" Mbps");
+                xdata.getinstance().saveSetting(config.Connectionspeed,speedinmb+" mbps");
                 /*Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
                 Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
                 Log.d("Case3 ", "Download Speed: " + speed);
