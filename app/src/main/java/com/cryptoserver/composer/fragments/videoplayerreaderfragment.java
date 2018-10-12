@@ -44,6 +44,7 @@ import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.metadata.MetaDataRead;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
@@ -61,12 +62,15 @@ import com.cryptoserver.composer.views.pagercustomduration;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -171,6 +175,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             righthandle=rootview.findViewById(R.id.righthandle);
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
+
 
             {
 
@@ -1044,6 +1049,43 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     metricItemArraylist.clear();
                     isnewvideofound=true;
 
+                    try {
+                        String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
+                        if(readmetadata != null)
+                        {
+                            Log.e("Meta data values ",readmetadata);
+                            JSONArray mainarray=new JSONArray(readmetadata);
+                            for(int j=0;j<mainarray.length();j++)
+                            {
+                                JSONArray subarray=mainarray.getJSONArray(j);
+                                for(int i=0;i<subarray.length();i++)
+                                {
+                                    JSONObject object=subarray.getJSONObject(i);
+                                    Iterator<String> myIter = object.keys();
+                                    while (myIter.hasNext()) {
+                                        String key = myIter.next();
+                                        String value = object.optString(key);
+                                        if(key.equals("battery"))
+                                        {
+                                            selectedmetrics=selectedmetrics+"\n\n"+key+" - "+value;
+                                        }
+                                        else
+                                        {
+                                            selectedmetrics=selectedmetrics+"\n"+key+" - "+value;
+                                        }
+                                    }
+                                }
+                                mmetricsitems.add(new videomodel(selectedmetrics));
+                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                            }
+                        }
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
         }
@@ -1124,6 +1166,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 m_mediaMetadataRetriever = new MediaMetadataRetriever();
                 m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+
+                if(m_mediaMetadataRetriever.extractMetadata(i)!=null) {
+                    Log.e("Metadata :: ", ""+ m_mediaMetadataRetriever.extractMetadata(i));
+                }
+
                 m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
                 if(m_bitmap != null)
                 {
@@ -1230,7 +1277,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
                     ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
                     //metricItemArraylist.addAll(mlist);
-                    for(int j=0;j<mlist.size();j++)
+                    /*for(int j=0;j<mlist.size();j++)
                     {
                         if(mlist.get(j).isSelected())
                         {
@@ -1239,7 +1286,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         }
                     }
                     if(! selectedmetrics.trim().isEmpty())
-                        selectedmetrics=selectedmetrics+"\n\n";
+                        selectedmetrics=selectedmetrics+"\n\n";*/
 
                     currentframenumber = currentframenumber + frameduration;
                 }

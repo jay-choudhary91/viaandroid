@@ -436,14 +436,6 @@ public abstract class locationawareactivity extends baseactivity implements
         //saving the user current location
         if(location != null)
         {
-            if(location.hasBearing())
-            {
-                Log.e("hasBearing ",""+location.getBearing());
-            }
-            else
-            {
-                Log.e("hasBearing ","none");
-            }
 
             googleutils.saveUserCurrentLocation(location);
 
@@ -703,21 +695,13 @@ public abstract class locationawareactivity extends baseactivity implements
 
                         getconnectionspeed();
 
-                        if(getcurrentfragment() instanceof videocomposerfragment)
-                        {
-                            isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                            if(isrecording)
-                                return;
-                        }
-                        else
-                        {
-                            isrecording=false;
-                        }
+
                         for(int i=0;i<metricItemArraylist.size();i++)
                         {
                             if(metricItemArraylist.get(i).isSelected())
                             {
                                 String value=metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
+                                metricItemArraylist.get(i).setMetricTrackValue(metricItemArraylist.get(i).getMetricTrackValue());
                                 if(! value.trim().isEmpty())
                                     metricItemArraylist.get(i).setMetricTrackValue(value);
 
@@ -731,7 +715,7 @@ public abstract class locationawareactivity extends baseactivity implements
                                     xdata.getinstance().saveSetting(config.WIFINetwork,value);
                                 } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
                                     xdata.getinstance().saveSetting(config.GPSAccuracy,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")) {//+"*"+metricItemArraylist.get(i).getMetricTrackValue())
+                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")) {
                                     xdata.getinstance().saveSetting(config.ScreenSize,value);
                                 } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("country")) {
                                     xdata.getinstance().saveSetting(config.Country,value);
@@ -751,12 +735,21 @@ public abstract class locationawareactivity extends baseactivity implements
                                     xdata.getinstance().saveSetting(config.Language,value);
                                 } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("systemuptime")) {
                                     xdata.getinstance().saveSetting(config.SystemUptime,value);
-
                                 } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("battery")) {
                                     xdata.getinstance().saveSetting(config.Battery,value);
                                 }
-
                             }
+                        }
+
+                        if(getcurrentfragment() instanceof videocomposerfragment)
+                        {
+                            isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
+                            if(isrecording)
+                                return;
+                        }
+                        else
+                        {
+                            isrecording=false;
                         }
 
                         dbtoxapiupdatecounter++;
@@ -1297,7 +1290,7 @@ public abstract class locationawareactivity extends baseactivity implements
             }else if(common.isChargerConnected(locationawareactivity.this)== true || common.isHeadsetOn(locationawareactivity.this)== true ){
                 metricItemValue = "1";
             }else{
-                metricItemValue = "NA";
+                metricItemValue = "N/A";
             }
 
         }else if(key.equalsIgnoreCase("nameattachedaccessories"))
@@ -1311,7 +1304,7 @@ public abstract class locationawareactivity extends baseactivity implements
             }else if(common.isHeadsetOn(locationawareactivity.this)== true){
                 metricItemValue = "headphone";
             }else{
-                metricItemValue = "NA";
+                metricItemValue = "N/A";
             }
         }
         else if(key.equalsIgnoreCase("multitaskingenabled"))
@@ -1367,7 +1360,7 @@ public abstract class locationawareactivity extends baseactivity implements
         }else if(key.equalsIgnoreCase("connectionspeed")){
             metricItemValue=xdata.getinstance().getSetting(config.Connectionspeed);
         }else if(key.equalsIgnoreCase("address")){
-            metricItemValue="";
+            metricItemValue=xdata.getinstance().getSetting(config.Address);
         }
 
         if(metricItemValue == null)
@@ -1423,7 +1416,7 @@ public abstract class locationawareactivity extends baseactivity implements
         thread.start();
     }
     private void stop() {
-        Log.e("noise", "==== Stop noise Monitoring===");
+      //  Log.e("noise", "==== Stop noise Monitoring===");
         try {
             if(mNoise != null)
             {
@@ -1438,7 +1431,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
     private void updateDisplay(String status, double signalEMA) {
 
-        Log.e("signalEMA = ", ""+ signalEMA);
+    //    Log.e("signalEMA = ", ""+ signalEMA);
 
         final String deciblevalue = String.valueOf(new DecimalFormat("##.####").format(signalEMA));
 
@@ -1795,7 +1788,7 @@ public abstract class locationawareactivity extends baseactivity implements
                     //long diffSeconds = diff / 1000 % 60;
                     duration=""+diffSeconds;
                 }
-                Log.e("BROADCAST CALL ","BROADCAST CALL");
+         //       Log.e("BROADCAST CALL ","BROADCAST CALL");
             }
 
             xdata.getinstance().saveSetting("CALL_STATUS",(CALL_STATUS.isEmpty())?"None":CALL_STATUS);

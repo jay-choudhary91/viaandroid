@@ -1122,11 +1122,11 @@ public class common {
         int orientation = context.getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             //code for portrait mode
-            oriantation = "PORTRAIT";
+            oriantation = "Portrait";
 
         } else {
             //code for landscape mode
-            oriantation = "LANDSCAPE";
+            oriantation = "Landscape";
         }
         return oriantation;
     }
@@ -1429,7 +1429,7 @@ public class common {
        long seconds=(uptime%60);*/
 
         int day = (int) (uptime / (24 * 3600));
-        Log.e("days", String.valueOf(day));
+       // Log.e("days", String.valueOf(day));
 
         uptime = uptime % (24 * 3600);
         int hour = (int) (uptime / 3600);
@@ -1451,7 +1451,7 @@ public class common {
                wholeUptime = String.format("%d days %02d:%02d:%02d", day,hour,minutes, seconds);
            }
            time = wholeUptime;
-           Log.e("systemtime", "" + time);
+        //   Log.e("systemtime", "" + time);
        }
       return time;
     }

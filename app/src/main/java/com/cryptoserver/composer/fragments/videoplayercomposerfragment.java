@@ -31,6 +31,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.metadata.MetaDataRead;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
@@ -45,11 +46,14 @@ import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -192,6 +196,39 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
             setupVideoPlayer();
             gethash();
+
+
+            try {
+                String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
+                Log.e("Meta data values ",readmetadata);
+                JSONArray mainarray=new JSONArray(readmetadata);
+                for(int j=0;j<mainarray.length();j++)
+                {
+                    JSONArray subarray=mainarray.getJSONArray(j);
+                    for(int i=0;i<subarray.length();i++)
+                    {
+                        JSONObject object=subarray.getJSONObject(i);
+                        Iterator<String> myIter = object.keys();
+                        while (myIter.hasNext()) {
+                            String key = myIter.next();
+                            String value = object.optString(key);
+                            if(key.equals("battery"))
+                            {
+                                selectedmetrics=selectedmetrics+"\n\n"+key+" - "+value;
+                            }
+                            else
+                            {
+                                selectedmetrics=selectedmetrics+"\n"+key+" - "+value;
+                            }
+                        }
+                    }
+                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
@@ -906,7 +943,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                     }
 
-                    if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
+                    /*if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
                     {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -917,7 +954,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                 selectedmetrics="";
                             }
                         });
-                    }
+                    }*/
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;

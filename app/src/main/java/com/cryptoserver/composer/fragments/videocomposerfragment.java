@@ -23,6 +23,8 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.location.Location;
+import android.media.MediaMetadata;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -36,6 +38,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -68,6 +71,8 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.metadata.MetaDataInsert;
+import com.cryptoserver.composer.metadata.MetaDataRead;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
@@ -347,6 +352,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private int lastmetricescount=0;
     graphicalfragment fragmentgraphic;
     private boolean issavedtofolder=false;
+    JSONArray metadatametricesjson=new JSONArray();
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -1081,6 +1087,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
                 mMediaRecorder.reset();
 
+                try {
+                    MetaDataInsert.writeRandomMetadata(lastrecordedvideo.getAbsolutePath(),""+metadatametricesjson.toString());
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
                 startPreview();
                 stopvideotimer();
                 madapterclick.onItemClicked(null,1);
@@ -1244,7 +1257,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             stopRecordingVideo();
         } else {
-
             txt_hashes.setText("");
             txt_metrics.setText("");
             selectedhashes="";
@@ -1553,7 +1565,34 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     fragmentgraphic.currenthashvalue=keyvalue;
 
                 ArrayList<metricmodel> mlist= gethelper().getmetricarraylist();
-                metricItemArraylist.addAll(mlist);
+                JSONArray metricesarray=new JSONArray();
+                metadatametricesjson=new JSONArray();
+                for(int j=0;j<mlist.size();j++)
+                {
+                    if(mlist.get(j).isSelected())
+                    {
+                        String value=mlist.get(j).getMetricTrackValue();
+                        if(mlist.get(j).getMetricTrackValue().trim().isEmpty() ||
+                                mlist.get(j).getMetricTrackValue().equalsIgnoreCase("null"))
+                        {
+                            value="N/A";
+                        }
+                        selectedmetrices=selectedmetrices+"\n"+mlist.get(j).getMetricTrackKeyName()+" - "+value;
+
+                        JSONObject object=new JSONObject();
+                        try {
+                            object.put(mlist.get(j).getMetricTrackKeyName(),value);
+                            metricesarray.put(object);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                metadatametricesjson.put(metricesarray);
+
+                if(! selectedmetrices.trim().isEmpty())
+                    selectedmetrices=selectedmetrices+"\n\n";
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
 
@@ -1567,16 +1606,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(apicurrentduration == apicallduration)
                     savevideoupdate(mlist);
 
-                for(int j=0;j<mlist.size();j++)
-                {
-                    if(mlist.get(j).isSelected())
-                    {
-                        selectedmetrices=selectedmetrices+"\n"+mlist.get(j).getMetricTrackKeyName()+" - "
-                                +mlist.get(j).getMetricTrackValue();
-                    }
-                }
-                if(! selectedmetrices.trim().isEmpty())
-                    selectedmetrices=selectedmetrices+"\n\n";
 
                 Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
                 if(apicurrentduration == apicallduration)
