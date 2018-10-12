@@ -235,6 +235,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         @Override
                         public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                             super.onScrollStateChanged(recyclerView, newState);
+                            Log.e("newstate",""+newState);
                             switch (newState) {
                                 case RecyclerView.SCROLL_STATE_IDLE:
                                     System.out.println("The RecyclerView is not scrolling");
@@ -283,6 +284,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                     {
                                         try {
                                             player.seekTo(currentduration);
+                                            Log.e("playerseekto",""+currentduration);
                                             controller.setProgress();
                                         }catch (Exception e)
                                         {
@@ -792,7 +794,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     if(mbitmaplist.size() >= (second))
                     {
                         //Log.e("getCurrentPosition ",""+player.getCurrentPosition());
-                   //     recyview_frames.scrollToPosition(second);
+                      //  recyview_frames.scrollToPosition(second);
                         recyview_frames.smoothScrollToPosition(second);
                     }
                 }
@@ -832,7 +834,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         if(player != null)
         {
             Log.e("seek to ",""+i);
+            Log.e("recyview_frames",""+i/1000);
             player.seekTo(i);
+            recyview_frames.smoothScrollToPosition(i/1000);
         }
     }
 
