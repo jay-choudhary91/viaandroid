@@ -72,7 +72,7 @@ public class MetaDataInsert {
         }
     }
 
-    public static void writeRandomMetadata(String videoFilePath, String title) throws IOException {
+    public static void writeRandomMetadata(String videoFilePath, String data) throws IOException {
 
         File videoFile = new File(videoFilePath);
         if (!videoFile.exists()) {
@@ -129,7 +129,7 @@ public class MetaDataInsert {
         }
         nam.setDataCountry(0);
         nam.setDataLanguage(0);
-        nam.setValue(title);
+        nam.setValue(data);
         ilst.addBox(nam);
 
         long sizeAfter = moov.getSize();

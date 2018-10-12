@@ -225,6 +225,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                     mmetricsitems.add(new videomodel(selectedmetrics));
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                 }
+
+
+
             }catch (Exception e)
             {
                 e.printStackTrace();
