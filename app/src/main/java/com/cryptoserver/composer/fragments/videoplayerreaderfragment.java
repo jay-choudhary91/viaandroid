@@ -1020,9 +1020,15 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 frameduration=checkframeduration();
                 keytype=checkkey();
 
+                Log.e("video uri selected ","" + " = video uri selected");
+
+               if(mbitmaplist.size()!=0)
+                     runmethod = false;
 
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
+                scurraberverticalbar.setVisibility(View.INVISIBLE);
+
                // setmetriceshashesdata();
                 //metricItemArraylist.addAll(mlist);
                 //itemMetricAdapter.notifyDataSetChanged();
@@ -1085,15 +1091,19 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     public void getFramesBitmap()
     {
         try {
-            Thread.sleep(1500);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        runmethod = true;
         isbitmapprocessing=true;
+
         mbitmaplist.add(new frame(0,null,true));
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
         m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
         String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
         long timeInmillisec = Long.parseLong( time );
         long duration = timeInmillisec / 1000;
         long hours = duration / 3600;
@@ -1104,9 +1114,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             minutes = minutes*60;
 
         seconds = seconds + minutes;
+
+        Log.e("videoseconds  =  ",""+seconds);
+
         for(int i=1;i<=seconds;i++)
         {
             Bitmap m_bitmap = null;
+
             try
             {
                 if(suspendbitmapqueue)
@@ -1125,9 +1139,12 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 m_mediaMetadataRetriever = new MediaMetadataRetriever();
                 m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
                 m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
-                if(m_bitmap != null)
+
+
+                if(m_bitmap != null && runmethod)
                 {
                     Log.e("Bitmap on ",""+i);
+
                     Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
                     mbitmaplist.add(new frame(i,bitmap,false));
 
@@ -1136,6 +1153,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         public void run() {
                             adapter.notifyDataSetChanged();
                             scurraberverticalbar.setVisibility(View.VISIBLE);
+                            //runmethod = true;
                         }
                     });
                 }
@@ -1151,7 +1169,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
         }
         isbitmapprocessing=false;
-        mbitmaplist.add(new frame(0,null,true));
+        if(mbitmaplist.size()!=0)
+             mbitmaplist.add(new frame(0,null,true));
 
     }
 
