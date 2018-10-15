@@ -212,21 +212,16 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                         while (myIter.hasNext()) {
                             String key = myIter.next();
                             String value = object.optString(key);
-                            if(key.equals("battery"))
-                            {
-                                selectedmetrics=selectedmetrics+"\n\n"+key+" - "+value;
-                            }
-                            else
-                            {
-                                selectedmetrics=selectedmetrics+"\n"+key+" - "+value;
-                            }
+                            selectedmetrics=selectedmetrics+"\n"+key+" - "+value;
+                            metricmodel model=new metricmodel();
+                            model.setMetricTrackKeyName(key);
+                            model.setMetricTrackValue(value);
+                            metricItemArraylist.add(new metricmodel());
                         }
                     }
                     mmetricsitems.add(new videomodel(selectedmetrics));
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                 }
-
-
 
             }catch (Exception e)
             {
@@ -306,6 +301,19 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
                     transaction.commit();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i=0;i<metricItemArraylist.size();i++)
+                            {
+                                String value=metricItemArraylist.get(i).getMetricTrackValue();
+                                common.setgraphicalitems(metricItemArraylist.get(i).getMetricTrackKeyName(),value,true);
+                            }
+                            if(fragmentgraphic != null)
+                                fragmentgraphic.setmetricesdata();
+                        }
+                    },500);
                 }
                 break;
         }

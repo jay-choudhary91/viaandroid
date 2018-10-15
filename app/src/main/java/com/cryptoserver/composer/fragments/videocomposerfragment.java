@@ -1114,6 +1114,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 mrecordimagebutton.setEnabled(true);
                 showsharepopupmain();
+                setmetricesadapter();
             }
         },100);
     }
@@ -1121,7 +1122,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void setvideoadapter() {
         int count = 1;
         currentframenumber=0;
-        mvideoframes.clear();
+        selectedhashes="";
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
+                mvideoframes.clear();
+            }
+        });
+
         currentframenumber = currentframenumber + frameduration;
         try
         {
@@ -1131,7 +1141,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String format= common.getvideoformat(lastrecordedvideo.getAbsolutePath());
             if(format.equalsIgnoreCase("mp4"))
                 grabber.setFormat(format);
-
 
             grabber.start();
             videomodel lastframehash=null;
@@ -1175,6 +1184,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     mhashesadapter.notifyDataSetChanged();
                     for(int i=0;i<mvideoframes.size();i++)
                         mhashesitems.add(mvideoframes.get(i));
+
                     mhashesadapter.notifyDataSetChanged();
                     recyview_hashes.scrollToPosition(mhashesitems.size()-1);
                 }
@@ -1557,31 +1567,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             public void run() {
                 if(array == null || array.length == 0)
                     return;
-                String keyvalue= getkeyvalue(array);
+                final String keyvalue= getkeyvalue(array);
                 currenthashvalue=keyvalue;
                 apicurrentduration++;
 
-                if(fragmentgraphic != null)
-                    fragmentgraphic.currenthashvalue=keyvalue;
-
-                ArrayList<metricmodel> mlist= gethelper().getmetricarraylist();
                 JSONArray metricesarray=new JSONArray();
                 metadatametricesjson=new JSONArray();
-                for(int j=0;j<mlist.size();j++)
+
+                metricItemArraylist.clear();
+                metricItemArraylist.addAll(gethelper().getmetricarraylist());
+                for(int j=0;j<metricItemArraylist.size();j++)
                 {
-                    if(mlist.get(j).isSelected())
+                    if(metricItemArraylist.get(j).isSelected())
                     {
-                        String value=mlist.get(j).getMetricTrackValue();
-                        if(mlist.get(j).getMetricTrackValue().trim().isEmpty() ||
-                                mlist.get(j).getMetricTrackValue().equalsIgnoreCase("null"))
+                        String value=metricItemArraylist.get(j).getMetricTrackValue();
+                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),value,true);
+
+                        if(metricItemArraylist.get(j).getMetricTrackValue().trim().isEmpty() ||
+                                metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("null"))
                         {
                             value="N/A";
                         }
-                        selectedmetrices=selectedmetrices+"\n"+mlist.get(j).getMetricTrackKeyName()+" - "+value;
+                        selectedmetrices=selectedmetrices+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+value;
 
                         JSONObject object=new JSONObject();
                         try {
-                            object.put(mlist.get(j).getMetricTrackKeyName(),value);
+                            object.put(metricItemArraylist.get(j).getMetricTrackKeyName(),value);
                             metricesarray.put(object);
                         }catch (Exception e)
                         {
@@ -1589,12 +1600,24 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
                     }
                 }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(fragmentgraphic != null)
+                        {
+                            fragmentgraphic.setmetricesdata();
+                            fragmentgraphic.currenthashvalue=keyvalue;
+                        }
+                    }
+                });
+
                 metadatametricesjson.put(metricesarray);
 
                 if(! selectedmetrices.trim().isEmpty())
                     selectedmetrices=selectedmetrices+"\n\n";
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
-                muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlist));
+                muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,metricItemArraylist));
 
                 if(! selectedhashes.trim().isEmpty())
                     selectedhashes=selectedhashes+"\n";
@@ -1604,7 +1627,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     apicurrentduration=apicallduration;
 
                 if(apicurrentduration == apicallduration)
-                    savevideoupdate(mlist);
+                    savevideoupdate(metricItemArraylist);
 
 
                 Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
@@ -1654,7 +1677,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         });
                     }
 
-
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
@@ -1666,6 +1688,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         };
         myHandler.post(myRunnable);
+    }
+
+    public void setmetricesadapter()
+    {
+        if(selectedmetrices.toString().trim().length() > 0)
+        {
+            mmetricsitems.add(new videomodel(selectedmetrices));
+            recyview_metrices.post(new Runnable() {
+                @Override
+                public void run() {
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                    selectedmetrices="";
+                }
+            });
+        }
+
     }
 
     @Override

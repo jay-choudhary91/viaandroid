@@ -594,6 +594,7 @@ public abstract class locationawareactivity extends baseactivity implements
         metricItemArraylist.clear();
 
         metricItemArraylist.add(new metricmodel("battery", "", true));
+        metricItemArraylist.add(new metricmodel("phonetype","",true));
         metricItemArraylist.add(new metricmodel("imeinumber", "", true));
         metricItemArraylist.add(new metricmodel("simserialnumber", "", true));
         metricItemArraylist.add(new metricmodel("version", "", true));
@@ -624,6 +625,7 @@ public abstract class locationawareactivity extends baseactivity implements
         metricItemArraylist.add(new metricmodel("attachedaccessoriescount", "", true));
         metricItemArraylist.add(new metricmodel("totalspace", "", true));
         metricItemArraylist.add(new metricmodel("usedspace", "", true));
+        metricItemArraylist.add(new metricmodel("memoryusage", "", true));
         metricItemArraylist.add(new metricmodel("freespace", "", true));
         metricItemArraylist.add(new metricmodel("deviceorientation", "", true));
         metricItemArraylist.add(new metricmodel("rammemory", "", true));
@@ -704,40 +706,6 @@ public abstract class locationawareactivity extends baseactivity implements
                                 metricItemArraylist.get(i).setMetricTrackValue(metricItemArraylist.get(i).getMetricTrackValue());
                                 if(! value.trim().isEmpty())
                                     metricItemArraylist.get(i).setMetricTrackValue(value);
-
-                                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("model")) {
-                                    xdata.getinstance().saveSetting(config.PhoneType,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("carrier")) {
-                                    xdata.getinstance().saveSetting(config.CellProvider,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("osversion")) {
-                                    xdata.getinstance().saveSetting(config.OSversion,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("wifiname")) {
-                                    xdata.getinstance().saveSetting(config.WIFINetwork,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
-                                    xdata.getinstance().saveSetting(config.GPSAccuracy,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("screenwidth")) {
-                                    xdata.getinstance().saveSetting(config.ScreenSize,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("country")) {
-                                    xdata.getinstance().saveSetting(config.Country,value);
-                                }else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("brightness")) {
-                                    xdata.getinstance().saveSetting(config.Brightness,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("timezone")) {
-                                    xdata.getinstance().saveSetting(config.TimeZone,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("usedspace")) {
-                                    xdata.getinstance().saveSetting(config.MemoryUsage,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")) {
-                                    xdata.getinstance().saveSetting(config.Bluetooth,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("phonetime")) {
-                                    xdata.getinstance().saveSetting(config.LocalTime,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("freespace")) {
-                                    xdata.getinstance().saveSetting(config.StorageAvailable,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")) {
-                                    xdata.getinstance().saveSetting(config.Language,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("systemuptime")) {
-                                    xdata.getinstance().saveSetting(config.SystemUptime,value);
-                                } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("battery")) {
-                                    xdata.getinstance().saveSetting(config.Battery,value);
-                                }
                             }
                         }
 
@@ -761,7 +729,7 @@ public abstract class locationawareactivity extends baseactivity implements
                     }
                 }).start();
 
-                myHandler.postDelayed(this, 5000);
+                myHandler.postDelayed(this, 3000);
             }
         };
         myHandler.post(myRunnable);
@@ -774,12 +742,7 @@ public abstract class locationawareactivity extends baseactivity implements
         List<metricmodel> settingupdatedlist=getMetricList();
         if(settingupdatedlist == null || settingupdatedlist.size() == 0)
         {
-            for(int i=0;i<metricItemArraylist.size();i++)
-            {
-                String value=metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
-                if(! value.trim().isEmpty())
-                    metricItemArraylist.get(i).setMetricTrackValue(value);
-            }
+
         }
         else
         {
@@ -793,12 +756,16 @@ public abstract class locationawareactivity extends baseactivity implements
                 {
                     metricItemArraylist.get(i).setSelected(false);
                 }
+
+
             }
         }
 
 
         return metricItemArraylist;
     }
+
+
 
     public List<metricmodel> getMetricList() {
         Gson gson = new Gson();
@@ -915,7 +882,7 @@ public abstract class locationawareactivity extends baseactivity implements
         {
             metricItemValue = Build.MANUFACTURER;
         }
-        else if(key.equalsIgnoreCase("model"))
+        else if(key.equalsIgnoreCase("model") || key.equalsIgnoreCase("phonetype"))
         {
             metricItemValue = Build.MODEL;
         }
@@ -1177,7 +1144,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
             metricItemValue  = common.getInternalMemory(totalRamMemorySize);
 
-        }else if(key.equalsIgnoreCase("usedram"))
+        }else if(key.equalsIgnoreCase("usedram") || key.equalsIgnoreCase("memoryusage"))
         {
             ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
             ActivityManager activityManager = (ActivityManager)  locationawareactivity.this.getSystemService(ACTIVITY_SERVICE);
@@ -1186,7 +1153,16 @@ public abstract class locationawareactivity extends baseactivity implements
             long totalRamMemorySize = mi.totalMem;
             long usedrammemorysize = totalRamMemorySize - totalRamFreeSize;
 
-            metricItemValue  = common.getInternalMemory(usedrammemorysize);
+            if(key.equalsIgnoreCase("usedram"))
+            {
+                metricItemValue  = common.getInternalMemory(usedrammemorysize);
+            }
+            else
+            {
+                long usedinpercentage=(100*usedrammemorysize)/totalRamMemorySize;
+                metricItemValue=""+usedinpercentage+"%";
+            }
+
         }else if(key.equalsIgnoreCase("freeram"))
         {
             ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
@@ -1513,9 +1489,13 @@ public abstract class locationawareactivity extends baseactivity implements
                         float deltaZ = Math.abs(sensorEvent.values[2]);
                         Math.sin(deltaX);
 
-                        updatearrayitem(config.acceleration_x,""+deltaX);
-                        updatearrayitem(config.acceleration_y,""+deltaY);
-                        updatearrayitem(config.acceleration_z,""+deltaZ);
+                        String x = String.valueOf(new DecimalFormat("#.#").format(deltaX));
+                        String y = String.valueOf(new DecimalFormat("#.#").format(deltaY));
+                        String z = String.valueOf(new DecimalFormat("#.#").format(deltaZ));
+
+                        updatearrayitem(config.acceleration_x,""+x);
+                        updatearrayitem(config.acceleration_y,""+y);
+                        updatearrayitem(config.acceleration_z,""+z);
                     }
                 }
             });
@@ -1599,8 +1579,6 @@ public abstract class locationawareactivity extends baseactivity implements
 
                                 value4[0] = value4[0].replace("IRQ","");
                                 updatearrayitem(config.cpuusageirq,value4[0]);
-
-                                xdata.getinstance().saveSetting(config.CPUUsage,value2[0]);
                             }
                         }
                     });
@@ -1755,7 +1733,7 @@ public abstract class locationawareactivity extends baseactivity implements
                             {
                                 compassValue = "NorthWestbound";
                             }
-                            xdata.getinstance().saveSetting(config.Orientation,""+compassValue);
+
                             updatearrayitem(config.compass,compassValue);
 
                         }
@@ -1880,11 +1858,9 @@ public abstract class locationawareactivity extends baseactivity implements
         for (int i = 0; i < metricItemArraylist.size(); i++) {
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
                 metricItemArraylist.get(i).setMetricTrackValue("" + location.getLatitude());
-                xdata.getinstance().saveSetting(config.Latitude,""+location.getLatitude());
             }
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
                 metricItemArraylist.get(i).setMetricTrackValue("" + location.getLongitude());
-                xdata.getinstance().saveSetting(config.Longitude,""+location.getLongitude());
             }
 
             if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
@@ -1892,7 +1868,6 @@ public abstract class locationawareactivity extends baseactivity implements
             }
             if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
                 metricItemArraylist.get(i).setMetricTrackValue("" +location.getAccuracy());
-                xdata.getinstance().saveSetting(config.GPSAccuracy,""+location.getAccuracy());
             }
             if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
                 metricItemArraylist.get(i).setMetricTrackValue("" +currentaddress);
@@ -1903,7 +1878,6 @@ public abstract class locationawareactivity extends baseactivity implements
                 {
                     String angle=common.anglefromcoordinate(location.getLatitude(),location.getLongitude(),
                             oldlocation.getLatitude(),oldlocation.getLongitude());
-                    xdata.getinstance().saveSetting(config.Heading,""+angle);
                     metricItemArraylist.get(i).setMetricTrackValue("" + angle);
                 }
             }
@@ -1925,7 +1899,7 @@ public abstract class locationawareactivity extends baseactivity implements
                         metricItemArraylist.get(i).setMetricTrackValue("" +strspeed);
                     }
                 }
-                xdata.getinstance().saveSetting(config.Speed,""+metricItemArraylist.get(i).getMetricTrackValue());
+
 
             }
         }
@@ -1934,10 +1908,10 @@ public abstract class locationawareactivity extends baseactivity implements
         {
             for (int i = 0; i < metricItemArraylist.size(); i++) {
 
-                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
+               /* if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
                     metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting(config.gpsaltitude)));
                     xdata.getinstance().saveSetting(config.Altitude,""+xdata.getinstance().getSetting(config.gpsaltitude));
-                }
+                }*/
 
                 if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
                     metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsquality")));
@@ -1972,7 +1946,6 @@ public abstract class locationawareactivity extends baseactivity implements
                         }
                         currentaddress = strReturnedAddress.toString();
                         googleutils.saveuseraddress(currentaddress);
-                        xdata.getinstance().saveSetting(config.Address,currentaddress);
                    //     Log.e("Myaddress", strReturnedAddress.toString());
                     } else {
                      //   Log.e("My address", "No Address returned!");

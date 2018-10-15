@@ -241,6 +241,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                     @Override
                     public void run() {
                         try {
+                         //   setmetricesdata();
                             loaddata();
                             loadMap();
                           //  player = new MediaPlayer();
@@ -261,7 +262,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     public void loaddata()
     {
-        if(myhandler != null && myrunnable != null)
+        /*if(myhandler != null && myrunnable != null)
             myhandler.removeCallbacks(myrunnable);
 
         myhandler=new Handler();
@@ -289,7 +290,67 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 myhandler.postDelayed(this, 2500);
             }
         };
-        myhandler.post(myrunnable);
+        myhandler.post(myrunnable);*/
+    }
+
+    public void setmetricesdata()
+    {
+        /*if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
+        {
+
+        }*/
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                common.locationAnalyticsdata(txt_latitude,txt_longitude,
+                        txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
+                common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
+                        txt_gps_accuracy,txt_screensize,txt_country,txt_cpuusage,txt_brightness,txt_timezone,txt_memoryusage,txt_bluetooth,
+                        txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
+
+                if(! common.isnetworkconnected(applicationviavideocomposer.getactivity()))
+                    xdata.getinstance().saveSetting(config.Connectionspeed,"N/A");
+
+                txt_connection_speed.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        txt_connection_speed.setText(config.Connectionspeed+"\n"+xdata.getinstance().getSetting(config.Connectionspeed));
+                    }
+                });
+                txt_data_hash.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        txt_data_hash.setText(currenthashvalue);
+                    }
+                });
+                txt_hash_formula.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
+                    }
+                });
+                txt_xaxis.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        txt_xaxis.setText("X-Axis \n"+xdata.getinstance().getSetting(config.acceleration_x));
+                    }
+                });
+                txt_yaxis.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        txt_yaxis.setText("Y-Axis \n"+xdata.getinstance().getSetting(config.acceleration_y));
+                    }
+                });
+                txt_zaxis.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        txt_zaxis.setText("Z-Axis \n"+xdata.getinstance().getSetting(config.acceleration_z));
+                    }
+                });
+            }
+        }).start();
+
     }
 
     @Override
@@ -726,7 +787,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             double deltaZ = Math.abs(event.values[2]);
 
 
-            if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
+            /*if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
             {
                 String x = String.valueOf(new DecimalFormat("#.#").format(deltaX));
                 String y = String.valueOf(new DecimalFormat("#.#").format(deltaY));
@@ -735,7 +796,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 txt_xaxis.setText("X-Axis \n"+x);
                 txt_yaxis.setText("Y-Axis \n"+y);
                 txt_zaxis.setText("Z-Axis \n"+z);
-            }
+            }*/
         }
         else
         {

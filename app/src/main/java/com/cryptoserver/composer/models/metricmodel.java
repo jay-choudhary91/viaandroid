@@ -20,6 +20,9 @@ public class metricmodel implements Serializable {
         setMetricTrackValue(keyValue);
         setSelected(isSelected);
     }
+    public metricmodel() {
+
+    }
 
     public String getTag() {
         return Tag;
