@@ -1402,7 +1402,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(fragmentgraphic == null)
         {
             fragmentgraphic  = new graphicalfragment();
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
             transaction.commit();
         }

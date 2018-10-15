@@ -406,7 +406,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     fragmentgraphic  = new graphicalfragment();
                         if(selectedvideouri!= null)
                             fragmentgraphic.setmideaplayerdata(true,player);
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                     transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
                     transaction.commit();
 
@@ -1092,7 +1092,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                         metricmodel model=new metricmodel();
                                         model.setMetricTrackKeyName(key);
                                         model.setMetricTrackValue(value);
-                                        metricItemArraylist.add(new metricmodel());
+                                        metricItemArraylist.add(model);
                                     }
                                 }
 
@@ -1160,6 +1160,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
         m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
         String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+        m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 
         long timeInmillisec = Long.parseLong( time );
         long duration = timeInmillisec / 1000;
@@ -1334,9 +1337,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     selectedmetrics="";
                     selectedhaeshes="";
                     mhashesitems.clear();
-                    mmetricsitems.clear();
                     mhashesadapter.notifyDataSetChanged();
-                    mmetricesadapter.notifyDataSetChanged();
                     break;
                 }
             }
@@ -1407,9 +1408,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         txt_hashes.setText("");
                         selectedmetrics="";
                         selectedhaeshes="";
-                        mmetricsitems.clear();
                         mhashesitems.clear();
-                        mmetricesadapter.notifyDataSetChanged();
                         mhashesadapter.notifyDataSetChanged();
 
                         Thread thread = new Thread(){
@@ -1437,7 +1436,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                     }
 
-                    if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
+                    /*if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
                     {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -1448,7 +1447,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                             }
                         });
 
-                    }
+                    }*/
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;

@@ -121,7 +121,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     String selectedhaeshes="";
     private int lastmetricescount=0;
     videoframeadapter mmetricesadapter,mhashesadapter;
-    private graphicalfragment fragmentgraphic;
+    private graphicalfragment fragmentgraphicobject;
 
     @Override
     public int getlayoutid() {
@@ -216,7 +216,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                             metricmodel model=new metricmodel();
                             model.setMetricTrackKeyName(key);
                             model.setMetricTrackValue(value);
-                            metricItemArraylist.add(new metricmodel());
+                            metricItemArraylist.add(model);
                         }
                     }
                     mmetricsitems.add(new videomodel(selectedmetrics));
@@ -294,12 +294,12 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                if(fragmentgraphic == null)
+                if(fragmentgraphicobject == null)
                 {
-                    fragmentgraphic  = new graphicalfragment();
-                    fragmentgraphic.setmideaplayerdata(true,player);
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
+                    fragmentgraphicobject  = new graphicalfragment();
+                    fragmentgraphicobject.setmideaplayerdata(true,player);
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.add(R.id.fragment_graphic_container,fragmentgraphicobject);
                     transaction.commit();
 
                     new Handler().postDelayed(new Runnable() {
@@ -310,8 +310,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                 String value=metricItemArraylist.get(i).getMetricTrackValue();
                                 common.setgraphicalitems(metricItemArraylist.get(i).getMetricTrackKeyName(),value,true);
                             }
-                            if(fragmentgraphic != null)
-                                fragmentgraphic.setmetricesdata();
+                            if(fragmentgraphicobject != null)
+                                fragmentgraphicobject.setmetricesdata();
                         }
                     },500);
                 }
@@ -322,8 +322,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     @Override
     public void oncurrentlocationchanged(Location location) {
         super.oncurrentlocationchanged(location);
-        if(fragmentgraphic != null)
-            fragmentgraphic.locationupdate(location,"");
+        if(fragmentgraphicobject != null)
+            fragmentgraphicobject.locationupdate(location,"");
     }
 
 
@@ -601,9 +601,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             }
 
 
-            if(fragmentgraphic != null){
-
-                fragmentgraphic.setmideaplayerdata(true,player);
+            if(fragmentgraphicobject != null){
+                fragmentgraphicobject.setmideaplayerdata(true,player);
             }
 
         }catch (Exception e)
@@ -970,8 +969,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
-                if(fragmentgraphic != null)
-                    fragmentgraphic.setdrawerproperty(graphicopen);
+                if(fragmentgraphicobject != null)
+                    fragmentgraphicobject.setdrawerproperty(graphicopen);
                 myHandler.postDelayed(this, 1000);
             }
         };

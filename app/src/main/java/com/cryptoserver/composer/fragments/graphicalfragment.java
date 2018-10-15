@@ -167,6 +167,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     @BindView(R.id.txt_hash_formula)
     TextView txt_hash_formula;
 
+    @BindView(R.id.layout_graphical)
+    LinearLayout layout_graphical;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
     @BindView(R.id.recyview_encryption)
@@ -219,7 +221,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
             myvisualizerviewmedia = (VisualizerViewMidea) rootview.findViewById(R.id.myvisualizerviewmedia);
 
-
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
             img_compass = (ImageView) rootview.findViewById(R.id.img_compass);
             recyview_encryption.setNestedScrollingEnabled(false);
@@ -229,6 +230,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             recyview_encryption.setLayoutManager(encryptionmanager);
             recyview_encryption.setAdapter(encryptionadapter);
 
+            layout_graphical.setVisibility(View.GONE);
             if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
 
@@ -299,6 +301,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         {
 
         }*/
+
+        layout_graphical.setVisibility(View.VISIBLE);
 
         new Thread(new Runnable() {
             @Override
