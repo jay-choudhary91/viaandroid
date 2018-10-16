@@ -196,19 +196,23 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                           {
                               if(mframetorecordcount == currentframenumber || (videokey.trim().isEmpty()))
                               {
-                                  Bitmap bitmap = mTextureView.getBitmap(10,10);
+                                  /*Bitmap bitmap = mTextureView.getBitmap(10,10);
                                   bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
                                           bitmap.getHeight(), mTextureView.getTransform( null ), true );
                                   ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                  bitmap.compress(Bitmap.CompressFormat.PNG, 10, stream);
-                                  byte[] byteArray = stream.toByteArray();
+                                  bitmap.compress(Bitmap.CompressFormat.PNG, 2, stream);*/
+                                  randomstring gen1 = new randomstring(20, ThreadLocalRandom.current());
+                                  String str=gen1.nextString().trim().toString();
+                                  if(str.trim().toString().length() == 0)
+                                      str=gen1.nextString().trim().toString();
+
+                                  byte[] byteArray = str.getBytes();
                                   if(videokey.trim().isEmpty())
                                   {
                                       randomstring gen = new randomstring(20, ThreadLocalRandom.current());
                                       videokey=gen.nextString();
                                       String keyvalue= getkeyvalue(byteArray);
                                       savevideostart(videokey,keytype,keyvalue);
-                                    //  xapistartvideo(keyvalue);
                                   }
 
                                   if(mframetorecordcount == currentframenumber)
@@ -216,11 +220,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                       updatelistitemnotify(byteArray,currentframenumber,"Frame");
                                       currentframenumber = currentframenumber + frameduration;
                                   }
-                                  bitmap.recycle();
+                                  //bitmap.recycle();
                               }
 
                               mframetorecordcount++;
-                         //     Log.e("Frame no ",""+mframetorecordcount);
                           }
                       }catch (Exception e)
                       {
@@ -340,7 +343,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     File lastrecordedvideo=null;
     String selectedvideofile ="",videokey="",selectedmetrices="", selectedhashes ="";
     int metriceslastupdatedposition=0;
-    private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+    //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
     videoframeadapter mmetricesadapter,mhashesadapter;
@@ -369,7 +372,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
-            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
             mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
@@ -1107,7 +1110,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     @Override
                     public void run() {
                         savevideocomplete();
-                        //common.exportvideo(lastrecordedvideo,false);
                         setvideoadapter();
                     }
                 }).start();
@@ -1123,7 +1125,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         int count = 1;
         currentframenumber=0;
         selectedhashes="";
-        getActivity().runOnUiThread(new Runnable() {
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 mhashesitems.clear();
@@ -1177,7 +1179,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             grabber.flush();
 
-            getActivity().runOnUiThread(new Runnable() {
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mhashesitems.clear();
@@ -1255,8 +1257,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     @Override
     public void oncurrentlocationchanged(Location location) {
         super.oncurrentlocationchanged(location);
-        if(fragmentgraphic != null)
-            fragmentgraphic.locationupdate(location,currenthashvalue);
     }
 
     public void startstopvideo()
@@ -1574,25 +1574,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 JSONArray metricesarray=new JSONArray();
                 metadatametricesjson=new JSONArray();
 
-                metricItemArraylist.clear();
-                metricItemArraylist.addAll(gethelper().getmetricarraylist());
-                for(int j=0;j<metricItemArraylist.size();j++)
+                ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                for(int j=0;j<mlocalarraylist.size();j++)
                 {
-                    if(metricItemArraylist.get(j).isSelected())
+                    metricmodel metric=mlocalarraylist.get(j);
+                    if(metric.isSelected())
                     {
-                        String value=metricItemArraylist.get(j).getMetricTrackValue();
-                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),value,true);
+                        String value=metric.getMetricTrackValue();
+                        common.setgraphicalitems(metric.getMetricTrackKeyName(),value,true);
 
-                        if(metricItemArraylist.get(j).getMetricTrackValue().trim().isEmpty() ||
-                                metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("null"))
+                        if(metric.getMetricTrackValue().trim().isEmpty() ||
+                                metric.getMetricTrackValue().equalsIgnoreCase("null"))
                         {
                             value="N/A";
                         }
-                        selectedmetrices=selectedmetrices+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+value;
+                        selectedmetrices=selectedmetrices+"\n"+metric.getMetricTrackKeyName()+" - "+value;
 
                         JSONObject object=new JSONObject();
                         try {
-                            object.put(metricItemArraylist.get(j).getMetricTrackKeyName(),value);
+                            object.put(metric.getMetricTrackKeyName(),value);
                             metricesarray.put(object);
                         }catch (Exception e)
                         {
@@ -1601,7 +1601,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }
 
-                getActivity().runOnUiThread(new Runnable() {
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if(fragmentgraphic != null)
@@ -1617,7 +1617,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(! selectedmetrices.trim().isEmpty())
                     selectedmetrices=selectedmetrices+"\n\n";
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
-                muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,metricItemArraylist));
+                muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
 
                 if(! selectedhashes.trim().isEmpty())
                     selectedhashes=selectedhashes+"\n";
@@ -1627,7 +1627,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     apicurrentduration=apicallduration;
 
                 if(apicurrentduration == apicallduration)
-                    savevideoupdate(metricItemArraylist);
+                    savevideoupdate(mlocalarraylist);
+
+
 
 
                 Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
@@ -1654,7 +1656,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
                     {
-                        getActivity().runOnUiThread(new Runnable() {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mhashesitems.add(new videomodel(selectedhashes));
@@ -1667,7 +1669,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrices.trim().isEmpty()))
                     {
-                        getActivity().runOnUiThread(new Runnable() {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mmetricsitems.add(new videomodel(selectedmetrices));

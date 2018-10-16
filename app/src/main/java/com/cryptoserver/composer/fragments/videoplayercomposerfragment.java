@@ -248,6 +248,15 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
             setmetriceshashesdata();
 
+            if(fragmentgraphicobject == null)
+            {
+                fragmentgraphicobject  = new graphicalfragment();
+                fragmentgraphicobject.setmediaplayerdata(true,player);
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_graphic_container,fragmentgraphicobject);
+                transaction.commit();
+            }
+
         }
         return rootview;
     }
@@ -294,14 +303,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                if(fragmentgraphicobject == null)
+                if(fragmentgraphicobject != null)
                 {
-                    fragmentgraphicobject  = new graphicalfragment();
-                    fragmentgraphicobject.setmideaplayerdata(true,player);
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_graphic_container,fragmentgraphicobject);
-                    transaction.commit();
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -322,8 +325,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     @Override
     public void oncurrentlocationchanged(Location location) {
         super.oncurrentlocationchanged(location);
-        if(fragmentgraphicobject != null)
-            fragmentgraphicobject.locationupdate(location,"");
     }
 
 
@@ -602,7 +603,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
 
             if(fragmentgraphicobject != null){
-                fragmentgraphicobject.setmideaplayerdata(true,player);
+                fragmentgraphicobject.setmediaplayerdata(true,player);
             }
 
         }catch (Exception e)
@@ -853,6 +854,9 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                 String keyValue= getkeyvalue(byteData);
 
+                if(fragmentgraphicobject != null)
+                    fragmentgraphicobject.sethashesdata(keyValue);
+
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
 
                 if (count == currentframenumber) {
@@ -866,20 +870,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-
-                    ArrayList<metricmodel> mlist = gethelper().getmetricarraylist();
-                    //metricItemArraylist.addAll(mlist);
-
-                    for(int j=0;j<mlist.size();j++)
-                    {
-                        if(mlist.get(j).isSelected())
-                        {
-                            selectedmetrics=selectedmetrics+"\n"+mlist.get(j).getMetricTrackKeyName()+" - "
-                                    +mlist.get(j).getMetricTrackValue();
-                        }
-                    }
-                    if(! selectedmetrics.trim().isEmpty())
-                        selectedmetrics=selectedmetrics+"\n\n";
 
                     currentframenumber = currentframenumber + frameduration;
 
@@ -944,7 +934,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //txt_hashes.append(selectedhaeshes);
                                 mhashesitems.add(new videomodel(selectedhaeshes));
                                 mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                                 selectedhaeshes="";
@@ -953,24 +942,12 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                     }
 
-                    /*if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
-                    {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //txt_metrics.append(selectedmetrics);
-                                mmetricsitems.add(new videomodel(selectedmetrics));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                selectedmetrics="";
-                            }
-                        });
-                    }*/
-
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
                 if(fragmentgraphicobject != null)
                     fragmentgraphicobject.setdrawerproperty(graphicopen);
+
                 myHandler.postDelayed(this, 1000);
             }
         };
@@ -1006,8 +983,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         }
 
         mbitmaplist.clear();
-
-
 
         if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
             currentframenumber=0;

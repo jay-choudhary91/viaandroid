@@ -738,6 +738,8 @@ public class common {
             xdata.getinstance().saveSetting(config.acceleration_y,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_z)) {
             xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"N/A"));
+        } else if (keyname.equalsIgnoreCase(config.orientation)) {
+            xdata.getinstance().saveSetting(config.orientation,((ismetricsselected)?value:""));
         }
     }
 
@@ -831,6 +833,8 @@ public class common {
             metricItemName = "headphonesattached";
         } else if (key.equalsIgnoreCase("deviceorientation")) {
             metricItemName = "deviceorientation";
+        }else if (key.equalsIgnoreCase("orientation")) {
+            metricItemName = "orientation";
         } else if (key.equalsIgnoreCase("wifiname")) {
             metricItemName = "wifiname";
         } else if (key.equalsIgnoreCase("connectedwifiquality")) {

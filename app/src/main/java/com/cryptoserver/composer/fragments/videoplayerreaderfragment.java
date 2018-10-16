@@ -15,10 +15,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -39,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.adapter.custompageradapter;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -57,8 +54,6 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
-import com.cryptoserver.composer.views.pageranimation;
-import com.cryptoserver.composer.views.pagercustomduration;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
@@ -405,7 +400,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 {
                     fragmentgraphic  = new graphicalfragment();
                         if(selectedvideouri!= null)
-                            fragmentgraphic.setmideaplayerdata(true,player);
+                            fragmentgraphic.setmediaplayerdata(true,player);
                     FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                     transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
                     transaction.commit();
@@ -430,8 +425,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public void oncurrentlocationchanged(Location location) {
         super.oncurrentlocationchanged(location);
-        if(fragmentgraphic != null)
-            fragmentgraphic.locationupdate(location,"");
     }
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
@@ -756,7 +749,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
         if(fragmentgraphic != null && selectedvideouri!=null){
 
-            fragmentgraphic.setmideaplayerdata(true,player);
+            fragmentgraphic.setmediaplayerdata(true,player);
         }
 
 
@@ -1301,6 +1294,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 byte[] byteData = new byte[buffer.remaining()];
                 buffer.get(byteData);
                 String keyValue= getkeyvalue(byteData);
+
+                if(fragmentgraphic != null)
+                    fragmentgraphic.sethashesdata(keyValue);
+
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
                 if (count == currentframenumber) {
                     lastframehash=null;

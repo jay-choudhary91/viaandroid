@@ -4,7 +4,6 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -22,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -36,21 +34,15 @@ import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.locationawareactivity;
 import com.cryptoserver.composer.adapter.encryptiondataadapter;
-import com.cryptoserver.composer.adapter.graphicaldataadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
-import com.cryptoserver.composer.models.metricmodel;
-import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.VisualizerView;
 import com.cryptoserver.composer.utils.VisualizerViewMidea;
-import com.cryptoserver.composer.utils.WaveFromView;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.noise;
@@ -68,7 +60,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -78,22 +69,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -208,7 +187,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
     private Handler myhandler;
     private Runnable myrunnable;
     public String currenthashvalue="";
-    boolean ismideaplayer = false;
+    boolean ismediaplayer = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -216,7 +195,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             scrollview_graphical.setVisibility(View.VISIBLE);
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
             myvisualizerviewmedia = (VisualizerViewMidea) rootview.findViewById(R.id.myvisualizerviewmedia);
@@ -224,9 +203,9 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
             img_compass = (ImageView) rootview.findViewById(R.id.img_compass);
             recyview_encryption.setNestedScrollingEnabled(false);
-            encryptionadapter=new encryptiondataadapter(frameslist,getActivity());
-            encryptionmanager=new LinearLayoutManager(getActivity());
-            msensormanager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+            encryptionadapter=new encryptiondataadapter(frameslist,applicationviavideocomposer.getactivity());
+            encryptionmanager=new LinearLayoutManager(applicationviavideocomposer.getactivity());
+            msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
             recyview_encryption.setLayoutManager(encryptionmanager);
             recyview_encryption.setAdapter(encryptionadapter);
 
@@ -234,79 +213,54 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
 
-
-            Thread thread=new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //getconnectionspeed();
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                         //   setmetricesdata();
-                            loaddata();
-                            loadMap();
-                          //  player = new MediaPlayer();
-                            setvisualizer();
-                            setchartdata();
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                }
-            });
-            thread.start();
+            //loadMap();
+            setvisualizer();
+            setchartdata();
         }
         return rootview;
     }
 
-    public void loaddata()
+    public void sethashesdata(final String currenthashvalue)
     {
-        /*if(myhandler != null && myrunnable != null)
-            myhandler.removeCallbacks(myrunnable);
-
-        myhandler=new Handler();
-        myrunnable = new Runnable() {
-            @Override
-            public void run() {
-                if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
-                {
-                    common.locationAnalyticsdata(txt_latitude,txt_longitude,
-                            txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
-                    common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
-                            txt_gps_accuracy,txt_screensize,txt_country,txt_cpuusage,txt_brightness,txt_timezone,txt_memoryusage,txt_bluetooth,
-                            txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
-
-                    txt_connection_speed.setText(config.Connectionspeed+"\n"+"N/A");
-
-                    if(! common.isnetworkconnected(applicationviavideocomposer.getactivity()))
-                        xdata.getinstance().saveSetting(config.Connectionspeed,"N/A");
-
-                    txt_connection_speed.setText(config.Connectionspeed+"\n"+xdata.getinstance().getSetting(config.Connectionspeed));
-
+        if(txt_data_hash != null)
+        {
+            txt_data_hash.post(new Runnable() {
+                @Override
+                public void run() {
                     txt_data_hash.setText(currenthashvalue);
-                    txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
                 }
-                myhandler.postDelayed(this, 2500);
-            }
-        };
-        myhandler.post(myrunnable);*/
+            });
+        }
+
     }
 
     public void setmetricesdata()
     {
-        /*if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
-        {
-
-        }*/
-
-        layout_graphical.setVisibility(View.VISIBLE);
-
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        layout_graphical.setVisibility(View.VISIBLE);
+                        String latitude=xdata.getinstance().getSetting(config.Latitude);
+                        String longitude=xdata.getinstance().getSetting(config.Longitude);
+                        if((! latitude.trim().isEmpty()) && (! longitude.trim().isEmpty()))
+                            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+
+                        if(ismediaplayer)
+                        {
+                            if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
+                            {
+                                String strdegree=xdata.getinstance().getSetting(config.orientation);
+                                int degree = Math.abs((int)Double.parseDouble(strdegree));
+                                rotatecompass(degree);
+                            }
+                        }
+                    }
+                });
+
                 common.locationAnalyticsdata(txt_latitude,txt_longitude,
                         txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
                 common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
@@ -399,7 +353,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        setMap(googleMap);
+        //setMap(googleMap);
+       // loadMap();
     }
 
     private void loadMap() {
@@ -425,8 +380,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
         this.mGoogleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
         mGoogleMap.setOnCameraIdleListener(this);
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -441,38 +396,20 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         }
     }
 
-    private void populateUserCurrentLocation(Location location) {
+    private void populateUserCurrentLocation(LatLng location) {
         // DeviceUser user = DeviceUserManager.getInstance().getUser();
         if (mGoogleMap == null)
             return;
 
         googlemap.setVisibility(View.VISIBLE);
-        if (location.getLatitude() == config.STATIC_LAT) {
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 5));
-
-        } else {
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 15));
-        }
-
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
     }
 
-    public void locationupdate(Location location,String currenthashvalue) {
+    public void locationupdate(Location location) {
         super.oncurrentlocationchanged(location);
         if (location == null) {
             return;
         }
-        CurrentLocationChange = location;
-        LatLng lng = new LatLng(location.getLatitude(), location.getLongitude());
-
-        DecimalFormat df = new DecimalFormat("#.####");
-        df.setRoundingMode(RoundingMode.HALF_UP);
-        LatLng evallatlng = new LatLng(Double.parseDouble(df.format(location.getLatitude())), Double.parseDouble(df.format(location.getLongitude())));
-        if (lastlocationchange != null && lastlocationchange.latitude == evallatlng.latitude && lastlocationchange.longitude == evallatlng.longitude) {
-            return;  // the locaiton hasnt change significatntly  do update anything on the screen and do not use google maps clicks
-        }
-        lastlocationchange = evallatlng;
-        populateUserCurrentLocation(location);
-
     }
 
     public void getaudiowave() {
@@ -483,13 +420,11 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
                     try {
 
-                        if((gethelper().getrecordingrunning() || ismideaplayer))
+                        if((gethelper().getrecordingrunning() || ismediaplayer))
                         {
                             int x = mNoise.getAmplitudevoice();
-                            Log.e("Amplitude value",""+ x);
                             myvisualizerview.addAmplitude(x); // update the VisualizeView
                             myvisualizerview.invalidate();
-                            //myvisualizerview.updateAmplitude(1f , true);
                         }
 
                     } catch (Exception e) {
@@ -708,18 +643,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
             if (Utils.getSDKInt() >= 18) {
                 // fill drawable only supported on api level 18 and above
-                Drawable drawable = ContextCompat.getDrawable(getActivity(), R.drawable.fade_red);
+                Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
                 set1.setFillDrawable(drawable);
-                /*ArrayList<Integer> colors = new ArrayList<Integer>();
-                colors.add(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-                colors.add(ContextCompat.getColor(getActivity(), R.color.colorAccent));
-                colors.add(ContextCompat.getColor(getActivity(), R.color.blue_button));
-                colors.add(ContextCompat.getColor(getActivity(), R.color.dark_x));
-                colors.add(ContextCompat.getColor(getActivity(), R.color.dark_x));
-                set1.setColors(colors);*/
-            }
-            else {
-                //set1.setFillColor(Color.BLACK);
             }
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
@@ -791,7 +716,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             double deltaZ = Math.abs(event.values[2]);
 
 
-            /*if(isgraphicopen && (gethelper().getrecordingrunning() || ismideaplayer))
+            /*if(isgraphicopen && (gethelper().getrecordingrunning() || ismediaplayer))
             {
                 String x = String.valueOf(new DecimalFormat("#.#").format(deltaX));
                 String y = String.valueOf(new DecimalFormat("#.#").format(deltaY));
@@ -804,20 +729,29 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         }
         else
         {
-            int degree = Math.round(event.values[0]);
-            RotateAnimation ra = new RotateAnimation(
-                    currentDegree,
-                    -degree,
-                    Animation.RELATIVE_TO_SELF, 0.5f,
-                    Animation.RELATIVE_TO_SELF,
-                    0.5f);
-
-            // how long the animation will take place
-            ra.setDuration(210);
-            ra.setFillAfter(true);
-            img_compass.startAnimation(ra);
-            currentDegree = -degree;
+            if(gethelper().getrecordingrunning())
+            {
+                int degree = Math.round(event.values[0]);
+              //  Log.e("degree ",""+degree);
+                rotatecompass(degree);
+            }
         }
+    }
+
+    public void rotatecompass(int degree)
+    {
+        RotateAnimation ra = new RotateAnimation(
+                currentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+        ra.setFillAfter(true);
+        img_compass.startAnimation(ra);
+        currentDegree = -degree;
     }
 
     @Override
@@ -848,7 +782,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
         if(mMediaPlayer != null){
 
-            getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            applicationviavideocomposer.getactivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
             myvisualizerviewmedia.setVisibility(View.VISIBLE);
 
             setupVisualizerFxAndUI();
@@ -893,10 +827,10 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 }, Visualizer.getMaxCaptureRate() / 2, true, false);
     }
 
-    public void setmideaplayerdata( boolean ismideaplayer , MediaPlayer mediaPlayer){
+    public void setmediaplayerdata(boolean ismediaplayer , MediaPlayer mediaPlayer){
 
         this.mMediaPlayer = mediaPlayer;
-        this.ismideaplayer = ismideaplayer;
+        this.ismediaplayer = ismediaplayer;
         if(mVisualizer != null){
             mVisualizer.setEnabled(false);
             setvisualizer();
@@ -904,13 +838,13 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     }
 
-    public void setmideaplayerdata( boolean ismideaplayer){
-        this.ismideaplayer = ismideaplayer;
+    public void setmediaplayerdata(boolean ismideaplayer){
+        this.ismediaplayer = ismideaplayer;
     }
 
 
     public void setvisualizer(){
-        if(ismideaplayer){
+        if(ismediaplayer){
             initAudio();
         }else{
             start();

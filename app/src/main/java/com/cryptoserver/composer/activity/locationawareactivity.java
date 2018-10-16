@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -43,13 +42,9 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
-import android.view.View;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.database.databasemanager;
-import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.utils.common;
@@ -70,16 +65,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -100,19 +92,18 @@ public abstract class locationawareactivity extends baseactivity implements
     private static final String LAST_UPDATED_TIME_STRING_KEY = "last_updated_time_key";
     private static final int PERMISSION_LOCATION_REQUEST_CODE = 99;
 
-    private LocationRequest mLocationRequest;
-    private Location mCurrentLocation;
-    private String mLastUpdateTime;
-    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mlocationrequest;
+    private Location mcurrentlocation;
+    private GoogleApiClient mgoogleapiclient;
     int GPS_REQUEST_CODE=111;
-    public Bundle NewSavedInstanceState=null;
-    boolean updateItem=false;
+    public Bundle newsavedinstancestate =null;
+    boolean updateitem =false;
     private TelephonyManager telephonymanager;
     private LocationManager manager;
-    private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+    private ArrayList<metricmodel> metricitemarraylist = new ArrayList<>();
 
-    private SensorManager mSensorManager;
-    private Sensor mAccelereometer;
+    private SensorManager msensormanager;
+    private Sensor maccelereometer;
     private BroadcastReceiver flightmodebroadcast ;
     IntentFilter aeroplacemodefilter;
 
@@ -122,8 +113,8 @@ public abstract class locationawareactivity extends baseactivity implements
     private float[] mI = new float[16];
     private float[] mOrientation = new float[3];
     private int mCount;
-    private float mCurrentDegree = 0f;
-    TelephonyManager mTelephonyManager;
+    private float mcurrentdegree = 0f;
+    TelephonyManager mtelephonymanager;
 
     private IntentFilter intentFilter;
     private BroadcastReceiver mBroadcast;
@@ -147,14 +138,12 @@ public abstract class locationawareactivity extends baseactivity implements
     OkHttpClient client = new OkHttpClient();
     // bandwidth in kbps
     private int POOR_BANDWIDTH = 150;
-    private int AVERAGE_BANDWIDTH = 550;
-    private int GOOD_BANDWIDTH = 2000;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         applicationviavideocomposer.setActivity(locationawareactivity.this);
-        NewSavedInstanceState=savedInstanceState;
+        newsavedinstancestate =savedInstanceState;
         telephonymanager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE );
 
@@ -309,7 +298,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
     @Override
     public void showPermissionDialog() {
-        updateItem=true;
+        updateitem =true;
         if (!checkPermission(this)) {
             ActivityCompat.requestPermissions(
                     this,
@@ -323,7 +312,7 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
     public void initLocationAPIs(Bundle savedInstanceState) {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mgoogleapiclient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -333,7 +322,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
         updateValuesFromBundle(savedInstanceState);
 
-        mGoogleApiClient.connect();
+        mgoogleapiclient.connect();
     }
 
     public static boolean checkPermission(final Context context) {
@@ -362,10 +351,10 @@ public abstract class locationawareactivity extends baseactivity implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        if(mGoogleApiClient != null && mGoogleApiClient.isConnected())
+        if(mgoogleapiclient != null && mgoogleapiclient.isConnected())
         {
             LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mGoogleApiClient, mLocationRequest, this);
+                    mgoogleapiclient, mlocationrequest, this);
 
         }
 //        mRequestingLocationUpdates = true;
@@ -377,18 +366,18 @@ public abstract class locationawareactivity extends baseactivity implements
 //    }
 
     protected void stopLocationUpdates() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        if (mgoogleapiclient != null && mgoogleapiclient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mgoogleapiclient, this);
         }
 //        mRequestingLocationUpdates = false;
     }
 
     protected LocationRequest createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(10000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        return mLocationRequest;
+        mlocationrequest = new LocationRequest();
+        mlocationrequest.setInterval(10000);
+        mlocationrequest.setFastestInterval(10000);
+        mlocationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return mlocationrequest;
     }
 
 
@@ -403,18 +392,12 @@ public abstract class locationawareactivity extends baseactivity implements
 
             }
 
-            // Update the value of mCurrentLocation from the Bundle and update the
+            // Update the value of mcurrentlocation from the Bundle and update the
             // UI to show the correct latitude and longitude.
             if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
                 // Since LOCATION_KEY was found in the Bundle, we can be sure that
                 // mCurrentLocationis not null.
-                mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
-            }
-
-            // Update the value of mLastUpdateTime from the Bundle and update the UI.
-            if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
-                mLastUpdateTime = savedInstanceState.getString(
-                        LAST_UPDATED_TIME_STRING_KEY);
+                mcurrentlocation = savedInstanceState.getParcelable(LOCATION_KEY);
             }
         }
     }
@@ -442,8 +425,7 @@ public abstract class locationawareactivity extends baseactivity implements
             if(location.getLatitude() == 0.0)
                 return;
 
-            mCurrentLocation = location;
-            mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+            mcurrentlocation = location;
             if (getcurrentfragment() != null) {
                 getcurrentfragment().oncurrentlocationchanged(location);
                 updatelocationsparams(location);
@@ -459,7 +441,7 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
     public Location getCurrentLocation() {
-        return mCurrentLocation;
+        return mcurrentlocation;
     }
 
     /*@Override
@@ -523,7 +505,7 @@ public abstract class locationawareactivity extends baseactivity implements
     {
         if (locationawareactivity.checkLocationEnable(locationawareactivity.this))
         {
-            initLocationAPIs(NewSavedInstanceState);
+            initLocationAPIs(newsavedinstancestate);
             if (getcurrentfragment() != null) {
                 getcurrentfragment().getAccurateLocation();
             }
@@ -591,90 +573,91 @@ public abstract class locationawareactivity extends baseactivity implements
 
     private void preparemetricesdata() {
 
-        metricItemArraylist.clear();
+        metricitemarraylist.clear();
 
-        metricItemArraylist.add(new metricmodel("battery", "", true));
-        metricItemArraylist.add(new metricmodel("phonetype","",true));
-        metricItemArraylist.add(new metricmodel("imeinumber", "", true));
-        metricItemArraylist.add(new metricmodel("simserialnumber", "", true));
-        metricItemArraylist.add(new metricmodel("version", "", true));
-        metricItemArraylist.add(new metricmodel("osversion", "", true));
-        metricItemArraylist.add(new metricmodel("softwareversion", "", true));
-        metricItemArraylist.add(new metricmodel("model", "", true));
-        metricItemArraylist.add(new metricmodel("manufacturer", "", true));
-        metricItemArraylist.add(new metricmodel("brightness", "",true));
-        metricItemArraylist.add(new metricmodel("gpslatitude", "", true));
-        metricItemArraylist.add(new metricmodel("gpslongitude", "", true));
-        metricItemArraylist.add(new metricmodel(config.gpsaltitude, "", true));
-        metricItemArraylist.add(new metricmodel("gpsquality", "", true));
-        metricItemArraylist.add(new metricmodel("carrier", "", true));
-        metricItemArraylist.add(new metricmodel("screenwidth", "", true));
-        metricItemArraylist.add(new metricmodel("screenheight", "", true));
-        metricItemArraylist.add(new metricmodel("systemuptime", "", true));
-        metricItemArraylist.add(new metricmodel("multitaskingenabled", "", true));
-        metricItemArraylist.add(new metricmodel("proximitysensorenabled", "", true));
-        metricItemArraylist.add(new metricmodel("pluggedin", "", true));
-        metricItemArraylist.add(new metricmodel("devicetime", "", true));
-        metricItemArraylist.add(new metricmodel("deviceregion", "", true));
-        metricItemArraylist.add(new metricmodel("devicelanguage", "", true));
-        metricItemArraylist.add(new metricmodel("devicecurrency", "", true));
-        metricItemArraylist.add(new metricmodel("timezone", "", true));
-        metricItemArraylist.add(new metricmodel("headphonesattached", "", true));
-        metricItemArraylist.add(new metricmodel("accessoriesattached", "", true));
-        metricItemArraylist.add(new metricmodel("nameattachedaccessories", "", true));
-        metricItemArraylist.add(new metricmodel("attachedaccessoriescount", "", true));
-        metricItemArraylist.add(new metricmodel("totalspace", "", true));
-        metricItemArraylist.add(new metricmodel("usedspace", "", true));
-        metricItemArraylist.add(new metricmodel("memoryusage", "", true));
-        metricItemArraylist.add(new metricmodel("freespace", "", true));
-        metricItemArraylist.add(new metricmodel("deviceorientation", "", true));
-        metricItemArraylist.add(new metricmodel("rammemory", "", true));
-        metricItemArraylist.add(new metricmodel("usedram", "", true));
-        metricItemArraylist.add(new metricmodel("freeram", "", true));
-        metricItemArraylist.add(new metricmodel("wificonnect", "", true));
-        metricItemArraylist.add(new metricmodel("cellnetworkconnect", "", true));
-        metricItemArraylist.add(new metricmodel("internalip", "", true));
-        metricItemArraylist.add(new metricmodel("externalip", "", true));
-        metricItemArraylist.add(new metricmodel("networktype", "", true));
-        metricItemArraylist.add(new metricmodel(config.connectedphonenetworkquality, "", true));
-        metricItemArraylist.add(new metricmodel("gravitysensorenabled", "", true));
-        metricItemArraylist.add(new metricmodel("gyroscopesensorenabled", "", true));
-        metricItemArraylist.add(new metricmodel("lightsensorenabled", "", true));
-        metricItemArraylist.add(new metricmodel("debuggerattached", "", true));
-        metricItemArraylist.add(new metricmodel("deviceid", "", true));
-        metricItemArraylist.add(new metricmodel("bluetoothonoff", "", true));
-        metricItemArraylist.add(new metricmodel("wifiname", "", true));
-        metricItemArraylist.add(new metricmodel(config.wifinetworkavailable, "", true));
-        metricItemArraylist.add(new metricmodel("processorcount", "", true));
-        metricItemArraylist.add(new metricmodel("activeprocessorcount", "", true));
-        metricItemArraylist.add(new metricmodel(config.cpuusageuser, "", true));
-        metricItemArraylist.add(new metricmodel(config.cpuusagesystem, "", true));
-        metricItemArraylist.add(new metricmodel(config.cpuusageiow, "", true));
-        metricItemArraylist.add(new metricmodel(config.cpuusageirq, "", true));
-        metricItemArraylist.add(new metricmodel(config.compass, "", true));
-        metricItemArraylist.add(new metricmodel(config.decibel, "", true));
-        metricItemArraylist.add(new metricmodel(config.barometer, "", true));
-        metricItemArraylist.add(new metricmodel("isaccelerometeravailable", "", true));
-        metricItemArraylist.add(new metricmodel(config.acceleration_x, "", true));
-        metricItemArraylist.add(new metricmodel(config.acceleration_y, "", true));
-        metricItemArraylist.add(new metricmodel(config.acceleration_z, "", true));
-        metricItemArraylist.add(new metricmodel(config.distancetravelled, "", true));
-        metricItemArraylist.add(new metricmodel("dataconnection", "", true));
-        metricItemArraylist.add(new metricmodel(config.currentcallinprogress, "", true));
-        metricItemArraylist.add(new metricmodel(config.currentcalldurationseconds, "", true));
-        metricItemArraylist.add(new metricmodel(config.currentcallremotenumber, "", true));
-        metricItemArraylist.add(new metricmodel("currentcallvolume", "", true));
-        metricItemArraylist.add(new metricmodel(config.currentcalldecibel, "", true));
-        metricItemArraylist.add(new metricmodel("gpsonoff","",true));
-        metricItemArraylist.add(new metricmodel(config.airplanemode,"",true));
-        metricItemArraylist.add(new metricmodel("phonetime","",true));
-        metricItemArraylist.add(new metricmodel("syncphonetime","",true));
-        metricItemArraylist.add(new metricmodel("country","",true));
-        metricItemArraylist.add(new metricmodel("connectionspeed","",true));
-        metricItemArraylist.add(new metricmodel("gpsaccuracy","",true));
-        metricItemArraylist.add(new metricmodel("speed","",true));
-        metricItemArraylist.add(new metricmodel("heading","",true));
-        metricItemArraylist.add(new metricmodel("address","",true));
+        metricitemarraylist.add(new metricmodel("battery", "", true));
+        metricitemarraylist.add(new metricmodel("phonetype","",true));
+        metricitemarraylist.add(new metricmodel("imeinumber", "", true));
+        metricitemarraylist.add(new metricmodel("simserialnumber", "", true));
+        metricitemarraylist.add(new metricmodel("version", "", true));
+        metricitemarraylist.add(new metricmodel("osversion", "", true));
+        metricitemarraylist.add(new metricmodel("softwareversion", "", true));
+        metricitemarraylist.add(new metricmodel("model", "", true));
+        metricitemarraylist.add(new metricmodel("manufacturer", "", true));
+        metricitemarraylist.add(new metricmodel("brightness", "",true));
+        metricitemarraylist.add(new metricmodel("gpslatitude", "", true));
+        metricitemarraylist.add(new metricmodel("gpslongitude", "", true));
+        metricitemarraylist.add(new metricmodel(config.gpsaltitude, "", true));
+        metricitemarraylist.add(new metricmodel("gpsquality", "", true));
+        metricitemarraylist.add(new metricmodel("carrier", "", true));
+        metricitemarraylist.add(new metricmodel("screenwidth", "", true));
+        metricitemarraylist.add(new metricmodel("screenheight", "", true));
+        metricitemarraylist.add(new metricmodel("systemuptime", "", true));
+        metricitemarraylist.add(new metricmodel("multitaskingenabled", "", true));
+        metricitemarraylist.add(new metricmodel("proximitysensorenabled", "", true));
+        metricitemarraylist.add(new metricmodel("pluggedin", "", true));
+        metricitemarraylist.add(new metricmodel("devicetime", "", true));
+        metricitemarraylist.add(new metricmodel("deviceregion", "", true));
+        metricitemarraylist.add(new metricmodel("devicelanguage", "", true));
+        metricitemarraylist.add(new metricmodel("devicecurrency", "", true));
+        metricitemarraylist.add(new metricmodel("timezone", "", true));
+        metricitemarraylist.add(new metricmodel("headphonesattached", "", true));
+        metricitemarraylist.add(new metricmodel("accessoriesattached", "", true));
+        metricitemarraylist.add(new metricmodel("nameattachedaccessories", "", true));
+        metricitemarraylist.add(new metricmodel("attachedaccessoriescount", "", true));
+        metricitemarraylist.add(new metricmodel("totalspace", "", true));
+        metricitemarraylist.add(new metricmodel("usedspace", "", true));
+        metricitemarraylist.add(new metricmodel("memoryusage", "", true));
+        metricitemarraylist.add(new metricmodel("freespace", "", true));
+        metricitemarraylist.add(new metricmodel("orientation","",true));
+        metricitemarraylist.add(new metricmodel("deviceorientation", "", true));
+        metricitemarraylist.add(new metricmodel("rammemory", "", true));
+        metricitemarraylist.add(new metricmodel("usedram", "", true));
+        metricitemarraylist.add(new metricmodel("freeram", "", true));
+        metricitemarraylist.add(new metricmodel("wificonnect", "", true));
+        metricitemarraylist.add(new metricmodel("cellnetworkconnect", "", true));
+        metricitemarraylist.add(new metricmodel("internalip", "", true));
+        metricitemarraylist.add(new metricmodel("externalip", "", true));
+        metricitemarraylist.add(new metricmodel("networktype", "", true));
+        metricitemarraylist.add(new metricmodel(config.connectedphonenetworkquality, "", true));
+        metricitemarraylist.add(new metricmodel("gravitysensorenabled", "", true));
+        metricitemarraylist.add(new metricmodel("gyroscopesensorenabled", "", true));
+        metricitemarraylist.add(new metricmodel("lightsensorenabled", "", true));
+        metricitemarraylist.add(new metricmodel("debuggerattached", "", true));
+        metricitemarraylist.add(new metricmodel("deviceid", "", true));
+        metricitemarraylist.add(new metricmodel("bluetoothonoff", "", true));
+        metricitemarraylist.add(new metricmodel("wifiname", "", true));
+        metricitemarraylist.add(new metricmodel(config.wifinetworkavailable, "", true));
+        metricitemarraylist.add(new metricmodel("processorcount", "", true));
+        metricitemarraylist.add(new metricmodel("activeprocessorcount", "", true));
+        metricitemarraylist.add(new metricmodel(config.cpuusageuser, "", true));
+        metricitemarraylist.add(new metricmodel(config.cpuusagesystem, "", true));
+        metricitemarraylist.add(new metricmodel(config.cpuusageiow, "", true));
+        metricitemarraylist.add(new metricmodel(config.cpuusageirq, "", true));
+        metricitemarraylist.add(new metricmodel(config.compass, "", true));
+        metricitemarraylist.add(new metricmodel(config.decibel, "", true));
+        metricitemarraylist.add(new metricmodel(config.barometer, "", true));
+        metricitemarraylist.add(new metricmodel("isaccelerometeravailable", "", true));
+        metricitemarraylist.add(new metricmodel(config.acceleration_x, "", true));
+        metricitemarraylist.add(new metricmodel(config.acceleration_y, "", true));
+        metricitemarraylist.add(new metricmodel(config.acceleration_z, "", true));
+        metricitemarraylist.add(new metricmodel(config.distancetravelled, "", true));
+        metricitemarraylist.add(new metricmodel("dataconnection", "", true));
+        metricitemarraylist.add(new metricmodel(config.currentcallinprogress, "", true));
+        metricitemarraylist.add(new metricmodel(config.currentcalldurationseconds, "", true));
+        metricitemarraylist.add(new metricmodel(config.currentcallremotenumber, "", true));
+        metricitemarraylist.add(new metricmodel("currentcallvolume", "", true));
+        metricitemarraylist.add(new metricmodel(config.currentcalldecibel, "", true));
+        metricitemarraylist.add(new metricmodel("gpsonoff","",true));
+        metricitemarraylist.add(new metricmodel(config.airplanemode,"",true));
+        metricitemarraylist.add(new metricmodel("phonetime","",true));
+        metricitemarraylist.add(new metricmodel("syncphonetime","",true));
+        metricitemarraylist.add(new metricmodel("country","",true));
+        metricitemarraylist.add(new metricmodel("connectionspeed","",true));
+        metricitemarraylist.add(new metricmodel("gpsaccuracy","",true));
+        metricitemarraylist.add(new metricmodel("speed","",true));
+        metricitemarraylist.add(new metricmodel("heading","",true));
+        metricitemarraylist.add(new metricmodel("address","",true));
 
        // getmetricarraylist();
         startmetrices();
@@ -698,14 +681,14 @@ public abstract class locationawareactivity extends baseactivity implements
                         getconnectionspeed();
 
 
-                        for(int i=0;i<metricItemArraylist.size();i++)
+                        for(int i = 0; i< metricitemarraylist.size(); i++)
                         {
-                            if(metricItemArraylist.get(i).isSelected())
+                            if(metricitemarraylist.get(i).isSelected())
                             {
-                                String value=metric_read(metricItemArraylist.get(i).getMetricTrackKeyName());
-                                metricItemArraylist.get(i).setMetricTrackValue(metricItemArraylist.get(i).getMetricTrackValue());
+                                String value=metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
+                                metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
                                 if(! value.trim().isEmpty())
-                                    metricItemArraylist.get(i).setMetricTrackValue(value);
+                                    metricitemarraylist.get(i).setMetricTrackValue(value);
                             }
                         }
 
@@ -750,19 +733,17 @@ public abstract class locationawareactivity extends baseactivity implements
             {
                 if(settingupdatedlist.get(i).isSelected())
                 {
-                    metricItemArraylist.get(i).setSelected(true);
+                    metricitemarraylist.get(i).setSelected(true);
                 }
                 else
                 {
-                    metricItemArraylist.get(i).setSelected(false);
+                    metricitemarraylist.get(i).setSelected(false);
                 }
-
-
             }
         }
 
 
-        return metricItemArraylist;
+        return metricitemarraylist;
     }
 
 
@@ -1437,14 +1418,14 @@ public abstract class locationawareactivity extends baseactivity implements
                 unregisterReceiver(flightmodebroadcast);
             }
 
-            if(mSensorManager != null)
-                mSensorManager.unregisterListener(mAccelerometerListener);
+            if(msensormanager != null)
+                msensormanager.unregisterListener(mAccelerometerListener);
 
-            if(mSensorManager != null)
-                mSensorManager.unregisterListener(mBarometerListener);
+            if(msensormanager != null)
+                msensormanager.unregisterListener(mBarometerListener);
 
-            if (mSensorManager != null)
-                mSensorManager.unregisterListener(mCompassListener);
+            if (msensormanager != null)
+                msensormanager.unregisterListener(mCompassListener);
 
 
         }catch (Exception e){
@@ -1463,11 +1444,11 @@ public abstract class locationawareactivity extends baseactivity implements
     public void registerAccelerometerSensor() {
         Thread thread = new Thread(){
             public void run(){
-                mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-                if (mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-                    mAccelereometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+                if (msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
+                    maccelereometer = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-                    mSensorManager.registerListener(mAccelerometerListener, mAccelereometer, SensorManager.SENSOR_DELAY_NORMAL);
+                    msensormanager.registerListener(mAccelerometerListener, maccelereometer, SensorManager.SENSOR_DELAY_NORMAL);
 
                 }
             }
@@ -1513,12 +1494,12 @@ public abstract class locationawareactivity extends baseactivity implements
         Thread thread = new Thread(){
             public void run(){
 
-                mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+                msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-                if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
+                if (msensormanager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null) {
 
-                    Sensor pS = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
-                    mSensorManager.registerListener(mBarometerListener, pS, SensorManager.SENSOR_DELAY_UI);
+                    Sensor pS = msensormanager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+                    msensormanager.registerListener(mBarometerListener, pS, SensorManager.SENSOR_DELAY_UI);
                 }
             }
         };
@@ -1624,8 +1605,8 @@ public abstract class locationawareactivity extends baseactivity implements
             @Override
             public void run() {
                 mPhoneStatelistener = new MyPhoneStateListener();
-                mTelephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                mTelephonyManager.listen(mPhoneStatelistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+                mtelephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                mtelephonymanager.listen(mPhoneStatelistener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
             }
         });
     }
@@ -1648,14 +1629,14 @@ public abstract class locationawareactivity extends baseactivity implements
 
     @Override
     public void registerCompassSensor() {
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Thread thread = new Thread(){
             public void run(){
-                Sensor accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-                Sensor magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+                Sensor accelerometer = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                Sensor magnetometer = msensormanager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
-                mSensorManager.registerListener(mCompassListener, accelerometer, SensorManager.SENSOR_DELAY_UI);
-                mSensorManager.registerListener(mCompassListener, magnetometer, SensorManager.SENSOR_DELAY_UI);
+                msensormanager.registerListener(mCompassListener, accelerometer, SensorManager.SENSOR_DELAY_UI);
+                msensormanager.registerListener(mCompassListener, magnetometer, SensorManager.SENSOR_DELAY_UI);
             }
         };
         thread.start();
@@ -1698,9 +1679,9 @@ public abstract class locationawareactivity extends baseactivity implements
                             float azimuthInRadians = mOrientation[0];
                             float azimuthInDegress = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
 
-                            mCurrentDegree = -azimuthInDegress;
+                            mcurrentdegree = -azimuthInDegress;
 
-                            int degree = (int) mCurrentDegree;
+                            int degree = (int) mcurrentdegree;
                             degree=Math.abs(degree);
                             String compassValue  = "Northbound";
 
@@ -1735,6 +1716,7 @@ public abstract class locationawareactivity extends baseactivity implements
                             }
 
                             updatearrayitem(config.compass,compassValue);
+                            updatearrayitem(config.orientation,""+degree);
 
                         }
                     }
@@ -1830,10 +1812,10 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
     public void updatearrayitem(String key,String value) {
-        for (int i = 0; i < metricItemArraylist.size(); i++) {
+        for (int i = 0; i < metricitemarraylist.size(); i++) {
 
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(key)) {
-                metricItemArraylist.get(i).setMetricTrackValue(value);
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(key)) {
+                metricitemarraylist.get(i).setMetricTrackValue(value);
                 break;
             }
         }
@@ -1855,35 +1837,35 @@ public abstract class locationawareactivity extends baseactivity implements
         }
 
 
-        for (int i = 0; i < metricItemArraylist.size(); i++) {
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
-                metricItemArraylist.get(i).setMetricTrackValue("" + location.getLatitude());
+        for (int i = 0; i < metricitemarraylist.size(); i++) {
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
+                metricitemarraylist.get(i).setMetricTrackValue("" + location.getLatitude());
             }
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
-                metricItemArraylist.get(i).setMetricTrackValue("" + location.getLongitude());
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
+                metricitemarraylist.get(i).setMetricTrackValue("" + location.getLongitude());
             }
 
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
-                metricItemArraylist.get(i).setMetricTrackValue("" + ((int)doubleTotalDistance));
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
+                metricitemarraylist.get(i).setMetricTrackValue("" + ((int)doubleTotalDistance));
             }
-            if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
-                metricItemArraylist.get(i).setMetricTrackValue("" +location.getAccuracy());
+            if(metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
+                metricitemarraylist.get(i).setMetricTrackValue("" +location.getAccuracy());
             }
-            if(metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
-                metricItemArraylist.get(i).setMetricTrackValue("" +currentaddress);
+            if(metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
+                metricitemarraylist.get(i).setMetricTrackValue("" +currentaddress);
             }
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
-                metricItemArraylist.get(i).setMetricTrackValue("" + "N/A");
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
+                metricitemarraylist.get(i).setMetricTrackValue("" + "N/A");
                 if(oldlocation != null)
                 {
                     String angle=common.anglefromcoordinate(location.getLatitude(),location.getLongitude(),
                             oldlocation.getLatitude(),oldlocation.getLongitude());
-                    metricItemArraylist.get(i).setMetricTrackValue("" + angle);
+                    metricitemarraylist.get(i).setMetricTrackValue("" + angle);
                 }
             }
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
                 if(location.hasSpeed()){
-                    metricItemArraylist.get(i).setMetricTrackValue("" + location.getSpeed());
+                    metricitemarraylist.get(i).setMetricTrackValue("" + location.getSpeed());
                 }else{
                     if(oldlocation != null)
                     {
@@ -1896,29 +1878,33 @@ public abstract class locationawareactivity extends baseactivity implements
                         if(strspeed.contains("."))
                             strspeed=strspeed.substring(0,strspeed.indexOf("."));
 
-                        metricItemArraylist.get(i).setMetricTrackValue("" +strspeed);
+                        metricitemarraylist.get(i).setMetricTrackValue("" +strspeed);
                     }
                 }
-
-
+            }
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
+                if(location.hasAltitude()){
+                    double altitude=location.getAltitude();
+                    metricitemarraylist.get(i).setMetricTrackValue("" + altitude);
+                }
             }
         }
 
         if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
         {
-            for (int i = 0; i < metricItemArraylist.size(); i++) {
+            for (int i = 0; i < metricitemarraylist.size(); i++) {
 
-               /* if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting(config.gpsaltitude)));
+               /* if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
+                    metricitemarraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting(config.gpsaltitude)));
                     xdata.getinstance().saveSetting(config.Altitude,""+xdata.getinstance().getSetting(config.gpsaltitude));
                 }*/
 
-                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsquality")));
+                if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
+                    metricitemarraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsquality")));
                 }
 
-                if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsnumberofsatelites")) {
-                    metricItemArraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsnumberofsatelites")));
+                if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsnumberofsatelites")) {
+                    metricitemarraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsnumberofsatelites")));
                 }
             }
         }

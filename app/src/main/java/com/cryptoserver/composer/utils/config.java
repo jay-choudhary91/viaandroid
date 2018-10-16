@@ -61,6 +61,7 @@ public class config {
     public static final String currentcallremotenumber = "currentcallremotenumber";
     public static final String decibel = "decibel";
     public static final String currentcalldecibel = "currentcalldecibel";
+    public static final String orientation = "orientation";
 
     //graphicaldata
     public static final String Latitude="Latitude";
