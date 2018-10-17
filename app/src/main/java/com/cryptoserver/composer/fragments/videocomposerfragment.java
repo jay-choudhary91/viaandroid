@@ -1608,6 +1608,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(apicurrentduration > apicallduration)
                     apicurrentduration=apicallduration;
 
+                if(selectedmetrices.toString().trim().length() == 0)
+                {
+                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                    getselectedmetrics(mlocalarraylist);
+                }
+
                 if(apicurrentduration == apicallduration)
                 {
                     ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();

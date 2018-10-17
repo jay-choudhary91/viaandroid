@@ -1403,7 +1403,7 @@ public class common {
 
 
             final String latitude=xdata.getinstance().getSetting(config.Latitude);
-            if(! latitude.isEmpty())
+            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("N/A")))
             {
 
                 txt_latitude.post(new Runnable() {
@@ -1427,7 +1427,7 @@ public class common {
             }
 
             final String longitude=xdata.getinstance().getSetting(config.Longitude);
-            if(! longitude.isEmpty())
+            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("N/A")))
             {
                 final double longg = Double.valueOf(longitude);
                 txt_longitude.post(new Runnable() {
@@ -1452,7 +1452,15 @@ public class common {
             txt_altitude.post(new Runnable() {
                 @Override
                 public void run() {
-                    txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+" ft");
+                    final String altitude=xdata.getinstance().getSetting(config.Altitude);
+                    if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("N/A")))
+                    {
+                        txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+" ft");
+                    }
+                    else
+                    {
+                        txt_altitude.setText(config.Altitude+"\n"+"N/A");
+                    }
                 }
             });
 
@@ -1485,6 +1493,82 @@ public class common {
             });
 
     }
+
+    /*public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
+                                             final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
+
+
+        txt_latitude.post(new Runnable() {
+            @Override
+            public void run() {
+                final String latitude=xdata.getinstance().getSetting(config.Latitude);
+                txt_latitude.setText(config.Latitude+"\n"+"N/A");
+                if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("N/A")))
+                {
+                    double latt = Double.valueOf(latitude);
+                    txt_latitude.setText(config.Latitude+"\n"+ convertlatitude(latt));
+                }
+            }
+        });
+
+
+        txt_longitude.post(new Runnable() {
+            @Override
+            public void run() {
+                final String longitude=xdata.getinstance().getSetting(config.Longitude);
+                txt_longitude.setText(config.Longitude+"\n"+"N/A");
+                if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("N/A")))
+                {
+                    final double longg = Double.valueOf(longitude);
+                    txt_longitude.setText(config.Longitude+"\n"+ convertlongitude(longg));
+                }
+            }
+        });
+
+        txt_altitude.post(new Runnable() {
+            @Override
+            public void run() {
+                final String altitude=xdata.getinstance().getSetting(config.Altitude);
+                if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("N/A")))
+                {
+                    txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+" ft");
+                }
+                else
+                {
+                    txt_altitude.setText(config.Altitude+"\n"+"N/A");
+                }
+            }
+        });
+
+        txt_heading.post(new Runnable() {
+            @Override
+            public void run() {
+                txt_heading.setText(config.Heading+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Heading)));
+            }
+        });
+
+        txt_orientation.post(new Runnable() {
+            @Override
+            public void run() {
+                txt_orientation.setText(config.Orientation+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
+            }
+        });
+
+        txt_speed.post(new Runnable() {
+            @Override
+            public void run() {
+                txt_speed.setText(config.Speed+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
+            }
+        });
+
+        txt_address.post(new Runnable() {
+            @Override
+            public void run() {
+                txt_address.setText(getxdatavalue(xdata.getinstance().getSetting(config.Address)));
+            }
+        });
+
+    }*/
 
     public  static String getxdatavalue(String value)
     {

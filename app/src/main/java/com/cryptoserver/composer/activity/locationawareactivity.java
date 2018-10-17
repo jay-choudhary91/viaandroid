@@ -604,7 +604,7 @@ public abstract class locationawareactivity extends baseactivity implements
                     @Override
                     public void run() {
 
-                        //getaltitudefromapi();
+                        getaltitudefromapi();
                         getconnectionspeed();
 
                         for(int i = 0; i< metricitemarraylist.size(); i++)
@@ -1812,11 +1812,12 @@ public abstract class locationawareactivity extends baseactivity implements
                 if(location.hasAltitude()){
                     int outValue = (int) (location.getAltitude() / 0.3048);
                     metricitemarraylist.get(i).setMetricTrackValue("" + outValue);
+                    //metricitemarraylist.get(i).setMetricTrackValue("" + altitude);
                 }
-                /*else
+                else
                 {
                     metricitemarraylist.get(i).setMetricTrackValue("" + altitude);
-                }*/
+                }
             }
         }
 
