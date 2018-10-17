@@ -47,6 +47,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.netutils.xapi;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.googleutils;
@@ -59,6 +60,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -106,6 +110,7 @@ public abstract class locationawareactivity extends baseactivity implements
     private Sensor maccelereometer;
     private BroadcastReceiver flightmodebroadcast ;
     IntentFilter aeroplacemodefilter;
+    private double altitude=0.0;
 
     private float[] mGData = new float[3];
     private float[] mMData = new float[3];
@@ -575,91 +580,12 @@ public abstract class locationawareactivity extends baseactivity implements
 
         metricitemarraylist.clear();
 
-        metricitemarraylist.add(new metricmodel("battery", "", true));
-        metricitemarraylist.add(new metricmodel("phonetype","",true));
-        metricitemarraylist.add(new metricmodel("imeinumber", "", true));
-        metricitemarraylist.add(new metricmodel("simserialnumber", "", true));
-        metricitemarraylist.add(new metricmodel("version", "", true));
-        metricitemarraylist.add(new metricmodel("osversion", "", true));
-        metricitemarraylist.add(new metricmodel("softwareversion", "", true));
-        metricitemarraylist.add(new metricmodel("model", "", true));
-        metricitemarraylist.add(new metricmodel("manufacturer", "", true));
-        metricitemarraylist.add(new metricmodel("brightness", "",true));
-        metricitemarraylist.add(new metricmodel("gpslatitude", "", true));
-        metricitemarraylist.add(new metricmodel("gpslongitude", "", true));
-        metricitemarraylist.add(new metricmodel(config.gpsaltitude, "", true));
-        metricitemarraylist.add(new metricmodel("gpsquality", "", true));
-        metricitemarraylist.add(new metricmodel("carrier", "", true));
-        metricitemarraylist.add(new metricmodel("screenwidth", "", true));
-        metricitemarraylist.add(new metricmodel("screenheight", "", true));
-        metricitemarraylist.add(new metricmodel("systemuptime", "", true));
-        metricitemarraylist.add(new metricmodel("multitaskingenabled", "", true));
-        metricitemarraylist.add(new metricmodel("proximitysensorenabled", "", true));
-        metricitemarraylist.add(new metricmodel("pluggedin", "", true));
-        metricitemarraylist.add(new metricmodel("devicetime", "", true));
-        metricitemarraylist.add(new metricmodel("deviceregion", "", true));
-        metricitemarraylist.add(new metricmodel("devicelanguage", "", true));
-        metricitemarraylist.add(new metricmodel("devicecurrency", "", true));
-        metricitemarraylist.add(new metricmodel("timezone", "", true));
-        metricitemarraylist.add(new metricmodel("headphonesattached", "", true));
-        metricitemarraylist.add(new metricmodel("accessoriesattached", "", true));
-        metricitemarraylist.add(new metricmodel("nameattachedaccessories", "", true));
-        metricitemarraylist.add(new metricmodel("attachedaccessoriescount", "", true));
-        metricitemarraylist.add(new metricmodel("totalspace", "", true));
-        metricitemarraylist.add(new metricmodel("usedspace", "", true));
-        metricitemarraylist.add(new metricmodel("memoryusage", "", true));
-        metricitemarraylist.add(new metricmodel("freespace", "", true));
-        metricitemarraylist.add(new metricmodel("orientation","",true));
-        metricitemarraylist.add(new metricmodel("deviceorientation", "", true));
-        metricitemarraylist.add(new metricmodel("rammemory", "", true));
-        metricitemarraylist.add(new metricmodel("usedram", "", true));
-        metricitemarraylist.add(new metricmodel("freeram", "", true));
-        metricitemarraylist.add(new metricmodel("wificonnect", "", true));
-        metricitemarraylist.add(new metricmodel("cellnetworkconnect", "", true));
-        metricitemarraylist.add(new metricmodel("internalip", "", true));
-        metricitemarraylist.add(new metricmodel("externalip", "", true));
-        metricitemarraylist.add(new metricmodel("networktype", "", true));
-        metricitemarraylist.add(new metricmodel(config.connectedphonenetworkquality, "", true));
-        metricitemarraylist.add(new metricmodel("gravitysensorenabled", "", true));
-        metricitemarraylist.add(new metricmodel("gyroscopesensorenabled", "", true));
-        metricitemarraylist.add(new metricmodel("lightsensorenabled", "", true));
-        metricitemarraylist.add(new metricmodel("debuggerattached", "", true));
-        metricitemarraylist.add(new metricmodel("deviceid", "", true));
-        metricitemarraylist.add(new metricmodel("bluetoothonoff", "", true));
-        metricitemarraylist.add(new metricmodel("wifiname", "", true));
-        metricitemarraylist.add(new metricmodel(config.wifinetworkavailable, "", true));
-        metricitemarraylist.add(new metricmodel("processorcount", "", true));
-        metricitemarraylist.add(new metricmodel("activeprocessorcount", "", true));
-        metricitemarraylist.add(new metricmodel(config.cpuusageuser, "", true));
-        metricitemarraylist.add(new metricmodel(config.cpuusagesystem, "", true));
-        metricitemarraylist.add(new metricmodel(config.cpuusageiow, "", true));
-        metricitemarraylist.add(new metricmodel(config.cpuusageirq, "", true));
-        metricitemarraylist.add(new metricmodel(config.compass, "", true));
-        metricitemarraylist.add(new metricmodel(config.decibel, "", true));
-        metricitemarraylist.add(new metricmodel(config.barometer, "", true));
-        metricitemarraylist.add(new metricmodel("isaccelerometeravailable", "", true));
-        metricitemarraylist.add(new metricmodel(config.acceleration_x, "", true));
-        metricitemarraylist.add(new metricmodel(config.acceleration_y, "", true));
-        metricitemarraylist.add(new metricmodel(config.acceleration_z, "", true));
-        metricitemarraylist.add(new metricmodel(config.distancetravelled, "", true));
-        metricitemarraylist.add(new metricmodel("dataconnection", "", true));
-        metricitemarraylist.add(new metricmodel(config.currentcallinprogress, "", true));
-        metricitemarraylist.add(new metricmodel(config.currentcalldurationseconds, "", true));
-        metricitemarraylist.add(new metricmodel(config.currentcallremotenumber, "", true));
-        metricitemarraylist.add(new metricmodel("currentcallvolume", "", true));
-        metricitemarraylist.add(new metricmodel(config.currentcalldecibel, "", true));
-        metricitemarraylist.add(new metricmodel("gpsonoff","",true));
-        metricitemarraylist.add(new metricmodel(config.airplanemode,"",true));
-        metricitemarraylist.add(new metricmodel("phonetime","",true));
-        metricitemarraylist.add(new metricmodel("syncphonetime","",true));
-        metricitemarraylist.add(new metricmodel("country","",true));
-        metricitemarraylist.add(new metricmodel("connectionspeed","",true));
-        metricitemarraylist.add(new metricmodel("gpsaccuracy","",true));
-        metricitemarraylist.add(new metricmodel("speed","",true));
-        metricitemarraylist.add(new metricmodel("heading","",true));
-        metricitemarraylist.add(new metricmodel("address","",true));
+        String[] items=common.getmetricesarray();
 
-       // getmetricarraylist();
+        for(int i=0;i<items.length;i++)
+        {
+            metricitemarraylist.add(new metricmodel(items[i], "", true));
+        }
         startmetrices();
 
     }
@@ -678,8 +604,8 @@ public abstract class locationawareactivity extends baseactivity implements
                     @Override
                     public void run() {
 
+                        //getaltitudefromapi();
                         getconnectionspeed();
-
 
                         for(int i = 0; i< metricitemarraylist.size(); i++)
                         {
@@ -1884,20 +1810,19 @@ public abstract class locationawareactivity extends baseactivity implements
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
                 if(location.hasAltitude()){
-                    double altitude=location.getAltitude();
-                    metricitemarraylist.get(i).setMetricTrackValue("" + altitude);
+                    int outValue = (int) (location.getAltitude() / 0.3048);
+                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue);
                 }
+                /*else
+                {
+                    metricitemarraylist.get(i).setMetricTrackValue("" + altitude);
+                }*/
             }
         }
 
-        if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
+        /*if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
         {
             for (int i = 0; i < metricitemarraylist.size(); i++) {
-
-               /* if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
-                    metricitemarraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting(config.gpsaltitude)));
-                    xdata.getinstance().saveSetting(config.Altitude,""+xdata.getinstance().getSetting(config.gpsaltitude));
-                }*/
 
                 if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
                     metricitemarraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsquality")));
@@ -1907,7 +1832,7 @@ public abstract class locationawareactivity extends baseactivity implements
                     metricitemarraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsnumberofsatelites")));
                 }
             }
-        }
+        }*/
         oldlocation=location;
     }
 
@@ -1945,4 +1870,47 @@ public abstract class locationawareactivity extends baseactivity implements
         thread.start();
     }
 
+    public void getaltitudefromapi()
+    {
+
+        altitude=0.0;
+        if(! common.isnetworkconnected(locationawareactivity.this))
+            return;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                if(oldlocation != null)
+                {
+                    double latitude=oldlocation.getLatitude();
+                    double longitude=oldlocation.getLongitude();
+
+                    StringBuilder urlbuilder=new StringBuilder();
+                    urlbuilder.append(config.location_elevationapi_baseurl);
+                    urlbuilder.append("locations="+""+latitude+","+longitude);
+                    urlbuilder.append("&key="+""+locationawareactivity.this.getResources().getString(R.string.android_api_key));
+                    String result=xapi.gethttpresponse(urlbuilder.toString());
+
+                    try
+                    {
+                        JSONObject object=new JSONObject(result);
+                        JSONArray array=object.getJSONArray("results");
+                        JSONObject jobject=array.getJSONObject(0);
+                        String elevation=jobject.getString("elevation");
+                        if(elevation.toString().trim().length() > 0)
+                        {
+                            double lengthMeters=Double.parseDouble(elevation);
+                            int outValue = (int) (lengthMeters / 0.3048);
+                            altitude=outValue;
+                        }
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
 }

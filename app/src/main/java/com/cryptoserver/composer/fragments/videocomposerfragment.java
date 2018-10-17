@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -23,22 +22,17 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.location.Location;
-import android.media.MediaMetadata;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemClock;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,7 +58,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -72,7 +65,6 @@ import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.metadata.MetaDataInsert;
-import com.cryptoserver.composer.metadata.MetaDataRead;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
@@ -88,19 +80,13 @@ import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.AndroidFrameConverter;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -182,7 +168,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-            if(mIsRecordingVideo)
+            if(isvideorecording)
             {
                 if(mTextureView == null)
                     return;
@@ -192,21 +178,23 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                   public void run() {
 
                       try {
-                          if(mIsRecordingVideo)
+                          if(isvideorecording)
                           {
                               if(mframetorecordcount == currentframenumber || (videokey.trim().isEmpty()))
                               {
-                                  /*Bitmap bitmap = mTextureView.getBitmap(10,10);
-                                  bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
-                                          bitmap.getHeight(), mTextureView.getTransform( null ), true );
-                                  ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                  bitmap.compress(Bitmap.CompressFormat.PNG, 2, stream);*/
-                                  randomstring gen1 = new randomstring(20, ThreadLocalRandom.current());
+                                  /*randomstring gen1 = new randomstring(20, ThreadLocalRandom.current());
                                   String str=gen1.nextString().trim().toString();
                                   if(str.trim().toString().length() == 0)
                                       str=gen1.nextString().trim().toString();
 
-                                  byte[] byteArray = str.getBytes();
+                                  byte[] byteArray = str.getBytes();*/
+                                  Bitmap bitmap = mTextureView.getBitmap(10,10);
+                                  bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
+                                          bitmap.getHeight(), mTextureView.getTransform( null ), true );
+                                  ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                  bitmap.compress(Bitmap.CompressFormat.PNG, 5, stream);
+                                  byte[] byteArray = stream.toByteArray();
+
                                   if(videokey.trim().isEmpty())
                                   {
                                       randomstring gen = new randomstring(20, ThreadLocalRandom.current());
@@ -255,7 +243,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     /**
      * Whether the app is recording video now
      */
-    public boolean mIsRecordingVideo=false;
+    public boolean isvideorecording =false;
     /**
      * An additional thread for running tasks that shouldn't block the UI.
      */
@@ -557,7 +545,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public boolean isvideorecording()
     {
-        return mIsRecordingVideo;
+        return isvideorecording;
     }
 
 
@@ -604,7 +592,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
                         }
                         fingerSpacing = currentFingerSpacing;
-                    } else if(!mIsRecordingVideo){
+                    } else if(!isvideorecording){
                         switch (motionEvent.getAction()){
                             case MotionEvent.ACTION_DOWN:
                                     if(layout_bottom.getVisibility() == View.VISIBLE) {
@@ -623,7 +611,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         switch (motionEvent.getAction()){
                             case MotionEvent.ACTION_DOWN:
-                                if(mIsRecordingVideo && (!(isdraweropen)))
+                                if(isvideorecording && (!(isdraweropen)))
                                 {
                                     if(layout_bottom.getVisibility() == View.VISIBLE)
                                     {
@@ -1053,7 +1041,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             // UI
             videokey="";
             issavedtofolder=false;
-            mIsRecordingVideo = true;
+            isvideorecording = true;
             // Start recording
             mMediaRecorder.start();
             startvideotimer();
@@ -1065,7 +1053,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void stopRecordingVideo() {
         // UI
         issavedtofolder=true;
-        mIsRecordingVideo = false;
+        isvideorecording = false;
         lastrecordedvideo=new File(selectedvideofile);
         /*Activity activity = getActivity();
         if (null != activity) {
@@ -1119,82 +1107,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 setmetricesadapter();
             }
         },100);
-    }
-
-    public void setvideoadapter() {
-        int count = 1;
-        currentframenumber=0;
-        selectedhashes="";
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mhashesitems.clear();
-                mhashesadapter.notifyDataSetChanged();
-                mvideoframes.clear();
-            }
-        });
-
-        currentframenumber = currentframenumber + frameduration;
-        try
-        {
-            customffmpegframegrabber grabber = new customffmpegframegrabber(lastrecordedvideo.getAbsolutePath());
-
-            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-            String format= common.getvideoformat(lastrecordedvideo.getAbsolutePath());
-            if(format.equalsIgnoreCase("mp4"))
-                grabber.setFormat(format);
-
-            grabber.start();
-            videomodel lastframehash=null;
-            for(int i = 0; i<grabber.getLengthInFrames(); i++){
-                Frame frame = grabber.grabImage();
-                if (frame == null)
-                    break;
-
-                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
-                String keyValue= getkeyvalue(byteData);
-                if (count == currentframenumber) {
-                    lastframehash=null;
-                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-                    currentframenumber = currentframenumber + frameduration;
-                }
-                else
-                {
-                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                }
-                count++;
-            }
-
-            if(lastframehash != null)
-            {
-                mvideoframes.add(lastframehash);
-            }
-            else
-            {
-                if(mvideoframes.size() > 1)
-                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-            }
-
-            grabber.flush();
-
-            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mhashesitems.clear();
-                    mhashesadapter.notifyDataSetChanged();
-                    for(int i=0;i<mvideoframes.size();i++)
-                        mhashesitems.add(mvideoframes.get(i));
-
-                    mhashesadapter.notifyDataSetChanged();
-                    recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-                }
-            });
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -1261,7 +1173,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void startstopvideo()
     {
-        if (mIsRecordingVideo) {
+        if (isvideorecording) {
             mrecordimagebutton.setEnabled(false);
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
@@ -1441,7 +1353,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             closeCamera();
             stopBackgroundThread();
             stopvideotimer();
-            mIsRecordingVideo=false;
+            isvideorecording =false;
         }
         super.onPause();
     }
@@ -1500,7 +1412,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(mIsRecordingVideo)
+                            if(isvideorecording)
                             {
                                 gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + ":"
@@ -1560,6 +1472,122 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         });
     }
 
+    public void setvideoadapter() {
+        int count = 1;
+        currentframenumber=0;
+        selectedhashes="";
+        final ArrayList<videomodel> mvideoframes =new ArrayList<>();
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
+            }
+        });
+
+        currentframenumber = currentframenumber + frameduration;
+        try
+        {
+            customffmpegframegrabber grabber = new customffmpegframegrabber(lastrecordedvideo.getAbsolutePath());
+
+            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+            String format= common.getvideoformat(lastrecordedvideo.getAbsolutePath());
+            if(format.equalsIgnoreCase("mp4"))
+                grabber.setFormat(format);
+
+            grabber.start();
+            videomodel lastframehash=null;
+            for(int i = 0; i<grabber.getLengthInFrames(); i++){
+                Frame frame = grabber.grabImage();
+                if (frame == null)
+                    break;
+
+                if(isvideorecording)
+                    break;
+
+                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
+                byte[] byteData = new byte[buffer.remaining()];
+                buffer.get(byteData);
+                String keyValue= getkeyvalue(byteData);
+                if (count == currentframenumber) {
+                    lastframehash=null;
+                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
+                    currentframenumber = currentframenumber + frameduration;
+                }
+                else
+                {
+                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                }
+                count++;
+            }
+
+            if(lastframehash != null)
+            {
+                mvideoframes.add(lastframehash);
+            }
+            else
+            {
+                if(mvideoframes.size() > 1)
+                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+            }
+
+            grabber.flush();
+
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mhashesitems.clear();
+                    mhashesadapter.notifyDataSetChanged();
+
+                    if(! isvideorecording)
+                    {
+                        for(int i=0;i<mvideoframes.size();i++)
+                            mhashesitems.add(mvideoframes.get(i));
+
+                        mhashesadapter.notifyDataSetChanged();
+                        recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+                    }
+                }
+            });
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
+    {
+        metadatametricesjson=new JSONArray();
+        JSONArray metricesarray=new JSONArray();
+        StringBuilder builder=new StringBuilder();
+        for(int j=0;j<mlocalarraylist.size();j++)
+        {
+            metricmodel metric=mlocalarraylist.get(j);
+            String value=metric.getMetricTrackValue();
+            common.setgraphicalitems(metric.getMetricTrackKeyName(),value,true);
+
+            if(metric.getMetricTrackValue().trim().isEmpty() ||
+                    metric.getMetricTrackValue().equalsIgnoreCase("null"))
+            {
+                value="N/A";
+            }
+            builder.append("\n"+metric.getMetricTrackKeyName()+" - "+value);
+            //selectedmetrices=selectedmetrices+"\n"+metric.getMetricTrackKeyName()+" - "+value;
+
+            JSONObject object=new JSONObject();
+            try {
+                object.put(metric.getMetricTrackKeyName(),value);
+                metricesarray.put(object);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        builder.append("\n");
+        metadatametricesjson.put(metricesarray);
+        selectedmetrices=selectedmetrices+builder.toString();
+    }
+
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
     {
         new Thread(new Runnable() {
@@ -1571,34 +1599,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 currenthashvalue=keyvalue;
                 apicurrentduration++;
 
-                JSONArray metricesarray=new JSONArray();
-                metadatametricesjson=new JSONArray();
+                mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
 
-                ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                for(int j=0;j<mlocalarraylist.size();j++)
+                if(! selectedhashes.trim().isEmpty())
+                    selectedhashes=selectedhashes+"\n";
+
+                selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+                if(apicurrentduration > apicallduration)
+                    apicurrentduration=apicallduration;
+
+                if(apicurrentduration == apicallduration)
                 {
-                    metricmodel metric=mlocalarraylist.get(j);
-                    if(metric.isSelected())
-                    {
-                        String value=metric.getMetricTrackValue();
-                        common.setgraphicalitems(metric.getMetricTrackKeyName(),value,true);
-
-                        if(metric.getMetricTrackValue().trim().isEmpty() ||
-                                metric.getMetricTrackValue().equalsIgnoreCase("null"))
-                        {
-                            value="N/A";
-                        }
-                        selectedmetrices=selectedmetrices+"\n"+metric.getMetricTrackKeyName()+" - "+value;
-
-                        JSONObject object=new JSONObject();
-                        try {
-                            object.put(metric.getMetricTrackKeyName(),value);
-                            metricesarray.put(object);
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
+                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                    getselectedmetrics(mlocalarraylist);
+                    muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
+                    savevideoupdate(mlocalarraylist);
                 }
 
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -1612,31 +1627,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 });
 
-                metadatametricesjson.put(metricesarray);
-
-                if(! selectedmetrices.trim().isEmpty())
-                    selectedmetrices=selectedmetrices+"\n\n";
-                mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
-                muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
-
-                if(! selectedhashes.trim().isEmpty())
-                    selectedhashes=selectedhashes+"\n";
-
-                selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
-                if(apicurrentduration > apicallduration)
-                    apicurrentduration=apicallduration;
-
-                if(apicurrentduration == apicallduration)
-                    savevideoupdate(mlocalarraylist);
-
-
-
-
                 Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
                 if(apicurrentduration == apicallduration)
-                {
                     apicurrentduration=0;
-                }
             }
         }).start();
     }

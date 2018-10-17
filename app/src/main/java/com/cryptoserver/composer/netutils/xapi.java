@@ -55,7 +55,7 @@ public class xapi extends AsyncTask<Void, Void, String> {
         return true;
     }
 
-    public static String getHttpClient(String URL) {
+    public static String gethttpresponse(String URL) {
         String response = "";
         String baseUrl = URL;
 

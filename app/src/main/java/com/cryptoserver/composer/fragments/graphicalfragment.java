@@ -213,7 +213,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
             if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
 
-            //loadMap();
+            loadMap();
             setvisualizer();
             setchartdata();
         }
@@ -236,6 +236,9 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     public void setmetricesdata()
     {
+        if(! isgraphicopen && (! ismediaplayer))
+            return;
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -353,7 +356,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        //setMap(googleMap);
+        setMap(googleMap);
        // loadMap();
     }
 

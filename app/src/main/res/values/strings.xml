@@ -24,6 +24,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="android_api_key">AIzaSyDPoZJinB-VFdViZST5kRggT92m3qOrh7w</string>
+
     <string name="md">md5</string>
     <string name="md_salt">md5+salt</string>
     <string name="sha">SHA1</string>

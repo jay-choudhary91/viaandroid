@@ -724,6 +724,8 @@ public class common {
             xdata.getinstance().saveSetting(config.Latitude,(ismetricsselected)?value:"");
         } else if (keyname.equalsIgnoreCase("gpslongitude")) {
             xdata.getinstance().saveSetting(config.Longitude,(ismetricsselected)?value:"");
+        }else if (keyname.equalsIgnoreCase(config.gpsaltitude)) {
+            xdata.getinstance().saveSetting(config.Altitude,(ismetricsselected)?value:"");
         } else if(keyname.equalsIgnoreCase("gpsaccuracy")){
             xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"N/A"));
         } else if(keyname.equalsIgnoreCase("address")){
@@ -1450,7 +1452,7 @@ public class common {
             txt_altitude.post(new Runnable() {
                 @Override
                 public void run() {
-                    txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude)));
+                    txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+" ft");
                 }
             });
 
@@ -1699,6 +1701,26 @@ public class common {
         builder.append("\"");
         Log.e("locationcordinate",builder.toString());
         return builder.toString();
+    }
+
+    public static String[] getmetricesarray()
+    {
+        String[] items={"battery","phonetype","imeinumber","simserialnumber","version","osversion","softwareversion","model",
+                "manufacturer","brightness","gpslatitude","gpslongitude",config.gpsaltitude,"gpsquality","carrier","screenwidth",
+                "screenheight","systemuptime","multitaskingenabled","proximitysensorenabled","pluggedin","devicetime",
+                "deviceregion","devicelanguage","devicecurrency","timezone","headphonesattached","accessoriesattached",
+                "nameattachedaccessories","attachedaccessoriescount","totalspace","usedspace","memoryusage","freespace",
+                "orientation","deviceorientation","rammemory","usedram","freeram","wificonnect","cellnetworkconnect","internalip",
+                "externalip","networktype",config.connectedphonenetworkquality,"gravitysensorenabled","gyroscopesensorenabled",
+                "lightsensorenabled","debuggerattached","deviceid","bluetoothonoff","wifiname",config.wifinetworkavailable,
+                "processorcount","activeprocessorcount",config.cpuusageuser,config.cpuusagesystem,config.cpuusageiow,
+                config.cpuusageirq,config.compass,config.decibel,config.barometer,config.acceleration_x,config.acceleration_y,
+                config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
+                config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
+                "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","phonetime","syncphonetime","country",
+                "connectionspeed","gpsaccuracy","speed","heading","address"};
+
+        return items;
     }
 
     public static float getamplitudevalue(double amp){

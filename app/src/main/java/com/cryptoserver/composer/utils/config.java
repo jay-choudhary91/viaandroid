@@ -19,6 +19,7 @@ public class config {
     public static final double STATIC_LAT = 43.65844179931329;
     public static final double STATIC_LNG = -116.69653460383417;
 
+    public static final String location_elevationapi_baseurl = "https://maps.googleapis.com/maps/api/elevation/json?";
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";
     public static final String date_time_format = "MM-dd-yyyy hh:mm:ss";
