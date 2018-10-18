@@ -1243,7 +1243,7 @@ public abstract class locationawareactivity extends baseactivity implements
         }else if(key.equalsIgnoreCase("connectionspeed")){
             metricItemValue=xdata.getinstance().getSetting(config.Connectionspeed);
         }else if(key.equalsIgnoreCase("address")){
-            metricItemValue=xdata.getinstance().getSetting(config.Address);
+            metricItemValue=""+currentaddress;
         }
 
         if(metricItemValue == null)
@@ -1543,12 +1543,18 @@ public abstract class locationawareactivity extends baseactivity implements
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(aeroplacemodefilter == null)
+                try {
+                    if(aeroplacemodefilter == null)
+                    {
+                        aeroplacemodefilter= new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+                        aeroplacemodefilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+                        registerReceiver(flightmodebroadcast,aeroplacemodefilter);
+                    }
+                }catch (Exception e)
                 {
-                    aeroplacemodefilter= new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-                    aeroplacemodefilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-                    registerReceiver(flightmodebroadcast,aeroplacemodefilter);
+                    e.printStackTrace();
                 }
+
             }
         });
     }

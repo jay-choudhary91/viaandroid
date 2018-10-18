@@ -1627,7 +1627,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     public void run() {
                         if(fragmentgraphic != null)
                         {
-                            fragmentgraphic.setmetricesdata();
+                            //fragmentgraphic.setmetricesdata();
                             fragmentgraphic.currenthashvalue=keyvalue;
                         }
                     }
@@ -1683,7 +1683,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
 
                 if(fragmentgraphic != null)
+                {
                     fragmentgraphic.setdrawerproperty(graphicopen);
+                    fragmentgraphic.setmetricesdata();
+                }
 
                 myHandler.postDelayed(this, 1000);
             }
@@ -2015,19 +2018,24 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             @Override
             public void onClick(View v) {
+
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+
                 progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-                new Handler().postDelayed(new Runnable() {
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-                        if(subdialogshare != null && subdialogshare.isShowing())
-                            subdialogshare.dismiss();
-
                         common.exportvideo(lastrecordedvideo,true);
-                        launchvideolist();
-
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressdialog.dismisswaitdialog();
+                                launchvideolist();
+                            }
+                        });
                     }
-                },100);
+                }).start();
             }
         });
 

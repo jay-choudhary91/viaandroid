@@ -729,7 +729,7 @@ public class common {
         } else if(keyname.equalsIgnoreCase("gpsaccuracy")){
             xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"N/A"));
         } else if(keyname.equalsIgnoreCase("address")){
-            xdata.getinstance().saveSetting(config.Address,xdata.getinstance().getSetting(config.Address));
+            xdata.getinstance().saveSetting(config.Address,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("heading")) {
             xdata.getinstance().saveSetting(config.Heading,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("speed")) {
@@ -1113,11 +1113,6 @@ public class common {
                         }
                     });
                 }
-                else
-                {
-                    Intent Broadcastintent = new Intent(common.broadcastreceivervideo);
-                    applicationviavideocomposer.getactivity().sendBroadcast(Broadcastintent);
-                }
             }catch (Exception e)
             {
                 e.printStackTrace();
@@ -1129,14 +1124,7 @@ public class common {
             e.printStackTrace();
             Log.e("Video export ","Error2");
         }
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressdialog.dismisswaitdialog();
-            }
-        });
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String displayCurrencyInfoForLocale(Locale locale) {
