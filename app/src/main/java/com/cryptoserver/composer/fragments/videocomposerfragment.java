@@ -1682,7 +1682,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         graphicopen=true;
                 }
 
-                if(fragmentgraphic != null)
+                if(fragmentgraphic != null && (mmetricsitems.size() > 0 || selectedmetrices.length() > 0))
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
                     fragmentgraphic.setmetricesdata();

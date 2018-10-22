@@ -743,6 +743,9 @@ public class common {
         } else if (keyname.equalsIgnoreCase(config.orientation)) {
             xdata.getinstance().saveSetting(config.orientation,((ismetricsselected)?value:""));
         }
+        else if (keyname.equalsIgnoreCase("connectionspeed")) {
+            xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"N/A"));
+        }
     }
 
     public static String metric_display(String key) {
@@ -1566,7 +1569,7 @@ public class common {
         return value;
     }
 
-    public static void phoneAnalytics(final TextView txt_phonetype, final TextView txt_cellprovider, TextView txt_connection_speed, final TextView txt_osversion,
+    public static void phoneAnalytics(final TextView txt_phonetype, final TextView txt_cellprovider, final TextView txt_connection_speed, final TextView txt_osversion,
                                       final TextView txt_wifinetwork, final TextView txt_gps_accuracy, final TextView txt_screensize, final TextView txt_country,
                                       final TextView txt_cpuusage, final TextView txt_brightness, final TextView txt_timezone, final TextView txt_memoryusage, final TextView txt_bluetooth,
                                       final TextView txt_localtime, final TextView txt_storageavailable, final TextView txt_language,
@@ -1676,6 +1679,13 @@ public class common {
                         txt_battery.setText(config.Battery+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
                     }
                 });
+        txt_connection_speed.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        txt_connection_speed.setText(config.Connectionspeed+"\n"+xdata.getinstance().getSetting(config.Connectionspeed));
+                    }
+                });
+
 
     }
 

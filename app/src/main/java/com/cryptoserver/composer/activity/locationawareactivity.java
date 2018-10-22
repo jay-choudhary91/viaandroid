@@ -123,7 +123,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
     private IntentFilter intentFilter;
     private BroadcastReceiver mBroadcast;
-    String CALL_STATUS="",CALL_DURATION="",CALL_REMOTE_NUMBER="",CALL_START_TIME="",currentaddress="";
+    String CALL_STATUS="",CALL_DURATION="",CALL_REMOTE_NUMBER="",CALL_START_TIME="",currentaddress="",connectionspeed="";
     MyPhoneStateListener mPhoneStatelistener;
     int mSignalStrength = 0,dbtoxapiupdatecounter=0;
 
@@ -160,7 +160,7 @@ public abstract class locationawareactivity extends baseactivity implements
     {
         if(! common.isnetworkconnected(locationawareactivity.this))
         {
-            xdata.getinstance().saveSetting(config.Connectionspeed,"N/A");
+            connectionspeed="N/A";
             return;
         }
 
@@ -216,7 +216,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 // get the download speed by dividing the file size by time taken to download
                 double speed = fileSize / timeTakenMills;
                 double speedinmb=kilobytePerSec/1024;
-                xdata.getinstance().saveSetting(config.Connectionspeed,speedinmb+" mbps");
+                connectionspeed=speedinmb+" mbps";
                 /*Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
                 Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
                 Log.d("Case3 ", "Download Speed: " + speed);
@@ -604,7 +604,6 @@ public abstract class locationawareactivity extends baseactivity implements
                     @Override
                     public void run() {
 
-                        getaltitudefromapi();
                         getconnectionspeed();
 
                         for(int i = 0; i< metricitemarraylist.size(); i++)
@@ -1090,10 +1089,10 @@ public abstract class locationawareactivity extends baseactivity implements
 
         }else if(key.equalsIgnoreCase("pluggedin"))
         {
-            metricItemValue = common.isChargerConnected(locationawareactivity.this)== true ? "True" : "False";
+            metricItemValue = common.isChargerConnected(locationawareactivity.this)== true ? "true" : "false";
         }else if(key.equalsIgnoreCase("headphonesattached"))
         {
-            metricItemValue = common.isHeadsetOn(locationawareactivity.this)== true ? "True" : "False";
+            metricItemValue = common.isHeadsetOn(locationawareactivity.this)== true ? "true" : "false";
         }else if(key.equalsIgnoreCase("deviceorientation"))
         {
             metricItemValue = common.getOriantation(locationawareactivity.this);
@@ -1164,7 +1163,7 @@ public abstract class locationawareactivity extends baseactivity implements
             if(common.isChargerConnected(locationawareactivity.this)== true || common.isHeadsetOn(locationawareactivity.this)== true ){
                 metricItemValue = "true";
             }else{
-                metricItemValue = "False";
+                metricItemValue = "false";
             }
         }else if(key.equalsIgnoreCase("attachedaccessoriescount"))
         {
@@ -1192,14 +1191,14 @@ public abstract class locationawareactivity extends baseactivity implements
         }
         else if(key.equalsIgnoreCase("multitaskingenabled"))
         {
-            metricItemValue="True";
+            metricItemValue="true";
 
         }
         else if(key.equalsIgnoreCase("debuggerattached"))
         {
-            metricItemValue="False";
+            metricItemValue="false";
             if(Debug.isDebuggerConnected())
-                metricItemValue="True";
+                metricItemValue="true";
 
         }
         else if(key.equalsIgnoreCase("currentcallvolume"))
@@ -1241,7 +1240,7 @@ public abstract class locationawareactivity extends baseactivity implements
         }else if(key.equalsIgnoreCase("country")) {
             metricItemValue = xdata.getinstance().getSetting(config.Country);
         }else if(key.equalsIgnoreCase("connectionspeed")){
-            metricItemValue=xdata.getinstance().getSetting(config.Connectionspeed);
+            metricItemValue=""+connectionspeed;
         }else if(key.equalsIgnoreCase("address")){
             metricItemValue=""+currentaddress;
         }
@@ -1875,49 +1874,5 @@ public abstract class locationawareactivity extends baseactivity implements
             }
         });
         thread.start();
-    }
-
-    public void getaltitudefromapi()
-    {
-
-        altitude=0.0;
-        if(! common.isnetworkconnected(locationawareactivity.this))
-            return;
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                if(oldlocation != null)
-                {
-                    double latitude=oldlocation.getLatitude();
-                    double longitude=oldlocation.getLongitude();
-
-                    StringBuilder urlbuilder=new StringBuilder();
-                    urlbuilder.append(config.location_elevationapi_baseurl);
-                    urlbuilder.append("locations="+""+latitude+","+longitude);
-                    urlbuilder.append("&key="+""+locationawareactivity.this.getResources().getString(R.string.android_api_key));
-                    String result=xapi.gethttpresponse(urlbuilder.toString());
-
-                    try
-                    {
-                        JSONObject object=new JSONObject(result);
-                        JSONArray array=object.getJSONArray("results");
-                        JSONObject jobject=array.getJSONObject(0);
-                        String elevation=jobject.getString("elevation");
-                        if(elevation.toString().trim().length() > 0)
-                        {
-                            double lengthMeters=Double.parseDouble(elevation);
-                            int outValue = (int) (lengthMeters / 0.3048);
-                            altitude=outValue;
-                        }
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
     }
 }

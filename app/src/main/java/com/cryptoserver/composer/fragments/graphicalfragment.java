@@ -77,8 +77,8 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class graphicalfragment extends basefragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener,
-        GoogleMap.OnCameraIdleListener, GoogleMap.OnCameraMoveListener, GoogleMap.OnCameraMoveStartedListener, GoogleMap.OnCameraChangeListener, OnChartValueSelectedListener, OnChartGestureListener,SensorEventListener {
+public class graphicalfragment extends basefragment implements
+        OnChartValueSelectedListener, OnChartGestureListener,SensorEventListener {
 
 
     public graphicalfragment() {
@@ -242,7 +242,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -266,6 +265,7 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
                 common.locationAnalyticsdata(txt_latitude,txt_longitude,
                         txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
+
                 common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
                         txt_gps_accuracy,txt_screensize,txt_country,txt_cpuusage,txt_brightness,txt_timezone,txt_memoryusage,txt_bluetooth,
                         txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
@@ -273,12 +273,6 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 if(! common.isnetworkconnected(applicationviavideocomposer.getactivity()))
                     xdata.getinstance().saveSetting(config.Connectionspeed,"N/A");
 
-                txt_connection_speed.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_connection_speed.setText(config.Connectionspeed+"\n"+xdata.getinstance().getSetting(config.Connectionspeed));
-                    }
-                });
                 txt_data_hash.post(new Runnable() {
                     @Override
                     public void run() {
@@ -311,53 +305,11 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
                 });
             }
         }).start();
-
     }
 
     @Override
     public int getlayoutid() {
         return R.layout.fragment_graphicalfragment;
-    }
-
-    @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
-
-    }
-
-    @Override
-    public void onCameraIdle() {
-
-    }
-
-    @Override
-    public void onCameraMove() {
-
-    }
-
-    @Override
-    public void onCameraMoveStarted(int i) {
-
-    }
-
-    @Override
-    public void onInfoWindowClick(Marker marker) {
-
-    }
-
-    @Override
-    public void onMapClick(LatLng latLng) {
-
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return false;
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        setMap(googleMap);
-       // loadMap();
     }
 
     private void loadMap() {
@@ -366,7 +318,12 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         transaction.add(R.id.googlemap, mapFragment).commit();
 
         if (mGoogleMap == null) {
-            mapFragment.getMapAsync(this);
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    setMap(googleMap);
+                }
+            });
         } else {
             setMap(mGoogleMap);
         }
@@ -374,15 +331,8 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
 
     private void setMap(GoogleMap googleMap) {
         this.mGoogleMap = googleMap;
-        this.mGoogleMap.setOnInfoWindowClickListener(this);
-        this.mGoogleMap.setOnMarkerClickListener(this);
-        this.mGoogleMap.setOnMapClickListener(this);
-        this.mGoogleMap.setOnCameraMoveListener(this);
-        this.mGoogleMap.setOnCameraMoveStartedListener(this);
-        mGoogleMap.setOnCameraChangeListener(this);
         mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
         this.mGoogleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-        mGoogleMap.setOnCameraIdleListener(this);
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -399,13 +349,14 @@ public class graphicalfragment extends basefragment implements OnMapReadyCallbac
         }
     }
 
-    private void populateUserCurrentLocation(LatLng location) {
+    private void populateUserCurrentLocation(final LatLng location) {
         // DeviceUser user = DeviceUserManager.getInstance().getUser();
         if (mGoogleMap == null)
             return;
 
         googlemap.setVisibility(View.VISIBLE);
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
+
     }
 
     public void locationupdate(Location location) {
