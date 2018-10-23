@@ -1612,11 +1612,30 @@ public abstract class locationawareactivity extends baseactivity implements
 
                             mcurrentdegree = -azimuthInDegress;
 
-                            int degree = (int) mcurrentdegree;
-                            degree=Math.abs(degree);
-                            String compassValue  = "Northbound";
+                            int heading = (int) mcurrentdegree;
+                            heading=Math.abs(heading);
 
-                            if (degree == 0 && degree < 45 || degree >= 315
+                            String strdirection  = "East";
+                            if(heading > 23 && heading <= 67){
+                                strdirection = "North East";
+                            } else if(heading > 68 && heading <= 112){
+                                strdirection = "East";
+                            } else if(heading > 113 && heading <= 167){
+                                strdirection = "South East";
+                            } else if(heading > 168 && heading <= 202){
+                                strdirection = "South";
+                            } else if(heading > 203 && heading <= 247){
+                                strdirection = "South West";
+                            } else if(heading > 248 && heading <= 293){
+                                strdirection = "West";
+                            } else if(heading > 294 && heading <= 337){
+                                strdirection = "North West";
+                            } else if(heading >= 338 || heading <= 22){
+                                strdirection = "North";
+                            }
+
+
+                            /*if (degree == 0 && degree < 45 || degree >= 315
                                     && degree == 360)
                             {
                                 compassValue = "Northbound";
@@ -1644,10 +1663,10 @@ public abstract class locationawareactivity extends baseactivity implements
                             if (degree >= 270 && degree < 315)
                             {
                                 compassValue = "NorthWestbound";
-                            }
+                            }*/
 
-                            updatearrayitem(config.compass,compassValue);
-                            updatearrayitem(config.orientation,""+degree);
+                            updatearrayitem(config.compass,strdirection);
+                            updatearrayitem(config.orientation,""+heading);
 
                         }
                     }

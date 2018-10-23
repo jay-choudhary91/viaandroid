@@ -1,11 +1,8 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -37,6 +34,7 @@ import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.progressdialog;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -49,9 +47,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -118,7 +116,7 @@ public class fragmentvideolist extends basefragment {
         recyrviewvideolist.addOnItemTouchListener(onTouchListener);
     }
 
-    public void requestpremission()
+    public void requestpermissions()
     {
         if (common.getdeniedpermissions().isEmpty()) {
             // All permissions are granted
@@ -258,8 +256,13 @@ public class fragmentvideolist extends basefragment {
 
     public void getVideoList()
     {
-        arrayvideolist.clear();
-        adapter.notifyDataSetChanged();
+        /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                arrayvideolist.clear();
+                adapter.notifyDataSetChanged();
+            }
+        });*/
 
         new Thread(new Runnable() {
             @Override
@@ -270,7 +273,7 @@ public class fragmentvideolist extends basefragment {
                     return;
 
                 File[] files = videodir.listFiles();
-                Arrays.sort( files, new Comparator()
+                /*Arrays.sort( files, new Comparator()
                 {
                     public int compare(Object o1, Object o2) {
                         if (((File)o1).lastModified() > ((File)o2).lastModified()) {
@@ -281,65 +284,83 @@ public class fragmentvideolist extends basefragment {
                             return 0;
                         }
                     }
-                });
+                });*/
 
                 for (File file : files)
                 {
-                    video videoobj=new video();
+
                     Date lastModDate = new Date(file.lastModified());
                     DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
-                    String outputDateStr = outputFormat.format(lastModDate);
+                    String outputdatestr = outputFormat.format(lastModDate);
 
-                    videoobj.setPath(file.getAbsolutePath());
-                    videoobj.setName(file.getName());
-                    videoobj.setCreatedate(outputDateStr);
+                    if(! isexistinarraay(file.getName(),outputdatestr))
+                    {
+                        video videoobj=new video();
+                        videoobj.setPath(file.getAbsolutePath());
+                        videoobj.setName(file.getName());
+                        videoobj.setCreatedate(outputdatestr);
+                        videoobj.setLastmodifiedtime(file.lastModified());
 
-                    boolean isVideo=false;
-                    MediaExtractor extractor = new MediaExtractor();
-                    try {
-                        //Adjust data source as per the requirement if file, URI, etc.
-                        extractor.setDataSource(file.getAbsolutePath());
-                        int numTracks = extractor.getTrackCount();
-                        if(numTracks > 0)
-                        {
-                            for (int i = 0; i < numTracks; ++i) {
-                                MediaFormat format = extractor.getTrackFormat(i);
-                                String mime = format.getString(MediaFormat.KEY_MIME);
-                                if (mime.startsWith("video/")) {
-                                    if (format.containsKey(MediaFormat.KEY_DURATION)) {
-                                        long seconds = format.getLong(MediaFormat.KEY_DURATION);
-                                        seconds=seconds/1000000;
-                                        int day = (int) TimeUnit.SECONDS.toDays(seconds);
-                                        long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
-                                        long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
-                                        long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
-                                        videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                        if(second > 0)
-                                        {
-                                            videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                            isVideo=true;
+                        boolean isVideo=false;
+                        MediaExtractor extractor = new MediaExtractor();
+                        try {
+                            //Adjust data source as per the requirement if file, URI, etc.
+                            extractor.setDataSource(file.getAbsolutePath());
+                            int numTracks = extractor.getTrackCount();
+                            if(numTracks > 0)
+                            {
+                                for (int i = 0; i < numTracks; ++i) {
+                                    MediaFormat format = extractor.getTrackFormat(i);
+                                    String mime = format.getString(MediaFormat.KEY_MIME);
+                                    if (mime.startsWith("video/")) {
+                                        if (format.containsKey(MediaFormat.KEY_DURATION)) {
+                                            long seconds = format.getLong(MediaFormat.KEY_DURATION);
+                                            seconds=seconds/1000000;
+                                            int day = (int) TimeUnit.SECONDS.toDays(seconds);
+                                            long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
+                                            long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
+                                            long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                                            videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                            if(second > 0)
+                                            {
+                                                videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                                isVideo=true;
+                                            }
+
                                         }
-
                                     }
                                 }
                             }
-                        }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }finally {
-                        //Release stuff
-                        extractor.release();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }finally {
+                            //Release stuff
+                            extractor.release();
+                        }
+                        //String md= md5.calculatemd5(file);
+                        //videoobj.setMd5(""+md);
+                        if(isVideo)
+                            arrayvideolist.add(videoobj);
                     }
-                    //String md= md5.calculatemd5(file);
-                    //videoobj.setMd5(""+md);
-                    if(isVideo)
-                        arrayvideolist.add(videoobj);
+
 
                 }
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Collections.sort( arrayvideolist, new Comparator()
+                        {
+                            public int compare(Object o1, Object o2) {
+                                if (((video)o1).getLastmodifiedtime() > ((video)o2).getLastmodifiedtime()) {
+                                    return -1;
+                                } else if (((video)o1).getLastmodifiedtime() < ((video)o2).getLastmodifiedtime()) {
+                                    return +1;
+                                } else {
+                                    return 0;
+                                }
+                            }
+                        });
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -399,7 +420,7 @@ public class fragmentvideolist extends basefragment {
             public void onItemClicked(Object object, int type) {
                 if(type == 1)
                 {
-                    requestpremission();
+                    requestpermissions();
                 }
             }
         });
@@ -436,70 +457,105 @@ public class fragmentvideolist extends basefragment {
                     return;
                 }
                 setcopyvideo(selectedvideopath);
-                requestpremission();
+
                 }
             }
         }
 
-    public void setcopyvideo(String selectedvideopath){
+    public void setcopyvideo(final String selectedvideopath){
 
-        File sourceFile = new File(selectedvideopath);
+        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File sourceFile = new File(selectedvideopath);
 
-        if(sourceFile.exists())
-        {
-            long space=sourceFile.getTotalSpace();
+                if(sourceFile.exists())
+                {
+                    long space=sourceFile.getTotalSpace();
 
-            String destinationDir = config.videodir;
+                    String destinationDir = config.videodir;
 
-            // check for existance of file.
-            File destinationFile = null;
-            File pathFile=new File(destinationDir+File.separator+sourceFile.getName());
-            if(pathFile.exists())
-            {
-                String extension = pathFile.getAbsolutePath().substring(pathFile.getAbsolutePath().lastIndexOf("."));
-                String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                destinationFile = new File(destinationDir+File.separator+fileName+extension);
-            }
-            else
-            {
-                destinationFile = new File(destinationDir+File.separator+sourceFile.getName());
-            }
+                    // check for existance of file.
+                    File destinationFile = null;
+                    File pathFile=new File(destinationDir+File.separator+sourceFile.getName());
+                    if(pathFile.exists())
+                    {
+                        String extension = pathFile.getAbsolutePath().substring(pathFile.getAbsolutePath().lastIndexOf("."));
+                        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        destinationFile = new File(destinationDir+File.separator+fileName+extension);
+                    }
+                    else
+                    {
+                        destinationFile = new File(destinationDir+File.separator+sourceFile.getName());
+                    }
 
-            try
-            {
-                if (!destinationFile.getParentFile().exists())
-                    destinationFile.getParentFile().mkdirs();
+                    try
+                    {
+                        if (!destinationFile.getParentFile().exists())
+                            destinationFile.getParentFile().mkdirs();
 
-                if (!destinationFile.exists()) {
-                    destinationFile.createNewFile();
+                        if (!destinationFile.exists()) {
+                            destinationFile.createNewFile();
+                        }
+
+                        InputStream in = new FileInputStream(selectedvideopath);
+                        OutputStream out = new FileOutputStream(destinationFile);
+
+                        // Copy the bits from instream to outstream
+                        byte[] buf = new byte[1024];
+                        int len;
+
+                        while ((len = in.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+
+                        in.close();
+                        out.close();
+
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressdialog.dismisswaitdialog();
+                                Toast.makeText(getActivity(),"Video upload successfully!",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressdialog.dismisswaitdialog();
+                                Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                }
+                else
+                {
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressdialog.dismisswaitdialog();
+                            Toast.makeText(getActivity(),"File doesn't exist!",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                 }
 
-                InputStream in = new FileInputStream(selectedvideopath);
-                OutputStream out = new FileOutputStream(destinationFile);
-
-                // Copy the bits from instream to outstream
-                byte[] buf = new byte[1024];
-                int len;
-
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-
-                in.close();
-                out.close();
-
-                Toast.makeText(getActivity(),"Video upload successfully!",Toast.LENGTH_SHORT).show();
-
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-                Toast.makeText(getActivity(),"An error occured!",Toast.LENGTH_SHORT).show();
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestpermissions();
+                    }
+                });
             }
-        }
-        else
-        {
-            Toast.makeText(getActivity(),"File doesn't exist!",Toast.LENGTH_SHORT).show();
-        }
+        }).start();
+
 
     }
 
@@ -556,5 +612,21 @@ public class fragmentvideolist extends basefragment {
             videoplayercomposerfragment.setdata(videoobj.getPath());
             gethelper().replaceFragment(videoplayercomposerfragment, false, true);
         }
+    }
+
+    public boolean isexistinarraay(String name,String modifieddatetime)
+    {
+        if(arrayvideolist.size() > 0)
+        {
+            for(int i=0;i<arrayvideolist.size();i++)
+            {
+                if(arrayvideolist.get(i).getName().equalsIgnoreCase(name) && arrayvideolist.get(i).getCreatedate().
+                        equalsIgnoreCase(modifieddatetime))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
