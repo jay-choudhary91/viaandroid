@@ -1563,11 +1563,14 @@ public abstract class locationawareactivity extends baseactivity implements
         msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Thread thread = new Thread(){
             public void run(){
-                Sensor accelerometer = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                /*Sensor accelerometer = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
                 Sensor magnetometer = msensormanager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
                 msensormanager.registerListener(mCompassListener, accelerometer, SensorManager.SENSOR_DELAY_UI);
-                msensormanager.registerListener(mCompassListener, magnetometer, SensorManager.SENSOR_DELAY_UI);
+                msensormanager.registerListener(mCompassListener, magnetometer, SensorManager.SENSOR_DELAY_UI);*/
+                // for the system's orientation sensor registered listeners
+                msensormanager.registerListener(mCompassListener, msensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                        SensorManager.SENSOR_DELAY_GAME);
             }
         };
         thread.start();
@@ -1583,7 +1586,7 @@ public abstract class locationawareactivity extends baseactivity implements
                     if (getcurrentfragment() != null)
                     {
 
-                        int type = event.sensor.getType();
+                        /*int type = event.sensor.getType();
                         float[] data;
                         if (type == Sensor.TYPE_ACCELEROMETER) {
                             data = mGData;
@@ -1613,7 +1616,9 @@ public abstract class locationawareactivity extends baseactivity implements
                             mcurrentdegree = -azimuthInDegress;
 
                             int heading = (int) mcurrentdegree;
-                            heading=Math.abs(heading);
+                            heading=Math.abs(heading);*/
+
+                            int heading = Math.round(event.values[0]);
 
                             String strdirection  = "East";
                             if(heading > 23 && heading <= 67){
@@ -1667,8 +1672,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
                             updatearrayitem(config.compass,strdirection);
                             updatearrayitem(config.orientation,""+heading);
-
-                        }
+                            updatearrayitem(config.heading,""+heading);
                     }
                 }
             });
@@ -1804,7 +1808,7 @@ public abstract class locationawareactivity extends baseactivity implements
             if(metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
                 metricitemarraylist.get(i).setMetricTrackValue("" +currentaddress);
             }
-            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
+            /*if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
                 metricitemarraylist.get(i).setMetricTrackValue("" + "N/A");
                 if(oldlocation != null)
                 {
@@ -1812,7 +1816,7 @@ public abstract class locationawareactivity extends baseactivity implements
                             oldlocation.getLatitude(),oldlocation.getLongitude());
                     metricitemarraylist.get(i).setMetricTrackValue("" + angle);
                 }
-            }
+            }*/
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
                 if(location.hasSpeed()){
                     metricitemarraylist.get(i).setMetricTrackValue("" + location.getSpeed());

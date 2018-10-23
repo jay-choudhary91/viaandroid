@@ -665,10 +665,13 @@ public class graphicalfragment extends basefragment implements
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor == maccelerometersensormanager) {
-            double deltaX = Math.abs(event.values[0]);
-            double deltaY = Math.abs(event.values[1]);
-            double deltaZ = Math.abs(event.values[2]);
+            double deltaX = event.values[0];
+            double deltaY = event.values[1];
+            double deltaZ = event.values[2];
 
+            /*txt_xaxis.setText("X-Axis \n"+deltaX);
+            txt_yaxis.setText("Y-Axis \n"+deltaY);
+            txt_zaxis.setText("Z-Axis \n"+deltaZ);*/
 
             /*if(isgraphicopen && (gethelper().getrecordingrunning() || ismediaplayer))
             {

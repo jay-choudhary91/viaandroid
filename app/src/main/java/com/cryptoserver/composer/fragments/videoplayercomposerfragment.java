@@ -1002,6 +1002,13 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         controller.setplaypauuse();
         currentvideoduration = videoduration;
         currentvideodurationseconds = currentvideoduration / 1000;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                player.seekTo(0);
+                controller.setProgress();
+            }
+        },200);
     }
 
 }

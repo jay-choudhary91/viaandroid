@@ -63,6 +63,7 @@ public class config {
     public static final String decibel = "decibel";
     public static final String currentcalldecibel = "currentcalldecibel";
     public static final String orientation = "orientation";
+    public static final String heading = "heading";
 
     //graphicaldata
     public static final String Latitude="Latitude";
