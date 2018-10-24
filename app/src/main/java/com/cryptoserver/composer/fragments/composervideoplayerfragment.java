@@ -1,10 +1,18 @@
 package com.cryptoserver.composer.fragments;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -26,8 +34,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
@@ -35,6 +45,7 @@ import com.cryptoserver.composer.metadata.MetaDataRead;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
@@ -50,6 +61,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -58,19 +70,16 @@ import java.util.Iterator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by devesh on 21/8/18.
  */
 
-public class videoplayercomposerfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, videocontrollerview.MediaPlayerControl, View.OnTouchListener, View.OnClickListener {
-
+public class composervideoplayerfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener,videocontrollerview.MediaPlayerControl, View.OnClickListener {
 
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
-    @BindView(R.id.recyview_metrices)
-    RecyclerView recyview_metrices;
-    @BindView(R.id.recyview_item)
-    RecyclerView recyview_hashes;
     @BindView(R.id.txt_slot1)
     TextView txtSlot1;
     @BindView(R.id.txt_slot2)
@@ -85,43 +94,49 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     ScrollView scrollview_metrices;
     @BindView(R.id.scrollview_hashes)
     ScrollView scrollview_hashes;
+    @BindView(R.id.recyview_metrices)
+    RecyclerView recyview_metrices;
+    @BindView(R.id.recyview_item)
+    RecyclerView recyview_hashes;
     @BindView(R.id.fragment_graphic_container)
     FrameLayout fragment_graphic_container;
 
     private String VIDEO_URL = null;
-    RelativeLayout showcontrollers;
-    SurfaceView videoSurface;
-    String selectedmetrics="";
-    MediaPlayer player;
-    videocontrollerview controller;
-    View rootview = null;
-    ImageView handleimageview,righthandle;
-    LinearLayout linearLayout;
-    String keytype =config.prefs_md5;
-    long currentframenumber =0,playerposition=0;
-    long frameduration =15, mframetorecordcount =0;
-    ArrayList<videomodel> mmetricsitems =new ArrayList<>();
-    ArrayList<videomodel> mhashesitems =new ArrayList<>();
-
-
-    ArrayList<videomodel> mvideoframes =new ArrayList<>();
-    ArrayList<videomodel> mallframes =new ArrayList<>();
-    ArrayList<frame> mbitmaplist =new ArrayList<>();
-    boolean ishashprocessing=false;
-    boolean issurafcedestroyed=false;
-    boolean isscrubbing=false;
+    private RelativeLayout showcontrollers;
+    private SurfaceView videoSurface;
+    private MediaPlayer player;
+    private videocontrollerview controller;
+    private View rootview = null;
+    private String selectedmetrics="";
+    private ImageView handleimageview,righthandle;
+    private LinearLayout linearLayout;
+    private String keytype =config.prefs_md5;
+    private long currentframenumber =0,playerposition=0;
+    private long frameduration =15;
+    private int REQUESTCODE_PICK=201;
+    private static final int request_read_external_storage = 1;
+    private Uri selectedvideouri =null;
+    private boolean issurafcedestroyed=false;
+    private boolean isscrubbing=true;
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-    ArrayList<videomodel> mainvideoframes =new ArrayList<>();
     private Handler myHandler;
     private Runnable myRunnable;
-    long framecount=0;
-    long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,lastgetframe=0;
-    boolean frameprocess=false,showlastframe = false;
+    private long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,lastgetframe=0;
+    private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
     private boolean isdraweropen=false;
-    String selectedhaeshes="";
+    private String selectedhaeshes="";
     private int lastmetricescount=0;
-    videoframeadapter mmetricesadapter,mhashesadapter;
-    private graphicalfragment fragmentgraphicobject;
+    private SurfaceHolder holder;
+    private ArrayList<videomodel> mainvideoframes =new ArrayList<>();
+    private ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    private ArrayList<videomodel> mallframes =new ArrayList<>();
+    private ArrayList<videomodel> mmetricsitems =new ArrayList<>();
+    private ArrayList<videomodel> mhashesitems =new ArrayList<>();
+    private videoframeadapter mmetricesadapter,mhashesadapter;
+    private graphicalfragment fragmentgraphic;
+    private Handler waveHandler;
+    private Runnable waveRunnable;
+    boolean runmethod = false;
 
     @Override
     public int getlayoutid() {
@@ -135,9 +150,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor(R.color.videoPlayer_header));
-
-            //gethelper().updateactionbar(0);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
@@ -145,7 +157,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             showcontrollers=rootview.findViewById(R.id.video_container);
 
             {
-
                 mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
@@ -181,55 +192,15 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 recyview_hashes.setAdapter(mmetricesadapter);
             }
 
-            videoSurface.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    switch (event.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            if(player !=null && (! isdraweropen))
-                                hideshowcontroller();
-                            break;
-                    }
-                    return false;
-                }
-            });
+            frameduration=checkframeduration();
+            keytype=checkkey();
 
-            setupVideoPlayer();
-            gethash();
-
-
-            try {
-                String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
-                Log.e("Meta data values ",readmetadata);
-                JSONArray mainarray=new JSONArray(readmetadata);
-                for(int j=0;j<mainarray.length();j++)
-                {
-                    JSONArray subarray=mainarray.getJSONArray(j);
-                    for(int i=0;i<subarray.length();i++)
-                    {
-                        JSONObject object=subarray.getJSONObject(i);
-                        Iterator<String> myIter = object.keys();
-                        while (myIter.hasNext()) {
-                            String key = myIter.next();
-                            String value = object.optString(key);
-                            selectedmetrics=selectedmetrics+"\n"+key+" - "+value;
-                            metricmodel model=new metricmodel();
-                            model.setMetricTrackKeyName(key);
-                            model.setMetricTrackValue(value);
-                            metricItemArraylist.add(model);
-                        }
-                    }
-                    mmetricsitems.add(new videomodel(selectedmetrics));
-                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                }
-
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            SurfaceHolder videoHolder = videoSurface.getHolder();
+            videoHolder.addCallback(this);
 
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
+            videoSurface.setOnTouchListener(this);
 
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
@@ -246,19 +217,110 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
 
-            setmetriceshashesdata();
+            setupVideoPlayer();
+            gethash();
 
-            if(fragmentgraphicobject == null)
-            {
-                fragmentgraphicobject  = new graphicalfragment();
-                fragmentgraphicobject.setmediaplayerdata(true,player);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container,fragmentgraphicobject);
-                transaction.commit();
+            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+                mvideoframes.clear();
+                mainvideoframes.clear();
+                mallframes.clear();
+                txt_metrics.setText("");
+                txt_hashes.setText("");
+                selectedhaeshes="";
+                selectedmetrics="";
+                metricItemArraylist.clear();
+                isnewvideofound=true;
+
+                try {
+                    String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
+                    if(readmetadata != null)
+                    {
+                        Log.e("Meta data values ",readmetadata);
+                        JSONArray mainarray=new JSONArray(readmetadata);
+                        for(int j=0;j<mainarray.length();j++)
+                        {
+                            JSONArray subarray=mainarray.getJSONArray(j);
+                            for(int i=0;i<subarray.length();i++)
+                            {
+                                JSONObject object=subarray.getJSONObject(i);
+                                Iterator<String> myIter = object.keys();
+                                while (myIter.hasNext()) {
+                                    String key = myIter.next();
+                                    String value = object.optString(key);
+                                    selectedmetrics=selectedmetrics+"\n"+key+" - "+value;
+                                    metricmodel model=new metricmodel();
+                                    model.setMetricTrackKeyName(key);
+                                    model.setMetricTrackValue(value);
+                                    metricItemArraylist.add(model);
+                                }
+                            }
+
+                            mmetricsitems.add(new videomodel(selectedmetrics));
+                            mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        }
+                    }
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+
             }
 
+            setmetriceshashesdata();
+
+            if(fragmentgraphic == null) {
+                fragmentgraphic = new graphicalfragment();
+
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
+                transaction.commit();
+            }
         }
         return rootview;
+    }
+
+    public void setdata(String VIDEO_URL){
+        this.VIDEO_URL = VIDEO_URL;
+    }
+
+
+    public void gethash(){
+        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+
+            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+
+        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+        {
+            keytype=config.prefs_md5;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+        {
+            keytype=config.prefs_md5_salt;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+        {
+            keytype=config.prefs_sha;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+        {
+            keytype=config.prefs_sha_salt;
+        }
+
+        if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+            currentframenumber=0;
+            mvideoframes.clear();
+            mallframes.clear();
+            Thread thread = new Thread(){
+                public void run(){
+                    setVideoAdapter();
+                }
+            };
+            thread.start();
+        }
     }
 
     @Override
@@ -303,7 +365,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                if(fragmentgraphicobject != null)
+                if(fragmentgraphic != null)
                 {
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -313,8 +375,11 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                                 String value=metricItemArraylist.get(i).getMetricTrackValue();
                                 common.setgraphicalitems(metricItemArraylist.get(i).getMetricTrackKeyName(),value,true);
                             }
-                            if(fragmentgraphicobject != null)
-                                fragmentgraphicobject.setmetricesdata();
+                            if(metricItemArraylist.size() > 0)
+                            {
+                                if(fragmentgraphic != null)
+                                    fragmentgraphic.setmetricesdata();
+                            }
                         }
                     },500);
                 }
@@ -326,7 +391,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     public void oncurrentlocationchanged(Location location) {
         super.oncurrentlocationchanged(location);
     }
-
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
     {
@@ -340,7 +404,14 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         view3.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
     }
 
+    @Override
+    public void setmetriceslistitems(ArrayList<metricmodel> mitems) {
+        super.setmetriceslistitems(mitems);
+        /*metricItemArraylist.clear();
+        metricItemArraylist.addAll(mitems);
+        itemMetricAdapter.notifyDataSetChanged();*/
 
+    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -353,10 +424,18 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             case  R.id.righthandle:
                 flingswipe.onTouchEvent(motionEvent);
                 break;
-
+            case  R.id.videoSurface:
+                {
+                    switch (motionEvent.getAction()){
+                        case MotionEvent.ACTION_DOWN:
+                            if(player != null && (! isdraweropen)) {
+                                hideshowcontroller();
+                            }
+                            break;
+                    }
+                }
+                break;
         }
-
-
         return true;
     }
 
@@ -401,7 +480,6 @@ public class videoplayercomposerfragment extends basefragment implements Surface
             return false;
         }
     });
-
 
     public void swipelefttoright()
     {
@@ -461,41 +539,25 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         if(isdraweropen)
             return;
 
-        if(handleimageview.getVisibility() ==  (View.VISIBLE))
+        if(controller != null)
         {
-            handleimageview.setVisibility(View.GONE);
-            gethelper().updateactionbar(0);
-            try {
-                if(controller != null)
-                {
-                    if(controller.controllersview.getVisibility() == View.VISIBLE)
-                        controller.controllersview.setVisibility(View.GONE);
-                }
-            }catch (Exception e)
+            if(controller.controllersview.getVisibility() == View.VISIBLE)
             {
-                e.printStackTrace();
+                handleimageview.setVisibility(View.GONE);
+                gethelper().updateactionbar(0);
+                controller.controllersview.setVisibility(View.GONE);
+
             }
-        }
-        else
-        {
-            handleimageview.setVisibility(View.VISIBLE);
-            gethelper().updateactionbar(1);
-            try {
-                if(controller != null)
-                {
-                    if(controller.controllersview.getVisibility() == View.GONE)
-                        controller.controllersview.setVisibility(View.VISIBLE);
-                }
-            }catch (Exception e)
+            else
             {
-                e.printStackTrace();
+                handleimageview.setVisibility(View.VISIBLE);
+                gethelper().updateactionbar(1);
+                controller.controllersview.setVisibility(View.VISIBLE);
             }
         }
     }
 
     public void onRestart() {
-        //gethelper().updateactionbar(1);
-        //handleimageview.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -503,14 +565,18 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         super.onDestroy();
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
+        destroyvideoplayer();
+    }
+
+    public void destroyvideoplayer()
+    {
         if(player != null)
         {
+            playerposition=player.getCurrentPosition();
             player.pause();
             player.stop();
             player.release();
             player=null;
-
-            //player.release();
         }
     }
 
@@ -533,15 +599,27 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 controller.removeAllViews();
 
             controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
-
-            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
+            {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(VIDEO_URL);
+                player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
-            }
 
+                if(player!=null)
+                   changeactionbarcolor();
+
+                if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
+                {
+                    frameduration=checkframeduration();
+                    keytype=checkkey();
+                    mvideoframes.clear();
+                    mainvideoframes.clear();
+                    mallframes.clear();
+                    isnewvideofound=true;
+                }
+            }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (SecurityException e) {
@@ -577,42 +655,65 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        playerposition=0;
+     //   playerposition=0;
         if (player != null) {
-            playerposition=player.getCurrentPosition();
+                playerposition=player.getCurrentPosition();
             player.pause();
         }
         issurafcedestroyed=true;
     }
 
     @Override
-    public void onPrepared(MediaPlayer mp) {
+    public void onPrepared(MediaPlayer mp)
+    {
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
-        //mp.start();
         videoduration=mp.getDuration();
+
+        /*int videoWidth = player.getVideoWidth();
+        int videoHeight = player.getVideoHeight();
+        float videoProportion = (float) videoWidth / (float) videoHeight;
+        int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+        float screenProportion = (float) screenWidth / (float) screenHeight;
+
+        android.widget.FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) videoSurface.getLayoutParams();
+
+
+        if (videoProportion > screenProportion) {
+            params.width = screenWidth;
+            params.height = (int) ((float) screenWidth / videoProportion);
+        } else {
+            params.width = (int) (videoProportion * (float) screenHeight);
+            params.height = screenHeight;
+        }
+
+        params.gravity = Gravity.CENTER;
+        videoSurface.setLayoutParams(params);*/
+
         try {
             if(playerposition > 0)
             {
                 mp.seekTo((int)playerposition);
+                player.seekTo((int)playerposition);
             }
             else
             {
                 mp.seekTo(100);
             }
 
-
-            if(fragmentgraphicobject != null){
-                fragmentgraphicobject.setmediaplayerdata(true,player);
-            }
-
         }catch (Exception e)
         {
             e.printStackTrace();
         }
+
         controller.show();
 
+        if(fragmentgraphic != null && selectedvideouri!=null)
+            fragmentgraphic.setmediaplayerdata(true,player);
+
     }
+
     adapteritemclick mitemclick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
@@ -650,14 +751,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     public int getCurrentPosition() {
         try {
             if(player != null)
-            {
-                if(currentvideoduration == 0 || (player.getCurrentPosition() > currentvideoduration))
-                {
-                    currentvideoduration=player.getCurrentPosition();  // suppose its on 4th pos means 4000
-                    currentvideodurationseconds=currentvideoduration/1000;  // Its 4
-                }
                 return player.getCurrentPosition();
-            }
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -668,9 +763,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     @Override
     public int getDuration() {
         if(player != null)
-        {
             return player.getDuration();
-        }
         return 0;
     }
 
@@ -691,11 +784,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     @Override
     public void seekTo(int i) {
         if(player != null)
-        {
-            Log.e("seek to  ",""+i);
             player.seekTo(i);
-        }
-
     }
 
     @Override
@@ -710,9 +799,7 @@ public class videoplayercomposerfragment extends basefragment implements Surface
     }
 
     @Override
-    public void toggleFullScreen() {
-
-    }
+    public void toggleFullScreen() {}
     public String getkeyvalue(byte[] data)
     {
         String value="";
@@ -792,26 +879,92 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_read_external_storage) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted) {
+                opengallery();
+            }
+        }
+    }
+
+    public  void opengallery()
+    {
+        destroyvideoplayer();
+        Intent intent;
+        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+        {
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        }
+        else
+        {
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+        }
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent,REQUESTCODE_PICK);
+    }
+
+    public int checkframeduration()
+    {
+        int frameduration=15;
+
+        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+        return frameduration;
+    }
+
+    public String checkkey()
+    {
+        String key="";
+        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+        {
+            key=config.prefs_md5;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+        {
+            key=config.prefs_md5_salt;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+        {
+            key=config.prefs_sha;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+        {
+            key=config.prefs_sha_salt;
+        }
+        return key;
+    }
+
+
     public void setupVideoPlayer()
     {
         try {
-            SurfaceHolder videoHolder = videoSurface.getHolder();
-            videoHolder.addCallback(this);
-
             player = new MediaPlayer();
             if(controller != null)
                 controller.removeAllViews();
 
             controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
 
-            if(VIDEO_URL!=null){
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(VIDEO_URL);
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
 
-                player.prepareAsync();
-                player.setOnPreparedListener(this);
-                player.setOnCompletionListener(this);
-            }
+            player.prepareAsync();
+            player.setOnPreparedListener(this);
+            player.setOnCompletionListener(this);
+            if(player!=null)
+                changeactionbarcolor();
 
 
         } catch (IllegalArgumentException e) {
@@ -825,10 +978,13 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         }
     }
 
+    public void  changeactionbarcolor(){
+            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
+                    (R.color.videoPlayer_header));
+    }
 
     public void setVideoAdapter() {
         int count = 1;
-        ishashprocessing=true;
         currentframenumber=0;
         currentframenumber = currentframenumber + frameduration;
         try
@@ -854,8 +1010,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
 
                 String keyValue= getkeyvalue(byteData);
 
-                if(fragmentgraphicobject != null)
-                    fragmentgraphicobject.sethashesdata(keyValue);
+                if(fragmentgraphic != null)
+                    fragmentgraphic.sethashesdata(keyValue);
 
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
 
@@ -907,13 +1063,11 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                 }
             }
 
-            ishashprocessing=false;
             grabber.flush();
 
         }catch (Exception e)
         {
             e.printStackTrace();
-            ishashprocessing=false;
         }
     }
 
@@ -945,8 +1099,8 @@ public class videoplayercomposerfragment extends basefragment implements Surface
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
-                if(fragmentgraphicobject != null)
-                    fragmentgraphicobject.setdrawerproperty(graphicopen);
+                if(fragmentgraphic != null)
+                    fragmentgraphic.setdrawerproperty(graphicopen);
 
                 myHandler.postDelayed(this, 1000);
             }
@@ -954,61 +1108,22 @@ public class videoplayercomposerfragment extends basefragment implements Surface
         myHandler.post(myRunnable);
     }
 
-    public void setdata(String VIDEO_URL){
-        this.VIDEO_URL = VIDEO_URL;
-    }
-
-    public void gethash(){
-        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-
-            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
-
-
-        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-        {
-            keytype=config.prefs_md5;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-        {
-            keytype=config.prefs_md5_salt;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-        {
-            keytype=config.prefs_sha;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-        {
-            keytype=config.prefs_sha_salt;
-        }
-
-        mbitmaplist.clear();
-
-        if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
-            currentframenumber=0;
-            mvideoframes.clear();
-            mallframes.clear();
-            Thread thread = new Thread(){
-                public void run(){
-                    setVideoAdapter();
-                }
-            };
-            thread.start();
-        }
-    }
-
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         controller.setplaypauuse();
         currentvideoduration = videoduration;
         currentvideodurationseconds = currentvideoduration / 1000;
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                player.seekTo(0);
-                controller.setProgress();
+                if(player != null && controller!= null)
+                {
+                    player.seekTo(0);
+                    controller.setProgress();
+                }
             }
         },200);
-    }
 
+    }
 }

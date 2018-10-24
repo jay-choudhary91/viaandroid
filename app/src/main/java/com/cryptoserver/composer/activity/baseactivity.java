@@ -22,7 +22,6 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
-import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.videogroup;
@@ -97,11 +96,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     protected void onRestart() {
         super.onRestart();
 
-        if(getcurrentfragment() instanceof videoplayercomposerfragment){
-
-            ((videoplayercomposerfragment) getcurrentfragment()).onRestart();
-        }
-        else if(getcurrentfragment() instanceof videoplayerreaderfragment){
+        if(getcurrentfragment() instanceof videoplayerreaderfragment){
 
             ((videoplayerreaderfragment) getcurrentfragment()).onRestart();
         }

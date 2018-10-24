@@ -608,7 +608,7 @@ public class fragmentvideolist extends basefragment {
         }else if(type == 3){
             getVideoList();
         }else if(type == 4){
-            videoplayercomposerfragment videoplayercomposerfragment = new videoplayercomposerfragment();
+            composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
             videoplayercomposerfragment.setdata(videoobj.getPath());
             gethelper().replaceFragment(videoplayercomposerfragment, false, true);
         }

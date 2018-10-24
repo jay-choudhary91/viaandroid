@@ -1962,9 +1962,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                videoplayercomposerfragment fullvdofragmnet=new videoplayercomposerfragment();
-                fullvdofragmnet.setdata(lastrecordedvideo.getAbsolutePath());
-                gethelper().addFragment(fullvdofragmnet,false,true);
+                composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
+                videoplayercomposerfragment.setdata(lastrecordedvideo.getAbsolutePath());
+                gethelper().replaceFragment(videoplayercomposerfragment, false, true);
             }
         });
         img_cancel.setOnClickListener(new View.OnClickListener() {

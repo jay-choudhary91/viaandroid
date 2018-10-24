@@ -332,6 +332,14 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             scrollview_hashes.setVisibility(View.INVISIBLE);
 
             setmetriceshashesdata();
+
+            if(fragmentgraphic == null) {
+                fragmentgraphic = new graphicalfragment();
+
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
+                transaction.commit();
+            }
         }
         return rootview;
     }
@@ -396,15 +404,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                if(fragmentgraphic == null)
+                if(fragmentgraphic != null)
                 {
-                    fragmentgraphic  = new graphicalfragment();
-                        if(selectedvideouri!= null)
-                            fragmentgraphic.setmediaplayerdata(true,player);
-                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
-                    transaction.commit();
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -413,8 +414,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                                 String value=metricItemArraylist.get(i).getMetricTrackValue();
                                 common.setgraphicalitems(metricItemArraylist.get(i).getMetricTrackKeyName(),value,true);
                             }
-                            if(fragmentgraphic != null)
-                                fragmentgraphic.setmetricesdata();
+                            if(metricItemArraylist.size() > 0)
+                            {
+                                if(fragmentgraphic != null)
+                                    fragmentgraphic.setmetricesdata();
+                            }
                         }
                     },500);
                 }
@@ -639,7 +643,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
+                player.setDataSource(VIDEO_URL);
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
@@ -747,11 +751,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         controller.show();
         frontview.setVisibility(View.GONE);
 
-        if(fragmentgraphic != null && selectedvideouri!=null){
-
+        if(fragmentgraphic != null && selectedvideouri!=null)
             fragmentgraphic.setmediaplayerdata(true,player);
-        }
-
 
     }
 
@@ -1243,7 +1244,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
             if(selectedimageuri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(getActivity(), selectedimageuri);
+                player.setDataSource(VIDEO_URL);
 
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
@@ -1408,13 +1409,16 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         mhashesitems.clear();
                         mhashesadapter.notifyDataSetChanged();
 
-                        Thread thread = new Thread(){
+                        new Thread(){
                             public void run(){
-                                getFramesBitmap();
                                 setVideoAdapter();
                             }
-                        };
-                        thread.start();
+                        }.start();
+                        new Thread(){
+                            public void run(){
+                                getFramesBitmap();
+                            }
+                        }.start();
                     }
                 }
 
@@ -1467,8 +1471,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                player.seekTo(0);
-                controller.setProgress();
+                if(player != null && controller!= null)
+                {
+                    player.seekTo(0);
+                    controller.setProgress();
+                }
             }
         },200);
 

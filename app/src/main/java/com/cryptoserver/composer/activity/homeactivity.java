@@ -1,20 +1,15 @@
 package com.cryptoserver.composer.activity;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -26,21 +21,16 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
+import com.cryptoserver.composer.fragments.composervideoplayerfragment;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
-import com.cryptoserver.composer.fragments.graphicalfragment;
-import com.cryptoserver.composer.fragments.videoplayercomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
-import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.services.callservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
-
-import java.io.File;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -175,7 +165,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else if((getcurrentfragment() instanceof fragmentvideolist) || getcurrentfragment() instanceof fragmentsettings
                 || getcurrentfragment() instanceof videoplayfragment
-                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof videoplayercomposerfragment)
+                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof composervideoplayerfragment)
         {
             txt_title.setText("");
         }
@@ -297,7 +287,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
 
 
-        }else if(fragment instanceof videoplayercomposerfragment){
+        }
+        else if(fragment instanceof composervideoplayerfragment){
             img_back.setVisibility(View.GONE);
             img_cancel.setVisibility(View.GONE);
             imgaddicon.setVisibility(View.GONE);
