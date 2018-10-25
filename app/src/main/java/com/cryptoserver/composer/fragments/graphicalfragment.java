@@ -214,7 +214,7 @@ public class graphicalfragment extends basefragment implements
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
 
             loadMap();
-            setvisualizer();
+       //     setvisualizer();
             setchartdata();
         }
         return rootview;
@@ -256,6 +256,9 @@ public class graphicalfragment extends basefragment implements
                             if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
                             {
                                 String strdegree=xdata.getinstance().getSetting(config.orientation);
+                                if(strdegree.equalsIgnoreCase("N/A"))
+                                    strdegree="0.0";
+
                                 int degree = Math.abs((int)Double.parseDouble(strdegree));
                                 rotatecompass(degree);
                             }
@@ -793,6 +796,13 @@ public class graphicalfragment extends basefragment implements
             setvisualizer();
         }
 
+    }
+
+    public void setmediaplayer(boolean ismediaplayer , MediaPlayer mediaPlayer){
+
+        this.mMediaPlayer = mediaPlayer;
+        this.ismediaplayer = ismediaplayer;
+        setvisualizer();
     }
 
     public void setmediaplayerdata(boolean ismideaplayer){

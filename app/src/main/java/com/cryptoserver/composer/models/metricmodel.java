@@ -13,6 +13,7 @@ public class metricmodel implements Serializable {
      String DateTime = "";
      String Tag = "";
      boolean isSelected=false;
+     boolean isupdated=false;
 
     public metricmodel(String datetime, String keyname, String keyValue, boolean isSelected) {
         setDateTime(datetime);
@@ -22,6 +23,14 @@ public class metricmodel implements Serializable {
     }
     public metricmodel() {
 
+    }
+
+    public boolean isIsupdated() {
+        return isupdated;
+    }
+
+    public void setIsupdated(boolean isupdated) {
+        this.isupdated = isupdated;
     }
 
     public String getTag() {

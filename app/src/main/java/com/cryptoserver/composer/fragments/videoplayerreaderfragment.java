@@ -42,6 +42,7 @@ import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.metadata.MetaDataRead;
+import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
@@ -127,11 +128,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     private Uri selectedvideouri =null;
     private boolean issurafcedestroyed=false;
     private boolean isscrubbing=true;
-    private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     private Handler myHandler,handlerrecycler;
     private Runnable myRunnable,runnablerecycler;
     private long framecount=0;
-    private long videoduration =0,framesegment=0,currentvideoduration=0,currentvideodurationseconds=0,lastgetframe=0;
+    private long videoduration =0,framesegment=0,currentvideoduration=0,maxincreasevideoduration=0,currentvideodurationseconds=0,lastgetframe=0;
     private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
     private boolean isdraweropen=false;
     private LinearLayoutManager mlinearlayoutmanager;
@@ -144,6 +144,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     private ArrayList<frame> mbitmaplist =new ArrayList<>();
     private ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
+    private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private videoframeadapter mmetricesadapter,mhashesadapter;
     private framebitmapadapter adapter;
     private graphicalfragment fragmentgraphic;
@@ -330,8 +331,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             recyview_metrices.setVisibility(View.INVISIBLE);
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
+            fragment_graphic_container.setVisibility(View.INVISIBLE);
 
-            setmetriceshashesdata();
 
             if(fragmentgraphic == null) {
                 fragmentgraphic = new graphicalfragment();
@@ -340,6 +341,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
                 transaction.commit();
             }
+
+            setmetriceshashesdata();
         }
         return rootview;
     }
@@ -404,24 +407,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                if(fragmentgraphic != null)
-                {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            for(int i=0;i<metricItemArraylist.size();i++)
-                            {
-                                String value=metricItemArraylist.get(i).getMetricTrackValue();
-                                common.setgraphicalitems(metricItemArraylist.get(i).getMetricTrackKeyName(),value,true);
-                            }
-                            if(metricItemArraylist.size() > 0)
-                            {
-                                if(fragmentgraphic != null)
-                                    fragmentgraphic.setmetricesdata();
-                            }
-                        }
-                    },500);
-                }
+
                 break;
         }
     }
@@ -707,30 +693,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public void onPrepared(MediaPlayer mp)
     {
+        maxincreasevideoduration=0;
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
         videoduration=mp.getDuration();
-
-        /*int videoWidth = player.getVideoWidth();
-        int videoHeight = player.getVideoHeight();
-        float videoProportion = (float) videoWidth / (float) videoHeight;
-        int screenWidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        int screenHeight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
-        float screenProportion = (float) screenWidth / (float) screenHeight;
-
-        android.widget.FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) videoSurface.getLayoutParams();
-
-
-        if (videoProportion > screenProportion) {
-            params.width = screenWidth;
-            params.height = (int) ((float) screenWidth / videoProportion);
-        } else {
-            params.width = (int) (videoProportion * (float) screenHeight);
-            params.height = screenHeight;
-        }
-
-        params.gravity = Gravity.CENTER;
-        videoSurface.setLayoutParams(params);*/
 
         try {
             if(playerposition > 0)
@@ -752,7 +718,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         frontview.setVisibility(View.GONE);
 
         if(fragmentgraphic != null && selectedvideouri!=null)
-            fragmentgraphic.setmediaplayerdata(true,player);
+            fragmentgraphic.setmediaplayer(true,player);
 
     }
 
@@ -794,6 +760,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         try {
             if(player != null)
             {
+                if(player.getCurrentPosition() > maxincreasevideoduration)
+                    maxincreasevideoduration=player.getCurrentPosition();
+
                 if(currentvideoduration == 0 || (player.getCurrentPosition() > currentvideoduration))
                 {
                     currentvideoduration=player.getCurrentPosition();  // suppose its on 4th pos means 4000
@@ -1063,35 +1032,35 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     txt_hashes.setText("");
                     selectedhaeshes="";
                     selectedmetrics="";
-                    metricItemArraylist.clear();
                     isnewvideofound=true;
 
                     try {
                         String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
                         if(readmetadata != null)
                         {
+                            metricmainarraylist.clear();
                             Log.e("Meta data values ",readmetadata);
-                            JSONArray mainarray=new JSONArray(readmetadata);
-                            for(int j=0;j<mainarray.length();j++)
+                            JSONArray array=new JSONArray(readmetadata);
+
+                            for(int j=0;j<array.length();j++)
                             {
-                                JSONArray subarray=mainarray.getJSONArray(j);
+                                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                                JSONArray subarray=array.getJSONArray(j);
                                 for(int i=0;i<subarray.length();i++)
                                 {
+
                                     JSONObject object=subarray.getJSONObject(i);
                                     Iterator<String> myIter = object.keys();
                                     while (myIter.hasNext()) {
                                         String key = myIter.next();
                                         String value = object.optString(key);
-                                        selectedmetrics=selectedmetrics+"\n"+key+" - "+value;
                                         metricmodel model=new metricmodel();
                                         model.setMetricTrackKeyName(key);
                                         model.setMetricTrackValue(value);
                                         metricItemArraylist.add(model);
                                     }
                                 }
-
-                                mmetricsitems.add(new videomodel(selectedmetrics));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
                             }
                         }
 
@@ -1099,8 +1068,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     {
                         e.printStackTrace();
                     }
-
-
                 }
             }
         }
@@ -1247,7 +1214,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 player.setDataSource(VIDEO_URL);
 
                 player.prepareAsync();
-                player.setOnPreparedListener(this);
+                //player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
                 if(player!=null)
                     changeactionbarcolor();
@@ -1450,6 +1417,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                     }*/
 
+                    setmetricesgraphicaldata();
+
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
@@ -1462,11 +1431,58 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         };
         myHandler.post(myRunnable);
     }
+
+    public void setmetricesgraphicaldata()
+    {
+        long currentduration=maxincreasevideoduration;
+        currentduration=currentduration/1000;
+
+        if(metricmainarraylist.size() == 0 || currentduration == 0)
+            return;
+
+        currentduration=(currentduration*30);
+        currentduration=currentduration/frameduration;
+
+        int n=(int)currentduration;
+        if(n> metricmainarraylist.size())
+            n=metricmainarraylist.size();
+
+        for(int i=0;i<n;i++)
+        {
+            if(! metricmainarraylist.get(i).isIsupdated())
+            {
+                selectedmetrics="\n";
+                metricmainarraylist.get(i).setIsupdated(true);
+                ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
+                for(int j=0;j<metricItemArraylist.size();j++)
+                {
+                    selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
+                            metricItemArraylist.get(j).getMetricTrackValue();
+                    common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                            metricItemArraylist.get(j).getMetricTrackValue(),true);
+                }
+
+                mmetricsitems.add(new videomodel(selectedmetrics));
+                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+            }
+        }
+
+        if(fragment_graphic_container .getVisibility() == View.VISIBLE)
+        {
+            if(fragmentgraphic != null)
+                fragmentgraphic.setmetricesdata();
+
+        }
+
+    }
+
+
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         controller.setplaypauuse();
         currentvideoduration = videoduration;
         currentvideodurationseconds = currentvideoduration / 1000;
+        maxincreasevideoduration=videoduration;
 
         new Handler().postDelayed(new Runnable() {
             @Override

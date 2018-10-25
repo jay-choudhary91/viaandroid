@@ -1039,6 +1039,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void startRecordingVideo() {
         try {
             // UI
+            metadatametricesjson=new JSONArray();
             videokey="";
             issavedtofolder=false;
             isvideorecording = true;
@@ -1161,6 +1162,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 txt_hashes.setVisibility(View.INVISIBLE);
                 txt_metrics.setVisibility(View.INVISIBLE);
                 resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+
+                if(fragmentgraphic != null)
+                    fragmentgraphic.setvisualizer();
 
                 break;
         }
@@ -1557,7 +1561,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
     {
-        metadatametricesjson=new JSONArray();
         JSONArray metricesarray=new JSONArray();
         StringBuilder builder=new StringBuilder();
         for(int j=0;j<mlocalarraylist.size();j++)
@@ -1608,16 +1611,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(apicurrentduration > apicallduration)
                     apicurrentduration=apicallduration;
 
-                if(selectedmetrices.toString().trim().length() == 0)
+                /*if(selectedmetrices.toString().trim().length() == 0)
                 {
-                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                    getselectedmetrics(mlocalarraylist);
-                }
+
+                }*/
+
+                ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                getselectedmetrics(mlocalarraylist);
 
                 if(apicurrentduration == apicallduration)
                 {
-                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                    getselectedmetrics(mlocalarraylist);
+                    //ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                    //getselectedmetrics(mlocalarraylist);
                     muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
                     savevideoupdate(mlocalarraylist);
                 }
