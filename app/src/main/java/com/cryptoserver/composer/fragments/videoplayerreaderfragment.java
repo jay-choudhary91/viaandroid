@@ -564,7 +564,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         if(isdraweropen)
             return;
 
-        if(controller != null)
+        if(controller != null && controller.controllersview!= null)
         {
             if(controller.controllersview.getVisibility() == View.VISIBLE)
             {
@@ -1012,6 +1012,25 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
+
+                mmetricsitems.clear();
+                mmetricesadapter.notifyDataSetChanged();
+
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
+
+                selectedhaeshes="";
+                selectedmetrics="";
+
+                suspendframequeue=false;
+                suspendbitmapqueue=false;
+
+                if(ishashprocessing)
+                    suspendframequeue=true;
+
+                if(isbitmapprocessing)
+                    suspendbitmapqueue=true;
+
                 scurraberverticalbar.setVisibility(View.INVISIBLE);
 
                // setmetriceshashesdata();
@@ -1030,8 +1049,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     mallframes.clear();
                     txt_metrics.setText("");
                     txt_hashes.setText("");
-                    selectedhaeshes="";
-                    selectedmetrics="";
                     isnewvideofound=true;
 
                     try {
@@ -1195,6 +1212,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             }
         }
         isbitmapprocessing=false;
+        suspendbitmapqueue=false;
+
         if(mbitmaplist.size()!=0)
              mbitmaplist.add(new frame(0,null,true));
 
@@ -1344,6 +1363,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             e.printStackTrace();
             ishashprocessing=false;
         }
+
+        suspendframequeue=false;
     }
 
     public void setmetriceshashesdata()
@@ -1358,19 +1379,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 boolean graphicopen=false;
                 if(isnewvideofound)
                 {
-                    if(ishashprocessing || isbitmapprocessing)
-                    {
-                        suspendframequeue=true;
-                        suspendbitmapqueue=true;
-                    }
-                    else
+                    if((! suspendframequeue) && (! suspendbitmapqueue))
                     {
                         isnewvideofound=false;
-                        suspendframequeue=false;
-                        suspendbitmapqueue=false;
-
-                        txt_metrics.setText("");
-                        txt_hashes.setText("");
                         selectedmetrics="";
                         selectedhaeshes="";
                         mhashesitems.clear();
@@ -1403,19 +1414,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                         });
 
                     }
-
-                    /*if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrics.trim().isEmpty()))
-                    {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mmetricsitems.add(new videomodel(selectedmetrics));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                selectedmetrics="";
-                            }
-                        });
-
-                    }*/
 
                     setmetricesgraphicaldata();
 

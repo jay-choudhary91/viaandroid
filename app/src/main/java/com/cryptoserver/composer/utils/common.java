@@ -1019,7 +1019,7 @@ public class common {
         return String.valueOf(new DecimalFormat("#.#").format(brng));
     }
 
-    public static List<String> getdeniedpermissions()
+    public static List<String> getstoragedeniedpermissions()
     {
         String[] neededpermissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -1028,6 +1028,24 @@ public class common {
         List<String> deniedpermissions = new ArrayList<>();
         for (String permission : neededpermissions) {
             if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                deniedpermissions.add(permission);
+            }
+        }
+        return deniedpermissions;
+    }
+
+    public static List<String> getphonelocationdeniedpermissions()
+    {
+        String[] neededpermissions = {
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+        };
+        List<String> deniedpermissions = new ArrayList<>();
+        for (String permission : neededpermissions) {
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), permission) !=
+                    PackageManager.PERMISSION_GRANTED) {
                 deniedpermissions.add(permission);
             }
         }

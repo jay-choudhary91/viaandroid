@@ -151,7 +151,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
             righthandle=rootview.findViewById(R.id.righthandle);
 
             {
-                mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
+                mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mmetricsitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
 
@@ -162,14 +162,14 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
                     }
                 });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
                 recyview_metrices.setLayoutManager(mLayoutManager);
                 recyview_metrices.setItemAnimator(new DefaultItemAnimator());
                 recyview_metrices.setAdapter(mhashesadapter);
             }
 
             {
-                mmetricesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
+                mmetricesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
 
@@ -180,7 +180,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
                     }
                 });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
                 recyview_hashes.setLayoutManager(mLayoutManager);
                 recyview_hashes.setItemAnimator(new DefaultItemAnimator());
                 recyview_hashes.setAdapter(mmetricesadapter);
@@ -372,13 +372,13 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
     {
         view1.setBackgroundResource(R.color.videolist_background);
-        view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
+        view1.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.white));
 
         view2.setBackgroundResource(R.color.white);
-        view2.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+        view2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
 
         view3.setBackgroundResource(R.color.white);
-        view3.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+        view3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
     }
 
     @Override
@@ -416,7 +416,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         return true;
     }
 
-    GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
+    GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
         private static final int flingactionmindstvac = 60;
         private static final int flingactionmindspdvac = 100;
@@ -461,7 +461,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public void swipelefttoright()
     {
         isdraweropen=true;
-        Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
+        Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
         linearLayout.startAnimation(rightswipe);
         handleimageview.setVisibility(View.GONE);
         linearLayout.setVisibility(View.VISIBLE);
@@ -488,7 +488,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public void swiperighttoleft()
     {
         isdraweropen=false;
-        Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
+        Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
         righthandle.setVisibility(View.VISIBLE);
@@ -516,7 +516,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         if(isdraweropen)
             return;
 
-        if(controller != null)
+        if(controller != null && controller.controllersview!= null)
         {
             if(controller.controllersview != null && controller.controllersview.getVisibility() == View.VISIBLE)
             {
@@ -575,13 +575,13 @@ public class composervideoplayerfragment extends basefragment implements Surface
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
+            controller = new videocontrollerview(applicationviavideocomposer.getactivity(),mitemclick,isscrubbing);
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
+                player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(VIDEO_URL));
                 player.prepareAsync();
-            //    player.setOnPreparedListener(this);
+                player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
 
                 if(player!=null)
@@ -830,7 +830,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         switch (btnid){
             case R.id.img_share_icon:
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())) {
-                    common.shareMedia(getActivity(),VIDEO_URL);
+                    common.shareMedia(applicationviavideocomposer.getactivity(),VIDEO_URL);
                 }
                 break;
 
@@ -917,10 +917,10 @@ public class composervideoplayerfragment extends basefragment implements Surface
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
+            controller = new videocontrollerview(applicationviavideocomposer.getactivity(),mitemclick,isscrubbing);
 
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(getActivity(), Uri.parse(VIDEO_URL));
+            player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(VIDEO_URL));
 
             player.prepareAsync();
             player.setOnPreparedListener(this);
@@ -1047,7 +1047,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 {
                     if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
                     {
-                        getActivity().runOnUiThread(new Runnable() {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 mhashesitems.add(new videomodel(selectedhaeshes));

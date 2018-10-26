@@ -1358,6 +1358,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             stopBackgroundThread();
             stopvideotimer();
             isvideorecording =false;
+            try {
+                if(! issavedtofolder && common.getstoragedeniedpermissions().isEmpty() && (selectedvideofile != null )
+                        && new File(selectedvideofile).exists())
+                    common.deletevideofile(selectedvideofile);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         super.onPause();
     }
@@ -1718,16 +1726,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        try {
-            if(! issavedtofolder && common.getdeniedpermissions().isEmpty() && (selectedvideofile != null )
-                    && new File(selectedvideofile).exists())
-                common.deletevideofile(selectedvideofile);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
 
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);

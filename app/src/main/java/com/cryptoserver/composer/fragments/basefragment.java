@@ -238,7 +238,7 @@ public abstract class basefragment extends Fragment {
 
         public void registerBarometerSensor();
 
-        public void registerUsageUser();
+        public void getsystemusage();
 
         public void registerUsageSystem();
 
@@ -430,7 +430,7 @@ public abstract class basefragment extends Fragment {
 
         if(key.equalsIgnoreCase("cpuusageuser") )
         {
-            gethelper().registerUsageUser();
+            gethelper().getsystemusage();
             return false;
         }
 

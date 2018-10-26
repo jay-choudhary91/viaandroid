@@ -80,7 +80,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             /*graphicalfragment frag=new graphicalfragment();
             replaceFragment(frag, false, true);*/
-            /*if (common.getdeniedpermissions().isEmpty())
+            /*if (common.getstoragedeniedpermissions().isEmpty())
                 deletetempdirectory();*/
 
             fragvideolist=new fragmentvideolist();

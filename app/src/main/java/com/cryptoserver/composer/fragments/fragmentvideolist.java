@@ -46,7 +46,6 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -118,12 +117,12 @@ public class fragmentvideolist extends basefragment {
 
     public void requestpermissions()
     {
-        if (common.getdeniedpermissions().isEmpty()) {
+        if (common.getstoragedeniedpermissions().isEmpty()) {
             // All permissions are granted
             getVideoList();
         } else {
-            String[] array = new String[common.getdeniedpermissions().size()];
-            array = common.getdeniedpermissions().toArray(array);
+            String[] array = new String[common.getstoragedeniedpermissions().size()];
+            array = common.getstoragedeniedpermissions().toArray(array);
             ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
         }
     }
@@ -187,7 +186,7 @@ public class fragmentvideolist extends basefragment {
             });
 
             launchvideocomposer(false);
-            if (common.getdeniedpermissions().isEmpty()) {
+            if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();
             }

@@ -40,14 +40,12 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Display;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.models.metricmodel;
-import com.cryptoserver.composer.netutils.xapi;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.googleutils;
@@ -60,9 +58,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -232,24 +227,12 @@ public abstract class locationawareactivity extends baseactivity implements
             doafterallpermissionsgranted.run();
             doafterallpermissionsgranted = null;
         } else {
-            String[] neededpermissions = {
-                    Manifest.permission.READ_PHONE_STATE,
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-            };
-            List<String> deniedpermissions = new ArrayList<>();
-            for (String permission : neededpermissions) {
-                if (ContextCompat.checkSelfPermission(locationawareactivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
-                    deniedpermissions.add(permission);
-                }
-            }
-            if (deniedpermissions.isEmpty()) {
+            if (common.getphonelocationdeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 doafterallpermissionsgranted();
             } else {
-                String[] array = new String[deniedpermissions.size()];
-                array = deniedpermissions.toArray(array);
+                String[] array = new String[common.getphonelocationdeniedpermissions().size()];
+                array = common.getphonelocationdeniedpermissions().toArray(array);
                 ActivityCompat.requestPermissions(locationawareactivity.this, array, request_permissions);
             }
         }
@@ -298,6 +281,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
     private void doafterallpermissionsgranted() {
         enableGPS(locationawareactivity.this);
+        registerallbroadcast();
         preparemetricesdata();
     }
 
@@ -702,32 +686,6 @@ public abstract class locationawareactivity extends baseactivity implements
             }
             return "N/A";
         }
-        else if(key.equalsIgnoreCase(config.acceleration_x) || key.equalsIgnoreCase(config.acceleration_y) ||
-                key.equalsIgnoreCase(config.acceleration_z))
-        {
-            registerAccelerometerSensor();
-            return "";
-        }
-        else if(key.equalsIgnoreCase(config.compass)){
-
-            SensorManager mSensorManager = (SensorManager) locationawareactivity.this.getSystemService(Context.SENSOR_SERVICE);
-            if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null) {
-                registerCompassSensor();
-                return "";
-            }else{
-                return "";
-            }
-        }
-        else if(key.equalsIgnoreCase(config.barometer)){
-            SensorManager mSensorManager = (SensorManager) locationawareactivity.this.getSystemService(Context.SENSOR_SERVICE);
-            if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
-                registerBarometerSensor();
-                return "";
-
-            }else{
-                return "";
-            }
-        }
         else if(key.equalsIgnoreCase("connectedphonenetworkquality"))
         {
             String str = telephonymanager.getNetworkOperatorName();
@@ -743,7 +701,7 @@ public abstract class locationawareactivity extends baseactivity implements
         else if(key.equalsIgnoreCase(config.cpuusageuser) || key.equalsIgnoreCase(config.cpuusagesystem)
                 || key.equalsIgnoreCase(config.cpuusageiow) || key.equalsIgnoreCase(config.cpuusageirq))
         {
-            registerUsageUser();
+            getsystemusage();
             return "";
         }
 
@@ -1219,10 +1177,6 @@ public abstract class locationawareactivity extends baseactivity implements
             String time = sdf.format(c.getTime());
             metricItemValue=time;
         }
-        else if(key.equalsIgnoreCase(config.airplanemode)){
-            getairplanemodeon();
-          /*  return false;*/
-        }
         else if(key.equalsIgnoreCase("gpsonoff")){
             //  LocationManager manager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE );
             if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ){
@@ -1339,10 +1293,6 @@ public abstract class locationawareactivity extends baseactivity implements
                 e.printStackTrace();
             }
 
-            if(flightmodebroadcast!=null){
-                unregisterReceiver(flightmodebroadcast);
-            }
-
             if(msensormanager != null)
                 msensormanager.unregisterListener(mAccelerometerListener);
 
@@ -1352,6 +1302,9 @@ public abstract class locationawareactivity extends baseactivity implements
             if (msensormanager != null)
                 msensormanager.unregisterListener(mCompassListener);
 
+            if((flightmodebroadcast!=null) && (aeroplacemodefilter != null)){
+                unregisterReceiver(flightmodebroadcast);
+            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -1456,7 +1409,7 @@ public abstract class locationawareactivity extends baseactivity implements
     };
 
     @Override
-    public void registerUsageUser() {
+    public void getsystemusage() {
 
         Thread thread = new Thread(){
             public void run(){
@@ -1719,50 +1672,84 @@ public abstract class locationawareactivity extends baseactivity implements
         }
     }
 
+    public void registerallbroadcast()
+    {
+        try
+        {
+            intentFilter = new IntentFilter(config.broadcast_call);
+            mBroadcast = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent)
+                {
+                    try
+                    {
+                        if(intent != null)
+                        {
+                            CALL_STATUS=intent.getStringExtra("CALL_STATUS");
+                            CALL_DURATION=intent.getStringExtra("CALL_DURATION");
+                            CALL_REMOTE_NUMBER=intent.getStringExtra("CALL_REMOTE_NUMBER");
+                            CALL_START_TIME=intent.getStringExtra("CALL_START_TIME");
+                        }
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            registerReceiver(mBroadcast, intentFilter);
+
+            getairplanemodeon();
+
+            flightmodebroadcast= new BroadcastReceiver() {
+                String turn;
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if(intent!=null){
+                        if(Settings.System.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0)== 0)
+                        {
+                            turn="OFF";
+                        }
+                        else
+                        {
+                            turn="ON";
+                        }
+                        updatearrayitem(config.airplanemode,turn);
+                    }
+                }
+            };
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try {
+            registerAccelerometerSensor();
+
+            {
+                SensorManager mSensorManager = (SensorManager) locationawareactivity.this.getSystemService(Context.SENSOR_SERVICE);
+                if (mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) != null)
+                    registerCompassSensor();
+            }
+
+            {
+                SensorManager mSensorManager = (SensorManager) locationawareactivity.this.getSystemService(Context.SENSOR_SERVICE);
+                if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null)
+                    registerBarometerSensor();
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
 
-        intentFilter = new IntentFilter(config.broadcast_call);
-        mBroadcast = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent)
-            {
-                try
-                {
-                    if(intent != null)
-                    {
-                        CALL_STATUS=intent.getStringExtra("CALL_STATUS");
-                        CALL_DURATION=intent.getStringExtra("CALL_DURATION");
-                        CALL_REMOTE_NUMBER=intent.getStringExtra("CALL_REMOTE_NUMBER");
-                        CALL_START_TIME=intent.getStringExtra("CALL_START_TIME");
-                    }
-
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        };
-        registerReceiver(mBroadcast, intentFilter);
-
-        flightmodebroadcast= new BroadcastReceiver() {
-            String turn;
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent!=null){
-                    if(Settings.System.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0)== 0)
-                    {
-                        turn="OFF";
-                    }
-                    else
-                    {
-                        turn="ON";
-                    }
-                    updatearrayitem(config.airplanemode,turn);
-                }
-            }
-        };
+        if (common.getphonelocationdeniedpermissions().isEmpty()) {
+            registerallbroadcast();
+        }
     }
 
     public void updatearrayitem(String key,String value) {
