@@ -212,9 +212,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
             scrollview_hashes.setVisibility(View.INVISIBLE);
             fragment_graphic_container.setVisibility(View.INVISIBLE);
 
-            setupVideoPlayer();
-            gethash();
-
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                 mvideoframes.clear();
                 mainvideoframes.clear();
@@ -224,6 +221,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 selectedhaeshes="";
                 selectedmetrics="";
                 isnewvideofound=true;
+
+                setupVideoPlayer();
+                gethash();
 
                 try {
                     String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
