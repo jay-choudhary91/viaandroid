@@ -132,7 +132,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private videoframeadapter mmetricesadapter,mhashesadapter;
     private graphicalfragment fragmentgraphic;
-
+    boolean isinbackground=false;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -571,7 +571,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     @Override
     public void onResume() {
         super.onResume();
-
+        isinbackground=false;
         try {
             if(! issurafcedestroyed)
                 return;
@@ -617,6 +617,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     @Override
     public void onStop() {
         super.onStop();
+        isinbackground=true;
     }
 
     // Implement SurfaceHolder.Callback
@@ -1120,6 +1121,11 @@ public class composervideoplayerfragment extends basefragment implements Surface
             if(fragmentgraphic != null)
                 fragmentgraphic.setmetricesdata();
         }
+        /*if(fragment_graphic_container .getVisibility() == View.VISIBLE)
+        {
+            if(fragmentgraphic != null)
+                fragmentgraphic.setmetricesdata();
+        }*/
     }
 
     @Override

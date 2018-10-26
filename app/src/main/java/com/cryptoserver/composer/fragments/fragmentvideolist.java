@@ -606,6 +606,8 @@ public class fragmentvideolist extends basefragment {
                 }
             }).show();
         }else if(type == 3){
+            arrayvideolist.clear();
+            adapter.notifyDataSetChanged();
             getVideoList();
         }else if(type == 4){
             xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
