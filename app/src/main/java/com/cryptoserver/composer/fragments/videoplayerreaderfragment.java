@@ -629,7 +629,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(VIDEO_URL);
+                player.setDataSource(applicationviavideocomposer.getactivity(),selectedvideouri);
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
@@ -824,7 +824,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public void start() {
         if(player != null)
+        {
             player.start();
+            player.setOnCompletionListener(this);
+        }
+
     }
 
     @Override
@@ -1219,7 +1223,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     }
 
-    public void setupVideoPlayer(final Uri selectedimageuri)
+    public void setupVideoPlayer(final Uri selecteduri)
     {
         try {
             player = new MediaPlayer();
@@ -1228,9 +1232,9 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
             controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
 
-            if(selectedimageuri!=null){
+            if(selecteduri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(VIDEO_URL);
+                player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
 
                 player.prepareAsync();
                 //player.setOnPreparedListener(this);

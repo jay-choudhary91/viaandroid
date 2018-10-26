@@ -1697,9 +1697,23 @@ public abstract class locationawareactivity extends baseactivity implements
                     }
                 }
             };
-            registerReceiver(mBroadcast, intentFilter);
 
-            getairplanemodeon();
+
+            try
+            {
+                registerReceiver(mBroadcast, intentFilter);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try
+            {
+                getairplanemodeon();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             flightmodebroadcast= new BroadcastReceiver() {
                 String turn;

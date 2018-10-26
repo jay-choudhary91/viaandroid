@@ -1965,6 +1965,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
+                xdata.getinstance().saveSetting("selectedvideourl",""+lastrecordedvideo.getAbsolutePath());
                 composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
                 videoplayercomposerfragment.setdata(lastrecordedvideo.getAbsolutePath());
                 gethelper().replaceFragment(videoplayercomposerfragment, false, true);

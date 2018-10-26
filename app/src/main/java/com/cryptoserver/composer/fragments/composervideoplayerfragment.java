@@ -212,6 +212,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
             scrollview_hashes.setVisibility(View.INVISIBLE);
             fragment_graphic_container.setVisibility(View.INVISIBLE);
 
+            VIDEO_URL=xdata.getinstance().getSetting("selectedvideourl");
+
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                 mvideoframes.clear();
                 mainvideoframes.clear();
@@ -260,24 +262,27 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     e.printStackTrace();
                 }
 
+                setmetriceshashesdata();
 
+                if(fragmentgraphic == null) {
+                    fragmentgraphic = new graphicalfragment();
+
+                    FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                    transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
+                    transaction.commit();
+                }
             }
-
-            setmetriceshashesdata();
-
-            if(fragmentgraphic == null) {
-                fragmentgraphic = new graphicalfragment();
-
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
-                transaction.commit();
+            else
+            {
+                Log.e("VideoURI ",""+"Null");
+                gethelper().onBack();
             }
         }
         return rootview;
     }
 
     public void setdata(String VIDEO_URL){
-        this.VIDEO_URL = VIDEO_URL;
+        //this.VIDEO_URL = VIDEO_URL;
     }
 
 
@@ -576,6 +581,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 controller.removeAllViews();
 
             controller = new videocontrollerview(applicationviavideocomposer.getactivity(),mitemclick,isscrubbing);
+            VIDEO_URL=xdata.getinstance().getSetting("selectedvideourl");
             if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -752,7 +758,11 @@ public class composervideoplayerfragment extends basefragment implements Surface
     @Override
     public void start() {
         if(player != null)
+        {
             player.start();
+            player.setOnCompletionListener(this);
+        }
+
     }
 
     @Override

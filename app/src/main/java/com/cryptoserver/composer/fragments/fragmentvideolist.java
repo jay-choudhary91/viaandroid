@@ -35,6 +35,7 @@ import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
+import com.cryptoserver.composer.utils.xdata;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -607,6 +608,7 @@ public class fragmentvideolist extends basefragment {
         }else if(type == 3){
             getVideoList();
         }else if(type == 4){
+            xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
             composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
             videoplayercomposerfragment.setdata(videoobj.getPath());
             gethelper().replaceFragment(videoplayercomposerfragment, false, true);
