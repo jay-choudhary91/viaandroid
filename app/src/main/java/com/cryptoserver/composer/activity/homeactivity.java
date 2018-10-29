@@ -351,7 +351,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         return super.dispatchTouchEvent( event );
     }
+
 }
+
+
+
 
     /*@Override
     protected void onResume() {

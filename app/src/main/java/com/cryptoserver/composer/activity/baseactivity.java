@@ -24,6 +24,7 @@ import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
+import com.cryptoserver.composer.models.startvideoinfo;
 import com.cryptoserver.composer.models.videogroup;
 import com.cryptoserver.composer.netutils.connectivityreceiver;
 import com.cryptoserver.composer.netutils.xapi;
@@ -32,7 +33,9 @@ import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.taskresult;
+import com.google.gson.Gson;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -309,6 +312,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         try {
             Cursor cur = mdbhelper.fetchmetadata();
+
+
             if (cur != null) {
                 while (!cur.isAfterLast()) {
 
@@ -396,6 +401,133 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
         }
     }
+
+
+    public void fetchstartvideoinfo() {
+
+        //String selectedid="",videokey="",videolist="",action_type="",hashmethod="",hashvalue="",videoid="",hassync="";
+        String hashmethod = "" , hashvalue = "";
+
+        String header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "",action_type="";
+
+        if(getcurrentfragment() instanceof videocomposerfragment)
+        {
+            boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
+            if(isrecording)
+                return;
+        }
+
+        if(! common.isnetworkconnected(baseactivity.this))
+            return;
+
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(baseactivity.this);
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        ArrayList<startvideoinfo> marray=new ArrayList<>();
+
+        try {
+            Cursor cur = mdbhelper.fatchstartvideoinfo();
+
+
+            if (cur != null) {
+                while (!cur.isAfterLast()) {
+
+                    header = "" + cur.getString(cur.getColumnIndex("header"));
+                    type = "" + cur.getString(cur.getColumnIndex("type"));
+                    location = "" + cur.getString(cur.getColumnIndex("location"));
+                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
+                    token = "" + cur.getString(cur.getColumnIndex("token"));
+                    videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
+                    sync = "" + cur.getString(cur.getColumnIndex("sync"));
+                    action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
+
+                     marray.add(new startvideoinfo(header, type, location,localkey,token, videokey,sync, action_type));
+                    //  cur.moveToLast();
+
+                    //  cur.moveToLast();
+
+                    break;
+                }
+            }
+
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try {
+            JSONObject obj = new JSONObject(header);
+             hashmethod  = obj.getString("hashmethod");
+             hashvalue  = obj.getString("firsthash");
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("video_updateid ",""+localkey);
+        if(! localkey.trim().isEmpty())
+        {
+            HashMap<String,String> mpairslist=new HashMap<String, String>();
+            if(action_type.equalsIgnoreCase(config.type_video_start))
+            {
+                mpairslist.put("html","0");
+                mpairslist.put("hashmethod",""+ hashmethod);
+                mpairslist.put("hashvalue",""+ hashvalue);
+                mpairslist.put("title","xx");
+            }
+
+
+            //final String finalSelectedid = selectedid;
+            final String finalAction_type = action_type;
+           // final String finalVideoid = videoid;
+            xapipost_send(baseactivity.this,action_type,mpairslist, new apiresponselistener() {
+                @Override
+                public void onResponse(taskresult response)
+                {
+                    if(response.isSuccess())
+                    {
+                        if(finalAction_type.equalsIgnoreCase(config.type_video_start))
+                        {
+                            try {
+                                JSONObject object = (JSONObject) response.getData();
+                                Log.e("finale object",""+ object);
+                               /* String videokey=object.getString("key");
+                                updatevideokey(finalVideoid,videokey);*/
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    if(finalAction_type.equalsIgnoreCase(config.type_video_update))
+                    {
+
+                    }
+                    else if(finalAction_type.equalsIgnoreCase(config.type_video_complete))
+                    {
+
+                    }
+
+                  //  updatedatasync(finalSelectedid);
+                }
+            });
+        }
+    }
+
 
     public void deletemetadatarecord(String selectedid)
     {

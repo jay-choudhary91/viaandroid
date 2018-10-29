@@ -143,8 +143,8 @@ public class databasemanager {
         try {
             lock.lock();
 
-           // String sql = "SELECT * FROM tblmetadata;";
-          //  mCur = mDb.rawQuery(sql, null);
+            // String sql = "SELECT * FROM tblmetadata;";
+            //  mCur = mDb.rawQuery(sql, null);
 
             mDb.execSQL("delete from tblmetadata where id='"+id+"'");
 
@@ -178,6 +178,72 @@ public class databasemanager {
             e.printStackTrace();
         }
 
+        return  mCur;
+    }
+
+    public void insertstartvideoinfo(String header,String type,String location,String localkey,
+                                      String token,String videokey,String sync,String action_type)
+    {
+        try {
+            lock.lock();
+
+            ContentValues values = new ContentValues();
+            values.put("header", "" + header);
+            values.put("type", ""+type);
+            values.put("location", location);
+            values.put("localkey", ""+localkey);
+            values.put("token", ""+token);
+            values.put("videokey", ""+videokey);
+            values.put("sync", ""+sync);
+             values.put("action_type", ""+action_type);
+
+            long l=mDb.insert("tbstartvideoinfo", null, values);
+            Log.e("Id ",""+l);
+
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
+            throw mSQLException;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public Cursor fatchstartvideoinfo() {
+
+        Cursor mCur=null;
+        try {
+            lock.lock();
+
+            String sql = "SELECT * FROM tbstartvideoinfo";
+            //String sql = "SELECT * FROM tblmetadata";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+
+        return  mCur;
+    }
+
+    public Cursor updatestartvideoinfo(String header , String id ) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            mDb.execSQL("update tbstartvideoinfo set header='"+ header +"' where localkey='"+id+"'");;
+
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
         return  mCur;
     }
 

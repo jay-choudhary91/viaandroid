@@ -85,6 +85,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -1354,6 +1355,13 @@ public class common {
         return format;
     }
 
+    public static String getfilename(String path){
+
+        String filename=path.substring(path.lastIndexOf("/")+1);
+
+        return filename;
+    }
+
     public static void showalert(Activity activity, String meg) {
         alertdialog = new AlertDialog.Builder(activity)
                 .setTitle("Alert")
@@ -1843,6 +1851,20 @@ public class common {
             return 1.0f;
         }
         return 0.0f;
+    }
+
+
+    public static String getSaltString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 18) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
     }
 
 }
