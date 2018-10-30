@@ -58,6 +58,12 @@ import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
+import org.cmc.music.metadata.IMusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+import org.cmc.music.myid3.MyID3Listener;
+import org.jcodec.containers.mp4.boxes.MetaValue;
+import org.jcodec.movtool.MetadataEditor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -67,6 +73,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -1041,10 +1048,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 //metricItemArraylist.addAll(mlist);
                 //itemMetricAdapter.notifyDataSetChanged();
 
+                setupVideoPlayer(selectedvideouri);
                 videoduration=0;
                 layout_scrubberview.setVisibility(View.VISIBLE);
                 playerposition=0;
-                setupVideoPlayer(selectedvideouri);
                 righthandle.setVisibility(View.VISIBLE);
                 framecount=0;
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
@@ -1054,44 +1061,78 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     txt_metrics.setText("");
                     txt_hashes.setText("");
                     isnewvideofound=true;
-
-                    try {
-                        String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
-                        if(readmetadata != null)
-                        {
-                            metricmainarraylist.clear();
-                            Log.e("Meta data values ",readmetadata);
-                            JSONArray array=new JSONArray(readmetadata);
-
-                            for(int j=0;j<array.length();j++)
-                            {
-                                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-                                JSONArray subarray=array.getJSONArray(j);
-                                for(int i=0;i<subarray.length();i++)
-                                {
-
-                                    JSONObject object=subarray.getJSONObject(i);
-                                    Iterator<String> myIter = object.keys();
-                                    while (myIter.hasNext()) {
-                                        String key = myIter.next();
-                                        String value = object.optString(key);
-                                        metricmodel model=new metricmodel();
-                                        model.setMetricTrackKeyName(key);
-                                        model.setMetricTrackValue(value);
-                                        metricItemArraylist.add(model);
-                                    }
-                                }
-                                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
-                            }
+                    new Thread(){
+                        public void run(){
+                            getmetadata();
                         }
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    }.start();
                 }
             }
         }
+    }
+
+    public void getmetadata()
+    {
+
+            try {
+                String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
+                if(readmetadata != null)
+                    parsemetadata(readmetadata);
+
+            /*MetadataEditor mediaMeta = MetadataEditor.createFrom(new File(VIDEO_URL));
+            Map<String, MetaValue> keyedMeta = mediaMeta.getKeyedMeta();
+            if (keyedMeta != null) {
+                System.out.println("Keyed metadata:");
+                for (Map.Entry<String, MetaValue> entry : keyedMeta.entrySet()) {
+                    System.out.println(entry.getKey() + ": " + entry.getValue());
+                    if(entry.getKey().equalsIgnoreCase("videometadata"))
+                    {
+                        try {
+                            String readmetadata= entry.getValue().toString();
+                            if(readmetadata != null)
+                                parsemetadata(readmetadata);
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }*/
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void parsemetadata(String metadata)
+    {
+        try {
+
+            Log.e("Meta data values ",metadata);
+            JSONArray array=new JSONArray(metadata);
+            metricmainarraylist.clear();
+            for(int j=0;j<array.length();j++)
+            {
+                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                JSONObject object=array.getJSONObject(j);
+                Iterator<String> myIter = object.keys();
+                while (myIter.hasNext()) {
+                    String key = myIter.next();
+                    String value = object.optString(key);
+                    metricmodel model=new metricmodel();
+                    model.setMetricTrackKeyName(key);
+                    model.setMetricTrackValue(value);
+                    metricItemArraylist.add(model);
+                }
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public int checkframeduration()
@@ -1139,12 +1180,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         isbitmapprocessing=true;
 
         mbitmaplist.add(new frame(0,null,true));
+
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
         m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
         String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-
-        m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-        m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        String metadata=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
+        if(metadata != null && (! metadata.trim().isEmpty()) && (! metadata.equalsIgnoreCase("null")))
+            parsemetadata(metadata);
 
         long timeInmillisec = Long.parseLong( time );
         long duration = timeInmillisec / 1000;
@@ -1156,13 +1198,11 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             minutes = minutes*60;
 
         seconds = seconds + minutes;
-
         Log.e("videoseconds  =  ",""+seconds);
 
         for(int i=1;i<=seconds;i++)
         {
             Bitmap m_bitmap = null;
-
             try
             {
                 if(suspendbitmapqueue)
@@ -1180,13 +1220,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
                 m_mediaMetadataRetriever = new MediaMetadataRetriever();
                 m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
-
-                if(m_mediaMetadataRetriever.extractMetadata(i)!=null) {
-                    Log.e("Metadata :: ", ""+ m_mediaMetadataRetriever.extractMetadata(i));
-                }
-
                 m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
-
 
                 if(m_bitmap != null && runmethod)
                 {

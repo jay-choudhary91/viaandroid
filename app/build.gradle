@@ -60,6 +60,7 @@ dependencies {
     implementation files('libs/commons-io-2.6.jar')
     implementation files('libs/org.apache.http.legacy.jar')
     implementation files('libs/sun.misc.base64decoder.jar')
+    implementation files('libs/myid3_for_android.jar')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
@@ -73,8 +74,8 @@ dependencies {
 
     //implementation 'com.github.bumptech.glide:glide:4.7.1'
     //implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever:1.0.14'
-    //implementation 'com.googlecode.mp4parser:isoparser:1.1.7'
     implementation 'com.googlecode.mp4parser:isoparser:1.1.21'
+    implementation 'org.jcodec:jcodec:0.2.3'
     implementation 'com.squareup.okhttp3:okhttp:3.3.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'fr.bmartel:jspeedtest:1.32.1'

@@ -86,6 +86,14 @@ import com.google.gson.Gson;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
+import org.cmc.music.common.ID3WriteException;
+import org.cmc.music.metadata.IMusicMetadata;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+import org.cmc.music.myid3.MyID3Listener;
+import org.jcodec.containers.mp4.boxes.MetaValue;
+import org.jcodec.movtool.MetadataEditor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,6 +101,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -101,6 +110,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -1104,6 +1114,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     e.printStackTrace();
                 }
 
+                setgetmetadata();
+
                 startPreview();
                 stopvideotimer();
                 madapterclick.onItemClicked(null,1);
@@ -1130,6 +1142,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             }
         },100);
+    }
+
+    public void setgetmetadata()
+    {
+        /*try {
+            MetadataEditor mediaMeta = MetadataEditor.createFrom(new File(lastrecordedvideo.getAbsolutePath()));
+            Map<String, MetaValue> keyedMeta = mediaMeta.getKeyedMeta();
+            keyedMeta.put("videometadata", MetaValue.createString(""+metadatametricesjson.toString()));
+            mediaMeta.save(false); // fast mode is off
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
+
     }
 
     @Override
@@ -1604,6 +1630,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         JSONArray metricesarray=new JSONArray();
         StringBuilder builder=new StringBuilder();
+        JSONObject object=new JSONObject();
         for(int j=0;j<mlocalarraylist.size();j++)
         {
             metricmodel metric=mlocalarraylist.get(j);
@@ -1618,17 +1645,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             builder.append("\n"+metric.getMetricTrackKeyName()+" - "+value);
             //selectedmetrices=selectedmetrices+"\n"+metric.getMetricTrackKeyName()+" - "+value;
 
-            JSONObject object=new JSONObject();
             try {
                 object.put(metric.getMetricTrackKeyName(),value);
-                metricesarray.put(object);
+
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
+       // metricesarray.put(object);
         builder.append("\n");
-        metadatametricesjson.put(metricesarray);
+        metadatametricesjson.put(object);
         selectedmetrices=selectedmetrices+builder.toString();
     }
 
