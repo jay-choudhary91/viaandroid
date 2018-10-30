@@ -40,6 +40,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -284,7 +285,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void fetchmetadatadb() {
 
-        String selectedid="",videokey="",videolist="",action_type="",hashmethod="",hashvalue="",videoid="",hassync="";
+        String selectedid="",videolist="",hashmethod="",hashvalue="",videoid="",hassync="";
+
+        String header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "",sync_date = "",action_type="";
+
 
         if(getcurrentfragment() instanceof videocomposerfragment)
         {
@@ -308,7 +312,42 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
-        ArrayList<videogroup> marray=new ArrayList<>();
+        ArrayList<startvideoinfo> marray=new ArrayList<>();
+
+        try {
+            Cursor cur = mdbhelper.fatchstartvideoinfo();
+
+
+            if (cur != null) {
+                while (!cur.isAfterLast()) {
+
+                    header = "" + cur.getString(cur.getColumnIndex("header"));
+                    type = "" + cur.getString(cur.getColumnIndex("type"));
+                    location = "" + cur.getString(cur.getColumnIndex("location"));
+                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
+                    token = "" + cur.getString(cur.getColumnIndex("token"));
+                    videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
+                    sync = "" + cur.getString(cur.getColumnIndex("sync"));
+                    action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
+                    sync_date = ""+ cur.getString(cur.getColumnIndex("sync_date"));
+
+                    marray.add(new startvideoinfo(header, type, location,localkey,token, videokey,sync, action_type,sync_date));
+                    //  cur.moveToLast();
+
+                    //  cur.moveToLast();
+                    Log.e("Marray =", "" + marray);
+
+                    break;
+                }
+            }
+
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        /*ArrayList<videogroup> marray=new ArrayList<>();
 
         try {
             Cursor cur = mdbhelper.fetchmetadata();
@@ -328,18 +367,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                     marray.add(new videogroup(selectedid,videoid,hassync,videokey,action_type));
                   //  cur.moveToLast();
-
                     break;
                 }
             }
-
             mdbhelper.close();
         }catch (Exception e)
         {
             e.printStackTrace();
-        }
-
+        }*/
         Log.e("video_updateid ",""+selectedid);
+
+
+
+
         if(! selectedid.trim().isEmpty())
         {
             HashMap<String,String> mpairslist=new HashMap<String, String>();
@@ -408,7 +448,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         //String selectedid="",videokey="",videolist="",action_type="",hashmethod="",hashvalue="",videoid="",hassync="";
         String hashmethod = "" , hashvalue = "";
 
-        String header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "",action_type="";
+        String header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "",sync_date = "",action_type="";
 
         if(getcurrentfragment() instanceof videocomposerfragment)
         {
@@ -449,8 +489,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
                     sync = "" + cur.getString(cur.getColumnIndex("sync"));
                     action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
+                    sync_date = ""+ cur.getString(cur.getColumnIndex("sync_date"));
 
-                     marray.add(new startvideoinfo(header, type, location,localkey,token, videokey,sync, action_type));
+                     marray.add(new startvideoinfo(header, type, location,localkey,token, videokey,sync, action_type,sync_date));
                     //  cur.moveToLast();
 
                     //  cur.moveToLast();

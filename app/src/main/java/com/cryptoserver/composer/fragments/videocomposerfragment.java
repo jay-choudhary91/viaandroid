@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Rect;
@@ -60,7 +59,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.baseactivity;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
@@ -69,8 +67,6 @@ import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.metadata.MetaDataInsert;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
-import com.cryptoserver.composer.models.startvideoinfo;
-import com.cryptoserver.composer.models.videogroup;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.randomstring;
@@ -87,7 +83,6 @@ import com.google.gson.Gson;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -210,7 +205,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                       String keyvalue= getkeyvalue(byteArray);
 
                                      if(firsthashvalue){
-                                         savesidecardatavideostart(keyvalue,keytype);
+                                         savestartvideoinfo(keyvalue,keytype);
                                          firsthashvalue = false;
                                      }
                                       savevideostart(videokey,keytype,keyvalue);
@@ -1552,7 +1547,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     if(count == frameduration){
 
                         String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
-                        updatesidecardatavideostart(keyValue,filename);
+                        updatestartvideoinfo(keyValue,filename);
 
                     }
 
@@ -1849,7 +1844,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
 
-    public void savesidecardatavideostart(String firsthash,String hashmethod)
+    public void savestartvideoinfo(String firsthash, String hashmethod)
         {
             if (mdbhelper == null) {
                 mdbhelper = new databasemanager(getActivity());
@@ -1864,14 +1859,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             try {
 
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("fps","30");
-                map.put("firsthash", firsthash);
-                map.put("hashmethod",keytype);
-                map.put("name","");
 
-                localkey = common.getSaltString();
-               // String headerdic[] = {"fps"  " 30"  , "firsthash :  " + firsthash  , "hashmethod : " + keytype  ,  "  name : "};
+                // String headerdic[] = {"fps"  " 30"  , "firsthash :  " + firsthash  , "hashmethod : " + keytype  ,  "  name : "};
 
                /* metadict["headers"] = headerdicjson
                 metadict["localkey"] = self.currentVideoKey
@@ -1881,10 +1870,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 metadict["type"] = "video"
                 metadict["videokey"] = ""*/
 
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put("fps","30");
+                map.put("firsthash", firsthash);
+                map.put("hashmethod",keytype);
+                map.put("name","");
+
+                localkey = common.getSaltString();
+
                 Gson gson = new Gson();
                 String json = gson.toJson(map);
 
-                mdbhelper.insertstartvideoinfo(json,"video","local",localkey,"","","",config.type_video_start);
+                mdbhelper.insertstartvideoinfo(json,"video","local",videokey,"","","","0",config.type_video_start);
 
                 mdbhelper.close();
             } catch (Exception e) {
@@ -1892,7 +1889,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
     }
 
-    public void updatesidecardatavideostart(String firsthash,String file_name)
+    public void updatestartvideoinfo(String firsthash, String file_name)
     {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(getActivity());
@@ -1921,7 +1918,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             //fetchstartvideoinfo();
 
            //mdbhelper.insertstartvideoinfo(json,"video","local",""+common.getSaltString(),"","","");
-            //mdbhelper.close();
+            mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2244,167 +2241,5 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
 
     }
-
-
-    public String  fetchmetadatadb() {
-
-        String header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "";
-
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(getActivity());
-            mdbhelper.createDatabase();
-        }
-
-        try {
-            mdbhelper.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<videogroup> marray = new ArrayList<>();
-
-        try {
-            Cursor cur = mdbhelper.fatchstartvideoinfo();
-            if (cur != null) {
-                while (!cur.isAfterLast()) {
-
-                    header = "" + cur.getString(cur.getColumnIndex("header"));
-                    type = "" + cur.getString(cur.getColumnIndex("type"));
-                    location = "" + cur.getString(cur.getColumnIndex("location"));
-                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    token = "" + cur.getString(cur.getColumnIndex("token"));
-                    videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
-                    sync = "" + cur.getString(cur.getColumnIndex("sync"));
-
-                   // marray.add(new videogroup(selectedid, videoid, hassync, videokey, action_type));
-                    //  cur.moveToLast();
-
-                    //mdbhelper.close();
-                    break;
-                }
-            }
-
-           // mdbhelper.close();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return localkey;
-    }
-
-    public void fetchstartvideoinfo() {
-
-        //String selectedid="",videokey="",videolist="",action_type="",hashmethod="",hashvalue="",videoid="",hassync="";
-        String hashmethod = "" , hashvalue = "";
-
-        String header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "",action_type="";
-
-        if(! common.isnetworkconnected(getActivity()))
-            return;
-
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(getActivity());
-            mdbhelper.createDatabase();
-        }
-
-        try {
-            mdbhelper.open();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        ArrayList<startvideoinfo> marray=new ArrayList<>();
-
-        try {
-            Cursor cur = mdbhelper.fatchstartvideoinfo();
-
-
-            if (cur != null) {
-                while (!cur.isAfterLast()) {
-
-                    header = "" + cur.getString(cur.getColumnIndex("header"));
-                    type = "" + cur.getString(cur.getColumnIndex("type"));
-                    location = "" + cur.getString(cur.getColumnIndex("location"));
-                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    token = "" + cur.getString(cur.getColumnIndex("token"));
-                    videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
-                    sync = "" + cur.getString(cur.getColumnIndex("sync"));
-                    action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
-
-                    marray.add(new startvideoinfo(header, type, location,localkey,token, videokey,sync, action_type));
-                    //  cur.moveToLast();
-
-                    //  cur.moveToLast();
-
-                    break;
-                }
-            }
-
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try {
-            JSONObject obj = new JSONObject(header);
-            hashmethod  = obj.getString("hashmethod");
-            hashvalue  = obj.getString("firsthash");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.e("video_updateid ",""+localkey);
-        if(! localkey.trim().isEmpty())
-        {
-            HashMap<String,String> mpairslist=new HashMap<String, String>();
-            if(action_type.equalsIgnoreCase(config.type_video_start))
-            {
-                mpairslist.put("html","0");
-                mpairslist.put("hashmethod",""+ hashmethod);
-                mpairslist.put("hashvalue",""+ hashvalue);
-                mpairslist.put("title","xx");
-            }
-
-
-            //final String finalSelectedid = selectedid;
-            final String finalAction_type = action_type;
-            // final String finalVideoid = videoid;
-           gethelper().xapipost_send(getActivity(),action_type,mpairslist, new apiresponselistener() {
-                @Override
-                public void onResponse(taskresult response)
-                {
-                    if(response.isSuccess())
-                    {
-                        if(finalAction_type.equalsIgnoreCase(config.type_video_start))
-                        {
-                            try {
-                                JSONObject object = (JSONObject) response.getData();
-                                Log.e("finale object",""+ object);
-                               /* String videokey=object.getString("key");
-                                updatevideokey(finalVideoid,videokey);*/
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    if(finalAction_type.equalsIgnoreCase(config.type_video_update))
-                    {
-
-                    }
-                    else if(finalAction_type.equalsIgnoreCase(config.type_video_complete))
-                    {
-
-                    }
-
-                    //  updatedatasync(finalSelectedid);
-                }
-            });
-        }
-    }
-
 }
 

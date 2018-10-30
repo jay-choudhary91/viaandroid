@@ -182,7 +182,7 @@ public class databasemanager {
     }
 
     public void insertstartvideoinfo(String header,String type,String location,String localkey,
-                                      String token,String videokey,String sync,String action_type)
+                                      String token,String videokey,String sync,String date , String action_type)
     {
         try {
             lock.lock();
@@ -195,7 +195,8 @@ public class databasemanager {
             values.put("token", ""+token);
             values.put("videokey", ""+videokey);
             values.put("sync", ""+sync);
-             values.put("action_type", ""+action_type);
+            values.put("action_type", ""+action_type);
+            values.put("sync_date",  date);
 
             long l=mDb.insert("tbstartvideoinfo", null, values);
             Log.e("Id ",""+l);
@@ -214,7 +215,7 @@ public class databasemanager {
         try {
             lock.lock();
 
-            String sql = "SELECT * FROM tbstartvideoinfo";
+            String sql = "SELECT * FROM tbstartvideoinfo where sync_date = 0 ";
             //String sql = "SELECT * FROM tblmetadata";
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
