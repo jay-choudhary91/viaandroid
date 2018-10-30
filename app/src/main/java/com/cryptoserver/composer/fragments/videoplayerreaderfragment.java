@@ -58,10 +58,6 @@ import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
-import org.cmc.music.metadata.IMusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-import org.cmc.music.myid3.MyID3Listener;
 import org.jcodec.containers.mp4.boxes.MetaValue;
 import org.jcodec.movtool.MetadataEditor;
 import org.json.JSONArray;

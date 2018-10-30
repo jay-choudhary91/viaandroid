@@ -60,7 +60,6 @@ dependencies {
     implementation files('libs/commons-io-2.6.jar')
     implementation files('libs/org.apache.http.legacy.jar')
     implementation files('libs/sun.misc.base64decoder.jar')
-    implementation files('libs/myid3_for_android.jar')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
