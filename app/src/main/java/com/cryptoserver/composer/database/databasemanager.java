@@ -231,6 +231,23 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor updatevideokeytoken(String videoid,String videokey,String token,String sync_date) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            mDb.execSQL("update tbstartvideoinfo set videokey='"+videokey+"', token='"+token+"' , sync_date='"+sync_date+"' where id='"+videoid+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
+
     public Cursor updatestartvideoinfo(String header , String id ) {
         Cursor mCur=null;
         try {

@@ -1913,7 +1913,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             Gson gson = new Gson();
             String json = gson.toJson(map);
 
-            mdbhelper.updatestartvideoinfo(json,localkey);
+            mdbhelper.updatestartvideoinfo(json,videokey);
 
             //fetchstartvideoinfo();
 
@@ -1923,8 +1923,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             e.printStackTrace();
         }
     }
-
-
 
     public void savevideocomplete()
     {

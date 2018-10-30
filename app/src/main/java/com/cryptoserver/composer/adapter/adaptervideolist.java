@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -22,12 +24,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -98,16 +104,51 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         holder.edtvideoname.setClickable(false);
         holder.edtvideoname.setFocusable(false);
 
+        final String url = arrayvideolist.get(position).getPath();
+
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
+/*
+                        Picasso.get()
+                                .load(url)
+                                .into(new Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+
+                                        ((Activity) context).runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                holder.img_videothumbnail.setImageBitmap(bitmap);
+                                                     }
+                                            };
+                                    }
+                                    @Override
+                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                                    }
+
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                    }
+
+
+                                });*/
+
+                        RequestOptions myOptions = new RequestOptions()
+                                .fitCenter()
+                                .override(100, 100);
+
                        final Bitmap bitmap = Glide.
                                 with(context).
-                                load(arrayvideolist.get(position).getPath()).
                                 asBitmap().
-                                into(100, 100). // Width and height
-                                get();
+                                load(url).
+                                apply(myOptions).
+                                submit().
+                                get();// Width and height
 
 
                         ((Activity) context).runOnUiThread(new Runnable() {
@@ -116,7 +157,6 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                                 holder.img_videothumbnail.setImageBitmap(bitmap);
                             }
                         });
-
 
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -258,6 +298,5 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
     public int getItemCount() {
         return arrayvideolist.size();
     }
-
 
 }

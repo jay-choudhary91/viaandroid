@@ -285,9 +285,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void fetchmetadatadb() {
 
-        String selectedid="",videolist="",hashmethod="",hashvalue="",videoid="",hassync="";
+        String videolist="",hashmethod="",hashvalue="",videoid="",hassync="";
 
-        String header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "",sync_date = "",action_type="";
+        String selectedid="", header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "",sync_date = "",action_type="";
 
 
         if(getcurrentfragment() instanceof videocomposerfragment)
@@ -321,6 +321,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             if (cur != null) {
                 while (!cur.isAfterLast()) {
 
+
+                    selectedid= "" + cur.getString(cur.getColumnIndex("id"));
                     header = "" + cur.getString(cur.getColumnIndex("header"));
                     type = "" + cur.getString(cur.getColumnIndex("type"));
                     location = "" + cur.getString(cur.getColumnIndex("location"));
@@ -377,6 +379,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }*/
         Log.e("video_updateid ",""+selectedid);
 
+        try {
+            JSONObject obj = new JSONObject(header);
+            hashmethod  = obj.getString("hashmethod");
+            hashvalue  = obj.getString("firsthash");
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -411,14 +424,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 @Override
                 public void onResponse(taskresult response)
                 {
+
+                    String videokey = common.getSaltString();
+                    String token = common.getSaltString();
+
+                    updatevideokeytoken(finalSelectedid,videokey,token,"1");
+
                     if(response.isSuccess())
                     {
                         if(finalAction_type.equalsIgnoreCase(config.type_video_start))
                         {
                             try {
-                                JSONObject object = (JSONObject) response.getData();
+                                /*JSONObject object = (JSONObject) response.getData();
                                 String videokey=object.getString("key");
-                                updatevideokey(finalVideoid,videokey);
+                                updatevideokey(finalVideoid,videokey);*/
                             }catch (Exception e)
                             {
                                 e.printStackTrace();
@@ -441,134 +460,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
         }
     }
-
-
-    public void fetchstartvideoinfo() {
-
-        //String selectedid="",videokey="",videolist="",action_type="",hashmethod="",hashvalue="",videoid="",hassync="";
-        String hashmethod = "" , hashvalue = "";
-
-        String header = "", type = "", location = "", localkey = "", token = "", videokey = "", sync = "",sync_date = "",action_type="";
-
-        if(getcurrentfragment() instanceof videocomposerfragment)
-        {
-            boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
-            if(isrecording)
-                return;
-        }
-
-        if(! common.isnetworkconnected(baseactivity.this))
-            return;
-
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(baseactivity.this);
-            mdbhelper.createDatabase();
-        }
-
-        try {
-            mdbhelper.open();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        ArrayList<startvideoinfo> marray=new ArrayList<>();
-
-        try {
-            Cursor cur = mdbhelper.fatchstartvideoinfo();
-
-
-            if (cur != null) {
-                while (!cur.isAfterLast()) {
-
-                    header = "" + cur.getString(cur.getColumnIndex("header"));
-                    type = "" + cur.getString(cur.getColumnIndex("type"));
-                    location = "" + cur.getString(cur.getColumnIndex("location"));
-                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    token = "" + cur.getString(cur.getColumnIndex("token"));
-                    videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
-                    sync = "" + cur.getString(cur.getColumnIndex("sync"));
-                    action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
-                    sync_date = ""+ cur.getString(cur.getColumnIndex("sync_date"));
-
-                     marray.add(new startvideoinfo(header, type, location,localkey,token, videokey,sync, action_type,sync_date));
-                    //  cur.moveToLast();
-
-                    //  cur.moveToLast();
-
-                    break;
-                }
-            }
-
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        try {
-            JSONObject obj = new JSONObject(header);
-             hashmethod  = obj.getString("hashmethod");
-             hashvalue  = obj.getString("firsthash");
-
-
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Log.e("video_updateid ",""+localkey);
-        if(! localkey.trim().isEmpty())
-        {
-            HashMap<String,String> mpairslist=new HashMap<String, String>();
-            if(action_type.equalsIgnoreCase(config.type_video_start))
-            {
-                mpairslist.put("html","0");
-                mpairslist.put("hashmethod",""+ hashmethod);
-                mpairslist.put("hashvalue",""+ hashvalue);
-                mpairslist.put("title","xx");
-            }
-
-
-            //final String finalSelectedid = selectedid;
-            final String finalAction_type = action_type;
-           // final String finalVideoid = videoid;
-            xapipost_send(baseactivity.this,action_type,mpairslist, new apiresponselistener() {
-                @Override
-                public void onResponse(taskresult response)
-                {
-                    if(response.isSuccess())
-                    {
-                        if(finalAction_type.equalsIgnoreCase(config.type_video_start))
-                        {
-                            try {
-                                JSONObject object = (JSONObject) response.getData();
-                                Log.e("finale object",""+ object);
-                               /* String videokey=object.getString("key");
-                                updatevideokey(finalVideoid,videokey);*/
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    if(finalAction_type.equalsIgnoreCase(config.type_video_update))
-                    {
-
-                    }
-                    else if(finalAction_type.equalsIgnoreCase(config.type_video_complete))
-                    {
-
-                    }
-
-                  //  updatedatasync(finalSelectedid);
-                }
-            });
-        }
-    }
-
 
     public void deletemetadatarecord(String selectedid)
     {
@@ -626,6 +517,27 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         try {
             mdbhelper.updatevideokey(videoid,videokey);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatevideokeytoken(String videoid,String videokey,String tokan,String sync_date)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(baseactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatevideokeytoken(videoid,videokey,tokan,sync_date);
             mdbhelper.close();
         }catch (Exception e)
         {
