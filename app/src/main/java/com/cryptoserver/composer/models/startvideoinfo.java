@@ -14,9 +14,17 @@ public class startvideoinfo
     String videokey = "";
     String sync = "";
     String action_type="";
+    String sync_date="";
 
+    public String getSync_date() {
+        return sync_date;
+    }
 
-    public startvideoinfo(String header,String type ,String location ,String localkey ,String token, String videokey ,String sync,String action_type
+    public void setSync_date(String sync_date) {
+        this.sync_date = sync_date;
+    }
+
+    public startvideoinfo(String header, String type , String location , String localkey , String token, String videokey , String sync, String action_type,String sync_date
     )
     {
         setHeader(header);
@@ -27,6 +35,7 @@ public class startvideoinfo
         setVideokey(videokey);
         setSync(sync);
         setAction_type(action_type);
+        setSync_date(sync_date);
     }
 
     public String getHeader() {
