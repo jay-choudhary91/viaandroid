@@ -231,6 +231,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgshareicon.setVisibility(View.GONE);
             updateheader("");
             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            fragment_container.setLayoutParams(params);
+
         }
         else if (fragment instanceof videocomposerfragment) {
             imgaddicon.setVisibility(View.GONE);

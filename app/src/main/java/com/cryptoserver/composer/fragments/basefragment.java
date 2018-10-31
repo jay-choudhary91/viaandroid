@@ -917,7 +917,7 @@ public abstract class basefragment extends Fragment {
             }
 
         }
-        else if(key.equalsIgnoreCase("phonetime")){
+        else if(key.equalsIgnoreCase("devicetime")){
             Calendar c = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");
             String time = sdf.format(c.getTime());

@@ -51,6 +51,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -359,6 +360,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     JSONArray metadatametricesjson=new JSONArray();
 
     String localkey = null;
+    private LinearLayoutManager mLayoutManager;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
 
 
     @Override
@@ -537,15 +540,44 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     }
                 });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+                mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
                 recyview_metrices.setLayoutManager(mLayoutManager);
                 recyview_metrices.setItemAnimator(new DefaultItemAnimator());
                 recyview_metrices.setAdapter(mmetricesadapter);
+                implementScrollListener();
             }
 
             setmetriceshashesdata();
         }
         return rootview;
+    }
+
+    // Implement scroll listener
+    private void implementScrollListener() {
+        recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                visibleItemCount = mLayoutManager.getChildCount();
+                totalItemCount = mLayoutManager.getItemCount();
+                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
+                    if(selectedmetrices.toString().trim().length() > 0)
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        selectedmetrices="";
+                    }
+                }
+            }
+        });
     }
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
@@ -1725,19 +1757,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 selectedhashes="";
                             }
                         });
-
                     }
 
                     if((recyview_metrices.getVisibility() == View.VISIBLE) && (! selectedmetrices.trim().isEmpty()))
                     {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mmetricsitems.add(new videomodel(selectedmetrices));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                selectedmetrices="";
-                            }
-                        });
+                        if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
+                        {
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mmetricsitems.add(new videomodel(selectedmetrices));
+                                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                                    selectedmetrices="";
+                                }
+                            });
+                        }
                     }
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))

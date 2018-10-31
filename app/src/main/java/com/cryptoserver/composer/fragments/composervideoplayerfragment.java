@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -136,7 +137,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private videoframeadapter mmetricesadapter,mhashesadapter;
     private graphicalfragment fragmentgraphic;
-    boolean isinbackground=false;
+    private boolean isinbackground=false;
+    private LinearLayoutManager mLayoutManager;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -166,10 +169,11 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
                     }
                 });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+                mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
                 recyview_metrices.setLayoutManager(mLayoutManager);
                 recyview_metrices.setItemAnimator(new DefaultItemAnimator());
                 recyview_metrices.setAdapter(mhashesadapter);
+                implementScrollListener();
             }
 
             {
@@ -234,7 +238,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 new Thread(){
                     public void run(){
                         getmetadata();
-                        getmetafromwriterkey();
                     }
                 }.start();
 
@@ -258,57 +261,61 @@ public class composervideoplayerfragment extends basefragment implements Surface
         return rootview;
     }
 
+    // Implement scroll listener
+    private void implementScrollListener() {
+        recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                }
+            }
 
-    public void getmetafromwriterkey()
-    {
-        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
-        String metadata=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
-        if(metadata != null && (! metadata.trim().isEmpty()) && (! metadata.equalsIgnoreCase("null")))
-            parsemetadata(metadata);
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                visibleItemCount = mLayoutManager.getChildCount();
+                totalItemCount = mLayoutManager.getItemCount();
+                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
+                    if(selectedmetrics.toString().trim().length() > 0)
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrics));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        selectedmetrics="";
+                    }
+                }
+            }
+        });
     }
-
 
     public void getmetadata()
     {
-
-        try {
-            String readmetadata= MetaDataRead.readmetadata(VIDEO_URL);
-            if(readmetadata != null)
-                parsemetadata(readmetadata);
-
-            /*MetadataEditor mediaMeta = MetadataEditor.createFrom(new File(VIDEO_URL));
-            Map<String, MetaValue> keyedMeta = mediaMeta.getKeyedMeta();
-            if (keyedMeta != null) {
-                System.out.println("Keyed metadata:");
-                for (Map.Entry<String, MetaValue> entry : keyedMeta.entrySet()) {
-                    System.out.println(entry.getKey() + ": " + entry.getValue());
-                    if(entry.getKey().equalsIgnoreCase("videometadata"))
-                    {
-                        try {
-                            String readmetadata= entry.getValue().toString();
-                            if(readmetadata != null)
-                                parsemetadata(readmetadata);
-
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }*/
-        }catch (Exception e)
-        {
-            e.printStackTrace();
+        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
+        m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+        String metadataWriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
+        String metadataTitle=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        for (int i = 0; i < 1000; i++){
+            //only Metadata != null is printed!
+            if(m_mediaMetadataRetriever.extractMetadata(i)!=null) {
+                Log.i("Metadata"+i, "Metadata :: " + m_mediaMetadataRetriever.extractMetadata(i));
+            }
         }
 
+        if(metadataWriter != null && (! metadataWriter.trim().isEmpty()) && (! metadataWriter.equalsIgnoreCase("null")))
+        {
+            parsemetadata(metadataWriter);
+        }
+        else if(metadataTitle != null && (! metadataTitle.trim().isEmpty()) && (! metadataTitle.equalsIgnoreCase("null")))
+        {
+            parsemetadata(metadataTitle);
+        }
     }
 
     public void parsemetadata(String metadata)
     {
         try {
 
-            Log.e("Meta data values ",metadata);
             JSONArray array=new JSONArray(metadata);
             metricmainarraylist.clear();
             for(int j=0;j<array.length();j++)
@@ -1105,29 +1112,31 @@ public class composervideoplayerfragment extends basefragment implements Surface
         myRunnable = new Runnable() {
             @Override
             public void run() {
-                boolean graphicopen=false;
-                if(isdraweropen)
+                if(! isinbackground)
                 {
-                    if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
+                    boolean graphicopen=false;
+                    if(isdraweropen)
                     {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mhashesitems.add(new videomodel(selectedhaeshes));
-                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                                selectedhaeshes="";
-                            }
-                        });
+                        if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
+                        {
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mhashesitems.add(new videomodel(selectedhaeshes));
+                                    mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                                    selectedhaeshes="";
+                                }
+                            });
+                        }
+
+                        if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+                            graphicopen=true;
+
+                        setmetricesgraphicaldata();
                     }
-
-                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen=true;
-
-                    setmetricesgraphicaldata();
+                    if(fragmentgraphic != null)
+                        fragmentgraphic.setdrawerproperty(graphicopen);
                 }
-                if(fragmentgraphic != null)
-                    fragmentgraphic.setdrawerproperty(graphicopen);
-
                 myHandler.postDelayed(this, 1000);
             }
         };
@@ -1153,7 +1162,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
         {
             if(! metricmainarraylist.get(i).isIsupdated())
             {
-                selectedmetrics="\n";
                 metricmainarraylist.get(i).setIsupdated(true);
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
                 for(int j=0;j<metricItemArraylist.size();j++)
@@ -1164,8 +1172,11 @@ public class composervideoplayerfragment extends basefragment implements Surface
                             metricItemArraylist.get(j).getMetricTrackValue(),true);
                 }
 
-                mmetricsitems.add(new videomodel(selectedmetrics));
-                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                if(mmetricsitems.size() == 0 && (! selectedmetrics.toString().trim().isEmpty()))
+                {
+                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                }
             }
         }
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)

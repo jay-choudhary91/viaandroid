@@ -29,6 +29,7 @@ import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -693,7 +694,7 @@ public class common {
             xdata.getinstance().saveSetting(config.OSversion,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("wifiname")) {
             xdata.getinstance().saveSetting(config.WIFINetwork,((ismetricsselected)?value:"N/A"));
-        } else if (keyname.equalsIgnoreCase("gpsaccuracy")) {
+        } else if (keyname.equalsIgnoreCase("gpsaccuracy") || keyname.equalsIgnoreCase("gpshorizontalaccuracy")) {
             xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("screenwidth")) {
             xdata.getinstance().saveSetting(config.ScreenSize,((ismetricsselected)?value:"N/A"));
@@ -707,7 +708,7 @@ public class common {
             xdata.getinstance().saveSetting(config.MemoryUsage,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("bluetoothonoff")) {
             xdata.getinstance().saveSetting(config.Bluetooth,((ismetricsselected)?value:"N/A"));
-        } else if (keyname.equalsIgnoreCase("phonetime")) {
+        } else if (keyname.equalsIgnoreCase("devicetime")) {
             xdata.getinstance().saveSetting(config.LocalTime,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("freespace")) {
             xdata.getinstance().saveSetting(config.StorageAvailable,((ismetricsselected)?value:"N/A"));
@@ -721,6 +722,9 @@ public class common {
             xdata.getinstance().saveSetting(config.CPUUsage,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase(config.compass)) {
             xdata.getinstance().saveSetting(config.Orientation,((ismetricsselected)?value:"N/A"));
+        }else if (keyname.equalsIgnoreCase(config.orientation) || keyname.equalsIgnoreCase("heading")) {
+            xdata.getinstance().saveSetting(config.Heading,((ismetricsselected)?value:"0"));
+            xdata.getinstance().saveSetting(config.orientation,((ismetricsselected)?value:"0"));
         } else if (keyname.equalsIgnoreCase("gpslatitude")) {
             xdata.getinstance().saveSetting(config.Latitude,(ismetricsselected)?value:"");
         } else if (keyname.equalsIgnoreCase("gpslongitude")) {
@@ -731,8 +735,6 @@ public class common {
             xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"N/A"));
         } else if(keyname.equalsIgnoreCase("address")){
             xdata.getinstance().saveSetting(config.Address,((ismetricsselected)?value:"N/A"));
-        } else if (keyname.equalsIgnoreCase("heading")) {
-            xdata.getinstance().saveSetting(config.Heading,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("speed")) {
             xdata.getinstance().saveSetting(config.Speed,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_x)) {
@@ -741,8 +743,6 @@ public class common {
             xdata.getinstance().saveSetting(config.acceleration_y,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_z)) {
             xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"N/A"));
-        } else if (keyname.equalsIgnoreCase(config.orientation)) {
-            xdata.getinstance().saveSetting(config.orientation,((ismetricsselected)?value:""));
         }
         else if (keyname.equalsIgnoreCase("connectionspeed")) {
             xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"N/A"));
@@ -919,8 +919,8 @@ public class common {
             metricItemName = "currentcallvolume";
         } else if (key.equalsIgnoreCase("currentcalldecibel")) {
             metricItemName = "currentcalldecibel";
-        } else if (key.equalsIgnoreCase("phonetime")) {
-            metricItemName = "phonetime";
+        } else if (key.equalsIgnoreCase("devicetime")) {
+            metricItemName = "devicetime";
         } else if (key.equalsIgnoreCase("airplanemode")) {
             metricItemName = "airplanemode";
         } else if (key.equalsIgnoreCase("gpsonoff")) {
@@ -1511,82 +1511,6 @@ public class common {
 
     }
 
-    /*public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
-                                             final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
-
-
-        txt_latitude.post(new Runnable() {
-            @Override
-            public void run() {
-                final String latitude=xdata.getinstance().getSetting(config.Latitude);
-                txt_latitude.setText(config.Latitude+"\n"+"N/A");
-                if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("N/A")))
-                {
-                    double latt = Double.valueOf(latitude);
-                    txt_latitude.setText(config.Latitude+"\n"+ convertlatitude(latt));
-                }
-            }
-        });
-
-
-        txt_longitude.post(new Runnable() {
-            @Override
-            public void run() {
-                final String longitude=xdata.getinstance().getSetting(config.Longitude);
-                txt_longitude.setText(config.Longitude+"\n"+"N/A");
-                if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("N/A")))
-                {
-                    final double longg = Double.valueOf(longitude);
-                    txt_longitude.setText(config.Longitude+"\n"+ convertlongitude(longg));
-                }
-            }
-        });
-
-        txt_altitude.post(new Runnable() {
-            @Override
-            public void run() {
-                final String altitude=xdata.getinstance().getSetting(config.Altitude);
-                if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("N/A")))
-                {
-                    txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+" ft");
-                }
-                else
-                {
-                    txt_altitude.setText(config.Altitude+"\n"+"N/A");
-                }
-            }
-        });
-
-        txt_heading.post(new Runnable() {
-            @Override
-            public void run() {
-                txt_heading.setText(config.Heading+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Heading)));
-            }
-        });
-
-        txt_orientation.post(new Runnable() {
-            @Override
-            public void run() {
-                txt_orientation.setText(config.Orientation+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
-            }
-        });
-
-        txt_speed.post(new Runnable() {
-            @Override
-            public void run() {
-                txt_speed.setText(config.Speed+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
-            }
-        });
-
-        txt_address.post(new Runnable() {
-            @Override
-            public void run() {
-                txt_address.setText(getxdatavalue(xdata.getinstance().getSetting(config.Address)));
-            }
-        });
-
-    }*/
-
     public  static String getxdatavalue(String value)
     {
         if(value == null || value.equalsIgnoreCase("null") || value.toString().trim().isEmpty())
@@ -1825,7 +1749,7 @@ public class common {
                 config.cpuusageirq,config.compass,config.decibel,config.barometer,config.acceleration_x,config.acceleration_y,
                 config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
-                "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","phonetime","syncphonetime","country",
+                "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
                 "connectionspeed","gpsaccuracy","speed","heading","address"};
 
         return items;

@@ -1171,7 +1171,7 @@ public abstract class locationawareactivity extends baseactivity implements
             }
 
         }
-        else if(key.equalsIgnoreCase("phonetime")){
+        else if(key.equalsIgnoreCase("devicetime")){
             Calendar c = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");
             String time = sdf.format(c.getTime());
@@ -1699,13 +1699,13 @@ public abstract class locationawareactivity extends baseactivity implements
             };
 
 
-            try
+            /*try
             {
                 registerReceiver(mBroadcast, intentFilter);
             }catch (Exception e)
             {
                 e.printStackTrace();
-            }
+            }*/
 
             try
             {
@@ -1886,14 +1886,9 @@ public abstract class locationawareactivity extends baseactivity implements
                             strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
                         }
                         currentaddress = strReturnedAddress.toString();
-                        googleutils.saveuseraddress(currentaddress);
-                   //     Log.e("Myaddress", strReturnedAddress.toString());
-                    } else {
-                     //   Log.e("My address", "No Address returned!");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                //    Log.w("Myaddress", "Canont get Address!");
                 }
             }
         });

@@ -184,10 +184,9 @@ public class graphicalfragment extends basefragment implements
     private Runnable waveRunnable;
     noise mNoise;
     boolean isgraphicopen=false;
-    private Handler myhandler;
-    private Runnable myrunnable;
     public String currenthashvalue="";
     boolean ismediaplayer = false;
+    private boolean isinbackground=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -234,8 +233,17 @@ public class graphicalfragment extends basefragment implements
 
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        isinbackground=true;
+    }
+
     public void setmetricesdata()
     {
+        if(isinbackground)
+            return;
+
         if(! isgraphicopen && (! ismediaplayer))
             return;
 
@@ -248,7 +256,8 @@ public class graphicalfragment extends basefragment implements
                         layout_graphical.setVisibility(View.VISIBLE);
                         String latitude=xdata.getinstance().getSetting(config.Latitude);
                         String longitude=xdata.getinstance().getSetting(config.Longitude);
-                        if((! latitude.trim().isEmpty()) && (! longitude.trim().isEmpty()))
+                        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("N/A"))) &&
+                                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
 
                         if(ismediaplayer)
@@ -336,6 +345,15 @@ public class graphicalfragment extends basefragment implements
         this.mGoogleMap = googleMap;
         mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
         this.mGoogleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+    }
+
+    private void populateUserCurrentLocation(final LatLng location) {
+        // DeviceUser user = DeviceUserManager.getInstance().getUser();
+        if (mGoogleMap == null)
+            return;
+
+        googlemap.setVisibility(View.VISIBLE);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -349,23 +367,6 @@ public class graphicalfragment extends basefragment implements
             mGoogleMap.setMyLocationEnabled(true);
             mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
             // mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.8497, 75.7692), 5));
-        }
-    }
-
-    private void populateUserCurrentLocation(final LatLng location) {
-        // DeviceUser user = DeviceUserManager.getInstance().getUser();
-        if (mGoogleMap == null)
-            return;
-
-        googlemap.setVisibility(View.VISIBLE);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
-
-    }
-
-    public void locationupdate(Location location) {
-        super.oncurrentlocationchanged(location);
-        if (location == null) {
-            return;
         }
     }
 
@@ -442,9 +443,6 @@ public class graphicalfragment extends basefragment implements
         super.onDestroy();
         if(waveHandler != null && waveRunnable != null)
             waveHandler.removeCallbacks(waveRunnable);
-
-        if(myhandler != null && myrunnable != null)
-            myhandler.removeCallbacks(myrunnable);
 
         try {
             stop();
@@ -721,7 +719,7 @@ public class graphicalfragment extends basefragment implements
     @Override
     public void onResume() {
         super.onResume();
-
+        isinbackground=false;
         // for the system's orientation sensor registered listeners
         msensormanager.registerListener(this, msensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_GAME);
@@ -787,28 +785,12 @@ public class graphicalfragment extends basefragment implements
                 }, Visualizer.getMaxCaptureRate() / 2, true, false);
     }
 
-    public void setmediaplayerdata(boolean ismediaplayer , MediaPlayer mediaPlayer){
-
-        this.mMediaPlayer = mediaPlayer;
-        this.ismediaplayer = ismediaplayer;
-        if(mVisualizer != null){
-            mVisualizer.setEnabled(false);
-            setvisualizer();
-        }
-
-    }
-
     public void setmediaplayer(boolean ismediaplayer , MediaPlayer mediaPlayer){
 
         this.mMediaPlayer = mediaPlayer;
         this.ismediaplayer = ismediaplayer;
         setvisualizer();
     }
-
-    public void setmediaplayerdata(boolean ismideaplayer){
-        this.ismediaplayer = ismideaplayer;
-    }
-
 
     public void setvisualizer(){
         if(ismediaplayer){
