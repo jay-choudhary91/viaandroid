@@ -718,7 +718,7 @@ public class common {
             xdata.getinstance().saveSetting(config.SystemUptime,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("battery")) {
             xdata.getinstance().saveSetting(config.Battery,((ismetricsselected)?value:"N/A"));
-        } else if (keyname.equalsIgnoreCase(config.cpuusagesystem)) {
+        } else if (keyname.equalsIgnoreCase(config.cpuusagesystem) || keyname.equalsIgnoreCase(config.cpuusageuser)) {
             xdata.getinstance().saveSetting(config.CPUUsage,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase(config.compass)) {
             xdata.getinstance().saveSetting(config.Orientation,((ismetricsselected)?value:"N/A"));
