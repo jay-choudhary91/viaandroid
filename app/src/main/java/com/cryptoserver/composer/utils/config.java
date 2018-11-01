@@ -64,10 +64,16 @@ public class config {
     public static final String currentcalldecibel = "currentcalldecibel";
     public static final String orientation = "orientation";
     public static final String heading = "heading";
+    public static final String gpslatitude = "gpslatitude";
+    public static final String gpslongitude = "gpslongitude";
+    public static final String gpslatitudedegree = "gpslatitudedegree";
+    public static final String gpslongitudedegree = "gpslongitudedegree";
 
     //graphicaldata
     public static final String Latitude="Latitude";
     public static final String Longitude="Longitude";
+    public static final String LatitudeDegree="LatitudeDegree";
+    public static final String LongitudeDegree="LongitudeDegree";
     public static final String Altitude="Altitude";
     public static final String Speed="Speed";
     public static final String Heading="Heading";
@@ -83,6 +89,8 @@ public class config {
     public static final String WIFINetwork="WIFI Network";
     public static final String GPSAccuracy="GPS Accuracy";
     public static final String ScreenSize="Screen Size";
+    public static final String ScreenWidth="Screen Width";
+    public static final String ScreenHeight="Screen Height";
     public static final String Country="Country";
     public static final String CPUUsage="CPU Usage";
     public static final String Brightness="Brightness";

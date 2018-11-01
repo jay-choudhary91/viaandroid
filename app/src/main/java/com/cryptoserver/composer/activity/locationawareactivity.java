@@ -40,6 +40,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 
 import com.cryptoserver.composer.R;
@@ -769,9 +770,9 @@ public abstract class locationawareactivity extends baseactivity implements
         {
             metricItemValue = ""+telephonymanager.getDeviceSoftwareVersion();
         }
-        else if(key.equalsIgnoreCase("deviceregion"))
+        else if(key.equalsIgnoreCase("deviceregion") || (key.equalsIgnoreCase("country")))
         {
-            metricItemValue = ""+ Locale.getDefault().getLanguage();
+            metricItemValue = ""+ Locale.getDefault().getCountry();
         }
         else if(key.equalsIgnoreCase("timezone"))
         {
@@ -891,7 +892,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 if (connectionInfo != null && !TextUtils.isEmpty(connectionInfo.getSSID())) {
 
                     if(key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wificonnect"))
-                        metricItemValue = "YES";
+                        metricItemValue = "true";
 
                     if(key.equalsIgnoreCase("externalip"))
                         metricItemValue =  common.getWifiIPAddress(locationawareactivity.this);
@@ -1191,8 +1192,6 @@ public abstract class locationawareactivity extends baseactivity implements
             } else if((android.provider.Settings.Global.getInt(getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 0)==1)){
                 metricItemValue="OFF";
             }
-        }else if(key.equalsIgnoreCase("country")) {
-            metricItemValue = xdata.getinstance().getSetting(config.Country);
         }else if(key.equalsIgnoreCase("connectionspeed")){
             metricItemValue=""+connectionspeed;
         }else if(key.equalsIgnoreCase("address")){
@@ -1516,18 +1515,11 @@ public abstract class locationawareactivity extends baseactivity implements
         msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Thread thread = new Thread(){
             public void run(){
-                /*Sensor accelerometer = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-                Sensor magnetometer = msensormanager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-
-                msensormanager.registerListener(mCompassListener, accelerometer, SensorManager.SENSOR_DELAY_UI);
-                msensormanager.registerListener(mCompassListener, magnetometer, SensorManager.SENSOR_DELAY_UI);*/
-                // for the system's orientation sensor registered listeners
                 msensormanager.registerListener(mCompassListener, msensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                         SensorManager.SENSOR_DELAY_GAME);
             }
         };
         thread.start();
-        //SensorManager snsMgr = (SensorManager) getSystemService(Service.SENSOR_SERVICE);
     }
 
     SensorEventListener mCompassListener=new SensorEventListener() {
@@ -1538,94 +1530,35 @@ public abstract class locationawareactivity extends baseactivity implements
                 public void run() {
                     if (getcurrentfragment() != null)
                     {
+                        int heading = Math.round(event.values[0]);
 
-                        /*int type = event.sensor.getType();
-                        float[] data;
-                        if (type == Sensor.TYPE_ACCELEROMETER) {
-                            data = mGData;
-                        } else if (type == Sensor.TYPE_MAGNETIC_FIELD) {
-                            data = mMData;
-                        } else {
-                            // we should not be here.
-                            return;
+                        int heading1 = Math.round(event.values[0]);
+                        int heading2 = Math.round(event.values[1]);
+                        int heading3 = Math.round(event.values[2]);
+                       // Log.e("Degrees ",""+heading1+" "+heading2+" "+heading3);
+
+                        String strdirection  = "East";
+                        if(heading > 23 && heading <= 67){
+                            strdirection = "North East";
+                        } else if(heading > 68 && heading <= 112){
+                            strdirection = "East";
+                        } else if(heading > 113 && heading <= 167){
+                            strdirection = "South East";
+                        } else if(heading > 168 && heading <= 202){
+                            strdirection = "South";
+                        } else if(heading > 203 && heading <= 247){
+                            strdirection = "South West";
+                        } else if(heading > 248 && heading <= 293){
+                            strdirection = "West";
+                        } else if(heading > 294 && heading <= 337){
+                            strdirection = "North West";
+                        } else if(heading >= 338 || heading <= 22){
+                            strdirection = "North";
                         }
-                        for (int i=0 ; i<3 ; i++)
-                            data[i] = event.values[i];
-                        SensorManager.getRotationMatrix(mR, mI, mGData, mMData);
-                        SensorManager.getOrientation(mR, mOrientation);
-                        float incl = SensorManager.getInclination(mI);
-                        if (mCount++ > 50) {
-                            final float rad2deg = (float)(180.0f/Math.PI);
-                            mCount = 0;
-                            Log.d("Compass", "yaw: " + (int)(mOrientation[0]*rad2deg) +
-                                    "  pitch: " + (int)(mOrientation[1]*rad2deg) +
-                                    "  roll: " + (int)(mOrientation[2]*rad2deg) +
-                                    "  incl: " + (int)(incl*rad2deg)
-                            );
 
-                            float azimuthInRadians = mOrientation[0];
-                            float azimuthInDegress = (float) (Math.toDegrees(azimuthInRadians) + 360) % 360;
-
-                            mcurrentdegree = -azimuthInDegress;
-
-                            int heading = (int) mcurrentdegree;
-                            heading=Math.abs(heading);*/
-
-                            int heading = Math.round(event.values[0]);
-
-                            String strdirection  = "East";
-                            if(heading > 23 && heading <= 67){
-                                strdirection = "North East";
-                            } else if(heading > 68 && heading <= 112){
-                                strdirection = "East";
-                            } else if(heading > 113 && heading <= 167){
-                                strdirection = "South East";
-                            } else if(heading > 168 && heading <= 202){
-                                strdirection = "South";
-                            } else if(heading > 203 && heading <= 247){
-                                strdirection = "South West";
-                            } else if(heading > 248 && heading <= 293){
-                                strdirection = "West";
-                            } else if(heading > 294 && heading <= 337){
-                                strdirection = "North West";
-                            } else if(heading >= 338 || heading <= 22){
-                                strdirection = "North";
-                            }
-
-
-                            /*if (degree == 0 && degree < 45 || degree >= 315
-                                    && degree == 360)
-                            {
-                                compassValue = "Northbound";
-                            }
-                            if (degree >= 45 && degree < 90)
-                            {
-                                compassValue = "NorthEastbound";
-                            }
-                            if (degree >= 90 && degree < 135)
-                            {
-                                compassValue = "Eastbound";
-                            }
-                            if (degree >= 135 && degree < 180)
-                            {
-                                compassValue = "SouthEastbound";
-                            }
-                            if (degree >= 180 && degree < 225)
-                            {
-                                compassValue = "SouthWestbound";
-                            }
-                            if (degree >= 225 && degree < 270)
-                            {
-                                compassValue = "Westbound";
-                            }
-                            if (degree >= 270 && degree < 315)
-                            {
-                                compassValue = "NorthWestbound";
-                            }*/
-
-                            updatearrayitem(config.compass,strdirection);
-                            updatearrayitem(config.orientation,""+heading);
-                            updatearrayitem(config.heading,""+heading);
+                        updatearrayitem(config.compass,strdirection);
+                        updatearrayitem(config.orientation,""+heading);
+                        updatearrayitem(config.heading,""+heading);
                     }
                 }
             });
@@ -1799,6 +1732,14 @@ public abstract class locationawareactivity extends baseactivity implements
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
                 metricitemarraylist.get(i).setMetricTrackValue("" + location.getLongitude());
             }
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree)) {
+                String degree=common.convertlatitude(location.getLatitude());
+                metricitemarraylist.get(i).setMetricTrackValue("" + degree);
+            }
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitudedegree)) {
+                String degree=common.convertlongitude(location.getLongitude());
+                metricitemarraylist.get(i).setMetricTrackValue("" + degree);
+            }
 
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
                 metricitemarraylist.get(i).setMetricTrackValue("" + ((int)doubleTotalDistance));
@@ -1840,12 +1781,12 @@ public abstract class locationawareactivity extends baseactivity implements
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
                 if(location.hasAltitude()){
                     int outValue = (int) (location.getAltitude() / 0.3048);
-                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue);
-                    //metricitemarraylist.get(i).setMetricTrackValue("" + altitude);
+                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue+" ft");
                 }
                 else
                 {
-                    metricitemarraylist.get(i).setMetricTrackValue("" + altitude);
+                    int outValue = (int)altitude;
+                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue+" ft");
                 }
             }
         }
@@ -1877,8 +1818,6 @@ public abstract class locationawareactivity extends baseactivity implements
                     List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                     if (addresses != null) {
                         Address returnedAddress = addresses.get(0);
-                        if(returnedAddress != null)
-                            xdata.getinstance().saveSetting(config.Country,returnedAddress.getCountryName());
 
                         StringBuilder strReturnedAddress = new StringBuilder("");
 

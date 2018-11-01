@@ -697,8 +697,10 @@ public class common {
         } else if (keyname.equalsIgnoreCase("gpsaccuracy") || keyname.equalsIgnoreCase("gpshorizontalaccuracy")) {
             xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("screenwidth")) {
-            xdata.getinstance().saveSetting(config.ScreenSize,((ismetricsselected)?value:"N/A"));
-        } else if (keyname.equalsIgnoreCase("country")) {
+            xdata.getinstance().saveSetting(config.ScreenWidth,((ismetricsselected)?value:"N/A"));
+        }else if (keyname.equalsIgnoreCase("screenheight")) {
+            xdata.getinstance().saveSetting(config.ScreenHeight,((ismetricsselected)?value:"N/A"));
+        }else if (keyname.equalsIgnoreCase("deviceregion")) {
             xdata.getinstance().saveSetting(config.Country,((ismetricsselected)?value:"N/A"));
         }else if (keyname.equalsIgnoreCase("brightness")) {
             xdata.getinstance().saveSetting(config.Brightness,((ismetricsselected)?value:"N/A"));
@@ -718,7 +720,7 @@ public class common {
             xdata.getinstance().saveSetting(config.SystemUptime,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase("battery")) {
             xdata.getinstance().saveSetting(config.Battery,((ismetricsselected)?value:"N/A"));
-        } else if (keyname.equalsIgnoreCase(config.cpuusagesystem) || keyname.equalsIgnoreCase(config.cpuusageuser)) {
+        } else if (keyname.equalsIgnoreCase(config.cpuusageuser)) {
             xdata.getinstance().saveSetting(config.CPUUsage,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase(config.compass)) {
             xdata.getinstance().saveSetting(config.Orientation,((ismetricsselected)?value:"N/A"));
@@ -729,7 +731,12 @@ public class common {
             xdata.getinstance().saveSetting(config.Latitude,(ismetricsselected)?value:"");
         } else if (keyname.equalsIgnoreCase("gpslongitude")) {
             xdata.getinstance().saveSetting(config.Longitude,(ismetricsselected)?value:"");
-        }else if (keyname.equalsIgnoreCase(config.gpsaltitude)) {
+        }else if (keyname.equalsIgnoreCase(config.gpslatitudedegree)) {
+            xdata.getinstance().saveSetting(config.LatitudeDegree,(ismetricsselected)?value:"");
+        } else if (keyname.equalsIgnoreCase(config.gpslongitudedegree)) {
+            xdata.getinstance().saveSetting(config.LongitudeDegree,(ismetricsselected)?value:"");
+        }
+        else if (keyname.equalsIgnoreCase(config.gpsaltitude)) {
             xdata.getinstance().saveSetting(config.Altitude,(ismetricsselected)?value:"");
         } else if(keyname.equalsIgnoreCase("gpsaccuracy")){
             xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"N/A"));
@@ -743,8 +750,7 @@ public class common {
             xdata.getinstance().saveSetting(config.acceleration_y,((ismetricsselected)?value:"N/A"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_z)) {
             xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"N/A"));
-        }
-        else if (keyname.equalsIgnoreCase("connectionspeed")) {
+        } else if (keyname.equalsIgnoreCase("connectionspeed")) {
             xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"N/A"));
         }
     }
@@ -797,6 +803,10 @@ public class common {
             metricItemName = "screenheight";
         } else if (key.equalsIgnoreCase("gpslatitude")) {
             metricItemName = "gpslatitude";
+        }else if (key.equalsIgnoreCase(config.gpslatitudedegree)) {
+            metricItemName = config.gpslatitudedegree;
+        }else if (key.equalsIgnoreCase(config.gpslongitudedegree)) {
+            metricItemName = config.gpslongitudedegree;
         } else if (key.equalsIgnoreCase("gpslongitude")) {
             metricItemName = "gpslongitude";
         } else if (key.equalsIgnoreCase("gpsquality")) {
@@ -1419,15 +1429,14 @@ public class common {
                                              final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
 
 
-            final String latitude=xdata.getinstance().getSetting(config.Latitude);
+            final String latitude=xdata.getinstance().getSetting(config.LatitudeDegree);
             if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("N/A")))
             {
 
                 txt_latitude.post(new Runnable() {
                     @Override
                     public void run() {
-                        double latt = Double.valueOf(latitude);
-                        txt_latitude.setText(config.Latitude+"\n"+ convertlatitude(latt));
+                        txt_latitude.setText(config.Latitude+"\n"+ latitude);
                     }
                 });
 
@@ -1443,14 +1452,13 @@ public class common {
 
             }
 
-            final String longitude=xdata.getinstance().getSetting(config.Longitude);
+            final String longitude=xdata.getinstance().getSetting(config.LongitudeDegree);
             if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("N/A")))
             {
-                final double longg = Double.valueOf(longitude);
                 txt_longitude.post(new Runnable() {
                     @Override
                     public void run() {
-                        txt_longitude.setText(config.Longitude+"\n"+ convertlongitude(longg));
+                        txt_longitude.setText(config.Longitude+"\n"+ longitude);
                     }
                 });
 
@@ -1472,7 +1480,7 @@ public class common {
                     final String altitude=xdata.getinstance().getSetting(config.Altitude);
                     if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("N/A")))
                     {
-                        txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+" ft");
+                        txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+"");
                     }
                     else
                     {
@@ -1484,7 +1492,18 @@ public class common {
             txt_heading.post(new Runnable() {
                 @Override
                 public void run() {
-                    txt_heading.setText(config.Heading+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Heading)));
+
+                    String value=getxdatavalue(xdata.getinstance().getSetting(config.Heading));
+                    if((! value.equalsIgnoreCase("N/A")) || (! value.equalsIgnoreCase("NA")))
+                    {
+                        double heading=Double.parseDouble(value);
+                        int headingg=(int)heading;
+                        txt_heading.setText(config.Heading+"\n"+headingg);
+                    }
+                    else
+                    {
+                        txt_heading.setText(config.Heading+"\n"+value);
+                    }
                 }
             });
 
@@ -1526,11 +1545,12 @@ public class common {
                                       final TextView txt_systemuptime, final TextView txt_battery) {
 
 
-                final int[] widthHeight= getScreenWidthHeight(applicationviavideocomposer.getactivity());
+                //final int[] widthHeight= getScreenWidthHeight(applicationviavideocomposer.getactivity());
                 txt_screensize.post(new Runnable() {
                     @Override
                     public void run() {
-                        txt_screensize.setText(config.ScreenSize+"\n"+widthHeight[0] +" *" + widthHeight[1]);
+                        txt_screensize.setText(config.ScreenSize+"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +
+                                xdata.getinstance().getSetting(config.ScreenHeight));
                     }
                 });
                 txt_phonetype.post(new Runnable() {
@@ -1738,7 +1758,7 @@ public class common {
     public static String[] getmetricesarray()
     {
         String[] items={"battery","phonetype","imeinumber","simserialnumber","version","osversion","softwareversion","model",
-                "manufacturer","brightness","gpslatitude","gpslongitude",config.gpsaltitude,"gpsquality","carrier","screenwidth",
+                "manufacturer","brightness","gpslatitude","gpslongitude",config.gpslatitudedegree,config.gpslongitudedegree,config.gpsaltitude,"gpsquality","carrier","screenwidth",
                 "screenheight","systemuptime","multitaskingenabled","proximitysensorenabled","pluggedin","devicetime",
                 "deviceregion","devicelanguage","devicecurrency","timezone","headphonesattached","accessoriesattached",
                 "nameattachedaccessories","attachedaccessoriescount","totalspace","usedspace","memoryusage","freespace",

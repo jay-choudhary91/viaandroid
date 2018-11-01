@@ -118,7 +118,7 @@
                 >
 
 
-                <include layout="@layout/layout_drawer_content"></include>
+                <include layout="@layout/layout_drawer_content_composer"></include>
 
             </LinearLayout>
 

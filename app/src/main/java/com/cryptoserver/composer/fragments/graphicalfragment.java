@@ -152,7 +152,6 @@ public class graphicalfragment extends basefragment implements
     FrameLayout googlemap;
     @BindView(R.id.recyview_encryption)
     RecyclerView recyview_encryption;
-    MediaPlayer player;
     @BindView(R.id.scrollview_graphical)
     ScrollView scrollview_graphical;
     @BindView(R.id.linechart)
@@ -160,7 +159,6 @@ public class graphicalfragment extends basefragment implements
     View rootview;
     private float currentDegree = 0f;
 
-    // device sensor manager
     private SensorManager msensormanager;
     private Sensor maccelerometersensormanager;
 
@@ -169,8 +167,6 @@ public class graphicalfragment extends basefragment implements
     RecyclerView.LayoutManager encryptionmanager;
     ImageView img_compass;
     GoogleMap mGoogleMap;
-    Location CurrentLocationChange = null;
-    LatLng lastlocationchange = null;
     private ArrayList<graphicalmodel> frameslist = new ArrayList<>();
 
     VisualizerView myvisualizerview;
@@ -213,7 +209,6 @@ public class graphicalfragment extends basefragment implements
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
 
             loadMap();
-       //     setvisualizer();
             setchartdata();
         }
         return rootview;

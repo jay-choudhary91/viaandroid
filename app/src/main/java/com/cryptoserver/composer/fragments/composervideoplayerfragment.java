@@ -1172,6 +1172,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
                             metricItemArraylist.get(j).getMetricTrackValue(),true);
                 }
 
+                selectedmetrics=selectedmetrics+"\n";
+
                 if(mmetricsitems.size() == 0 && (! selectedmetrics.toString().trim().isEmpty()))
                 {
                     mmetricsitems.add(new videomodel(selectedmetrics));
@@ -1184,11 +1186,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
             if(fragmentgraphic != null)
                 fragmentgraphic.setmetricesdata();
         }
-        /*if(fragment_graphic_container .getVisibility() == View.VISIBLE)
-        {
-            if(fragmentgraphic != null)
-                fragmentgraphic.setmetricesdata();
-        }*/
     }
 
     @Override

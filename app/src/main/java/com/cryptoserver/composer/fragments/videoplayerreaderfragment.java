@@ -354,6 +354,15 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         return rootview;
     }
 
+    private boolean isLastItemDisplaying(RecyclerView recyclerView) {
+        if (recyclerView.getAdapter().getItemCount() != 0) {
+            int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+            if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1)
+                return true;
+        }
+        return false;
+    }
+
     // Implement scroll listener
     private void implementScrollListener() {
         recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -1478,6 +1487,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
                             metricItemArraylist.get(j).getMetricTrackValue(),true);
                 }
+
+                selectedmetrics=selectedmetrics+"\n";
 
                 if(mmetricsitems.size() == 0 && (! selectedmetrics.toString().trim().isEmpty()))
                 {
