@@ -1179,6 +1179,13 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     mmetricsitems.add(new videomodel(selectedmetrics));
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                 }
+
+                if((player != null) && (! player.isPlaying()) && (! selectedmetrics.toString().trim().isEmpty()))
+                {
+                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                    selectedmetrics="";
+                }
             }
         }
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)

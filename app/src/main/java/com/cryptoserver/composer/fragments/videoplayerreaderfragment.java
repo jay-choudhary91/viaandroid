@@ -1495,6 +1495,13 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     mmetricsitems.add(new videomodel(selectedmetrics));
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                 }
+
+                if((player != null) && (! player.isPlaying()) && (! selectedmetrics.toString().trim().isEmpty()))
+                {
+                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                    selectedmetrics="";
+                }
             }
         }
 
