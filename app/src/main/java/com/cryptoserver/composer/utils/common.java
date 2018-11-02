@@ -1811,4 +1811,45 @@ public class common {
 
     }
 
+    public static String getCurrentDate(){
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(c);
+
+        return formattedDate;
+    }
+
+    public static String[] getcurrentdatewithtimezone(){
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"),
+                Locale.getDefault());
+        Date currentLocalTime = calendar.getTime();
+        DateFormat date = new SimpleDateFormat("Z");
+        String localTime = date.format(currentLocalTime);
+
+
+        int convertedVal = Integer.parseInt(localTime);
+
+        if(convertedVal > 0){
+            convertedVal=convertedVal/100;
+            localTime = "+" + ""+convertedVal;
+        }else{
+
+            convertedVal=convertedVal/100;
+
+            localTime =  "" + convertedVal;
+        }
+
+        DateFormat date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault());
+
+        String currenttime[] = {date1.format(currentLocalTime),localTime };
+
+
+        return currenttime;
+
+    }
+
+
 }

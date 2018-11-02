@@ -614,7 +614,7 @@ public abstract class locationawareactivity extends baseactivity implements
                         }
 
                         dbtoxapiupdatecounter++;
-                        if(dbtoxapiupdatecounter > 5)
+                        if(dbtoxapiupdatecounter > 1)
                         {
                             dbtoxapiupdatecounter=0;
                             fetchmetadatadb();

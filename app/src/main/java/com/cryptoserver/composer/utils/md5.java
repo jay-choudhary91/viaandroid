@@ -125,7 +125,7 @@ public class md5
         return md5;
     }
 
-    public static final String md5(final String s) {
+    public static final String calculatestaringmd5(final String s) {
         final String md5 = "md5";
         try {
             // Create md5 Hash

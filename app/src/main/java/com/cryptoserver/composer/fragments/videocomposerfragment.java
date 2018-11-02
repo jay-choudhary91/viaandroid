@@ -205,12 +205,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                       randomstring gen = new randomstring(20, ThreadLocalRandom.current());
                                       videokey=gen.nextString();
                                       String keyvalue= getkeyvalue(byteArray);
+                                      savestartvideoinfo(keyvalue,keytype);
 
-                                     if(firsthashvalue){
-                                         savestartvideoinfo(keyvalue,keytype);
-                                         firsthashvalue = false;
-                                     }
-                                      savevideostart(videokey,keytype,keyvalue);
 
                                   }
 
@@ -1707,21 +1703,29 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if(apicurrentduration > apicallduration)
                     apicurrentduration=apicallduration;
 
-                /*if(selectedmetrices.toString().trim().length() == 0)
-                {
-
-                }*/
 
                 ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                 getselectedmetrics(mlocalarraylist);
 
-                if(apicurrentduration == apicallduration)
+                JSONArray metricesarray=new JSONArray();
+                if(metadatametricesjson.length() > 0)
+                {
+                    try {
+                        metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
+                        muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
+                        savevideoupdate(mlocalarraylist,metricesarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                /*if(apicurrentduration == apicallduration)
                 {
                     //ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                     //getselectedmetrics(mlocalarraylist);
                     muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
                     savevideoupdate(mlocalarraylist);
-                }
+                }*/
 
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
@@ -1733,8 +1737,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
                     }
                 });
-
-
 
                 Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
                 if(apicurrentduration == apicallduration)
@@ -1827,21 +1829,30 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             myHandler.removeCallbacks(myRunnable);
     }
 
-    public void savevideoupdate(ArrayList<metricmodel> mmetriceslist)
+    public void savevideoupdate(ArrayList<metricmodel> mmetriceslist, JSONArray metricesjsonarray)
     {
         JSONArray hasharray=new JSONArray();
         JSONArray metricesarray=new JSONArray();
+        String currentdate[] = common.getcurrentdatewithtimezone();
+        String sequenceno = "",sequencehash = "", metrichash = "" ;
+
         {
 
             for(int i=0;i<muploadframelist.size();i++)
             {
                 JSONObject object=new JSONObject();
                 try {
-                    object.put("framenumber",muploadframelist.get(i).getFramenumber());
+
+                    Log.e("framenumber", muploadframelist.get(i).getFramenumber());
+
+                    sequenceno = muploadframelist.get(i).getFramenumber();
+                    sequencehash = muploadframelist.get(i).getHashvalue();
+                   /* object.put("framenumber",muploadframelist.get(i).getFramenumber());
                     object.put("meta",muploadframelist.get(i).getMeta());
                     object.put("hashvalue",muploadframelist.get(i).getHashvalue());
                     object.put("hashmethod",muploadframelist.get(i).getHashmethod());
-                    hasharray.put(object);
+                    hasharray.put(object);*/
+
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -1851,7 +1862,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             Log.e("Json array ",""+hasharray.toString());
         }
 
-        {
+        /*{
+
             for(int i=0;i<mmetriceslist.size();i++)
             {
                 JSONObject object=new JSONObject();
@@ -1863,7 +1875,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
 
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(getActivity());
@@ -1877,8 +1889,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-            mdbhelper.insertframemetricesinfo(videokey,hasharray.toString(),""+metricesarray.toString(),
-                    "","",config.type_video_update);
+            /*mdbhelper.insertframemetricesinfo(videokey,hasharray.toString(),""+metricesarray.toString(),
+                    "","",config.type_video_update);*/
+
+            metrichash = md5.calculatestaringmd5(metricesarray.toString());
+            mdbhelper.insertframemetricesinfo("", metrichash ,keytype,videokey,""+metricesjsonarray.toString(),currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"");
 
             mdbhelper.close();
 
@@ -1902,7 +1917,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-            mdbhelper.insertframemetricesinfo(videokey,hashmethod,hashvalue,hashmethod,hashvalue,config.type_video_start);
+
+            String currentdate = common.getCurrentDate();
+
+
+            // mdbhelper.insertframemetricesinfo(videokey,hashmethod,hashvalue,hashmethod,hashvalue,config.type_video_start);
+            mdbhelper.insertframemetricesinfo("", hashvalue ,hashmethod,videokey,"",currentdate,"","","","","","");
 
             mdbhelper.close();
         } catch (Exception e) {
@@ -1912,22 +1932,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
 
     public void savestartvideoinfo(String firsthash, String hashmethod)
-        {
-            if (mdbhelper == null) {
-                mdbhelper = new databasemanager(getActivity());
-                mdbhelper.createDatabase();
-            }
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(getActivity());
+            mdbhelper.createDatabase();
+        }
 
-            try {
-                mdbhelper.open();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            mdbhelper.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            try {
+        try {
 
 
-                // String headerdic[] = {"fps"  " 30"  , "firsthash :  " + firsthash  , "hashmethod : " + keytype  ,  "  name : "};
+            // String headerdic[] = {"fps"  " 30"  , "firsthash :  " + firsthash  , "hashmethod : " + keytype  ,  "  name : "};
 
                /* metadict["headers"] = headerdicjson
                 metadict["localkey"] = self.currentVideoKey
@@ -1937,26 +1957,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 metadict["type"] = "video"
                 metadict["videokey"] = ""*/
 
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("fps","30");
-                map.put("firsthash", firsthash);
-                map.put("hashmethod",keytype);
-                map.put("name","");
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("fps","30");
+            map.put("firsthash", firsthash);
+            map.put("hashmethod",keytype);
+            map.put("name","");
 
-                localkey = common.getSaltString();
+            localkey = common.getSaltString();
 
-                Gson gson = new Gson();
-                String json = gson.toJson(map);
+            Gson gson = new Gson();
+            String json = gson.toJson(map);
 
-                mdbhelper.insertstartvideoinfo(json,"video","local",videokey,"","","","0",config.type_video_start);
+            //common.getCurrentDate();
+            String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
 
-                mdbhelper.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            String devicestartdate = currenttimewithoffset[0];
+            String timeoffset = currenttimewithoffset[1];
+
+            mdbhelper.insertstartvideoinfo(json,"video","local",videokey,"","","","0",config.type_video_start,devicestartdate,devicestartdate,timeoffset);
+
+            mdbhelper.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void updatestartvideoinfo(String firsthash, String file_name)
+    public void updatestartvideoinfo(String updatefirsthash, String file_name)
     {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(getActivity());
@@ -1973,7 +1999,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("fps","30");
-            map.put("firsthash", firsthash);
+            map.put("firsthash", updatefirsthash);
             map.put("hashmethod",keytype);
             map.put("name",file_name);
 
@@ -1984,7 +2010,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             //fetchstartvideoinfo();
 
-           //mdbhelper.insertstartvideoinfo(json,"video","local",""+common.getSaltString(),"","","");
+            //mdbhelper.insertstartvideoinfo(json,"video","local",""+common.getSaltString(),"","","");
             mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -2005,7 +2031,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-            mdbhelper.insertframemetricesinfo(videokey,"","","","",config.type_video_complete);
+            //mdbhelper.insertframemetricesinfo("","","","","",config.type_video_complete);
+            //mdbhelper.insertframemetricesinfo(videokey,"","","","",config.type_video_complete);
 
             mdbhelper.close();
         } catch (Exception e) {
