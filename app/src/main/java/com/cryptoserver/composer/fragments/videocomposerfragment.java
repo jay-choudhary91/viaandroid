@@ -206,8 +206,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                       videokey=gen.nextString();
                                       String keyvalue= getkeyvalue(byteArray);
                                       savestartvideoinfo(keyvalue,keytype);
-
-
                                   }
 
                                   if(mframetorecordcount == currentframenumber)
