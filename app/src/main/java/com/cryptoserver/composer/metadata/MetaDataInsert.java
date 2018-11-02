@@ -11,6 +11,8 @@ import com.coremedia.iso.boxes.MetaBox;
 import com.coremedia.iso.boxes.MovieBox;
 import com.coremedia.iso.boxes.UserDataBox;
 import com.coremedia.iso.boxes.apple.AppleItemListBox;
+import com.googlecode.mp4parser.boxes.apple.AppleAlbumBox;
+import com.googlecode.mp4parser.boxes.apple.AppleDescriptionBox;
 import com.googlecode.mp4parser.boxes.apple.AppleNameBox;
 import com.googlecode.mp4parser.util.Path;
 
@@ -123,12 +125,10 @@ public class MetaDataInsert {
         }
         // Got Apple List Box
 
-        AppleNameBox nam;
+        AppleAlbumBox nam;
         if ((nam = Path.getPath(ilst, "©nam")) == null) {
-            nam = new AppleNameBox();
+            nam = new AppleAlbumBox();
         }
-        nam.setDataCountry(0);
-        nam.setDataLanguage(0);
         nam.setValue(data);
         ilst.addBox(nam);
 

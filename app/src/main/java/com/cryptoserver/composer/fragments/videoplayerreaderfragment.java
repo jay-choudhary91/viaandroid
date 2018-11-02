@@ -42,7 +42,6 @@ import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.metadata.MetaDataRead;
 import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
@@ -59,8 +58,6 @@ import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
-import org.jcodec.containers.mp4.boxes.MetaValue;
-import org.jcodec.movtool.MetadataEditor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -70,7 +67,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -157,7 +153,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     boolean runmethod = false;
     private LinearLayoutManager mLayoutManager;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
-
+    public int selectedsection=1;
+    public boolean isvideocompleted=false;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -196,7 +193,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 recyview_metrices.setLayoutManager(mLayoutManager);
                 recyview_metrices.setItemAnimator(new DefaultItemAnimator());
                 recyview_metrices.setAdapter(mhashesadapter);
-                implementScrollListener();
+                implementscrolllistener();
             }
 
             {
@@ -354,17 +351,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         return rootview;
     }
 
-    private boolean isLastItemDisplaying(RecyclerView recyclerView) {
-        if (recyclerView.getAdapter().getItemCount() != 0) {
-            int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
-            if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1)
-                return true;
-        }
-        return false;
-    }
-
     // Implement scroll listener
-    private void implementScrollListener() {
+    private void implementscrolllistener() {
         recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -414,43 +402,53 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         switch (view.getId())
         {
             case R.id.txt_slot1:
-                scrollview_metrices.setVisibility(View.INVISIBLE);
-                scrollview_hashes.setVisibility(View.INVISIBLE);
-                fragment_graphic_container.setVisibility(View.INVISIBLE);
+                if(selectedsection != 1) {
+                    selectedsection = 1;
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+                    fragment_graphic_container.setVisibility(View.INVISIBLE);
 
-                recyview_hashes.setVisibility(View.VISIBLE);
-                recyview_metrices.setVisibility(View.INVISIBLE);
+                    recyview_hashes.setVisibility(View.VISIBLE);
+                    recyview_metrices.setVisibility(View.INVISIBLE);
 
-                txt_metrics.setVisibility(View.INVISIBLE);
-                txt_hashes.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
-                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+                }
+
                 break;
 
             case R.id.txt_slot2:
-                scrollview_metrices.setVisibility(View.INVISIBLE);
-                scrollview_hashes.setVisibility(View.INVISIBLE);
-                fragment_graphic_container.setVisibility(View.INVISIBLE);
+                if(selectedsection != 2) {
+                    selectedsection = 2;
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+                    fragment_graphic_container.setVisibility(View.INVISIBLE);
 
-                txt_hashes.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
 
-                recyview_metrices.setVisibility(View.VISIBLE);
-                recyview_hashes.setVisibility(View.INVISIBLE);
+                    recyview_metrices.setVisibility(View.VISIBLE);
+                    recyview_hashes.setVisibility(View.INVISIBLE);
 
-                resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
+                    resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
+                }
+
                 break;
 
             case R.id.txt_slot3:
-                fragment_graphic_container.setVisibility(View.VISIBLE);
-                scrollview_metrices.setVisibility(View.INVISIBLE);
-                scrollview_hashes.setVisibility(View.INVISIBLE);
-                recyview_metrices.setVisibility(View.INVISIBLE);
-                recyview_hashes.setVisibility(View.INVISIBLE);
-                txt_hashes.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
-                resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
-
+                if(selectedsection != 3) {
+                    selectedsection = 3;
+                    fragment_graphic_container.setVisibility(View.VISIBLE);
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+                    recyview_metrices.setVisibility(View.INVISIBLE);
+                    recyview_hashes.setVisibility(View.INVISIBLE);
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+                }
 
                 break;
         }
@@ -737,6 +735,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
     @Override
     public void onPrepared(MediaPlayer mp)
     {
+        isvideocompleted=false;
         maxincreasevideoduration=0;
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
@@ -1175,15 +1174,15 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
         String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         String metadatawriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
-        String metadatatitle=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        String metadataAlbum=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
 
         if(metadatawriter != null && (! metadatawriter.trim().isEmpty()) && (! metadatawriter.equalsIgnoreCase("null")))
         {
             parsemetadata(metadatawriter);
         }
-        else if(metadatatitle != null && (! metadatatitle.trim().isEmpty()) && (! metadatatitle.equalsIgnoreCase("null")))
+        else if(metadataAlbum != null && (! metadataAlbum.trim().isEmpty()) && (! metadataAlbum.equalsIgnoreCase("null")))
         {
-            parsemetadata(metadatatitle);
+            parsemetadata(metadataAlbum);
         }
 
         long timeInmillisec=0;
@@ -1469,7 +1468,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         currentduration=currentduration/frameduration;
 
         int n=(int)currentduration;
-        if(n> metricmainarraylist.size())
+        if(n> metricmainarraylist.size() || isvideocompleted)
             n=metricmainarraylist.size();
 
         Log.e("Current duration ",""+n+" "+currentduration+" "+metricmainarraylist.size());
@@ -1517,6 +1516,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        isvideocompleted=true;
         controller.setplaypauuse();
         currentvideoduration = videoduration;
         currentvideodurationseconds = currentvideoduration / 1000;

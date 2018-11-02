@@ -2,6 +2,8 @@ package com.cryptoserver.composer.metadata;
 
 import com.coremedia.iso.IsoFile;
 import com.cryptoserver.composer.utils.Path;
+import com.googlecode.mp4parser.boxes.apple.AppleAlbumBox;
+import com.googlecode.mp4parser.boxes.apple.AppleDescriptionBox;
 import com.googlecode.mp4parser.boxes.apple.AppleNameBox;
 
 import java.io.File;
@@ -34,7 +36,7 @@ public class MetaDataRead {
         String xml="";
         try {
             IsoFile isoFile = new IsoFile(videoFilePath);
-            AppleNameBox nam = Path.getPath(isoFile, "/moov[0]/udta[0]/meta[0]/ilst/©nam");
+            AppleAlbumBox nam = Path.getPath(isoFile, "/moov[0]/udta[0]/meta[0]/ilst/©nam");
             xml = nam.getValue();
             isoFile.close();
         }catch (Exception e)

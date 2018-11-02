@@ -1,15 +1,12 @@
 package com.cryptoserver.composer.fragments;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -32,22 +29,16 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.metadata.MetaDataRead;
 import com.cryptoserver.composer.models.arraycontainer;
-import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
-import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
@@ -59,24 +50,17 @@ import com.cryptoserver.composer.utils.xdata;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
-import org.jcodec.containers.mp4.boxes.MetaValue;
-import org.jcodec.movtool.MetadataEditor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by devesh on 21/8/18.
@@ -140,6 +124,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private boolean isinbackground=false;
     private LinearLayoutManager mLayoutManager;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
+    public int selectedsection=1;
+    public boolean isvideocompleted=false;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -173,7 +159,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 recyview_metrices.setLayoutManager(mLayoutManager);
                 recyview_metrices.setItemAnimator(new DefaultItemAnimator());
                 recyview_metrices.setAdapter(mhashesadapter);
-                implementScrollListener();
+                implementscrolllistener();
             }
 
             {
@@ -262,7 +248,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     }
 
     // Implement scroll listener
-    private void implementScrollListener() {
+    private void implementscrolllistener() {
         recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -294,7 +280,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
         m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
         String metadataWriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
-        String metadataTitle=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        String metadataAlbum=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         for (int i = 0; i < 1000; i++){
             //only Metadata != null is printed!
             if(m_mediaMetadataRetriever.extractMetadata(i)!=null) {
@@ -306,9 +292,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
         {
             parsemetadata(metadataWriter);
         }
-        else if(metadataTitle != null && (! metadataTitle.trim().isEmpty()) && (! metadataTitle.equalsIgnoreCase("null")))
+        else if(metadataAlbum != null && (! metadataAlbum.trim().isEmpty()) && (! metadataAlbum.equalsIgnoreCase("null")))
         {
-            parsemetadata(metadataTitle);
+            parsemetadata(metadataAlbum);
         }
     }
 
@@ -387,43 +373,53 @@ public class composervideoplayerfragment extends basefragment implements Surface
         switch (view.getId())
         {
             case R.id.txt_slot1:
-                scrollview_metrices.setVisibility(View.INVISIBLE);
-                scrollview_hashes.setVisibility(View.INVISIBLE);
-                fragment_graphic_container.setVisibility(View.INVISIBLE);
+                if(selectedsection != 1) {
+                    selectedsection = 1;
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+                    fragment_graphic_container.setVisibility(View.INVISIBLE);
 
-                recyview_hashes.setVisibility(View.VISIBLE);
-                recyview_metrices.setVisibility(View.INVISIBLE);
+                    recyview_hashes.setVisibility(View.VISIBLE);
+                    recyview_metrices.setVisibility(View.INVISIBLE);
 
-                txt_metrics.setVisibility(View.INVISIBLE);
-                txt_hashes.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
-                resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+                }
+
                 break;
 
             case R.id.txt_slot2:
-                scrollview_metrices.setVisibility(View.INVISIBLE);
-                scrollview_hashes.setVisibility(View.INVISIBLE);
-                fragment_graphic_container.setVisibility(View.INVISIBLE);
+                if(selectedsection != 2) {
+                    selectedsection = 2;
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+                    fragment_graphic_container.setVisibility(View.INVISIBLE);
 
-                txt_hashes.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
 
-                recyview_metrices.setVisibility(View.VISIBLE);
-                recyview_hashes.setVisibility(View.INVISIBLE);
+                    recyview_metrices.setVisibility(View.VISIBLE);
+                    recyview_hashes.setVisibility(View.INVISIBLE);
 
-                resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
+                    resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
+                }
+
                 break;
 
             case R.id.txt_slot3:
-                fragment_graphic_container.setVisibility(View.VISIBLE);
-                scrollview_metrices.setVisibility(View.INVISIBLE);
-                scrollview_hashes.setVisibility(View.INVISIBLE);
-                recyview_metrices.setVisibility(View.INVISIBLE);
-                recyview_hashes.setVisibility(View.INVISIBLE);
-                txt_hashes.setVisibility(View.INVISIBLE);
-                txt_metrics.setVisibility(View.INVISIBLE);
-                resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
-
+                if(selectedsection != 3) {
+                    selectedsection = 3;
+                    fragment_graphic_container.setVisibility(View.VISIBLE);
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+                    recyview_metrices.setVisibility(View.INVISIBLE);
+                    recyview_hashes.setVisibility(View.INVISIBLE);
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+                }
                 break;
         }
     }
@@ -709,6 +705,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     @Override
     public void onPrepared(MediaPlayer mp)
     {
+        isvideocompleted=false;
         maxincreasevideoduration=0;
         controller.setMediaPlayer(this);
         controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
@@ -1155,7 +1152,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         currentduration=currentduration/frameduration;
 
         int n=(int)currentduration;
-        if(n> metricmainarraylist.size())
+        if(n> metricmainarraylist.size() || isvideocompleted)
             n=metricmainarraylist.size();
 
         for(int i=0;i<n;i++)
@@ -1197,6 +1194,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
+        isvideocompleted=true;
         controller.setplaypauuse();
         maxincreasevideoduration=videoduration;
         currentvideoduration = videoduration;

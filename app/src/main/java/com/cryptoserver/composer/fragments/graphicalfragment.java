@@ -10,7 +10,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
@@ -65,9 +64,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 
@@ -166,7 +163,7 @@ public class graphicalfragment extends basefragment implements
     LinearLayout layout_orientation;
     RecyclerView.LayoutManager encryptionmanager;
     ImageView img_compass;
-    GoogleMap mGoogleMap;
+    GoogleMap mgooglemap;
     private ArrayList<graphicalmodel> frameslist = new ArrayList<>();
 
     VisualizerView myvisualizerview;
@@ -208,7 +205,7 @@ public class graphicalfragment extends basefragment implements
             if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
 
-            loadMap();
+            loadmap();
             setchartdata();
         }
         return rootview;
@@ -319,12 +316,12 @@ public class graphicalfragment extends basefragment implements
         return R.layout.fragment_graphicalfragment;
     }
 
-    private void loadMap() {
+    private void loadmap() {
         SupportMapFragment mapFragment = new SupportMapFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.googlemap, mapFragment).commit();
 
-        if (mGoogleMap == null) {
+        if (mgooglemap == null) {
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
@@ -332,23 +329,23 @@ public class graphicalfragment extends basefragment implements
                 }
             });
         } else {
-            setMap(mGoogleMap);
+            setMap(mgooglemap);
         }
     }
 
     private void setMap(GoogleMap googleMap) {
-        this.mGoogleMap = googleMap;
-        mGoogleMap.getUiSettings().setZoomControlsEnabled(false);
-        this.mGoogleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        this.mgooglemap = googleMap;
+        mgooglemap.getUiSettings().setZoomControlsEnabled(false);
+        this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
     }
 
     private void populateUserCurrentLocation(final LatLng location) {
         // DeviceUser user = DeviceUserManager.getInstance().getUser();
-        if (mGoogleMap == null)
+        if (mgooglemap == null)
             return;
 
         googlemap.setVisibility(View.VISIBLE);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
+        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -359,9 +356,9 @@ public class graphicalfragment extends basefragment implements
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
         } else {
-            mGoogleMap.setMyLocationEnabled(true);
-            mGoogleMap.getUiSettings().setMyLocationButtonEnabled(false);
-            // mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.8497, 75.7692), 5));
+            mgooglemap.setMyLocationEnabled(true);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+            // mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.8497, 75.7692), 5));
         }
     }
 
