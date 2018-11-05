@@ -6,7 +6,7 @@
     android:id="@+id/audio_listlayout"
     android:background="@color/videolist_background">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_audiolist"
         android:layout_width="match_parent"
@@ -14,6 +14,15 @@
         android:layout_marginTop="50dp">
 
     </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:text="audio list"/>
 
 
 </RelativeLayout>
