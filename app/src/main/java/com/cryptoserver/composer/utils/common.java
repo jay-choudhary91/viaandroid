@@ -62,6 +62,8 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
 import com.cryptoserver.composer.models.metricmodel;
 
+import org.json.JSONArray;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -114,6 +116,8 @@ public class common {
     public static final String NETWORK_EHRPD = "EHRPD (3G)";
     public static final String NETWORK_HSPAP = "HSPAP (3G)";
     public static final String NETWORK_UNKOWN = "Unknown";
+
+    public static final int maxlength = 400;
 
     public static final String broadcastreceivervideo = "broadcastreceivervideo";
 
@@ -1819,6 +1823,30 @@ public class common {
         String formattedDate = df.format(c);
 
         return formattedDate;
+    }
+
+    public static JSONArray getjson(JSONArray metadatametricesjson)
+    {
+        JSONArray jsonArray=new JSONArray();
+        try {
+            Log.e("Meta data length ",""+metadatametricesjson.length());
+            if(metadatametricesjson.length() > maxlength)
+            {
+                int n=maxlength;
+                for(int i=n;n>0;n--)
+                {
+                    jsonArray.put(metadatametricesjson.get(i));
+                }
+            }
+            else
+            {
+                jsonArray=metadatametricesjson;
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return jsonArray;
     }
 
     public static String[] getcurrentdatewithtimezone(){

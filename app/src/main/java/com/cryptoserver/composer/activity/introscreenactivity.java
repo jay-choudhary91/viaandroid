@@ -27,11 +27,6 @@ import com.cryptoserver.composer.views.pagercustomduration;
 
 import java.util.Date;
 
-import fr.bmartel.speedtest.SpeedTestReport;
-import fr.bmartel.speedtest.SpeedTestSocket;
-import fr.bmartel.speedtest.inter.ISpeedTestListener;
-import fr.bmartel.speedtest.model.SpeedTestError;
-
 public class introscreenactivity extends AppCompatActivity {
 
     int currentselected;

@@ -321,7 +321,7 @@ public class fragmentvideolist extends basefragment {
                                             long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
                                             long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
                                             videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                            if(second > 0)
+                                            if(second > 0 || minute > 0 || hours > 0)
                                             {
                                                 videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
                                                 isVideo=true;

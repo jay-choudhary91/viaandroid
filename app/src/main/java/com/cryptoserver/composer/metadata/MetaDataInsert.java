@@ -1,6 +1,8 @@
 package com.cryptoserver.composer.metadata;
 
 
+import android.util.Log;
+
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.ChunkOffsetBox;
@@ -91,6 +93,7 @@ public class MetaDataInsert {
 
         boolean correctOffset = needsOffsetCorrection(isoFile);
         long sizeBefore = moov.getSize();
+        Log.e("Size before ",""+sizeBefore);
         long offset = 0;
         for (Box box : isoFile.getBoxes()) {
             if ("moov".equals(box.getType())) {
@@ -133,6 +136,7 @@ public class MetaDataInsert {
         ilst.addBox(nam);
 
         long sizeAfter = moov.getSize();
+        Log.e("Size after ",""+sizeAfter);
         long diff = sizeAfter - sizeBefore;
         // This is the difference of before/after
 
@@ -153,9 +157,11 @@ public class MetaDataInsert {
         if (diff != 0) {
             // this is not good: We have to insert bytes in the middle of the file
             // and this costs time as it requires re-writing most of the file's data
+            Log.e("Difference ",""+diff);
             fc = splitFileAndInsert(videoFile, offset, sizeAfter - sizeBefore);
         } else {
             // simple overwrite of something with the file
+            Log.e("Difference ",""+diff);
             fc = new RandomAccessFile(videoFile, "rw").getChannel();
         }
         fc.position(offset);

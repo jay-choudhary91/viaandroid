@@ -1130,13 +1130,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
                 mMediaRecorder.reset();
 
-                try {
-                    MetaDataInsert.writeRandomMetadata(lastrecordedvideo.getAbsolutePath(),""+metadatametricesjson.toString());
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
                 startPreview();
                 stopvideotimer();
                 madapterclick.onItemClicked(null,1);
@@ -1149,6 +1142,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        try {
+                            MetaDataInsert.writeRandomMetadata(lastrecordedvideo.getAbsolutePath(),""+
+                                    common.getjson(metadatametricesjson));
+                        }catch (Exception e)
+                        {
+                            Log.e("Meta data Error","Error");
+                            e.printStackTrace();
+                        }
                         savevideocomplete();
                         setvideoadapter();
                     }
