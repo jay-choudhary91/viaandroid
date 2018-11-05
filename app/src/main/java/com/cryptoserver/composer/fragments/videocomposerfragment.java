@@ -1993,6 +1993,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void updatestartvideoinfo(String updatefirsthash, String file_name,String completeddate,String lastframe,String lastcount)
     {
+
+
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(getActivity());
             mdbhelper.createDatabase();
