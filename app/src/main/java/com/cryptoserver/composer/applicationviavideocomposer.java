@@ -19,7 +19,9 @@ public class applicationviavideocomposer extends Application {
         Fabric.with(this, new Crashlytics());
         mcontext = this;
         xdata.getinstance().init(this);
-        xdata.getinstance().saveSetting(xdata.keybaseurl, "http://console.dev.crypto-servers.com/xapi.php?");
+        xdata.getinstance().saveSetting(xdata.keybaseurl, "http://console.dev.crypto-servers.com/xapi.php?xapi_body=1&");
+
+
     }
 
     @Override

@@ -82,10 +82,15 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             return taskresult.NO_INTERNET;
         }
 
+        String responseString = "";
+
+        String baseUrl = useurl+"action="+action;
+        Log.d("URL>>", baseUrl);
+
         try {
 
 
-            URL url = new URL("http://console.dev.crypto-servers.com/xapi.php?xapi_body=1&action=video_update");
+            URL url = new URL(baseUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setDoOutput(true);
             // is output buffer writter

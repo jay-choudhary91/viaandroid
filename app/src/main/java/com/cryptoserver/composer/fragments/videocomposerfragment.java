@@ -1558,6 +1558,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         int count = 1;
         currentframenumber=0;
         selectedhashes="";
+        String firstframe = "";
         final ArrayList<videomodel> mvideoframes =new ArrayList<>();
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
@@ -1599,17 +1600,27 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     if(count == frameduration){
 
+                        String updatecompletedate[] = common.getcurrentdatewithtimezone();
+                        String completeddate = updatecompletedate[0];
+
                         String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
-                        updatestartvideoinfo(keyValue,filename);
 
+                        updatestartvideoinfo(keyValue,filename,completeddate,"","");
                     }
-
-
                 }
                 else
                 {
 
+                    String updatecompletedate[] = common.getcurrentdatewithtimezone();
+                    String completeddate = updatecompletedate[0];
+
+                    String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
+
                     lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+
+                    String lastframe = keyValue;
+
+                    updatestartvideoinfo(keyValue,filename,completeddate,lastframe,"" + count);
                 }
                 count++;
             }
@@ -1972,7 +1983,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            mdbhelper.insertstartvideoinfo(json,"video","local",videokey,"","","","0",config.type_video_start,devicestartdate,devicestartdate,timeoffset);
+            mdbhelper.insertstartvideoinfo(json,"video","local",videokey,"","","","0",config.type_video_start,devicestartdate,devicestartdate,timeoffset,devicestartdate);
 
             mdbhelper.close();
         } catch (Exception e) {
@@ -1980,7 +1991,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
-    public void updatestartvideoinfo(String updatefirsthash, String file_name)
+    public void updatestartvideoinfo(String updatefirsthash, String file_name,String completeddate,String lastframe,String lastcount)
     {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(getActivity());
@@ -1996,10 +2007,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         try {
 
             HashMap<String, String> map = new HashMap<String, String>();
+
             map.put("fps","30");
             map.put("firsthash", updatefirsthash);
             map.put("hashmethod",keytype);
             map.put("name",file_name);
+            map.put("duration","5.00");
+            map.put("frmaecounts",lastcount);
+            map.put("finalhash",lastframe);
 
             Gson gson = new Gson();
             String json = gson.toJson(map);

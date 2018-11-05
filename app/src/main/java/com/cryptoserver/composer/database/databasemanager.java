@@ -206,7 +206,7 @@ public class databasemanager {
 
     public void insertstartvideoinfo(String header,String type,String location,String localkey,
                                       String token,String videokey,String sync,String date , String action_type,
-                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset)
+                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,String videocompletedevicedate)
     {
         try {
             lock.lock();
@@ -224,6 +224,7 @@ public class databasemanager {
             values.put("apirequestdevicedate",  apirequestdevicedate);
             values.put("videostartdevicedate",  videostartdevicedate);
             values.put("devicetimeoffset",  devicetimeoffset);
+            values.put("videocompletedevicedate",  videocompletedevicedate);
 
             long l=mDb.insert("tbstartvideoinfo", null, values);
             Log.e("Id ",""+l);

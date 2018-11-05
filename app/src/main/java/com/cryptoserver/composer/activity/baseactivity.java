@@ -294,11 +294,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
          String videolist="",hashmethod="",hashvalue="",videoid="",hassync="";
 
          String selectedid="", header = "", type = "", location = "", localkey = "", token = "", videokey = "",
-                sync = "",sync_date = "",action_type="",apirequestdevicedate = "",videostartdevicedate= "",devicetimeoffset = "";
+                sync = "",sync_date = "",action_type="",apirequestdevicedate = "",videostartdevicedate= "",devicetimeoffset = "",
+                 videocompletedevicedate = "";
 
          String synchdefaultversion = "1", synchstatus = "inprogress", synchcompletedate = "", synchlastsequence = "";
 
-        HashMap<String,String> mpairslist=new HashMap<String, String>();
+        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
 
         if(getcurrentfragment() instanceof videocomposerfragment)
         {
@@ -343,6 +344,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     apirequestdevicedate = ""+ cur.getString(cur.getColumnIndex("apirequestdevicedate"));
                     videostartdevicedate = ""+ cur.getString(cur.getColumnIndex("videostartdevicedate"));
                     devicetimeoffset = ""+ cur.getString(cur.getColumnIndex("devicetimeoffset"));
+                    videocompletedevicedate = ""+ cur.getString(cur.getColumnIndex("videocompletedevicedate"));
 
                     marray.add(new startvideoinfo(header, type, location,localkey,token, videokey,sync, action_type,sync_date));
                     //  cur.moveToLast();
@@ -396,6 +398,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         final String finalsync = sync;
         final String finaldevicetimeoffset = devicetimeoffset;
         final String  finalapirequestdevicedate = apirequestdevicedate;
+        final String  finalvideocompletedevicedate = videocompletedevicedate;
 
         if(videokey.trim().isEmpty()){
 
@@ -408,7 +411,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             mpairslist.put("devicetimeoffset",devicetimeoffset);
 
 
-            xapipost_send(baseactivity.this,config.type_video_start,mpairslist, new apiresponselistener() {
+            xapipost_sendjson(baseactivity.this,config.type_video_start,mpairslist, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response)
                 {
@@ -434,8 +437,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
         }else{
 
-            callUpdateapi(finallocalkey,finalvideokey,finaltoken,finalsync,finaldevicetimeoffset,finalapirequestdevicedate,finalselectedid);
-
+            callUpdateapi(finallocalkey,finalvideokey,finaltoken,finalsync,finaldevicetimeoffset,finalapirequestdevicedate,finalselectedid,finalvideocompletedevicedate);
         }
                    /* else if(action_type.equalsIgnoreCase(config.type_video_complete))
                     {
@@ -449,7 +451,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     final String finalVideoid = videoid;*/
         }
 
-    public void callUpdateapi(String finallocalkey, String finalvideokey, String finaltoken, String finalsync, String finaldevicetimeoffset,String finalapirequestdevicedate, String id){
+    public void callUpdateapi(String finallocalkey, String finalvideokey, String finaltoken, String finalsync, String finaldevicetimeoffset,String finalapirequestdevicedate, String id,String finalvideocompletedevicedate){
 
         String selectedid = "", blockchain= "",valuehash= "",hashmethod= "",localkey= "",metricdata= "",
                 recordate= "",rsequenceno= "",sequencehash= "",sequenceno= "",serverdate= "",videoupdatedevicedate= "",sequencedevicedate = "";
@@ -498,7 +500,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             }else{
 
-                updatedatasyncdate(finallocalkey,common.getCurrentDate());
+                callvideocompletedapi(finallocalkey,finalapirequestdevicedate,finalvideokey,finaldevicetimeoffset,finaltoken,finalvideocompletedevicedate);
             }
 
             int count = cur.getCount();
@@ -564,6 +566,51 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
     }
+
+
+    public void callvideocompletedapi(String finallocalkey,String finalapirequestdevicedate,String finalvideokey,String finaldevicetimeoffset,String finaltoken,String finalvideocompletedevicedate){
+
+        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+        final String localkey = finallocalkey;
+
+        mpairslist.put("html","0");
+        mpairslist.put("key",""+finalvideokey);
+        mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
+        mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
+        mpairslist.put("videocompletedevicedate",""+finalvideocompletedevicedate);
+        mpairslist.put("videotoken",finaltoken);
+        mpairslist.put("framecount", "24");
+        mpairslist.put("videoduration", "5:00");
+
+        xapipost_sendjson(baseactivity.this,config.type_video_complete, mpairslist, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response)
+            {
+                if(response.isSuccess())
+                {
+                    try {
+
+                        JSONObject object = (JSONObject) response.getData();
+
+                        updatedatasyncdate(localkey,common.getCurrentDate());
+
+                     /*   String sequence = object.getString("sequence");
+                        String serverdate = object.getString("serverdate");
+                        String serverdictionaryhash = object.getString("serverdictionaryhash");
+                        updatevideoupdateapiresponce(finalselectedid,sequence,serverdate,serverdictionaryhash);*/
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+
+
+    }
+
 
     public void deletemetadatarecord(String selectedid)
     {
