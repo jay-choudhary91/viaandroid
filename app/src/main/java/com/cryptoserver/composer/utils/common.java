@@ -1851,5 +1851,26 @@ public class common {
 
     }
 
+    public static String getvideotimefromurl(String url){
 
+        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
+        m_mediaMetadataRetriever.setDataSource(url);
+
+        String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+        long timeInmillisec=0;
+
+        if(time != null)
+            timeInmillisec = Long.parseLong( time );
+
+        long duration = timeInmillisec / 1000;
+        long hours = duration / 3600;
+        long minutes = (duration - hours * 3600) / 60;
+        long seconds = duration - (hours * 3600 + minutes * 60);
+
+        seconds = seconds + minutes;
+        Log.e("videoseconds  =  ",""+seconds);
+
+        return ""+ minutes + ":" +seconds;
+    }
 }
