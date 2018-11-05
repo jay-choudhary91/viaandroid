@@ -181,7 +181,30 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         onfragmentbackstackchanged();
     }
+    @Override
+    public void replacetabfragment(basefragment f, boolean clearBackStack, boolean addToBackstack) {
+        replacetabfragment(f, R.id.tab_container, clearBackStack, addToBackstack);
+    }
 
+    public void replacetabfragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack) {
+        if (clearBackStack) {
+            clearfragmentbackstack();
+        }
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        // transaction.setCustomAnimations(R.anim.card_flip_right_in, R.anim.card_flip_right_out, R.anim.card_flip_left_in, R.anim.card_flip_left_out);
+        transaction.replace(layoutId, f);
+        if (addToBackstack) {
+            transaction.addToBackStack(null);
+        }
+
+        transaction.commit();
+
+        mcurrentfragment = f;
+        mfragments.push(f);
+
+        onfragmentbackstackchanged();
+    }
     public int minnumberoffragments = 1;
 
     public int getMinNumberOfFragments() {

@@ -90,8 +90,10 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
-        <activity android:name=".activity.introscreenactivity"/>
-
+        <activity android:name=".activity.introscreenactivity" />
+        <activity
+            android:name=".activity.bottombaractivity"
+            android:label="@string/title_activity_bottombaractivity"></activity>
     </application>
 
 </manifest>

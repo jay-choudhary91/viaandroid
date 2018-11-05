@@ -186,7 +186,7 @@ public class fragmentvideolist extends basefragment {
                 }
             });
 
-            launchvideocomposer(false);
+        //    launchvideocomposer(false);
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();
@@ -420,7 +420,7 @@ public class fragmentvideolist extends basefragment {
             public void onItemClicked(Object object, int type) {
                 if(type == 1)
                 {
-                    requestpermissions();
+                //    requestpermissions();
                 }
             }
         });
