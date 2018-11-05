@@ -57,6 +57,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by devesh on 5/11/18.
  */
@@ -114,6 +116,8 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
      */
     private static final int MAX_PREVIEW_HEIGHT = 1080;
 
+    View rootview = null;
+
     /**
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
      * {@link TextureView}.
@@ -166,6 +170,8 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
      * The {@link android.util.Size} of camera preview.
      */
     private Size mPreviewSize;
+
+    private static final int request_permissions = 1;
 
     /**
      * {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state.
@@ -409,22 +415,35 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         return R.layout.imagecapturefragment;
     }
 
-    /*@Override
+    @Override
+    public void initviews(View parent, Bundle savedInstanceState) {
+        super.initviews(parent, savedInstanceState);
+        ButterKnife.bind(this,parent);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_camera2_basic, container, false);
-    }*/
+
+        if(rootview == null) {
+            rootview = super.onCreateView(inflater, container, savedInstanceState);
+            ButterKnife.bind(this, rootview);
+
+            rootview.findViewById(R.id.img_image_capture).setOnClickListener(this);
+
+            mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
+
+
+        }
+
+        return rootview;
+    }
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
 
 
-        view.findViewById(R.id.img_image_capture).setOnClickListener(this);
-        view.findViewById(R.id.info).setOnClickListener(this);
 
-
-
-        mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
     }
 
     @Override
@@ -436,18 +455,39 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
+
+        String[] neededpermissions = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        };
+        List<String> deniedpermissions = new ArrayList<>();
+        for (String permission : neededpermissions) {
+            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                deniedpermissions.add(permission);
+            }
+        }
+
         startBackgroundThread();
 
+        if(deniedpermissions.isEmpty()){
+
+            if (mTextureView.isAvailable()) {
+                openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+            } else {
+                mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+            }
+        }else {
+                String[] array = new String[deniedpermissions.size()];
+                array = deniedpermissions.toArray(array);
+                ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+            }
+        }
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
         // a camera and start preview from here (otherwise, we wait until the surface is ready in
         // the SurfaceTextureListener).
-        if (mTextureView.isAvailable()) {
-            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
-        } else {
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        }
-    }
+
 
     @Override
     public void onPause() {
@@ -456,7 +496,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         super.onPause();
     }
 
-    private void requestCameraPermission() {
+    /*private void requestCameraPermission() {
         if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
             new ConfirmationDialog().show(getChildFragmentManager(), FRAGMENT_DIALOG);
         } else {
@@ -475,7 +515,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
+    }*/
 
     /**
      * Sets up member variables related to camera.
@@ -595,7 +635,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     private void openCamera(int width, int height) {
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestCameraPermission();
+           // requestCameraPermission();
             return;
         }
         setUpCameraOutputs(width, height);
@@ -994,10 +1034,30 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_permissions) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted) {
+
+            } else {
+                Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
     /**
      * Shows OK/Cancel confirmation dialog about camera permission.
      */
-    public static class ConfirmationDialog extends DialogFragment {
+   /* public static class ConfirmationDialog extends DialogFragment {
 
         @NonNull
         @Override
@@ -1024,12 +1084,5 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                             })
                     .create();
         }
-    }
-
-
-
-
-
-
-
+    }*/
 }

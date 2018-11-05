@@ -369,11 +369,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         ButterKnife.bind(this,parent);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
+
             applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);

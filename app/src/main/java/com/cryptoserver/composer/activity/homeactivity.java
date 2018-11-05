@@ -27,6 +27,7 @@ import com.cryptoserver.composer.fragments.fragmentaudiolist;
 import com.cryptoserver.composer.fragments.fragmentimagelist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
+import com.cryptoserver.composer.fragments.imagecapturefragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
@@ -364,6 +365,20 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
 
         }
+         else if(fragment instanceof imagecapturefragment){
+             imgaddicon.setVisibility(View.GONE);
+             imgsettingsicon.setVisibility(View.GONE);
+             imguploadicon.setVisibility(View.GONE);
+             img_menu.setVisibility(View.VISIBLE);
+             img_help.setVisibility(View.VISIBLE);
+             imgshareicon.setVisibility(View.GONE);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+
+         }
         else
         {
             finish();

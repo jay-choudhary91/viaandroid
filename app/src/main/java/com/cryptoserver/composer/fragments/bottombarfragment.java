@@ -98,9 +98,11 @@ public class bottombarfragment extends basefragment  {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
             BottomNavigationView navigation = (BottomNavigationView) rootview.findViewById(R.id.navigation);
+
+
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-            //  launchvideocomposer(false);
+            // launchvideocomposer(false);
         }
         return rootview;
     }
