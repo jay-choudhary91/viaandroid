@@ -58,7 +58,7 @@ public class databasemanager {
 
     public void insertframemetricesinfo(String blockchain,String valuehash,String hashmethod,String localkey,
                                         String metricdata,String recordate,String rsequenceno,String sequencehash,
-                                        String sequenceno,String serverdate,String sequencedevicedate,String serverdictionaryhash)
+                                        String sequenceno,String serverdate,String sequencedevicedate,String serverdictionaryhash,String completehashvalue)
     {
         try {
             lock.lock();
@@ -76,6 +76,7 @@ public class databasemanager {
             values.put("serverdate", ""+serverdate);
             values.put("sequencedevicedate", ""+sequencedevicedate);
             values.put("serverdictionaryhash", ""+serverdictionaryhash);
+            values.put("completehashvalue", ""+completehashvalue);
 
             long l=mDb.insert("tblmetadata", null, values);
             Log.e("Id ",""+l);
@@ -117,6 +118,23 @@ public class databasemanager {
         try {
             lock.lock();
             mDb.execSQL("update tblmetadata set videokey='"+videokey+"' where videoid='"+videoid+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
+
+    public Cursor updatecompletehashvalue(String localkey,String completehashvalue) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            mDb.execSQL("update tblmetadata set completehashvalue='"+completehashvalue+"' where localkey='"+localkey+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -330,12 +348,12 @@ public class databasemanager {
         return  mCur;
     }
 
-
-    public Cursor updatestartvideoinfo(String header , String id ) {
+    public Cursor updatestartvideoinfo(String header , String localkey ,String completedate) {
         Cursor mCur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set header='"+ header +"' where localkey='"+id+"'");;
+
+            mDb.execSQL("update tbstartvideoinfo set header='"+ header +"' , videocompletedevicedate = '"+ completedate +"' where localkey='"+localkey+"'");;
 
             if (mCur != null)
                 mCur.moveToNext();

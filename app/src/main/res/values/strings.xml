@@ -78,5 +78,15 @@
 
 
     <string name="developermode_description">App entered in developer mode</string>
+    <string name="title_activity_bottombaractivity">bottombaractivity</string>
+    <string name="title_audio">Audio</string>
+    <string name="title_video">Video</string>
+    <string name="title_image">Image</string>
+
+
+    <string name="picture">Picture</string>
+    <string name="descriptioninfo">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
 
 </resources>

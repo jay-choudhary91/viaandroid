@@ -130,6 +130,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     boolean upsideDown = false;
 
+    String firsthash = "";
+
     /**
      * An {@link AutoFitTextureView} for camera preview.
      */
@@ -205,6 +207,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                       randomstring gen = new randomstring(20, ThreadLocalRandom.current());
                                       videokey=gen.nextString();
                                       String keyvalue= getkeyvalue(byteArray);
+
                                       savestartvideoinfo(keyvalue,keytype);
                                   }
 
@@ -366,11 +369,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         ButterKnife.bind(this,parent);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
+
             applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
@@ -1601,27 +1606,24 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     if(count == frameduration){
 
-                        String updatecompletedate[] = common.getcurrentdatewithtimezone();
-                        String completeddate = updatecompletedate[0];
-
                         String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
+                        firsthash = keyValue;
 
-                        updatestartvideoinfo(keyValue,filename,completeddate,"","");
+                        Log.e("videofirsthashvalue ",""+ keyValue);
+
+                        updatestartvideoinfo(keyValue, filename,"","","",lastrecordedvideo.getAbsolutePath());
                     }
                 }
                 else
                 {
+                        String updatecompletedate[] = common.getcurrentdatewithtimezone();
+                        String completeddate = updatecompletedate[0];
+                        String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
+                        String lastframe = keyValue;
 
-                    String updatecompletedate[] = common.getcurrentdatewithtimezone();
-                    String completeddate = updatecompletedate[0];
+                        updatestartvideoinfo(firsthash,filename,completeddate,lastframe,"" + count,lastrecordedvideo.getAbsolutePath());
+                        lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
 
-                    String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
-
-                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-
-                    String lastframe = keyValue;
-
-                    updatestartvideoinfo(keyValue,filename,completeddate,lastframe,"" + count);
                 }
                 count++;
             }
@@ -1903,7 +1905,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     "","",config.type_video_update);*/
 
             metrichash = md5.calculatestaringmd5(metricesarray.toString());
-            mdbhelper.insertframemetricesinfo("", metrichash ,keytype,videokey,""+metricesjsonarray.toString(),currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"");
+            mdbhelper.insertframemetricesinfo("", metrichash ,keytype,videokey,""+metricesjsonarray.toString(),currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"","");
 
             mdbhelper.close();
 
@@ -1932,7 +1934,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
 
             // mdbhelper.insertframemetricesinfo(videokey,hashmethod,hashvalue,hashmethod,hashvalue,config.type_video_start);
-            mdbhelper.insertframemetricesinfo("", hashvalue ,hashmethod,videokey,"",currentdate,"","","","","","");
+            mdbhelper.insertframemetricesinfo("", hashvalue ,hashmethod,videokey,"",currentdate,"","","","","","","");
 
             mdbhelper.close();
         } catch (Exception e) {
@@ -1968,10 +1970,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 metadict["videokey"] = ""*/
 
             HashMap<String, String> map = new HashMap<String, String>();
+
             map.put("fps","30");
             map.put("firsthash", firsthash);
             map.put("hashmethod",keytype);
             map.put("name","");
+            map.put("duration","");
+            map.put("frmaecounts","");
+            map.put("finalhash","");
 
             localkey = common.getSaltString();
 
@@ -1984,7 +1990,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            mdbhelper.insertstartvideoinfo(json,"video","local",videokey,"","","","0",config.type_video_start,devicestartdate,devicestartdate,timeoffset,devicestartdate);
+            mdbhelper.insertstartvideoinfo(json,"video","local",videokey,"","","0","0",config.type_video_start,devicestartdate,devicestartdate,timeoffset,devicestartdate);
 
             mdbhelper.close();
         } catch (Exception e) {
@@ -1992,8 +1998,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
-    public void updatestartvideoinfo(String updatefirsthash, String file_name,String completeddate,String lastframe,String lastcount)
+    public void updatestartvideoinfo(String updatefirsthash, String file_name,String completeddate,String lastframe,String lastcount,String videourl)
     {
+        String duration = "";
+
+
+        if(!videourl.isEmpty())
+            duration = common.getvideotimefromurl(videourl);
+
+
+        Log.e("firsthashevalue", updatefirsthash);
 
 
         if (mdbhelper == null) {
@@ -2009,20 +2023,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         try {
 
+            Log.e("firstupdatevalue", updatefirsthash +"-----"+ file_name +"-----"+lastframe +"-----"+ lastcount +"-----"+ completeddate +"-----"+duration);
+
             HashMap<String, String> map = new HashMap<String, String>();
 
             map.put("fps","30");
             map.put("firsthash", updatefirsthash);
             map.put("hashmethod",keytype);
             map.put("name",file_name);
-            map.put("duration","5.00");
+            map.put("duration",duration);
             map.put("frmaecounts",lastcount);
             map.put("finalhash",lastframe);
 
             Gson gson = new Gson();
             String json = gson.toJson(map);
 
-            mdbhelper.updatestartvideoinfo(json,videokey);
+            mdbhelper.updatestartvideoinfo(json,videokey,completeddate);
 
             //fetchstartvideoinfo();
 

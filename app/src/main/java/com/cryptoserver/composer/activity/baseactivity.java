@@ -37,6 +37,7 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.taskresult;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +63,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     private Stack<Fragment> mfragments = new Stack<Fragment>();
     private static final int permission_location_request_code = 91;
     private databasemanager mdbhelper;
+    boolean updatesync = true;
     public boolean isisapprunning() {
         return isapprunning;
     }
@@ -179,7 +181,30 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         onfragmentbackstackchanged();
     }
+    @Override
+    public void replacetabfragment(basefragment f, boolean clearBackStack, boolean addToBackstack) {
+       // replacetabfragment(f, R.id.tab_container, clearBackStack, addToBackstack);
+    }
 
+   /* public void replaceFragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack) {
+        if (clearBackStack) {
+            clearfragmentbackstack();
+        }
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        // transaction.setCustomAnimations(R.anim.card_flip_right_in, R.anim.card_flip_right_out, R.anim.card_flip_left_in, R.anim.card_flip_left_out);
+        transaction.replace(layoutId, f);
+        if (addToBackstack) {
+            transaction.addToBackStack(null);
+        }
+
+        transaction.commit();
+
+        mcurrentfragment = f;
+        mfragments.push(f);
+
+        onfragmentbackstackchanged();
+    }*/
     public int minnumberoffragments = 1;
 
     public int getMinNumberOfFragments() {
@@ -362,21 +387,28 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
-                String currentdate = getCurrentDate();
 
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("version",synchdefaultversion);
-                map.put("firstdate",currentdate);
-                map.put("lastdate",currentdate);
-                map.put("lastsequence",synchlastsequence);
-                map.put("status",synchstatus);
-                map.put("completedate",synchcompletedate);
+        if(sync.equalsIgnoreCase("0")){
 
-                Gson gson = new Gson();
-                String json = gson.toJson(map);
-                Log.e("json",""+json);
+            String currentdate[] = common.getcurrentdatewithtimezone();
+            String firstdate = currentdate[0];
 
-               updatedatasync(json,selectedid);
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("version",synchdefaultversion);
+            map.put("firstdate",firstdate);
+            map.put("lastdate",firstdate);
+            map.put("lastsequence",synchlastsequence);
+            map.put("status",synchstatus);
+            map.put("completedate",synchcompletedate);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(map);
+            Log.e("json",""+json);
+
+            updatedatasync(json,selectedid);
+        }
+
+
 
 
         Log.e("video_updateid ",""+selectedid);
@@ -391,6 +423,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
+        final String  finalheader = header;
         final String  finalselectedid = selectedid;
         final String  finallocalkey = localkey;
         final String finalvideokey = videokey;
@@ -437,7 +470,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
         }else{
 
-            callUpdateapi(finallocalkey,finalvideokey,finaltoken,finalsync,finaldevicetimeoffset,finalapirequestdevicedate,finalselectedid,finalvideocompletedevicedate);
+            callUpdateapi(finalheader,finallocalkey,finalvideokey,finaltoken,finalsync,finaldevicetimeoffset,finalapirequestdevicedate,finalselectedid,finalvideocompletedevicedate);
         }
                    /* else if(action_type.equalsIgnoreCase(config.type_video_complete))
                     {
@@ -451,7 +484,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     final String finalVideoid = videoid;*/
         }
 
-    public void callUpdateapi(String finallocalkey, String finalvideokey, String finaltoken, String finalsync, String finaldevicetimeoffset,String finalapirequestdevicedate, String id,String finalvideocompletedevicedate){
+    public void callUpdateapi(String finalheader,String finallocalkey, String finalvideokey, String finaltoken, String finalsync, String finaldevicetimeoffset,String finalapirequestdevicedate, String startselectedid,String finalvideocompletedevicedate){
 
         String selectedid = "", blockchain= "",valuehash= "",hashmethod= "",localkey= "",metricdata= "",
                 recordate= "",rsequenceno= "",sequencehash= "",sequenceno= "",serverdate= "",videoupdatedevicedate= "",sequencedevicedate = "";
@@ -500,7 +533,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             }else{
 
-                callvideocompletedapi(finallocalkey,finalapirequestdevicedate,finalvideokey,finaldevicetimeoffset,finaltoken,finalvideocompletedevicedate);
+                callvideocompletedapi(startselectedid,finalheader,finallocalkey,finalapirequestdevicedate,finalvideokey,finaldevicetimeoffset,finaltoken,finalvideocompletedevicedate,finalsync);
             }
 
             int count = cur.getCount();
@@ -568,10 +601,47 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public void callvideocompletedapi(String finallocalkey,String finalapirequestdevicedate,String finalvideokey,String finaldevicetimeoffset,String finaltoken,String finalvideocompletedevicedate){
+    public void callvideocompletedapi(String startselectedid,String finalheader,String finallocalkey,String finalapirequestdevicedate,String finalvideokey,String finaldevicetimeoffset,String finaltoken,String finalvideocompletedevicedate,String finalsync){
 
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
         final String localkey = finallocalkey;
+        final String header = finalheader,sync =finalsync;
+        String synchdefaultversion = "1", synchstatus = "completed", synchcompletedate = "", synchlastsequence = "";
+
+        String framecount="",videocompletedevicedate="",videoduration="",hassync="",synccurrentdate = "";
+
+        String currentdate[] = common.getcurrentdatewithtimezone();
+        String Lastdate = currentdate[0];
+
+        try {
+
+            JSONObject obj = new JSONObject(sync);
+            JSONObject objheader = new JSONObject(header);
+
+
+            framecount  = objheader.getString("frmaecounts");
+            videoduration  = objheader.getString("duration");
+
+            synccurrentdate = obj.getString("firstdate");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("version",synchdefaultversion);
+        map.put("firstdate",synccurrentdate);
+        map.put("lastdate",Lastdate);
+        map.put("lastsequence",framecount);
+        map.put("status",synchstatus);
+        map.put("completedate",finalvideocompletedevicedate);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(map);
+        Log.e("json",""+json);
+
+        updatedatasync(json,startselectedid);
 
         mpairslist.put("html","0");
         mpairslist.put("key",""+finalvideokey);
@@ -579,8 +649,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
         mpairslist.put("videocompletedevicedate",""+finalvideocompletedevicedate);
         mpairslist.put("videotoken",finaltoken);
-        mpairslist.put("framecount", "24");
-        mpairslist.put("videoduration", "5:00");
+        mpairslist.put("framecount", framecount);
+        mpairslist.put("videoduration", videoduration);
 
         xapipost_sendjson(baseactivity.this,config.type_video_complete, mpairslist, new apiresponselistener() {
             @Override
@@ -591,8 +661,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     try {
 
                         JSONObject object = (JSONObject) response.getData();
+                        String valuehash = object.getString("hashvalue");
 
+                        updatecompletehashvalue(localkey,valuehash);
                         updatedatasyncdate(localkey,common.getCurrentDate());
+
+
 
                      /*   String sequence = object.getString("sequence");
                         String serverdate = object.getString("serverdate");
@@ -668,6 +742,28 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         try {
             mdbhelper.updatevideosyncdate(localkey,syncdate);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void updatecompletehashvalue(String localkey,String valuehash)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(baseactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatecompletehashvalue(localkey,valuehash);
             mdbhelper.close();
         }catch (Exception e)
         {

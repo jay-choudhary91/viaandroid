@@ -218,6 +218,8 @@ public abstract class basefragment extends Fragment {
 
         public void replaceFragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack);
 
+        public void replacetabfragment(basefragment f,  boolean clearBackStack, boolean addToBackstack );
+
         public void onBack();
 
         public void launchHome();

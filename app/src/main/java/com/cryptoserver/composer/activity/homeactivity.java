@@ -7,7 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,8 +25,11 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
+import com.cryptoserver.composer.fragments.fragmentaudiolist;
+import com.cryptoserver.composer.fragments.fragmentimagelist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
+import com.cryptoserver.composer.fragments.imagecapturefragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
@@ -60,10 +66,47 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     RelativeLayout actionbar;
     @BindView(R.id.fragment_container)
     FrameLayout fragment_container;
+    @BindView(R.id.navigation)
+    BottomNavigationView navigation;
 
     private IntentFilter intentfilter;
     private BroadcastReceiver broadcast;
     private fragmentvideolist fragvideolist;
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_video:
+                    fragmentvideolist fragvideolist = null;
+                    if (fragvideolist == null) {
+                        fragvideolist = new fragmentvideolist();
+                        replaceFragment(fragvideolist, false, true);
+
+                    }
+                    return true;
+                case R.id.navigation_audio:
+                    fragmentaudiolist fragaudiolist = null;
+                    if (fragaudiolist == null) {
+                        fragaudiolist = new fragmentaudiolist();
+                        replaceFragment(fragaudiolist, false, true);
+
+                    }
+
+                    return true;
+
+                case R.id.navigation_image:
+                    fragmentimagelist fragimglist = null;
+                    if (fragimglist == null) {
+                        fragimglist = new fragmentimagelist();
+                        replaceFragment(fragimglist, false, true);
+                    }
+                    return true;
+            }
+            return false;
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +125,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             replaceFragment(frag, false, true);*/
             /*if (common.getstoragedeniedpermissions().isEmpty())
                 deletetempdirectory();*/
-
             fragvideolist=new fragmentvideolist();
             replaceFragment(fragvideolist, false, true);
         }
@@ -94,6 +136,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_cancel.setOnClickListener(this);
         imgshareicon.setOnClickListener(this);
         img_menu.setOnClickListener(this);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         actionbar.post(new Runnable() {
             @Override
@@ -163,14 +206,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             txt_title.setText(txt);
         }
-        else if((getcurrentfragment() instanceof fragmentvideolist) || getcurrentfragment() instanceof fragmentsettings
+        else if( getcurrentfragment() instanceof fragmentsettings || getcurrentfragment() instanceof fragmentvideolist|| getcurrentfragment() instanceof fragmentaudiolist || getcurrentfragment() instanceof fragmentimagelist
                 || getcurrentfragment() instanceof videoplayfragment
-                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof composervideoplayerfragment)
+                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof composervideoplayerfragment )
         {
             txt_title.setText("");
         }
     }
-
+//(getcurrentfragment() instanceof fragmentvideolist)
     @Override
     public void updateactionbar(int showHide, int color) {
         actionbar.setBackgroundColor(color);
@@ -213,6 +256,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_cancel.setVisibility(View.GONE);
         img_menu.setVisibility(View.GONE);
         img_help.setVisibility(View.GONE);
+        navigation.setVisibility(View.GONE);
         actionbar.setVisibility(View.VISIBLE);
 
         {
@@ -221,23 +265,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             params.addRule(RelativeLayout.BELOW, R.id.actionbar);
             fragment_container.setLayoutParams(params);
         }
-
-
-        if (fragment instanceof fragmentvideolist) {
-            imgaddicon.setVisibility(View.VISIBLE);
-            imgsettingsicon.setVisibility(View.VISIBLE);
-            imguploadicon.setVisibility(View.VISIBLE);
-            imgsettingsicon.setEnabled(true);
-            imgshareicon.setVisibility(View.GONE);
-            updateheader("");
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
-
-            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT);
-            fragment_container.setLayoutParams(params);
-
-        }
-        else if (fragment instanceof videocomposerfragment) {
+         if (fragment instanceof videocomposerfragment) {
             imgaddicon.setVisibility(View.GONE);
             imgsettingsicon.setVisibility(View.GONE);
             imguploadicon.setVisibility(View.GONE);
@@ -290,9 +318,49 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
-
-
         }
+         else if(fragment instanceof fragmentaudiolist){
+             navigation.setVisibility(View.VISIBLE);
+             imgaddicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             imgshareicon.setVisibility(View.GONE);
+             updateheader("");
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }
+         else if(fragment instanceof fragmentvideolist){
+             navigation.setVisibility(View.VISIBLE);
+             imgaddicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             imgshareicon.setVisibility(View.GONE);
+             updateheader("");
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }
+         else if(fragment instanceof fragmentimagelist){
+             navigation.setVisibility(View.VISIBLE);
+             imgaddicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             imgshareicon.setVisibility(View.GONE);
+             updateheader("");
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }
         else if(fragment instanceof composervideoplayerfragment){
             img_back.setVisibility(View.GONE);
             img_cancel.setVisibility(View.GONE);
@@ -310,6 +378,20 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
 
         }
+         else if(fragment instanceof imagecapturefragment){
+             imgaddicon.setVisibility(View.GONE);
+             imgsettingsicon.setVisibility(View.GONE);
+             imguploadicon.setVisibility(View.GONE);
+             img_menu.setVisibility(View.VISIBLE);
+             img_help.setVisibility(View.VISIBLE);
+             imgshareicon.setVisibility(View.GONE);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+
+         }
         else
         {
             finish();
