@@ -15,5 +15,12 @@
     </android.support.v7.widget.RecyclerView>
 
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="20dp"
+        android:textColor="@color/white"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content"
+        android:text="image list"/>
 </RelativeLayout>

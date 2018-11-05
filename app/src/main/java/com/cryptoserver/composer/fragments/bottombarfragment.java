@@ -30,9 +30,10 @@ public class bottombarfragment extends basefragment  {
         // Required empty public constructor
     }
     private TextView mTextMessage;
-    fragmentaudiolist fragaudiolist;
-    fragmentvideolist fragvideolist;
-    fragmentimagelist fragimglist;
+
+
+
+    basefragment fragment ;
     View rootview = null;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -41,7 +42,17 @@ public class bottombarfragment extends basefragment  {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
+                case R.id.navigation_video:
+                    fragmentvideolist fragvideolist=null;
+                    if(fragvideolist == null)
+                    {
+                        fragvideolist=new fragmentvideolist();
+                        gethelper().replacetabfragment(fragvideolist,false,true);
+
+                    }
+                    return true;
                 case R.id.navigation_audio:
+                    fragmentaudiolist fragaudiolist=null;
                     if(fragaudiolist == null)
                     {
                         fragaudiolist=new fragmentaudiolist();
@@ -50,15 +61,9 @@ public class bottombarfragment extends basefragment  {
                     }
 
                     return true;
-                case R.id.navigation_video:
-                    if(fragvideolist == null)
-                    {
-                        fragvideolist=new fragmentvideolist();
-                        gethelper().replacetabfragment(fragvideolist,false,true);
 
-                    }
-                    return true;
                 case R.id.navigation_image:
+                    fragmentimagelist fragimglist=null;
                     if(fragimglist == null)
                     {
                         fragimglist=new fragmentimagelist();
@@ -94,11 +99,6 @@ public class bottombarfragment extends basefragment  {
             ButterKnife.bind(this, rootview);
             BottomNavigationView navigation = (BottomNavigationView) rootview.findViewById(R.id.navigation);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-            if(fragaudiolist == null)
-            {
-                fragaudiolist=new fragmentaudiolist();
-                gethelper().replacetabfragment(fragaudiolist,false,true);
-            }
 
             //  launchvideocomposer(false);
         }
@@ -154,7 +154,7 @@ public class bottombarfragment extends basefragment  {
         }
     }*/
 
-    @Override
+   /* @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
         switch (btnid) {
@@ -167,8 +167,10 @@ public class bottombarfragment extends basefragment  {
                 break;
             case R.id.img_add_icon:
 
-                //   launchvideocomposer(false);
+               if(fragment instanceof fragmentvideolist){
+                   launchvideocomposer(false);
+               }
                 break;
         }
-    }
+    }*/
 }
