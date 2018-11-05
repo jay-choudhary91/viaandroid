@@ -91,7 +91,7 @@ dependencies {
         exclude group: 'org.bytedeco.javacpp-presets'
     }
     implementation group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: versions.ffmpeg
-    //implementation group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: versions.ffmpeg, classifier: 'android-arm'
+    implementation group: 'org.bytedeco.javacpp-presets', name: 'ffmpeg', version: versions.ffmpeg, classifier: 'android-arm'
 
 
     /*compile group: 'org.bytedeco', name: 'javacv', version: '1.4.1'

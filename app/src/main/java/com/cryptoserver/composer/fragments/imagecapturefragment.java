@@ -472,7 +472,6 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         }
 
         startBackgroundThread();
-
         if(deniedpermissions.isEmpty()){
             doafterallpermissions();
         }else {
@@ -489,6 +488,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 openCamera(mTextureView.getWidth(), mTextureView.getHeight());
             }
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+
         }
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
@@ -878,6 +878,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                     showToast("Saved: " + mFile);
                     Log.d(TAG, mFile.toString());
                     unlockFocus();
+                    //gethelper().onBack();
                 }
             };
 
