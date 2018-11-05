@@ -21,7 +21,10 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
+import com.cryptoserver.composer.fragments.bottombarfragment;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
+import com.cryptoserver.composer.fragments.fragmentaudiolist;
+import com.cryptoserver.composer.fragments.fragmentimagelist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
@@ -82,9 +85,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             replaceFragment(frag, false, true);*/
             /*if (common.getstoragedeniedpermissions().isEmpty())
                 deletetempdirectory();*/
-
-            fragvideolist=new fragmentvideolist();
-            replaceFragment(fragvideolist, false, true);
+           bottombarfragment fragbottombar=new bottombarfragment();
+           replaceFragment(fragbottombar,false,true);
+           /* fragvideolist=new fragmentvideolist();
+            replaceFragment(fragvideolist, false, true);*/
         }
 
         imgaddicon.setOnClickListener(this);
@@ -163,14 +167,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             txt_title.setText(txt);
         }
-        else if((getcurrentfragment() instanceof fragmentvideolist) || getcurrentfragment() instanceof fragmentsettings
+        else if( getcurrentfragment() instanceof fragmentsettings
                 || getcurrentfragment() instanceof videoplayfragment
-                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof composervideoplayerfragment)
+                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof composervideoplayerfragment || getcurrentfragment() instanceof bottombarfragment)
         {
             txt_title.setText("");
         }
     }
-
+//(getcurrentfragment() instanceof fragmentvideolist)
     @Override
     public void updateactionbar(int showHide, int color) {
         actionbar.setBackgroundColor(color);
@@ -223,7 +227,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
 
 
-        if (fragment instanceof fragmentvideolist) {
+        /*if (fragment instanceof fragmentvideolist) {
             imgaddicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setVisibility(View.VISIBLE);
             imguploadicon.setVisibility(View.VISIBLE);
@@ -236,8 +240,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
 
-        }
-        else if (fragment instanceof videocomposerfragment) {
+        }*/
+         if (fragment instanceof videocomposerfragment) {
             imgaddicon.setVisibility(View.GONE);
             imgsettingsicon.setVisibility(View.GONE);
             imguploadicon.setVisibility(View.GONE);
@@ -290,9 +294,59 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
-
-
         }
+        else if(fragment instanceof bottombarfragment){
+             imgaddicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             imgshareicon.setVisibility(View.GONE);
+             updateheader("");
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+        }
+         else if(fragment instanceof fragmentaudiolist){
+             imgaddicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             imgshareicon.setVisibility(View.GONE);
+             updateheader("");
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }
+         else if(fragment instanceof fragmentvideolist){
+             imgaddicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             imgshareicon.setVisibility(View.GONE);
+             updateheader("");
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }
+         else if(fragment instanceof fragmentimagelist){
+             imgaddicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             imgshareicon.setVisibility(View.GONE);
+             updateheader("");
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }
         else if(fragment instanceof composervideoplayerfragment){
             img_back.setVisibility(View.GONE);
             img_cancel.setVisibility(View.GONE);
