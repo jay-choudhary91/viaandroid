@@ -49,7 +49,10 @@ public class fragmentimagelist extends basefragment {
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_add_icon:
-                Toast.makeText(getActivity(), "imagelist", Toast.LENGTH_SHORT).show();
+
+                imagecapturefragment imagecapturefragment = new imagecapturefragment();
+                gethelper().addFragment(imagecapturefragment,false,true);
+
                 //   launchvideocomposer(false);
                 break;
         }

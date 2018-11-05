@@ -24,7 +24,6 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.basefragment;
-import com.cryptoserver.composer.fragments.bottombarfragment;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
 import com.cryptoserver.composer.fragments.fragmentaudiolist;
 import com.cryptoserver.composer.fragments.fragmentimagelist;
@@ -207,9 +206,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             txt_title.setText(txt);
         }
-        else if( getcurrentfragment() instanceof fragmentsettings || getcurrentfragment() instanceof bottombarfragment || getcurrentfragment() instanceof fragmentvideolist|| getcurrentfragment() instanceof fragmentaudiolist || getcurrentfragment() instanceof fragmentimagelist
+        else if( getcurrentfragment() instanceof fragmentsettings || getcurrentfragment() instanceof fragmentvideolist|| getcurrentfragment() instanceof fragmentaudiolist || getcurrentfragment() instanceof fragmentimagelist
                 || getcurrentfragment() instanceof videoplayfragment
-                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof composervideoplayerfragment || getcurrentfragment() instanceof bottombarfragment)
+                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof composervideoplayerfragment )
         {
             txt_title.setText("");
         }
@@ -319,20 +318,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
-        }
-        else if(fragment instanceof bottombarfragment){
-            navigation.setVisibility(View.VISIBLE);
-            /* imgaddicon.setVisibility(View.VISIBLE);
-             imgsettingsicon.setVisibility(View.VISIBLE);
-             imguploadicon.setVisibility(View.VISIBLE);
-             imgsettingsicon.setEnabled(true);
-             imgshareicon.setVisibility(View.GONE);
-             updateheader("");
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
-
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);*/
         }
          else if(fragment instanceof fragmentaudiolist){
              navigation.setVisibility(View.VISIBLE);
