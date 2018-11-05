@@ -474,17 +474,21 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         startBackgroundThread();
 
         if(deniedpermissions.isEmpty()){
-
-            if (mTextureView.isAvailable()) {
-                openCamera(mTextureView.getWidth(), mTextureView.getHeight());
-            } else {
-                mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-            }
+            doafterallpermissions();
         }else {
                 String[] array = new String[deniedpermissions.size()];
                 array = deniedpermissions.toArray(array);
                 ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
             }
+        }
+
+
+        public void doafterallpermissions()
+        {
+            if (mTextureView.isAvailable()) {
+                openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+            }
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
         // When the screen is turned off and turned back on, the SurfaceTexture is already
         // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
@@ -1049,7 +1053,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 }
             }
             if (permissionsallgranted) {
-
+                doafterallpermissions();
             } else {
                 Toast.makeText(getActivity(), R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
 
