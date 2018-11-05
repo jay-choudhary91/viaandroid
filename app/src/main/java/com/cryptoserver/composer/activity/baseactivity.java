@@ -181,10 +181,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
     @Override
     public void replacetabfragment(basefragment f, boolean clearBackStack, boolean addToBackstack) {
-        replacetabfragment(f, R.id.tab_container, clearBackStack, addToBackstack);
+       // replacetabfragment(f, R.id.tab_container, clearBackStack, addToBackstack);
     }
 
-    public void replacetabfragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack) {
+   /* public void replaceFragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack) {
         if (clearBackStack) {
             clearfragmentbackstack();
         }
@@ -202,7 +202,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         mfragments.push(f);
 
         onfragmentbackstackchanged();
-    }
+    }*/
     public int minnumberoffragments = 1;
 
     public int getMinNumberOfFragments() {
