@@ -672,12 +672,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 }
                         }
                     }
-                    mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                    try {
+                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                     return true;
-                } catch (CameraAccessException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (NullPointerException ex) {
-                    ex.printStackTrace();
                 }
                 break;
         }
