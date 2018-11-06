@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -41,14 +43,17 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -61,13 +66,20 @@ import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.metadata.MetaDataInsert;
 import com.cryptoserver.composer.models.frameinfo;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.md5;
+import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -513,16 +525,13 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
-
-
             captureimage = rootview.findViewById(R.id.img_image_capture);
-            captureimage.setOnClickListener(this);
 
-            mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
-           /* mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
-            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
+            mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
+            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
+
+
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
@@ -538,14 +547,18 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             handleimageview=rootview.findViewById(R.id.handle);
             righthandle=rootview.findViewById(R.id.righthandle);
 
+
+
             recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
-            mrecordimagebutton.setOnClickListener(this);
-            imgflashon.setOnClickListener(this);
-            rotatecamera.setOnClickListener(this);
 
-            if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
-                apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
+            captureimage.setOnClickListener(this);
+            timerhandler = new Handler() ;
+            handleimageview.setOnTouchListener(this);
+            righthandle.setOnTouchListener(this);
+            rotatecamera.setOnClickListener(this);
+            imgflashon.setOnClickListener(this);
+
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -603,33 +616,6 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 }
             });
 
-            timerhandler = new Handler() ;
-            gethelper().updateheader("00:00:00");
-            if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-                frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
-
-            if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                    xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-            {
-                keytype=config.prefs_md5;
-            }
-            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-            {
-                keytype=config.prefs_md5_salt;
-            }
-            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-            {
-                keytype=config.prefs_sha;
-            }
-            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-            {
-                keytype=config.prefs_sha_salt;
-            }
-
-            mTextureView.setOnTouchListener(this);
-            handleimageview.setOnTouchListener(this);
-            righthandle.setOnTouchListener(this);
-
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
@@ -681,73 +667,114 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 recyview_metrices.setLayoutManager(mLayoutManager);
                 recyview_metrices.setItemAnimator(new DefaultItemAnimator());
                 recyview_metrices.setAdapter(mmetricesadapter);
-                //implementscrolllistener();
+                implementscrolllistener();
             }
 
-            setmetriceshashesdata();*/
+            setmetriceshashesdata();
         }
         return rootview;
     }
 
-    public void setmetriceshashesdata()
-    {
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
 
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
+    public void setimagehash(){
+
+        /*Bitmap bitmap = mTextureView.getBitmap(10,10);
+        bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
+                bitmap.getHeight(), mTextureView.getTransform( null ), true );
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 5, stream);
+        byte[] byteArray = stream.toByteArray();*/
+
+       // BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+       // Bitmap bitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath(),bmOptions);
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 5, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        final String keyhash =  getkeyvalue(byteArray);
+
+        Log.e("keyhash = ","" +keyhash);
+
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
 
-                boolean graphicopen=false;
-                if(isdraweropen)
-                {
-                    if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
-                    {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mhashesitems.add(new videomodel(selectedhashes));
-                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                                selectedhashes="";
-                            }
-                        });
-                    }
+                showsharepopupmain();
 
-                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
-                    {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mmetricsitems.add(new videomodel(selectedmetrices));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                selectedmetrices="";
-                            }
-                        });
-                    }
-
-                    if(! selectedmetrices.toString().trim().isEmpty())
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                        selectedmetrices="";
-                    }
-
-                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen=true;
-                }
-
-                if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
-                {
-                    fragmentgraphic.setdrawerproperty(graphicopen);
-                    fragmentgraphic.setmetricesdata();
-                }
-
-                myHandler.postDelayed(this, 1000);
+                mhashesitems.add(new videomodel(keyhash));
+                mhashesadapter.notifyDataSetChanged();
+                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
             }
-        };
-        myHandler.post(myRunnable);
+        });
     }
+
+
+    public String getkeyvalue(byte[] data)
+    {
+        String value="";
+        String salt="";
+
+        switch (keytype)
+        {
+            case config.prefs_md5:
+                value= md5.calculatebytemd5(data);
+                break;
+
+            case config.prefs_md5_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= md5.calculatebytemd5(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= md5.calculatebytemd5(data);
+                }
+
+                break;
+            case config.prefs_sha:
+                value= sha.sha1(data);
+                break;
+            case config.prefs_sha_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= sha.sha1(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= sha.sha1(data);
+                }
+                break;
+        }
+        return value;
+    }
+
 
 
     public void setmetricesadapter()
@@ -764,6 +791,24 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             });
         }
 
+    }
+
+    // Implement scroll listener
+    private void implementscrolllistener() {
+        recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
     }
 
     @Override
@@ -865,12 +910,14 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         Activity activity = getActivity();
         manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
+
             for (String cameraId : manager.getCameraIdList()) {
                 CameraCharacteristics characteristics
                         = manager.getCameraCharacteristics(cameraId);
 
                 // We don't use a front facing camera in this sample.
                 Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
+
                 if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
                     continue;
                 }
@@ -1188,6 +1235,10 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             if (null == activity || null == mCameraDevice) {
                 return;
             }
+            selectedmetrices="";
+            mmetricsitems.clear();
+            mmetricesadapter.notifyDataSetChanged();
+
             // This is the CaptureRequest.Builder that we use to take a picture.
             final CaptureRequest.Builder captureBuilder =
                     mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
@@ -1209,7 +1260,14 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("Saved: " + mFile);
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setimagehash();
+                        }
+                    }).start();
+
                     Log.d(TAG, mFile.toString());
                     unlockFocus();
                     //gethelper().onBack();
@@ -1344,7 +1402,373 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                     if(fragmentgraphic != null)
                         fragmentgraphic.setvisualizer();
                 }
+                break;
         }
+    }
+
+    public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
+    {
+        JSONArray metricesarray=new JSONArray();
+        StringBuilder builder=new StringBuilder();
+        JSONObject object=new JSONObject();
+        for(int j=0;j<mlocalarraylist.size();j++)
+        {
+            metricmodel metric=mlocalarraylist.get(j);
+            String value=metric.getMetricTrackValue();
+            common.setgraphicalitems(metric.getMetricTrackKeyName(),value,true);
+
+            if(metric.getMetricTrackValue().trim().isEmpty() ||
+                    metric.getMetricTrackValue().equalsIgnoreCase("null"))
+            {
+                value="NA";
+            }
+            builder.append("\n"+metric.getMetricTrackKeyName()+" - "+value);
+            //selectedmetrices=selectedmetrices+"\n"+metric.getMetricTrackKeyName()+" - "+value;
+
+            try {
+                object.put(metric.getMetricTrackKeyName(),value);
+
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        builder.append("\n");
+        //metadatametricesjson.put(object);
+        selectedmetrices=selectedmetrices+builder.toString();
+    }
+
+    public void setmetriceshashesdata()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                boolean graphicopen=false;
+                if(isdraweropen)
+                {
+                    if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
+                    {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mhashesitems.add(new videomodel(selectedhashes));
+                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                                selectedhashes="";
+                            }
+                        });
+                    }
+
+                    if(mmetricsitems.size() == 0)
+                    {
+                        ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                        getselectedmetrics(mlocalarraylist);
+
+                        if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
+                        {
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mmetricsitems.add(new videomodel(selectedmetrices));
+                                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                                    selectedmetrices="";
+                                }
+                            });
+                        }
+
+                        if(! selectedmetrices.toString().trim().isEmpty())
+                        {
+                            mmetricsitems.add(new videomodel(selectedmetrices));
+                            mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                            selectedmetrices="";
+                        }
+                    }
+
+
+                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+                        graphicopen=true;
+                }
+
+                if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
+                {
+                    fragmentgraphic.setdrawerproperty(graphicopen);
+                    fragmentgraphic.setmetricesdata();
+                }
+
+                myHandler.postDelayed(this, 1000);
+            }
+        };
+        myHandler.post(myRunnable);
+    }
+
+
+    public void showsharepopupmain()
+    {
+        if(maindialogshare != null && maindialogshare.isShowing())
+            maindialogshare.dismiss();
+
+        maindialogshare=new Dialog(applicationviavideocomposer.getactivity());
+        maindialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        maindialogshare.setCanceledOnTouchOutside(true);
+        maindialogshare.setContentView(R.layout.popup_sharescreen);
+        //maindialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int width=widthHeight[0];
+        double height=widthHeight[1]/1.6;
+        maindialogshare.getWindow().setLayout(width-20, (int)height);
+        maindialogshare.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+
+            }
+        });
+        TextView txt_share_btn1 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn1);
+        TextView txt_share_btn2 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn2);
+        TextView txt_share_btn3 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn3);
+        TextView txt_title1 = (TextView)maindialogshare.findViewById(R.id.txt_title1);
+        TextView txt_title2 = (TextView)maindialogshare.findViewById(R.id.txt_title2);
+        ImageView img_cancel=maindialogshare.findViewById(R.id.img_cancelicon);
+
+        txt_share_btn1.setText(getResources().getString(R.string.share));
+        txt_share_btn2.setText(getResources().getString(R.string.new_audio));
+        txt_share_btn3.setText(getResources().getString(R.string.listen));
+
+        txt_title1.setText(getResources().getString(R.string.audio_has_been_encrypted));
+        txt_title2.setText(getResources().getString(R.string.congratulations_audio));
+
+        common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),20);
+        common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),20);
+        common.changeFocusStyle(txt_share_btn3,getResources().getColor(R.color.share_c),20);
+
+        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+
+                showsharepopupsub();
+            }
+        });
+
+        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+            }
+        });
+
+        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+            }
+        });
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(maindialogshare != null && maindialogshare.isShowing())
+                    maindialogshare.dismiss();
+
+            }
+        });
+        maindialogshare.show();
+    }
+
+
+    public void showsharepopupsub()
+    {
+        if(subdialogshare != null && subdialogshare.isShowing())
+            subdialogshare.dismiss();
+
+        subdialogshare=new Dialog(applicationviavideocomposer.getactivity());
+        subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        subdialogshare.setCanceledOnTouchOutside(true);
+
+        subdialogshare.setContentView(R.layout.popup_sharescreen);
+        //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int width=widthHeight[0];
+        double height=widthHeight[1]/1.6;
+        subdialogshare.getWindow().setLayout(width-20, (int)height);
+
+        TextView txt_share_btn1 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn1);
+        TextView txt_share_btn2 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn2);
+        TextView txt_share_btn3 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn3);
+        TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
+        TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
+        ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
+
+        txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
+        txt_share_btn2.setText(getResources().getString(R.string.share_partial_video));
+        txt_share_btn3.setText(getResources().getString(R.string.cancel_viewlist));
+
+        txt_title1.setText(getResources().getString(R.string.audio_how_would_you));
+        txt_title2.setText("");
+
+        common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),5);
+        common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),5);
+        common.changeFocusStyle(txt_share_btn3,getResources().getColor(R.color.share_c),5);
+
+        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+
+            }
+        });
+
+        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+            }
+        });
+
+        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+            }
+        });
+        img_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(subdialogshare != null && subdialogshare.isShowing())
+                    subdialogshare.dismiss();
+            }
+        });
+        subdialogshare.show();
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        switch (view.getId())
+        {
+            case  R.id.handle:
+                flingswipe.onTouchEvent(motionEvent);
+                break;
+
+            case  R.id.righthandle:
+                flingswipe.onTouchEvent(motionEvent);
+                break;
+        }
+        return true;
+    }
+
+    GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
+    {
+        private static final int flingactionmindstvac = 60;
+        private static final int flingactionmindspdvac = 100;
+
+        @Override
+        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
+                               float flingActionYcoSpdPsgVal)
+        {
+            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Right to Left fling
+                swiperighttoleft();
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Left to Right fling
+                swipelefttoright();
+                return false;
+            }
+
+            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Bottom to Top fling
+
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Top to Bottom fling
+
+                return false;
+            }
+            return false;
+        }
+    });
+
+    public void swipelefttoright()
+    {
+        isdraweropen=true;
+        Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
+        linearLayout.startAnimation(rightswipe);
+        handleimageview.setVisibility(View.GONE);
+        linearLayout.setVisibility(View.VISIBLE);
+        rightswipe.start();
+        righthandle.setVisibility(View.VISIBLE);
+        rightswipe.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                righthandle.setImageResource(R.drawable.righthandle);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                righthandle.setImageResource(R.drawable.lefthandle);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    public void swiperighttoleft()
+    {
+        isdraweropen=false;
+        Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
+        linearLayout.startAnimation(leftswipe);
+        linearLayout.setVisibility(View.INVISIBLE);
+        righthandle.setVisibility(View.VISIBLE);
+        handleimageview.setVisibility(View.GONE);
+        leftswipe.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                handleimageview.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
@@ -1354,10 +1778,6 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         }
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        return false;
-    }
 
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
@@ -1490,9 +1910,8 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     private void navigateflash() {
         try {
             if(isflashon) {
-                imgflashon.setImageResource(R.drawable.flash_off);
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    imgflashon.setImageResource(R.drawable.flash_off);
                     manager.setTorchMode(mCameraId, true);
                     isflashon = false;
                 }
@@ -1503,10 +1922,10 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     manager.setTorchMode(mCameraId, false);
+                    imgflashon.setImageResource(R.drawable.flash_on);
+
                     isflashon = true;
                 }
-
-                imgflashon.setImageResource(R.drawable.flash_on);
 
                /* mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
                 mPreviewRequestBuilder.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
