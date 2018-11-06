@@ -1343,11 +1343,11 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             }
 
             case R.id.img_flash_on:
-                navigateflash();
+               // navigateflash();
                 break;
 
             case R.id.img_rotate_camera:
-                switchCamera();
+               // switchCamera();
                 break;
             case R.id.txt_slot1:
                 if(selectedsection != 1)
