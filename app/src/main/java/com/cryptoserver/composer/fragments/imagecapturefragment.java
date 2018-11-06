@@ -24,6 +24,8 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
+import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -33,17 +35,38 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.videoframeadapter;
+import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.frameinfo;
+import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.xdata;
+
+import org.json.JSONArray;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,11 +84,14 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 
+import static com.cryptoserver.composer.fragments.videocomposerfragment.CAMERA_BACK;
+import static com.cryptoserver.composer.fragments.videocomposerfragment.CAMERA_FRONT;
+
 /**
  * Created by devesh on 5/11/18.
  */
 
-public class imagecapturefragment extends basefragment  implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback{
+public class imagecapturefragment extends basefragment  implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener{
 
 
 
@@ -118,7 +144,9 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
      */
     private static final int MAX_PREVIEW_HEIGHT = 1080;
 
-    View rootview = null;
+
+    private CaptureRequest.Builder mPreviewBuilder;
+
 
     /**
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
@@ -242,9 +270,6 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
 
     };
 
-    /**
-     * {@link CaptureRequest.Builder} for the camera preview
-     */
     private CaptureRequest.Builder mPreviewRequestBuilder;
 
     /**
@@ -274,6 +299,62 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
      */
     private int mSensorOrientation;
 
+    LinearLayout layout_bottom,layout_drawer;
+
+    RecyclerView recyview_hashes;
+    RecyclerView recyview_metrices;
+    ImageView handleimageview,righthandle;
+    LinearLayout linearLayout;
+    FrameLayout fragment_graphic_container;
+    boolean isflashon = false,inPreview = true;
+
+    TextView txtSlot1;
+    TextView txtSlot2;
+    TextView txtSlot3,txt_metrics,txt_hashes;
+    ScrollView scrollview_metrices,scrollview_hashes;
+
+    public int selectedsection=1;
+
+    ImageView mrecordimagebutton,imgflashon,rotatecamera,handle;
+
+    public Dialog maindialogshare,subdialogshare;
+    View rootview = null;
+    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    Handler timerhandler;
+    int Seconds, Minutes, MilliSeconds ;
+    String keytype = config.prefs_md5,currenthashvalue="";
+    ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    ArrayList<frameinfo> muploadframelist =new ArrayList<>();
+    long currentframenumber =0;
+    long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
+    public boolean autostartvideo=false,camerastatusok=false;
+    adapteritemclick madapterclick;
+    File lastrecordedvideo=null;
+    String selectedvideofile ="",videokey="",selectedmetrices="", selectedhashes ="";
+    int metriceslastupdatedposition=0;
+    //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+    ArrayList<videomodel> mmetricsitems =new ArrayList<>();
+    ArrayList<videomodel> mhashesitems =new ArrayList<>();
+    videoframeadapter mmetricesadapter,mhashesadapter;
+
+    databasemanager mdbhelper;
+    private boolean isdraweropen=false,isgraphicalshown=false;
+    private Handler myHandler;
+    private Runnable myRunnable;
+    private int lastmetricescount=0;
+    private boolean issavedtofolder=false;
+    JSONArray metadatametricesjson=new JSONArray();
+
+    String localkey = null;
+    private LinearLayoutManager mLayoutManager;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+
+    graphicalfragment fragmentgraphic;
+
+    CameraManager manager;
+
+    ImageView captureimage;
+
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
      */
@@ -291,11 +372,11 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                     if (afState == null) {
                         captureStillPicture();
                     } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState ||
-                            CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState) {
+                            CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState ||
+                            CaptureResult.CONTROL_AF_STATE_INACTIVE == afState /*add this*/) {
                         // CONTROL_AE_STATE can be null on some devices
                         Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
-                        if (aeState == null ||
-                                aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
+                        if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
                             mState = STATE_PICTURE_TAKEN;
                             captureStillPicture();
                         } else {
@@ -428,17 +509,261 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                              Bundle savedInstanceState) {
 
         if(rootview == null) {
+
+
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            rootview.findViewById(R.id.img_image_capture).setOnClickListener(this);
+
+
+            captureimage = rootview.findViewById(R.id.img_image_capture);
+            captureimage.setOnClickListener(this);
 
             mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
+           /* mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
+            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
+            rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
+            handle = (ImageView) rootview.findViewById(R.id.handle);
+            layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
+            layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
+            txtSlot1 = (TextView) rootview.findViewById(R.id.txt_slot1);
+            txtSlot2 = (TextView) rootview.findViewById(R.id.txt_slot2);
+            txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
+            txt_metrics = (TextView) rootview.findViewById(R.id.txt_metrics);
+            txt_hashes = (TextView) rootview.findViewById(R.id.txt_hashes);
+            scrollview_metrices = (ScrollView) rootview.findViewById(R.id.scrollview_metrices);
+            scrollview_hashes = (ScrollView) rootview.findViewById(R.id.scrollview_hashes);
+            fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_container);
+            linearLayout=rootview.findViewById(R.id.content);
+            handleimageview=rootview.findViewById(R.id.handle);
+            righthandle=rootview.findViewById(R.id.righthandle);
+
+            recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
+            recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
+            mrecordimagebutton.setOnClickListener(this);
+            imgflashon.setOnClickListener(this);
+            rotatecamera.setOnClickListener(this);
+
+            if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
+                apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
+
+            handleimageview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
+                    linearLayout.startAnimation(rightswipe);
+                    handleimageview.setVisibility(View.GONE);
+                    linearLayout.setVisibility(View.VISIBLE);
+                    rightswipe.start();
+                    righthandle.setVisibility(View.VISIBLE);
+                    rightswipe.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            righthandle.setImageResource(R.drawable.righthandle);
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            righthandle.setImageResource(R.drawable.lefthandle);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+
+                }
+            });
+
+            righthandle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
+                    linearLayout.startAnimation(leftswipe);
+                    linearLayout.setVisibility(View.INVISIBLE);
+                    righthandle.setVisibility(View.VISIBLE);
+                    handleimageview.setVisibility(View.GONE);
+                    leftswipe.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            handleimageview.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                }
+            });
+
+            timerhandler = new Handler() ;
+            gethelper().updateheader("00:00:00");
+            if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+                frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+            if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                    xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+            {
+                keytype=config.prefs_md5;
+            }
+            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+            {
+                keytype=config.prefs_md5_salt;
+            }
+            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+            {
+                keytype=config.prefs_sha;
+            }
+            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+            {
+                keytype=config.prefs_sha_salt;
+            }
+
+            mTextureView.setOnTouchListener(this);
+            handleimageview.setOnTouchListener(this);
+            righthandle.setOnTouchListener(this);
+
+            txtSlot1.setOnClickListener(this);
+            txtSlot2.setOnClickListener(this);
+            txtSlot3.setOnClickListener(this);
+
+            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+            txtSlot1.setVisibility(View.VISIBLE);
+            txtSlot2.setVisibility(View.VISIBLE);
+            txtSlot3.setVisibility(View.VISIBLE);
+            txt_metrics.setVisibility(View.INVISIBLE);
+            txt_hashes.setVisibility(View.INVISIBLE);
+            recyview_hashes.setVisibility(View.VISIBLE);
+            recyview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_metrices.setVisibility(View.INVISIBLE);
+            scrollview_hashes.setVisibility(View.INVISIBLE);
+            fragment_graphic_container.setVisibility(View.INVISIBLE);
+
+            {
+
+                mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+
+                    }
+
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+
+                    }
+                });
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                recyview_hashes.setLayoutManager(mLayoutManager);
+                recyview_hashes.setItemAnimator(new DefaultItemAnimator());
+                recyview_hashes.setAdapter(mhashesadapter);
+            }
+
+            {
+                mmetricesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mmetricsitems, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+
+                    }
+
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+
+                    }
+                });
+                mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+                recyview_metrices.setLayoutManager(mLayoutManager);
+                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
+                recyview_metrices.setAdapter(mmetricesadapter);
+                //implementscrolllistener();
+            }
+
+            setmetriceshashesdata();*/
+        }
+        return rootview;
+    }
+
+    public void setmetriceshashesdata()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                boolean graphicopen=false;
+                if(isdraweropen)
+                {
+                    if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
+                    {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mhashesitems.add(new videomodel(selectedhashes));
+                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                                selectedhashes="";
+                            }
+                        });
+                    }
+
+                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
+                    {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mmetricsitems.add(new videomodel(selectedmetrices));
+                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                                selectedmetrices="";
+                            }
+                        });
+                    }
+
+                    if(! selectedmetrices.toString().trim().isEmpty())
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        selectedmetrices="";
+                    }
+
+                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+                        graphicopen=true;
+                }
+
+                if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
+                {
+                    fragmentgraphic.setdrawerproperty(graphicopen);
+                    fragmentgraphic.setmetricesdata();
+                }
+
+                myHandler.postDelayed(this, 1000);
+            }
+        };
+        myHandler.post(myRunnable);
+    }
 
 
+    public void setmetricesadapter()
+    {
+        if(selectedmetrices.toString().trim().length() > 0)
+        {
+            mmetricsitems.add(new videomodel(selectedmetrices));
+            recyview_metrices.post(new Runnable() {
+                @Override
+                public void run() {
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                    selectedmetrices="";
+                }
+            });
         }
 
-        return rootview;
     }
 
     @Override
@@ -451,8 +776,8 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        mFile = new File(getActivity().getExternalFilesDir(null), fileName+".jpg");
+       /* String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        mFile = new File(getActivity().getExternalFilesDir(null), fileName+".jpg");*/
     }
 
     @Override
@@ -464,7 +789,9 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
         };
+
         List<String> deniedpermissions = new ArrayList<>();
+
         for (String permission : neededpermissions) {
             if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
                 deniedpermissions.add(permission);
@@ -484,9 +811,12 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
 
         public void doafterallpermissions()
         {
+            startBackgroundThread();
+
             if (mTextureView.isAvailable()) {
                 openCamera(mTextureView.getWidth(), mTextureView.getHeight());
             }
+
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
 
         }
@@ -533,7 +863,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     @SuppressWarnings("SuspiciousNameCombination")
     private void setUpCameraOutputs(int width, int height) {
         Activity activity = getActivity();
-        CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             for (String cameraId : manager.getCameraIdList()) {
                 CameraCharacteristics characteristics
@@ -648,7 +978,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         setUpCameraOutputs(width, height);
         configureTransform(width, height);
         Activity activity = getActivity();
-        CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+         manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
@@ -746,7 +1076,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                                 mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                                         CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                                 // Flash is automatically enabled when necessary.
-                                setAutoFlash(mPreviewRequestBuilder);
+                                //setAutoFlash(mPreviewRequestBuilder);
 
                                 // Finally, we start displaying the camera preview.
                                 mPreviewRequest = mPreviewRequestBuilder.build();
@@ -761,6 +1091,8 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                         public void onConfigureFailed(
                                 @NonNull CameraCaptureSession cameraCaptureSession) {
                             showToast("Failed");
+
+
                         }
                     }, null
             );
@@ -806,7 +1138,9 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
      * Initiate a still image capture.
      */
     private void takePicture() {
-        lockFocus();
+        //lockFocus();
+
+        captureStillPicture();
     }
 
     /**
@@ -862,7 +1196,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             // Use the same AE and AF modes as the preview.
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-            setAutoFlash(captureBuilder);
+           // setAutoFlash(captureBuilder);
 
             // Orientation
             int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
@@ -885,6 +1219,8 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             mCaptureSession.stopRepeating();
             mCaptureSession.abortCaptures();
             mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
+
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -913,7 +1249,9 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             // Reset the auto-focus trigger
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                     CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
-            setAutoFlash(mPreviewRequestBuilder);
+
+           // setAutoFlash(mPreviewRequestBuilder);
+
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
             // After this, the camera will go back to the normal state of preview.
@@ -929,7 +1267,9 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_image_capture: {
+                getImageFile(getActivity());
                 takePicture();
+
                 break;
             }
             case R.id.info: {
@@ -942,6 +1282,68 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 }
                 break;
             }
+
+            case R.id.img_flash_on:
+                navigateflash();
+                break;
+
+            case R.id.img_rotate_camera:
+                switchCamera();
+                break;
+            case R.id.txt_slot1:
+                if(selectedsection != 1)
+                {
+                    selectedsection=1;
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+
+                    recyview_hashes.setVisibility(View.VISIBLE);
+                    recyview_metrices.setVisibility(View.INVISIBLE);
+                    fragment_graphic_container.setVisibility(View.INVISIBLE);
+
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+                }
+
+                break;
+
+            case R.id.txt_slot2:
+                if(selectedsection != 2)
+                {
+                    selectedsection=2;
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+                    fragment_graphic_container.setVisibility(View.INVISIBLE);
+
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+
+                    recyview_metrices.setVisibility(View.VISIBLE);
+                    recyview_hashes.setVisibility(View.INVISIBLE);
+
+                    resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
+                }
+
+                break;
+
+            case R.id.txt_slot3:
+                if(selectedsection != 3)
+                {
+                    selectedsection=3;
+                    fragment_graphic_container.setVisibility(View.VISIBLE);
+                    scrollview_metrices.setVisibility(View.INVISIBLE);
+                    scrollview_hashes.setVisibility(View.INVISIBLE);
+                    recyview_metrices.setVisibility(View.INVISIBLE);
+                    recyview_hashes.setVisibility(View.INVISIBLE);
+                    txt_hashes.setVisibility(View.INVISIBLE);
+                    txt_metrics.setVisibility(View.INVISIBLE);
+                    resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
+
+                    if(fragmentgraphic != null)
+                        fragmentgraphic.setvisualizer();
+                }
         }
     }
 
@@ -950,6 +1352,11 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
                     CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
         }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return false;
     }
 
     /**
@@ -1061,6 +1468,126 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             }
         }
     }
+
+    private File getImageFile(Context context) {
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        mFile=new File(config.videodir, fileName+".jpg");
+
+        File destinationDir=new File(config.videodir);
+        try {
+
+            if (!destinationDir.exists())
+                destinationDir.mkdirs();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        selectedvideofile=mFile.getAbsolutePath();
+        return mFile;
+    }
+
+    private void navigateflash() {
+        try {
+            if(isflashon) {
+                imgflashon.setImageResource(R.drawable.flash_off);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    manager.setTorchMode(mCameraId, true);
+                    isflashon = false;
+                }
+               /* mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
+                mPreviewRequestBuilder.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);*/
+                //isflashon = false;
+            } else {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    manager.setTorchMode(mCameraId, false);
+                    isflashon = true;
+                }
+
+                imgflashon.setImageResource(R.drawable.flash_on);
+
+               /* mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+                mPreviewRequestBuilder.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
+                isflashon = true;*/
+            }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void turnOnFlashLight() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                manager.setTorchMode(mCameraId, true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void turnOffFlashLight() {
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                manager.setTorchMode(mCameraId, false);
+                /*playOnOffSound();
+                mTorchOnOffButton.setImageResource(R.drawable.off);*/
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void switchCamera() {
+        if (mCameraId.equals(CAMERA_FRONT)) {
+            mCameraId = CAMERA_BACK;
+            closeCamera();
+            reopenCamera();
+
+        } else if (mCameraId.equals(CAMERA_BACK)) {
+            mCameraId = CAMERA_FRONT;
+            closeCamera();
+            reopenCamera();
+        }
+    }
+
+    public void reopenCamera() {
+        if (mTextureView.isAvailable())
+            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+
+    }
+
+    public void resetButtonViews(TextView view1, TextView view2, TextView view3)
+    {
+        view1.setBackgroundResource(R.color.videolist_background);
+        view1.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.white));
+
+        view2.setBackgroundResource(R.color.white);
+        view2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
+
+        view3.setBackgroundResource(R.color.white);
+        view3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
+    }
+
+   /* private void playOnOffSound(){
+
+        mp = MediaPlayer.create(FlashLightActivity.this, R.raw.flash_sound);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                // TODO Auto-generated method stub
+                mp.release();
+            }
+        });
+        mp.start();
+    }*/
 
     /**
      * Shows OK/Cancel confirmation dialog about camera permission.
