@@ -48,7 +48,7 @@ public class bottombarfragment extends basefragment  {
                     if(fragimgcapture == null)
                         fragimgcapture=new imagecapturefragment();
 
-                    //fragimgcapture.setData(false, mclick);
+                    fragimgcapture.setData(mclick);
                     gethelper().replacetabfragment(fragimgcapture,false,true);
                     return true;
             }

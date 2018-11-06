@@ -110,7 +110,6 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private static final String FRAGMENT_DIALOG = "dialog";
-
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
@@ -704,8 +703,6 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 mhashesitems.clear();
                 mhashesadapter.notifyDataSetChanged();
 
-                showsharepopupmain();
-
                 mhashesitems.add(new videomodel(keyhash));
                 mhashesadapter.notifyDataSetChanged();
                 recyview_hashes.scrollToPosition(mhashesitems.size()-1);
@@ -1268,6 +1265,10 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                         }
                     }).start();
 
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,1);
+
+                    showsharepopupmain();
                     Log.d(TAG, mFile.toString());
                     unlockFocus();
                     //gethelper().onBack();
@@ -2039,4 +2040,8 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                     .create();
         }
     }*/
+
+    public void setData(adapteritemclick madapterclick) {
+        this.madapterclick = madapterclick;
+    }
 }

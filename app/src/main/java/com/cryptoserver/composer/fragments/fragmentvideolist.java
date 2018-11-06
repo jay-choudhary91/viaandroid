@@ -288,44 +288,52 @@ public class fragmentvideolist extends basefragment {
                         videoobj.setCreatedate(outputdatestr);
                         videoobj.setLastmodifiedtime(file.lastModified());
 
-                        boolean isVideo=false;
+                        boolean ismedia=false;
                         MediaExtractor extractor = new MediaExtractor();
                         try {
-                            //Adjust data source as per the requirement if file, URI, etc.
-                            extractor.setDataSource(file.getAbsolutePath());
-                            int numTracks = extractor.getTrackCount();
-                            if(numTracks > 0)
-                            {
-                                for (int i = 0; i < numTracks; ++i) {
-                                    MediaFormat format = extractor.getTrackFormat(i);
-                                    String mime = format.getString(MediaFormat.KEY_MIME);
-                                    if(i == 0)
-                                        videoobj.setmimetype(mime);
 
-                                    if (mime.startsWith("video/") || mime.startsWith("audio/"))
-                                    {
-                                        if (format.containsKey(MediaFormat.KEY_DURATION)) {
-                                            long seconds = format.getLong(MediaFormat.KEY_DURATION);
-                                            seconds=seconds/1000000;
-                                            int day = (int) TimeUnit.SECONDS.toDays(seconds);
-                                            long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
-                                            long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
-                                            long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
-                                            videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                            if(second > 0 || minute > 0 || hours > 0)
-                                            {
-                                                videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                                isVideo=true;
+                            if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png"))
+                            {
+                                videoobj.setmimetype("image/");
+                                ismedia=true;
+                            }
+                            else
+                            {
+                                //Adjust data source as per the requirement if file, URI, etc.
+                                extractor.setDataSource(file.getAbsolutePath());
+                                int numTracks = extractor.getTrackCount();
+                                if(numTracks > 0)
+                                {
+                                    for (int i = 0; i < numTracks; ++i) {
+                                        MediaFormat format = extractor.getTrackFormat(i);
+                                        String mime = format.getString(MediaFormat.KEY_MIME);
+                                        if(i == 0)
+                                            videoobj.setmimetype(mime);
+
+                                        if (mime.startsWith("video/") || mime.startsWith("audio/"))
+                                        {
+                                            if (format.containsKey(MediaFormat.KEY_DURATION)) {
+                                                long seconds = format.getLong(MediaFormat.KEY_DURATION);
+                                                seconds=seconds/1000000;
+                                                int day = (int) TimeUnit.SECONDS.toDays(seconds);
+                                                long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
+                                                long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
+                                                long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                                                videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                                if(second > 0 || minute > 0 || hours > 0)
+                                                {
+                                                    videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                                    ismedia=true;
+                                                }
                                             }
                                         }
-                                    }
-                                    else if (mime.startsWith("image/"))
-                                    {
-
+                                        else if (mime.startsWith("image/"))
+                                        {
+                                            ismedia=true;
+                                        }
                                     }
                                 }
                             }
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }finally {
@@ -334,7 +342,7 @@ public class fragmentvideolist extends basefragment {
                         }
                         //String md= md5.calculatemd5(file);
                         //videoobj.setMd5(""+md);
-                        if(isVideo)
+                        if(ismedia)
                             arrayvideolist.add(videoobj);
                     }
 

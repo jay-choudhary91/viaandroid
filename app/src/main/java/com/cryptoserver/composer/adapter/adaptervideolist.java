@@ -96,7 +96,15 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         }
 
         holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
-        holder.tvvideoduration.setText("Duration : " +arrayvideolist.get(position).getDuration());
+
+        if (arrayvideolist.get(position).getmimetype().contains("image/"))
+        {
+            holder.tvvideoduration.setText("");
+        }
+        else
+        {
+            holder.tvvideoduration.setText("Duration : " +arrayvideolist.get(position).getDuration());
+        }
 
         holder.edtvideoname.setEnabled(false);
         holder.edtvideoname.setClickable(false);
@@ -140,7 +148,7 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         }
         else
         {
-            holder.img_videothumbnail.setImageResource(R.drawable.ic_microphone);
+            holder.img_videothumbnail.setBackgroundResource(R.drawable.audiotab);
         }
 
         if(arrayvideolist.get(position).isSelected){
