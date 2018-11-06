@@ -49,14 +49,8 @@ public class fragmentaudiolist extends basefragment {
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_add_icon:
-                Toast.makeText(getActivity(), "audiolist", Toast.LENGTH_SHORT).show();
-
-               imagecapturefragment imagecapturefrag=new imagecapturefragment();
-                gethelper().replacetabfragment(imagecapturefrag,false,true);
-
-
-
-                //   launchvideocomposer(false);
+                audiocomposerfragment imagecapturefrag=new audiocomposerfragment();
+                gethelper().addFragment(imagecapturefrag,false,true);
                 break;
         }
     }

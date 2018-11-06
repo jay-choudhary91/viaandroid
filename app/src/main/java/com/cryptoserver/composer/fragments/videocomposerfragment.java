@@ -506,7 +506,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             fragment_graphic_container.setVisibility(View.INVISIBLE);
 
             {
-
                 mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
@@ -1397,7 +1396,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             transaction.commit();
         }
 
-
         camerastatusok=true;
         layout_bottom.setVisibility(View.VISIBLE);
         mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
@@ -1436,7 +1434,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             try {
                 if(! issavedtofolder && common.getstoragedeniedpermissions().isEmpty() && (selectedvideofile != null )
                         && new File(selectedvideofile).exists())
-                    common.deletevideofile(selectedvideofile);
+                    common.deletefile(selectedvideofile);
             }catch (Exception e)
             {
                 e.printStackTrace();
@@ -1676,7 +1674,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(metric.getMetricTrackValue().trim().isEmpty() ||
                     metric.getMetricTrackValue().equalsIgnoreCase("null"))
             {
-                value="N/A";
+                value="NA";
             }
             builder.append("\n"+metric.getMetricTrackKeyName()+" - "+value);
             //selectedmetrices=selectedmetrices+"\n"+metric.getMetricTrackKeyName()+" - "+value;

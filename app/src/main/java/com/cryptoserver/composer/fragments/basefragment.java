@@ -596,7 +596,7 @@ public abstract class basefragment extends Fragment {
         }
         else if(key.equalsIgnoreCase("networktype") || key.equalsIgnoreCase("internalip"))
         {
-            metricItemValue="N/A";
+            metricItemValue="NA";
             ConnectivityManager cm =
                     (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
 

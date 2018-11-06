@@ -3,11 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/videolist_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.bottombarfragment">
+    android:background="@color/videolist_background">
 
-<!--
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="wrap_content"
@@ -19,6 +17,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />-->
+        app:menu="@menu/navigation" />
+
+    <FrameLayout
+        android:id="@+id/tab_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:layout_above="@id/navigation"
+        android:orientation="vertical">
+
+    </FrameLayout>
 
 </RelativeLayout>

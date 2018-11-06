@@ -49,7 +49,7 @@ public class graphicaldataadapter extends RecyclerView.Adapter<graphicaldataadap
             holder.tv_graphicaltitle.setVisibility(View.GONE);
 
         if(graphicalmodeldata.getGraphicalvalue().trim().isEmpty() || graphicalmodeldata.getGraphicalvalue().equalsIgnoreCase("null"))
-            holder.tv_graphicalvalue.setText("N/A");
+            holder.tv_graphicalvalue.setText("NA");
     }
 
     @Override

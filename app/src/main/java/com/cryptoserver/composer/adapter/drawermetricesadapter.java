@@ -65,7 +65,7 @@ public class drawermetricesadapter extends RecyclerView.Adapter<drawermetricesad
 
         content=metricModel.getMetricTrackValue();
         if(metricModel.getMetricTrackValue().trim().isEmpty() || metricModel.getMetricTrackValue().equalsIgnoreCase("null"))
-            content="N/A";
+            content="NA";
 
         holder.txt_info.setText(key+" - "+content);
     }

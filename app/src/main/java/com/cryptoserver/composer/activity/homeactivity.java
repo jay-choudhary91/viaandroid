@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.fragments.audiocomposerfragment;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
 import com.cryptoserver.composer.fragments.fragmentaudiolist;
@@ -208,7 +209,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else if( getcurrentfragment() instanceof fragmentsettings || getcurrentfragment() instanceof fragmentvideolist|| getcurrentfragment() instanceof fragmentaudiolist || getcurrentfragment() instanceof fragmentimagelist
                 || getcurrentfragment() instanceof videoplayfragment
-                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof composervideoplayerfragment )
+                || getcurrentfragment() instanceof videoplayerreaderfragment
+                || getcurrentfragment() instanceof composervideoplayerfragment
+                || getcurrentfragment() instanceof audiocomposerfragment
+                )
         {
             txt_title.setText("");
         }
@@ -379,6 +383,20 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         }
          else if(fragment instanceof imagecapturefragment){
+             imgaddicon.setVisibility(View.GONE);
+             imgsettingsicon.setVisibility(View.GONE);
+             imguploadicon.setVisibility(View.GONE);
+             img_menu.setVisibility(View.VISIBLE);
+             img_help.setVisibility(View.VISIBLE);
+             imgshareicon.setVisibility(View.GONE);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+
+         }
+         else if(fragment instanceof audiocomposerfragment){
              imgaddicon.setVisibility(View.GONE);
              imgsettingsicon.setVisibility(View.GONE);
              imguploadicon.setVisibility(View.GONE);

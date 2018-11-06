@@ -691,43 +691,43 @@ public class common {
     public static void setgraphicalitems(String keyname,String value,boolean ismetricsselected)
     {
         if (keyname.equalsIgnoreCase("model") || keyname.equalsIgnoreCase("phonetype")) {
-            xdata.getinstance().saveSetting(config.PhoneType,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.PhoneType,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("carrier")) {
-            xdata.getinstance().saveSetting(config.CellProvider,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.CellProvider,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("osversion")) {
-            xdata.getinstance().saveSetting(config.OSversion,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.OSversion,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("wifiname")) {
-            xdata.getinstance().saveSetting(config.WIFINetwork,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.WIFINetwork,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("gpsaccuracy") || keyname.equalsIgnoreCase("gpshorizontalaccuracy")) {
-            xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("screenwidth")) {
-            xdata.getinstance().saveSetting(config.ScreenWidth,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.ScreenWidth,((ismetricsselected)?value:"NA"));
         }else if (keyname.equalsIgnoreCase("screenheight")) {
-            xdata.getinstance().saveSetting(config.ScreenHeight,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.ScreenHeight,((ismetricsselected)?value:"NA"));
         }else if (keyname.equalsIgnoreCase("deviceregion")) {
-            xdata.getinstance().saveSetting(config.Country,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Country,((ismetricsselected)?value:"NA"));
         }else if (keyname.equalsIgnoreCase("brightness")) {
-            xdata.getinstance().saveSetting(config.Brightness,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Brightness,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("timezone")) {
-            xdata.getinstance().saveSetting(config.TimeZone,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.TimeZone,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("memoryusage")) {
-            xdata.getinstance().saveSetting(config.MemoryUsage,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.MemoryUsage,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("bluetoothonoff")) {
-            xdata.getinstance().saveSetting(config.Bluetooth,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Bluetooth,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("devicetime")) {
-            xdata.getinstance().saveSetting(config.LocalTime,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.LocalTime,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("freespace")) {
-            xdata.getinstance().saveSetting(config.StorageAvailable,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.StorageAvailable,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("devicelanguage")) {
-            xdata.getinstance().saveSetting(config.Language,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Language,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("systemuptime")) {
-            xdata.getinstance().saveSetting(config.SystemUptime,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.SystemUptime,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("battery")) {
-            xdata.getinstance().saveSetting(config.Battery,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Battery,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase(config.cpuusageuser)) {
-            xdata.getinstance().saveSetting(config.CPUUsage,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.CPUUsage,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase(config.compass)) {
-            xdata.getinstance().saveSetting(config.Orientation,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Orientation,((ismetricsselected)?value:"NA"));
         }else if (keyname.equalsIgnoreCase(config.orientation) || keyname.equalsIgnoreCase("heading")) {
             xdata.getinstance().saveSetting(config.Heading,((ismetricsselected)?value:"0"));
             xdata.getinstance().saveSetting(config.orientation,((ismetricsselected)?value:"0"));
@@ -743,19 +743,19 @@ public class common {
         else if (keyname.equalsIgnoreCase(config.gpsaltitude)) {
             xdata.getinstance().saveSetting(config.Altitude,(ismetricsselected)?value:"");
         } else if(keyname.equalsIgnoreCase("gpsaccuracy")){
-            xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.GPSAccuracy,((ismetricsselected)?value:"NA"));
         } else if(keyname.equalsIgnoreCase("address")){
-            xdata.getinstance().saveSetting(config.Address,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Address,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("speed")) {
-            xdata.getinstance().saveSetting(config.Speed,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Speed,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_x)) {
-            xdata.getinstance().saveSetting(config.acceleration_x,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.acceleration_x,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_y)) {
-            xdata.getinstance().saveSetting(config.acceleration_y,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.acceleration_y,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase(config.acceleration_z)) {
-            xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("connectionspeed")) {
-            xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"N/A"));
+            xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"NA"));
         }
     }
 
@@ -1067,7 +1067,7 @@ public class common {
         return deniedpermissions;
     }
 
-    public static void deletevideofile(String filename)
+    public static void deletefile(String filename)
     {
         File sourcefile=new File(filename);
         try {
@@ -1434,7 +1434,7 @@ public class common {
 
 
             final String latitude=xdata.getinstance().getSetting(config.LatitudeDegree);
-            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("N/A")))
+            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA")))
             {
 
                 txt_latitude.post(new Runnable() {
@@ -1450,14 +1450,14 @@ public class common {
                 txt_latitude.post(new Runnable() {
                     @Override
                     public void run() {
-                        txt_latitude.setText(config.Latitude+"\n"+"N/A");
+                        txt_latitude.setText(config.Latitude+"\n"+"NA");
                     }
                 });
 
             }
 
             final String longitude=xdata.getinstance().getSetting(config.LongitudeDegree);
-            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("N/A")))
+            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA")))
             {
                 txt_longitude.post(new Runnable() {
                     @Override
@@ -1472,7 +1472,7 @@ public class common {
                 txt_longitude.post(new Runnable() {
                     @Override
                     public void run() {
-                        txt_longitude.setText(config.Longitude+"\n"+"N/A");
+                        txt_longitude.setText(config.Longitude+"\n"+"NA");
                     }
                 });
 
@@ -1482,13 +1482,13 @@ public class common {
                 @Override
                 public void run() {
                     final String altitude=xdata.getinstance().getSetting(config.Altitude);
-                    if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("N/A")))
+                    if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
                     {
                         txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+"");
                     }
                     else
                     {
-                        txt_altitude.setText(config.Altitude+"\n"+"N/A");
+                        txt_altitude.setText(config.Altitude+"\n"+"NA");
                     }
                 }
             });
@@ -1498,7 +1498,7 @@ public class common {
                 public void run() {
 
                     String value=getxdatavalue(xdata.getinstance().getSetting(config.Heading));
-                    if((! value.equalsIgnoreCase("N/A")) || (! value.equalsIgnoreCase("NA")))
+                    if((! value.equalsIgnoreCase("NA")) && (! value.equalsIgnoreCase("NA")))
                     {
                         double heading=Double.parseDouble(value);
                         int headingg=(int)heading;
@@ -1537,7 +1537,7 @@ public class common {
     public  static String getxdatavalue(String value)
     {
         if(value == null || value.equalsIgnoreCase("null") || value.toString().trim().isEmpty())
-            value="N/A";
+            value="NA";
 
         return value;
     }

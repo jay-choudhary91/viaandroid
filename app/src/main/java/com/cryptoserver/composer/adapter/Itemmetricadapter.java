@@ -52,7 +52,7 @@ public class Itemmetricadapter extends RecyclerView.Adapter<Itemmetricadapter.Co
         holder.tvItemName.setText(common.metric_display(metricModel.getMetricTrackKeyName()));
         holder.tv_itemValue.setText(metricModel.getMetricTrackValue());
         if(metricModel.getMetricTrackValue().trim().isEmpty() || metricModel.getMetricTrackValue().equalsIgnoreCase("null"))
-            holder.tv_itemValue.setText("N/A");
+            holder.tv_itemValue.setText("NA");
 
         holder.imgSelected.setImageResource(metricModel.isSelected() ? R.drawable.selectedicon : R.drawable.unselectedicon);
 

@@ -248,7 +248,7 @@ public class graphicalfragment extends basefragment implements
                         layout_graphical.setVisibility(View.VISIBLE);
                         String latitude=xdata.getinstance().getSetting(config.Latitude);
                         String longitude=xdata.getinstance().getSetting(config.Longitude);
-                        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("N/A"))) &&
+                        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                                 (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
 
@@ -257,7 +257,7 @@ public class graphicalfragment extends basefragment implements
                             if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
                             {
                                 String strdegree=xdata.getinstance().getSetting(config.orientation);
-                                if(strdegree.equalsIgnoreCase("N/A"))
+                                if(strdegree.equalsIgnoreCase("NA"))
                                     strdegree="0.0";
 
                                 int degree = Math.abs((int)Double.parseDouble(strdegree));
@@ -275,7 +275,7 @@ public class graphicalfragment extends basefragment implements
                         txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
 
                 if(! common.isnetworkconnected(applicationviavideocomposer.getactivity()))
-                    xdata.getinstance().saveSetting(config.Connectionspeed,"N/A");
+                    xdata.getinstance().saveSetting(config.Connectionspeed,"NA");
 
                 txt_data_hash.post(new Runnable() {
                     @Override

@@ -21,6 +21,10 @@
     <string name="congratulations_video">Congratulations on your video!</string>
     <string name="how_would_you">How would you like to share your video?</string>
 
+    <string name="audio_has_been_encrypted">Audio Has Been Encrypted!</string>
+    <string name="congratulations_audio">Congratulations on your audio!</string>
+    <string name="audio_how_would_you">How would you like to share your audio?</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -48,6 +52,9 @@
     <string name="shave_to_camera">Save to Camera Roll</string>
     <string name="share_partial_video">Share Partial Video</string>
     <string name="cancel_viewlist">Cancel and View List</string>
+
+    <string name="new_audio">New Audio</string>
+    <string name="listen">Listen Audio</string>
 
     <string name="short_seconds">sec</string>
     <string name="megabyte">MB</string>
