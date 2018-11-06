@@ -156,7 +156,7 @@ public abstract class locationawareactivity extends baseactivity implements
     {
         if(! common.isnetworkconnected(locationawareactivity.this))
         {
-            connectionspeed="N/A";
+            connectionspeed="NA";
             return;
         }
 
@@ -685,7 +685,7 @@ public abstract class locationawareactivity extends baseactivity implements
             }else{
                 //start();
             }
-            return "N/A";
+            return "NA";
         }
         else if(key.equalsIgnoreCase("connectedphonenetworkquality"))
         {
@@ -839,7 +839,7 @@ public abstract class locationawareactivity extends baseactivity implements
         }
         else if(key.equalsIgnoreCase("networktype") || key.equalsIgnoreCase("internalip"))
         {
-            metricItemValue="N/A";
+            metricItemValue="NA";
             ConnectivityManager cm =
                     (ConnectivityManager)locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -1131,7 +1131,7 @@ public abstract class locationawareactivity extends baseactivity implements
             }else if(common.isChargerConnected(locationawareactivity.this)== true || common.isHeadsetOn(locationawareactivity.this)== true ){
                 metricItemValue = "1";
             }else{
-                metricItemValue = "N/A";
+                metricItemValue = "NA";
             }
 
         }else if(key.equalsIgnoreCase("nameattachedaccessories"))
@@ -1145,7 +1145,7 @@ public abstract class locationawareactivity extends baseactivity implements
             }else if(common.isHeadsetOn(locationawareactivity.this)== true){
                 metricItemValue = "headphone";
             }else{
-                metricItemValue = "N/A";
+                metricItemValue = "NA";
             }
         }
         else if(key.equalsIgnoreCase("multitaskingenabled"))
@@ -1751,7 +1751,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 metricitemarraylist.get(i).setMetricTrackValue("" +currentaddress);
             }
             /*if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
-                metricitemarraylist.get(i).setMetricTrackValue("" + "N/A");
+                metricitemarraylist.get(i).setMetricTrackValue("" + "NA");
                 if(oldlocation != null)
                 {
                     String angle=common.anglefromcoordinate(location.getLatitude(),location.getLongitude(),
