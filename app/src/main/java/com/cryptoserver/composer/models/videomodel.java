@@ -16,9 +16,9 @@ public class videomodel
     public long frametotal =0;
     public long frameps =0;
 
-    public videomodel(String frameinfo)
+    public videomodel(String keyvalue)
     {
-        this.frameinfo = frameinfo;
+        this.keyvalue = keyvalue;
     }
 
     public videomodel(String videopath, long frametotal, long frameps, String md5)
@@ -36,6 +36,7 @@ public class videomodel
         this.currentframenumber = currentframenumber;
         this.keyvalue = keyvalue;
     }
+
 
     public String gettitle() {
         return title;
