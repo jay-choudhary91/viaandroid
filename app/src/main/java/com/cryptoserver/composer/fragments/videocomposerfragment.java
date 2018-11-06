@@ -681,7 +681,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     return true;
                 } catch (Exception e) {
                     e.printStackTrace();
-                } 
+                }
                 break;
         }
         return true;
