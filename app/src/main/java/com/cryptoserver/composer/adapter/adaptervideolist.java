@@ -102,45 +102,18 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         holder.edtvideoname.setClickable(false);
         holder.edtvideoname.setFocusable(false);
 
-        final String url = arrayvideolist.get(position).getPath();
-
+        if(! arrayvideolist.get(position).getmimetype().contains("audio"))
+        {
             Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-/*
-                        Picasso.get()
-                                .load(url)
-                                .into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-
-                                        ((Activity) context).runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                holder.img_videothumbnail.setImageBitmap(bitmap);
-                                                     }
-                                            };
-                                    }
-                                    @Override
-                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                                    }
-
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                                    }
-
-
-                                });*/
-
+                        String url = arrayvideolist.get(position).getPath();
                         RequestOptions myOptions = new RequestOptions()
                                 .fitCenter()
                                 .override(100, 100);
 
-                       final Bitmap bitmap = Glide.
+                        final Bitmap bitmap = Glide.
                                 with(context).
                                 asBitmap().
                                 load(url).
@@ -162,7 +135,13 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                         e.printStackTrace();
                     }
                 }
-            });thread.start();
+            });
+            thread.start();
+        }
+        else
+        {
+            holder.img_videothumbnail.setImageResource(R.drawable.ic_microphone);
+        }
 
         if(arrayvideolist.get(position).isSelected){
             holder.edtvideoname.setEnabled(true);
@@ -209,12 +188,8 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         holder.img_videothumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                adapter.onItemClicked(arrayvideolist.get(position),4);
-
-                /*Intent in=new Intent(context, fullscreenvideoactivity.class);
-                in.putExtra("videopath",arrayvideolist.get(position).getPath());
-                context.startActivity(in);*/
+                if(arrayvideolist.get(position).getmimetype().contains("video"))
+                    adapter.onItemClicked(arrayvideolist.get(position),4);
             }
         });
 

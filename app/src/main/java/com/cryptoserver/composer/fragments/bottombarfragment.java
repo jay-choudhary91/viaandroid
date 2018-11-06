@@ -23,6 +23,7 @@ public class bottombarfragment extends basefragment  {
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
     imagecapturefragment fragimgcapture=null;
+    adapteritemclick madapterclick;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -32,15 +33,13 @@ public class bottombarfragment extends basefragment  {
             switch (item.getItemId()) {
                 case R.id.navigation_video:
 
-                    if(fragvideocomposer == null)
-                        fragvideocomposer=new videocomposerfragment();
-
-                    gethelper().replacetabfragment(fragvideocomposer,false,true);
+                    launchvideocomposer();
                     return true;
                 case R.id.navigation_audio:
                     if(fragaudiocomposer == null)
                         fragaudiocomposer=new audiocomposerfragment();
 
+                    fragaudiocomposer.setData(mclick);
                     gethelper().replacetabfragment(fragaudiocomposer,false,true);
                     return true;
 
@@ -49,6 +48,7 @@ public class bottombarfragment extends basefragment  {
                     if(fragimgcapture == null)
                         fragimgcapture=new imagecapturefragment();
 
+                    //fragimgcapture.setData(false, mclick);
                     gethelper().replacetabfragment(fragimgcapture,false,true);
                     return true;
             }
@@ -77,28 +77,36 @@ public class bottombarfragment extends basefragment  {
             BottomNavigationView navigation = (BottomNavigationView) rootview.findViewById(R.id.navigation);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-            launchvideocomposer(false);
+            launchvideocomposer();
         }
         return rootview;
     }
 
-    public void launchvideocomposer(boolean autostart)
+    public void launchvideocomposer()
     {
-        videocomposerfragment fragment=new videocomposerfragment();
-        fragment.setData(autostart, new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
+        if(fragvideocomposer == null)
+            fragvideocomposer=new videocomposerfragment();
 
-            }
+        fragvideocomposer.setData(false, mclick);
+        gethelper().replacetabfragment(fragvideocomposer,false,true);
+    }
 
-            @Override
-            public void onItemClicked(Object object, int type) {
-                if(type == 1)
-                {
-                    //   requestpermissions();
-                }
+    adapteritemclick mclick=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+
+        }
+
+        @Override
+        public void onItemClicked(Object object, int type) {
+            if(type == 1)
+            {
+                madapterclick.onItemClicked(null);
             }
-        });
-        gethelper().replaceFragment(fragment, false, true);
+        }
+    };
+
+    public void setData(adapteritemclick madapterclick) {
+        this.madapterclick = madapterclick;
     }
 }

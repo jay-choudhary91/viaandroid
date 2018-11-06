@@ -25,6 +25,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.audiocomposerfragment;
 import com.cryptoserver.composer.fragments.basefragment;
+import com.cryptoserver.composer.fragments.bottombarfragment;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
 import com.cryptoserver.composer.fragments.fragmentaudiolist;
 import com.cryptoserver.composer.fragments.fragmentimagelist;
@@ -67,48 +68,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     RelativeLayout actionbar;
     @BindView(R.id.fragment_container)
     FrameLayout fragment_container;
-    @BindView(R.id.navigation)
-    BottomNavigationView navigation;
 
-    private IntentFilter intentfilter;
-    private BroadcastReceiver broadcast;
+    private bottombarfragment fragbottombar;
     private fragmentvideolist fragvideolist;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_video:
-                    fragmentvideolist fragvideolist = null;
-                    if (fragvideolist == null) {
-                        fragvideolist = new fragmentvideolist();
-                        replaceFragment(fragvideolist, false, true);
-
-                    }
-                    return true;
-                case R.id.navigation_audio:
-                    fragmentaudiolist fragaudiolist = null;
-                    if (fragaudiolist == null) {
-                        fragaudiolist = new fragmentaudiolist();
-                        replaceFragment(fragaudiolist, false, true);
-
-                    }
-
-                    return true;
-
-                case R.id.navigation_image:
-                    fragmentimagelist fragimglist = null;
-                    if (fragimglist == null) {
-                        fragimglist = new fragmentimagelist();
-                        replaceFragment(fragimglist, false, true);
-                    }
-                    return true;
-            }
-            return false;
-        }
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,12 +84,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
-            /*graphicalfragment frag=new graphicalfragment();
-            replaceFragment(frag, false, true);*/
-            /*if (common.getstoragedeniedpermissions().isEmpty())
-                deletetempdirectory();*/
             fragvideolist=new fragmentvideolist();
             replaceFragment(fragvideolist, false, true);
+
+            /*fragbottombar=new bottombarfragment();
+            replaceFragment(fragbottombar, false, true);*/
         }
 
         imgaddicon.setOnClickListener(this);
@@ -137,7 +98,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_cancel.setOnClickListener(this);
         imgshareicon.setOnClickListener(this);
         img_menu.setOnClickListener(this);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         actionbar.post(new Runnable() {
             @Override
@@ -168,27 +128,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @Override
     public void onStart() {
         super.onStart();
-        intentfilter = new IntentFilter(common.broadcastreceivervideo);
-        broadcast = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent)
-            {
-                if((fragvideolist != null))
-                    fragvideolist.getVideoList();
-            }
-        };
-        registerReceiver(broadcast, intentfilter);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        try {
-            unregisterReceiver(broadcast);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -211,7 +155,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof videoplayerreaderfragment
                 || getcurrentfragment() instanceof composervideoplayerfragment
-                || getcurrentfragment() instanceof audiocomposerfragment
+                || getcurrentfragment() instanceof audiocomposerfragment|| getcurrentfragment() instanceof bottombarfragment
                 )
         {
             txt_title.setText("");
@@ -260,7 +204,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_cancel.setVisibility(View.GONE);
         img_menu.setVisibility(View.GONE);
         img_help.setVisibility(View.GONE);
-        navigation.setVisibility(View.GONE);
         actionbar.setVisibility(View.VISIBLE);
 
         {
@@ -324,7 +267,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
         }
          else if(fragment instanceof fragmentaudiolist){
-             navigation.setVisibility(View.VISIBLE);
              imgaddicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setVisibility(View.VISIBLE);
              imguploadicon.setVisibility(View.VISIBLE);
@@ -338,7 +280,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              fragment_container.setLayoutParams(params);
          }
          else if(fragment instanceof fragmentvideolist){
-             navigation.setVisibility(View.VISIBLE);
              imgaddicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setVisibility(View.VISIBLE);
              imguploadicon.setVisibility(View.VISIBLE);
@@ -352,7 +293,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              fragment_container.setLayoutParams(params);
          }
          else if(fragment instanceof fragmentimagelist){
-             navigation.setVisibility(View.VISIBLE);
              imgaddicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setVisibility(View.VISIBLE);
              imguploadicon.setVisibility(View.VISIBLE);
@@ -408,6 +348,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
+         }
+         else if(fragment instanceof bottombarfragment){
 
          }
         else
@@ -433,13 +375,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 break;
             case R.id.img_setting:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_setting);
-                //ArrayList<metricmodel> array= getmetricarraylist();
                 break;
             case R.id.img_upload_icon:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_upload_icon);
                 break;
             case R.id.img_menu:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_menu);
+                //getcurrentfragment().onHeaderBtnClick(R.id.img_menu);
+                onBack();
                 break;
         }
     }

@@ -11,6 +11,7 @@ public class video
     public String createdate="";
     public String duration="";
     public String md5="";
+    public String mimetype="";
     public long lastmodifiedtime=0;
     public boolean isSelected = false;
 
@@ -37,6 +38,14 @@ public class video
 
     public void setLastmodifiedtime(long lastmodifiedtime) {
         this.lastmodifiedtime = lastmodifiedtime;
+    }
+
+    public String getmimetype() {
+        return mimetype;
+    }
+
+    public void setmimetype(String mimetype) {
+        this.mimetype = mimetype;
     }
 
     public String getPath() {

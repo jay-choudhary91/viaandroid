@@ -186,7 +186,7 @@ public class fragmentvideolist extends basefragment {
                 }
             });
 
-        //    launchvideocomposer(false);
+            launchvideocomposer(false);
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();
@@ -273,19 +273,6 @@ public class fragmentvideolist extends basefragment {
                     return;
 
                 File[] files = videodir.listFiles();
-                /*Arrays.sort( files, new Comparator()
-                {
-                    public int compare(Object o1, Object o2) {
-                        if (((File)o1).lastModified() > ((File)o2).lastModified()) {
-                            return -1;
-                        } else if (((File)o1).lastModified() < ((File)o2).lastModified()) {
-                            return +1;
-                        } else {
-                            return 0;
-                        }
-                    }
-                });*/
-
                 for (File file : files)
                 {
 
@@ -312,7 +299,11 @@ public class fragmentvideolist extends basefragment {
                                 for (int i = 0; i < numTracks; ++i) {
                                     MediaFormat format = extractor.getTrackFormat(i);
                                     String mime = format.getString(MediaFormat.KEY_MIME);
-                                    if (mime.startsWith("video/")) {
+                                    if(i == 0)
+                                        videoobj.setmimetype(mime);
+
+                                    if (mime.startsWith("video/") || mime.startsWith("audio/"))
+                                    {
                                         if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                             long seconds = format.getLong(MediaFormat.KEY_DURATION);
                                             seconds=seconds/1000000;
@@ -326,8 +317,11 @@ public class fragmentvideolist extends basefragment {
                                                 videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
                                                 isVideo=true;
                                             }
-
                                         }
+                                    }
+                                    else if (mime.startsWith("image/"))
+                                    {
+
                                     }
                                 }
                             }
@@ -409,22 +403,19 @@ public class fragmentvideolist extends basefragment {
 
     public void launchvideocomposer(boolean autostart)
     {
-        videocomposerfragment fragment=new videocomposerfragment();
-        fragment.setData(autostart, new adapteritemclick() {
+        bottombarfragment fragbottombar=new bottombarfragment();
+        fragbottombar.setData(new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
-
+                requestpermissions();
             }
 
             @Override
             public void onItemClicked(Object object, int type) {
-                if(type == 1)
-                {
-                   requestpermissions();
-                }
+
             }
         });
-        gethelper().replaceFragment(fragment, false, true);
+        gethelper().replaceFragment(fragbottombar, false, true);
     }
 
     public  void opengallery()

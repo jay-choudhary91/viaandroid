@@ -22,7 +22,9 @@ import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.database.databasemanager;
+import com.cryptoserver.composer.fragments.audiocomposerfragment;
 import com.cryptoserver.composer.fragments.basefragment;
+import com.cryptoserver.composer.fragments.imagecapturefragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
@@ -217,27 +219,29 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         int a=getSupportFragmentManager().getBackStackEntryCount();
         int b=getMinNumberOfFragments();
 
-       /* if(getcurrentfragment() instanceof videoplayfragment){
-
-            boolean finishapp = xdata.getinstance().getboolean("AppFinish");
-
-            if(finishapp){
-                finish();
-                return;
-            }
-        }
-*/
         if (getSupportFragmentManager().getBackStackEntryCount() <= getMinNumberOfFragments()) {
             finish();
             return;
         }
 
-        getSupportFragmentManager().popBackStack();
-        if(mfragments != null && (! mfragments.isEmpty()))
+        if(getcurrentfragment() instanceof videocomposerfragment)
         {
-            mfragments.pop();
-            mcurrentfragment = (basefragment) (mfragments.isEmpty() ? null : ((mfragments.peek() instanceof basefragment) ? mfragments.peek() : null));
+            setbackpress();
+            onBack();
+        }
+        else
+        {
+            setbackpress();
+        }
+    }
 
+    public void setbackpress()
+    {
+        {
+            getSupportFragmentManager().popBackStack();
+            mfragments.pop();
+            mcurrentfragment = (basefragment) (mfragments.isEmpty() ? null : ((mfragments.peek()
+                    instanceof basefragment) ? mfragments.peek() : null));
             onfragmentbackstackchanged();
         }
     }

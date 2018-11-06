@@ -83,8 +83,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     TextView txtSlot2;
     TextView txtSlot3,txt_metrics,txt_hashes;
     ScrollView scrollview_metrices,scrollview_hashes;
-
-    private boolean isdraweropen=false,isgraphicalshown=false;
+    adapteritemclick madapterclick;
+    private boolean isdraweropen=false;
     private Handler myHandler;
     private Runnable myRunnable;
     public int selectedsection=1;
@@ -256,6 +256,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             setmetriceshashesdata();
         }
+
         return rootview;
     }
 
@@ -369,6 +370,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     public void onPause() {
         if(mrecorder != null)
         {
+            isaudiorecording=false;
+            stoptimer();
+            resettimer();
+
             try {
                 if(common.getstoragedeniedpermissions().isEmpty() && (selectedfile != null )
                         && new File(selectedfile).exists())
@@ -566,6 +571,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }catch (Exception e){
             e.printStackTrace();
         }
+        if(madapterclick != null)
+            madapterclick.onItemClicked(null,1);
+
         mrecorder = null;
         stoptimer();
         resettimer();
@@ -936,6 +944,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             }
         });
+    }
+
+    public void setData(adapteritemclick madapterclick) {
+        this.madapterclick = madapterclick;
     }
 
 }
