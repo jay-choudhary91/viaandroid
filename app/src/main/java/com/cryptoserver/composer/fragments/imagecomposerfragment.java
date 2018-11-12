@@ -671,25 +671,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
 
         }
-
-        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-        {
-            keytype=config.prefs_md5;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-        {
-            keytype=config.prefs_md5_salt;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-        {
-            keytype=config.prefs_sha;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-        {
-            keytype=config.prefs_sha_salt;
-        }
-
         return rootview;
     }
 
@@ -703,7 +684,21 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         byte[] byteArray = stream.toByteArray();
         bitmap.recycle();
         final String keyhash =  getkeyvalue(byteArray);
-        selectedhashes=keytype+" : "+keyhash;
+
+        Log.e("keyhash = ","" +keyhash);
+
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mhashesitems.clear();
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
+
+                mvideoframes.add(new videomodel(keyhash));
+                mhashesadapter.notifyDataSetChanged();
+                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+            }
+        });
     }
 
 
