@@ -29,7 +29,7 @@ public class bottombarfragment extends basefragment  {
     View rootview = null;
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
-    imagecapturefragment fragimgcapture=null;
+    imagecomposerfragment fragimgcapture=null;
     adapteritemclick madapterclick;
     int selectedtab=0;
     BottomNavigationView navigation;
@@ -73,7 +73,7 @@ public class bottombarfragment extends basefragment  {
                     {
                         selectedtab=3;
                         if(fragimgcapture == null)
-                            fragimgcapture=new imagecapturefragment();
+                            fragimgcapture=new imagecomposerfragment();
 
                         fragimgcapture.setData(mclick);
                         gethelper().replacetabfragment(fragimgcapture,false,true);

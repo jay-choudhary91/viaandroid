@@ -26,15 +26,12 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
-import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -66,7 +63,6 @@ import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.metadata.MetaDataInsert;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
@@ -93,18 +89,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collector;
 
 import butterknife.ButterKnife;
-
-import static com.cryptoserver.composer.fragments.videocomposerfragment.CAMERA_BACK;
-import static com.cryptoserver.composer.fragments.videocomposerfragment.CAMERA_FRONT;
 
 /**
  * Created by devesh on 5/11/18.
  */
 
-public class imagecapturefragment extends basefragment  implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener{
+public class imagecomposerfragment extends basefragment  implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener{
 
 
 
@@ -511,8 +503,8 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         }
     }
 
-    public static imagecapturefragment newInstance() {
-        return new imagecapturefragment();
+    public static imagecomposerfragment newInstance() {
+        return new imagecomposerfragment();
     }
 
     @Override

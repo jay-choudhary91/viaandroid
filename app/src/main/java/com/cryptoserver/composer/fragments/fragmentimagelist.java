@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 
@@ -50,7 +49,7 @@ public class fragmentimagelist extends basefragment {
                 break;
             case R.id.img_add_icon:
 
-                imagecapturefragment imagecapturefragment = new imagecapturefragment();
+                imagecomposerfragment imagecapturefragment = new imagecomposerfragment();
                 gethelper().addFragment(imagecapturefragment,false,true);
 
                 //   launchvideocomposer(false);

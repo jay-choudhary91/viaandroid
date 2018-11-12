@@ -1,16 +1,11 @@
 package com.cryptoserver.composer.activity;
 
 import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -31,12 +26,11 @@ import com.cryptoserver.composer.fragments.fragmentaudiolist;
 import com.cryptoserver.composer.fragments.fragmentimagelist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.fragmentvideolist;
-import com.cryptoserver.composer.fragments.imagecapturefragment;
+import com.cryptoserver.composer.fragments.imagecomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
 import com.cryptoserver.composer.services.callservice;
-import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
 
@@ -151,7 +145,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             txt_title.setText(txt);
         }
-        else if( getcurrentfragment() instanceof fragmentsettings || getcurrentfragment() instanceof audiocomposerfragment|| getcurrentfragment() instanceof imagecapturefragment || getcurrentfragment() instanceof fragmentimagelist
+        else if( getcurrentfragment() instanceof fragmentsettings || getcurrentfragment() instanceof audiocomposerfragment|| getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof fragmentimagelist
                 || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof videoplayerreaderfragment
                 || getcurrentfragment() instanceof composervideoplayerfragment
@@ -322,7 +316,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
 
         }
-         else if(fragment instanceof imagecapturefragment){
+         else if(fragment instanceof imagecomposerfragment){
              imgaddicon.setVisibility(View.GONE);
              imgsettingsicon.setVisibility(View.GONE);
              imguploadicon.setVisibility(View.GONE);
