@@ -412,13 +412,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             updatedatasync(json,selectedid);
         }
 
-
-
-
         Log.e("video_updateid ",""+selectedid);
-
         try {
-
             JSONObject obj = new JSONObject(header);
             hashmethod  = obj.getString("hashmethod");
             hashvalue  = obj.getString("firsthash");
@@ -474,7 +469,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             });
         }else{
 
-            callUpdateapi(finalheader,finallocalkey,finalvideokey,finaltoken,finalsync,finaldevicetimeoffset,finalapirequestdevicedate,finalselectedid,finalvideocompletedevicedate);
+
+            if(sync_date.equalsIgnoreCase("0"))
+                callUpdateapi(finalheader,finallocalkey,finalvideokey,finaltoken,finalsync,finaldevicetimeoffset,finalapirequestdevicedate,finalselectedid,finalvideocompletedevicedate);
+
+
         }
                    /* else if(action_type.equalsIgnoreCase(config.type_video_complete))
                     {
@@ -669,7 +668,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
                         updatecompletehashvalue(localkey,valuehash);
                         updatedatasyncdate(localkey,common.getCurrentDate());
-
 
 
                      /*   String sequence = object.getString("sequence");
