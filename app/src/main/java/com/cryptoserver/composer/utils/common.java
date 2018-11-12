@@ -959,6 +959,14 @@ public class common {
             metricItemName ="celltowerid";
         }else if(key.equalsIgnoreCase("numberoftowers")){
             metricItemName ="numberoftowers";
+        }else if(key.equalsIgnoreCase("numberofsatellites")){
+            metricItemName ="numberofsatellites";
+        }else if(key.equalsIgnoreCase("satelliteangle")){
+            metricItemName ="satelliteangle";
+        }else if(key.equalsIgnoreCase("satelliteid")){
+            metricItemName ="satelliteid";
+        }else if(key.equalsIgnoreCase("strengthofsatellites")){
+            metricItemName ="strengthofsatellites";
         }
         return metricItemName;
     }
@@ -1780,7 +1788,8 @@ public class common {
                 config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
-                "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers"};
+                "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
+                "satelliteangle","satelliteid","strengthofsatellites"};
 
         return items;
     }

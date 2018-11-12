@@ -17,6 +17,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
@@ -77,6 +79,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -89,7 +92,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public abstract class locationawareactivity extends baseactivity implements
+public abstract class locationawareactivity extends baseactivity implements GpsStatus.Listener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
@@ -139,6 +142,11 @@ public abstract class locationawareactivity extends baseactivity implements
     private Handler myHandler;
     private Runnable myRunnable;
     public boolean isrecording = false;
+    public boolean firstsatellitesinfo = true;
+
+    String satelliteid = "", anglesatellite = "";
+
+    int numberofsatellites = 0;
 
     long startTime;
     long endTime;
@@ -156,8 +164,9 @@ public abstract class locationawareactivity extends baseactivity implements
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        getallpermissions();
+
         getconnectionspeed();
+
     }
 
     public void getconnectionspeed() {
@@ -165,7 +174,6 @@ public abstract class locationawareactivity extends baseactivity implements
             connectionspeed = "NA";
             return;
         }
-
 
         Request request = new Request.Builder()
                 .url("https://m.media-amazon.com/images/S/aplus-media/vc/6a9569ab-cb8e-46d9-8aea-a7022e58c74a.jpg")
@@ -236,6 +244,17 @@ public abstract class locationawareactivity extends baseactivity implements
             if (common.getphonelocationdeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 doafterallpermissionsgranted();
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                manager.addGpsStatusListener(this);
             } else {
                 String[] array = new String[common.getphonelocationdeniedpermissions().size()];
                 array = common.getphonelocationdeniedpermissions().toArray(array);
@@ -282,6 +301,62 @@ public abstract class locationawareactivity extends baseactivity implements
                 };*/
                 getallpermissions();
             }
+        }
+    }
+
+    @Override
+    public void onGpsStatusChanged(int event) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
+        GpsStatus gpsStatus = manager.getGpsStatus(null);
+        if(gpsStatus != null) {
+           /* Iterable<GpsSatellite>satellites = gpsStatus.getSatellites();
+            Iterator<GpsSatellite>sat = satellites.iterator();
+            int i=0;
+            int satellitesInFix = 0;
+            while (sat.hasNext()) {
+                GpsSatellite satellite = sat.next();
+
+                if(gpsStatus.usedInFix())
+
+                String strGpsStats = (i++) + ": " + satellite.getPrn() + "," + satellite.usedInFix() + "," + satellite.getSnr() + "," + satellite.getAzimuth() + "," + satellite.getElevation()+ "\n\n";
+                Log.e("strGpsStats", strGpsStats);
+
+            }*/
+
+            int satellites = 0;
+            int satellitesInFix = 0;
+            int timetofix = manager.getGpsStatus(null).getTimeToFirstFix();
+            for (GpsSatellite sat : manager.getGpsStatus(null).getSatellites()) {
+
+                if(sat.usedInFix()) {
+                    satellitesInFix++;
+                }
+                    GpsSatellite satellite = sat;
+
+                    satelliteid = "" + satellite.getPrn();
+                    int angle=(int)satellite.getAzimuth();
+
+                    if(angle > 0)
+                        anglesatellite = "" +angle ;
+
+
+                    Log.e("satellitePNR","" +satellite.getPrn());
+                    Log.e("satelliteAzimuth","" +satellite.getAzimuth());
+
+                satellites++;
+            }
+            Log.i("totalSatellites", satellites + " Used In Last Fix ("+satellitesInFix+")");
+            numberofsatellites = satellites;
         }
     }
 
@@ -487,9 +562,8 @@ public abstract class locationawareactivity extends baseactivity implements
         }
     }
 
-    public void onGpsStatusChanged(int event) {
 
-    }
+
 
     public void setNavigateWithLocation() {
         if (locationawareactivity.checkLocationEnable(locationawareactivity.this)) {
@@ -1078,6 +1152,18 @@ public abstract class locationawareactivity extends baseactivity implements
 
             }
         }else if(key.equalsIgnoreCase("numberoftowers")){
+        } else if (key.equalsIgnoreCase("connectionspeed")) {
+            metricItemValue = "" + connectionspeed;
+        } else if (key.equalsIgnoreCase("address")) {
+            metricItemValue = "" + currentaddress;
+        }else if (key.equalsIgnoreCase("numberofsatellites")) {
+            metricItemValue = "" + numberofsatellites;
+        }else if (key.equalsIgnoreCase("satelliteangle")) {
+            metricItemValue = "" + anglesatellite;
+        }else if (key.equalsIgnoreCase("satelliteid")) {
+            metricItemValue = "" + satelliteid;
+        }else if (key.equalsIgnoreCase("satelliteangle")) {
+            metricItemValue = "N/A" ;
         }
 
         if (metricItemValue == null)
@@ -1130,6 +1216,7 @@ public abstract class locationawareactivity extends baseactivity implements
         };
         thread.start();
     }
+
     private void stop() {
         //  Log.e("noise", "==== Stop noise Monitoring===");
         try {
@@ -1192,6 +1279,8 @@ public abstract class locationawareactivity extends baseactivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        getallpermissions();
     }
 
 
@@ -1368,14 +1457,12 @@ public abstract class locationawareactivity extends baseactivity implements
             @Override
             public void run() {
                 try {
-                    if(aeroplacemodefilter == null)
-                    {
-                        aeroplacemodefilter= new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+                    if (aeroplacemodefilter == null) {
+                        aeroplacemodefilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
                         aeroplacemodefilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-                        registerReceiver(flightmodebroadcast,aeroplacemodefilter);
+                        registerReceiver(flightmodebroadcast, aeroplacemodefilter);
                     }
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -1386,8 +1473,8 @@ public abstract class locationawareactivity extends baseactivity implements
     @Override
     public void registerCompassSensor() {
         msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Thread thread = new Thread(){
-            public void run(){
+        Thread thread = new Thread() {
+            public void run() {
                 msensormanager.registerListener(mCompassListener, msensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                         SensorManager.SENSOR_DELAY_GAME);
             }
@@ -1395,43 +1482,42 @@ public abstract class locationawareactivity extends baseactivity implements
         thread.start();
     }
 
-    SensorEventListener mCompassListener=new SensorEventListener() {
+    SensorEventListener mCompassListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(final SensorEvent event) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getcurrentfragment() != null)
-                    {
+                    if (getcurrentfragment() != null) {
                         int heading = Math.round(event.values[0]);
 
                         int heading1 = Math.round(event.values[0]);
                         int heading2 = Math.round(event.values[1]);
                         int heading3 = Math.round(event.values[2]);
-                       // Log.e("Degrees ",""+heading1+" "+heading2+" "+heading3);
+                        // Log.e("Degrees ",""+heading1+" "+heading2+" "+heading3);
 
-                        String strdirection  = "East";
-                        if(heading > 23 && heading <= 67){
+                        String strdirection = "East";
+                        if (heading > 23 && heading <= 67) {
                             strdirection = "North East";
-                        } else if(heading > 68 && heading <= 112){
+                        } else if (heading > 68 && heading <= 112) {
                             strdirection = "East";
-                        } else if(heading > 113 && heading <= 167){
+                        } else if (heading > 113 && heading <= 167) {
                             strdirection = "South East";
-                        } else if(heading > 168 && heading <= 202){
+                        } else if (heading > 168 && heading <= 202) {
                             strdirection = "South";
-                        } else if(heading > 203 && heading <= 247){
+                        } else if (heading > 203 && heading <= 247) {
                             strdirection = "South West";
-                        } else if(heading > 248 && heading <= 293){
+                        } else if (heading > 248 && heading <= 293) {
                             strdirection = "West";
-                        } else if(heading > 294 && heading <= 337){
+                        } else if (heading > 294 && heading <= 337) {
                             strdirection = "North West";
-                        } else if(heading >= 338 || heading <= 22){
+                        } else if (heading >= 338 || heading <= 22) {
                             strdirection = "North";
                         }
 
-                        updatearrayitem(config.compass,strdirection);
-                        updatearrayitem(config.orientation,""+heading);
-                        updatearrayitem(config.heading,""+heading);
+                        updatearrayitem(config.compass, strdirection);
+                        updatearrayitem(config.orientation, "" + heading);
+                        updatearrayitem(config.heading, "" + heading);
                     }
                 }
             });
@@ -1445,60 +1531,50 @@ public abstract class locationawareactivity extends baseactivity implements
 
     @Override
     public void getCallInfo() {
-        try
-        {
-            String duration="";
-            if(! CALL_START_TIME.isEmpty())
-            {
-                long startTime=Long.parseLong(CALL_START_TIME);
+        try {
+            String duration = "";
+            if (!CALL_START_TIME.isEmpty()) {
+                long startTime = Long.parseLong(CALL_START_TIME);
 
-                if(startTime > 0)
-                {
+                if (startTime > 0) {
                     Date callEndTime = new Date();
                     long diff = callEndTime.getTime() - startTime;
 
                     long diffSeconds = TimeUnit.MILLISECONDS.toSeconds(diff);
                     //long diffSeconds = diff / 1000 % 60;
-                    duration=""+diffSeconds;
+                    duration = "" + diffSeconds;
                 }
-         //       Log.e("BROADCAST CALL ","BROADCAST CALL");
+                //       Log.e("BROADCAST CALL ","BROADCAST CALL");
             }
 
-            xdata.getinstance().saveSetting("CALL_STATUS",(CALL_STATUS.isEmpty())?"None":CALL_STATUS);
-            xdata.getinstance().saveSetting("CALL_DURATION",(duration.isEmpty())?"None":duration);
-            xdata.getinstance().saveSetting("CALL_REMOTE_NUMBER",(CALL_REMOTE_NUMBER.isEmpty())?"None":CALL_REMOTE_NUMBER);
+            xdata.getinstance().saveSetting("CALL_STATUS", (CALL_STATUS.isEmpty()) ? "None" : CALL_STATUS);
+            xdata.getinstance().saveSetting("CALL_DURATION", (duration.isEmpty()) ? "None" : duration);
+            xdata.getinstance().saveSetting("CALL_REMOTE_NUMBER", (CALL_REMOTE_NUMBER.isEmpty()) ? "None" : CALL_REMOTE_NUMBER);
 
-            updatearrayitem(config.currentcallinprogress,xdata.getinstance().getSetting("CALL_STATUS"));
-            updatearrayitem(config.currentcalldurationseconds,xdata.getinstance().getSetting("CALL_STATUS"));
-            updatearrayitem(config.currentcallremotenumber,xdata.getinstance().getSetting("CALL_STATUS"));
+            updatearrayitem(config.currentcallinprogress, xdata.getinstance().getSetting("CALL_STATUS"));
+            updatearrayitem(config.currentcalldurationseconds, xdata.getinstance().getSetting("CALL_STATUS"));
+            updatearrayitem(config.currentcallremotenumber, xdata.getinstance().getSetting("CALL_STATUS"));
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void registerallbroadcast()
-    {
-        try
-        {
+    public void registerallbroadcast() {
+        try {
             intentFilter = new IntentFilter(config.broadcast_call);
             mBroadcast = new BroadcastReceiver() {
                 @Override
-                public void onReceive(Context context, Intent intent)
-                {
-                    try
-                    {
-                        if(intent != null)
-                        {
-                            CALL_STATUS=intent.getStringExtra("CALL_STATUS");
-                            CALL_DURATION=intent.getStringExtra("CALL_DURATION");
-                            CALL_REMOTE_NUMBER=intent.getStringExtra("CALL_REMOTE_NUMBER");
-                            CALL_START_TIME=intent.getStringExtra("CALL_START_TIME");
+                public void onReceive(Context context, Intent intent) {
+                    try {
+                        if (intent != null) {
+                            CALL_STATUS = intent.getStringExtra("CALL_STATUS");
+                            CALL_DURATION = intent.getStringExtra("CALL_DURATION");
+                            CALL_REMOTE_NUMBER = intent.getStringExtra("CALL_REMOTE_NUMBER");
+                            CALL_START_TIME = intent.getStringExtra("CALL_START_TIME");
                         }
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -1513,33 +1589,28 @@ public abstract class locationawareactivity extends baseactivity implements
                 e.printStackTrace();
             }*/
 
-            try
-            {
+            try {
                 getairplanemodeon();
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            flightmodebroadcast= new BroadcastReceiver() {
+            flightmodebroadcast = new BroadcastReceiver() {
                 String turn;
+
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    if(intent!=null){
-                        if(Settings.System.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0)== 0)
-                        {
-                            turn="OFF";
+                    if (intent != null) {
+                        if (Settings.System.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
+                            turn = "OFF";
+                        } else {
+                            turn = "ON";
                         }
-                        else
-                        {
-                            turn="ON";
-                        }
-                        updatearrayitem(config.airplanemode,turn);
+                        updatearrayitem(config.airplanemode, turn);
                     }
                 }
             };
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1557,8 +1628,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null)
                     registerBarometerSensor();
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1572,7 +1642,7 @@ public abstract class locationawareactivity extends baseactivity implements
         }
     }
 
-    public void updatearrayitem(String key,String value) {
+    public void updatearrayitem(String key, String value) {
         for (int i = 0; i < metricitemarraylist.size(); i++) {
 
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(key)) {
@@ -1583,15 +1653,14 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
     public void updatelocationsparams(Location location) {
-        double doubleTotalDistance=0.0;
-        double currenttime=0;
+        double doubleTotalDistance = 0.0;
+        double currenttime = 0;
 
-        double newTime= System.currentTimeMillis();
-        if(oldlocation != null)
-        {
-            long meter=common.calculateDistance(location.getLatitude(),location.getLongitude(),
-                    oldlocation.getLatitude(),oldlocation.getLongitude());
-            doubleTotalDistance=doubleTotalDistance+meter;
+        double newTime = System.currentTimeMillis();
+        if (oldlocation != null) {
+            long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(),
+                    oldlocation.getLatitude(), oldlocation.getLongitude());
+            doubleTotalDistance = doubleTotalDistance + meter;
           /*  double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
             double speed=meter/timeDifferance;
             Log.e("speed",""+speed+ "meter...."+meter);*/
@@ -1606,22 +1675,22 @@ public abstract class locationawareactivity extends baseactivity implements
                 metricitemarraylist.get(i).setMetricTrackValue("" + location.getLongitude());
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitudedegree)) {
-                String degree=common.convertlatitude(location.getLatitude());
+                String degree = common.convertlatitude(location.getLatitude());
                 metricitemarraylist.get(i).setMetricTrackValue("" + degree);
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitudedegree)) {
-                String degree=common.convertlongitude(location.getLongitude());
+                String degree = common.convertlongitude(location.getLongitude());
                 metricitemarraylist.get(i).setMetricTrackValue("" + degree);
             }
 
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
-                metricitemarraylist.get(i).setMetricTrackValue("" + ((int)doubleTotalDistance));
+                metricitemarraylist.get(i).setMetricTrackValue("" + ((int) doubleTotalDistance));
             }
-            if(metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
-                metricitemarraylist.get(i).setMetricTrackValue("" +location.getAccuracy());
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
+                metricitemarraylist.get(i).setMetricTrackValue("" + location.getAccuracy());
             }
-            if(metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")){
-                metricitemarraylist.get(i).setMetricTrackValue("" +currentaddress);
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")) {
+                metricitemarraylist.get(i).setMetricTrackValue("" + currentaddress);
             }
             /*if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
                 metricitemarraylist.get(i).setMetricTrackValue("" + "NA");
@@ -1633,33 +1702,30 @@ public abstract class locationawareactivity extends baseactivity implements
                 }
             }*/
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-                if(location.hasSpeed()){
+                if (location.hasSpeed()) {
                     metricitemarraylist.get(i).setMetricTrackValue("" + location.getSpeed());
-                }else{
-                    if(oldlocation != null)
-                    {
-                        long meter=common.calculateDistance(location.getLatitude(),location.getLongitude(),
-                                oldlocation.getLatitude(),oldlocation.getLongitude());
-                        doubleTotalDistance=doubleTotalDistance+meter;
-                        double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
-                        double speed=meter/timeDifferance;
-                        String strspeed=""+speed;
-                        if(strspeed.contains("."))
-                            strspeed=strspeed.substring(0,strspeed.indexOf("."));
+                } else {
+                    if (oldlocation != null) {
+                        long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(),
+                                oldlocation.getLatitude(), oldlocation.getLongitude());
+                        doubleTotalDistance = doubleTotalDistance + meter;
+                        double timeDifferance = (location.getTime() - oldlocation.getTime());
+                        double speed = meter / timeDifferance;
+                        String strspeed = "" + speed;
+                        if (strspeed.contains("."))
+                            strspeed = strspeed.substring(0, strspeed.indexOf("."));
 
-                        metricitemarraylist.get(i).setMetricTrackValue("" +strspeed);
+                        metricitemarraylist.get(i).setMetricTrackValue("" + strspeed);
                     }
                 }
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
-                if(location.hasAltitude()){
+                if (location.hasAltitude()) {
                     int outValue = (int) (location.getAltitude() / 0.3048);
-                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue+" ft");
-                }
-                else
-                {
-                    int outValue = (int)altitude;
-                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue+" ft");
+                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue + " ft");
+                } else {
+                    int outValue = (int) altitude;
+                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue + " ft");
                 }
             }
         }
@@ -1677,12 +1743,12 @@ public abstract class locationawareactivity extends baseactivity implements
                 }
             }
         }*/
-        oldlocation=location;
+        oldlocation = location;
     }
 
     //get complete address
     private void fetchcompleteaddress(final Location location) {
-        Thread thread=new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 String strAdd = "";
