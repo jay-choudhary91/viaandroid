@@ -93,6 +93,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collector;
 
 import butterknife.ButterKnife;
 
@@ -190,7 +191,17 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     /**
      * ID of the current {@link CameraDevice}.
      */
-    private String mCameraId;
+    public static final String CAMERA_FRONT = "1";
+    public static final String CAMERA_BACK = "0";
+
+    private String mCameraId = CAMERA_BACK;
+    private boolean isFlashSupported;
+    private boolean isTorchOn = false;
+
+
+
+    private int mCameraLensFacingDirection;
+
 
     /**
      * An {@link AutoFitTextureView} for camera preview.
@@ -546,8 +557,6 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             handleimageview=rootview.findViewById(R.id.handle);
             righthandle=rootview.findViewById(R.id.righthandle);
 
-
-
             recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
 
@@ -632,7 +641,6 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             fragment_graphic_container.setVisibility(View.INVISIBLE);
 
             {
-
                 mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
@@ -902,7 +910,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
      * @param width  The width of available size for camera preview
      * @param height The height of available size for camera preview
      */
-    @SuppressWarnings("SuspiciousNameCombination")
+   /* @SuppressWarnings("SuspiciousNameCombination")
     private void setUpCameraOutputs(int width, int height) {
         Activity activity = getActivity();
         manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
@@ -915,22 +923,22 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 // We don't use a front facing camera in this sample.
                 Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
 
-                if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
+                *//*if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
                     continue;
-                }
+                }*//*
 
                 StreamConfigurationMap map = characteristics.get(
                         CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                if (map == null) {
+                *//*if (map == null) {
                     continue;
-                }
+                }*//*
 
                 // For still image captures, we use the largest available size.
                 Size largest = Collections.max(
                         Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
                         new CompareSizesByArea());
                 mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
-                        ImageFormat.JPEG, /*maxImages*/2);
+                        ImageFormat.JPEG, *//*maxImages*//*2);
                 mImageReader.setOnImageAvailableListener(
                         mOnImageAvailableListener, mBackgroundHandler);
 
@@ -1000,9 +1008,122 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
                 Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
                 mFlashSupported = available == null ? false : available;
 
-                mCameraId = cameraId;
+                //mCameraId = cameraId;
                 return;
             }
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            // Currently an NPE is thrown when the Camera2API is used but not supported on the
+            // device this code runs.
+            ErrorDialog.newInstance(getString(R.string.camera_error))
+                    .show(getChildFragmentManager(), FRAGMENT_DIALOG);
+        }
+    }*/
+
+
+    private void setUpCameraOutputs(int width, int height) {
+        Activity activity = getActivity();
+        CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        try {
+//            for (String cameraId : manager.getCameraIdList()) {
+
+           // mCameraId = "1";
+            CameraCharacteristics characteristics
+                    = manager.getCameraCharacteristics(mCameraId);
+
+            // We don't use a front facing camera in this sample.
+            Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
+//                if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
+//                    continue;
+//                }
+
+            Boolean availableflash = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+            isFlashSupported = availableflash == null ? false : availableflash;
+
+
+            StreamConfigurationMap map = characteristics.get(
+                    CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+//                if (map == null) {
+//                    continue;
+//                }
+
+            // For still image captures, we use the largest available size.
+            Size largest = Collections.max(
+                    Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
+                    new CompareSizesByArea());
+            mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
+                    ImageFormat.JPEG, /*maxImages*/2);
+            mImageReader.setOnImageAvailableListener(
+                    mOnImageAvailableListener, mBackgroundHandler);
+
+            // Find out if we need to swap dimension to get the preview size relative to sensor
+            // coordinate.
+            int displayRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+            //noinspection ConstantConditions
+            mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+            boolean swappedDimensions = false;
+            switch (displayRotation) {
+                case Surface.ROTATION_0:
+                case Surface.ROTATION_180:
+                    if (mSensorOrientation == 90 || mSensorOrientation == 270) {
+                        swappedDimensions = true;
+                    }
+                    break;
+                case Surface.ROTATION_90:
+                case Surface.ROTATION_270:
+                    if (mSensorOrientation == 0 || mSensorOrientation == 180) {
+                        swappedDimensions = true;
+                    }
+                    break;
+                default:
+                    Log.e(TAG, "Display rotation is invalid: " + displayRotation);
+            }
+
+            Point displaySize = new Point();
+            activity.getWindowManager().getDefaultDisplay().getSize(displaySize);
+            int rotatedPreviewWidth = width;
+            int rotatedPreviewHeight = height;
+            int maxPreviewWidth = displaySize.x;
+            int maxPreviewHeight = displaySize.y;
+
+            if (swappedDimensions) {
+                rotatedPreviewWidth = height;
+                rotatedPreviewHeight = width;
+                maxPreviewWidth = displaySize.y;
+                maxPreviewHeight = displaySize.x;
+            }
+
+            if (maxPreviewWidth > MAX_PREVIEW_WIDTH) {
+                maxPreviewWidth = MAX_PREVIEW_WIDTH;
+            }
+
+            if (maxPreviewHeight > MAX_PREVIEW_HEIGHT) {
+                maxPreviewHeight = MAX_PREVIEW_HEIGHT;
+            }
+
+            // Danger, W.R.! Attempting to use too large a preview size could  exceed the camera
+            // bus' bandwidth limitation, resulting in gorgeous previews but the storage of
+            // garbage capture data.
+            mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
+                    rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth,
+                    maxPreviewHeight, largest);
+
+            // We fit the aspect ratio of TextureView to the size of preview we picked.
+            int orientation = getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                mTextureView.setAspectRatio(
+                        mPreviewSize.getWidth(), mPreviewSize.getHeight());
+            } else {
+                mTextureView.setAspectRatio(
+                        mPreviewSize.getHeight(), mPreviewSize.getWidth());
+            }
+
+            // Check if the flash is supported.
+            Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+            mFlashSupported = available == null ? false : available;
+
+//            }
         } catch (CameraAccessException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
@@ -1022,7 +1143,7 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         setUpCameraOutputs(width, height);
         configureTransform(width, height);
         Activity activity = getActivity();
-         manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        CameraManager  manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
@@ -1343,11 +1464,11 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
             }
 
             case R.id.img_flash_on:
-               // navigateflash();
+                camraflashonoff();
                 break;
 
             case R.id.img_rotate_camera:
-               // switchCamera();
+                switchCamera();
                 break;
             case R.id.txt_slot1:
                 if(selectedsection != 1)
@@ -1908,58 +2029,24 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
         return mFile;
     }
 
-    private void navigateflash() {
+    public void camraflashonoff() {
         try {
-            if(isflashon) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    imgflashon.setImageResource(R.drawable.flash_off);
-                    manager.setTorchMode(mCameraId, true);
-                    isflashon = false;
+            if (mCameraId.equals(CAMERA_BACK)) {
+                if (isFlashSupported) {
+                    if (isTorchOn) {
+                        mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                        mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
+                        imgflashon.setImageResource(R.drawable.flash_off);
+                        isTorchOn = false;
+                    } else {
+                        mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+                        mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
+                        imgflashon.setImageResource(R.drawable.flash_on);
+                        isTorchOn = true;
+                    }
                 }
-               /* mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
-                mPreviewRequestBuilder.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);*/
-                //isflashon = false;
-            } else {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    manager.setTorchMode(mCameraId, false);
-                    imgflashon.setImageResource(R.drawable.flash_on);
-
-                    isflashon = true;
-                }
-
-               /* mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
-                mPreviewRequestBuilder.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
-                isflashon = true;*/
             }
         } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void turnOnFlashLight() {
-
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                manager.setTorchMode(mCameraId, true);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void turnOffFlashLight() {
-
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                manager.setTorchMode(mCameraId, false);
-                /*playOnOffSound();
-                mTorchOnOffButton.setImageResource(R.drawable.off);*/
-
-            }
-
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1978,9 +2065,11 @@ public class imagecapturefragment extends basefragment  implements View.OnClickL
     }
 
     public void reopenCamera() {
-        if (mTextureView.isAvailable())
+        if (mTextureView.isAvailable()) {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
-
+        } else {
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+        }
     }
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
