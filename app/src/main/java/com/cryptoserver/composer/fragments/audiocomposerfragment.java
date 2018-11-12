@@ -4,13 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CaptureRequest;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -44,21 +38,17 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.VisualizerView;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.customffmpegframegrabber;
-import com.cryptoserver.composer.utils.progressdialog;
-import com.cryptoserver.composer.utils.xdata;
+import com.cryptoserver.composer.utils.noise;
+import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,6 +67,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     TextView txt_timer;
     @BindView(R.id.img_capture)
     ImageView img_capture;
+    @BindView(R.id.myvisualizerview)
+    visualizeraudiorecorder myvisualizerview;
 
     LinearLayout layout_bottom,layout_drawer;
     RecyclerView recyview_hashes;
@@ -108,6 +100,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     public Dialog maindialogshare,subdialogshare;
     private LinearLayoutManager mLayoutManager;
     private graphicalfragment fragmentgraphic;
+    private Handler wavehandler;
+    private Runnable waverunnable;
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_audiocomposer;
@@ -259,6 +254,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 implementscrolllistener();
             }
 
+            startnoise();
             setmetriceshashesdata();
         }
 
@@ -404,6 +400,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             case R.id.img_capture: {
                 if(! isaudiorecording)
                 {
+                    myvisualizerview.clear();
                     startrecording();
                 }
                 else
@@ -493,7 +490,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         Minutes = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        txt_timer.setText("00:00:00");
+        gethelper().updateheader("00:00:00");
     }
 
     public Runnable runnable = new Runnable() {
@@ -514,9 +511,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         public void run() {
                             if(isaudiorecording)
                             {
-                                txt_timer.setText("" + String.format("%02d", Minutes) + ":"
+                                gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + ":"
-                                        + String.format("%02d", (MilliSeconds/10)));
+                                        + String.format("%02d", (MilliSeconds / 10)));
                             }
 
                         }
@@ -586,7 +583,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
 /*        try {
             customffmpegframegrabber grabber = new customffmpegframegrabber(new File(selectedfile));
-            grabber.start();
+            grabber.startnoise();
             int totalframes=grabber.getLengthInAudioFrames();
             for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
                 Frame frame = grabber.grabAudio();
@@ -606,6 +603,88 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }*/
 
         showsharepopupmain();
+    }
+
+    private void startnoise() {
+
+        try {
+            if (mNoise != null)
+                mNoise.stop();
+
+            mNoise = new noise();
+
+            if (mNoise != null)
+                mNoise.start();
+
+            try {
+                if (mNoise != null)
+                {
+                    myvisualizerview.setVisibility(View.VISIBLE);
+                    getaudiowave();
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }catch (Exception e)
+        {
+
+        }
+
+    }
+
+    public void getaudiowave() {
+        wavehandler =new Handler();
+        waverunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+
+                    if((isaudiorecording))
+                    {
+                        int x = mNoise.getAmplitudevoice();
+                        myvisualizerview.addAmplitude(x); // update the VisualizeView
+                        myvisualizerview.invalidate();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                wavehandler.postDelayed(this, 2);
+            }
+        };
+        wavehandler.post(waverunnable);
+    }
+
+
+    private void stopnoise() {
+        try {
+            if(mNoise != null)
+            {
+                mNoise.stop();
+                //myvisualizerview.updateAmplitude((float) 0,false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(wavehandler != null && waverunnable != null)
+            wavehandler.removeCallbacks(waverunnable);
+
+        try {
+            stopnoise();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
