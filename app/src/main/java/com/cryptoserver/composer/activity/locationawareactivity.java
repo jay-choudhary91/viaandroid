@@ -142,7 +142,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private Handler myHandler;
     private Runnable myRunnable;
     public boolean isrecording = false;
-    public boolean firstsatellitesinfo  = true;
+    public boolean firstsatellitesinfo = true;
 
     String satelliteid = "", anglesatellite = "";
 
@@ -164,20 +164,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        getallpermissions();
-        getconnectionspeed();
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        manager.addGpsStatusListener(this);
+        getconnectionspeed();
 
     }
 
@@ -256,6 +244,17 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             if (common.getphonelocationdeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 doafterallpermissionsgranted();
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                manager.addGpsStatusListener(this);
             } else {
                 String[] array = new String[common.getphonelocationdeniedpermissions().size()];
                 array = common.getphonelocationdeniedpermissions().toArray(array);
@@ -1277,6 +1276,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onResume() {
         super.onResume();
+
+        getallpermissions();
     }
 
 
