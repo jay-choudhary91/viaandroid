@@ -953,6 +953,12 @@ public class common {
             metricItemName ="speed";
         }else if(key.equalsIgnoreCase("heading")){
             metricItemName ="heading";
+        }else if(key.equalsIgnoreCase("celltowersignalstrength")){
+            metricItemName ="celltowersignalstrength";
+        }else if(key.equalsIgnoreCase("celltowerid")){
+            metricItemName ="celltowerid";
+        }else if(key.equalsIgnoreCase("numberoftowers")){
+            metricItemName ="numberoftowers";
         }
         return metricItemName;
     }
@@ -1774,7 +1780,7 @@ public class common {
                 config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
-                "connectionspeed","gpsaccuracy","speed","heading","address"};
+                "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers"};
 
         return items;
     }
