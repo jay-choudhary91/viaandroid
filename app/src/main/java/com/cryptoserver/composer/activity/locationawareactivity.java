@@ -142,6 +142,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private Handler myHandler;
     private Runnable myRunnable;
     public boolean isrecording = false;
+    public boolean firstsatellitesinfo  = true;
+
+    String satelliteid = "", anglesatellite = "";
 
     int numberofsatellites = 0;
 
@@ -161,6 +164,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        getallpermissions();
+        getconnectionspeed();
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -173,8 +179,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         manager.addGpsStatusListener(this);
 
-        getallpermissions();
-        getconnectionspeed();
     }
 
     public void getconnectionspeed() {
@@ -338,17 +342,22 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 if(sat.usedInFix()) {
                     satellitesInFix++;
                 }
+                    GpsSatellite satellite = sat;
 
-                GpsSatellite satellite = sat;
-                Log.e("satellitePNR","" +satellite.getPrn());
-                Log.e("satelliteAzimuth","" +satellite.getAzimuth());
+                    satelliteid = "" + satellite.getPrn();
+                    int angle=(int)satellite.getAzimuth();
+
+                    if(angle > 0)
+                        anglesatellite = "" +angle ;
+
+
+                    Log.e("satellitePNR","" +satellite.getPrn());
+                    Log.e("satelliteAzimuth","" +satellite.getAzimuth());
+
                 satellites++;
             }
             Log.i("totalSatellites", satellites + " Used In Last Fix ("+satellitesInFix+")");
-
-            numberofsatellites =satellitesInFix;
-
-            Log.e("satelite count = ", ""+ satellitesInFix);
+            numberofsatellites = satellites;
         }
     }
 
@@ -555,9 +564,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
 
-    public void setNavigateWithLocation() {
-        if (locationawareactivity.checkLocationEnable(locationawareactivity.this)) {
-    }
+
 
     public void setNavigateWithLocation() {
         if (locationawareactivity.checkLocationEnable(locationawareactivity.this)) {
@@ -1144,11 +1151,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }else if (key.equalsIgnoreCase("numberofsatellites")) {
             metricItemValue = "" + numberofsatellites;
         }else if (key.equalsIgnoreCase("satelliteangle")) {
-            metricItemValue = "" + currentaddress;
+            metricItemValue = "" + anglesatellite;
         }else if (key.equalsIgnoreCase("satelliteid")) {
-            metricItemValue = "" + currentaddress;
+            metricItemValue = "" + satelliteid;
         }else if (key.equalsIgnoreCase("satelliteangle")) {
-            metricItemValue = "" + currentaddress;
+            metricItemValue = "N/A" ;
         }
 
         if (metricItemValue == null)

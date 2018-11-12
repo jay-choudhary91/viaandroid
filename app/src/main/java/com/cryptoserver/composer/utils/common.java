@@ -1788,8 +1788,8 @@ public class common {
                 config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
-                "connectionspeed","gpsaccuracy","speed","heading","address","numberofsatellites","satelliteangle","satelliteid","strengthofsatellites"};
-                "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers"};
+                "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
+                "satelliteangle","satelliteid","strengthofsatellites"};
 
         return items;
     }
