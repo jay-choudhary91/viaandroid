@@ -145,10 +145,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             txt_title.setText(txt);
         }
-        else if( getcurrentfragment() instanceof fragmentsettings || getcurrentfragment() instanceof audiocomposerfragment|| getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof fragmentimagelist
+        else if( getcurrentfragment() instanceof fragmentsettings || getcurrentfragment() instanceof audiocomposerfragment||
+                getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof fragmentimagelist
                 || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof videoplayerreaderfragment
                 || getcurrentfragment() instanceof composervideoplayerfragment
+                || getcurrentfragment() instanceof fragmentvideolist
                 || getcurrentfragment() instanceof audiocomposerfragment|| getcurrentfragment() instanceof bottombarfragment
                 )
         {
