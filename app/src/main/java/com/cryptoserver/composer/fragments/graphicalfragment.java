@@ -41,7 +41,7 @@ import com.cryptoserver.composer.adapter.encryptiondataadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
 import com.cryptoserver.composer.utils.VisualizerView;
-import com.cryptoserver.composer.utils.VisualizerViewMidea;
+import com.cryptoserver.composer.utils.VisualizerViewMedia;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.noise;
@@ -167,7 +167,7 @@ public class graphicalfragment extends basefragment implements
     private ArrayList<graphicalmodel> frameslist = new ArrayList<>();
 
     VisualizerView myvisualizerview;
-    VisualizerViewMidea myvisualizerviewmedia;
+    VisualizerViewMedia myvisualizerviewmedia;
 
     private MediaPlayer mMediaPlayer;
     private Visualizer mVisualizer;
@@ -190,7 +190,7 @@ public class graphicalfragment extends basefragment implements
             applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             scrollview_graphical.setVisibility(View.VISIBLE);
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
-            myvisualizerviewmedia = (VisualizerViewMidea) rootview.findViewById(R.id.myvisualizerviewmedia);
+            myvisualizerviewmedia = (VisualizerViewMedia) rootview.findViewById(R.id.myvisualizerviewmedia);
 
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
             img_compass = (ImageView) rootview.findViewById(R.id.img_compass);

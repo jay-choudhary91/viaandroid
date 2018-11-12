@@ -14,7 +14,7 @@ import com.cryptoserver.composer.R;
  * Created by devesh on 9/10/18.
  */
 
-public class VisualizerViewMidea extends View {
+public class VisualizerViewMedia extends View {
 
 
     private byte[] mBytes;
@@ -24,17 +24,17 @@ public class VisualizerViewMidea extends View {
     private float density;
     private int gap;
 
-    public VisualizerViewMidea(Context context) {
+    public VisualizerViewMedia(Context context) {
         super(context);
         init();
     }
 
-    public VisualizerViewMidea(Context context, AttributeSet attrs) {
+    public VisualizerViewMedia(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public VisualizerViewMidea(Context context, AttributeSet attrs, int defStyleAttr) {
+    public VisualizerViewMedia(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }

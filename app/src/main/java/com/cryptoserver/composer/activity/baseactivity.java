@@ -224,7 +224,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             return;
         }
 
-        if(getcurrentfragment() instanceof videocomposerfragment)
+        if(getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
+                || getcurrentfragment() instanceof imagecapturefragment)
         {
             setbackpress();
             onBack();
@@ -237,13 +238,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void setbackpress()
     {
-        {
-            getSupportFragmentManager().popBackStack();
-            mfragments.pop();
-            mcurrentfragment = (basefragment) (mfragments.isEmpty() ? null : ((mfragments.peek()
-                    instanceof basefragment) ? mfragments.peek() : null));
-            onfragmentbackstackchanged();
-        }
+        getSupportFragmentManager().popBackStack();
+        mfragments.pop();
+        mcurrentfragment = (basefragment) (mfragments.isEmpty() ? null : ((mfragments.peek()
+                instanceof basefragment) ? mfragments.peek() : null));
+        onfragmentbackstackchanged();
     }
 
     public void clearfragmentbackstack() {

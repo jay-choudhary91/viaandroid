@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.net.Uri;
@@ -26,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adaptervideolist;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -142,6 +145,8 @@ public class fragmentvideolist extends basefragment {
                 }
             }
             if (permissionsallgranted) {
+                arrayvideolist.clear();
+                adapter.notifyDataSetChanged();
                 getVideoList();
             }
         }
@@ -154,17 +159,6 @@ public class fragmentvideolist extends basefragment {
             ButterKnife.bind(this,rootview);
             listlayout=rootview.findViewById(R.id.listlayout);
 
-
-            adapter = new adaptervideolist(getActivity(),arrayvideolist, new adapteritemclick() {
-                @Override
-                public void onItemClicked(Object object) {
-                }
-                @Override
-                public void onItemClicked(Object object, int type) {
-                    video videoobj=(video)object;
-                    setAdapter(videoobj,type);
-                }
-            });
             LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyrviewvideolist.setLayoutManager(layoutManager);
@@ -173,7 +167,7 @@ public class fragmentvideolist extends basefragment {
             DividerItemDecoration itemDecor = new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
             itemDecor.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.devidercolor));
             recyrviewvideolist.addItemDecoration(itemDecor);
-            recyrviewvideolist.setAdapter(adapter);
+
 
             onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
             onTouchListener.setSwipeOptionViews(R.id.btn_edit).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
@@ -363,13 +357,35 @@ public class fragmentvideolist extends basefragment {
                                 }
                             }
                         });
-                        adapter.notifyDataSetChanged();
+                        setmediaadapter();
                     }
                 });
             }
         }).start();
 
     }
+
+    /*public Bitmap getthumbnail(String filepath)
+    {
+        Bitmap bitmap=null;
+        try {
+            RequestOptions myOptions = new RequestOptions()
+                    .fitCenter()
+                    .override(100, 100);
+
+            bitmap = Glide.
+                    with(getActivity()).
+                    asBitmap().
+                    load(filepath).
+                    apply(myOptions).
+                    submit().
+                    get();// Width and height
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }*/
 
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -630,5 +646,20 @@ public class fragmentvideolist extends basefragment {
             }
         }
         return false;
+    }
+
+    public void setmediaadapter()
+    {
+        adapter = new adaptervideolist(getActivity(),arrayvideolist, new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+            }
+            @Override
+            public void onItemClicked(Object object, int type) {
+                video videoobj=(video)object;
+                setAdapter(videoobj,type);
+            }
+        });
+        recyrviewvideolist.setAdapter(adapter);
     }
 }

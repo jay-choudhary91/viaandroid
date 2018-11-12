@@ -483,7 +483,7 @@
                     android:layout_height="match_parent"
                     android:visibility="gone"/>
 
-                <com.cryptoserver.composer.utils.VisualizerViewMidea
+                <com.cryptoserver.composer.utils.VisualizerViewMedia
                     android:id="@+id/myvisualizerviewmedia"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

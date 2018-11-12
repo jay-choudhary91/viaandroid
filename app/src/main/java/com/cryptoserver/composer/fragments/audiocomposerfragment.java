@@ -46,14 +46,19 @@ import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -548,7 +553,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private File getfile() {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.videodir, fileName+".m4a");
+        File file=new File(config.videodir, fileName+".wav");
 
         File destinationDir=new File(config.videodir);
         try {
@@ -578,6 +583,28 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         stoptimer();
         resettimer();
         isaudiorecording=false;
+
+/*        try {
+            customffmpegframegrabber grabber = new customffmpegframegrabber(new File(selectedfile));
+            grabber.start();
+            int totalframes=grabber.getLengthInAudioFrames();
+            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
+                Frame frame = grabber.grabAudio();
+                if (frame == null)
+                    break;
+
+
+                frame.samples[0]
+
+                ByteBuffer buffer= ((ByteBuffer) frame.samples[0].position(0));
+                byte[] byteData = new byte[buffer.remaining()];
+                buffer.get(byteData);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
+
         showsharepopupmain();
     }
 

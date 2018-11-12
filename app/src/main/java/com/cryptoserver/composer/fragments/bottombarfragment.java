@@ -1,16 +1,20 @@
 package com.cryptoserver.composer.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -19,11 +23,17 @@ import butterknife.ButterKnife;
 
 public class bottombarfragment extends basefragment  {
 
+    @BindView(R.id.tab_container)
+    FrameLayout tab_container;
+
     View rootview = null;
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
     imagecapturefragment fragimgcapture=null;
     adapteritemclick madapterclick;
+    int selectedtab=0;
+    BottomNavigationView navigation;
+    public boolean isviewloaded=true;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -33,28 +43,59 @@ public class bottombarfragment extends basefragment  {
             switch (item.getItemId()) {
                 case R.id.navigation_video:
 
-                    launchvideocomposer();
+                    if(selectedtab != 1 && isviewloaded)
+                    {
+                        selectedtab=1;
+                        launchvideocomposer();
+                        isviewloaded=false;
+                        startloadtimer(1500);
+                    }
+
                     return true;
                 case R.id.navigation_audio:
-                    if(fragaudiocomposer == null)
-                        fragaudiocomposer=new audiocomposerfragment();
+                    if(selectedtab != 2 && isviewloaded)
+                    {
+                        selectedtab=2;
+                        if(fragaudiocomposer == null)
+                            fragaudiocomposer=new audiocomposerfragment();
 
-                    fragaudiocomposer.setData(mclick);
-                    gethelper().replacetabfragment(fragaudiocomposer,false,true);
+                        fragaudiocomposer.setData(mclick);
+                        gethelper().replacetabfragment(fragaudiocomposer,false,true);
+                        isviewloaded=false;
+                        startloadtimer(1000);
+                    }
+
                     return true;
 
                 case R.id.navigation_image:
 
-                    if(fragimgcapture == null)
-                        fragimgcapture=new imagecapturefragment();
+                    if(selectedtab != 3 && isviewloaded)
+                    {
+                        selectedtab=3;
+                        if(fragimgcapture == null)
+                            fragimgcapture=new imagecapturefragment();
 
-                    fragimgcapture.setData(mclick);
-                    gethelper().replacetabfragment(fragimgcapture,false,true);
+                        fragimgcapture.setData(mclick);
+                        gethelper().replacetabfragment(fragimgcapture,false,true);
+                        isviewloaded=false;
+                        startloadtimer(1500);
+                    }
+
                     return true;
             }
             return false;
         }
     };
+
+    public void startloadtimer(long loadingtime)
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isviewloaded=true;
+            }
+        },loadingtime);
+    }
 
     @Override
     public int getlayoutid() {
@@ -74,10 +115,18 @@ public class bottombarfragment extends basefragment  {
         if(rootview==null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            BottomNavigationView navigation = (BottomNavigationView) rootview.findViewById(R.id.navigation);
+            navigation = (BottomNavigationView) rootview.findViewById(R.id.navigation);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-            launchvideocomposer();
+            tab_container.setBackgroundColor(Color.BLACK);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    navigation.setSelectedItemId(R.id.navigation_video);
+                }
+            },100);
+
+            //launchvideocomposer();
         }
         return rootview;
     }

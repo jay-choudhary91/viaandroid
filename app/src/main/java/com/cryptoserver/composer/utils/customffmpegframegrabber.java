@@ -1085,6 +1085,9 @@ public class customffmpegframegrabber extends FrameGrabber {
     public Frame grabImage() throws Exception {
         return grabFrame(false, true, true, false);
     }
+    public Frame grabAudio() throws Exception {
+        return grabFrame(true, false, true, false);
+    }
     public Frame grabSamples() throws Exception {
         return grabFrame(true, false, true, false);
     }

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -33,6 +35,7 @@ import com.cryptoserver.composer.utils.common;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -45,7 +48,7 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adapteritemclick adapter;
     private int row_index = -1;
-
+    HashMap<String, Bitmap> cacheBitmap;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tvvideodescription;
@@ -71,6 +74,23 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         this.context = context;
         this.arrayvideolist = arrayvideolist;
         this.adapter = adapter;
+    }
+
+    public void initCacheBitmap() {
+        cacheBitmap = new HashMap<String, Bitmap>(arrayvideolist.size());
+        int flag=0;
+        for(video video:arrayvideolist)
+        {
+            if(video.getmimetype().contains("audio"))
+            {
+                cacheBitmap.put(video.getPath(), null);
+            }
+            else
+            {
+                cacheBitmap.put(video.getPath(), ThumbnailUtils.createVideoThumbnail(video.getPath(), MediaStore.Images.Thumbnails.MICRO_KIND));
+            }
+            flag++;
+        }
     }
 
     @NonNull
@@ -112,44 +132,19 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
 
         if(! arrayvideolist.get(position).getmimetype().contains("audio"))
         {
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        String url = arrayvideolist.get(position).getPath();
-                        RequestOptions myOptions = new RequestOptions()
-                                .fitCenter()
-                                .override(100, 100);
 
-                        final Bitmap bitmap = Glide.
-                                with(context).
-                                asBitmap().
-                                load(url).
-                                apply(myOptions).
-                                submit().
-                                get();// Width and height
-
-
-                        ((Activity) context).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                holder.img_videothumbnail.setImageBitmap(bitmap);
-                            }
-                        });
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
+            Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getPath()));
+            Glide.with(context).
+                    load(uri).
+                    thumbnail(0.1f).
+                    into(holder.img_videothumbnail);
         }
         else
         {
             holder.img_videothumbnail.setBackgroundResource(R.drawable.audiotab);
         }
+
+
 
         if(arrayvideolist.get(position).isSelected){
             holder.edtvideoname.setEnabled(true);

@@ -1,5 +1,7 @@
 package com.cryptoserver.composer.models;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by root on 9/8/18.
  */
@@ -13,6 +15,7 @@ public class video
     public String md5="";
     public String mimetype="";
     public long lastmodifiedtime=0;
+    public Bitmap thumbnail=null;
     public boolean isSelected = false;
 
 
@@ -31,6 +34,13 @@ public class video
 
     }
 
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 
     public long getLastmodifiedtime() {
         return lastmodifiedtime;
