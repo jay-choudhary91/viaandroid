@@ -2,34 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     android:id="@+id/rl_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/imageviewmic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_microphone"
-        android:layout_centerInParent="true"
-        android:background="?android:attr/selectableItemBackground"
-        android:layout_marginEnd="10dp"
-        android:clickable="true"
-        android:focusable="true"
-        />
-
-    <com.cryptoserver.composer.views.customfonttextview
-        android:id="@+id/txt_timer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:text="00:00:00"
+    <com.cryptoserver.composer.utils.visualizeraudiorecorder
+        android:id="@+id/myvisualizerview"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/imageviewmic"
-        android:layout_centerVertical="true"
-        android:textColor="@color/white"
-        app:fontType="OpenSans_Regular"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
     <LinearLayout
@@ -109,6 +90,18 @@
 
 
     </RelativeLayout>
+
+    <com.cryptoserver.composer.views.customfonttextview
+        android:id="@+id/txt_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:text=""
+        android:layout_marginTop="10dp"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        app:fontType="OpenSans_Regular"/>
 
 
 </RelativeLayout>
