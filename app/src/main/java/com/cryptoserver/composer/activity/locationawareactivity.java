@@ -38,9 +38,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrengthGsm;
 import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -547,6 +554,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
 
+
+    public void setNavigateWithLocation() {
+        if (locationawareactivity.checkLocationEnable(locationawareactivity.this)) {
+    }
 
     public void setNavigateWithLocation() {
         if (locationawareactivity.checkLocationEnable(locationawareactivity.this)) {
@@ -1108,6 +1119,24 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             } else if ((android.provider.Settings.Global.getInt(getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 0) == 1)) {
                 metricItemValue = "OFF";
             }
+        } else if (key.equalsIgnoreCase("connectionspeed")) {
+            metricItemValue = "" + connectionspeed;
+        } else if (key.equalsIgnoreCase("address")) {
+            metricItemValue = "" + currentaddress;
+        } else if(key.equalsIgnoreCase("celltowersignalstrength")){
+
+            int cellsignalstrength = (mSignalStrength * 2) - 113;
+
+            metricItemValue=""+cellsignalstrength+ " " +"dBm";
+        } else if(key.equalsIgnoreCase("celltowerid")){
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            if(telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
+                GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+                int celltowerid = cellLocation.getCid();
+                Log.e("nearbytower", "" + cellLocation.getLac() + "" + cellLocation.getLac());
+                metricItemValue = "" + celltowerid;
+            }
+        }else if(key.equalsIgnoreCase("numberoftowers")){
         } else if (key.equalsIgnoreCase("connectionspeed")) {
             metricItemValue = "" + connectionspeed;
         } else if (key.equalsIgnoreCase("address")) {
