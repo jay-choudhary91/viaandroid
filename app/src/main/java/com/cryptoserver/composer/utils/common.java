@@ -953,6 +953,14 @@ public class common {
             metricItemName ="speed";
         }else if(key.equalsIgnoreCase("heading")){
             metricItemName ="heading";
+        }else if(key.equalsIgnoreCase("numberofsatellites")){
+            metricItemName ="numberofsatellites";
+        }else if(key.equalsIgnoreCase("satelliteangle")){
+            metricItemName ="satelliteangle";
+        }else if(key.equalsIgnoreCase("satelliteid")){
+            metricItemName ="satelliteid";
+        }else if(key.equalsIgnoreCase("strengthofsatellites")){
+            metricItemName ="strengthofsatellites";
         }
         return metricItemName;
     }
@@ -1774,7 +1782,7 @@ public class common {
                 config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
-                "connectionspeed","gpsaccuracy","speed","heading","address"};
+                "connectionspeed","gpsaccuracy","speed","heading","address","numberofsatellites","satelliteangle","satelliteid","strengthofsatellites"};
 
         return items;
     }

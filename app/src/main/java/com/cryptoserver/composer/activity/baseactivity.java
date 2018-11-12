@@ -406,13 +406,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         Log.e("video_updateid ",""+selectedid);
-        try {
-            JSONObject obj = new JSONObject(header);
-            hashmethod  = obj.getString("hashmethod");
-            hashvalue  = obj.getString("firsthash");
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(!header.isEmpty()){
+            try {
+                JSONObject obj = new JSONObject(header);
+                hashmethod  = obj.getString("hashmethod");
+                hashvalue  = obj.getString("firsthash");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         final String  finalheader = header;
@@ -465,19 +468,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
             if(sync_date.equalsIgnoreCase("0"))
                 callUpdateapi(finalheader,finallocalkey,finalvideokey,finaltoken,finalsync,finaldevicetimeoffset,finalapirequestdevicedate,finalselectedid,finalvideocompletedevicedate);
+            }
 
-
-        }
-                   /* else if(action_type.equalsIgnoreCase(config.type_video_complete))
-                    {
-                        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-                        mpairslist.put("completedatetime",""+datetime);
-                        mpairslist.put("key",""+videokey);
-                    }
-
-                    final String finalSelectedid = selectedid;
-                    final String finalAction_type = action_type;
-                    final String finalVideoid = videoid;*/
         }
 
     public void callUpdateapi(String finalheader,String finallocalkey, String finalvideokey, String finaltoken, String finalsync, String finaldevicetimeoffset,String finalapirequestdevicedate, String startselectedid,String finalvideocompletedevicedate){
