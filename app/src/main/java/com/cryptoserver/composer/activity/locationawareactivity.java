@@ -36,9 +36,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.CellInfo;
+import android.telephony.CellInfoGsm;
+import android.telephony.CellInfoLte;
+import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrengthGsm;
 import android.telephony.PhoneStateListener;
+import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -95,18 +102,18 @@ public abstract class locationawareactivity extends baseactivity implements
     private LocationRequest mlocationrequest;
     private Location mcurrentlocation;
     private GoogleApiClient mgoogleapiclient;
-    int GPS_REQUEST_CODE=111;
-    public Bundle newsavedinstancestate =null;
-    boolean updateitem =false;
+    int GPS_REQUEST_CODE = 111;
+    public Bundle newsavedinstancestate = null;
+    boolean updateitem = false;
     private TelephonyManager telephonymanager;
     private LocationManager manager;
     private ArrayList<metricmodel> metricitemarraylist = new ArrayList<>();
 
     private SensorManager msensormanager;
     private Sensor maccelereometer;
-    private BroadcastReceiver flightmodebroadcast ;
+    private BroadcastReceiver flightmodebroadcast;
     IntentFilter aeroplacemodefilter;
-    private double altitude=0.0;
+    private double altitude = 0.0;
 
     private float[] mGData = new float[3];
     private float[] mMData = new float[3];
@@ -119,19 +126,19 @@ public abstract class locationawareactivity extends baseactivity implements
 
     private IntentFilter intentFilter;
     private BroadcastReceiver mBroadcast;
-    String CALL_STATUS="",CALL_DURATION="",CALL_REMOTE_NUMBER="",CALL_START_TIME="",currentaddress="",connectionspeed="";
+    String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", currentaddress = "", connectionspeed = "";
     MyPhoneStateListener mPhoneStatelistener;
-    int mSignalStrength = 0,dbtoxapiupdatecounter=0;
+    int mSignalStrength = 0, dbtoxapiupdatecounter = 0;
 
     noise mNoise;
-    private static final int PERMISSION_RECORD_AUDIO= 92;
+    private static final int PERMISSION_RECORD_AUDIO = 92;
     public static final int my_permission_read_phone_state = 90;
     private static final int request_permissions = 101;
     private Runnable doafterallpermissionsgranted;
     private Location oldlocation;
     private Handler myHandler;
     private Runnable myRunnable;
-    public boolean isrecording=false;
+    public boolean isrecording = false;
 
     long startTime;
     long endTime;
@@ -139,24 +146,23 @@ public abstract class locationawareactivity extends baseactivity implements
     OkHttpClient client = new OkHttpClient();
     // bandwidth in kbps
     private int POOR_BANDWIDTH = 150;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         applicationviavideocomposer.setActivity(locationawareactivity.this);
-        newsavedinstancestate =savedInstanceState;
-        telephonymanager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-        manager = (LocationManager)getSystemService(Context.LOCATION_SERVICE );
+        newsavedinstancestate = savedInstanceState;
+        telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         getallpermissions();
         getconnectionspeed();
     }
 
-    public void getconnectionspeed()
-    {
-        if(! common.isnetworkconnected(locationawareactivity.this))
-        {
-            connectionspeed="NA";
+    public void getconnectionspeed() {
+        if (!common.isnetworkconnected(locationawareactivity.this)) {
+            connectionspeed = "NA";
             return;
         }
 
@@ -205,14 +211,14 @@ public abstract class locationawareactivity extends baseactivity implements
                 double timeTakenSecs = timeTakenMills / 1000;  // divide by 1000 to get time in seconds
                 final int kilobytePerSec = (int) Math.round(1024 / timeTakenSecs);
 
-                if(kilobytePerSec <= POOR_BANDWIDTH){
+                if (kilobytePerSec <= POOR_BANDWIDTH) {
                     // slow connection
                 }
 
                 // get the download speed by dividing the file size by time taken to download
                 double speed = fileSize / timeTakenMills;
-                double speedinmb=kilobytePerSec/1024;
-                connectionspeed=speedinmb+" mbps";
+                double speedinmb = kilobytePerSec / 1024;
+                connectionspeed = speedinmb + " mbps";
                 /*Log.d("Case1 ", "Time taken in secs: " + timeTakenSecs);
                 Log.d("Case2 ", "kilobyte per sec: " + kilobytePerSec);
                 Log.d("Case3 ", "Download Speed: " + speed);
@@ -222,8 +228,7 @@ public abstract class locationawareactivity extends baseactivity implements
         });
     }
 
-    public void getallpermissions()
-    {
+    public void getallpermissions() {
         if (doafterallpermissionsgranted != null) {
             doafterallpermissionsgranted.run();
             doafterallpermissionsgranted = null;
@@ -241,7 +246,7 @@ public abstract class locationawareactivity extends baseactivity implements
 
     @Override
     public void setrecordingrunning(boolean toggle) {
-        isrecording=toggle;
+        isrecording = toggle;
     }
 
     @Override
@@ -288,15 +293,13 @@ public abstract class locationawareactivity extends baseactivity implements
 
     @Override
     public void showPermissionDialog() {
-        updateitem =true;
+        updateitem = true;
         if (!checkPermission(this)) {
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_LOCATION_REQUEST_CODE);
-        }
-        else
-        {
+        } else {
             enableGPS(locationawareactivity.this);
         }
     }
@@ -321,11 +324,10 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(myHandler != null && myRunnable != null)
+        if (myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
         stopLocationUpdates();
     }
@@ -341,8 +343,7 @@ public abstract class locationawareactivity extends baseactivity implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        if(mgoogleapiclient != null && mgoogleapiclient.isConnected())
-        {
+        if (mgoogleapiclient != null && mgoogleapiclient.isConnected()) {
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mgoogleapiclient, mlocationrequest, this);
 
@@ -407,12 +408,11 @@ public abstract class locationawareactivity extends baseactivity implements
     @Override
     public void onLocationChanged(Location location) {
         //saving the user current location
-        if(location != null)
-        {
+        if (location != null) {
 
             googleutils.saveUserCurrentLocation(location);
 
-            if(location.getLatitude() == 0.0)
+            if (location.getLatitude() == 0.0)
                 return;
 
             mcurrentlocation = location;
@@ -491,10 +491,8 @@ public abstract class locationawareactivity extends baseactivity implements
 
     }
 
-    public void setNavigateWithLocation()
-    {
-        if (locationawareactivity.checkLocationEnable(locationawareactivity.this))
-        {
+    public void setNavigateWithLocation() {
+        if (locationawareactivity.checkLocationEnable(locationawareactivity.this)) {
             initLocationAPIs(newsavedinstancestate);
             if (getcurrentfragment() != null) {
                 getcurrentfragment().getAccurateLocation();
@@ -503,20 +501,15 @@ public abstract class locationawareactivity extends baseactivity implements
 
     }
 
-    public void enableGPS(final Context context)
-    {
-        if (!locationawareactivity.checkLocationEnable(context))
-        {
+    public void enableGPS(final Context context) {
+        if (!locationawareactivity.checkLocationEnable(context)) {
             showgpsalert(context);
-        }
-        else
-        {
+        } else {
             setNavigateWithLocation();
         }
     }
 
-    public void showgpsalert(final Context context)
-    {
+    public void showgpsalert(final Context context) {
 /*        appdialog.showConfirmationDialog(context, "GPS", "GPS is disabled in your device. Would you like to enable it?","YES","NO", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -538,7 +531,7 @@ public abstract class locationawareactivity extends baseactivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_REQUEST_CODE);
-                        if(dialog != null)
+                        if (dialog != null)
                             dialog.dismiss();
                     }
                 })
@@ -565,22 +558,20 @@ public abstract class locationawareactivity extends baseactivity implements
 
         metricitemarraylist.clear();
 
-        String[] items=common.getmetricesarray();
+        String[] items = common.getmetricesarray();
 
-        for(int i=0;i<items.length;i++)
-        {
+        for (int i = 0; i < items.length; i++) {
             metricitemarraylist.add(new metricmodel(items[i], "", true));
         }
         startmetrices();
 
     }
 
-    public void startmetrices()
-    {
-        if(myHandler != null && myRunnable != null)
+    public void startmetrices() {
+        if (myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
 
-        myHandler=new Handler();
+        myHandler = new Handler();
         myRunnable = new Runnable() {
             @Override
             public void run() {
@@ -591,32 +582,26 @@ public abstract class locationawareactivity extends baseactivity implements
 
                         getconnectionspeed();
 
-                        for(int i = 0; i< metricitemarraylist.size(); i++)
-                        {
-                            if(metricitemarraylist.get(i).isSelected())
-                            {
-                                String value=metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
+                        for (int i = 0; i < metricitemarraylist.size(); i++) {
+                            if (metricitemarraylist.get(i).isSelected()) {
+                                String value = metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
                                 metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
-                                if(! value.trim().isEmpty())
+                                if (!value.trim().isEmpty())
                                     metricitemarraylist.get(i).setMetricTrackValue(value);
                             }
                         }
 
-                        if(getcurrentfragment() instanceof videocomposerfragment)
-                        {
-                            isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                            if(isrecording)
+                        if (getcurrentfragment() instanceof videocomposerfragment) {
+                            isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
+                            if (isrecording)
                                 return;
-                        }
-                        else
-                        {
-                            isrecording=false;
+                        } else {
+                            isrecording = false;
                         }
 
                         dbtoxapiupdatecounter++;
-                        if(dbtoxapiupdatecounter > 1)
-                        {
-                            dbtoxapiupdatecounter=0;
+                        if (dbtoxapiupdatecounter > 1) {
+                            dbtoxapiupdatecounter = 0;
                             fetchmetadatadb();
                         }
                     }
@@ -629,24 +614,15 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
 
+    public ArrayList<metricmodel> getmetricarraylist() {
+        List<metricmodel> settingupdatedlist = getMetricList();
+        if (settingupdatedlist == null || settingupdatedlist.size() == 0) {
 
-    public ArrayList<metricmodel> getmetricarraylist()
-    {
-        List<metricmodel> settingupdatedlist=getMetricList();
-        if(settingupdatedlist == null || settingupdatedlist.size() == 0)
-        {
-
-        }
-        else
-        {
-            for(int i=0;i<settingupdatedlist.size();i++)
-            {
-                if(settingupdatedlist.get(i).isSelected())
-                {
+        } else {
+            for (int i = 0; i < settingupdatedlist.size(); i++) {
+                if (settingupdatedlist.get(i).isSelected()) {
                     metricitemarraylist.get(i).setSelected(true);
-                }
-                else
-                {
+                } else {
                     metricitemarraylist.get(i).setSelected(false);
                 }
             }
@@ -657,14 +633,12 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
 
-
     public List<metricmodel> getMetricList() {
         Gson gson = new Gson();
-        List<metricmodel> metricList=new ArrayList<>();
+        List<metricmodel> metricList = new ArrayList<>();
 
         String value = xdata.getinstance().getSetting(config.metriclist);
-        if(value.trim().length() > 0)
-        {
+        if (value.trim().length() > 0) {
             Type type = new TypeToken<List<metricmodel>>() {
             }.getType();
             metricList = gson.fromJson(value, type);
@@ -673,267 +647,196 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
     @SuppressLint("MissingPermission")
-    public String metric_read(String key)
-    {
-        String metricItemValue="";
+    public String metric_read(String key) {
+        String metricItemValue = "";
 
-        if(key.equalsIgnoreCase(config.decibel) || key.equalsIgnoreCase(config.currentcalldecibel)){
+        if (key.equalsIgnoreCase(config.decibel) || key.equalsIgnoreCase(config.currentcalldecibel)) {
             if (ContextCompat.checkSelfPermission(locationawareactivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(locationawareactivity.this,
                         new String[]{Manifest.permission.RECORD_AUDIO},
                         PERMISSION_RECORD_AUDIO);
-            }else{
+            } else {
                 //start();
             }
             return "NA";
-        }
-        else if(key.equalsIgnoreCase("connectedphonenetworkquality"))
-        {
+        } else if (key.equalsIgnoreCase("connectedphonenetworkquality")) {
             String str = telephonymanager.getNetworkOperatorName();
-            if(str != null)
-            {
-                if(! str.trim().isEmpty())
-                {
+            if (str != null) {
+                if (!str.trim().isEmpty()) {
                     registerMobileNetworkStrength();
                     return "";
                 }
             }
-        }
-        else if(key.equalsIgnoreCase(config.cpuusageuser) || key.equalsIgnoreCase(config.cpuusagesystem)
-                || key.equalsIgnoreCase(config.cpuusageiow) || key.equalsIgnoreCase(config.cpuusageirq))
-        {
+        } else if (key.equalsIgnoreCase(config.cpuusageuser) || key.equalsIgnoreCase(config.cpuusagesystem)
+                || key.equalsIgnoreCase(config.cpuusageiow) || key.equalsIgnoreCase(config.cpuusageirq)) {
             getsystemusage();
             return "";
-        }
-
-        else if(key.equalsIgnoreCase(config.currentcallinprogress) || key.equalsIgnoreCase(config.currentcalldurationseconds)
-                || key.equalsIgnoreCase(config.currentcallremotenumber))
-        {
+        } else if (key.equalsIgnoreCase(config.currentcallinprogress) || key.equalsIgnoreCase(config.currentcalldurationseconds)
+                || key.equalsIgnoreCase(config.currentcallremotenumber)) {
             getCallInfo();
             return "";
-        }
-
-        else if(key.equalsIgnoreCase("imeinumber"))
-        {
+        } else if (key.equalsIgnoreCase("imeinumber")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 metricItemValue = telephonymanager.getImei();
-            }
-            else
-            {
+            } else {
                 metricItemValue = telephonymanager.getDeviceId();
             }
-        }
-        else if(key.equalsIgnoreCase("username"))
-        {
+        } else if (key.equalsIgnoreCase("username")) {
             metricItemValue = common.getUsername();
-        }
-        else if(key.equalsIgnoreCase("deviceid"))
-        {
-            metricItemValue = Settings.Secure.getString(locationawareactivity.this.getContentResolver(),Settings.Secure.ANDROID_ID);
-        }
-        else if(key.equalsIgnoreCase("simserialnumber"))
-        {
+        } else if (key.equalsIgnoreCase("deviceid")) {
+            metricItemValue = Settings.Secure.getString(locationawareactivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        } else if (key.equalsIgnoreCase("simserialnumber")) {
             metricItemValue = telephonymanager.getSimSerialNumber();
-        }
-        else if(key.equalsIgnoreCase("carrier"))
-        {
+        } else if (key.equalsIgnoreCase("carrier")) {
             metricItemValue = telephonymanager.getNetworkOperatorName();
-        }
-        else if(key.equalsIgnoreCase("carrierVOIP"))
-        {
+        } else if (key.equalsIgnoreCase("carrierVOIP")) {
 
-        }
-        else if(key.equalsIgnoreCase("manufacturer"))
-        {
+        } else if (key.equalsIgnoreCase("manufacturer")) {
             metricItemValue = Build.MANUFACTURER;
-        }
-        else if(key.equalsIgnoreCase("model") || key.equalsIgnoreCase("phonetype"))
-        {
+        } else if (key.equalsIgnoreCase("model") || key.equalsIgnoreCase("phonetype")) {
             metricItemValue = Build.MODEL;
-        }
-        else if(key.equalsIgnoreCase("version"))
-        {
-            metricItemValue = ""+Build.VERSION.SDK_INT;
-        }
-        else if(key.equalsIgnoreCase("osversion"))
-        {
+        } else if (key.equalsIgnoreCase("version")) {
+            metricItemValue = "" + Build.VERSION.SDK_INT;
+        } else if (key.equalsIgnoreCase("osversion")) {
             metricItemValue = Build.VERSION.RELEASE;
-        }
-        else if(key.equalsIgnoreCase("devicetime"))
-        {
+        } else if (key.equalsIgnoreCase("devicetime")) {
             Calendar calander = Calendar.getInstance();
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.time_format);
             String time = simpleDateFormat.format(calander.getTime());
             metricItemValue = time;
-        }
-        else if(key.equalsIgnoreCase("softwareversion"))
-        {
-            metricItemValue = ""+telephonymanager.getDeviceSoftwareVersion();
-        }
-        else if(key.equalsIgnoreCase("deviceregion") || (key.equalsIgnoreCase("country")))
-        {
-            metricItemValue = ""+ Locale.getDefault().getCountry();
-        }
-        else if(key.equalsIgnoreCase("timezone"))
-        {
+        } else if (key.equalsIgnoreCase("softwareversion")) {
+            metricItemValue = "" + telephonymanager.getDeviceSoftwareVersion();
+        } else if (key.equalsIgnoreCase("deviceregion") || (key.equalsIgnoreCase("country"))) {
+            metricItemValue = "" + Locale.getDefault().getCountry();
+        } else if (key.equalsIgnoreCase("timezone")) {
             TimeZone timezone = TimeZone.getDefault();
             metricItemValue = timezone.getDisplayName();
-        }else if(key.equalsIgnoreCase("devicelanguage"))
-        {
+        } else if (key.equalsIgnoreCase("devicelanguage")) {
             metricItemValue = Locale.getDefault().getDisplayLanguage();
-        }
-        else if(key.equalsIgnoreCase("brightness"))
-        {
+        } else if (key.equalsIgnoreCase("brightness")) {
             try {
-                int brightnessValue = Settings.System.getInt(locationawareactivity.this.getContentResolver(),Settings.System.SCREEN_BRIGHTNESS,0);
+                int brightnessValue = Settings.System.getInt(locationawareactivity.this.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
 
-                float total=(brightnessValue*100)/255;
-                metricItemValue=""+(int)total+"%";
+                float total = (brightnessValue * 100) / 255;
+                metricItemValue = "" + (int) total + "%";
             } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        }
-        else if(key.equalsIgnoreCase("dataconnection") )
-        {
-            metricItemValue="Not Connected!";
+        } else if (key.equalsIgnoreCase("dataconnection")) {
+            metricItemValue = "Not Connected!";
             ConnectivityManager cm =
-                    (ConnectivityManager)locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                    (ConnectivityManager) locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             boolean isConnected = activeNetwork != null &&
                     activeNetwork.isConnectedOrConnecting();
-            if(isConnected)
-            {
+            if (isConnected) {
                 boolean TYPE_WIFI = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
                 boolean TYPE_MOBILE = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
                 boolean TYPE_BLUETOOTH = activeNetwork.getType() == ConnectivityManager.TYPE_BLUETOOTH;
 
-                if(TYPE_WIFI)
-                    metricItemValue="Wifi";
+                if (TYPE_WIFI)
+                    metricItemValue = "Wifi";
 
-                if(TYPE_MOBILE)
-                    metricItemValue="Mobile Data";
+                if (TYPE_MOBILE)
+                    metricItemValue = "Mobile Data";
 
-                if(TYPE_BLUETOOTH)
-                    metricItemValue="Bluetooth";
+                if (TYPE_BLUETOOTH)
+                    metricItemValue = "Bluetooth";
             }
 
-        }
-        else if(key.equalsIgnoreCase("cellnetworkconnect"))
-        {
-            metricItemValue="NO";
+        } else if (key.equalsIgnoreCase("cellnetworkconnect")) {
+            metricItemValue = "NO";
             ConnectivityManager cm =
-                    (ConnectivityManager)locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                    (ConnectivityManager) locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             boolean isConnected = activeNetwork != null &&
                     activeNetwork.isConnectedOrConnecting();
-            if(isConnected)
-            {
+            if (isConnected) {
                 boolean TYPE_MOBILE = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
-                if(TYPE_MOBILE)
-                    metricItemValue="YES";
+                if (TYPE_MOBILE)
+                    metricItemValue = "YES";
             }
 
-        }
-        else if(key.equalsIgnoreCase("networktype") || key.equalsIgnoreCase("internalip"))
-        {
-            metricItemValue="NA";
+        } else if (key.equalsIgnoreCase("networktype") || key.equalsIgnoreCase("internalip")) {
+            metricItemValue = "NA";
             ConnectivityManager cm =
-                    (ConnectivityManager)locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                    (ConnectivityManager) locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
             NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
             boolean isConnected = activeNetwork != null &&
                     activeNetwork.isConnectedOrConnecting();
-            if(isConnected)
-            {
+            if (isConnected) {
                 boolean TYPE_MOBILE = activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
                 boolean TYPE_WIFI = activeNetwork.getType() == ConnectivityManager.TYPE_WIFI;
 
-                if(TYPE_MOBILE && key.equalsIgnoreCase("networktype")){
-                    metricItemValue= common.mapNetworkTypeToName(locationawareactivity.this);
+                if (TYPE_MOBILE && key.equalsIgnoreCase("networktype")) {
+                    metricItemValue = common.mapNetworkTypeToName(locationawareactivity.this);
                 }
-                if(TYPE_WIFI && key.equalsIgnoreCase("networktype")){
-                    metricItemValue="Wifi";
+                if (TYPE_WIFI && key.equalsIgnoreCase("networktype")) {
+                    metricItemValue = "Wifi";
                 }
 
-                if(key.equalsIgnoreCase("internalip") && TYPE_MOBILE)
+                if (key.equalsIgnoreCase("internalip") && TYPE_MOBILE)
                     metricItemValue = common.getLocalIpAddress();
 
             }
 
-        }
-        else if(key.equalsIgnoreCase("screenwidth"))
-        {
+        } else if (key.equalsIgnoreCase("screenwidth")) {
             Display display = applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
             int width = size.x;
-            metricItemValue=""+width;
-        }
-        else if(key.equalsIgnoreCase("screenheight"))
-        {
+            metricItemValue = "" + width;
+        } else if (key.equalsIgnoreCase("screenheight")) {
             Display display = applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
             int height = size.y;
-            metricItemValue=""+height;
-        }
-        else if(key.equalsIgnoreCase("wificonnect") || key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wifiname")
-                || key.equalsIgnoreCase("connectedwifiquality") || key.equalsIgnoreCase("externalip"))
-        {
+            metricItemValue = "" + height;
+        } else if (key.equalsIgnoreCase("wificonnect") || key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wifiname")
+                || key.equalsIgnoreCase("connectedwifiquality") || key.equalsIgnoreCase("externalip")) {
             metricItemValue = "NO";
             ConnectivityManager connManager = (ConnectivityManager) locationawareactivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             if (networkInfo.isConnected()) {
-                final WifiManager wifiManager = (WifiManager)locationawareactivity.this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                final WifiManager wifiManager = (WifiManager) locationawareactivity.this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 final WifiInfo connectionInfo = wifiManager.getConnectionInfo();
                 if (connectionInfo != null && !TextUtils.isEmpty(connectionInfo.getSSID())) {
 
-                    if(key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wificonnect"))
+                    if (key.equalsIgnoreCase(config.wifinetworkavailable) || key.equalsIgnoreCase("wificonnect"))
                         metricItemValue = "true";
 
-                    if(key.equalsIgnoreCase("externalip"))
-                        metricItemValue =  common.getWifiIPAddress(locationawareactivity.this);
+                    if (key.equalsIgnoreCase("externalip"))
+                        metricItemValue = common.getWifiIPAddress(locationawareactivity.this);
 
-                    if(key.equalsIgnoreCase("wifiname"))
+                    if (key.equalsIgnoreCase("wifiname"))
                         metricItemValue = connectionInfo.getSSID();
 
-                    if(key.equalsIgnoreCase("connectedwifiquality"))
-                    {
-                        int rssi=connectionInfo.getRssi();
-                        if(rssi >= -50)
-                        {
-                            metricItemValue="Excellent";
-                        }
-                        else if(rssi <= -50 && rssi >= -60)
-                        {
-                            metricItemValue="Good";
-                        }
-                        else if(rssi <= -60 && rssi > -70)
-                        {
-                            metricItemValue="Fair";
-                        }
-                        else if(rssi <= -70)
-                        {
-                            metricItemValue="Weak";
+                    if (key.equalsIgnoreCase("connectedwifiquality")) {
+                        int rssi = connectionInfo.getRssi();
+                        if (rssi >= -50) {
+                            metricItemValue = "Excellent";
+                        } else if (rssi <= -50 && rssi >= -60) {
+                            metricItemValue = "Good";
+                        } else if (rssi <= -60 && rssi > -70) {
+                            metricItemValue = "Fair";
+                        } else if (rssi <= -70) {
+                            metricItemValue = "Weak";
                         }
                     }
                 }
-            }
-            else
-            {
-                metricItemValue="NO";
+            } else {
+                metricItemValue = "NO";
             }
             return metricItemValue;
-        }
-        else if(key.equalsIgnoreCase("bluetoothonoff"))
-        {
+        } else if (key.equalsIgnoreCase("bluetoothonoff")) {
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter == null) {
-                metricItemValue= ("Not supported");
-            }else {
+                metricItemValue = ("Not supported");
+            } else {
                 if (bluetoothAdapter.isEnabled()) {
                     metricItemValue = ("ON");
                 } else {
@@ -941,9 +844,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 }
             }
             return metricItemValue;
-        }
-        else if(key.equalsIgnoreCase("battery"))
-        {
+        } else if (key.equalsIgnoreCase("battery")) {
             IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
             Intent batteryStatus = locationawareactivity.this.registerReceiver(null, iFilter);
 
@@ -952,18 +853,14 @@ public abstract class locationawareactivity extends baseactivity implements
 
             float batteryPct = level / (float) scale;
 
-            int percentage= (int) (batteryPct * 100);
-            metricItemValue=""+percentage+"%";
-        }
-        else if(key.equalsIgnoreCase("gpslatitude")|| key.equalsIgnoreCase("gpslongitude") || key.equalsIgnoreCase(config.gpsaltitude) ||
+            int percentage = (int) (batteryPct * 100);
+            metricItemValue = "" + percentage + "%";
+        } else if (key.equalsIgnoreCase("gpslatitude") || key.equalsIgnoreCase("gpslongitude") || key.equalsIgnoreCase(config.gpsaltitude) ||
                 key.equalsIgnoreCase("gpsverticalaccuracy")
                 || key.equalsIgnoreCase("gpsquality") || key.equalsIgnoreCase("heading")
-                || key.equalsIgnoreCase("speed") || key.equalsIgnoreCase("gpsaccuracy"))
-        {
-            metricItemValue="";
-        }
-        else if(key.equalsIgnoreCase("totalspace"))
-        {
+                || key.equalsIgnoreCase("speed") || key.equalsIgnoreCase("gpsaccuracy")) {
+            metricItemValue = "";
+        } else if (key.equalsIgnoreCase("totalspace")) {
             String totalinternalsize = null;
 
             File path = Environment.getDataDirectory();
@@ -972,10 +869,9 @@ public abstract class locationawareactivity extends baseactivity implements
             long totalBlocks = stat.getBlockCountLong();
             long totalinternalmemory = totalBlocks * blockSize;
 
-            metricItemValue  = common.getInternalMemory(totalinternalmemory);
+            metricItemValue = common.getInternalMemory(totalinternalmemory);
 
-        }else if(key.equalsIgnoreCase("usedspace"))
-        {
+        } else if (key.equalsIgnoreCase("usedspace")) {
             File path = Environment.getDataDirectory();
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSizeLong();
@@ -983,223 +879,200 @@ public abstract class locationawareactivity extends baseactivity implements
             long availableBlocks = stat.getAvailableBlocksLong();
 
             long totalinternalmemory = totalBlocks * blockSize;
-            long  availablefreesapce =  availableBlocks * blockSize;
+            long availablefreesapce = availableBlocks * blockSize;
 
             long usedSize = totalinternalmemory - availablefreesapce;
 
-            metricItemValue  = common.getInternalMemory(usedSize);
+            metricItemValue = common.getInternalMemory(usedSize);
 
-        }else if(key.equalsIgnoreCase("freespace"))
-        {
+        } else if (key.equalsIgnoreCase("freespace")) {
             File path = Environment.getDataDirectory();
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSizeLong();
             long availableBlocks = stat.getAvailableBlocksLong();
-            long availablefreesapce =  availableBlocks * blockSize;
+            long availablefreesapce = availableBlocks * blockSize;
 
-            metricItemValue  = common.getInternalMemory(availablefreesapce);
+            metricItemValue = common.getInternalMemory(availablefreesapce);
 
-        }else if(key.equalsIgnoreCase("rammemory"))
-        {
+        } else if (key.equalsIgnoreCase("rammemory")) {
             ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
             ActivityManager activityManager = (ActivityManager) locationawareactivity.this.getSystemService(ACTIVITY_SERVICE);
             activityManager.getMemoryInfo(mi);
             long totalRamMemorySize = mi.totalMem;
 
 
-            metricItemValue  = common.getInternalMemory(totalRamMemorySize);
+            metricItemValue = common.getInternalMemory(totalRamMemorySize);
 
-        }else if(key.equalsIgnoreCase("usedram") || key.equalsIgnoreCase("memoryusage"))
-        {
+        } else if (key.equalsIgnoreCase("usedram") || key.equalsIgnoreCase("memoryusage")) {
             ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
-            ActivityManager activityManager = (ActivityManager)  locationawareactivity.this.getSystemService(ACTIVITY_SERVICE);
+            ActivityManager activityManager = (ActivityManager) locationawareactivity.this.getSystemService(ACTIVITY_SERVICE);
             activityManager.getMemoryInfo(mi);
             long totalRamFreeSize = mi.availMem;
             long totalRamMemorySize = mi.totalMem;
             long usedrammemorysize = totalRamMemorySize - totalRamFreeSize;
 
-            if(key.equalsIgnoreCase("usedram"))
-            {
-                metricItemValue  = common.getInternalMemory(usedrammemorysize);
-            }
-            else
-            {
-                long usedinpercentage=(100*usedrammemorysize)/totalRamMemorySize;
-                metricItemValue=""+usedinpercentage+"%";
+            if (key.equalsIgnoreCase("usedram")) {
+                metricItemValue = common.getInternalMemory(usedrammemorysize);
+            } else {
+                long usedinpercentage = (100 * usedrammemorysize) / totalRamMemorySize;
+                metricItemValue = "" + usedinpercentage + "%";
             }
 
-        }else if(key.equalsIgnoreCase("freeram"))
-        {
+        } else if (key.equalsIgnoreCase("freeram")) {
             ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
             ActivityManager activityManager = (ActivityManager) locationawareactivity.this.getSystemService(ACTIVITY_SERVICE);
             activityManager.getMemoryInfo(mi);
             long totalRamFreeSize = mi.availMem;
 
-            metricItemValue  = common.getInternalMemory(totalRamFreeSize);
-        }else if(key.equalsIgnoreCase("devicecurrency"))
-        {
+            metricItemValue = common.getInternalMemory(totalRamFreeSize);
+        } else if (key.equalsIgnoreCase("devicecurrency")) {
             Locale defaultLocale = Locale.getDefault();
-            metricItemValue  = common.displayCurrencyInfoForLocale(defaultLocale);
-        }else if(key.equalsIgnoreCase("systemuptime"))
-        {
+            metricItemValue = common.displayCurrencyInfoForLocale(defaultLocale);
+        } else if (key.equalsIgnoreCase("systemuptime")) {
             // Get the whole uptime
             metricItemValue = common.getSystemUptime();
-            metricItemValue=common.systemuptime(Long.parseLong(metricItemValue));
+            metricItemValue = common.systemuptime(Long.parseLong(metricItemValue));
 
-        }else if(key.equalsIgnoreCase("pluggedin"))
-        {
-            metricItemValue = common.isChargerConnected(locationawareactivity.this)== true ? "true" : "false";
-        }else if(key.equalsIgnoreCase("headphonesattached"))
-        {
-            metricItemValue = common.isHeadsetOn(locationawareactivity.this)== true ? "true" : "false";
-        }else if(key.equalsIgnoreCase("deviceorientation"))
-        {
+        } else if (key.equalsIgnoreCase("pluggedin")) {
+            metricItemValue = common.isChargerConnected(locationawareactivity.this) == true ? "true" : "false";
+        } else if (key.equalsIgnoreCase("headphonesattached")) {
+            metricItemValue = common.isHeadsetOn(locationawareactivity.this) == true ? "true" : "false";
+        } else if (key.equalsIgnoreCase("deviceorientation")) {
             metricItemValue = common.getOriantation(locationawareactivity.this);
-        }
-        else if(key.equalsIgnoreCase("isaccelerometeravailable")
+        } else if (key.equalsIgnoreCase("isaccelerometeravailable")
                 || key.equalsIgnoreCase("seisometer") || key.equalsIgnoreCase("proximitySensorEnabled")
                 || key.equalsIgnoreCase("lightSensorEnabled") || key.equalsIgnoreCase("gravitysensorenabled") ||
-                key.equalsIgnoreCase("gyroscopeSensorEnabled"))
-        {
-            metricItemValue="NO";
-            SensorManager sensorManager = (SensorManager) applicationviavideocomposer.getactivity(). getSystemService(Context.SENSOR_SERVICE);
-            if(key.equalsIgnoreCase("isaccelerometeravailable") ||
-                    key.equalsIgnoreCase("seisometer"))
-            {
+                key.equalsIgnoreCase("gyroscopeSensorEnabled")) {
+            metricItemValue = "NO";
+            SensorManager sensorManager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
+            if (key.equalsIgnoreCase("isaccelerometeravailable") ||
+                    key.equalsIgnoreCase("seisometer")) {
                 if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
-                    metricItemValue="YES";
+                    metricItemValue = "YES";
                 }
 
-                if(key.equalsIgnoreCase("isaccelerometeravailable"))
-                {
+                if (key.equalsIgnoreCase("isaccelerometeravailable")) {
                     // metricItemValue="UpdateLater";
                     //getHelper().registerAccelerometerSensor();
                 }
             }
 
-            if(key.equalsIgnoreCase("proximitySensorEnabled"))
-            {
+            if (key.equalsIgnoreCase("proximitySensorEnabled")) {
                 if (sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null) {
-                    metricItemValue="YES";
+                    metricItemValue = "YES";
                 }
             }
 
-            if(key.equalsIgnoreCase("lightSensorEnabled"))
-            {
+            if (key.equalsIgnoreCase("lightSensorEnabled")) {
                 if (sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) != null) {
-                    metricItemValue="YES";
+                    metricItemValue = "YES";
                 }
             }
 
-            if(key.equalsIgnoreCase("gravitySensorEnabled"))
-            {
+            if (key.equalsIgnoreCase("gravitySensorEnabled")) {
                 if (sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY) != null) {
-                    metricItemValue="YES";
+                    metricItemValue = "YES";
                 }
             }
 
-            if(key.equalsIgnoreCase("gyroscopeSensorEnabled"))
-            {
+            if (key.equalsIgnoreCase("gyroscopeSensorEnabled")) {
                 if (sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null) {
-                    metricItemValue="YES";
+                    metricItemValue = "YES";
                 }
             }
 
-        }
-        else if(key.equalsIgnoreCase("processorcount") || key.equalsIgnoreCase("activeprocessorcount"))
-        {
-            if(Build.VERSION.SDK_INT >= 17) {
-                int processors= Runtime.getRuntime().availableProcessors();
-                metricItemValue=""+processors;
+        } else if (key.equalsIgnoreCase("processorcount") || key.equalsIgnoreCase("activeprocessorcount")) {
+            if (Build.VERSION.SDK_INT >= 17) {
+                int processors = Runtime.getRuntime().availableProcessors();
+                metricItemValue = "" + processors;
             }
-        }
-        else if(key.equalsIgnoreCase("usbconnecteddevicename"))
-        {
+        } else if (key.equalsIgnoreCase("usbconnecteddevicename")) {
 
 
-        }else if(key.equalsIgnoreCase("accessoriesattached"))
-        {
-            if(common.isChargerConnected(locationawareactivity.this)== true || common.isHeadsetOn(locationawareactivity.this)== true ){
+        } else if (key.equalsIgnoreCase("accessoriesattached")) {
+            if (common.isChargerConnected(locationawareactivity.this) == true || common.isHeadsetOn(locationawareactivity.this) == true) {
                 metricItemValue = "true";
-            }else{
+            } else {
                 metricItemValue = "false";
             }
-        }else if(key.equalsIgnoreCase("attachedaccessoriescount"))
-        {
-            if(common.isChargerConnected(locationawareactivity.this)== true && common.isHeadsetOn(locationawareactivity.this)== true ){
+        } else if (key.equalsIgnoreCase("attachedaccessoriescount")) {
+            if (common.isChargerConnected(locationawareactivity.this) == true && common.isHeadsetOn(locationawareactivity.this) == true) {
                 metricItemValue = "2";
-            }else if(common.isChargerConnected(locationawareactivity.this)== true || common.isHeadsetOn(locationawareactivity.this)== true ){
+            } else if (common.isChargerConnected(locationawareactivity.this) == true || common.isHeadsetOn(locationawareactivity.this) == true) {
                 metricItemValue = "1";
-            }else{
+            } else {
                 metricItemValue = "NA";
             }
 
-        }else if(key.equalsIgnoreCase("nameattachedaccessories"))
-        {
-            if(common.isChargerConnected(locationawareactivity.this)== true && common.isHeadsetOn(locationawareactivity.this)== true ){
+        } else if (key.equalsIgnoreCase("nameattachedaccessories")) {
+            if (common.isChargerConnected(locationawareactivity.this) == true && common.isHeadsetOn(locationawareactivity.this) == true) {
 
-                metricItemValue = ("Charger"+","+"headphone");
+                metricItemValue = ("Charger" + "," + "headphone");
 
-            }else if(common.isChargerConnected(locationawareactivity.this)== true){
+            } else if (common.isChargerConnected(locationawareactivity.this) == true) {
                 metricItemValue = "Charger";
-            }else if(common.isHeadsetOn(locationawareactivity.this)== true){
+            } else if (common.isHeadsetOn(locationawareactivity.this) == true) {
                 metricItemValue = "headphone";
-            }else{
+            } else {
                 metricItemValue = "NA";
             }
-        }
-        else if(key.equalsIgnoreCase("multitaskingenabled"))
-        {
-            metricItemValue="true";
+        } else if (key.equalsIgnoreCase("multitaskingenabled")) {
+            metricItemValue = "true";
 
-        }
-        else if(key.equalsIgnoreCase("debuggerattached"))
-        {
-            metricItemValue="false";
-            if(Debug.isDebuggerConnected())
-                metricItemValue="true";
+        } else if (key.equalsIgnoreCase("debuggerattached")) {
+            metricItemValue = "false";
+            if (Debug.isDebuggerConnected())
+                metricItemValue = "true";
 
-        }
-        else if(key.equalsIgnoreCase("currentcallvolume"))
-        {
+        } else if (key.equalsIgnoreCase("currentcallvolume")) {
             try {
                 AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 int STREAM_VOICE_CALL = audio.getStreamVolume(AudioManager.STREAM_VOICE_CALL);
-                metricItemValue=""+STREAM_VOICE_CALL;
-            }catch (Exception e)
-            {
+                metricItemValue = "" + STREAM_VOICE_CALL;
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        }
-        else if(key.equalsIgnoreCase("devicetime")){
+        } else if (key.equalsIgnoreCase("devicetime")) {
             Calendar c = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");
             String time = sdf.format(c.getTime());
-            metricItemValue=time;
-        }
-        else if(key.equalsIgnoreCase("gpsonoff")){
+            metricItemValue = time;
+        } else if (key.equalsIgnoreCase("gpsonoff")) {
             //  LocationManager manager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE );
-            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ){
-                metricItemValue="OFF";
-            }
-            else{
-                metricItemValue="ON";
-            }
-        }else if(key.equalsIgnoreCase("syncphonetime")){
-            if(android.provider.Settings.Global.getInt(getContentResolver(), Settings.Global.AUTO_TIME, 0)==1) {
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                metricItemValue = "OFF";
+            } else {
                 metricItemValue = "ON";
-            } else if((android.provider.Settings.Global.getInt(getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 0)==1)){
-                metricItemValue="OFF";
             }
-        }else if(key.equalsIgnoreCase("connectionspeed")){
-            metricItemValue=""+connectionspeed;
-        }else if(key.equalsIgnoreCase("address")){
-            metricItemValue=""+currentaddress;
+        } else if (key.equalsIgnoreCase("syncphonetime")) {
+            if (android.provider.Settings.Global.getInt(getContentResolver(), Settings.Global.AUTO_TIME, 0) == 1) {
+                metricItemValue = "ON";
+            } else if ((android.provider.Settings.Global.getInt(getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 0) == 1)) {
+                metricItemValue = "OFF";
+            }
+        } else if (key.equalsIgnoreCase("connectionspeed")) {
+            metricItemValue = "" + connectionspeed;
+        } else if (key.equalsIgnoreCase("address")) {
+            metricItemValue = "" + currentaddress;
+        } else if(key.equalsIgnoreCase("celltowersignalstrength")){
+
+            int cellsignalstrength = (mSignalStrength * 2) - 113;
+
+            metricItemValue=""+cellsignalstrength+ " " +"dBm";
+        } else if(key.equalsIgnoreCase("celltowerid")){
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            if(telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
+                GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+                int celltowerid = cellLocation.getCid();
+                Log.e("nearbytower", "" + cellLocation.getLac() + "" + cellLocation.getLac());
+                metricItemValue = "" + celltowerid;
+            }
+        }else if(key.equalsIgnoreCase("numberoftowers")){
         }
 
-        if(metricItemValue == null)
-            metricItemValue="";
+        if (metricItemValue == null)
+            metricItemValue = "";
 
         return metricItemValue;
     }
@@ -1210,22 +1083,21 @@ public abstract class locationawareactivity extends baseactivity implements
 
         try {
 
-            if(mNoise != null)
+            if (mNoise != null)
                 mNoise.stop();
 
             mNoise = new noise();
 
-            if(mNoise != null)
-            {
-                if(mNoise != null)
+            if (mNoise != null) {
+                if (mNoise != null)
                     mNoise.start();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Thread thread = new Thread(){
-            public void run(){
+        Thread thread = new Thread() {
+            public void run() {
 
                 try {
                     Thread.sleep(1000);
@@ -1235,8 +1107,7 @@ public abstract class locationawareactivity extends baseactivity implements
                 //Do something after 100ms
 
                 try {
-                    if(mNoise != null)
-                    {
+                    if (mNoise != null) {
                         double amp = mNoise.getAmplitude();
                         //Log.i("noise", "runnable mPollTask");
                         updateDisplay("Monitoring Voice...", amp);
@@ -1251,10 +1122,9 @@ public abstract class locationawareactivity extends baseactivity implements
         thread.start();
     }
     private void stop() {
-      //  Log.e("noise", "==== Stop noise Monitoring===");
+        //  Log.e("noise", "==== Stop noise Monitoring===");
         try {
-            if(mNoise != null)
-            {
+            if (mNoise != null) {
                 mNoise.stop();
             }
         } catch (Exception e) {
@@ -1266,15 +1136,15 @@ public abstract class locationawareactivity extends baseactivity implements
 
     private void updateDisplay(String status, double signalEMA) {
 
-    //    Log.e("signalEMA = ", ""+ signalEMA);
+        //    Log.e("signalEMA = ", ""+ signalEMA);
 
         final String deciblevalue = String.valueOf(new DecimalFormat("##.####").format(signalEMA));
 
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                updatearrayitem(config.decibel,deciblevalue);
-                updatearrayitem(config.currentcalldecibel,deciblevalue);
+                updatearrayitem(config.decibel, deciblevalue);
+                updatearrayitem(config.currentcalldecibel, deciblevalue);
                 stop();
             }
         });
@@ -1287,25 +1157,24 @@ public abstract class locationawareactivity extends baseactivity implements
 
             try {
                 unregisterReceiver(mBroadcast);
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            if(msensormanager != null)
+            if (msensormanager != null)
                 msensormanager.unregisterListener(mAccelerometerListener);
 
-            if(msensormanager != null)
+            if (msensormanager != null)
                 msensormanager.unregisterListener(mBarometerListener);
 
             if (msensormanager != null)
                 msensormanager.unregisterListener(mCompassListener);
 
-            if((flightmodebroadcast!=null) && (aeroplacemodefilter != null)){
+            if ((flightmodebroadcast != null) && (aeroplacemodefilter != null)) {
                 unregisterReceiver(flightmodebroadcast);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1319,8 +1188,8 @@ public abstract class locationawareactivity extends baseactivity implements
 
     @Override
     public void registerAccelerometerSensor() {
-        Thread thread = new Thread(){
-            public void run(){
+        Thread thread = new Thread() {
+            public void run() {
                 msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
                 if (msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
                     maccelereometer = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -1333,15 +1202,14 @@ public abstract class locationawareactivity extends baseactivity implements
         thread.start();
     }
 
-    SensorEventListener mAccelerometerListener=new SensorEventListener() {
+    SensorEventListener mAccelerometerListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(final SensorEvent sensorEvent) {
             float lux = sensorEvent.values[0];
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(getcurrentfragment() != null)
-                    {
+                    if (getcurrentfragment() != null) {
                         float deltaX = Math.abs(sensorEvent.values[0]);
                         float deltaY = Math.abs(sensorEvent.values[1]);
                         float deltaZ = Math.abs(sensorEvent.values[2]);
@@ -1351,9 +1219,9 @@ public abstract class locationawareactivity extends baseactivity implements
                         String y = String.valueOf(new DecimalFormat("#.#").format(deltaY));
                         String z = String.valueOf(new DecimalFormat("#.#").format(deltaZ));
 
-                        updatearrayitem(config.acceleration_x,""+x);
-                        updatearrayitem(config.acceleration_y,""+y);
-                        updatearrayitem(config.acceleration_z,""+z);
+                        updatearrayitem(config.acceleration_x, "" + x);
+                        updatearrayitem(config.acceleration_y, "" + y);
+                        updatearrayitem(config.acceleration_z, "" + z);
                     }
                 }
             });
@@ -1368,8 +1236,8 @@ public abstract class locationawareactivity extends baseactivity implements
     @Override
     public void registerBarometerSensor() {
 
-        Thread thread = new Thread(){
-            public void run(){
+        Thread thread = new Thread() {
+            public void run() {
 
                 msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -1384,18 +1252,18 @@ public abstract class locationawareactivity extends baseactivity implements
     }
 
 
-    SensorEventListener mBarometerListener=new SensorEventListener() {
+    SensorEventListener mBarometerListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(final SensorEvent sensorEvent) {
             float lux = sensorEvent.values[0];
             float[] values = sensorEvent.values;
-            final String data=String.format("%3f",values[0]);
+            final String data = String.format("%3f", values[0]);
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if(getcurrentfragment() != null)
-                        updatearrayitem(config.barometer,data);
+                    if (getcurrentfragment() != null)
+                        updatearrayitem(config.barometer, data);
 
                 }
             });
@@ -1410,9 +1278,9 @@ public abstract class locationawareactivity extends baseactivity implements
     @Override
     public void getsystemusage() {
 
-        Thread thread = new Thread(){
-            public void run(){
-                try{
+        Thread thread = new Thread() {
+            public void run() {
+                try {
                     String system = common.executeTop();
                     String[] cpuArray = system.split(",");
                     final String[] value1 = {cpuArray[0]};
@@ -1424,23 +1292,22 @@ public abstract class locationawareactivity extends baseactivity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(getcurrentfragment() != null)
-                            {
-                                value1[0] = value1[0].replace("User","");
-                                updatearrayitem(config.cpuusageuser,value1[0]);
+                            if (getcurrentfragment() != null) {
+                                value1[0] = value1[0].replace("User", "");
+                                updatearrayitem(config.cpuusageuser, value1[0]);
 
-                                value2[0] = value2[0].replace("System","");
-                                updatearrayitem(config.cpuusagesystem,value2[0]);
+                                value2[0] = value2[0].replace("System", "");
+                                updatearrayitem(config.cpuusagesystem, value2[0]);
 
-                                value3[0] = value3[0].replace("IOW","");
-                                updatearrayitem(config.cpuusageiow,value3[0]);
+                                value3[0] = value3[0].replace("IOW", "");
+                                updatearrayitem(config.cpuusageiow, value3[0]);
 
-                                value4[0] = value4[0].replace("IRQ","");
-                                updatearrayitem(config.cpuusageirq,value4[0]);
+                                value4[0] = value4[0].replace("IRQ", "");
+                                updatearrayitem(config.cpuusageirq, value4[0]);
                             }
                         }
                     });
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -1454,25 +1321,22 @@ public abstract class locationawareactivity extends baseactivity implements
             super.onSignalStrengthsChanged(signalStrength);
             mSignalStrength = signalStrength.getGsmSignalStrength();
 
-            String result="";
+            String result = "";
 
             if (mSignalStrength <= 2 || mSignalStrength == 99)
                 result = "Unknown";
             else if (mSignalStrength >= 12) {
                 result = "Excellent";
-            }
-            else if (mSignalStrength >= 8)  {
+            } else if (mSignalStrength >= 8) {
                 result = "Good";
-            }
-            else if (mSignalStrength >= 5)  {
+            } else if (mSignalStrength >= 5) {
                 result = "Moderate";
-            }
-            else {
+            } else {
                 result = "Poor";
             }
 
-            if(getcurrentfragment() != null)
-                updatearrayitem(config.connectedphonenetworkquality,result);
+            if (getcurrentfragment() != null)
+                updatearrayitem(config.connectedphonenetworkquality, result);
         }
     }
 
