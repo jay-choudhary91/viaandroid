@@ -1056,17 +1056,23 @@ public abstract class locationawareactivity extends baseactivity implements
         } else if (key.equalsIgnoreCase("address")) {
             metricItemValue = "" + currentaddress;
         } else if(key.equalsIgnoreCase("celltowersignalstrength")){
-
-            int cellsignalstrength = (mSignalStrength * 2) - 113;
-
-            metricItemValue=""+cellsignalstrength+ " " +"dBm";
+            if(TelephonyManager.SIM_STATE_ABSENT==1){
+               Log.e("signalstrenght", ""+ mSignalStrength);
+                metricItemValue=""+mSignalStrength;
+            }else{
+                int cellsignalstrength = (mSignalStrength * 2) - 113;
+                metricItemValue=""+cellsignalstrength+ " " +"dBm";
+            }
         } else if(key.equalsIgnoreCase("celltowerid")){
-            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            if(telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
-                GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
-                int celltowerid = cellLocation.getCid();
-                Log.e("nearbytower", "" + cellLocation.getLac() + "" + cellLocation.getLac());
-                metricItemValue = "" + celltowerid;
+            if(TelephonyManager.SIM_STATE_ABSENT==1){
+                metricItemValue="";
+            }else{
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                if(telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
+                    GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+                    int celltowerid = cellLocation.getCid();
+                    metricItemValue = "" + celltowerid;
+                }
             }
         }else if(key.equalsIgnoreCase("numberoftowers")){
         }
