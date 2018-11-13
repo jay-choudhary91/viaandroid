@@ -414,7 +414,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             case R.id.img_capture: {
                 if(! isaudiorecording)
                 {
-                    myvisualizerview.clear();
+                    myvisualizerview.setVisibility(View.VISIBLE);
                     startrecording();
                 }
                 else
@@ -598,6 +598,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         stoptimer();
         resettimer();
         isaudiorecording=false;
+        if(mrecorder==null){
+            myvisualizerview.clear();
+            myvisualizerview.setVisibility(View.INVISIBLE);
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -1025,7 +1029,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
 
         txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
-        txt_share_btn2.setText(getResources().getString(R.string.share_partial_video));
+        txt_share_btn2.setText(getResources().getString(R.string.share_partial_audio));
         txt_share_btn3.setText(getResources().getString(R.string.cancel_viewlist));
 
         txt_title1.setText(getResources().getString(R.string.audio_how_would_you));
