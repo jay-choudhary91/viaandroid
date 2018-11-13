@@ -400,7 +400,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             case R.id.img_capture: {
                 if(! isaudiorecording)
                 {
-                    myvisualizerview.clear();
+                    myvisualizerview.setVisibility(View.VISIBLE);
                     startrecording();
                 }
                 else
@@ -579,8 +579,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         mrecorder = null;
         stoptimer();
         resettimer();
-        myvisualizerview.clear();
         isaudiorecording=false;
+        if(mrecorder==null){
+            myvisualizerview.clear();
+            myvisualizerview.setVisibility(View.INVISIBLE);
+        }
 
 /*        try {
             customffmpegframegrabber grabber = new customffmpegframegrabber(new File(selectedfile));
