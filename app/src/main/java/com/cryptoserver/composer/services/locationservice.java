@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -23,10 +25,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.cryptoserver.composer.activity.locationawareactivity;
+import com.cryptoserver.composer.utils.common;
+import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
 
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 
@@ -44,6 +51,10 @@ public class locationservice extends Service implements LocationListener, GpsSta
     ArrayList<Location> noAccuracyLocationList;
     ArrayList<Location> inaccurateLocationList;
     ArrayList<Location> kalmanNGLocationList;
+    private Location oldlocation;
+
+
+    String satelliteid = "", satelliteangle = "",currentaddress = "";
 
 
     boolean isLogging;
@@ -76,6 +87,18 @@ public class locationservice extends Service implements LocationListener, GpsSta
         batteryLevelScaledArray = new ArrayList<>();
         registerReceiver(this.batteryInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         startUpdatingLocation();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.addGpsStatusListener(this);
     }
 
     @Override
@@ -159,6 +182,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
     }
 
     /* GpsStatus.Listener implementation */
+    @Override
     public void onGpsStatusChanged(int event) {
         int satellites = 0;
         int satellitesInFix = 0;
@@ -178,11 +202,25 @@ public class locationservice extends Service implements LocationListener, GpsSta
             if(sat.usedInFix()) {
                 satellitesInFix++;
             }
+
+            GpsSatellite satellite = sat;
+
+            satelliteid = "" + satellite.getPrn();
+            int angle=(int)satellite.getAzimuth();
+
+            if(angle > 0)
+                satelliteangle = "" +angle ;
+
+                 xdata.getinstance().saveSetting("satelliteid", satelliteid);
+                 xdata.getinstance().saveSetting("satelliteangle", satelliteangle +"°");
+
             satellites++;
         }
-        Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
 
-        xdata.getinstance().saveSetting("gpsnumberofsatelites","In view : "+satellites+", In using : "+satellitesInFix);
+        Log.e("Usedsatellite =","" + satellitesInFix);
+
+        Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
+        xdata.getinstance().saveSetting("gpsnumberofsatelites", "" + satellites);
     }
 
     private void notifyLocationProviderStatusUpdated(boolean isLocationProviderAvailable) {
@@ -263,6 +301,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
         Intent intent = new Intent("LocationUpdated");
         intent.putExtra("location", newLocation);
 
+        updatelocationsparams(newLocation);
         LocalBroadcastManager.getInstance(this.getApplication()).sendBroadcast(intent);
     }
 
@@ -280,6 +319,56 @@ public class locationservice extends Service implements LocationListener, GpsSta
             batteryScale = scale;
         }
     };
+
+
+
+    public void updatelocationsparams(Location location) {
+
+        double doubleTotalDistance = 0.0;
+        double currenttime = 0;
+        double altitude = 0.0;
+
+        double newTime = System.currentTimeMillis();
+        if (oldlocation != null) {
+            long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(),
+                    oldlocation.getLatitude(), oldlocation.getLongitude());
+            doubleTotalDistance = doubleTotalDistance + meter;
+        }
+
+
+        xdata.getinstance().saveSetting("distancetravelled", "" + "" + ((int) doubleTotalDistance));
+        xdata.getinstance().saveSetting("gpsaccuracy", "" + location.getAccuracy());
+        xdata.getinstance().saveSetting("strengthofsatellites", "" + location.getAccuracy());
+
+        if (location.hasSpeed()) {
+            xdata.getinstance().saveSetting("speed", "" + location.getSpeed());
+        } else {
+            if (oldlocation != null) {
+                long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(),
+                        oldlocation.getLatitude(), oldlocation.getLongitude());
+                doubleTotalDistance = doubleTotalDistance + meter;
+                double timeDifferance = (location.getTime() - oldlocation.getTime());
+                double speed = meter / timeDifferance;
+                String strspeed = "" + speed;
+                if (strspeed.contains("."))
+                    strspeed = strspeed.substring(0, strspeed.indexOf("."));
+
+                xdata.getinstance().saveSetting("speed", "" +strspeed);
+
+            }
+        }
+
+        if (location.hasAltitude()) {
+            int outValue = (int) (location.getAltitude() / 0.3048);
+            xdata.getinstance().saveSetting("Altitude", "" + outValue);
+
+        } else {
+            int outValue = (int) altitude;
+            xdata.getinstance().saveSetting("Altitude", "" + outValue);
+        }
+
+        oldlocation = location;
+    }
 }
 
 

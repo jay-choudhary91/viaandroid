@@ -5,10 +5,12 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -32,17 +34,23 @@ import android.os.Bundle;
 import android.os.Debug;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.StatFs;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.CellIdentityGsm;
+import android.telephony.CellIdentityLte;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
+import android.telephony.CellSignalStrength;
 import android.telephony.CellSignalStrengthGsm;
+import android.telephony.CellSignalStrengthLte;
+import android.telephony.NeighboringCellInfo;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
@@ -56,6 +64,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.services.locationservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.googleutils;
@@ -155,6 +164,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     // bandwidth in kbps
     private int POOR_BANDWIDTH = 150;
 
+    List<CellInfo> towerinfolist=new ArrayList<>() ;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -243,18 +254,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else {
             if (common.getphonelocationdeniedpermissions().isEmpty()) {
                 // All permissions are granted
+
                 doafterallpermissionsgranted();
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
+
+                if (isMyServiceRunning(locationservice.class)) {
+                    Log.e("Running ", "Yes");
+                } else {
+                    Log.e("Running ", "No");
+
+                    final Intent locationService = new Intent(applicationviavideocomposer.getactivity(), locationservice.class);
+                    applicationviavideocomposer.getactivity().startService(locationService);
+                    applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
                 }
-                manager.addGpsStatusListener(this);
             } else {
                 String[] array = new String[common.getphonelocationdeniedpermissions().size()];
                 array = common.getphonelocationdeniedpermissions().toArray(array);
@@ -262,6 +273,43 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
         }
     }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) applicationviavideocomposer.getactivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // This is called when the connection with the service has been
+            // established, giving us the service object we can use to
+            // interact with the service.  Because we have bound to a explicit
+            // service that we know is running in our own process, we can
+            // cast its IBinder to a concrete class and directly access it.
+            String name = className.getClassName();
+
+            if (name.endsWith("LocationService")) {
+                /*locationService = ((LocationService.LocationServiceBinder) service).getService();
+                locationService.startUpdatingLocation();*/
+            }
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            // This is called when the connection with the service has been
+            // unexpectedly disconnected -- that is, its process crashed.
+            // Because it is running in our same process, we should never
+            // see this happen.
+            /*if (className.getClassName().equals("LocationService")) {
+                locationService.stopUpdatingLocation();
+                locationService = null;
+            }*/
+        }
+    };
 
     @Override
     public void setrecordingrunning(boolean toggle) {
@@ -306,58 +354,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     @Override
     public void onGpsStatusChanged(int event) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-
-        GpsStatus gpsStatus = manager.getGpsStatus(null);
-        if(gpsStatus != null) {
-           /* Iterable<GpsSatellite>satellites = gpsStatus.getSatellites();
-            Iterator<GpsSatellite>sat = satellites.iterator();
-            int i=0;
-            int satellitesInFix = 0;
-            while (sat.hasNext()) {
-                GpsSatellite satellite = sat.next();
-
-                if(gpsStatus.usedInFix())
-
-                String strGpsStats = (i++) + ": " + satellite.getPrn() + "," + satellite.usedInFix() + "," + satellite.getSnr() + "," + satellite.getAzimuth() + "," + satellite.getElevation()+ "\n\n";
-                Log.e("strGpsStats", strGpsStats);
-
-            }*/
-
-            int satellites = 0;
-            int satellitesInFix = 0;
-            int timetofix = manager.getGpsStatus(null).getTimeToFirstFix();
-            for (GpsSatellite sat : manager.getGpsStatus(null).getSatellites()) {
-
-                if(sat.usedInFix()) {
-                    satellitesInFix++;
-                }
-                    GpsSatellite satellite = sat;
-
-                    satelliteid = "" + satellite.getPrn();
-                    int angle=(int)satellite.getAzimuth();
-
-                    if(angle > 0)
-                        anglesatellite = "" +angle ;
-
-
-                    Log.e("satellitePNR","" +satellite.getPrn());
-                    Log.e("satelliteAzimuth","" +satellite.getAzimuth());
-
-                satellites++;
-            }
-            Log.i("totalSatellites", satellites + " Used In Last Fix ("+satellitesInFix+")");
-            numberofsatellites = satellites;
-        }
     }
 
     private void doafterallpermissionsgranted() {
@@ -495,6 +491,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 getcurrentfragment().oncurrentlocationchanged(location);
                 updatelocationsparams(location);
                 fetchcompleteaddress(location);
+
+
             }
             //stopLocationUpdates();
         }
@@ -561,8 +559,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             return false;
         }
     }
-
-
 
 
     public void setNavigateWithLocation() {
@@ -656,12 +652,16 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                         getconnectionspeed();
 
+                        towerinfolist = gettowerinfo();
+
                         for (int i = 0; i < metricitemarraylist.size(); i++) {
                             if (metricitemarraylist.get(i).isSelected()) {
                                 String value = metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
                                 metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
+
                                 if (!value.trim().isEmpty())
                                     metricitemarraylist.get(i).setMetricTrackValue(value);
+
                             }
                         }
 
@@ -1129,41 +1129,85 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + connectionspeed;
         } else if (key.equalsIgnoreCase("address")) {
             metricItemValue = "" + currentaddress;
-        } else if(key.equalsIgnoreCase("celltowersignalstrength")){
-            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            if(telephonyManager.getSimState()==telephonyManager.SIM_STATE_ABSENT){
-                Log.e("signalstrenght", ""+ mSignalStrength);
-                metricItemValue=""+mSignalStrength;
-            }else{
-                int cellsignalstrength = (mSignalStrength * 2) - 113;
-                metricItemValue=""+cellsignalstrength+ " " +"dBm";
-            }
-        } else if(key.equalsIgnoreCase("celltowerid")){
-            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            if(telephonyManager.getSimState()==telephonyManager.SIM_STATE_ABSENT){
-                metricItemValue="";
-            }else{
-                telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                if(telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
-                    GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
-                    int celltowerid = cellLocation.getCid();
-                    metricItemValue = "" + celltowerid;
-                }
+        }
+        else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")) {
 
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            int networkType = telephonyManager.getNetworkType();
+
+            if(towerinfolist.size()!=0){
+                CellInfo info = towerinfolist.get(0);
+                if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
+                    Log.e("signalstrenght", "" + mSignalStrength);
+                    metricItemValue = "" + mSignalStrength;
+                } else {
+                    if(key.equalsIgnoreCase("celltowersignalstrength")){
+
+                        if(info != null){
+                            try{
+                                if(TelephonyManager.NETWORK_TYPE_LTE == networkType){
+                                    CellSignalStrengthLte gsm = ((CellInfoLte) info).getCellSignalStrength();
+                                    int signalstrength =  gsm.getDbm();
+                                    metricItemValue = "" + signalstrength + " " + "dBm";
+                                }else{
+
+                                    CellSignalStrengthGsm gsm = ((CellInfoGsm) info).getCellSignalStrength();
+                                    int signalstrength =  gsm.getDbm();
+                                    metricItemValue = "" + signalstrength + " " + "dBm";
+                                }
+
+
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }else if(key.equalsIgnoreCase("celltowerid")){
+                        if(info != null) {
+
+                            if(TelephonyManager.NETWORK_TYPE_LTE == networkType){
+                                CellIdentityLte identity = ((CellInfoLte) info).getCellIdentity();
+                                int celltowerid = identity.getCi();
+                                metricItemValue = "" + celltowerid;
+                            }else{
+                                CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
+                                int celltowerid = identityGsm.getCid();
+                                metricItemValue = "" + celltowerid;
+                            }
+                        }
+                    }
+                }
             }
-        }else if(key.equalsIgnoreCase("numberoftowers")){
+            }
+
+        /*else if (key.equalsIgnoreCase("celltowerid")) {
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
+                metricItemValue = "";
+            } else {
+                telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                if (telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
+
+                }
+            }
+        } */
+        else if (key.equalsIgnoreCase("numberoftowers")) {
+            metricItemValue = "" + towerinfolist.size();
         } else if (key.equalsIgnoreCase("connectionspeed")) {
             metricItemValue = "" + connectionspeed;
         } else if (key.equalsIgnoreCase("address")) {
             metricItemValue = "" + currentaddress;
-        }else if (key.equalsIgnoreCase("numberofsatellites")) {
-            metricItemValue = "" + numberofsatellites;
-        }else if (key.equalsIgnoreCase("satelliteangle")) {
-            metricItemValue = "" + anglesatellite;
-        }else if (key.equalsIgnoreCase("satelliteid")) {
-            metricItemValue = "" + satelliteid;
-        }else if (key.equalsIgnoreCase("satelliteangle")) {
-            metricItemValue = "N/A" ;
+        } else if (key.equalsIgnoreCase("numberofsatellites")) {
+            // metricItemValue = "" + numberofsatellites;
+            metricItemValue = metricItemValue = xdata.getinstance().getSetting("gpsnumberofsatelites");
+        } else if (key.equalsIgnoreCase("satelliteangle")) {
+            //metricItemValue = "" + anglesatellite;
+            metricItemValue = xdata.getinstance().getSetting("satelliteangle");
+        } else if (key.equalsIgnoreCase("satelliteid")) {
+            //metricItemValue = "" + satelliteid;
+            metricItemValue = xdata.getinstance().getSetting("satelliteid");
+        } else if (key.equalsIgnoreCase("strengthofsatellites")) {
+            metricItemValue =xdata.getinstance().getSetting("strengthofsatellites");;
         }
 
         if (metricItemValue == null)
@@ -1653,18 +1697,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     public void updatelocationsparams(Location location) {
-        double doubleTotalDistance = 0.0;
-        double currenttime = 0;
-
-        double newTime = System.currentTimeMillis();
-        if (oldlocation != null) {
-            long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(),
-                    oldlocation.getLatitude(), oldlocation.getLongitude());
-            doubleTotalDistance = doubleTotalDistance + meter;
-          /*  double timeDifferance = (location.getTime() - oldlocation.getTime()) ;
-            double speed=meter/timeDifferance;
-            Log.e("speed",""+speed+ "meter...."+meter);*/
-        }
 
 
         for (int i = 0; i < metricitemarraylist.size(); i++) {
@@ -1682,17 +1714,24 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 String degree = common.convertlongitude(location.getLongitude());
                 metricitemarraylist.get(i).setMetricTrackValue("" + degree);
             }
-
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
-                metricitemarraylist.get(i).setMetricTrackValue("" + ((int) doubleTotalDistance));
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("distancetravelled"));
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
-                metricitemarraylist.get(i).setMetricTrackValue("" + location.getAccuracy());
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsaccuracy"));
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")) {
                 metricitemarraylist.get(i).setMetricTrackValue("" + currentaddress);
             }
-            /*if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
+
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("speed"));
+            }
+            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
+                metricitemarraylist.get(i).setMetricTrackValue("" + xdata.getinstance().getSetting("Altitude") + " ft");
+            }
+
+             /*if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
                 metricitemarraylist.get(i).setMetricTrackValue("" + "NA");
                 if(oldlocation != null)
                 {
@@ -1701,34 +1740,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     metricitemarraylist.get(i).setMetricTrackValue("" + angle);
                 }
             }*/
-            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-                if (location.hasSpeed()) {
-                    metricitemarraylist.get(i).setMetricTrackValue("" + location.getSpeed());
-                } else {
-                    if (oldlocation != null) {
-                        long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(),
-                                oldlocation.getLatitude(), oldlocation.getLongitude());
-                        doubleTotalDistance = doubleTotalDistance + meter;
-                        double timeDifferance = (location.getTime() - oldlocation.getTime());
-                        double speed = meter / timeDifferance;
-                        String strspeed = "" + speed;
-                        if (strspeed.contains("."))
-                            strspeed = strspeed.substring(0, strspeed.indexOf("."));
-
-                        metricitemarraylist.get(i).setMetricTrackValue("" + strspeed);
-                    }
-                }
-            }
-            if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
-                if (location.hasAltitude()) {
-                    int outValue = (int) (location.getAltitude() / 0.3048);
-                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue + " ft");
-                } else {
-                    int outValue = (int) altitude;
-                    metricitemarraylist.get(i).setMetricTrackValue("" + outValue + " ft");
-                }
-            }
-        }
 
         /*if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
         {
@@ -1743,7 +1754,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 }
             }
         }*/
-        oldlocation = location;
+            oldlocation = location;
+        }
     }
 
     //get complete address
@@ -1772,4 +1784,28 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         });
         thread.start();
     }
+
+    public List<CellInfo> gettowerinfo() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+
+        List<CellInfo> infos = telephonyManager.getAllCellInfo();
+
+        return infos;
+    }
+
+
+
+
+
 }
