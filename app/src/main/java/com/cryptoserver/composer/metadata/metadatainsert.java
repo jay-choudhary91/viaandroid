@@ -14,8 +14,6 @@ import com.coremedia.iso.boxes.MovieBox;
 import com.coremedia.iso.boxes.UserDataBox;
 import com.coremedia.iso.boxes.apple.AppleItemListBox;
 import com.googlecode.mp4parser.boxes.apple.AppleAlbumBox;
-import com.googlecode.mp4parser.boxes.apple.AppleDescriptionBox;
-import com.googlecode.mp4parser.boxes.apple.AppleNameBox;
 import com.googlecode.mp4parser.util.Path;
 
 import java.io.*;
@@ -27,16 +25,8 @@ import java.util.List;
 /**
  * Change metadata and make sure chunkoffsets are corrected.
  */
-public class MetaDataInsert {
+public class metadatainsert {
 
-
-    /*public static void main(String[] args) throws IOException {
-        MetaDataInsert cmd = new MetaDataInsert();
-        cmd.writeRandomMetadata("c:\\content\\Mobile_H264 - Kopie.mp4",
-                "lore ipsum tralalala");
-
-    }
-*/
     public static FileChannel splitFileAndInsert(File f, long pos, long length) throws IOException {
         FileChannel read = new RandomAccessFile(f, "r").getChannel();
         File tmp = File.createTempFile("ChangeMetaData", "splitFileAndInsert");
@@ -76,7 +66,7 @@ public class MetaDataInsert {
         }
     }
 
-    public static void writeRandomMetadata(String videoFilePath, String data) throws IOException {
+    public static void writemetadata(String videoFilePath, String data) throws IOException {
 
         File videoFile = new File(videoFilePath);
         if (!videoFile.exists()) {

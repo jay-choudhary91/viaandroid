@@ -14,11 +14,11 @@ import java.io.IOException;
 /**
  * Change metadata and make sure chunkoffsets are corrected.
  */
-public class MetaDataRead {
+public class metadataread {
 
 
     /*public static void main(String[] args) throws IOException {
-        MetaDataRead cmd = new MetaDataRead();
+        metadataread cmd = new metadataread();
         String xml = cmd.read("C:\\content\\Mobile_H264.mp4");
         System.err.println(xml);
     }*/

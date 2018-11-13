@@ -214,8 +214,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 recyview_hashes.setAdapter(mmetricesadapter);
             }
 
-            frameduration=checkframeduration();
-            keytype=checkkey();
+            frameduration=common.checkframeduration();
+            keytype=common.checkkey();
             recyview_frames.post(new Runnable() {
                 @Override
                 public void run() {
@@ -679,10 +679,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                 if(player!=null)
                    changeactionbarcolor();
 
-                if(! keytype.equalsIgnoreCase(checkkey()) || (frameduration != checkframeduration()))
+                if(! keytype.equalsIgnoreCase(common.checkkey()) || (frameduration != common.checkframeduration()))
                 {
-                    frameduration=checkframeduration();
-                    keytype=checkkey();
+                    frameduration=common.checkframeduration();
+                    keytype=common.checkkey();
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
@@ -1048,8 +1048,8 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
                     return;
                 }
 
-                frameduration=checkframeduration();
-                keytype=checkkey();
+                frameduration=common.checkframeduration();
+                keytype=common.checkkey();
 
                if(mbitmaplist.size()!=0)
                      runmethod = false;
@@ -1121,39 +1121,6 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
             e.printStackTrace();
         }
 
-    }
-
-    public int checkframeduration()
-    {
-        int frameduration=15;
-
-        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
-
-        return frameduration;
-    }
-
-    public String checkkey()
-    {
-        String key="";
-        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-        {
-            key=config.prefs_md5;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-        {
-            key=config.prefs_md5_salt;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-        {
-            key=config.prefs_sha;
-        }
-        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-        {
-            key=config.prefs_sha_salt;
-        }
-        return key;
     }
 
     public void getFramesBitmap()

@@ -36,19 +36,27 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.metadata.metadatainsert;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
-import com.cryptoserver.composer.utils.VisualizerView;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.customffmpegframegrabber;
+import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
+import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.visualizeraudiorecorder;
+import com.cryptoserver.composer.utils.xdata;
 
+import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -102,6 +110,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private graphicalfragment fragmentgraphic;
     private Handler wavehandler;
     private Runnable waverunnable;
+    private String keytype =config.prefs_md5;
+    JSONArray metadatametricesjson=new JSONArray();
+    private long currentframenumber =0,frameduration =15;
+    private ArrayList<videomodel> mvideoframes =new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -254,6 +266,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 implementscrolllistener();
             }
 
+            keytype=common.checkkey();
+            frameduration=common.checkframeduration();
             startnoise();
             setmetriceshashesdata();
         }
@@ -526,9 +540,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void startrecording() {
 
+        selectedhashes="";
+        metadatametricesjson=new JSONArray();
         selectedmetrices="";
         mmetricsitems.clear();
         mmetricesadapter.notifyDataSetChanged();
+        mhashesitems.clear();
+        mhashesadapter.notifyDataSetChanged();
 
         mrecorder = new MediaRecorder();
         mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -550,7 +568,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private File getfile() {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.videodir, fileName+".wav");
+        File file=new File(config.videodir, fileName+".m4a");
 
         File destinationDir=new File(config.videodir);
         try {
@@ -581,28 +599,143 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         resettimer();
         isaudiorecording=false;
 
-/*        try {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    setaudiohashes();
+                    metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
+                }catch (Exception e)
+                {
+                    Log.e("Meta data Error","Error");
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        showsharepopupmain();
+    }
+
+
+    public void setaudiohashes()
+    {
+        try {
+
+            int count = 1;
+            currentframenumber=0;
+            currentframenumber = currentframenumber + frameduration;
+
             customffmpegframegrabber grabber = new customffmpegframegrabber(new File(selectedfile));
-            grabber.startnoise();
+            grabber.start();
+            videomodel lastframehash=null;
             int totalframes=grabber.getLengthInAudioFrames();
             for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
                 Frame frame = grabber.grabAudio();
                 if (frame == null)
                     break;
 
-
-                frame.samples[0]
+                if(isaudiorecording)
+                    break;
 
                 ByteBuffer buffer= ((ByteBuffer) frame.samples[0].position(0));
                 byte[] byteData = new byte[buffer.remaining()];
                 buffer.get(byteData);
+
+                String keyValue= getkeyvalue(byteData);
+
+                if (count == currentframenumber) {
+                    lastframehash=null;
+                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
+                    if(! selectedhashes.trim().isEmpty())
+                        selectedhashes=selectedhashes+"\n";
+
+                    selectedhashes=selectedhashes+mvideoframes.get(mvideoframes.size()-1).gettitle()
+                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+
+                    currentframenumber = currentframenumber + frameduration;
+                }
+                else
+                {
+                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                }
+                count++;
             }
+
+            if(lastframehash != null && (! isaudiorecording))
+            {
+                selectedhashes=selectedhashes+"\n"+lastframehash.gettitle()+" "+ lastframehash.getcurrentframenumber()+" "+
+                        lastframehash.getkeytype()+":"+" "+lastframehash.getkeyvalue();
+            }
+            grabber.flush();
+
         }catch (Exception e)
         {
             e.printStackTrace();
-        }*/
+        }
+    }
 
-        showsharepopupmain();
+    public String getkeyvalue(byte[] data)
+    {
+        String value="";
+        String salt="";
+
+        switch (keytype)
+        {
+            case config.prefs_md5:
+                value= md5.calculatebytemd5(data);
+                break;
+
+            case config.prefs_md5_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= md5.calculatebytemd5(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= md5.calculatebytemd5(data);
+                }
+
+                break;
+            case config.prefs_sha:
+                value= sha.sha1(data);
+                break;
+            case config.prefs_sha_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= sha.sha1(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= sha.sha1(data);
+                }
+                break;
+        }
+        return value;
     }
 
     private void startnoise() {
@@ -715,7 +848,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
         }
         builder.append("\n");
-        //metadatametricesjson.put(object);
+        metadatametricesjson.put(object);
         selectedmetrices=selectedmetrices+builder.toString();
     }
 

@@ -1840,6 +1840,39 @@ public class common {
         return formattedDate;
     }
 
+    public static int checkframeduration()
+    {
+        int frameduration=15;
+
+        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+        return frameduration;
+    }
+
+    public static String checkkey()
+    {
+        String key="";
+        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
+        {
+            key=config.prefs_md5;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+        {
+            key=config.prefs_md5_salt;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+        {
+            key=config.prefs_sha;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+        {
+            key=config.prefs_sha_salt;
+        }
+        return key;
+    }
+
     public static JSONArray getjson(JSONArray metadatametricesjson)
     {
         JSONArray jsonArray=new JSONArray();

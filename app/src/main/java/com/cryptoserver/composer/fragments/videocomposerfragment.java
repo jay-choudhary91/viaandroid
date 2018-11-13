@@ -65,7 +65,7 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.metadata.MetaDataInsert;
+import com.cryptoserver.composer.metadata.metadatainsert;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
@@ -189,12 +189,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                           {
                               if(mframetorecordcount == currentframenumber || (videokey.trim().isEmpty()))
                               {
-                                  /*randomstring gen1 = new randomstring(20, ThreadLocalRandom.current());
-                                  String str=gen1.nextString().trim().toString();
-                                  if(str.trim().toString().length() == 0)
-                                      str=gen1.nextString().trim().toString();
-
-                                  byte[] byteArray = str.getBytes();*/
                                   Bitmap bitmap = mTextureView.getBitmap(10,10);
                                   bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
                                           bitmap.getHeight(), mTextureView.getTransform( null ), true );
@@ -1150,7 +1144,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     @Override
                     public void run() {
                         try {
-                            MetaDataInsert.writeRandomMetadata(lastrecordedvideo.getAbsolutePath(),""+
+                            metadatainsert.writemetadata(lastrecordedvideo.getAbsolutePath(),""+
                                     common.getjson(metadatametricesjson));
                         }catch (Exception e)
                         {

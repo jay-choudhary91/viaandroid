@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import android.graphics.drawable.Drawable;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -37,6 +38,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
+
+import wseemann.media.FFmpegMediaMetadataRetriever;
 
 /**
  * Created by devesh on 6/8/18.
@@ -114,6 +117,15 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         {
             holder.edtvideoname.setText(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().trim().length()));
         }
+
+        File file=new File(arrayvideolist.get(position).getPath());
+
+        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
+        m_mediaMetadataRetriever.setDataSource(arrayvideolist.get(position).getPath());
+
+        String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        String metadatawriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
+        String metadataalbum=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
 
         holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
 

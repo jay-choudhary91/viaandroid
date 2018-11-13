@@ -47,6 +47,15 @@ android {
             applicationId 'com.cryptoserver.composer'
         }
     }
+    packagingOptions {
+        pickFirst 'lib/armeabi/libavdevice.so'
+        pickFirst 'lib/armeabi/libavutil.so'
+        pickFirst 'lib/armeabi/libswresample.so'
+        pickFirst 'lib/armeabi/libavformat.so'
+        pickFirst 'lib/armeabi/libavcodec.so'
+        pickFirst 'lib/armeabi/libswscale.so'
+        pickFirst 'lib/armeabi/libavfilter.so'
+    }
 }
 
 ext {
@@ -74,6 +83,7 @@ dependencies {
         transitive = true
     }
 
+    implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever:1.0.+'
     implementation 'com.googlecode.mp4parser:isoparser:1.1.21'
     implementation 'com.squareup.okhttp3:okhttp:3.3.0'
     implementation 'com.android.support:multidex:1.0.3'
