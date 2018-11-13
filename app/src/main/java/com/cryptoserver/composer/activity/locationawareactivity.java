@@ -1135,7 +1135,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             int networkType = telephonyManager.getNetworkType();
 
-            if(towerinfolist.size()!=0){
+            if(towerinfolist.size() > 0){
                 CellInfo info = towerinfolist.get(0);
                 if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
                     Log.e("signalstrenght", "" + mSignalStrength);
