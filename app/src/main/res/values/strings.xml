@@ -25,6 +25,10 @@
     <string name="congratulations_audio">Congratulations on your audio!</string>
     <string name="audio_how_would_you">How would you like to share your audio?</string>
 
+    <string name="photo_has_been_encrypted">Photo Has Been Encrypted!</string>
+    <string name="congratulations_photo">Congratulations on your photo!</string>
+    <string name="photo_how_would_you">How would you like to share your photo?</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
