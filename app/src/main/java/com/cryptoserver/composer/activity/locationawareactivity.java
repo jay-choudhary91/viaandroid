@@ -1138,8 +1138,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             if(towerinfolist.size() > 0){
                 CellInfo info = towerinfolist.get(0);
                 if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
-                    Log.e("signalstrenght", "" + mSignalStrength);
-                    metricItemValue = "" + mSignalStrength;
+                    metricItemValue = "";
                 } else {
                     if(key.equalsIgnoreCase("celltowersignalstrength")){
 
@@ -1192,7 +1191,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
         } */
         else if (key.equalsIgnoreCase("numberoftowers")) {
-            metricItemValue = "" + towerinfolist.size();
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
+                metricItemValue = "" ;
+            }
+            else
+            {
+                metricItemValue = "" + towerinfolist.size();
+            }
         } else if (key.equalsIgnoreCase("connectionspeed")) {
             metricItemValue = "" + connectionspeed;
         } else if (key.equalsIgnoreCase("address")) {
