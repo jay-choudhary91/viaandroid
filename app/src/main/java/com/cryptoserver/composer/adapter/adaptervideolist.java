@@ -206,28 +206,30 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                 if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
                   /*  Log.i(TAG,"Here you can write the code");*/
                   if(arrayvideolist.size()>0){
-                      String renamevalue = holder.edtvideoname.getText().toString();
-                      String path = arrayvideolist.get(position).getPath();
-
-                      File sourceFile = new File(path);
-                      File filedirectory = sourceFile.getParentFile();
-                      String filename = sourceFile.getName();
-
-                      if(renamevalue.toString().trim().length() > 0)
+                      if(arrayvideolist.get(position).getmimetype().contains("video/"))
                       {
-                          if(!filename.equalsIgnoreCase(renamevalue)){
-                              File from = new File(filedirectory,filename);
-                              File to = new File(filedirectory,renamevalue + ".mp4");
-                              from.renameTo(to);
+                          String renamevalue = holder.edtvideoname.getText().toString();
+                          String path = arrayvideolist.get(position).getPath();
 
-                              adapter.onItemClicked(arrayvideolist.get(position),3);
+                          File sourceFile = new File(path);
+                          File filedirectory = sourceFile.getParentFile();
+                          String filename = sourceFile.getName();
+
+                          if(renamevalue.toString().trim().length() > 0)
+                          {
+                              if(!filename.equalsIgnoreCase(renamevalue)){
+                                  File from = new File(filedirectory,filename);
+                                  File to = new File(filedirectory,renamevalue + ".mp4");
+                                  from.renameTo(to);
+
+                                  adapter.onItemClicked(arrayvideolist.get(position),3);
+                              }
+                          }
+                          else
+                          {
+                              holder.edtvideoname.setText(common.removeextension(filename));
                           }
                       }
-                      else
-                      {
-                          holder.edtvideoname.setText(common.removeextension(filename));
-                      }
-
                       return true;
                   }
 
@@ -245,26 +247,29 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                     InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(holder.edtvideoname.getWindowToken(), 0);
                     if(arrayvideolist.size()>0){
-                        String renamevalue = holder.edtvideoname.getText().toString();
-                        String path = arrayvideolist.get(position).getPath();
-
-                        File sourceFile = new File(path);
-                        File filedirectory = sourceFile.getParentFile();
-                        String filename = sourceFile.getName();
-
-                        if(renamevalue.toString().trim().length() > 0)
+                        if(arrayvideolist.get(position).getmimetype().contains("video/"))
                         {
-                            if(!filename.equalsIgnoreCase(renamevalue)){
-                                File from = new File(filedirectory,filename);
-                                File to = new File(filedirectory,renamevalue + ".mp4");
-                                from.renameTo(to);
+                            String renamevalue = holder.edtvideoname.getText().toString();
+                            String path = arrayvideolist.get(position).getPath();
 
-                                adapter.onItemClicked(arrayvideolist.get(position),3);
+                            File sourceFile = new File(path);
+                            File filedirectory = sourceFile.getParentFile();
+                            String filename = sourceFile.getName();
+
+                            if(renamevalue.toString().trim().length() > 0)
+                            {
+                                if(!filename.equalsIgnoreCase(renamevalue)){
+                                    File from = new File(filedirectory,filename);
+                                    File to = new File(filedirectory,renamevalue + ".mp4");
+                                    from.renameTo(to);
+
+                                    adapter.onItemClicked(arrayvideolist.get(position),3);
+                                }
                             }
-                        }
-                        else
-                        {
-                            holder.edtvideoname.setText(common.removeextension(filename));
+                            else
+                            {
+                                holder.edtvideoname.setText(common.removeextension(filename));
+                            }
                         }
                     }
                     Log.e("Focaus change ", "Focus change");
