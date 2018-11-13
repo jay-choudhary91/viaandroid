@@ -577,9 +577,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             madapterclick.onItemClicked(null,1);
 
         mrecorder = null;
-        myvisualizerview.clear();
         stoptimer();
         resettimer();
+        myvisualizerview.clear();
         isaudiorecording=false;
 
 /*        try {
