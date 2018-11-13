@@ -49,9 +49,8 @@ public class bottombarfragment extends basefragment  {
                         launchvideocomposer();
                         isviewloaded=false;
                         startloadtimer(1500);
+                        return true;
                     }
-
-                    return true;
                 case R.id.navigation_audio:
                     if(selectedtab != 2 && isviewloaded)
                     {
@@ -63,10 +62,8 @@ public class bottombarfragment extends basefragment  {
                         gethelper().replacetabfragment(fragaudiocomposer,false,true);
                         isviewloaded=false;
                         startloadtimer(1000);
+                        return true;
                     }
-
-                    return true;
-
                 case R.id.navigation_image:
 
                     if(selectedtab != 3 && isviewloaded)
@@ -79,9 +76,8 @@ public class bottombarfragment extends basefragment  {
                         gethelper().replacetabfragment(fragimgcapture,false,true);
                         isviewloaded=false;
                         startloadtimer(1500);
+                        return true;
                     }
-
-                    return true;
             }
             return false;
         }
