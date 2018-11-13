@@ -51,6 +51,7 @@ public class bottombarfragment extends basefragment  {
                         startloadtimer(1500);
                         return true;
                     }
+                    break;
                 case R.id.navigation_audio:
                     if(selectedtab != 2 && isviewloaded)
                     {
@@ -64,6 +65,7 @@ public class bottombarfragment extends basefragment  {
                         startloadtimer(1000);
                         return true;
                     }
+                    break;
                 case R.id.navigation_image:
 
                     if(selectedtab != 3 && isviewloaded)
@@ -78,6 +80,7 @@ public class bottombarfragment extends basefragment  {
                         startloadtimer(1500);
                         return true;
                     }
+                    break;
             }
             return false;
         }
