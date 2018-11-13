@@ -680,7 +680,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         Bitmap bitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
         byte[] byteArray = stream.toByteArray();
         bitmap.recycle();
         final String keyhash =  getkeyvalue(byteArray);
