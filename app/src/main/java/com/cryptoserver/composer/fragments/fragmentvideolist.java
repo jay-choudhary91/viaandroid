@@ -586,40 +586,113 @@ public class fragmentvideolist extends basefragment {
     {
         if(type == 1)
         {
-            Uri uri = Uri.parse("file://"+videoobj.getPath());
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.putExtra(Intent.EXTRA_STREAM, uri);
-            share.setType("video/*");
-            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            getActivity().startActivity(Intent.createChooser(share, "Share video"));
+            if(videoobj.getmimetype().startsWith("image/")){
+                Uri uri = Uri.parse("file://"+videoobj.getPath());
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                share.setType("image/*");
+                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                getActivity().startActivity(Intent.createChooser(share, "Share photo"));
+            }else if(videoobj.getmimetype().startsWith("audio/")){
+                Uri uri = Uri.parse("file://"+videoobj.getPath());
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                share.setType("audio/*");
+                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                getActivity().startActivity(Intent.createChooser(share, "Share audio"));
+
+            }else if(videoobj.getmimetype().startsWith("video/")){
+                Uri uri = Uri.parse("file://"+videoobj.getPath());
+                Intent share = new Intent(Intent.ACTION_SEND);
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                share.setType("video/*");
+                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                getActivity().startActivity(Intent.createChooser(share, "Share video"));
+            }
+
         }
         else if(type == 2)
         {
-            new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-            .setTitle("Alert!!")
-            .setMessage(getActivity().getResources().getString(R.string.delete_confirm))
-            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-            File fdelete = new File(videoobj.getPath());
-            if (fdelete.exists()) {
-                if (fdelete.delete()) {
-                    System.out.println("file Deleted :" + videoobj.getPath());
-                    arrayvideolist.remove(videoobj);
-                    dialog.dismiss();
-                } else {
-                    System.out.println("file not Deleted :" + videoobj.getPath());
-                }
+            if(videoobj.getmimetype().startsWith("image/")){
+                new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+                        .setTitle("Alert!!")
+                        .setMessage(getActivity().getResources().getString(R.string.dlt_cnfm_photo))
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                File fdelete = new File(videoobj.getPath());
+                                if (fdelete.exists()) {
+                                    if (fdelete.delete()) {
+                                        System.out.println("file Deleted :" + videoobj.getPath());
+                                        arrayvideolist.remove(videoobj);
+                                        dialog.dismiss();
+                                    } else {
+                                        System.out.println("file not Deleted :" + videoobj.getPath());
+                                    }
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+            }else if(videoobj.getmimetype().startsWith("audio/")){
+                new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+                        .setTitle("Alert!!")
+                        .setMessage(getActivity().getResources().getString(R.string.dlt_cnfm_audio))
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                File fdelete = new File(videoobj.getPath());
+                                if (fdelete.exists()) {
+                                    if (fdelete.delete()) {
+                                        System.out.println("file Deleted :" + videoobj.getPath());
+                                        arrayvideolist.remove(videoobj);
+                                        dialog.dismiss();
+                                    } else {
+                                        System.out.println("file not Deleted :" + videoobj.getPath());
+                                    }
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
+
+            }else if(videoobj.getmimetype().startsWith("video/")){
+                new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+                        .setTitle("Alert!!")
+                        .setMessage(getActivity().getResources().getString(R.string.delete_confirm))
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                File fdelete = new File(videoobj.getPath());
+                                if (fdelete.exists()) {
+                                    if (fdelete.delete()) {
+                                        System.out.println("file Deleted :" + videoobj.getPath());
+                                        arrayvideolist.remove(videoobj);
+                                        dialog.dismiss();
+                                    } else {
+                                        System.out.println("file not Deleted :" + videoobj.getPath());
+                                    }
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).show();
             }
-            adapter.notifyDataSetChanged();
-                }
-            })
-            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            }).show();
         }else if(type == 3){
             arrayvideolist.clear();
             adapter.notifyDataSetChanged();

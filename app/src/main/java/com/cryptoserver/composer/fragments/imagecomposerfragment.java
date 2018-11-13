@@ -1503,8 +1503,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         ImageView img_cancel=maindialogshare.findViewById(R.id.img_cancelicon);
 
         txt_share_btn1.setText(getResources().getString(R.string.share));
-        txt_share_btn2.setText(getResources().getString(R.string.new_audio));
-        txt_share_btn3.setText(getResources().getString(R.string.listen));
+        txt_share_btn2.setText(getResources().getString(R.string.new_photo));
+        txt_share_btn3.setText(getResources().getString(R.string.view_photo));
 
         txt_title1.setText(getResources().getString(R.string.audio_has_been_encrypted));
         txt_title2.setText(getResources().getString(R.string.congratulations_audio));
@@ -1580,7 +1580,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
 
         txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
-        txt_share_btn2.setText(getResources().getString(R.string.share_partial_video));
+        txt_share_btn2.setText(getResources().getString(R.string.share_partial_photo));
         txt_share_btn3.setText(getResources().getString(R.string.cancel_viewlist));
 
         txt_title1.setText(getResources().getString(R.string.audio_how_would_you));

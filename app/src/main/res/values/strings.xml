@@ -44,6 +44,8 @@
     <string name="frames_per_second">Frames per second</string>
     <string name="metric_list">Metric List</string>
     <string name="delete_confirm">Are you sure you want to delete this video?</string>
+    <string name="dlt_cnfm_audio">Are you sure you want to delete this audio?</string>
+    <string name="dlt_cnfm_photo">Are you sure you want to delete this photo?</string>
 
     <string name="share">Share</string>
     <string name="new_video">New Video</string>
@@ -55,6 +57,7 @@
 
     <string name="new_audio">New Audio</string>
     <string name="listen">Listen Audio</string>
+    <string name="share_partial_audio">Share Partial Audio</string>
 
     <string name="short_seconds">sec</string>
     <string name="megabyte">MB</string>
@@ -64,6 +67,9 @@
     <string name="file_doesnot_exist">File doesn\'t exist!</string>
     <string name="file_uri_parse_error">Error on URI parse!</string>
 
+    <string name="new_photo">New Photo</string>
+    <string name="view_photo">View Photo</string>
+    <string name="share_partial_photo">Share Partial Photo</string>
 
     <string name="description">Media Controls</string>
 
@@ -88,7 +94,7 @@
     <string name="title_activity_bottombaractivity">bottombaractivity</string>
     <string name="title_audio">Audio</string>
     <string name="title_video">Video</string>
-    <string name="title_image">Image</string>
+    <string name="title_image">Photo</string>
 
 
     <string name="picture">Picture</string>
