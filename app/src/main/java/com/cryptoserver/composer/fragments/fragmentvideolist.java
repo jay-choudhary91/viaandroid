@@ -582,7 +582,7 @@ public class fragmentvideolist extends basefragment {
         recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
     }
 
-    public void setAdapter(final video videoobj,int type)
+    public void setAdapter(final video videoobj, int type)
     {
         if(type == 1)
         {
@@ -614,89 +614,26 @@ public class fragmentvideolist extends basefragment {
         else if(type == 2)
         {
             if(videoobj.getmimetype().startsWith("image/")){
-                new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-                        .setTitle("Alert!!")
-                        .setMessage(getActivity().getResources().getString(R.string.dlt_cnfm_photo))
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                File fdelete = new File(videoobj.getPath());
-                                if (fdelete.exists()) {
-                                    if (fdelete.delete()) {
-                                        System.out.println("file Deleted :" + videoobj.getPath());
-                                        arrayvideolist.remove(videoobj);
-                                        dialog.dismiss();
-                                    } else {
-                                        System.out.println("file not Deleted :" + videoobj.getPath());
-                                    }
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                showalertdialog(videoobj,getActivity().getResources().getString(R.string.dlt_cnfm_photo));
+
             }else if(videoobj.getmimetype().startsWith("audio/")){
-                new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-                        .setTitle("Alert!!")
-                        .setMessage(getActivity().getResources().getString(R.string.dlt_cnfm_audio))
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                File fdelete = new File(videoobj.getPath());
-                                if (fdelete.exists()) {
-                                    if (fdelete.delete()) {
-                                        System.out.println("file Deleted :" + videoobj.getPath());
-                                        arrayvideolist.remove(videoobj);
-                                        dialog.dismiss();
-                                    } else {
-                                        System.out.println("file not Deleted :" + videoobj.getPath());
-                                    }
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                showalertdialog(videoobj,getActivity().getResources().getString(R.string.dlt_cnfm_audio));
 
             }else if(videoobj.getmimetype().startsWith("video/")){
-                new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-                        .setTitle("Alert!!")
-                        .setMessage(getActivity().getResources().getString(R.string.delete_confirm))
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                File fdelete = new File(videoobj.getPath());
-                                if (fdelete.exists()) {
-                                    if (fdelete.delete()) {
-                                        System.out.println("file Deleted :" + videoobj.getPath());
-                                        arrayvideolist.remove(videoobj);
-                                        dialog.dismiss();
-                                    } else {
-                                        System.out.println("file not Deleted :" + videoobj.getPath());
-                                    }
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        }).show();
+                showalertdialog(videoobj,getActivity().getResources().getString(R.string.delete_confirm_video));
+
             }
         }else if(type == 3){
-            arrayvideolist.clear();
-            adapter.notifyDataSetChanged();
-            getVideoList();
+            //arrayvideolist.clear();
+            myHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            },500);
+
+            //getVideoList();
+
         }else if(type == 4){
             xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
             composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
@@ -732,7 +669,36 @@ public class fragmentvideolist extends basefragment {
                 video videoobj=(video)object;
                 setAdapter(videoobj,type);
             }
+
         });
         recyrviewvideolist.setAdapter(adapter);
+    }
+
+    public void showalertdialog(final video videoobj, String message){
+        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+                .setTitle("Alert!!")
+                .setMessage(message)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        File fdelete = new File(videoobj.getPath());
+                        if (fdelete.exists()) {
+                            if (fdelete.delete()) {
+                                System.out.println("file Deleted :" + videoobj.getPath());
+                                arrayvideolist.remove(videoobj);
+                                dialog.dismiss();
+                            } else {
+                                System.out.println("file not Deleted :" + videoobj.getPath());
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 }
