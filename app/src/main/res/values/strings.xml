@@ -47,7 +47,7 @@
     <string name="hash_list">Hash List</string>
     <string name="frames_per_second">Frames per second</string>
     <string name="metric_list">Metric List</string>
-    <string name="delete_confirm">Are you sure you want to delete this video?</string>
+    <string name="delete_confirm_video">Are you sure you want to delete this video?</string>
     <string name="dlt_cnfm_audio">Are you sure you want to delete this audio?</string>
     <string name="dlt_cnfm_photo">Are you sure you want to delete this photo?</string>
 
