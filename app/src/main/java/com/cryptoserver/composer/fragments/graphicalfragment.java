@@ -4,6 +4,7 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -67,6 +68,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
@@ -349,6 +352,15 @@ public class graphicalfragment extends basefragment implements
         googlemap.setVisibility(View.VISIBLE);
         if(ismediaplayer)
         {
+            /*PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
+            mgooglemap.addPolyline(options);*/
+
+
+            /*Polyline line = mgooglemap.addPolyline(new PolylineOptions()
+                    .add(location)
+                    .width(5)
+                    .color(Color.RED));*/
+
             mgooglemap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
         }
@@ -364,9 +376,15 @@ public class graphicalfragment extends basefragment implements
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
         } else {
-            mgooglemap.setMyLocationEnabled(false);
+            if(! ismediaplayer)
+            {
+                mgooglemap.setMyLocationEnabled(true);
+            }
+            else
+            {
+                mgooglemap.setMyLocationEnabled(false);
+            }
             mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
-            // mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.8497, 75.7692), 5));
         }
     }
 

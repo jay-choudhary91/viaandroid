@@ -191,7 +191,7 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
         super.onPostExecute(aVoid);
         taskresult result = new taskresult();
         JSONObject jsonObject = null;
-        Log.d("Response>> ", aVoid);
+        //Log.d("Response>> ", aVoid);
         try {
             result.success(false);
             jsonObject=new JSONObject(aVoid);
