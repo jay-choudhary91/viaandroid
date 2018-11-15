@@ -2336,7 +2336,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                 isflashon = true;
             }
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
