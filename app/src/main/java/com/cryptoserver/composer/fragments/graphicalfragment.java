@@ -64,7 +64,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
@@ -164,6 +166,7 @@ public class graphicalfragment extends basefragment implements
     RecyclerView.LayoutManager encryptionmanager;
     ImageView img_compass;
     GoogleMap mgooglemap;
+    MarkerOptions mmarker;
     private ArrayList<graphicalmodel> frameslist = new ArrayList<>();
 
     VisualizerView myvisualizerview;
@@ -345,6 +348,12 @@ public class graphicalfragment extends basefragment implements
             return;
 
         googlemap.setVisibility(View.VISIBLE);
+
+        mmarker = new MarkerOptions();
+        mmarker.position(new LatLng(location.latitude, location.longitude));
+        mmarker.title("Current Position");
+        mmarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.rsz_circle));
+        mgooglemap.addMarker(mmarker);
         mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -356,7 +365,7 @@ public class graphicalfragment extends basefragment implements
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
         } else {
-            mgooglemap.setMyLocationEnabled(true);
+            mgooglemap.setMyLocationEnabled(false);
             mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
             // mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(26.8497, 75.7692), 5));
         }
