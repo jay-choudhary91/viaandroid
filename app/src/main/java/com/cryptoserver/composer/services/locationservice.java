@@ -197,7 +197,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
             return;
         }
         int timetofix = locationManager.getGpsStatus(null).getTimeToFirstFix();
-        Log.i(TAG, "Time to first fix = " + timetofix);
+     //   Log.i(TAG, "Time to first fix = " + timetofix);
         for (GpsSatellite sat : locationManager.getGpsStatus(null).getSatellites()) {
             if(sat.usedInFix()) {
                 satellitesInFix++;
@@ -217,9 +217,9 @@ public class locationservice extends Service implements LocationListener, GpsSta
             satellites++;
         }
 
-        Log.e("Usedsatellite =","" + satellitesInFix);
+//        Log.e("Usedsatellite =","" + satellitesInFix);
 
-        Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
+  //      Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
         xdata.getinstance().saveSetting("gpsnumberofsatelites", "" + satellites);
     }
 
