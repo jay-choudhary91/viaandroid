@@ -655,6 +655,21 @@ public class common {
         return str;
     }
 
+    public static String getnamefrompath(String path)
+    {
+        String str="";
+        if(path != null && (! path.trim().isEmpty()))
+        {
+            File file=new File(path);
+            str=file.getName();
+            if(str.contains("."))
+                str=str.substring(0,str.indexOf("."));
+
+            return str;
+        }
+        return str;
+    }
+
     public static String getGpsDirection(float degree) {
         String direction_text = "";
         if (degree == 0 && degree < 45 || degree >= 315

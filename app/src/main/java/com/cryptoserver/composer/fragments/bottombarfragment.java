@@ -31,7 +31,7 @@ public class bottombarfragment extends basefragment  {
     audiocomposerfragment fragaudiocomposer=null;
     imagecomposerfragment fragimgcapture=null;
     adapteritemclick madapterclick;
-    int selectedtab=0;
+    int selectedtab=0,lastselectedtab=0;
     BottomNavigationView navigation;
     public boolean isviewloaded=true;
 
@@ -43,41 +43,29 @@ public class bottombarfragment extends basefragment  {
             switch (item.getItemId()) {
                 case R.id.navigation_video:
 
+                    lastselectedtab=1;
                     if(selectedtab != 1 && isviewloaded)
                     {
                         selectedtab=1;
-                        launchvideocomposer();
-                        isviewloaded=false;
-                        startloadtimer(1500);
+                        loadfragments();
                         return true;
                     }
                     break;
                 case R.id.navigation_audio:
+                    lastselectedtab=2;
                     if(selectedtab != 2 && isviewloaded)
                     {
                         selectedtab=2;
-                        if(fragaudiocomposer == null)
-                            fragaudiocomposer=new audiocomposerfragment();
-
-                        fragaudiocomposer.setData(mclick);
-                        gethelper().replacetabfragment(fragaudiocomposer,false,true);
-                        isviewloaded=false;
-                        startloadtimer(1000);
+                        loadfragments();
                         return true;
                     }
                     break;
                 case R.id.navigation_image:
-
+                    lastselectedtab=3;
                     if(selectedtab != 3 && isviewloaded)
                     {
                         selectedtab=3;
-                        if(fragimgcapture == null)
-                            fragimgcapture=new imagecomposerfragment();
-
-                        fragimgcapture.setData(mclick);
-                        gethelper().replacetabfragment(fragimgcapture,false,true);
-                        isviewloaded=false;
-                        startloadtimer(1500);
+                        loadfragments();
                         return true;
                     }
                     break;
@@ -86,12 +74,61 @@ public class bottombarfragment extends basefragment  {
         }
     };
 
+    public void loadfragments()
+    {
+        switch (selectedtab)
+        {
+            case 1:
+                if(fragvideocomposer == null)
+                    fragvideocomposer=new videocomposerfragment();
+
+                fragvideocomposer.setData(false, mclick);
+                gethelper().replacetabfragment(fragvideocomposer,false,true);
+                isviewloaded=false;
+                startloadtimer(1500);
+                break;
+            case 2:
+                if(fragaudiocomposer == null)
+                    fragaudiocomposer=new audiocomposerfragment();
+
+                fragaudiocomposer.setData(mclick);
+                gethelper().replacetabfragment(fragaudiocomposer,false,true);
+                isviewloaded=false;
+                startloadtimer(1000);
+                break;
+            case 3:
+                if(fragimgcapture == null)
+                    fragimgcapture=new imagecomposerfragment();
+
+                fragimgcapture.setData(mclick);
+                gethelper().replacetabfragment(fragimgcapture,false,true);
+                isviewloaded=false;
+                startloadtimer(1500);
+                break;
+        }
+    }
+
     public void startloadtimer(long loadingtime)
     {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 isviewloaded=true;
+                if(lastselectedtab != selectedtab)
+                {
+                    if(lastselectedtab == 1)
+                    {
+                        navigation.setSelectedItemId(R.id.navigation_video);
+                    }
+                    else if(lastselectedtab == 2)
+                    {
+                        navigation.setSelectedItemId(R.id.navigation_audio);
+                    }
+                    else if(lastselectedtab == 3)
+                    {
+                        navigation.setSelectedItemId(R.id.navigation_image);
+                    }
+                }
             }
         },loadingtime);
     }
@@ -128,15 +165,6 @@ public class bottombarfragment extends basefragment  {
             //launchvideocomposer();
         }
         return rootview;
-    }
-
-    public void launchvideocomposer()
-    {
-        if(fragvideocomposer == null)
-            fragvideocomposer=new videocomposerfragment();
-
-        fragvideocomposer.setData(false, mclick);
-        gethelper().replacetabfragment(fragvideocomposer,false,true);
     }
 
     adapteritemclick mclick=new adapteritemclick() {

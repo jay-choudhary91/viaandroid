@@ -165,6 +165,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private int POOR_BANDWIDTH = 150;
 
     List<CellInfo> towerinfolist=new ArrayList<>() ;
+    private boolean isservicebound=false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -264,7 +265,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                     final Intent locationService = new Intent(applicationviavideocomposer.getactivity(), locationservice.class);
                     applicationviavideocomposer.getactivity().startService(locationService);
-                    applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
+                    isservicebound =applicationviavideocomposer.getactivity().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
                 }
             } else {
                 String[] array = new String[common.getphonelocationdeniedpermissions().size()];
@@ -398,6 +399,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        try
+        {
+            if(isservicebound)
+                applicationviavideocomposer.getactivity().unbindService(serviceConnection);
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         if (myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
         stopLocationUpdates();

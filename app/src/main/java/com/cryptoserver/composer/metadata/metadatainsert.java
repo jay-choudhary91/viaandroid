@@ -13,7 +13,9 @@ import com.coremedia.iso.boxes.MetaBox;
 import com.coremedia.iso.boxes.MovieBox;
 import com.coremedia.iso.boxes.UserDataBox;
 import com.coremedia.iso.boxes.apple.AppleItemListBox;
+import com.cryptoserver.composer.utils.common;
 import com.googlecode.mp4parser.boxes.apple.AppleAlbumBox;
+import com.googlecode.mp4parser.boxes.apple.AppleNameBox;
 import com.googlecode.mp4parser.util.Path;
 
 import java.io.*;
@@ -112,18 +114,32 @@ public class metadatainsert {
             metaBox.addBox(ilst);
 
         }
+
+
         if (freeBox == null) {
             freeBox = new FreeBox(128 * 1024);
             metaBox.addBox(freeBox);
         }
         // Got Apple List Box
 
-        AppleAlbumBox nam;
-        if ((nam = Path.getPath(ilst, "©nam")) == null) {
-            nam = new AppleAlbumBox();
+        {
+            AppleNameBox nam;
+            if ((nam = Path.getPath(ilst, "©nam")) == null) {
+                nam = new AppleNameBox();
+            }
+            nam.setValue(common.getnamefrompath(videoFilePath));
+            ilst.addBox(nam);
         }
-        nam.setValue(data);
-        ilst.addBox(nam);
+
+        {
+            AppleAlbumBox nam;
+            if ((nam = Path.getPath(ilst, "©nam")) == null) {
+                nam = new AppleAlbumBox();
+            }
+            nam.setValue(data);
+            ilst.addBox(nam);
+        }
+
 
         long sizeAfter = moov.getSize();
         Log.e("Size after ",""+sizeAfter);
