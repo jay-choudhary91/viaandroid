@@ -1254,7 +1254,7 @@ public class common {
     }
 
     public static String getWifiIPAddress(Context context) {
-        WifiManager wifiMgr = (WifiManager) context.getSystemService(WIFI_SERVICE);
+        WifiManager wifiMgr = (WifiManager) applicationviavideocomposer.getactivity().getApplicationContext().getSystemService(WIFI_SERVICE);
         WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
         int ip = wifiInfo.getIpAddress();
         String ipaddress = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
