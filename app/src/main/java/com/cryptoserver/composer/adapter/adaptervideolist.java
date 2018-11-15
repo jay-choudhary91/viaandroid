@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
@@ -141,10 +142,15 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                     load(uri).
                     thumbnail(0.1f).
                     into(holder.img_videothumbnail);
+           // holder.img_videothumbnail.setBackgroundResource(R.drawable.phototab);
         }
         else
         {
-            holder.img_videothumbnail.setBackgroundResource(R.drawable.audiotab);
+            Glide.with(context).
+                    load(R.drawable.audiotab).
+                    thumbnail(0.1f).
+                    into(holder.img_videothumbnail);
+           /* holder.img_videothumbnail.setBackgroundResource(R.drawable.audiotab);*/
         }
 
 
@@ -202,7 +208,6 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         holder.edtvideoname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
                 if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
                   /*  Log.i(TAG,"Here you can write the code");*/
                   if(arrayvideolist.size()>0){
@@ -221,8 +226,10 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                                   File from = new File(filedirectory,filename);
                                   File to = new File(filedirectory,renamevalue + ".mp4");
                                   from.renameTo(to);
-
+                                  arrayvideolist.get(position).setPath(to.getAbsolutePath());
+                                  arrayvideolist.get(position).setName(renamevalue+ ".mp4");
                                   adapter.onItemClicked(arrayvideolist.get(position),3);
+
                               }
                           }
                           else
@@ -263,7 +270,10 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
                                     File to = new File(filedirectory,renamevalue + ".mp4");
                                     from.renameTo(to);
 
-                                    adapter.onItemClicked(arrayvideolist.get(position),3);
+                                   arrayvideolist.get(position).setPath(to.getAbsolutePath());
+                                   arrayvideolist.get(position).setName(renamevalue+ ".mp4");
+
+                                   adapter.onItemClicked(arrayvideolist.get(position),3);
                                 }
                             }
                             else

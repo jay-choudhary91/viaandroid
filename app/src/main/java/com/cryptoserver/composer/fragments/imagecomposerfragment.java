@@ -24,8 +24,10 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.ExifInterface;
 import android.media.Image;
 import android.media.ImageReader;
+import android.media.ImageWriter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -73,11 +75,14 @@ import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -675,32 +680,47 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    public void setimagehash(){
+    public void setimagehash() throws FileNotFoundException {
 
         Bitmap bitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-        byte[] byteArray = stream.toByteArray();
-        bitmap.recycle();
-        final String keyhash =  getkeyvalue(byteArray);
+        if(bitmap!=null){
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        Log.e("keyhash = ","" +keyhash);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
 
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mhashesitems.clear();
-                mhashesitems.clear();
-                mhashesadapter.notifyDataSetChanged();
+            byte[] byteArray = stream.toByteArray();
+            bitmap.recycle();
 
-                mvideoframes.add(new videomodel(keyhash));
-                mhashesadapter.notifyDataSetChanged();
-                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-            }
-        });
+
+       /* byte[] data = null;
+
+        try {
+            data = FileUtils.readFileToByteArray(mFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
+
+            selectedhashes =  getkeyvalue(byteArray);
+
+            Log.e("keyhash = ","" +selectedhashes);
+
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mhashesitems.clear();
+                    mhashesitems.clear();
+                    mhashesadapter.notifyDataSetChanged();
+
+                    mvideoframes.add(new videomodel(selectedhashes));
+                    mhashesadapter.notifyDataSetChanged();
+                    recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+                }
+            });
+        }
+
     }
-
 
     public String getkeyvalue(byte[] data)
     {
@@ -762,8 +782,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
         return value;
     }
-
-
 
     public void setmetricesadapter()
     {
@@ -1196,6 +1214,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private void captureStillPicture() {
         try {
             final Activity activity = getActivity();
+            metadatametricesjson=new JSONArray();
             if (null == activity || null == mCameraDevice) {
                 return;
             }
@@ -1228,7 +1247,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            setimagehash();
+                            try {
+                                setimagehash();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }).start();
 
@@ -1403,7 +1426,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
         }
         builder.append("\n");
-        //metadatametricesjson.put(object);
+        metadatametricesjson.put(object);
+
         selectedmetrices=selectedmetrices+builder.toString();
     }
 
@@ -1431,36 +1455,38 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             }
                         });
                     }
-
-                    if(mmetricsitems.size() == 0)
-                    {
-                        ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                        getselectedmetrics(mlocalarraylist);
-
-                        if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
-                        {
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mmetricsitems.add(new videomodel(selectedmetrices));
-                                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                    selectedmetrices="";
-                                }
-                            });
-                        }
-
-                        if(! selectedmetrices.toString().trim().isEmpty())
-                        {
-                            mmetricsitems.add(new videomodel(selectedmetrices));
-                            mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                            selectedmetrices="";
-                        }
-                    }
-
-
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
+
+
+
+                if(mmetricsitems.size() == 0)
+                {
+                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                    getselectedmetrics(mlocalarraylist);
+
+                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
+                    {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mmetricsitems.add(new videomodel(selectedmetrices));
+                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                                selectedmetrices="";
+                            }
+                        });
+                    }
+
+                    if(! selectedmetrices.toString().trim().isEmpty())
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        selectedmetrices="";
+                    }
+                }
+
+
 
                 if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
                 {
@@ -1751,7 +1777,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
-    private static class ImageSaver implements Runnable {
+    private class ImageSaver implements Runnable {
 
         /**
          * The JPEG image
@@ -1783,11 +1809,26 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 if (null != output) {
                     try {
                         output.close();
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                try {
+                                    writeimagefile(mFile,""+ common.getjson(metadatametricesjson));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        },1000);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
+
         }
 
     }
@@ -1860,7 +1901,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     private File getImageFile(Context context) {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        mFile=new File(config.videodir, fileName+".jpg");
+        mFile=new File(config.videodir, fileName+".png");
 
         File destinationDir=new File(config.videodir);
         try {
@@ -1979,5 +2020,27 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void setData(adapteritemclick madapterclick) {
         this.madapterclick = madapterclick;
+    }
+
+
+    public static void writeimagefile (File filepath, String data) throws IOException{
+
+        ExifInterface exif = null;
+
+        try{
+            exif = new ExifInterface(filepath.getCanonicalPath());
+            if (exif != null) {
+                String imagedata = data;
+
+                exif.setAttribute(ExifInterface. TAG_USER_COMMENT, data);
+                exif.saveAttributes();
+
+                String lati = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
+                Log.v("longiResult", ""+ lati);
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
