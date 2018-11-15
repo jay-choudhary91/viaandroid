@@ -508,7 +508,10 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
 
     GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private static final int flingactionmindstvac = 60;
+        int[] screenWidthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int screenwidth=screenWidthHeight[0];
+        int width=((screenwidth)/2);
+        private  final int flingactionmindstvac =width ;
         private static final int flingactionmindspdvac = 100;
 
         @Override

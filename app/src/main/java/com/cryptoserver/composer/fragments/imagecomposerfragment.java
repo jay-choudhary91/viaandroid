@@ -27,7 +27,6 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.media.ImageReader;
-import android.media.ImageWriter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -75,13 +74,11 @@ import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -1815,7 +1812,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             public void run() {
 
                                 try {
-                                    writeimagefile(mFile,""+ common.getjson(metadatametricesjson));
+                                    saveimagemetadata(mFile,""+ common.getjson(metadatametricesjson));
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -1972,58 +1969,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         view3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
     }
 
-   /* private void playOnOffSound(){
-
-        mp = MediaPlayer.create(FlashLightActivity.this, R.raw.flash_sound);
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                // TODO Auto-generated method stub
-                mp.release();
-            }
-        });
-        mp.start();
-    }*/
-
-    /**
-     * Shows OK/Cancel confirmation dialog about camera permission.
-     */
-   /* public static class ConfirmationDialog extends DialogFragment {
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Fragment parent = getParentFragment();
-            return new AlertDialog.Builder(getActivity())
-                    .setMessage(R.string.request_permission)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            parent.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                    REQUEST_CAMERA_PERMISSION);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Activity activity = parent.getActivity();
-                                    if (activity != null) {
-                                        activity.finish();
-                                    }
-                                }
-                            })
-                    .create();
-        }
-    }*/
-
     public void setData(adapteritemclick madapterclick) {
         this.madapterclick = madapterclick;
     }
 
 
-    public static void writeimagefile (File filepath, String data) throws IOException{
+    public static void saveimagemetadata(File filepath, String data) throws IOException{
 
         ExifInterface exif = null;
 
@@ -2035,8 +1986,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 exif.setAttribute(ExifInterface. TAG_USER_COMMENT, data);
                 exif.saveAttributes();
 
-                String lati = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
-                Log.v("longiResult", ""+ lati);
+                String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
+                Log.v("usercomment", ""+ usercomment);
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block

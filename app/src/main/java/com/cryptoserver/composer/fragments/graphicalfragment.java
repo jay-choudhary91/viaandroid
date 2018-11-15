@@ -166,7 +166,6 @@ public class graphicalfragment extends basefragment implements
     RecyclerView.LayoutManager encryptionmanager;
     ImageView img_compass;
     GoogleMap mgooglemap;
-    MarkerOptions mmarker;
     private ArrayList<graphicalmodel> frameslist = new ArrayList<>();
 
     VisualizerView myvisualizerview;
@@ -348,12 +347,12 @@ public class graphicalfragment extends basefragment implements
             return;
 
         googlemap.setVisibility(View.VISIBLE);
+        if(ismediaplayer)
+        {
+            mgooglemap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
+        }
 
-        mmarker = new MarkerOptions();
-        mmarker.position(new LatLng(location.latitude, location.longitude));
-        mmarker.title("Current Position");
-        mmarker.icon(BitmapDescriptorFactory.fromResource(R.drawable.rsz_circle));
-        mgooglemap.addMarker(mmarker);
         mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

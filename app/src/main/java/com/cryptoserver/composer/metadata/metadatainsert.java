@@ -121,25 +121,12 @@ public class metadatainsert {
             metaBox.addBox(freeBox);
         }
         // Got Apple List Box
-
-        {
-            AppleNameBox nam;
-            if ((nam = Path.getPath(ilst, "©nam")) == null) {
-                nam = new AppleNameBox();
-            }
-            nam.setValue(common.getnamefrompath(videoFilePath));
-            ilst.addBox(nam);
+        AppleAlbumBox nam;
+        if ((nam = Path.getPath(ilst, "©nam")) == null) {
+            nam = new AppleAlbumBox();
         }
-
-        {
-            AppleAlbumBox nam;
-            if ((nam = Path.getPath(ilst, "©nam")) == null) {
-                nam = new AppleAlbumBox();
-            }
-            nam.setValue(data);
-            ilst.addBox(nam);
-        }
-
+        nam.setValue(data);
+        ilst.addBox(nam);
 
         long sizeAfter = moov.getSize();
         Log.e("Size after ",""+sizeAfter);
