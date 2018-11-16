@@ -1,5 +1,6 @@
 package com.cryptoserver.composer.activity;
 
+import android.arch.lifecycle.Lifecycle;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -193,7 +194,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             transaction.addToBackStack(null);
         }
 
-        transaction.commit();
+        // Placed after crash on 2018-11-16
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)){
+            // Do fragment's transaction commit
+            transaction.commit();
+        }
 
         mcurrentfragment = f;
         mfragments.push(f);

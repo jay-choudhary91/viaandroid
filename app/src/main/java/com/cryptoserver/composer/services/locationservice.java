@@ -360,11 +360,11 @@ public class locationservice extends Service implements LocationListener, GpsSta
 
         if (location.hasAltitude()) {
             int outValue = (int) (location.getAltitude() / 0.3048);
-            xdata.getinstance().saveSetting("Altitude", "" + outValue);
+            xdata.getinstance().saveSetting(config.gpsaltitude, "" + outValue);
 
         } else {
             int outValue = (int) altitude;
-            xdata.getinstance().saveSetting("Altitude", "" + outValue);
+            xdata.getinstance().saveSetting(config.gpsaltitude, "" + outValue);
         }
 
         oldlocation = location;

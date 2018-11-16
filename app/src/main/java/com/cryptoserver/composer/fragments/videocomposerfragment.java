@@ -702,11 +702,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        int[] screenWidthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int screenwidth=screenWidthHeight[0];
-        int width=((screenwidth)/2);
-        private  final int flingactionmindstvac =width ;
-        private static final int flingactionmindspdvac = 100;
+        private final int flingactionmindstvac=common.getdrawerswipearea();
+        private static final int flingactionmindspdvac = 10;
 
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
@@ -1729,13 +1726,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         e.printStackTrace();
                     }
                 }
-                /*if(apicurrentduration == apicallduration)
-                {
-                    //ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                    //getselectedmetrics(mlocalarraylist);
-                    muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
-                    savevideoupdate(mlocalarraylist);
-                }*/
 
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override

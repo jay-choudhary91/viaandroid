@@ -1640,6 +1640,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             public void onClick(View v) {
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
+
+                launchvideolist();
             }
         });
         img_cancel.setOnClickListener(new View.OnClickListener() {
@@ -1650,6 +1652,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
         });
         subdialogshare.show();
+    }
+
+    public void launchvideolist()
+    {
+        gethelper().onBack();
     }
 
     @Override
@@ -1670,8 +1677,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private static final int flingactionmindstvac = 60;
-        private static final int flingactionmindspdvac = 100;
+        private final int flingactionmindstvac=common.getdrawerswipearea();
+        private static final int flingactionmindspdvac = 10;
 
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,

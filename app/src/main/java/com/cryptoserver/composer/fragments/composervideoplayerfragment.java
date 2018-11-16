@@ -47,6 +47,7 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
@@ -478,12 +479,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        int[] screenWidthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int screenwidth=screenWidthHeight[0];
-        int width=((screenwidth)/2);
-        private  final int flingactionmindstvac =width ;
-        private static final int flingactionmindspdvac = 100;
-//60,100
+        private final int flingactionmindstvac=common.getdrawerswipearea();
+        private static final int flingactionmindspdvac = 10;
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
                                float flingActionYcoSpdPsgVal)
@@ -1163,6 +1160,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
             if(! metricmainarraylist.get(i).isIsupdated())
             {
                 metricmainarraylist.get(i).setIsupdated(true);
+                double latt=0,longg=0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
                 for(int j=0;j<metricItemArraylist.size();j++)
                 {
@@ -1170,6 +1168,42 @@ public class composervideoplayerfragment extends basefragment implements Surface
                             metricItemArraylist.get(j).getMetricTrackValue();
                     common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
                             metricItemArraylist.get(j).getMetricTrackValue(),true);
+
+                    if(fragmentgraphic != null)
+                    {
+                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
+                        {
+                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
+                            {
+                                latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
+                                if(longg != 0)
+                                {
+                                    if(fragmentgraphic != null)
+                                    {
+                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
+                                        latt=0;longg=0;
+                                    }
+                                }
+                            }
+                        }
+                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
+                        {
+                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
+                            {
+                                longg=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
+                                if(latt != 0)
+                                {
+                                    if(fragmentgraphic != null)
+                                    {
+                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
+                                        latt=0;longg=0;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
                 }
 
                 selectedmetrics=selectedmetrics+"\n";

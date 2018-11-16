@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -66,12 +67,22 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Dash;
+import com.google.android.gms.maps.model.Dot;
+import com.google.android.gms.maps.model.Gap;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.RoundCap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -185,6 +196,34 @@ public class graphicalfragment extends basefragment implements
     public String currenthashvalue="";
     boolean ismediaplayer = false;
     private boolean isinbackground=false;
+    ArrayList<LatLng> points=new ArrayList<>();
+    PolylineOptions polylineOptions = new PolylineOptions();
+    private static final int PATTERN_GAP_LENGTH_PX = 5;
+    private static final PatternItem DOT = new Dot();
+    private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
+    private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
+
+    /*private static final int COLOR_BLACK_ARGB = 0xff000000;
+    private static final int COLOR_WHITE_ARGB = 0xffffffff;
+    private static final int COLOR_GREEN_ARGB = 0xff388E3C;
+    private static final int COLOR_PURPLE_ARGB = 0xff81C784;
+    private static final int COLOR_ORANGE_ARGB = 0xffF57F17;
+    private static final int COLOR_BLUE_ARGB = 0xffF9A825;
+
+    private static final int POLYGON_STROKE_WIDTH_PX = 8;
+    private static final int PATTERN_DASH_LENGTH_PX = 20;
+    private static final int PATTERN_GAP_LENGTH_PX = 20;
+    private static final PatternItem DOT = new Dot();
+    private static final PatternItem DASH = new Dash(PATTERN_DASH_LENGTH_PX);
+    private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
+
+    // Create a stroke pattern of a gap followed by a dash.
+    private static final List<PatternItem> PATTERN_POLYGON_ALPHA = Arrays.asList(GAP, DASH);
+
+    // Create a stroke pattern of a dot followed by a gap, a dash, and another gap.
+    private static final List<PatternItem> PATTERN_POLYGON_BETA =
+            Arrays.asList(DOT, GAP, DASH, GAP);*/
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -234,6 +273,37 @@ public class graphicalfragment extends basefragment implements
     public void onStop() {
         super.onStop();
         isinbackground=true;
+    }
+
+    public void drawmappoints(LatLng latlng)
+    {
+        if(mgooglemap != null)
+        {
+            if(ismediaplayer)
+            {
+                {
+                    points.add(latlng);
+                    polylineOptions.addAll(points);
+                    polylineOptions.color(Color.BLUE);
+                    polylineOptions.width(40);
+                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+                    polyline.setStartCap(new RoundCap());
+                    polyline.setEndCap(new RoundCap());
+                    polyline.setJointType(JointType.DEFAULT);
+                }
+
+                {
+                    points.add(latlng);
+                    polylineOptions.addAll(points);
+                    polylineOptions.color(Color.WHITE);
+                    polylineOptions.width(20);
+                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+                    polyline.setStartCap(new RoundCap());
+                    polyline.setEndCap(new RoundCap());
+                    polyline.setJointType(JointType.ROUND);
+                }
+            }
+        }
     }
 
     public void setmetricesdata()
@@ -340,9 +410,30 @@ public class graphicalfragment extends basefragment implements
 
     private void setMap(GoogleMap googleMap) {
         this.mgooglemap = googleMap;
-        mgooglemap.getUiSettings().setZoomControlsEnabled(false);
         this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        /*points.add(new LatLng(26.235896,74.24235896));
+        points.add(new LatLng(26.34235896,74.24235896));
+        points.add(new LatLng(26.232435896,74.424235896));
+        points.add(new LatLng(26.22235896,74.2325896));
+        points.add(new LatLng(26.454235896,74.24235896));
+        points.add(new LatLng(26.534235896,74.24235896));
+        points.add(new LatLng(26.5565235896,74.42235896));
+        points.add(new LatLng(26.67235896,74.23235896));
+        points.add(new LatLng(26.878235896,74.22135896));
+        points.add(new LatLng(26.45235896,74.23335896));
+        points.add(new LatLng(26.33235896,74.22335896));
+        polylineOptions.addAll(points);
+        polylineOptions.color(Color.BLUE);
+        polylineOptions.width(20);
+        Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+        //polyline.setEndCap(new RoundCap());
+        //polyline.setJointType(JointType.ROUND);
+         polyline.setPattern(PATTERN_POLYLINE_DOTTED);*/
+
     }
+
+    //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
 
     private void populateUserCurrentLocation(final LatLng location) {
         // DeviceUser user = DeviceUserManager.getInstance().getUser();
@@ -350,20 +441,46 @@ public class graphicalfragment extends basefragment implements
             return;
 
         googlemap.setVisibility(View.VISIBLE);
-        if(ismediaplayer)
-        {
-            /*PolylineOptions options = new PolylineOptions().width(5).color(Color.BLUE).geodesic(true);
-            mgooglemap.addPolyline(options);*/
 
 
-            /*Polyline line = mgooglemap.addPolyline(new PolylineOptions()
-                    .add(location)
-                    .width(5)
-                    .color(Color.RED));*/
+        //polyline.setPattern(PATTERN_POLYLINE_DOTTED);
 
-            mgooglemap.addMarker(new MarkerOptions().position(new LatLng(location.latitude, location.longitude))
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
+        /*Polygon polygon = mgooglemap.addPolygon(new PolygonOptions()
+                .clickable(true)
+                .add(location));
+        polygon.setTag("beta");
+
+
+        String type = "";
+        // Get the data object stored with the polygon.
+        if (polygon.getTag() != null) {
+            type = polygon.getTag().toString();
         }
+
+        List<PatternItem> pattern = null;
+        int strokeColor = COLOR_BLACK_ARGB;
+        int fillColor = COLOR_WHITE_ARGB;
+
+        switch (type) {
+            // If no type is given, allow the API to use the default.
+            case "alpha":
+                // Apply a stroke pattern to render a dashed line, and define colors.
+                pattern = PATTERN_POLYGON_ALPHA;
+                strokeColor = COLOR_GREEN_ARGB;
+                fillColor = COLOR_PURPLE_ARGB;
+                break;
+            case "beta":
+                // Apply a stroke pattern to render a line of dots and dashes, and define colors.
+                pattern = PATTERN_POLYGON_BETA;
+                strokeColor = COLOR_ORANGE_ARGB;
+                fillColor = COLOR_BLUE_ARGB;
+                break;
+        }
+
+        polygon.setStrokePattern(pattern);
+        polygon.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
+        polygon.setStrokeColor(strokeColor);
+        polygon.setFillColor(fillColor);*/
 
         mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -384,6 +501,7 @@ public class graphicalfragment extends basefragment implements
             {
                 mgooglemap.setMyLocationEnabled(false);
             }
+            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
             mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
         }
     }
