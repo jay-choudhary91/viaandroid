@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.net.Uri;
@@ -27,10 +26,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.adapter.adaptervideolist;
+import com.cryptoserver.composer.adapter.adaptermedialist;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
@@ -64,7 +61,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by devesh on 6/8/18.
  */
 
-public class fragmentvideolist extends basefragment {
+public class fragmentmedialist extends basefragment {
 
     @BindView(R.id.rv_videolist)
     RecyclerView recyrviewvideolist;
@@ -79,7 +76,7 @@ public class fragmentvideolist extends basefragment {
     View rootview = null;
     private static final int request_permissions = 1;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
-    adaptervideolist adapter;
+    adaptermedialist adapter;
     private RecyclerTouchListener onTouchListener;
     int request_take_gallery_video = 101;
 
@@ -660,7 +657,7 @@ public class fragmentvideolist extends basefragment {
 
     public void setmediaadapter()
     {
-        adapter = new adaptervideolist(getActivity(),arrayvideolist, new adapteritemclick() {
+        adapter = new adaptermedialist(getActivity(),arrayvideolist, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
             }

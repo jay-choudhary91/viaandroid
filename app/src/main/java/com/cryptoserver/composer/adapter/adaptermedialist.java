@@ -1,11 +1,8 @@
 package com.cryptoserver.composer.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import android.graphics.drawable.Drawable;
-import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -27,26 +24,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-
-import wseemann.media.FFmpegMediaMetadataRetriever;
 
 /**
  * Created by devesh on 6/8/18.
  */
 
-public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myViewHolder> {
+public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myViewHolder> {
 
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
@@ -74,7 +65,7 @@ public class adaptervideolist extends RecyclerView.Adapter<adaptervideolist.myVi
         }
     }
 
-    public adaptervideolist(Context context, ArrayList<video> arrayvideolist, adapteritemclick adapter){
+    public adaptermedialist(Context context, ArrayList<video> arrayvideolist, adapteritemclick adapter){
         this.context = context;
         this.arrayvideolist = arrayvideolist;
         this.adapter = adapter;

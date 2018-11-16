@@ -24,8 +24,8 @@ import com.cryptoserver.composer.fragments.bottombarfragment;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
 import com.cryptoserver.composer.fragments.fragmentaudiolist;
 import com.cryptoserver.composer.fragments.fragmentimagelist;
+import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
-import com.cryptoserver.composer.fragments.fragmentvideolist;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
@@ -64,7 +64,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     FrameLayout fragment_container;
 
     private bottombarfragment fragbottombar;
-    private fragmentvideolist fragvideolist;
+    private fragmentmedialist fragvideolist;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +78,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else
         {
-            fragvideolist=new fragmentvideolist();
+            fragvideolist=new fragmentmedialist();
             replaceFragment(fragvideolist, false, true);
 
             /*fragbottombar=new bottombarfragment();
@@ -150,13 +150,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof videoplayerreaderfragment
                 || getcurrentfragment() instanceof composervideoplayerfragment
-                || getcurrentfragment() instanceof fragmentvideolist || getcurrentfragment() instanceof bottombarfragment
+                || getcurrentfragment() instanceof fragmentmedialist || getcurrentfragment() instanceof bottombarfragment
                 )
         {
             txt_title.setText("");
         }
     }
-//(getcurrentfragment() instanceof fragmentvideolist)
+//(getcurrentfragment() instanceof fragmentmedialist)
     @Override
     public void updateactionbar(int showHide, int color) {
         actionbar.setBackgroundColor(color);
@@ -274,7 +274,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }
-         else if(fragment instanceof fragmentvideolist){
+         else if(fragment instanceof fragmentmedialist){
              imgaddicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setVisibility(View.VISIBLE);
              imguploadicon.setVisibility(View.VISIBLE);
