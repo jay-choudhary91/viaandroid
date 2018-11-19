@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
@@ -40,8 +39,6 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.metadata.metadatainsert;
-import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
@@ -49,8 +46,6 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
-import com.cryptoserver.composer.utils.progressdialog;
-import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
@@ -65,13 +60,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -292,13 +285,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             startnoise();
             setmetriceshashesdata();
 
-
-            /*int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
-                    RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);*/
-
             try {
-                bufferSize = AudioRecord.getMinBufferSize(8000,
-                        AudioFormat.CHANNEL_CONFIGURATION_MONO,
+                bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
+                        AudioFormat.CHANNEL_IN_MONO,
                         AudioFormat.ENCODING_PCM_16BIT);
             }catch (Exception e)
             {
@@ -421,6 +410,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         if(recorder != null)
         {
             isaudiorecording=false;
+            gethelper().setrecordingrunning(false);
             stoptimer();
             resettimer();
 
@@ -590,6 +580,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                     RECORDER_SAMPLERATE, RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING, bufferSize);
 
+            gethelper().setrecordingrunning(true);
             int i = recorder.getState();
             if(i==1)
                 recorder.startRecording();
@@ -601,7 +592,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 @Override
                 public void run() {
-                    writeAudioDataToFile();
+                    writeaudiodatatofile();
                 }
             },"AudioRecorder Thread");
 
@@ -612,9 +603,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    private void writeAudioDataToFile(){
+    private void writeaudiodatatofile(){
         byte data[] = new byte[bufferSize];
-        String filename = getTempFilename();
+        String filename = gettempfilename();
         FileOutputStream os = null;
 
         try {
@@ -704,6 +695,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         if(null != recorder){
             try {
+                gethelper().setrecordingrunning(false);
                 isaudiorecording=false;
                 recorder.stop();
                 recorder.release();
@@ -731,10 +723,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                     try {
                         selectedfile=getfile().getAbsolutePath();
-                        copyWaveFile(getTempFilename(),selectedfile);
+                        copywavefile(gettempfilename(),selectedfile);
                         setaudiohashes();
                       //  metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
-                        common.deletefile(getTempFilename());;
+                        common.deletefile(gettempfilename());;
                     }catch (Exception e)
                     {
                         Log.e("Meta data Error","Error");
@@ -746,7 +738,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         showsharepopupmain();
     }
 
-    private String getTempFilename(){
+    private String gettempfilename(){
         String filepath = Environment.getExternalStorageDirectory().getPath();
         File file = new File(filepath,AUDIO_RECORDER_FOLDER);
 
@@ -763,7 +755,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    private void WriteWaveFileHeader(
+    private void writewavefileheader(
             FileOutputStream out, long totalAudioLen,
             long totalDataLen, long longSampleRate, int channels,
             long byteRate) throws IOException {
@@ -818,7 +810,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         out.write(header, 0, 44);
     }
 
-    private void copyWaveFile(String inFilename,String outFilename){
+    private void copywavefile(String inFilename, String outFilename){
         FileInputStream in = null;
         FileOutputStream out = null;
         long totalAudioLen = 0;
@@ -837,7 +829,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
            // AppLog.logString("File size: " + totalDataLen);
 
-            WriteWaveFileHeader(out, totalAudioLen, totalDataLen,
+            writewavefileheader(out, totalAudioLen, totalDataLen,
                     longSampleRate, channels, byteRate);
 
             while(in.read(data) != -1){
@@ -995,16 +987,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private void startnoise() {
 
         try {
-            if (mNoise != null)
-                mNoise.stop();
+            if (noise != null)
+                noise.stop();
 
-            mNoise = new noise();
+            noise = new noise();
 
-            if (mNoise != null)
-                mNoise.start();
+            if (noise != null)
+                noise.start();
 
             try {
-                if (mNoise != null)
+                if (noise != null)
                 {
                     myvisualizerview.setVisibility(View.VISIBLE);
                     getaudiowave();
@@ -1031,7 +1023,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                     if((isaudiorecording))
                     {
-                        int x = mNoise.getAmplitudevoice();
+                        int x = noise.getAmplitudevoice();
                         myvisualizerview.addAmplitude(x); // update the VisualizeView
                         myvisualizerview.invalidate();
                     }
@@ -1048,9 +1040,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void stopnoise() {
         try {
-            if(mNoise != null)
+            if(noise != null)
             {
-                mNoise.stop();
+                noise.stop();
                 //myvisualizerview.updateAmplitude((float) 0,false);
             }
         } catch (Exception e) {

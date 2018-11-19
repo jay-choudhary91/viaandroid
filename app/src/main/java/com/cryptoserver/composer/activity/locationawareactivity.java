@@ -679,8 +679,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
                             if (isrecording)
                                 return;
-                        } else {
-                            isrecording = false;
                         }
 
                         dbtoxapiupdatecounter++;
