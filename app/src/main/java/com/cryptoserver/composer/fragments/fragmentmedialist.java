@@ -68,10 +68,10 @@ public class fragmentmedialist extends basefragment {
 
     RelativeLayout listlayout;
     boolean touched =false;
-    private Handler myHandler;
-    private Runnable myRunnable;
+    private Handler myhandler;
+    private Runnable myrunnable;
     boolean isinbackground=false;
-    Date initialDate;
+    Date initialdate;
 
     View rootview = null;
     private static final int request_permissions = 1;
@@ -177,12 +177,11 @@ public class fragmentmedialist extends basefragment {
                 }
             });
 
-            launchvideocomposer(false);
+            launchbottombarfragment();
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();
             }
-
 
             recyrviewvideolist.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -191,7 +190,7 @@ public class fragmentmedialist extends basefragment {
                     switch (event.getAction()){
                         case MotionEvent.ACTION_DOWN:
                             touched = true;
-                            initialDate = new Date();
+                            initialdate = new Date();
                             Log.e("user touch","on touch" + touched);
                             break;
 
@@ -214,8 +213,8 @@ public class fragmentmedialist extends basefragment {
     {
         if(! common.isdevelopermodeenable())
         {
-            myHandler=new Handler();
-            myRunnable = new Runnable() {
+            myhandler =new Handler();
+            myrunnable = new Runnable() {
                 @Override
                 public void run() {
 
@@ -223,26 +222,26 @@ public class fragmentmedialist extends basefragment {
                     {
                         if(touched==true){
                             Date currentDate=new Date();
-                            int secondDifference= (int) (Math.abs(initialDate.getTime()-currentDate.getTime())/1000);
+                            int secondDifference= (int) (Math.abs(initialdate.getTime()-currentDate.getTime())/1000);
                             if(secondDifference > 4)
                             {
-                                initialDate = new Date();
+                                initialdate = new Date();
                                 if(! appdialog.isdialogshowing())
                                     appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
                             }
                         }
                     }
-                    myHandler.postDelayed(this, 100);
+                    myhandler.postDelayed(this, 100);
                 }
             };
-            myHandler.post(myRunnable);
+            myhandler.post(myrunnable);
         }
     }
 
     public void removehandler()
     {
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
     }
 
     public void getVideoList()
@@ -275,6 +274,7 @@ public class fragmentmedialist extends basefragment {
                     {
                         video videoobj=new video();
                         videoobj.setPath(file.getAbsolutePath());
+                        videoobj.setExtension(common.getvideoextension(file.getAbsolutePath()));
                         videoobj.setName(file.getName());
                         videoobj.setCreatedate(outputdatestr);
                         videoobj.setLastmodifiedtime(file.lastModified());
@@ -417,12 +417,12 @@ public class fragmentmedialist extends basefragment {
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_add_icon:
-                launchvideocomposer(false);
+                launchbottombarfragment();
                 break;
         }
     }
 
-    public void launchvideocomposer(boolean autostart)
+    public void launchbottombarfragment()
     {
         bottombarfragment fragbottombar=new bottombarfragment();
         fragbottombar.setData(new adapteritemclick() {
@@ -622,7 +622,7 @@ public class fragmentmedialist extends basefragment {
             }
         }else if(type == 3){
             //arrayvideolist.clear();
-            myHandler.postDelayed(new Runnable() {
+            myhandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     adapter.notifyDataSetChanged();

@@ -153,7 +153,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-
+        registerallbroadcast();
         getconnectionspeed();
 
     }
@@ -1299,11 +1299,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
@@ -1631,7 +1626,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     public void onStart() {
         super.onStart();
-        registerallbroadcast();
     }
 
     public void updatearrayitem(String key, String value) {

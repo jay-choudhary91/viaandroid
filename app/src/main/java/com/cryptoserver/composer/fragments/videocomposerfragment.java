@@ -1428,6 +1428,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             stopBackgroundThread();
             stopvideotimer();
             isvideorecording =false;
+            mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             try {
                 if(! issavedtofolder && common.getstoragedeniedpermissions().isEmpty() && (selectedvideofile != null )
                         && new File(selectedvideofile).exists())
@@ -2258,7 +2259,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             @Override
                             public void run() {
                                 progressdialog.dismisswaitdialog();
-                                launchvideolist();
+                                launchmedialist();
                             }
                         });
                     }
@@ -2298,7 +2299,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             public void onClick(View v) {
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
-                launchvideolist();
+                launchmedialist();
             }
         });
         img_cancel.setOnClickListener(new View.OnClickListener() {
@@ -2311,7 +2312,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         subdialogshare.show();
     }
 
-    public void launchvideolist()
+    public void launchmedialist()
     {
         gethelper().onBack();
     }
