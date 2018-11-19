@@ -64,14 +64,14 @@ import static android.content.Context.LOCATION_SERVICE;
 
 public abstract class basefragment extends Fragment {
 
-    private fragmentnavigationhelper fragmentHelper;
+    private fragmentnavigationhelper fragmenthelper;
     private SharedPreferences prefs;
     private View view;
     private TelephonyManager telephonymanager;
     public static final int my_permission_read_phone_state = 90;
     private static final int permission_location_request_code = 91;
     int gps_request_code =111;
-    noise mNoise;
+    noise noise;
     LocationManager manager;
     private static final int PERMISSION_RECORD_AUDIO= 92;
     @Override
@@ -89,7 +89,7 @@ public abstract class basefragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            fragmentHelper = (fragmentnavigationhelper) activity;
+            fragmenthelper = (fragmentnavigationhelper) activity;
         } catch (Exception e) {
         }
 
@@ -145,7 +145,7 @@ public abstract class basefragment extends Fragment {
     }
 
     public fragmentnavigationhelper gethelper() {
-        return this.fragmentHelper;
+        return this.fragmenthelper;
     }
 
     public View getparentview() {
@@ -960,15 +960,15 @@ public abstract class basefragment extends Fragment {
 
         try {
 
-            if(mNoise != null)
-                mNoise.stop();
+            if(noise != null)
+                noise.stop();
 
-            mNoise = new noise();
+            noise = new noise();
 
-            if(mNoise != null)
+            if(noise != null)
             {
-                if(mNoise != null)
-                    mNoise.start();
+                if(noise != null)
+                    noise.start();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -985,9 +985,9 @@ public abstract class basefragment extends Fragment {
                 //Do something after 100ms
 
                 try {
-                    if(mNoise != null)
+                    if(noise != null)
                     {
-                        double amp = mNoise.getAmplitude();
+                        double amp = noise.getAmplitude();
                         //Log.i("noise", "runnable mPollTask");
                         updateDisplay("Monitoring Voice...", amp);
                     }
@@ -1003,9 +1003,9 @@ public abstract class basefragment extends Fragment {
     private void stop() {
         Log.e("noise", "==== Stop noise Monitoring===");
         try {
-            if(mNoise != null)
+            if(noise != null)
             {
-                mNoise.stop();
+                noise.stop();
             }
         } catch (Exception e) {
             e.printStackTrace();

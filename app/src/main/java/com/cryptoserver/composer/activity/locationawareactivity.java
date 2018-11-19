@@ -19,7 +19,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
@@ -46,16 +45,11 @@ import android.telephony.CellIdentityLte;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
-import android.telephony.CellInfoWcdma;
-import android.telephony.CellSignalStrength;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.CellSignalStrengthLte;
-import android.telephony.NeighboringCellInfo;
 import android.telephony.PhoneStateListener;
-import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
@@ -88,7 +82,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -123,21 +116,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     private SensorManager msensormanager;
     private Sensor maccelereometer;
-    private BroadcastReceiver flightmodebroadcast;
-    IntentFilter aeroplacemodefilter;
-    private double altitude = 0.0;
-
-    private float[] mGData = new float[3];
-    private float[] mMData = new float[3];
-    private float[] mR = new float[16];
-    private float[] mI = new float[16];
-    private float[] mOrientation = new float[3];
-    private int mCount;
-    private float mcurrentdegree = 0f;
     TelephonyManager mtelephonymanager;
 
     private IntentFilter intentFilter;
-    private BroadcastReceiver mBroadcast;
+    private BroadcastReceiver phonecallbroadcast;
     String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", currentaddress = "", connectionspeed = "";
     MyPhoneStateListener mPhoneStatelistener;
     int mSignalStrength = 0, dbtoxapiupdatecounter = 0;
@@ -151,11 +133,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private Handler myHandler;
     private Runnable myRunnable;
     public boolean isrecording = false;
-    public boolean firstsatellitesinfo = true;
-
-    String satelliteid = "", anglesatellite = "";
-
-    int numberofsatellites = 0;
 
     long startTime;
     long endTime;
@@ -359,7 +336,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     private void doafterallpermissionsgranted() {
         enableGPS(locationawareactivity.this);
-        registerallbroadcast();
+     //   registerallbroadcast();
         preparemetricesdata();
     }
 
@@ -404,6 +381,27 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             if(isservicebound)
                 applicationviavideocomposer.getactivity().unbindService(serviceConnection);
 
+            try {
+
+                try {
+                    unregisterReceiver(phonecallbroadcast);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (msensormanager != null)
+                    msensormanager.unregisterListener(maccelerometerlistener);
+
+                if (msensormanager != null)
+                    msensormanager.unregisterListener(mBarometerListener);
+
+                if (msensormanager != null)
+                    msensormanager.unregisterListener(mcompasslistener);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -444,6 +442,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 //        mRequestingLocationUpdates = false;
     }
 
+    @SuppressLint("RestrictedApi")
     protected LocationRequest createLocationRequest() {
         mlocationrequest = new LocationRequest();
         mlocationrequest.setInterval(10000);
@@ -679,8 +678,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
                             if (isrecording)
                                 return;
-                        } else {
-                            isrecording = false;
                         }
 
                         dbtoxapiupdatecounter++;
@@ -1187,19 +1184,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     }
                 }
             }
-            }
-
-        /*else if (key.equalsIgnoreCase("celltowerid")) {
-            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
-                metricItemValue = "";
-            } else {
-                telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                if (telephonyManager.getPhoneType() == TelephonyManager.PHONE_TYPE_GSM) {
-
-                }
-            }
-        } */
+        }
         else if (key.equalsIgnoreCase("numberoftowers")) {
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             if (telephonyManager.getSimState() == telephonyManager.SIM_STATE_ABSENT) {
@@ -1224,6 +1209,13 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = xdata.getinstance().getSetting("satelliteid");
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
             metricItemValue =xdata.getinstance().getSetting("strengthofsatellites");;
+        }
+        else if (key.equalsIgnoreCase(config.airplanemode)) {
+            metricItemValue = "ON";
+            if(Settings.Global.getInt(locationawareactivity.this.getContentResolver(),Settings.Global.AIRPLANE_MODE_ON, 0) == 0)
+            {
+                metricItemValue = "OFF";
+            }
         }
 
         if (metricItemValue == null)
@@ -1309,31 +1301,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onStop() {
         super.onStop();
-        try {
-
-            try {
-                unregisterReceiver(mBroadcast);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (msensormanager != null)
-                msensormanager.unregisterListener(mAccelerometerListener);
-
-            if (msensormanager != null)
-                msensormanager.unregisterListener(mBarometerListener);
-
-            if (msensormanager != null)
-                msensormanager.unregisterListener(mCompassListener);
-
-            if ((flightmodebroadcast != null) && (aeroplacemodefilter != null)) {
-                unregisterReceiver(flightmodebroadcast);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -1352,7 +1319,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 if (msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
                     maccelereometer = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-                    msensormanager.registerListener(mAccelerometerListener, maccelereometer, SensorManager.SENSOR_DELAY_NORMAL);
+                    msensormanager.registerListener(maccelerometerlistener, maccelereometer, SensorManager.SENSOR_DELAY_NORMAL);
 
                 }
             }
@@ -1360,7 +1327,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         thread.start();
     }
 
-    SensorEventListener mAccelerometerListener = new SensorEventListener() {
+    SensorEventListener maccelerometerlistener = new SensorEventListener() {
         @Override
         public void onSensorChanged(final SensorEvent sensorEvent) {
             float lux = sensorEvent.values[0];
@@ -1513,21 +1480,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     public void getairplanemodeon() {
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (aeroplacemodefilter == null) {
-                        aeroplacemodefilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-                        aeroplacemodefilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-                        registerReceiver(flightmodebroadcast, aeroplacemodefilter);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
     }
 
     @Override
@@ -1535,14 +1487,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         msensormanager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Thread thread = new Thread() {
             public void run() {
-                msensormanager.registerListener(mCompassListener, msensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+                msensormanager.registerListener(mcompasslistener, msensormanager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                         SensorManager.SENSOR_DELAY_GAME);
             }
         };
         thread.start();
     }
 
-    SensorEventListener mCompassListener = new SensorEventListener() {
+    SensorEventListener mcompasslistener = new SensorEventListener() {
         @Override
         public void onSensorChanged(final SensorEvent event) {
             runOnUiThread(new Runnable() {
@@ -1623,7 +1575,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     public void registerallbroadcast() {
         try {
             intentFilter = new IntentFilter(config.broadcast_call);
-            mBroadcast = new BroadcastReceiver() {
+            phonecallbroadcast = new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     try {
@@ -1640,36 +1592,19 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 }
             };
 
-
-            /*try
+            try
             {
-                registerReceiver(mBroadcast, intentFilter);
+                registerReceiver(phonecallbroadcast, intentFilter);
             }catch (Exception e)
             {
                 e.printStackTrace();
-            }*/
+            }
 
             try {
                 getairplanemodeon();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            flightmodebroadcast = new BroadcastReceiver() {
-                String turn;
-
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (intent != null) {
-                        if (Settings.System.getInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0) == 0) {
-                            turn = "OFF";
-                        } else {
-                            turn = "ON";
-                        }
-                        updatearrayitem(config.airplanemode, turn);
-                    }
-                }
-            };
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1696,10 +1631,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     public void onStart() {
         super.onStart();
-
-        if (common.getphonelocationdeniedpermissions().isEmpty()) {
-            registerallbroadcast();
-        }
+        registerallbroadcast();
     }
 
     public void updatearrayitem(String key, String value) {
@@ -1789,7 +1721,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         StringBuilder strReturnedAddress = new StringBuilder("");
 
                         for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
-                            strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                            strReturnedAddress.append(returnedAddress.getAddressLine(i));
                         }
                         currentaddress = strReturnedAddress.toString();
                     }

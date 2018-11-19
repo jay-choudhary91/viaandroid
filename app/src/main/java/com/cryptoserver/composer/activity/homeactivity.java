@@ -443,8 +443,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 getcurrentfragment().onHeaderBtnClick(R.id.img_upload_icon);
                 break;
             case R.id.img_menu:
-                //getcurrentfragment().onHeaderBtnClick(R.id.img_menu);
-                onBack();
+                getcurrentfragment().onHeaderBtnClick(R.id.img_menu);
                 break;
         }
     }
