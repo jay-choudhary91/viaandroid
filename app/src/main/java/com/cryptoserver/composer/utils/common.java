@@ -1125,6 +1125,78 @@ public class common {
     }
 
 
+    public static void exportimage(final File file, boolean savetohome)
+    {
+        String sourcePath = file.getAbsolutePath();
+        File sourceFile = new File(sourcePath);
+
+        File destinationDir=null;
+
+        if(savetohome)
+        {
+            destinationDir = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), BuildConfig.APPLICATION_ID);
+        }
+        else
+        {
+            destinationDir=new File(config.videodir);
+        }
+
+        if (!destinationDir.exists())
+            destinationDir.mkdirs();
+
+        final File mediaFile = new File(destinationDir.getPath() + File.separator +
+                sourceFile.getName());
+        try
+        {
+            if (!mediaFile.getParentFile().exists())
+                mediaFile.getParentFile().mkdirs();
+
+            if (!mediaFile.exists()) {
+                mediaFile.createNewFile();
+            }
+
+            InputStream in = new FileInputStream(sourceFile);
+            OutputStream out = new FileOutputStream(mediaFile);
+
+            // Copy the bits from instream to outstream
+            byte[] buf = new byte[1024];
+            int len;
+
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            in.close();
+            out.close();
+
+            try
+            {
+                if(savetohome)
+                {
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentValues values = new ContentValues();
+                            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+                            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                            values.put(MediaStore.MediaColumns.DATA, file.getAbsolutePath());
+                            applicationviavideocomposer.getactivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                        }
+                    });
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+                Log.e("Video export ","Error1");
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.e("Video export ","Error2");
+        }
+    }
 
     public static void exportvideo(File lastrecordedvideo,boolean savetohome)
     {
