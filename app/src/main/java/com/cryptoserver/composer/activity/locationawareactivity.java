@@ -444,6 +444,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 //        mRequestingLocationUpdates = false;
     }
 
+    @SuppressLint("RestrictedApi")
     protected LocationRequest createLocationRequest() {
         mlocationrequest = new LocationRequest();
         mlocationrequest.setInterval(10000);
@@ -1787,7 +1788,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         StringBuilder strReturnedAddress = new StringBuilder("");
 
                         for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
-                            strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                            strReturnedAddress.append(returnedAddress.getAddressLine(i));
                         }
                         currentaddress = strReturnedAddress.toString();
                     }

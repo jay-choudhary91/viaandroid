@@ -129,6 +129,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private AudioRecord recorder = null;
     private int bufferSize = 0;
     private Thread recordingThread = null;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_audiocomposer;
@@ -324,7 +325,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
+                visibleItemCount = mLayoutManager.getChildCount();
+                totalItemCount = mLayoutManager.getItemCount();
+                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
+                    if(selectedmetrices.toString().trim().length() > 0)
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        selectedmetrices="";
+                    }
+                }
             }
         });
     }
@@ -1123,29 +1134,23 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         });
                     }
 
-                    if(mmetricsitems.size() == 0)
+                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
                     {
-                        ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                        getselectedmetrics(mlocalarraylist);
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mmetricsitems.add(new videomodel(selectedmetrices));
+                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                                selectedmetrices="";
+                            }
+                        });
+                    }
 
-                        if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
-                        {
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    mmetricsitems.add(new videomodel(selectedmetrices));
-                                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                    selectedmetrices="";
-                                }
-                            });
-                        }
-
-                        if((! isaudiorecording) && (! selectedmetrices.toString().trim().isEmpty()))
-                        {
-                            mmetricsitems.add(new videomodel(selectedmetrices));
-                            mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                            selectedmetrices="";
-                        }
+                    if((! isaudiorecording) && (! selectedmetrices.toString().trim().isEmpty()))
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        selectedmetrices="";
                     }
 
 
