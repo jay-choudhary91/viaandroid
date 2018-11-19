@@ -188,9 +188,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public static final String CAMERA_FRONT = "1";
     public static final String CAMERA_BACK = "0";
 
-    private String mCameraId = CAMERA_BACK;
-    private boolean isFlashSupported;
-    private boolean isTorchOn = false;
+    private String cameraid = CAMERA_BACK;
+    private boolean isflashsupported=false;
+    private boolean isflashon = false;
     /**
      * An {@link AutoFitTextureView} for camera preview.
      */
@@ -338,8 +338,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     videoframeadapter mmetricesadapter,mhashesadapter;
 
     private boolean isdraweropen=false;
-    private Handler myHandler;
-    private Runnable myRunnable;
+    private Handler myhandler;
+    private Runnable myrunnable;
     JSONArray metadatametricesjson=new JSONArray();
     private LinearLayoutManager mLayoutManager;
     graphicalfragment fragmentgraphic;
@@ -844,9 +844,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             CameraCharacteristics characteristics
-                    = manager.getCameraCharacteristics(mCameraId);
+                    = manager.getCameraCharacteristics(cameraid);
             Boolean availableflash = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-            isFlashSupported = availableflash == null ? false : availableflash;
+            isflashsupported = availableflash == null ? false : availableflash;
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             Size largest = Collections.max(
                     Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
@@ -943,7 +943,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
-            manager.openCamera(mCameraId, mStateCallback, mBackgroundHandler);
+            manager.openCamera(cameraid, mStateCallback, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -1364,11 +1364,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void setmetriceshashesdata()
     {
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
 
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
             @Override
             public void run() {
 
@@ -1417,10 +1417,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     fragmentgraphic.setdrawerproperty(graphicopen);
                     fragmentgraphic.setmetricesdata();
                 }
-                myHandler.postDelayed(this, 1000);
+                myhandler.postDelayed(this, 1000);
             }
         };
-        myHandler.post(myRunnable);
+        myhandler.post(myrunnable);
     }
 
 
@@ -1862,18 +1862,18 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void camraflashonoff() {
         try {
-            if (mCameraId.equals(CAMERA_BACK)) {
-                if (isFlashSupported) {
-                    if (isTorchOn) {
+            if (cameraid.equals(CAMERA_BACK)) {
+                if (isflashsupported) {
+                    if (isflashon) {
                         mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
                         mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
                         imgflashon.setImageResource(R.drawable.flash_off);
-                        isTorchOn = false;
+                        isflashon = false;
                     } else {
                         mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
                         mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
                         imgflashon.setImageResource(R.drawable.flash_on);
-                        isTorchOn = true;
+                        isflashon = true;
                     }
                 }
             }
@@ -1883,13 +1883,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
     public void switchCamera() {
-        if (mCameraId.equals(CAMERA_FRONT)) {
-            mCameraId = CAMERA_BACK;
+        if (cameraid.equals(CAMERA_FRONT)) {
+            cameraid = CAMERA_BACK;
             closeCamera();
             reopenCamera();
 
-        } else if (mCameraId.equals(CAMERA_BACK)) {
-            mCameraId = CAMERA_FRONT;
+        } else if (cameraid.equals(CAMERA_BACK)) {
+            cameraid = CAMERA_FRONT;
             closeCamera();
             reopenCamera();
         }
