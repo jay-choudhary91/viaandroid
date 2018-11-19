@@ -19,17 +19,21 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.fragments.audiocomposerfragment;
+import com.cryptoserver.composer.fragments.audiotabreaderfrag;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.bottombarfragment;
+import com.cryptoserver.composer.fragments.bottombarrederfrag;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
 import com.cryptoserver.composer.fragments.fragmentaudiolist;
 import com.cryptoserver.composer.fragments.fragmentimagelist;
 import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
+import com.cryptoserver.composer.fragments.phototabreaderfrag;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
+import com.cryptoserver.composer.fragments.videotabreaderfrag;
 import com.cryptoserver.composer.services.callservice;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
@@ -73,8 +77,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-            videoplayerreaderfragment frag=new videoplayerreaderfragment();
-            replaceFragment(frag, false, true);
+           /* videoplayerreaderfragment frag=new videoplayerreaderfragment();
+            replaceFragment(frag, false, true);*/
+            bottombarrederfrag bottombarfrag=new bottombarrederfrag();
+            replaceFragment(bottombarfrag,false,true);
         }
         else
         {
@@ -151,6 +157,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 || getcurrentfragment() instanceof videoplayerreaderfragment
                 || getcurrentfragment() instanceof composervideoplayerfragment
                 || getcurrentfragment() instanceof fragmentmedialist || getcurrentfragment() instanceof bottombarfragment
+                || getcurrentfragment() instanceof bottombarrederfrag || getcurrentfragment() instanceof audiotabreaderfrag
+                || getcurrentfragment() instanceof videotabreaderfrag || getcurrentfragment() instanceof phototabreaderfrag
                 )
         {
             txt_title.setText("");
@@ -343,6 +351,63 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              updateheader("");
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
 
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }else if(fragment instanceof audiotabreaderfrag){
+             img_back.setVisibility(View.GONE);
+             img_cancel.setVisibility(View.GONE);
+             imgaddicon.setVisibility(View.GONE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.GONE);
+             img_menu.setVisibility(View.VISIBLE);
+             imgshareicon.setVisibility(View.VISIBLE);
+             updateheader("");
+             imgsettingsicon.setEnabled(true);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         } else if(fragment instanceof phototabreaderfrag){
+             img_back.setVisibility(View.GONE);
+             img_cancel.setVisibility(View.GONE);
+             imgaddicon.setVisibility(View.GONE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.GONE);
+             img_menu.setVisibility(View.VISIBLE);
+             imgshareicon.setVisibility(View.VISIBLE);
+             updateheader("");
+             imgsettingsicon.setEnabled(true);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }else if(fragment instanceof videotabreaderfrag){
+             img_back.setVisibility(View.GONE);
+             img_cancel.setVisibility(View.GONE);
+             imgaddicon.setVisibility(View.GONE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.GONE);
+             img_menu.setVisibility(View.VISIBLE);
+             imgshareicon.setVisibility(View.VISIBLE);
+             updateheader("");
+             imgsettingsicon.setEnabled(true);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }
+         else if(fragment instanceof bottombarrederfrag){
+             img_back.setVisibility(View.GONE);
+             img_cancel.setVisibility(View.GONE);
+             imgaddicon.setVisibility(View.GONE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.GONE);
+             img_menu.setVisibility(View.VISIBLE);
+             imgshareicon.setVisibility(View.VISIBLE);
+             updateheader("");
+             imgsettingsicon.setEnabled(true);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
