@@ -1477,6 +1477,14 @@ public class common {
         }
         return format;
     }
+    public static String getvideoextension(String path) {
+        String format = "";
+        if (!path.trim().isEmpty()) {
+            int extIndex = path.lastIndexOf(".");
+            format = path.substring(extIndex, path.length());
+        }
+        return format;
+    }
 
     public static String getfilename(String path){
 

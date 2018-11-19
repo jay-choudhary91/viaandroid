@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 
 import butterknife.BindView;
@@ -155,14 +156,22 @@ public class bottombarfragment extends basefragment  {
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
             tab_container.setBackgroundColor(Color.BLACK);
-            new Handler().postDelayed(new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    navigation.setSelectedItemId(R.id.navigation_video);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            navigation.setSelectedItemId(R.id.navigation_video);
+                        }
+                    });
                 }
-            },100);
-
-            //launchvideocomposer();
+            }).start();
         }
         return rootview;
     }

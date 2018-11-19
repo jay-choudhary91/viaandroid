@@ -360,7 +360,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 case STATE_WAITING_LOCK: {
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
                     if (afState == null) {
-                        captureStillPicture();
+                        capturestillpicture();
                     } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState ||
                             CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState ||
                             CaptureResult.CONTROL_AF_STATE_INACTIVE == afState /*add this*/) {
@@ -368,7 +368,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                         if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
                             mState = STATE_PICTURE_TAKEN;
-                            captureStillPicture();
+                            capturestillpicture();
                         } else {
                             runPrecaptureSequence();
                         }
@@ -390,7 +390,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                     if (aeState == null || aeState != CaptureResult.CONTROL_AE_STATE_PRECAPTURE) {
                         mState = STATE_PICTURE_TAKEN;
-                        captureStillPicture();
+                        capturestillpicture();
                     }
                     break;
                 }
@@ -658,15 +658,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             byte[] byteArray = stream.toByteArray();
             bitmap.recycle();
             selectedhashes =  getkeyvalue(byteArray);
+            selectedhashes=keytype+" : "+selectedhashes;
             Log.e("keyhash = ","" +selectedhashes);
 
             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     mhashesitems.clear();
-                    mhashesitems.clear();
                     mhashesadapter.notifyDataSetChanged();
-
                     mvideoframes.add(new videomodel(selectedhashes));
                     mhashesadapter.notifyDataSetChanged();
                     recyview_hashes.scrollToPosition(mhashesitems.size()-1);
@@ -1100,7 +1099,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private void takePicture() {
         //lockFocus();
 
-        captureStillPicture();
+        capturestillpicture();
     }
 
     /**
@@ -1142,7 +1141,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * Capture a still picture. This method should be called when we get a response in
      * {@link #mCaptureCallback} from both {@link #lockFocus()}.
      */
-    private void captureStillPicture() {
+    private void capturestillpicture() {
         try {
             final Activity activity = getActivity();
             metadatametricesjson=new JSONArray();
@@ -1192,7 +1191,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     setmetriceshashesdata();
                     showsharepopupmain();
                     Log.d(TAG, capturedimagefile.toString());
-                    unlockFocus();
+                    unlockfocus();
                     //gethelper().onBack();
                 }
             };
@@ -1225,7 +1224,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * Unlock the focus. This method should be called when still image capture sequence is
      * finished.
      */
-    private void unlockFocus() {
+    private void unlockfocus() {
         try {
             // Reset the auto-focus trigger
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
@@ -1555,7 +1554,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             @Override
                             public void run() {
                                 progressdialog.dismisswaitdialog();
-                                launchvideolist();
+                                launchmedialist();
                             }
                         });
                     }
@@ -1580,7 +1579,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
 
-                launchvideolist();
+                launchmedialist();
             }
         });
         img_cancel.setOnClickListener(new View.OnClickListener() {
@@ -1593,7 +1592,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         subdialogshare.show();
     }
 
-    public void launchvideolist()
+    public void launchmedialist()
     {
         gethelper().onBack();
     }
@@ -1882,6 +1881,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid){
+            case R.id.img_menu:
+                gethelper().onBack();
+                break;
+        }
+    }
+
     public void switchCamera() {
         if (cameraid.equals(CAMERA_FRONT)) {
             cameraid = CAMERA_BACK;
@@ -1920,18 +1929,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    public static void saveimagemetadata(File filepath, String data) throws IOException{
+    public void saveimagemetadata(File filepath, String data) throws IOException{
 
         ExifInterface exif = null;
 
         try{
             exif = new ExifInterface(filepath.getCanonicalPath());
             if (exif != null) {
-                String imagedata = data;
-
-                exif.setAttribute(ExifInterface. TAG_USER_COMMENT, data);
+                String imagemetadata = common.getnamefrompath(capturedimagefile.getAbsolutePath())+"|"+ data;
+                exif.setAttribute(ExifInterface. TAG_USER_COMMENT, imagemetadata);
                 exif.saveAttributes();
-
                 String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
                 Log.v("usercomment", ""+ usercomment);
             }

@@ -133,6 +133,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private Handler myHandler;
     private Runnable myRunnable;
     public boolean isrecording = false;
+    public boolean iscameracapture = false;
 
     long startTime;
     long endTime;
@@ -153,9 +154,19 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-
+        registerallbroadcast();
         getconnectionspeed();
 
+    }
+
+    @Override
+    public void setcameracapture(boolean toggle) {
+        iscameracapture=toggle;
+    }
+
+    @Override
+    public boolean iscameracapture() {
+        return iscameracapture;
     }
 
     public void getconnectionspeed() {
@@ -1299,11 +1310,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
@@ -1631,7 +1637,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     public void onStart() {
         super.onStart();
-        registerallbroadcast();
     }
 
     public void updatearrayitem(String key, String value) {
