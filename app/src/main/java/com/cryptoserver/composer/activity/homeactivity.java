@@ -158,7 +158,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 || getcurrentfragment() instanceof composervideoplayerfragment
                 || getcurrentfragment() instanceof fragmentmedialist || getcurrentfragment() instanceof bottombarfragment
                 || getcurrentfragment() instanceof bottombarrederfrag || getcurrentfragment() instanceof audiotabreaderfrag
-                || getcurrentfragment() instanceof videotabreaderfrag || getcurrentfragment() instanceof phototabreaderfrag
+                || getcurrentfragment() instanceof phototabreaderfrag
                 )
         {
             txt_title.setText("");
@@ -383,7 +383,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }else if(fragment instanceof videotabreaderfrag){
-             img_back.setVisibility(View.GONE);
+            /* img_back.setVisibility(View.GONE);
              img_cancel.setVisibility(View.GONE);
              imgaddicon.setVisibility(View.GONE);
              imgsettingsicon.setVisibility(View.VISIBLE);
@@ -395,10 +395,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
+             fragment_container.setLayoutParams(params);*/
          }
          else if(fragment instanceof bottombarrederfrag){
-             img_back.setVisibility(View.GONE);
+             /*img_back.setVisibility(View.GONE);
              img_cancel.setVisibility(View.GONE);
              imgaddicon.setVisibility(View.GONE);
              imgsettingsicon.setVisibility(View.VISIBLE);
@@ -410,7 +410,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
+             fragment_container.setLayoutParams(params);*/
          }
          else if(fragment instanceof bottombarfragment){
 
