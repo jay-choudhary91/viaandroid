@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +27,8 @@ public class bottombarrederfrag extends basefragment {
     @BindView(R.id.tab_container)
     FrameLayout tab_reader_container;
     View rootview = null;
-    videotabreaderfrag fragvideotabreader=null;
+    adapteritemclick madapterclick;
+    videoplayerreaderfragment fragvideotabreader=null;
     audiotabreaderfrag fragaudiotabreader=null;
     phototabreaderfrag fragphototabreader=null;
     int selectedtab=0,lastselectedtab=0;
@@ -76,7 +78,7 @@ public class bottombarrederfrag extends basefragment {
         switch (selectedtab) {
             case 1:
                 if (fragvideotabreader == null)
-                    fragvideotabreader = new videotabreaderfrag();
+                    fragvideotabreader = new videoplayerreaderfragment();
 
                 // fragvideocomposer.setData(false, mclick);
                 gethelper().replacetabfragment(fragvideotabreader, false, true);
@@ -160,6 +162,25 @@ public class bottombarrederfrag extends basefragment {
             //launchvideocomposer();
         }
         return rootview;
+    }
+
+    adapteritemclick mclick=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+
+        }
+
+        @Override
+        public void onItemClicked(Object object, int type) {
+            if(type == 1)
+            {
+                madapterclick.onItemClicked(null);
+            }
+        }
+    };
+
+    public void setData(adapteritemclick madapterclick) {
+        this.madapterclick = madapterclick;
     }
 }
 

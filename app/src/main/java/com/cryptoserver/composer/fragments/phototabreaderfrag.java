@@ -1,18 +1,26 @@
 package com.cryptoserver.composer.fragments;
 
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,14 +34,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.frame;
+import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
+import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.customffmpegframegrabber;
+import com.cryptoserver.composer.utils.md5;
+import com.cryptoserver.composer.utils.progressdialog;
+import com.cryptoserver.composer.utils.sha;
+import com.cryptoserver.composer.utils.xdata;
 
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.Frame;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -68,8 +95,19 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
     private int REQUESTCODE_PICK = 301;
     private Uri selectedphotouri =null;
     private String photo_url = null;
+    private ArrayList<videomodel> mainphotoframes =new ArrayList<>();
+    private ArrayList<videomodel> mphotoframes =new ArrayList<>();
+    private ArrayList<videomodel> mallframes =new ArrayList<>();
     @BindView(R.id.tab_photoreader)
     ImageView tab_photoreader;
+    private Handler myhandler;
+    private Runnable myrunnable;
+    String selectedmetrices="", selectedhashes ="";
+    private String keytype = config.prefs_md5;
+    private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewphotofound=false;;
+    private boolean ishashprocessing=false;
+    JSONArray metadatametricesjson=new JSONArray();
+    private static final int request_read_external_storage = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -212,13 +250,23 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
                 recyview_metrices.setAdapter(mmetricesadapter);
                 implementscrolllistener();
             }
+            if(fragmentgraphic == null) {
+                fragmentgraphic = new graphicalfragment();
 
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
+                transaction.commit();
+            }
+
+            setmetriceshashesdata();
         }
-
-
         return rootview;
     }
-
+    @Override
+    public void initviews(View parent, Bundle savedInstanceState) {
+        super.initviews(parent, savedInstanceState);
+        ButterKnife.bind(this,parent);
+    }
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
@@ -424,13 +472,47 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_menu:
-                opengallery();
+                checkwritestoragepermission();
                 break;
+
+        }
+    }
+    private void checkwritestoragepermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED ) {
+                opengallery();
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        request_read_external_storage);
+            }
+        }
+        else
+        {
+            opengallery();
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_read_external_storage) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted) {
+                opengallery();
+            }
+        }
+    }
     public void opengallery() {
-        // destroyvideoplayer();
         Intent intent;
         if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
             intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -454,27 +536,267 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
 
                 try {
                     photo_url = common.getpath(getActivity(), selectedphotouri);
-                    Bitmap bitmap= BitmapFactory.decodeFile(photo_url);
-                    if(photo_url!=null){
-                        tab_photoreader.setImageBitmap(bitmap);
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     common.showalert(getActivity(), getResources().getString(R.string.file_uri_parse_error));
                     return;
                 }
+                if(photo_url == null || (photo_url.trim().isEmpty()))
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                    return;
+                }
+
+                if(! (new File(photo_url).exists()))
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                    return;
+                }
+
+                keytype=common.checkkey();
+
+                mmetricsitems.clear();
+                mmetricesadapter.notifyDataSetChanged();
+
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
+
+                selectedhashes="";
+                selectedmetrices="";
+
+                suspendframequeue=false;
+                suspendbitmapqueue=false;
+
+                if(ishashprocessing)
+                    suspendframequeue=true;
+                if(photo_url!=null){
+                    tab_photoreader.setImageURI(selectedphotouri);
+                }
+                righthandle.setVisibility(View.VISIBLE);
+                if(photo_url != null && (! photo_url.isEmpty())){
+                    mphotoframes.clear();
+                    mainphotoframes.clear();
+                    mallframes.clear();
+                    txt_metrics.setText("");
+                    txt_hashes.setText("");
+                    isnewphotofound=true;
+                }
             }
         }
     }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
 
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        progressdialog.dismisswaitdialog();
+    }
     @Override
     public void onResume() {
         super.onResume();
+         try {
+             if(photo_url != null && (! photo_url.isEmpty()))
+             {
+                 tab_photoreader.setImageURI(selectedphotouri);
 
-        if(photo_url != null && (! photo_url.isEmpty()))
-        {
-            tab_photoreader.setImageURI(selectedphotouri);
+             }
+             if(! keytype.equalsIgnoreCase(common.checkkey()) )
+             {
+                 keytype=common.checkkey();
+                 mphotoframes.clear();
+                 mainphotoframes.clear();
+                 mallframes.clear();
+                 isnewphotofound=true;
+             }
+         }catch (Exception e){
+             e.printStackTrace();
+         }
 
+    }
+    public static void saveimagemetadata(File filepath, String data) throws IOException {
+
+        ExifInterface exif = null;
+
+        try{
+            exif = new ExifInterface(filepath.getCanonicalPath());
+            if (exif != null) {
+                String imagedata = data;
+
+                exif.setAttribute(ExifInterface. TAG_USER_COMMENT, data);
+                exif.saveAttributes();
+
+                String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
+                Log.v("usercomment", ""+ usercomment);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+    public void setmetriceshashesdata()
+    {
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
+
+        myhandler=new Handler();
+        myrunnable = new Runnable() {
+            @Override
+            public void run() {
+                boolean graphicopen=false;
+                if(isnewphotofound)
+                {
+                    if((! suspendframequeue) && (! suspendbitmapqueue))
+                    {
+                        isnewphotofound=false;
+                        selectedmetrices="";
+                        selectedhashes="";
+                        mhashesitems.clear();
+                        mhashesadapter.notifyDataSetChanged();
+
+                        new Thread(){
+                            public void run(){
+                                try {
+                                   setimagehash();
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }.start();
+                        new Thread(){
+                            public void run(){
+                               // getFramesBitmap();
+                            }
+                        }.start();
+                    }
+                }
+
+                if(isdraweropen)
+                {
+                    if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
+                    {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mhashesitems.add(new videomodel(selectedhashes));
+                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                                selectedhashes="";
+                            }
+                        });
+
+                    }
+
+                  //  setmetricesgraphicaldata();
+
+                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+                        graphicopen=true;
+                }
+
+                if(fragmentgraphic != null)
+                    fragmentgraphic.setdrawerproperty(graphicopen);
+                    fragmentgraphic.setmetricesdata();
+
+                myhandler.postDelayed(this, 1000);
+            }
+        };
+        myhandler.post(myrunnable);
+    }
+
+
+
+    public void setimagehash() throws FileNotFoundException {
+        Bitmap bitmap = BitmapFactory.decodeFile(photo_url);
+        if(bitmap!=null){
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+            byte[] byteArray = stream.toByteArray();
+            bitmap.recycle();
+            selectedhashes =  getkeyvalue(byteArray);
+            Log.e("keyhash = ","" +selectedhashes);
+
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mhashesitems.clear();
+                    mhashesadapter.notifyDataSetChanged();
+
+                    mphotoframes.add(new videomodel(selectedhashes));
+                    mhashesadapter.notifyDataSetChanged();
+                    recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+                }
+            });
+        }
+    }
+    public String getkeyvalue(byte[] data)
+    {
+        String value="";
+        String salt="";
+
+        switch (keytype)
+        {
+            case config.prefs_md5:
+                value= md5.calculatebytemd5(data);
+                break;
+
+            case config.prefs_md5_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= md5.calculatebytemd5(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= md5.calculatebytemd5(data);
+                }
+
+                break;
+            case config.prefs_sha:
+                value= sha.sha1(data);
+                break;
+            case config.prefs_sha_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= sha.sha1(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= sha.sha1(data);
+                }
+                break;
+        }
+        return value;
+    }
+   /* public void destroyimageview()
+    {
+        if(tab_photoreader != null)
+        {
+            tab_photoreader.setImageURI(null);
+            tab_photoreader.setImageBitmap(null);
+        }
+    }*/
+
 }
