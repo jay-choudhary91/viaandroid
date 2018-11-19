@@ -63,14 +63,13 @@ import android.widget.Toast;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
+import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
@@ -192,12 +191,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private String mCameraId = CAMERA_BACK;
     private boolean isFlashSupported;
     private boolean isTorchOn = false;
-
-
-
-    private int mCameraLensFacingDirection;
-
-
     /**
      * An {@link AutoFitTextureView} for camera preview.
      */
@@ -271,7 +264,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     /**
      * This is the output file for our picture.
      */
-    private File mFile;
+    private File capturedimagefile;
 
     /**
      * This a callback object for the {@link ImageReader}. "onImageAvailable" will be called when a
@@ -282,7 +275,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), mFile));
+            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), capturedimagefile));
         }
 
     };
@@ -323,7 +316,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     ImageView handleimageview,righthandle;
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
-    boolean isflashon = false,inPreview = true;
 
     TextView txtSlot1;
     TextView txtSlot2;
@@ -332,44 +324,25 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public int selectedsection=1;
 
-    ImageView mrecordimagebutton,imgflashon,rotatecamera,handle;
+    ImageView imgflashon,rotatecamera,handle;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
-    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
-    int Seconds, Minutes, MilliSeconds ;
-    String keytype = config.prefs_md5,currenthashvalue="";
+    String keytype = config.prefs_md5;
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
-    ArrayList<frameinfo> muploadframelist =new ArrayList<>();
-    long currentframenumber =0;
-    long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
-    public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
-    File lastrecordedvideo=null;
-    String selectedvideofile ="",videokey="",selectedmetrices="", selectedhashes ="";
-    int metriceslastupdatedposition=0;
-    //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+    String selectedvideofile ="",selectedmetrices="", selectedhashes ="";
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
     videoframeadapter mmetricesadapter,mhashesadapter;
 
-    databasemanager mdbhelper;
-    private boolean isdraweropen=false,isgraphicalshown=false;
+    private boolean isdraweropen=false;
     private Handler myHandler;
     private Runnable myRunnable;
-    private int lastmetricescount=0;
-    private boolean issavedtofolder=false;
     JSONArray metadatametricesjson=new JSONArray();
-
-    String localkey = null;
     private LinearLayoutManager mLayoutManager;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
-
     graphicalfragment fragmentgraphic;
-
-    CameraManager manager;
-
     ImageView captureimage;
 
     /**
@@ -678,29 +651,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
 
     public void setimagehash() throws FileNotFoundException {
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mFile.getAbsolutePath());
-
+        Bitmap bitmap = BitmapFactory.decodeFile(capturedimagefile.getAbsolutePath());
         if(bitmap!=null){
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
             bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-
             byte[] byteArray = stream.toByteArray();
             bitmap.recycle();
-
-
-       /* byte[] data = null;
-
-        try {
-            data = FileUtils.readFileToByteArray(mFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-
             selectedhashes =  getkeyvalue(byteArray);
-
             Log.e("keyhash = ","" +selectedhashes);
 
             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -716,7 +673,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 }
             });
         }
-
     }
 
     public String getkeyvalue(byte[] data)
@@ -825,7 +781,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
        /* String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        mFile = new File(getActivity().getExternalFilesDir(null), fileName+".jpg");*/
+        capturedimagefile = new File(getActivity().getExternalFilesDir(null), fileName+".jpg");*/
     }
 
     @Override
@@ -887,29 +843,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         Activity activity = getActivity();
         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
-//            for (String cameraId : manager.getCameraIdList()) {
-
-           // mCameraId = "1";
             CameraCharacteristics characteristics
                     = manager.getCameraCharacteristics(mCameraId);
-
-            // We don't use a front facing camera in this sample.
-            Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
-//                if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
-//                    continue;
-//                }
-
             Boolean availableflash = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
             isFlashSupported = availableflash == null ? false : availableflash;
-
-
-            StreamConfigurationMap map = characteristics.get(
-                    CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-//                if (map == null) {
-//                    continue;
-//                }
-
-            // For still image captures, we use the largest available size.
+            StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             Size largest = Collections.max(
                     Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
                     new CompareSizesByArea());
@@ -917,11 +855,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     ImageFormat.JPEG, /*maxImages*/2);
             mImageReader.setOnImageAvailableListener(
                     mOnImageAvailableListener, mBackgroundHandler);
-
-            // Find out if we need to swap dimension to get the preview size relative to sensor
-            // coordinate.
             int displayRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-            //noinspection ConstantConditions
             mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
             boolean swappedDimensions = false;
             switch (displayRotation) {
@@ -1257,7 +1191,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
                     setmetriceshashesdata();
                     showsharepopupmain();
-                    Log.d(TAG, mFile.toString());
+                    Log.d(TAG, capturedimagefile.toString());
                     unlockFocus();
                     //gethelper().onBack();
                 }
@@ -1456,13 +1390,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         graphicopen=true;
                 }
 
-
-
                 if(mmetricsitems.size() == 0)
                 {
                     ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
                     getselectedmetrics(mlocalarraylist);
-
                     if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
                     {
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -1474,7 +1405,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             }
                         });
                     }
-
                     if(! selectedmetrices.toString().trim().isEmpty())
                     {
                         mmetricsitems.add(new videomodel(selectedmetrices));
@@ -1482,15 +1412,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         selectedmetrices="";
                     }
                 }
-
-
-
                 if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
                     fragmentgraphic.setmetricesdata();
                 }
-
                 myHandler.postDelayed(this, 1000);
             }
         };
@@ -1617,10 +1543,23 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             @Override
             public void onClick(View v) {
-
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
 
+                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        common.exportimage(capturedimagefile,true);
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressdialog.dismisswaitdialog();
+                                launchvideolist();
+                            }
+                        });
+                    }
+                }).start();
             }
         });
 
@@ -1905,7 +1844,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     private File getImageFile(Context context) {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        mFile=new File(config.videodir, fileName+".png");
+        capturedimagefile =new File(config.videodir, fileName+".jpg");
 
         File destinationDir=new File(config.videodir);
         try {
@@ -1917,8 +1856,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         {
             e.printStackTrace();
         }
-        selectedvideofile=mFile.getAbsolutePath();
-        return mFile;
+        selectedvideofile= capturedimagefile.getAbsolutePath();
+        return capturedimagefile;
     }
 
     public void camraflashonoff() {

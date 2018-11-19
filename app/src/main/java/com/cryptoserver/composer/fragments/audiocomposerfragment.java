@@ -49,6 +49,7 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
+import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.visualizeraudiorecorder;
@@ -106,7 +107,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
     videoframeadapter mmetricesadapter,mhashesadapter;
-    private MediaRecorder mrecorder;
     private String selectedfile = null,selectedmetrices="", selectedhashes ="";;
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
@@ -418,12 +418,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     @Override
     public void onPause() {
-        if(mrecorder != null)
+        if(recorder != null)
         {
             isaudiorecording=false;
             stoptimer();
             resettimer();
 
+            myvisualizerview.clear();
+            myvisualizerview.setVisibility(View.INVISIBLE);
             try {
                 if(common.getstoragedeniedpermissions().isEmpty() && (selectedfile != null )
                         && new File(selectedfile).exists())
@@ -434,8 +436,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
 
             try{
-                mrecorder.stop();
-                mrecorder.release();
+                recorder.stop();
+                recorder.release();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -715,7 +717,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             stoptimer();
             resettimer();
-            if(mrecorder==null){
+            if(recorder==null){
                 myvisualizerview.clear();
                 myvisualizerview.setVisibility(View.INVISIBLE);
             }
