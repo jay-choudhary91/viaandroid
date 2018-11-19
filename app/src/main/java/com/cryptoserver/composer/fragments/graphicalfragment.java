@@ -326,7 +326,6 @@ public class graphicalfragment extends basefragment implements
                         if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                                 (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-
                         if(ismediaplayer)
                         {
                             if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)

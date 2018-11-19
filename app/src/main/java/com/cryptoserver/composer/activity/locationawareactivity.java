@@ -133,6 +133,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private Handler myHandler;
     private Runnable myRunnable;
     public boolean isrecording = false;
+    public boolean iscameracapture = false;
 
     long startTime;
     long endTime;
@@ -156,6 +157,16 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         registerallbroadcast();
         getconnectionspeed();
 
+    }
+
+    @Override
+    public void setcameracapture(boolean toggle) {
+        iscameracapture=toggle;
+    }
+
+    @Override
+    public boolean iscameracapture() {
+        return iscameracapture;
     }
 
     public void getconnectionspeed() {
