@@ -519,6 +519,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid){
+            case R.id.img_menu:
+                gethelper().onBack();
+                break;
+        }
+    }
+
     public void starttimer()
     {
         StartTime = SystemClock.uptimeMillis();
@@ -588,9 +598,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         currentframenumber = currentframenumber + frameduration;
 
         try {
-            recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
-                    RECORDER_SAMPLERATE, RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING, bufferSize);
-
+            recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,RECORDER_SAMPLERATE,RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING,bufferSize);
             gethelper().setrecordingrunning(true);
             int i = recorder.getState();
             if(i==1)
@@ -618,7 +626,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         byte data[] = new byte[bufferSize];
         String filename = gettempfilename();
         FileOutputStream os = null;
-
+        framegap=0;
         try {
             os = new FileOutputStream(filename);
         } catch (FileNotFoundException e) {
@@ -636,7 +644,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     try {
                         os.write(data);
 
-                        if(framegap == 7)
+                        if(framegap == 1 && isaudiorecording)
                         {
                             framegap=0;
                             Log.e("Frame count ",""+mframetorecordcount);
@@ -725,9 +733,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 myvisualizerview.setVisibility(View.INVISIBLE);
             }
 
-            mhashesitems.clear();
-            mhashesadapter.notifyDataSetChanged();
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -736,8 +741,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         selectedfile=getfile().getAbsolutePath();
                         copywavefile(gettempfilename(),selectedfile);
                         setaudiohashes();
-                      //  metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
+                        //metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
                         common.deletefile(gettempfilename());;
+
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(madapterclick != null)
+                                    madapterclick.onItemClicked(null,1);
+                            }
+                        });
+
                     }catch (Exception e)
                     {
                         Log.e("Meta data Error","Error");
@@ -879,6 +893,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     {
         try {
 
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mhashesitems.clear();
+                    mhashesadapter.notifyDataSetChanged();
+                }
+            });
+            selectedhashes="";
             int count = 1;
             currentframenumber=0;
             currentframenumber = currentframenumber + frameduration;
@@ -1294,6 +1316,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
 
+                launchmedialist();
+
             }
         });
 
@@ -1314,7 +1338,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
 
-                launchvideolist();
+                launchmedialist();
             }
         });
         img_cancel.setOnClickListener(new View.OnClickListener() {
@@ -1327,7 +1351,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         subdialogshare.show();
     }
 
-    public void launchvideolist()
+    public void launchmedialist()
     {
         gethelper().onBack();
     }

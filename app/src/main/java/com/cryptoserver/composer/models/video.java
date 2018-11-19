@@ -14,6 +14,7 @@ public class video
     public String duration="";
     public String md5="";
     public String mimetype="";
+    public String extension="";
     public long lastmodifiedtime=0;
     public Bitmap thumbnail=null;
     public boolean isSelected = false;
@@ -32,6 +33,14 @@ public class video
     public  video()
     {
 
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
     public Bitmap getThumbnail() {
