@@ -340,7 +340,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private boolean isdraweropen=false;
     private Handler myhandler;
     private Runnable myrunnable;
-    JSONArray metadatametricesjson=new JSONArray();
+    JSONObject metadatametricesjson=new JSONObject();
     private LinearLayoutManager mLayoutManager;
     graphicalfragment fragmentgraphic;
     ImageView captureimage;
@@ -659,7 +659,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             bitmap.recycle();
             selectedhashes =  getkeyvalue(byteArray);
             selectedhashes=keytype+" : "+selectedhashes;
-            Log.e("keyhash = ","" +selectedhashes);
+            Log.e("keyhash = ",keytype+"" +selectedhashes);
 
             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                 @Override
@@ -1144,7 +1144,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private void capturestillpicture() {
         try {
             final Activity activity = getActivity();
-            metadatametricesjson=new JSONArray();
+            metadatametricesjson=new JSONObject();
             if (null == activity || null == mCameraDevice) {
                 return;
             }
@@ -1345,10 +1345,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 value="NA";
             }
             builder.append("\n"+metric.getMetricTrackKeyName()+" - "+value);
-            //selectedmetrices=selectedmetrices+"\n"+metric.getMetricTrackKeyName()+" - "+value;
 
             try {
                 object.put(metric.getMetricTrackKeyName(),value);
+                metadatametricesjson.put(metric.getMetricTrackKeyName(),value);
+                Log.e("jsondata",metadatametricesjson.toString());
 
             }catch (Exception e)
             {
@@ -1356,8 +1357,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
         }
         builder.append("\n");
-        metadatametricesjson.put(object);
-
         selectedmetrices=selectedmetrices+builder.toString();
     }
 
@@ -1758,7 +1757,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             public void run() {
 
                                 try {
-                                    saveimagemetadata(mFile,""+ common.getjson(metadatametricesjson));
+                                    saveimagemetadata(mFile,""+ metadatametricesjson);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -1935,10 +1934,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         ExifInterface exif = null;
 
         try{
-            exif = new ExifInterface(filepath.getCanonicalPath());
+            String path=filepath.getCanonicalPath();
+            exif = new ExifInterface(path);
             if (exif != null) {
                 String imagemetadata = common.getnamefrompath(capturedimagefile.getAbsolutePath())+"|"+ data;
                 exif.setAttribute(ExifInterface. TAG_USER_COMMENT, imagemetadata);
+                Log.e("imagemetadata",imagemetadata);
                 exif.saveAttributes();
                 String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
                 Log.v("usercomment", ""+ usercomment);

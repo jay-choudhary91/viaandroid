@@ -344,13 +344,15 @@ public class locationservice extends Service implements LocationListener, GpsSta
                         oldlocation.getLatitude(), oldlocation.getLongitude());
                 doubleTotalDistance = doubleTotalDistance + meter;
                 double timeDifferance = (location.getTime() - oldlocation.getTime());
-                double speed = meter / timeDifferance;
-                String strspeed = "" + speed;
-                if (strspeed.contains("."))
-                    strspeed = strspeed.substring(0, strspeed.indexOf("."));
-
+                String strspeed="0";
+                if(meter > 0)
+                {
+                    double speed = meter / timeDifferance;
+                    strspeed = "" + speed;
+                    if (strspeed.contains("."))
+                        strspeed = strspeed.substring(0, strspeed.indexOf("."));
+                }
                 xdata.getinstance().saveSetting("speed", "" +strspeed);
-
             }
         }
 

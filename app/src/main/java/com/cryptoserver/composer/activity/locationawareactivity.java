@@ -1595,7 +1595,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("speed"));
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
-                metricitemarraylist.get(i).setMetricTrackValue("" + xdata.getinstance().getSetting(config.gpsaltitude) + " ft");
+                String altitude=xdata.getinstance().getSetting(config.gpsaltitude);
+                if(altitude.trim().isEmpty())
+                    altitude="0";
+
+                metricitemarraylist.get(i).setMetricTrackValue("" + altitude + " ft");
             }
             oldlocation = location;
         }

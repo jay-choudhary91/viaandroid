@@ -94,7 +94,7 @@ public class videoplayfragment extends basefragment implements View.OnClickListe
                 if(filePath != null){
                     //progressdialog.showwaitingdialog(getActivity());
                     String selectedvideopath = filePath;
-                    common.shareMedia(getActivity(),selectedvideopath);
+                    common.sharevideo(getActivity(),selectedvideopath);
                 }
            }
         });
