@@ -4,7 +4,6 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -26,14 +25,12 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -48,10 +45,8 @@ import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.arraycontainer;
-import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
-import com.cryptoserver.composer.utils.VisualizerViewMedia;
 import com.cryptoserver.composer.utils.VisualizerViewaudioMedia;
 import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
@@ -62,7 +57,6 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
-import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,7 +69,6 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -133,7 +126,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
     private boolean isscrubbing=true;
     private Handler myHandler,handlerrecycler;
     private Runnable myRunnable,runnablerecycler;
-    private long videoduration =0,maxincreasevideoduration=0;
+    private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0, currentaudiodurationseconds =0;
     private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
     private boolean isdraweropen=false;
     private LinearLayoutManager mlinearlayoutmanager;
@@ -160,10 +153,10 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
     VisualizerViewaudioMedia myvisualizerviewmedia;
     circularImageview playpausebutton;
     private TextView songName, time_current, time;
-    StringBuilder               mFormatBuilder;
+    StringBuilder mFormatBuilder;
     Formatter mFormatter;
     private SeekBar mediaseekbar;
-    private static int oTime =0, sTime =0, eTime =0, fTime = 5000, bTime = 5000;
+    private int ontime =0, starttime =0, endtime =0, fTime = 5000, bTime = 5000;
     private Handler hdlr = new Handler();
     RelativeLayout rlcontrollerview;
 
@@ -598,6 +591,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 if(player!=null){
                     changeactionbarcolor();
                     initAudio();
+                    setaudiodata();
                 }
 
 
@@ -659,7 +653,8 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
     {
         isvideocompleted=false;
         maxincreasevideoduration=0;
-        videoduration=mp.getDuration();
+
+        audioduration =mp.getDuration();
 
         try {
             if(playerposition > 0)
@@ -699,24 +694,8 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
         if(player != null)
         {
             if(selectedvideouri!= null){
-
-                player.start();
                 playpausebutton.setImageResource(R.drawable.pause);
-
-                eTime = player.getDuration();
-                sTime = player.getCurrentPosition();
-
-                if(oTime == 0){
-                    mediaseekbar.setMax(eTime);
-                    oTime =1;
-                }
-
-                if (time != null)
-                    time.setText(stringForTime(eTime));
-                if (time_current != null)
-                    time_current.setText(stringForTime(sTime));
-
-                mediaseekbar.setProgress(sTime);
+                player.start();
                 hdlr.postDelayed(UpdateSongTime, 100);
                 player.setOnCompletionListener(this);
             }
@@ -876,6 +855,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
 
                 rlcontrollerview.setVisibility(View.VISIBLE);
                 selectedvideouri = data.getData();
+                selectionmetadata();
 
                 try {
                     //VIDEO_URL=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
@@ -920,8 +900,8 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 if(isbitmapprocessing)
                     suspendbitmapqueue=true;
 
-                setupVideoPlayer(selectedvideouri);
-                videoduration=0;
+                setupaudioplayer(selectedvideouri);
+                audioduration =0;
                 playpausebutton.setImageResource(R.drawable.play);
                 rlcontrollerview.setVisibility(View.VISIBLE);
                 playerposition=0;
@@ -998,7 +978,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
 
     }
 
-    public void setupVideoPlayer(final Uri selecteduri)
+    public void setupaudioplayer(final Uri selecteduri)
     {
         try {
             player = new MediaPlayer();
@@ -1014,6 +994,8 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 if(player!=null){
                     changeactionbarcolor();
                     initAudio();
+
+                    setaudiodata();
                 }
 
 
@@ -1249,11 +1231,10 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
 
     }
 
-
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         isvideocompleted=true;
-        maxincreasevideoduration=videoduration;
+        maxincreasevideoduration= audioduration;
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -1261,7 +1242,6 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 if(player != null )
                 {
                     player.seekTo(0);
-                    mVisualizer.setEnabled(false);
                     playpausebutton.setImageResource(R.drawable.play);
                 }
             }
@@ -1321,13 +1301,21 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
         public void run() {
             if(player != null ){
 
-                sTime = player.getCurrentPosition();
-              /*  time_current.setText(String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(sTime),
-                    TimeUnit.MILLISECONDS.toSeconds(sTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(sTime))) );
-*/            mediaseekbar.setProgress(player.getCurrentPosition());
+                    if(player.getCurrentPosition() > maxincreasevideoduration)
+                        maxincreasevideoduration=player.getCurrentPosition();
+
+                    if(currentaudioduration == 0 || (player.getCurrentPosition() > currentaudioduration))
+                    {
+                        currentaudioduration =player.getCurrentPosition();  // suppose its on 4th pos means 4000
+                        currentaudiodurationseconds = currentaudioduration /1000;  // Its 4
+                    }
+
+
+                starttime = player.getCurrentPosition();
+                mediaseekbar.setProgress(player.getCurrentPosition());
 
                 if (time_current != null)
-                    time_current.setText(stringForTime(sTime));
+                    time_current.setText(stringForTime(starttime));
                 hdlr.postDelayed(this, 100);
             }
         }
@@ -1348,4 +1336,43 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
             return mFormatter.format("%02d:%02d", minutes, seconds).toString();
         }
     }
+
+   public void setaudiodata(){
+
+     Handler handler = new Handler();
+     handler.postDelayed(new Runnable() {
+         @Override
+         public void run() {
+             endtime = player.getDuration();
+             starttime = player.getCurrentPosition();
+
+             audioduration  = endtime;
+
+             if (time != null)
+                 time.setText(stringForTime(endtime));
+             if (time_current != null)
+                 time_current.setText(stringForTime(starttime));
+
+             mediaseekbar.setMax(endtime);
+             mediaseekbar.setProgress(starttime);
+         }
+     },100);
+   }
+
+   public void selectionmetadata(){
+       selectedsection = 1;
+
+       resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
+       txtSlot1.setVisibility(View.VISIBLE);
+       txtSlot2.setVisibility(View.VISIBLE);
+       txtSlot3.setVisibility(View.VISIBLE);
+       txt_metrics.setVisibility(View.INVISIBLE);
+       txt_hashes.setVisibility(View.INVISIBLE);
+       recyview_hashes.setVisibility(View.VISIBLE);
+       recyview_metrices.setVisibility(View.INVISIBLE);
+       scrollview_metrices.setVisibility(View.INVISIBLE);
+       scrollview_hashes.setVisibility(View.INVISIBLE);
+       fragment_graphic_container.setVisibility(View.INVISIBLE);
+
+   }
 }
