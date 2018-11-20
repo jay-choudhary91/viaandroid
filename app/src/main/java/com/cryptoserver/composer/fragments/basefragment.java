@@ -256,6 +256,9 @@ public abstract class basefragment extends Fragment {
         public void setrecordingrunning(boolean toggle);
         public boolean getrecordingrunning();
 
+        public void setcameracapture(boolean toggle);
+        public boolean iscameracapture();
+
         public void xapi_send(Context mContext, String Action, HashMap<String, String> mPairList, apiresponselistener mListener);
         public void xapipost_send(Context mContext, String Action, HashMap<String, String> mPairList, apiresponselistener mListener);
 
