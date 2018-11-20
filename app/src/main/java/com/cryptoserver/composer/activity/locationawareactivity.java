@@ -329,13 +329,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     }
                 };
             } else {
-                /*doafterallpermissionsgranted = new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(locationawareactivity.this, R.string.permissions_denied_exit, Toast.LENGTH_SHORT).show();
-                        //gethelper().onBack();
-                    }
-                };*/
                 getallpermissions();
             }
         }
@@ -438,19 +431,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     mgoogleapiclient, mlocationrequest, this);
 
         }
-//        mRequestingLocationUpdates = true;
     }
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        stopLocationUpdates();
-//    }
 
     protected void stopLocationUpdates() {
         if (mgoogleapiclient != null && mgoogleapiclient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mgoogleapiclient, this);
         }
-//        mRequestingLocationUpdates = false;
     }
 
     @SuppressLint("RestrictedApi")
@@ -486,9 +472,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     @Override
     public void onConnected(Bundle bundle) {
-//        if (mRequestingLocationUpdates) {
         startLocationUpdates();
-//        }
     }
 
     @Override
@@ -511,10 +495,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 getcurrentfragment().oncurrentlocationchanged(location);
                 updatelocationsparams(location);
                 fetchcompleteaddress(location);
-
-
             }
-            //stopLocationUpdates();
         }
     }
 
@@ -527,52 +508,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         return mcurrentlocation;
     }
 
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_LOCATION_REQUEST_CODE) {
-            // If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // permission was granted, yay! Do the
-                // contacts-related task you need to do.
-                enableGPS(locationawareactivity.this);
-
-            } else {
-                // permission denied, boo! Disable the
-                // functionality that depends on this permission.
-                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
-                enableGPS(locationawareactivity.this);
-            }
-            return;
-        }
-
-    }*/
-
     @SuppressLint("MissingPermission")
     public static boolean checkLocationEnable(Context context) {
-        //check the Gps settings
         LocationManager locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-
-        /*GpsStatus gpsStatus = locationManager.getGpsStatus(null);
-        if(gpsStatus != null) {
-            Iterable<GpsSatellite>satellites = gpsStatus.getSatellites();
-            int satellites1 = gpsStatus.getMaxSatellites();
-            Iterator<GpsSatellite> sat = satellites.iterator();
-            String lSatellites = null;
-            int i = 0;
-            while (sat.hasNext()) {
-                GpsSatellite satellite = sat.next();
-                lSatellites = "Satellite" + (i++) + ": "
-                        + satellite.getPrn() + ","
-                        + satellite.usedInFix() + ","
-                        + satellite.getSnr() + ","
-                        + satellite.getAzimuth() + ","
-                        + satellite.getElevation()+ "\n\n";
-
-                Log.d("SATELLITE",lSatellites);
-            }
-        }
-*/
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             return true;
         } else {
@@ -600,19 +538,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     public void showgpsalert(final Context context) {
-/*        appdialog.showConfirmationDialog(context, "GPS", "GPS is disabled in your device. Would you like to enable it?","YES","NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), GPS_REQUEST_CODE);
-                    }
-                },
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        setNavigateWithLocation();
-                    }
-                }).show();*/
 
         new AlertDialog.Builder(context, R.style.customdialogtheme)
                 .setTitle("GPS")
@@ -1042,11 +967,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 if (sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) != null) {
                     metricItemValue = "YES";
                 }
-
-                if (key.equalsIgnoreCase("isaccelerometeravailable")) {
-                    // metricItemValue="UpdateLater";
-                    //getHelper().registerAccelerometerSensor();
-                }
             }
 
             if (key.equalsIgnoreCase("proximitySensorEnabled")) {
@@ -1211,7 +1131,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + currentaddress;
         } else if (key.equalsIgnoreCase("numberofsatellites")) {
             // metricItemValue = "" + numberofsatellites;
-            metricItemValue = metricItemValue = xdata.getinstance().getSetting("gpsnumberofsatelites");
+            metricItemValue = xdata.getinstance().getSetting("gpsnumberofsatelites");
         } else if (key.equalsIgnoreCase("satelliteangle")) {
             //metricItemValue = "" + anglesatellite;
             metricItemValue = xdata.getinstance().getSetting("satelliteangle");
@@ -1281,7 +1201,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     private void stop() {
-        //  Log.e("noise", "==== Stop noise Monitoring===");
         try {
             if (mNoise != null) {
                 mNoise.stop();
@@ -1294,11 +1213,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
 
     private void updateDisplay(String status, double signalEMA) {
-
-        //    Log.e("signalEMA = ", ""+ signalEMA);
-
         final String deciblevalue = String.valueOf(new DecimalFormat("##.####").format(signalEMA));
-
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -1512,7 +1427,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         int heading1 = Math.round(event.values[0]);
                         int heading2 = Math.round(event.values[1]);
                         int heading3 = Math.round(event.values[2]);
-                        // Log.e("Degrees ",""+heading1+" "+heading2+" "+heading3);
+                        Log.e("Heading ",""+heading);
 
                         String strdirection = "East";
                         if (heading > 23 && heading <= 67) {
@@ -1562,7 +1477,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     //long diffSeconds = diff / 1000 % 60;
                     duration = "" + diffSeconds;
                 }
-                //       Log.e("BROADCAST CALL ","BROADCAST CALL");
             }
 
             xdata.getinstance().saveSetting("CALL_STATUS", (CALL_STATUS.isEmpty()) ? "None" : CALL_STATUS);
@@ -1683,30 +1597,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
                 metricitemarraylist.get(i).setMetricTrackValue("" + xdata.getinstance().getSetting(config.gpsaltitude) + " ft");
             }
-
-             /*if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("heading")) {
-                metricitemarraylist.get(i).setMetricTrackValue("" + "NA");
-                if(oldlocation != null)
-                {
-                    String angle=common.anglefromcoordinate(location.getLatitude(),location.getLongitude(),
-                            oldlocation.getLatitude(),oldlocation.getLongitude());
-                    metricitemarraylist.get(i).setMetricTrackValue("" + angle);
-                }
-            }*/
-
-        /*if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
-        {
-            for (int i = 0; i < metricitemarraylist.size(); i++) {
-
-                if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsquality")) {
-                    metricitemarraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsquality")));
-                }
-
-                if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsnumberofsatelites")) {
-                    metricitemarraylist.get(i).setMetricTrackValue("" + (xdata.getinstance().getSetting("gpsnumberofsatelites")));
-                }
-            }
-        }*/
             oldlocation = location;
         }
     }

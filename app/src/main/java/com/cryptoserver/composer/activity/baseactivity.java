@@ -228,6 +228,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if(getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
                 || getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof audiotabreaderfrag
                 || getcurrentfragment() instanceof phototabreaderfrag)
+                || getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof audiotabreaderfrag
+                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof phototabreaderfrag)
         {
             setbackpress();
             onBack();

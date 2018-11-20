@@ -917,15 +917,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 return;
             }
             manager.openCamera(cameraId, mStateCallback, null);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             Toast.makeText(activity, "Cannot access the camera.", Toast.LENGTH_SHORT).show();
             activity.finish();
-        } catch (NullPointerException e) {
-            // Currently an NPE is thrown when the Camera2API is used but not supported on the
-            // device this code runs.
-
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Interrupted while trying to lock camera opening.");
         }
     }
     private void closeCamera() {
@@ -997,7 +991,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             HandlerThread thread = new HandlerThread("CameraPreview");
             thread.start();
             mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1117,7 +1111,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         try {
             mPreviewSession.stopRepeating();
             mPreviewSession.abortCaptures();
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
