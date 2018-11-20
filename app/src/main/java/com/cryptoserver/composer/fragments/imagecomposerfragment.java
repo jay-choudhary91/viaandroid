@@ -1349,6 +1349,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             try {
                 object.put(metric.getMetricTrackKeyName(),value);
                 metadatametricesjson.put(metric.getMetricTrackKeyName(),value);
+                Log.e("jsondata",metadatametricesjson.toString());
 
             }catch (Exception e)
             {
@@ -1937,6 +1938,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             if (exif != null) {
                 String imagemetadata = common.getnamefrompath(capturedimagefile.getAbsolutePath())+"|"+ data;
                 exif.setAttribute(ExifInterface. TAG_USER_COMMENT, imagemetadata);
+                Log.e("imagemetadata",imagemetadata);
                 exif.saveAttributes();
                 String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
                 Log.v("usercomment", ""+ usercomment);
