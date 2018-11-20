@@ -720,6 +720,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
             byte[] byteArray = stream.toByteArray();
             bitmap.recycle();
             selectedhashes =  getkeyvalue(byteArray);
+            selectedhashes=keytype+" : "+selectedhashes;
             Log.e("keyhash = ","" +selectedhashes);
 
             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {

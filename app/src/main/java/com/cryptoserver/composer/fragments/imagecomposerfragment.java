@@ -659,7 +659,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             bitmap.recycle();
             selectedhashes =  getkeyvalue(byteArray);
             selectedhashes=keytype+" : "+selectedhashes;
-            Log.e("keyhash = ","" +selectedhashes);
+            Log.e("keyhash = ",keytype+"" +selectedhashes);
 
             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                 @Override
