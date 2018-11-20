@@ -340,7 +340,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private boolean isdraweropen=false;
     private Handler myhandler;
     private Runnable myrunnable;
-    JSONArray metadatametricesjson=new JSONArray();
+    JSONObject metadatametricesjson=new JSONObject();
     private LinearLayoutManager mLayoutManager;
     graphicalfragment fragmentgraphic;
     ImageView captureimage;
@@ -1144,7 +1144,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private void capturestillpicture() {
         try {
             final Activity activity = getActivity();
-            metadatametricesjson=new JSONArray();
+            metadatametricesjson=new JSONObject();
             if (null == activity || null == mCameraDevice) {
                 return;
             }
@@ -1349,6 +1349,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             try {
                 object.put(metric.getMetricTrackKeyName(),value);
+                metadatametricesjson.put(metric.getMetricTrackKeyName(),value);
 
             }catch (Exception e)
             {
@@ -1356,8 +1357,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
         }
         builder.append("\n");
-        metadatametricesjson.put(object);
-
         selectedmetrices=selectedmetrices+builder.toString();
     }
 
@@ -1758,7 +1757,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             public void run() {
 
                                 try {
-                                    saveimagemetadata(mFile,""+ common.getjson(metadatametricesjson));
+                                    saveimagemetadata(mFile,""+ metadatametricesjson);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
