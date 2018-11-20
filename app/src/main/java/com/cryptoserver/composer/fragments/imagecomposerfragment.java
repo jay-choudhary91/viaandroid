@@ -1345,7 +1345,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 value="NA";
             }
             builder.append("\n"+metric.getMetricTrackKeyName()+" - "+value);
-            //selectedmetrices=selectedmetrices+"\n"+metric.getMetricTrackKeyName()+" - "+value;
 
             try {
                 object.put(metric.getMetricTrackKeyName(),value);
