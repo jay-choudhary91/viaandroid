@@ -1934,7 +1934,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         ExifInterface exif = null;
 
         try{
-            exif = new ExifInterface(filepath.getCanonicalPath());
+            String path=filepath.getCanonicalPath();
+            exif = new ExifInterface(path);
             if (exif != null) {
                 String imagemetadata = common.getnamefrompath(capturedimagefile.getAbsolutePath())+"|"+ data;
                 exif.setAttribute(ExifInterface. TAG_USER_COMMENT, imagemetadata);

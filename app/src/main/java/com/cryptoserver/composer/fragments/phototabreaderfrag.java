@@ -468,6 +468,10 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
         switch (btnid) {
+            case R.id.img_share_icon:
+                if(photo_url != null && (! photo_url.isEmpty()))
+                    common.shareimage(getActivity(),photo_url);
+                break;
             case R.id.img_upload_icon:
                 //  checkwritestoragepermission();
                 break;

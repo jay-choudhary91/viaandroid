@@ -897,7 +897,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         switch (btnid){
             case R.id.img_share_icon:
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())) {
-                    common.shareMedia(applicationviavideocomposer.getactivity(),VIDEO_URL);
+                    common.sharevideo(applicationviavideocomposer.getactivity(),VIDEO_URL);
                 }
                 break;
 

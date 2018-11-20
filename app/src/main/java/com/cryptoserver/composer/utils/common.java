@@ -529,13 +529,41 @@ public class common {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    public static void shareMedia(Context context, String videoPath) {
+    public static void sharevideo(Context context, String videoPath) {
         File file = new File(videoPath);
         if (file.exists()) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             Uri uri = Uri.fromFile(file);
             //Uri uri = Uri.fromFile(file);
             sharingIntent.setType("video/*");
+            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share video using"));
+
+        }
+    }
+
+    public static void shareaudio(Context context, String videoPath) {
+        File file = new File(videoPath);
+        if (file.exists()) {
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            Uri uri = Uri.fromFile(file);
+            //Uri uri = Uri.fromFile(file);
+            sharingIntent.setType("audio/*");
+            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share video using"));
+
+        }
+    }
+
+    public static void shareimage(Context context, String videoPath) {
+        File file = new File(videoPath);
+        if (file.exists()) {
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            Uri uri = Uri.fromFile(file);
+            //Uri uri = Uri.fromFile(file);
+            sharingIntent.setType("image/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
             applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share video using"));

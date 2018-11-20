@@ -949,7 +949,7 @@ public class videoplayerreaderfragment extends basefragment implements SurfaceHo
         switch (btnid){
             case R.id.img_share_icon:
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
-                    common.shareMedia(getActivity(),VIDEO_URL);
+                    common.sharevideo(getActivity(),VIDEO_URL);
                 break;
             case R.id.img_menu:
                 checkwritestoragepermission();

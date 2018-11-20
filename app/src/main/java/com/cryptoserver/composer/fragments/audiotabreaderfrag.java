@@ -4,7 +4,6 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -26,14 +25,12 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -48,10 +45,8 @@ import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.arraycontainer;
-import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
-import com.cryptoserver.composer.utils.VisualizerViewMedia;
 import com.cryptoserver.composer.utils.VisualizerViewaudioMedia;
 import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
@@ -62,7 +57,6 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
-import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -75,7 +69,6 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -114,7 +107,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
     @BindView(R.id.fragment_graphic_container)
     FrameLayout fragment_graphic_container;
 
-    private String VIDEO_URL = null;
+    private String audiourl = null;
     private RelativeLayout showcontrollers;
     private MediaPlayer player;
     private View rootview = null;
@@ -587,7 +580,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 return;
 
             player = new MediaPlayer();
-            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
+            if(audiourl != null && (! audiourl.isEmpty()))
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selectedvideouri);
@@ -798,8 +791,8 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
         super.onHeaderBtnClick(btnid);
         switch (btnid){
             case R.id.img_share_icon:
-                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
-                    common.shareMedia(getActivity(),VIDEO_URL);
+                if(audiourl != null && (! audiourl.isEmpty()))
+                    common.shareaudio(getActivity(), audiourl);
                 break;
             case R.id.img_menu:
                 checkwritestoragepermission();
@@ -878,8 +871,8 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 selectedvideouri = data.getData();
 
                 try {
-                    //VIDEO_URL=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
-                    VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
+                    //audiourl=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
+                    audiourl = common.getpath(getActivity(), selectedvideouri);
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -887,13 +880,13 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                     return;
                 }
 
-                if(VIDEO_URL == null || (VIDEO_URL.trim().isEmpty()))
+                if(audiourl == null || (audiourl.trim().isEmpty()))
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
 
-                if(! (new File(VIDEO_URL).exists()))
+                if(! (new File(audiourl).exists()))
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
@@ -926,7 +919,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 rlcontrollerview.setVisibility(View.VISIBLE);
                 playerposition=0;
                 righthandle.setVisibility(View.VISIBLE);
-                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+                if(audiourl != null && (! audiourl.isEmpty())){
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
@@ -978,7 +971,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
         isbitmapprocessing=true;
 
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+        m_mediaMetadataRetriever.setDataSource(audiourl);
 
         String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         String metadatawriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
@@ -1041,7 +1034,7 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
         currentframenumber = currentframenumber + frameduration;
         try
         {
-            customffmpegframegrabber grabber = new customffmpegframegrabber(new File(VIDEO_URL));
+            customffmpegframegrabber grabber = new customffmpegframegrabber(new File(audiourl));
             grabber.start();
             videomodel lastframehash=null;
             int totalframes=grabber.getLengthInAudioFrames();
