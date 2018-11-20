@@ -172,6 +172,7 @@ public class graphicalfragment extends basefragment implements
     View rootview;
     private float currentDegree = 0f;
 
+
     private SensorManager msensormanager;
     private Sensor maccelerometersensormanager;
 
@@ -192,7 +193,7 @@ public class graphicalfragment extends basefragment implements
     private Handler waveHandler;
     private Runnable waveRunnable;
     noise mNoise;
-    boolean isgraphicopen=false;
+    boolean isgraphicopen=false,photocapture=false;
     public String currenthashvalue="";
     boolean ismediaplayer = false;
     private boolean isinbackground=false;
@@ -326,7 +327,7 @@ public class graphicalfragment extends basefragment implements
                         if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                                 (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        if(ismediaplayer)
+                        if(ismediaplayer || photocapture)
                         {
                             if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
                             {
@@ -591,6 +592,11 @@ public class graphicalfragment extends basefragment implements
     public void setdrawerproperty(boolean isgraphicopen)
     {
         this.isgraphicopen=isgraphicopen;
+    }
+
+    public void setphotocapture(boolean photocapture)
+    {
+        this.photocapture=photocapture;
     }
 
     public void setchartdata()

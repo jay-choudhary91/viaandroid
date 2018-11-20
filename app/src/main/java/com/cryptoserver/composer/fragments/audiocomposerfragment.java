@@ -291,9 +291,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             {
                 e.printStackTrace();
             }
-
         }
-
         return rootview;
     }
 
@@ -419,6 +417,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         if(mrecorder != null)
         {
             isaudiorecording=false;
+            gethelper().setrecordingrunning(true);
             stoptimer();
             resettimer();
 
@@ -617,6 +616,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
         starttimer();
         isaudiorecording=true;
+        gethelper().setrecordingrunning(true);
     }
 
     //Conversion of short to byte
@@ -726,6 +726,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         if (null != audiorecorder) {
             try {
                 isaudiorecording = false;
+                gethelper().setrecordingrunning(false);
                 audiorecorder.stop();
                 audiorecorder.release();
                 audiorecorder = null;
@@ -946,32 +947,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
     private void startnoise() {
-
-        try {
-            if (mNoise != null)
-                mNoise.stop();
-
-            mNoise = new noise();
-
-            if (mNoise != null)
-                mNoise.start();
-
-            try {
-                if (mNoise != null)
-                {
-                    myvisualizerview.setVisibility(View.VISIBLE);
-                    getaudiowave();
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }catch (Exception e)
-        {
-
-        }
-
+        myvisualizerview.setVisibility(View.VISIBLE);
+        getaudiowave();
     }
 
     public void getaudiowave() {
@@ -984,7 +961,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                     if((isaudiorecording))
                     {
-                        int x = mNoise.getAmplitudevoice();
+                        int x = mrecorder.getMaxAmplitude();
                         myvisualizerview.addAmplitude(x); // update the VisualizeView
                         myvisualizerview.invalidate();
                     }
@@ -998,33 +975,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         wavehandler.post(waverunnable);
     }
 
-
-    private void stopnoise() {
-        try {
-            if(mNoise != null)
-            {
-                mNoise.stop();
-                //myvisualizerview.updateAmplitude((float) 0,false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         if(wavehandler != null && waverunnable != null)
             wavehandler.removeCallbacks(waverunnable);
-
-        try {
-            stopnoise();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
     }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)

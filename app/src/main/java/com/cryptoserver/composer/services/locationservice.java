@@ -216,10 +216,6 @@ public class locationservice extends Service implements LocationListener, GpsSta
 
             satellites++;
         }
-
-//        Log.e("Usedsatellite =","" + satellitesInFix);
-
-  //      Log.i(TAG, satellites + " Used In Last Fix ("+satellitesInFix+")");
         xdata.getinstance().saveSetting("gpsnumberofsatelites", "" + satellites);
     }
 

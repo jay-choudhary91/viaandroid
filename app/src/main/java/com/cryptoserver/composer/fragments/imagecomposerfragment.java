@@ -1415,6 +1415,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
                     fragmentgraphic.setmetricesdata();
+                    fragmentgraphic.setphotocapture(true);
                 }
                 myhandler.postDelayed(this, 1000);
             }
