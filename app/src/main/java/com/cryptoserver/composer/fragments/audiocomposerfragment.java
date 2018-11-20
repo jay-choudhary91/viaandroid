@@ -1256,6 +1256,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
 
     @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid){
+            case R.id.img_menu:
+                gethelper().onBack();
+                break;
+        }
+    }
+
+    @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
         switch (view.getId())
