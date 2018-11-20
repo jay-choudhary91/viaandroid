@@ -22,8 +22,10 @@ import android.view.inputmethod.InputMethodManager;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.audiocomposerfragment;
+import com.cryptoserver.composer.fragments.audiotabreaderfrag;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
+import com.cryptoserver.composer.fragments.phototabreaderfrag;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
@@ -224,7 +226,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         if(getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
-                || getcurrentfragment() instanceof imagecomposerfragment)
+                || getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof audiotabreaderfrag
+                || getcurrentfragment() instanceof phototabreaderfrag)
         {
             setbackpress();
             onBack();

@@ -26,21 +26,25 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginBottom="50dp">
+        android:background="@color/whitetransparent"
+        >
 
-        <ImageButton android:id="@+id/btn_playpause"
-            style="@android:style/MediaButton.Play"
+        <com.cryptoserver.composer.utils.circularImageview
+
+            android:id="@+id/btn_playpause"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@string/description"
             android:layout_above="@+id/mediacontroller_progress"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/play"
             android:layout_margin="10dp"
             />
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:layout_marginBottom="30dp">
 
             <ImageButton android:id="@+id/img_volume"
                 android:layout_marginTop="-7dp"
