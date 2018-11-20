@@ -68,17 +68,17 @@ public class metadatainsert {
         }
     }
 
-    public static void writemetadata(String videoFilePath, String data) throws IOException {
+    public static void writemetadata(String filepath, String data) throws IOException {
 
-        File videoFile = new File(videoFilePath);
+        File videoFile = new File(filepath);
         if (!videoFile.exists()) {
-            throw new FileNotFoundException("File " + videoFilePath + " not exists");
+            throw new FileNotFoundException("File " + filepath + " not exists");
         }
 
         if (!videoFile.canWrite()) {
-            throw new IllegalStateException("No write permissions to file " + videoFilePath);
+            throw new IllegalStateException("No write permissions to file " + filepath);
         }
-        IsoFile isoFile = new IsoFile(videoFilePath);
+        IsoFile isoFile = new IsoFile(filepath);
 
         MovieBox moov = isoFile.getBoxes(MovieBox.class).get(0);
         FreeBox freeBox = findFreeBox(moov);

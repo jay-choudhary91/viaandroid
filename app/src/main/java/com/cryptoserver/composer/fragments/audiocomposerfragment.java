@@ -8,8 +8,8 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -39,6 +39,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.metadata.metadatainsert;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
@@ -56,10 +57,10 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,6 +101,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
     videoframeadapter mmetricesadapter,mhashesadapter;
+    private MediaRecorder mrecorder;
     private String selectedfile = null,selectedmetrices="", selectedhashes ="";;
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
@@ -115,20 +117,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private Runnable waverunnable;
     private String keytype =config.prefs_md5;
     JSONArray metadatametricesjson=new JSONArray();
-    private long currentframenumber =0,mframetorecordcount=0,frameduration =15,framegap=0;
+    private long currentframenumber =0,mframetorecordcount=0,frameduration =15;
     private ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    noise mNoise;
 
-    private static final int RECORDER_BPP = 16;
-    private static final String AUDIO_RECORDER_FILE_EXT_WAV = ".wav";
-    private static final String AUDIO_RECORDER_FOLDER = "AudioRecorder";
-    private static final String AUDIO_RECORDER_TEMP_FILE = "record_temp.raw";
-    private static final int RECORDER_SAMPLERATE = 44100;
-    private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_STEREO;
+    private static final int RECORDER_SAMPLERATE = 8000;
+    private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-
-    private AudioRecord recorder = null;
-    private int bufferSize = 0;
+    private AudioRecord audiorecorder = null;
     private Thread recordingThread = null;
+    int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
+    int BytesPerElement = 2; // 2 bytes in 16bit format
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     @Override
     public int getlayoutid() {
@@ -285,18 +284,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             frameduration=common.checkframeduration();
             startnoise();
             setmetriceshashesdata();
-
             try {
-                bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
-                        AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT);
+                int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
+                        RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
-
         }
-
         return rootview;
     }
 
@@ -336,6 +331,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         selectedmetrices="";
                     }
                 }
+
             }
         });
     }
@@ -418,15 +414,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     @Override
     public void onPause() {
-        if(recorder != null)
+        if(mrecorder != null)
         {
             isaudiorecording=false;
-            gethelper().setrecordingrunning(false);
+            gethelper().setrecordingrunning(true);
             stoptimer();
             resettimer();
 
-            myvisualizerview.clear();
-            myvisualizerview.setVisibility(View.INVISIBLE);
             try {
                 if(common.getstoragedeniedpermissions().isEmpty() && (selectedfile != null )
                         && new File(selectedfile).exists())
@@ -437,8 +431,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
 
             try{
-                recorder.stop();
-                recorder.release();
+                mrecorder.stop();
+                mrecorder.release();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -453,12 +447,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(! isaudiorecording)
                 {
                     myvisualizerview.setVisibility(View.VISIBLE);
-                    startrecording();
+                    try {
+                        startrecording();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else
                 {
                     stoprecording();
                 }
+
                 break;
             }
             case R.id.txt_slot1:
@@ -519,16 +518,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    @Override
-    public void onHeaderBtnClick(int btnid) {
-        super.onHeaderBtnClick(btnid);
-        switch (btnid){
-            case R.id.img_menu:
-                gethelper().onBack();
-                break;
-        }
-    }
-
     public void starttimer()
     {
         StartTime = SystemClock.uptimeMillis();
@@ -585,7 +574,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     };
 
-    private void startrecording() {
+    private void startrecording() throws IOException {
+
         selectedhashes="";
         metadatametricesjson=new JSONArray();
         selectedmetrices="";
@@ -597,77 +587,193 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         mframetorecordcount =0;
         currentframenumber = currentframenumber + frameduration;
 
+
+        mrecorder = new MediaRecorder();
+        mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mrecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        selectedfile = getfile().getAbsolutePath();
+        Log.d("filename",selectedfile);
+        mrecorder.setOutputFile(selectedfile);
+        mrecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
         try {
-            recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,RECORDER_SAMPLERATE,RECORDER_CHANNELS,RECORDER_AUDIO_ENCODING,bufferSize);
-            gethelper().setrecordingrunning(true);
-            int i = recorder.getState();
-            if(i==1)
-                recorder.startRecording();
+            mrecorder.prepare();
+            mrecorder.start();
 
-            starttimer();
-            isaudiorecording=true;
+            audiorecorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
+                    RECORDER_SAMPLERATE, RECORDER_CHANNELS,
+                    RECORDER_AUDIO_ENCODING, BufferElements2Rec * BytesPerElement);
 
+            audiorecorder.startRecording();
             recordingThread = new Thread(new Runnable() {
-
-                @Override
                 public void run() {
-                    writeaudiodatatofile();
+                    writeAudioDataToFile();
                 }
-            },"AudioRecorder Thread");
-
+            }, "AudioRecorder Thread");
             recordingThread.start();
-        }catch (Exception e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        starttimer();
+        isaudiorecording=true;
+        gethelper().setrecordingrunning(true);
     }
 
-    private void writeaudiodatatofile(){
-        byte data[] = new byte[bufferSize];
-        String filename = gettempfilename();
+    //Conversion of short to byte
+    private byte[] short2byte(short[] sData) {
+        int shortArrsize = sData.length;
+        byte[] bytes = new byte[shortArrsize * 2];
+
+        for (int i = 0; i < shortArrsize; i++) {
+            bytes[i * 2] = (byte) (sData[i] & 0x00FF);
+            bytes[(i * 2) + 1] = (byte) (sData[i] >> 8);
+            sData[i] = 0;
+        }
+        return bytes;
+    }
+
+    private void writeAudioDataToFile() {
+        // Write the output audio in byte
+        String filePath = gettempfile().getAbsolutePath();
+
+        short sData[] = new short[BufferElements2Rec];
+
         FileOutputStream os = null;
-        framegap=0;
         try {
-            os = new FileOutputStream(filename);
+            os = new FileOutputStream(filePath);
         } catch (FileNotFoundException e) {
-// TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        int read = 0;
-
-        if(null != os){
-            while(isaudiorecording){
-                read = recorder.read(data, 0, bufferSize);
-
-                if(AudioRecord.ERROR_INVALID_OPERATION != read){
-                    try {
-                        os.write(data);
-
-                        if(framegap == 1 && isaudiorecording)
-                        {
-                            framegap=0;
-                            Log.e("Frame count ",""+mframetorecordcount);
-                            if(mframetorecordcount == currentframenumber)
-                            {
-                                updatelistitemnotify(data,currentframenumber,"Frame");
-                                currentframenumber = currentframenumber + frameduration;
-                            }
-                            mframetorecordcount++;
-                        }
-                        framegap++;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
+        int framegap=0;
+        while (isaudiorecording) {
+            // gets the voice output from microphone to byte format
+            audiorecorder.read(sData, 0, BufferElements2Rec);
+            System.out.println("Short wirting to file" + sData.toString());
             try {
-                os.close();
+                // writes the data to file from buffer stores the voice buffer
+                byte data[] = short2byte(sData);
+                os.write(data, 0, BufferElements2Rec * BytesPerElement);
+
+                if(isaudiorecording)
+                {
+                    Log.e("Frame count ",""+mframetorecordcount);
+                    if(framegap == 2)
+                    {
+                        framegap=0;
+                        updatelistitemnotify(data,currentframenumber,"Frame");
+                        currentframenumber = currentframenumber + frameduration;
+                    }
+                    framegap++;
+                    mframetorecordcount++;
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        try {
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private File getfile() {
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File file=new File(config.videodir, fileName+".m4a");
+
+        File destinationDir=new File(config.videodir);
+        try {
+
+            if (!destinationDir.exists())
+                destinationDir.mkdirs();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    private File gettempfile() {
+        String fileName = "audiotemp.pcm";
+        File file=new File(config.videodir, fileName);
+
+        File destinationDir=new File(config.videodir);
+        try {
+
+            if (!destinationDir.exists())
+                destinationDir.mkdirs();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    private void stoprecording() {
+
+        try{
+            mrecorder.stop();
+            mrecorder.release();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if (null != audiorecorder) {
+            try {
+                isaudiorecording = false;
+                gethelper().setrecordingrunning(false);
+                audiorecorder.stop();
+                audiorecorder.release();
+                audiorecorder = null;
+                recordingThread = null;
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        if(madapterclick != null)
+            madapterclick.onItemClicked(null,1);
+
+        mrecorder = null;
+        stoptimer();
+        resettimer();
+        isaudiorecording=false;
+        if(mrecorder==null){
+            myvisualizerview.clear();
+            myvisualizerview.setVisibility(View.INVISIBLE);
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    setaudiohashes();
+                    metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
+
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(madapterclick != null)
+                                madapterclick.onItemClicked(null,1);
+                        }
+                    });
+
+                }catch (Exception e)
+                {
+                    Log.e("Meta data Error","Error");
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        showsharepopupmain();
     }
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
@@ -709,184 +815,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }).start();
     }
 
-    private void stoprecording() {
-        // stops the recording activity
-
-        if(null != recorder){
-            try {
-                gethelper().setrecordingrunning(false);
-                isaudiorecording=false;
-                recorder.stop();
-                recorder.release();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            recorder = null;
-            recordingThread = null;
-
-            stoptimer();
-            resettimer();
-            if(recorder==null){
-                myvisualizerview.clear();
-                myvisualizerview.setVisibility(View.INVISIBLE);
-            }
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    try {
-                        selectedfile=getfile().getAbsolutePath();
-                        copywavefile(gettempfilename(),selectedfile);
-                        setaudiohashes();
-                        //metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
-                        common.deletefile(gettempfilename());;
-
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(madapterclick != null)
-                                    madapterclick.onItemClicked(null,1);
-                            }
-                        });
-
-                    }catch (Exception e)
-                    {
-                        Log.e("Meta data Error","Error");
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-        showsharepopupmain();
-    }
-
-    private String gettempfilename(){
-        String filepath = Environment.getExternalStorageDirectory().getPath();
-        File file = new File(filepath,AUDIO_RECORDER_FOLDER);
-
-        if(!file.exists()){
-            file.mkdirs();
-        }
-
-        File tempFile = new File(filepath,AUDIO_RECORDER_TEMP_FILE);
-
-        if(tempFile.exists())
-            tempFile.delete();
-
-        return (file.getAbsolutePath() + "/" + AUDIO_RECORDER_TEMP_FILE);
-    }
-
-
-    private void writewavefileheader(
-            FileOutputStream out, long totalAudioLen,
-            long totalDataLen, long longSampleRate, int channels,
-            long byteRate) throws IOException {
-
-        byte[] header = new byte[44];
-
-        header[0] = 'R'; // RIFF/WAVE header
-        header[1] = 'I';
-        header[2] = 'F';
-        header[3] = 'F';
-        header[4] = (byte) (totalDataLen & 0xff);
-        header[5] = (byte) ((totalDataLen >> 8) & 0xff);
-        header[6] = (byte) ((totalDataLen >> 16) & 0xff);
-        header[7] = (byte) ((totalDataLen >> 24) & 0xff);
-        header[8] = 'W';
-        header[9] = 'A';
-        header[10] = 'V';
-        header[11] = 'E';
-        header[12] = 'f'; // 'fmt ' chunk
-        header[13] = 'm';
-        header[14] = 't';
-        header[15] = ' ';
-        header[16] = 16; // 4 bytes: size of 'fmt ' chunk
-        header[17] = 0;
-        header[18] = 0;
-        header[19] = 0;
-        header[20] = 1; // format = 1
-        header[21] = 0;
-        header[22] = (byte) channels;
-        header[23] = 0;
-        header[24] = (byte) (longSampleRate & 0xff);
-        header[25] = (byte) ((longSampleRate >> 8) & 0xff);
-        header[26] = (byte) ((longSampleRate >> 16) & 0xff);
-        header[27] = (byte) ((longSampleRate >> 24) & 0xff);
-        header[28] = (byte) (byteRate & 0xff);
-        header[29] = (byte) ((byteRate >> 8) & 0xff);
-        header[30] = (byte) ((byteRate >> 16) & 0xff);
-        header[31] = (byte) ((byteRate >> 24) & 0xff);
-        header[32] = (byte) (2 * 16 / 8); // block align
-        header[33] = 0;
-        header[34] = RECORDER_BPP; // bits per sample
-        header[35] = 0;
-        header[36] = 'd';
-        header[37] = 'a';
-        header[38] = 't';
-        header[39] = 'a';
-        header[40] = (byte) (totalAudioLen & 0xff);
-        header[41] = (byte) ((totalAudioLen >> 8) & 0xff);
-        header[42] = (byte) ((totalAudioLen >> 16) & 0xff);
-        header[43] = (byte) ((totalAudioLen >> 24) & 0xff);
-
-        out.write(header, 0, 44);
-    }
-
-    private void copywavefile(String inFilename, String outFilename){
-        FileInputStream in = null;
-        FileOutputStream out = null;
-        long totalAudioLen = 0;
-        long totalDataLen = totalAudioLen + 36;
-        long longSampleRate = RECORDER_SAMPLERATE;
-        int channels = 2;
-        long byteRate = RECORDER_BPP * RECORDER_SAMPLERATE * channels/8;
-
-        byte[] data = new byte[bufferSize];
-
-        try {
-            in = new FileInputStream(inFilename);
-            out = new FileOutputStream(outFilename);
-            totalAudioLen = in.getChannel().size();
-            totalDataLen = totalAudioLen + 36;
-
-           // AppLog.logString("File size: " + totalDataLen);
-
-            writewavefileheader(out, totalAudioLen, totalDataLen,
-                    longSampleRate, channels, byteRate);
-
-            while(in.read(data) != -1){
-                out.write(data);
-            }
-
-            in.close();
-            out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private File getfile() {
-        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.videodir, fileName+""+AUDIO_RECORDER_FILE_EXT_WAV);
-
-        File destinationDir=new File(config.videodir);
-        try {
-
-            if (!destinationDir.exists())
-                destinationDir.mkdirs();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return file;
-    }
 
 
     public void setaudiohashes()
@@ -904,6 +832,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             int count = 1;
             currentframenumber=0;
             currentframenumber = currentframenumber + frameduration;
+
 
             customffmpegframegrabber grabber = new customffmpegframegrabber(new File(selectedfile));
             grabber.start();
@@ -1018,32 +947,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
     private void startnoise() {
-
-        try {
-            if (noise != null)
-                noise.stop();
-
-            noise = new noise();
-
-            if (noise != null)
-                noise.start();
-
-            try {
-                if (noise != null)
-                {
-                    myvisualizerview.setVisibility(View.VISIBLE);
-                    getaudiowave();
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }catch (Exception e)
-        {
-
-        }
-
+        myvisualizerview.setVisibility(View.VISIBLE);
+        getaudiowave();
     }
 
     public void getaudiowave() {
@@ -1056,7 +961,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                     if((isaudiorecording))
                     {
-                        int x = noise.getAmplitudevoice();
+                        int x = mrecorder.getMaxAmplitude();
                         myvisualizerview.addAmplitude(x); // update the VisualizeView
                         myvisualizerview.invalidate();
                     }
@@ -1070,33 +975,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         wavehandler.post(waverunnable);
     }
 
-
-    private void stopnoise() {
-        try {
-            if(noise != null)
-            {
-                noise.stop();
-                //myvisualizerview.updateAmplitude((float) 0,false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         if(wavehandler != null && waverunnable != null)
             wavehandler.removeCallbacks(waverunnable);
-
-        try {
-            stopnoise();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
     }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
@@ -1191,6 +1074,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         };
         myHandler.post(myRunnable);
     }
+
 
 
     public void showsharepopupmain()
@@ -1356,6 +1240,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         gethelper().onBack();
     }
 
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
@@ -1374,8 +1259,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private final int flingactionmindstvac=common.getdrawerswipearea();
-        private static final int flingactionmindspdvac = 10;
+        private static final int flingactionmindstvac = 60;
+        private static final int flingactionmindspdvac = 100;
 
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
