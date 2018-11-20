@@ -1124,6 +1124,58 @@ public class common {
         }
     }
 
+    public static void exportaudio(final File file, boolean savetohome)
+    {
+        String sourcePath = file.getAbsolutePath();
+        File sourceFile = new File(sourcePath);
+
+        File destinationDir=null;
+
+        if(savetohome)
+        {
+            destinationDir = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_MUSIC), BuildConfig.APPLICATION_ID);
+        }
+        else
+        {
+            destinationDir=new File(config.videodir);
+        }
+
+        if (!destinationDir.exists())
+            destinationDir.mkdirs();
+
+        final File mediaFile = new File(destinationDir.getPath() + File.separator +
+                sourceFile.getName());
+        try
+        {
+            if (!mediaFile.getParentFile().exists())
+                mediaFile.getParentFile().mkdirs();
+
+            if (!mediaFile.exists()) {
+                mediaFile.createNewFile();
+            }
+
+            InputStream in = new FileInputStream(sourceFile);
+            OutputStream out = new FileOutputStream(mediaFile);
+
+            // Copy the bits from instream to outstream
+            byte[] buf = new byte[1024];
+            int len;
+
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            in.close();
+            out.close();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            Log.e("Video export ","Error2");
+        }
+    }
+
 
     public static void exportimage(final File file, boolean savetohome)
     {

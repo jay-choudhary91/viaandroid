@@ -47,6 +47,7 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
+import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
@@ -1200,7 +1201,20 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(subdialogshare != null && subdialogshare.isShowing())
                     subdialogshare.dismiss();
 
-                launchmedialist();
+                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        common.exportaudio(new File(selectedfile),true);
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressdialog.dismisswaitdialog();
+                                launchmedialist();
+                            }
+                        });
+                    }
+                }).start();
 
             }
         });
