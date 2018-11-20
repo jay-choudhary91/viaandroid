@@ -40,6 +40,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
@@ -54,6 +55,7 @@ import com.cryptoserver.composer.utils.xdata;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -62,6 +64,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -98,6 +101,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
     private ArrayList<videomodel> mainphotoframes =new ArrayList<>();
     private ArrayList<videomodel> mphotoframes =new ArrayList<>();
     private ArrayList<videomodel> mallframes =new ArrayList<>();
+    private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     @BindView(R.id.tab_photoreader)
     ImageView tab_photoreader;
     private Handler myhandler;
@@ -480,11 +484,12 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED ) {
+                    PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED) {
                 opengallery();
             } else {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "app needs to be able to save photos", Toast.LENGTH_SHORT).show();
                 }
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         request_read_external_storage);
@@ -668,7 +673,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
                         }.start();
                         new Thread(){
                             public void run(){
-                               // getFramesBitmap();
+                                getmetricsmetadata();
                             }
                         }.start();
                     }
@@ -689,7 +694,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
 
                     }
 
-                  //  setmetricesgraphicaldata();
+                   setmetricesgraphicaldata();
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
@@ -798,5 +803,92 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
             tab_photoreader.setImageBitmap(null);
         }
     }*/
+
+
+    public void getmetricsmetadata() {
+        String phnmetadata=null;
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        ExifInterface exif = null;
+
+        try {
+            exif = new ExifInterface(photo_url);
+            if (exif != null) {
+                String photometadata = exif.getAttribute(ExifInterface.TAG_USER_COMMENT);
+                Log.e("usercomment", "" + photometadata);
+                if(photometadata != null && (! photometadata.trim().isEmpty()) && !photometadata.equals("null")){
+                    String split[]=photometadata.split("\\|");
+                    String title = (split.length >= 1) ? split[0] : "";
+                    String data = (split.length >= 2) ? split[1] : "";
+                    data=data.replace("?","");
+                    if(data!=null){
+                        JSONObject jsonobject=new JSONObject(data);
+                        Log.e("jsonobject",jsonobject.toString());
+                        metricmainarraylist.clear();
+                        ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                        Iterator<String> myIter = jsonobject.keys();
+                        while (myIter.hasNext()) {
+                            String key = myIter.next();
+                            String value = jsonobject.optString(key);
+                            metricmodel model=new metricmodel();
+                            model.setMetricTrackKeyName(key);
+                            model.setMetricTrackValue(value);
+                            metricItemArraylist.add(model);
+                        }
+                        metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setmetricesgraphicaldata()
+    {
+            int position=metricmainarraylist.size()-1;
+            if(position>=0){
+                if(! metricmainarraylist.get(position).isIsupdated())
+                {
+                    metricmainarraylist.get(position).setIsupdated(true);
+                    ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(position).getMetricItemArraylist();
+                    for(int j=0;j<metricItemArraylist.size();j++)
+                    {
+                        selectedmetrices=selectedmetrices+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
+                                metricItemArraylist.get(j).getMetricTrackValue();
+                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                metricItemArraylist.get(j).getMetricTrackValue(),true);
+                    }
+
+                    selectedmetrices=selectedmetrices+"\n";
+
+                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                    }
+
+                    if((tab_photoreader != null) && (! selectedmetrices.toString().trim().isEmpty()))
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        selectedmetrices="";
+                    }
+                }
+
+                if(fragment_graphic_container .getVisibility() == View.VISIBLE)
+                {
+                    if(fragmentgraphic != null)
+                        fragmentgraphic.setmetricesdata();
+
+                }
+            }
+    }
 
 }
