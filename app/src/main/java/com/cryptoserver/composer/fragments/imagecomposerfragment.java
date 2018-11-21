@@ -1719,6 +1719,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             public void run() {
 
                                 try {
+                                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                                    getselectedmetrics(mlocalarraylist);
                                     saveimagemetadata(mFile,""+ metadatametricesjson);
                                 } catch (IOException e) {
                                     e.printStackTrace();

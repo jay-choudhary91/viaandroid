@@ -824,6 +824,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
             exif = new ExifInterface(photo_url);
             if (exif != null) {
                 String photometadata = exif.getAttribute(ExifInterface.TAG_USER_COMMENT);
+                String artistdata = exif.getAttribute(ExifInterface.TAG_ARTIST);
                 Log.e("usercomment", "" + photometadata);
                 if(photometadata != null && (! photometadata.trim().isEmpty()) && !photometadata.equals("null")){
                     String split[]=photometadata.split("\\|");
