@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.audiocomposerfragment;
@@ -226,11 +227,17 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         if(getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
-                || getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof audiotabreaderfrag
-                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof phototabreaderfrag)
+                || getcurrentfragment() instanceof imagecomposerfragment)
         {
             setbackpress();
             onBack();
+        }
+        else if(getcurrentfragment() instanceof audiotabreaderfrag
+                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof phototabreaderfrag)
+        {
+            setbackpress();
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                onBack();
         }
         else
         {

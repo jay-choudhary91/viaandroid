@@ -644,6 +644,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 implementscrolllistener();
             }
 
+            keytype=common.checkkey();
+
         }
         return rootview;
     }
@@ -659,7 +661,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             public void run() {
                 mhashesitems.clear();
                 mhashesadapter.notifyDataSetChanged();
-                mvideoframes.add(new videomodel(selectedhashes));
+
+                mhashesitems.add(new videomodel(selectedhashes));
                 mhashesadapter.notifyDataSetChanged();
                 recyview_hashes.scrollToPosition(mhashesitems.size()-1);
             }
@@ -725,22 +728,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 break;
         }
         return value;
-    }
-
-    public void setmetricesadapter()
-    {
-        if(selectedmetrices.toString().trim().length() > 0)
-        {
-            mmetricsitems.add(new videomodel(selectedmetrices));
-            recyview_metrices.post(new Runnable() {
-                @Override
-                public void run() {
-                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                    selectedmetrices="";
-                }
-            });
-        }
-
     }
 
     // Implement scroll listener
@@ -1357,7 +1344,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 boolean graphicopen=false;
                 if(isdraweropen)
                 {
-                    if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
+                    /*if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
                     {
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
@@ -1367,7 +1354,21 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                                 selectedhashes="";
                             }
                         });
+                    }*/
+
+                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
+                    {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mmetricsitems.add(new videomodel(selectedmetrices));
+                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                                selectedmetrices="";
+                            }
+                        });
                     }
+
+
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
