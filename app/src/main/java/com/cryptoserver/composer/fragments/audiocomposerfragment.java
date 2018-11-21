@@ -63,6 +63,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -847,10 +848,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(isaudiorecording)
                     break;
 
-                ByteBuffer buffer= ((ByteBuffer) frame.samples[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
-
+                ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
+                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 2);
+                bb.asShortBuffer().put(shortbuff);
+                byte[] byteData = bb.array();
                 String keyValue= getkeyvalue(byteData);
 
                 if (count == currentframenumber) {

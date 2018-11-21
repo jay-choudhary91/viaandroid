@@ -14,7 +14,6 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
@@ -911,13 +910,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mFlashSupported = available == null ? false : available;
 
 //            }
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (NullPointerException e) {
-            // Currently an NPE is thrown when the Camera2API is used but not supported on the
-            // device this code runs.
-            ErrorDialog.newInstance(getString(R.string.camera_error))
-                    .show(getChildFragmentManager(), FRAGMENT_DIALOG);
         }
     }
 
@@ -936,10 +930,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
             manager.openCamera(cameraid, mStateCallback, mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
         }
     }
 
@@ -1048,7 +1040,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         }
                     }, null
             );
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1107,7 +1099,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mState = STATE_WAITING_LOCK;
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1125,7 +1117,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mState = STATE_WAITING_PRECAPTURE;
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1185,7 +1177,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     showsharepopupmain();
                     Log.d(TAG, capturedimagefile.toString());
                     unlockfocus();
-                    //gethelper().onBack();
                 }
             };
 
@@ -1194,7 +1185,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
 
 
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1231,7 +1222,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mState = STATE_PREVIEW;
             mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback,
                     mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1847,7 +1838,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     }
                 }
             }
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1910,6 +1901,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             if (exif != null) {
                 String imagemetadata = common.getnamefrompath(capturedimagefile.getAbsolutePath())+"|"+ data;
                 exif.setAttribute(ExifInterface. TAG_USER_COMMENT, imagemetadata);
+                exif.setAttribute(ExifInterface. TAG_ARTIST, imagemetadata);
                 Log.e("imagemetadata",imagemetadata);
                 exif.saveAttributes();
                 String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);

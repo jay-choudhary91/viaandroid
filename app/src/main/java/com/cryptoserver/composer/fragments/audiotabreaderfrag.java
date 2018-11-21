@@ -57,6 +57,8 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,7 +66,14 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Iterator;
@@ -1033,10 +1042,41 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 if (frame == null)
                     break;
 
-                ByteBuffer buffer= ((ByteBuffer) frame.samples[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
+                ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
+                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 2);
+                bb.asShortBuffer().put(shortbuff);
+                byte[] byteData = bb.array();
                 String keyValue= getkeyvalue(byteData);
+                Log.e("hashes ",""+keyValue);
+
+                /*Buffer outputBuffer = frame.samples[0];
+                ByteBuffer byteBuffer=null;
+                if (outputBuffer instanceof ByteBuffer) {
+                    byteBuffer = (ByteBuffer) outputBuffer;
+                } else if (outputBuffer instanceof CharBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity());
+                    byteBuffer.asCharBuffer().put((CharBuffer) outputBuffer);
+                } else if (outputBuffer instanceof ShortBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 2);
+                    byteBuffer.asShortBuffer().put((ShortBuffer) outputBuffer);
+                } else if (outputBuffer instanceof IntBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
+                    byteBuffer.asIntBuffer().put((IntBuffer) outputBuffer);
+                } else if (outputBuffer instanceof LongBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
+                    byteBuffer.asLongBuffer().put((LongBuffer) outputBuffer);
+                } else if (outputBuffer instanceof FloatBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
+                    byteBuffer.asFloatBuffer().put((FloatBuffer) outputBuffer);
+                } else if (outputBuffer instanceof DoubleBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
+                    byteBuffer.asDoubleBuffer().put((DoubleBuffer) outputBuffer);
+                }
+
+                byte[] byteData = new byte[byteBuffer.remaining()];
+                byteBuffer.get(byteData);
+                String keyValue= getkeyvalue(byteData);
+                Log.e("hashes ",""+keyValue);*/
 
                 if(fragmentgraphic != null)
                     fragmentgraphic.sethashesdata(keyValue);

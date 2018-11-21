@@ -717,20 +717,29 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
 
 
     public void setimagehash() throws FileNotFoundException {
-        selectedhashes =  md5.fileToMD5(photo_url);
-        selectedhashes=keytype+" : "+selectedhashes;
-        Log.e("keyhash = ","" +selectedhashes);
+        Bitmap bitmap = BitmapFactory.decodeFile(photo_url);
+        if(bitmap!=null){
+           //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+           // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+           // byte[] byteArray = stream.toByteArray();
+           // bitmap.recycle();
+           // selectedhashes =  getkeyvalue(byteArray);
+            selectedhashes =  md5.fileToMD5(photo_url);
+            selectedhashes=keytype+" : "+selectedhashes;
+            Log.e("keyhash = ","" +selectedhashes);
 
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mhashesitems.clear();
-                mhashesadapter.notifyDataSetChanged();
-                mphotoframes.add(new videomodel(selectedhashes));
-                mhashesadapter.notifyDataSetChanged();
-                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-            }
-        });
+            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mhashesitems.clear();
+                    mhashesadapter.notifyDataSetChanged();
+
+                    mphotoframes.add(new videomodel(selectedhashes));
+                    mhashesadapter.notifyDataSetChanged();
+                    recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+                }
+            });
+        }
     }
     public String getkeyvalue(byte[] data)
     {
