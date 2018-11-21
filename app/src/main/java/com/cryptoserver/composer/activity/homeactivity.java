@@ -85,9 +85,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             fragvideolist=new fragmentmedialist();
             replaceFragment(fragvideolist, false, true);
-
-            /*fragbottombar=new bottombarfragment();
-            replaceFragment(fragbottombar, false, true);*/
         }
 
         imgaddicon.setOnClickListener(this);
@@ -298,23 +295,44 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }else if(fragment instanceof audiotabreaderfrag){
-             imgsettingsicon.setVisibility(View.VISIBLE);
-             img_menu.setVisibility(View.VISIBLE);
-             imgshareicon.setVisibility(View.VISIBLE);
-             imgsettingsicon.setEnabled(true);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
+             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+             {
+                 imgsettingsicon.setVisibility(View.VISIBLE);
+                 img_menu.setVisibility(View.VISIBLE);
+                 imgshareicon.setVisibility(View.VISIBLE);
+                 imgsettingsicon.setEnabled(true);
+                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                         RelativeLayout.LayoutParams.MATCH_PARENT);
+                 fragment_container.setLayoutParams(params);
+             }else{
+                 imgshareicon.setVisibility(View.VISIBLE);
+                 img_menu.setVisibility(View.VISIBLE);
+                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                         RelativeLayout.LayoutParams.MATCH_PARENT);
+                 fragment_container.setLayoutParams(params);
+             }
          } else if(fragment instanceof phototabreaderfrag){
-             imgsettingsicon.setVisibility(View.VISIBLE);
-             img_menu.setVisibility(View.VISIBLE);
-             imgshareicon.setVisibility(View.VISIBLE);
-             imgsettingsicon.setEnabled(true);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
+             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+             {
+                 imgsettingsicon.setVisibility(View.VISIBLE);
+                 img_menu.setVisibility(View.VISIBLE);
+                 imgshareicon.setVisibility(View.VISIBLE);
+                 imgsettingsicon.setEnabled(true);
+                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                         RelativeLayout.LayoutParams.MATCH_PARENT);
+                 fragment_container.setLayoutParams(params);
+             }else{
+                 img_menu.setVisibility(View.VISIBLE);
+                 imgshareicon.setVisibility(View.VISIBLE);
+                 imgsettingsicon.setEnabled(true);
+                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                         RelativeLayout.LayoutParams.MATCH_PARENT);
+                 fragment_container.setLayoutParams(params);
+             }
+
          }else if(fragment instanceof videotabreaderfrag){
 
          }

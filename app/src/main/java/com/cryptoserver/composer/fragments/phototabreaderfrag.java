@@ -36,6 +36,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -253,6 +254,16 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
                 recyview_metrices.setItemAnimator(new DefaultItemAnimator());
                 recyview_metrices.setAdapter(mmetricesadapter);
                 implementscrolllistener();
+            }
+            photo_url=xdata.getinstance().getSetting("selectedphotourl");
+            if(photo_url != null && (! photo_url.isEmpty())){
+                mphotoframes.clear();
+                mainphotoframes.clear();
+                mallframes.clear();
+                txt_metrics.setText("");
+                txt_hashes.setText("");
+                isnewphotofound=true;
+                setupphoto(Uri.parse(photo_url));
             }
             if(fragmentgraphic == null) {
                 fragmentgraphic = new graphicalfragment();
@@ -480,7 +491,11 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_menu:
-                checkwritestoragepermission();
+                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
+                    checkwritestoragepermission();
+                }else{
+                    gethelper().onBack();
+                }
                 break;
 
         }
@@ -578,9 +593,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
 
                 if(ishashprocessing)
                     suspendframequeue=true;
-                if(photo_url!=null){
-                    tab_photoreader.setImageURI(selectedphotouri);
-                }
+                  setupphoto(selectedphotouri);
                 righthandle.setVisibility(View.VISIBLE);
                 if(photo_url != null && (! photo_url.isEmpty())){
                     mphotoframes.clear();
@@ -611,8 +624,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
          try {
              if(photo_url != null && (! photo_url.isEmpty()))
              {
-                 tab_photoreader.setImageURI(selectedphotouri);
-
+                setupphoto(Uri.parse(photo_url));
              }
              if(! keytype.equalsIgnoreCase(common.checkkey()) )
              {
@@ -801,14 +813,12 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
         }
         return value;
     }
-   /* public void destroyimageview()
+    public void setupphoto(final Uri selectedphotouri)
     {
-        if(tab_photoreader != null)
-        {
-            tab_photoreader.setImageURI(null);
-            tab_photoreader.setImageBitmap(null);
+        if(photo_url!=null){
+            tab_photoreader.setImageURI(selectedphotouri);
         }
-    }*/
+    }
 
 
     public void getmetricsmetadata() {

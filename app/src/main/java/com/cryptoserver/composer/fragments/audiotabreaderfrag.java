@@ -39,6 +39,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
@@ -241,7 +242,6 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
 
                 }
             });
-
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
 
@@ -262,15 +262,6 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
             fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-
-            if(fragmentgraphic == null) {
-                fragmentgraphic = new graphicalfragment();
-
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
-                transaction.commit();
-            }
 
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
@@ -295,7 +286,29 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                     player.start();
                 }
             });
+            audiourl=xdata.getinstance().getSetting("selectedaudiourl");
+            if(audiourl != null && (! audiourl.isEmpty())){
+                mvideoframes.clear();
+                mainvideoframes.clear();
+                mallframes.clear();
+                txt_metrics.setText("");
+                txt_hashes.setText("");
+                isnewvideofound=true;
+                audioduration =0;
+                playpausebutton.setImageResource(R.drawable.play);
+                rlcontrollerview.setVisibility(View.VISIBLE);
+                playerposition=0;
+                righthandle.setVisibility(View.VISIBLE);
+                setupaudioplayer(Uri.parse(audiourl));
 
+            }
+            if(fragmentgraphic == null) {
+                fragmentgraphic = new graphicalfragment();
+
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
+                transaction.commit();
+            }
             setmetriceshashesdata();
         }
         return rootview;
@@ -708,6 +721,14 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 hdlr.postDelayed(UpdateSongTime, 100);
                 player.setOnCompletionListener(this);
             }
+            else{
+                if(audiourl!=null){
+                    playpausebutton.setImageResource(R.drawable.pause);
+                    player.start();
+                    hdlr.postDelayed(UpdateSongTime, 100);
+                    player.setOnCompletionListener(this);
+                }
+            }
         }
     }
 
@@ -790,7 +811,11 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                     common.shareaudio(getActivity(), audiourl);
                 break;
             case R.id.img_menu:
-                checkwritestoragepermission();
+                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
+                    checkwritestoragepermission();
+                }else{
+                    gethelper().onBack();
+                }
                 break;
             case R.id.img_setting:
                 destroyvideoplayer();
@@ -997,13 +1022,12 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
 
                 player.prepareAsync();
-                //player.setOnPreparedListener(this);
+                player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
 
                 if(player!=null){
                     changeactionbarcolor();
                     initAudio();
-
                     setaudiodata();
                 }
 
