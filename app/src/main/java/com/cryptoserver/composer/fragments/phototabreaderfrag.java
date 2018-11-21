@@ -255,16 +255,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
                 recyview_metrices.setAdapter(mmetricesadapter);
                 implementscrolllistener();
             }
-            photo_url=xdata.getinstance().getSetting("selectedphotourl");
-            if(photo_url != null && (! photo_url.isEmpty())){
-                mphotoframes.clear();
-                mainphotoframes.clear();
-                mallframes.clear();
-                txt_metrics.setText("");
-                txt_hashes.setText("");
-                isnewphotofound=true;
-                setupphoto(Uri.parse(photo_url));
-            }
+
             if(fragmentgraphic == null) {
                 fragmentgraphic = new graphicalfragment();
 
@@ -274,6 +265,7 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
             }
 
             setmetriceshashesdata();
+            setupimagedata();
         }
         return rootview;
     }
@@ -588,24 +580,41 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
                 selectedhashes="";
                 selectedmetrices="";
 
+                xdata.getinstance().saveSetting("selectedphotourl",""+photo_url);
                 suspendframequeue=false;
                 suspendbitmapqueue=false;
 
-                if(ishashprocessing)
-                    suspendframequeue=true;
-                  setupphoto(selectedphotouri);
-                righthandle.setVisibility(View.VISIBLE);
-                if(photo_url != null && (! photo_url.isEmpty())){
-                    mphotoframes.clear();
-                    mainphotoframes.clear();
-                    mallframes.clear();
-                    txt_metrics.setText("");
-                    txt_hashes.setText("");
-                    isnewphotofound=true;
-                }
+                setupimagedata();
             }
         }
     }
+
+    public void setupimagedata()
+    {
+        photo_url=xdata.getinstance().getSetting("selectedphotourl");
+        if(photo_url != null && (! photo_url.isEmpty())){
+            setupphoto(Uri.parse(photo_url));
+            getmetricsmetadata();
+            new Thread(){
+                public void run(){
+                    try {
+                        setimagehash();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+        }
+    }
+
+    public void setupphoto(final Uri selectedphotouri)
+    {
+        if(photo_url!=null){
+            tab_photoreader.setImageURI(selectedphotouri);
+        }
+    }
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -621,42 +630,6 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
-         try {
-             if(photo_url != null && (! photo_url.isEmpty()))
-             {
-                setupphoto(Uri.parse(photo_url));
-             }
-             if(! keytype.equalsIgnoreCase(common.checkkey()) )
-             {
-                 keytype=common.checkkey();
-                 mphotoframes.clear();
-                 mainphotoframes.clear();
-                 mallframes.clear();
-                 isnewphotofound=true;
-             }
-         }catch (Exception e){
-             e.printStackTrace();
-         }
-
-    }
-    public static void saveimagemetadata(File filepath, String data) throws IOException {
-
-        ExifInterface exif = null;
-
-        try{
-            exif = new ExifInterface(filepath.getCanonicalPath());
-            if (exif != null) {
-                String imagedata = data;
-
-                exif.setAttribute(ExifInterface. TAG_USER_COMMENT, data);
-                exif.saveAttributes();
-
-                String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
-                Log.v("usercomment", ""+ usercomment);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
     public void setmetriceshashesdata()
     {
@@ -668,32 +641,6 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
             @Override
             public void run() {
                 boolean graphicopen=false;
-                if(isnewphotofound)
-                {
-                    if((! suspendframequeue) && (! suspendbitmapqueue))
-                    {
-                        isnewphotofound=false;
-                        selectedmetrices="";
-                        selectedhashes="";
-                        mhashesitems.clear();
-                        mhashesadapter.notifyDataSetChanged();
-
-                        new Thread(){
-                            public void run(){
-                                try {
-                                   setimagehash();
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }.start();
-                        new Thread(){
-                            public void run(){
-                                getmetricsmetadata();
-                            }
-                        }.start();
-                    }
-                }
 
                 if(isdraweropen)
                 {
@@ -707,7 +654,12 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
                                 selectedhashes="";
                             }
                         });
+                    }
 
+                    if ((tab_photoreader != null) && (!selectedmetrices.toString().trim().isEmpty())) {
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size() - 1);
+                        selectedmetrices = "";
                     }
 
                    setmetricesgraphicaldata();
@@ -727,99 +679,48 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
     }
 
 
+    public void setmetricesgraphicaldata() {
+        if (metricmainarraylist.size() > 0) {
+            if (!metricmainarraylist.get(metricmainarraylist.size()-1).isIsupdated()) {
+                metricmainarraylist.get(metricmainarraylist.size()-1).setIsupdated(true);
+                ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size()-1).getMetricItemArraylist();
+                for (int j = 0; j < metricItemArraylist.size(); j++) {
+                    selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
+                            metricItemArraylist.get(j).getMetricTrackValue();
+                    common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                            metricItemArraylist.get(j).getMetricTrackValue(), true);
+                }
+
+                selectedmetrices = selectedmetrices + "\n";
+
+
+            }
+
+            if (fragment_graphic_container.getVisibility() == View.VISIBLE) {
+                if (fragmentgraphic != null)
+                    fragmentgraphic.setmetricesdata();
+
+            }
+        }
+    }
 
     public void setimagehash() throws FileNotFoundException {
-        Bitmap bitmap = BitmapFactory.decodeFile(photo_url);
-        if(bitmap!=null){
-           //ByteArrayOutputStream stream = new ByteArrayOutputStream();
-           // bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-           // byte[] byteArray = stream.toByteArray();
-           // bitmap.recycle();
-           // selectedhashes =  getkeyvalue(byteArray);
-            selectedhashes =  md5.fileToMD5(photo_url);
-            selectedhashes=keytype+" : "+selectedhashes;
-            Log.e("keyhash = ","" +selectedhashes);
+        selectedhashes =  md5.fileToMD5(photo_url);
+        selectedhashes=keytype+" : "+selectedhashes;
+        Log.e("keyhash = ","" +selectedhashes);
 
-            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mhashesitems.clear();
-                    mhashesadapter.notifyDataSetChanged();
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
 
-                    mphotoframes.add(new videomodel(selectedhashes));
-                    mhashesadapter.notifyDataSetChanged();
-                    recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-                }
-            });
-        }
+                mphotoframes.add(new videomodel(selectedhashes));
+                mhashesadapter.notifyDataSetChanged();
+                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+            }
+        });
     }
-    public String getkeyvalue(byte[] data)
-    {
-        String value="";
-        String salt="";
-
-        switch (keytype)
-        {
-            case config.prefs_md5:
-                value= md5.calculatebytemd5(data);
-                break;
-
-            case config.prefs_md5_salt:
-                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
-                if(! salt.trim().isEmpty())
-                {
-                    byte[] saltbytes=salt.getBytes();
-                    try {
-                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                        outputstream.write(saltbytes);
-                        outputstream.write(data);
-                        byte updatedarray[] = outputstream.toByteArray();
-                        value= md5.calculatebytemd5(updatedarray);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    value= md5.calculatebytemd5(data);
-                }
-
-                break;
-            case config.prefs_sha:
-                value= sha.sha1(data);
-                break;
-            case config.prefs_sha_salt:
-                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
-                if(! salt.trim().isEmpty())
-                {
-                    byte[] saltbytes=salt.getBytes();
-                    try {
-                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                        outputstream.write(saltbytes);
-                        outputstream.write(data);
-                        byte updatedarray[] = outputstream.toByteArray();
-                        value= sha.sha1(updatedarray);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    value= sha.sha1(data);
-                }
-                break;
-        }
-        return value;
-    }
-    public void setupphoto(final Uri selectedphotouri)
-    {
-        if(photo_url!=null){
-            tab_photoreader.setImageURI(selectedphotouri);
-        }
-    }
-
 
     public void getmetricsmetadata() {
         String phnmetadata=null;
@@ -867,45 +768,6 @@ public class phototabreaderfrag extends basefragment implements View.OnClickList
         }
     }
 
-    public void setmetricesgraphicaldata()
-    {
-            int position=metricmainarraylist.size()-1;
-            if(position>=0){
-                if(! metricmainarraylist.get(position).isIsupdated())
-                {
-                    metricmainarraylist.get(position).setIsupdated(true);
-                    ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(position).getMetricItemArraylist();
-                    for(int j=0;j<metricItemArraylist.size();j++)
-                    {
-                        selectedmetrices=selectedmetrices+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
-                                metricItemArraylist.get(j).getMetricTrackValue();
-                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                metricItemArraylist.get(j).getMetricTrackValue(),true);
-                    }
 
-                    selectedmetrices=selectedmetrices+"\n";
-
-                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                    }
-
-                    if((tab_photoreader != null) && (! selectedmetrices.toString().trim().isEmpty()))
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                        selectedmetrices="";
-                    }
-                }
-
-                if(fragment_graphic_container .getVisibility() == View.VISIBLE)
-                {
-                    if(fragmentgraphic != null)
-                        fragmentgraphic.setmetricesdata();
-
-                }
-            }
-    }
 
 }
