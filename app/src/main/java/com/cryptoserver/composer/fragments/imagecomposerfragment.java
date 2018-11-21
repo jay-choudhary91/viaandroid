@@ -651,27 +651,20 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
 
     public void setimagehash() throws FileNotFoundException {
-        Bitmap bitmap = BitmapFactory.decodeFile(capturedimagefile.getAbsolutePath());
-        if(bitmap!=null){
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-            byte[] byteArray = stream.toByteArray();
-            bitmap.recycle();
-            selectedhashes =  getkeyvalue(byteArray);
-            selectedhashes=keytype+" : "+selectedhashes;
-            Log.e("keyhash = ",keytype+"" +selectedhashes);
+        selectedhashes =  md5.fileToMD5(capturedimagefile.getAbsolutePath());
+        selectedhashes=keytype+" : "+selectedhashes;
+        Log.e("keyhash = ","" +selectedhashes);
 
-            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mhashesitems.clear();
-                    mhashesadapter.notifyDataSetChanged();
-                    mvideoframes.add(new videomodel(selectedhashes));
-                    mhashesadapter.notifyDataSetChanged();
-                    recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-                }
-            });
-        }
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
+                mvideoframes.add(new videomodel(selectedhashes));
+                mhashesadapter.notifyDataSetChanged();
+                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+            }
+        });
     }
 
     public String getkeyvalue(byte[] data)
@@ -1388,28 +1381,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         graphicopen=true;
                 }
 
-                if(mmetricsitems.size() == 0)
-                {
-                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                    getselectedmetrics(mlocalarraylist);
-                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
-                    {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mmetricsitems.add(new videomodel(selectedmetrices));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                selectedmetrices="";
-                            }
-                        });
-                    }
-                    if(! selectedmetrices.toString().trim().isEmpty())
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                        selectedmetrices="";
-                    }
-                }
                 if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
