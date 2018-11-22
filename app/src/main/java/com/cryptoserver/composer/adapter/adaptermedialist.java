@@ -138,7 +138,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         else
         {
             Glide.with(context).
-                    load(R.drawable.audiotab).
+                    load(R.drawable.audiothum).
                     thumbnail(0.1f).
                     into(holder.img_videothumbnail);
            /* holder.img_videothumbnail.setBackgroundResource(R.drawable.audiotab);*/

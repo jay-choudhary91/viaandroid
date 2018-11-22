@@ -258,20 +258,26 @@ public class graphicalfragment extends basefragment implements
     {
         if(mgooglemap != null)
         {
-            if(ismediaplayer)
+            if(ismediaplayer || photocapture)
             {
+
+                Log.e("GraphicalLatLng",""+latlng.latitude+" "+latlng.longitude);
                 {
-                    points.add(latlng);
+                    /*points.add(latlng);
                     polylineOptions.addAll(points);
                     polylineOptions.color(Color.BLUE);
-                    polylineOptions.width(40);
+                    polylineOptions.width(20);
                     Polyline polyline =mgooglemap.addPolyline(polylineOptions);
                     polyline.setStartCap(new RoundCap());
                     polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.DEFAULT);
+                    polyline.setJointType(JointType.DEFAULT);*/
+
+                    mgooglemap.addMarker(new MarkerOptions()
+                     .position(latlng)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
                 }
 
-                {
+                /*{
                     points.add(latlng);
                     polylineOptions.addAll(points);
                     polylineOptions.color(Color.WHITE);
@@ -280,7 +286,7 @@ public class graphicalfragment extends basefragment implements
                     polyline.setStartCap(new RoundCap());
                     polyline.setEndCap(new RoundCap());
                     polyline.setJointType(JointType.ROUND);
-                }
+                }*/
             }
         }
     }
