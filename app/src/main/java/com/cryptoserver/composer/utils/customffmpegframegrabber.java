@@ -476,6 +476,7 @@ public class customffmpegframegrabber extends FrameGrabber {
     @Override public int getSampleFormat() {
         if (sampleMode == SampleMode.SHORT || sampleMode == SampleMode.FLOAT) {
             if (sampleFormat == AV_SAMPLE_FMT_NONE) {
+               // return sampleMode == SampleMode.SHORT ? AV_SAMPLE_FMT_S16 : AV_SAMPLE_FMT_FLT;
                 return sampleMode == SampleMode.SHORT ? AV_SAMPLE_FMT_S16 : AV_SAMPLE_FMT_FLT;
             } else {
                 return sampleFormat;
@@ -1008,13 +1009,13 @@ public class customffmpegframegrabber extends FrameGrabber {
                     case AV_SAMPLE_FMT_U8:
                     case AV_SAMPLE_FMT_U8P:  samples_buf[i] = b; break;
                     case AV_SAMPLE_FMT_S16:
-                    case AV_SAMPLE_FMT_S16P: samples_buf[i] = b; break;
+                    case AV_SAMPLE_FMT_S16P: samples_buf[i] = b.asShortBuffer();  break;
                     case AV_SAMPLE_FMT_S32:
-                    case AV_SAMPLE_FMT_S32P: samples_buf[i] = b; break;
+                    case AV_SAMPLE_FMT_S32P: samples_buf[i] = b.asIntBuffer();    break;
                     case AV_SAMPLE_FMT_FLT:
-                    case AV_SAMPLE_FMT_FLTP: samples_buf[i] = b; break;
+                    case AV_SAMPLE_FMT_FLTP: samples_buf[i] = b.asFloatBuffer();  break;
                     case AV_SAMPLE_FMT_DBL:
-                    case AV_SAMPLE_FMT_DBLP: samples_buf[i] = b; break;
+                    case AV_SAMPLE_FMT_DBLP: samples_buf[i] = b.asDoubleBuffer(); break;
                     default: assert false;
                 }
             }
@@ -1054,13 +1055,13 @@ public class customffmpegframegrabber extends FrameGrabber {
                         case AV_SAMPLE_FMT_U8:
                         case AV_SAMPLE_FMT_U8P:  samples_buf_out[i] = b; break;
                         case AV_SAMPLE_FMT_S16:
-                        case AV_SAMPLE_FMT_S16P: samples_buf_out[i] = b; break;
+                        case AV_SAMPLE_FMT_S16P: samples_buf_out[i] = b.asShortBuffer();  break;
                         case AV_SAMPLE_FMT_S32:
-                        case AV_SAMPLE_FMT_S32P: samples_buf_out[i] = b; break;
+                        case AV_SAMPLE_FMT_S32P: samples_buf_out[i] = b.asIntBuffer();    break;
                         case AV_SAMPLE_FMT_FLT:
-                        case AV_SAMPLE_FMT_FLTP: samples_buf_out[i] = b; break;
+                        case AV_SAMPLE_FMT_FLTP: samples_buf_out[i] = b.asFloatBuffer();  break;
                         case AV_SAMPLE_FMT_DBL:
-                        case AV_SAMPLE_FMT_DBLP: samples_buf_out[i] = b; break;
+                        case AV_SAMPLE_FMT_DBLP: samples_buf_out[i] = b.asDoubleBuffer(); break;
                         default: assert false;
                     }
                 }

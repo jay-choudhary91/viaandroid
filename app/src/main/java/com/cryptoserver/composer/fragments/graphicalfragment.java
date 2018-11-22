@@ -893,20 +893,30 @@ public class graphicalfragment extends basefragment implements
 
         mVisualizer = new Visualizer(mMediaPlayer.getAudioSessionId());
 
-        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-        mVisualizer.setDataCaptureListener(
-                new Visualizer.OnDataCaptureListener() {
-                    public void onWaveFormDataCapture(Visualizer visualizer,
-                                                      byte[] bytes, int samplingRate) {
+        if(mVisualizer != null && Visualizer.getCaptureSizeRange() != null && Visualizer.getCaptureSizeRange().length > 0)
+        {
+            try {
+                mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+                mVisualizer.setDataCaptureListener(
+                        new Visualizer.OnDataCaptureListener() {
+                            public void onWaveFormDataCapture(Visualizer visualizer,
+                                                              byte[] bytes, int samplingRate) {
 
-                        myvisualizerviewmedia.updateVisualizer(bytes);
+                                myvisualizerviewmedia.updateVisualizer(bytes);
 
-                    }
+                            }
 
-                    public void onFftDataCapture(Visualizer visualizer,
-                                                 byte[] bytes, int samplingRate) {
-                    }
-                }, Visualizer.getMaxCaptureRate() / 2, true, false);
+                            public void onFftDataCapture(Visualizer visualizer,
+                                                         byte[] bytes, int samplingRate) {
+                            }
+                        }, Visualizer.getMaxCaptureRate() / 2, true, false);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     public void setmediaplayer(boolean ismediaplayer , MediaPlayer mediaPlayer){

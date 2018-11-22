@@ -632,10 +632,26 @@ public class fragmentmedialist extends basefragment {
             //getVideoList();
 
         }else if(type == 4){
-            xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
-            composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
-            videoplayercomposerfragment.setdata(videoobj.getPath());
-            gethelper().replaceFragment(videoplayercomposerfragment, false, true);
+            if(videoobj.getmimetype().startsWith("image/")){
+                xdata.getinstance().saveSetting("selectedphotourl",""+videoobj.getPath());
+                imagereaderfragment phototabfrag = new imagereaderfragment();
+               // phototabfrag.setdata(videoobj.getPath());
+                gethelper().replaceFragment(phototabfrag, false, true);
+
+            }else if(videoobj.getmimetype().startsWith("audio/")){
+                xdata.getinstance().saveSetting("selectedaudiourl",""+videoobj.getPath());
+                audioreaderfragment audiotabfrag = new audioreaderfragment();
+              //  audiotabfrag.setdata(videoobj.getPath());
+                gethelper().replaceFragment(audiotabfrag, false, true);
+
+            }else if(videoobj.getmimetype().startsWith("video/")){
+
+                xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
+                composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
+                videoplayercomposerfragment.setdata(videoobj.getPath());
+                gethelper().replaceFragment(videoplayercomposerfragment, false, true);
+            }
+
         }
     }
 

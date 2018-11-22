@@ -50,13 +50,6 @@ public class headerpagerfragment extends Fragment {
 
     public void loadAnimation()
     {
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-
-            }
-        },100);*/
         try {
             isgifloaded =true;
             GifDrawable gifDrawable = null;

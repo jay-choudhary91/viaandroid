@@ -1427,7 +1427,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         int heading1 = Math.round(event.values[0]);
                         int heading2 = Math.round(event.values[1]);
                         int heading3 = Math.round(event.values[2]);
-                        Log.e("Heading ",""+heading);
+                       // Log.e("Heading ",""+heading);
 
                         String strdirection = "East";
                         if (heading > 23 && heading <= 67) {

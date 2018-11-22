@@ -14,7 +14,6 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
@@ -645,33 +644,29 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 implementscrolllistener();
             }
 
+            keytype=common.checkkey();
+
         }
         return rootview;
     }
 
 
     public void setimagehash() throws FileNotFoundException {
-        Bitmap bitmap = BitmapFactory.decodeFile(capturedimagefile.getAbsolutePath());
-        if(bitmap!=null){
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-            byte[] byteArray = stream.toByteArray();
-            bitmap.recycle();
-            selectedhashes =  getkeyvalue(byteArray);
-            selectedhashes=keytype+" : "+selectedhashes;
-            Log.e("keyhash = ",keytype+"" +selectedhashes);
+        selectedhashes =  md5.fileToMD5(capturedimagefile.getAbsolutePath());
+        selectedhashes=keytype+" : "+selectedhashes;
+        Log.e("keyhash = ","" +selectedhashes);
 
-            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mhashesitems.clear();
-                    mhashesadapter.notifyDataSetChanged();
-                    mvideoframes.add(new videomodel(selectedhashes));
-                    mhashesadapter.notifyDataSetChanged();
-                    recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-                }
-            });
-        }
+        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mhashesitems.clear();
+                mhashesadapter.notifyDataSetChanged();
+
+                mhashesitems.add(new videomodel(selectedhashes));
+                mhashesadapter.notifyDataSetChanged();
+                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+            }
+        });
     }
 
     public String getkeyvalue(byte[] data)
@@ -733,22 +728,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 break;
         }
         return value;
-    }
-
-    public void setmetricesadapter()
-    {
-        if(selectedmetrices.toString().trim().length() > 0)
-        {
-            mmetricsitems.add(new videomodel(selectedmetrices));
-            recyview_metrices.post(new Runnable() {
-                @Override
-                public void run() {
-                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                    selectedmetrices="";
-                }
-            });
-        }
-
     }
 
     // Implement scroll listener
@@ -918,13 +897,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mFlashSupported = available == null ? false : available;
 
 //            }
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (NullPointerException e) {
-            // Currently an NPE is thrown when the Camera2API is used but not supported on the
-            // device this code runs.
-            ErrorDialog.newInstance(getString(R.string.camera_error))
-                    .show(getChildFragmentManager(), FRAGMENT_DIALOG);
         }
     }
 
@@ -943,10 +917,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
             manager.openCamera(cameraid, mStateCallback, mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
-            throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
         }
     }
 
@@ -1055,7 +1027,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         }
                     }, null
             );
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1114,7 +1086,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mState = STATE_WAITING_LOCK;
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1132,7 +1104,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mState = STATE_WAITING_PRECAPTURE;
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1192,7 +1164,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     showsharepopupmain();
                     Log.d(TAG, capturedimagefile.toString());
                     unlockfocus();
-                    //gethelper().onBack();
                 }
             };
 
@@ -1201,7 +1172,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
 
 
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1238,7 +1209,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mState = STATE_PREVIEW;
             mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback,
                     mBackgroundHandler);
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1373,7 +1344,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 boolean graphicopen=false;
                 if(isdraweropen)
                 {
-                    if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
+                    /*if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
                     {
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
@@ -1383,15 +1354,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                                 selectedhashes="";
                             }
                         });
-                    }
-                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen=true;
-                }
+                    }*/
 
-                if(mmetricsitems.size() == 0)
-                {
-                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                    getselectedmetrics(mlocalarraylist);
                     if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
                     {
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -1403,13 +1367,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             }
                         });
                     }
-                    if(! selectedmetrices.toString().trim().isEmpty())
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                        selectedmetrices="";
-                    }
+
+
+                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+                        graphicopen=true;
                 }
+
                 if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
@@ -1757,6 +1720,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             public void run() {
 
                                 try {
+                                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                                    getselectedmetrics(mlocalarraylist);
                                     saveimagemetadata(mFile,""+ metadatametricesjson);
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -1876,7 +1841,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     }
                 }
             }
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1939,6 +1904,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             if (exif != null) {
                 String imagemetadata = common.getnamefrompath(capturedimagefile.getAbsolutePath())+"|"+ data;
                 exif.setAttribute(ExifInterface. TAG_USER_COMMENT, imagemetadata);
+                exif.setAttribute(ExifInterface. TAG_ARTIST, imagemetadata);
                 Log.e("imagemetadata",imagemetadata);
                 exif.saveAttributes();
                 String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);

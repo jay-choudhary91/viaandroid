@@ -77,7 +77,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by devesh on 21/8/18.
  */
 
-public class videoplayerreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener,videocontrollerview.MediaPlayerControl, View.OnClickListener {
+public class videoreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener,videocontrollerview.MediaPlayerControl, View.OnClickListener {
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;

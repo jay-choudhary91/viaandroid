@@ -39,6 +39,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
@@ -57,6 +58,8 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -64,7 +67,14 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Iterator;
@@ -78,7 +88,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener {
+public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener {
 
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
@@ -232,7 +242,6 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
 
                 }
             });
-
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
 
@@ -253,15 +262,6 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
             fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-
-            if(fragmentgraphic == null) {
-                fragmentgraphic = new graphicalfragment();
-
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
-                transaction.commit();
-            }
 
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
@@ -286,7 +286,29 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                     player.start();
                 }
             });
+            audiourl=xdata.getinstance().getSetting("selectedaudiourl");
+            if(audiourl != null && (! audiourl.isEmpty())){
+                mvideoframes.clear();
+                mainvideoframes.clear();
+                mallframes.clear();
+                txt_metrics.setText("");
+                txt_hashes.setText("");
+                isnewvideofound=true;
+                audioduration =0;
+                playpausebutton.setImageResource(R.drawable.play);
+                rlcontrollerview.setVisibility(View.VISIBLE);
+                playerposition=0;
+                righthandle.setVisibility(View.VISIBLE);
+                setupaudioplayer(Uri.parse(audiourl));
 
+            }
+            if(fragmentgraphic == null) {
+                fragmentgraphic = new graphicalfragment();
+
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
+                transaction.commit();
+            }
             setmetriceshashesdata();
         }
         return rootview;
@@ -699,6 +721,14 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 hdlr.postDelayed(UpdateSongTime, 100);
                 player.setOnCompletionListener(this);
             }
+            else{
+                if(audiourl!=null){
+                    playpausebutton.setImageResource(R.drawable.pause);
+                    player.start();
+                    hdlr.postDelayed(UpdateSongTime, 100);
+                    player.setOnCompletionListener(this);
+                }
+            }
         }
     }
 
@@ -781,7 +811,11 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                     common.shareaudio(getActivity(), audiourl);
                 break;
             case R.id.img_menu:
-                checkwritestoragepermission();
+                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
+                    checkwritestoragepermission();
+                }else{
+                    gethelper().onBack();
+                }
                 break;
             case R.id.img_setting:
                 destroyvideoplayer();
@@ -988,13 +1022,12 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
 
                 player.prepareAsync();
-                //player.setOnPreparedListener(this);
+                player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
 
                 if(player!=null){
                     changeactionbarcolor();
                     initAudio();
-
                     setaudiodata();
                 }
 
@@ -1033,10 +1066,41 @@ public class audiotabreaderfrag extends basefragment implements SurfaceHolder.Ca
                 if (frame == null)
                     break;
 
-                ByteBuffer buffer= ((ByteBuffer) frame.samples[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
+                ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
+                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 2);
+                bb.asShortBuffer().put(shortbuff);
+                byte[] byteData = bb.array();
                 String keyValue= getkeyvalue(byteData);
+                Log.e("hashes ",""+keyValue);
+
+                /*Buffer outputBuffer = frame.samples[0];
+                ByteBuffer byteBuffer=null;
+                if (outputBuffer instanceof ByteBuffer) {
+                    byteBuffer = (ByteBuffer) outputBuffer;
+                } else if (outputBuffer instanceof CharBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity());
+                    byteBuffer.asCharBuffer().put((CharBuffer) outputBuffer);
+                } else if (outputBuffer instanceof ShortBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 2);
+                    byteBuffer.asShortBuffer().put((ShortBuffer) outputBuffer);
+                } else if (outputBuffer instanceof IntBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
+                    byteBuffer.asIntBuffer().put((IntBuffer) outputBuffer);
+                } else if (outputBuffer instanceof LongBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
+                    byteBuffer.asLongBuffer().put((LongBuffer) outputBuffer);
+                } else if (outputBuffer instanceof FloatBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
+                    byteBuffer.asFloatBuffer().put((FloatBuffer) outputBuffer);
+                } else if (outputBuffer instanceof DoubleBuffer) {
+                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
+                    byteBuffer.asDoubleBuffer().put((DoubleBuffer) outputBuffer);
+                }
+
+                byte[] byteData = new byte[byteBuffer.remaining()];
+                byteBuffer.get(byteData);
+                String keyValue= getkeyvalue(byteData);
+                Log.e("hashes ",""+keyValue);*/
 
                 if(fragmentgraphic != null)
                     fragmentgraphic.sethashesdata(keyValue);

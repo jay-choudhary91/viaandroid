@@ -191,7 +191,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         holder.img_videothumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(arrayvideolist.get(position).getmimetype().contains("video"))
+               // if(arrayvideolist.get(position).getmimetype().contains("video"))
                     adapter.onItemClicked(arrayvideolist.get(position),4);
             }
         });
