@@ -2296,6 +2296,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 launchmedialist();
             }
         });
+
         img_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

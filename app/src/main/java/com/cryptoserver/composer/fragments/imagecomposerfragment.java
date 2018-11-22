@@ -1452,6 +1452,15 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             public void onClick(View v) {
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
+
+                String filepath =  capturedimagefile.getAbsolutePath();
+
+                xdata.getinstance().saveSetting("selectedphotourl",""+filepath);
+                imagereaderfragment phototabfrag = new imagereaderfragment();
+                // phototabfrag.setdata(videoobj.getPath());
+                gethelper().replaceFragment(phototabfrag, false, true);
+
+
             }
         });
         img_cancel.setOnClickListener(new View.OnClickListener() {
@@ -1489,6 +1498,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
         TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
         ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
+
+        txt_share_btn2.setVisibility(View.GONE);
 
         txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
         txt_share_btn2.setText(getResources().getString(R.string.share_partial_photo));

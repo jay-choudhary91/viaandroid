@@ -1104,6 +1104,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         TextView txt_share_btn3 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn3);
         TextView txt_title1 = (TextView)maindialogshare.findViewById(R.id.txt_title1);
         TextView txt_title2 = (TextView)maindialogshare.findViewById(R.id.txt_title2);
+
         ImageView img_cancel=maindialogshare.findViewById(R.id.img_cancelicon);
 
         txt_share_btn1.setText(getResources().getString(R.string.share));
@@ -1145,8 +1146,15 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             public void onClick(View v) {
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
+
+                xdata.getinstance().saveSetting("selectedaudiourl",""+ selectedfile);
+                audioreaderfragment audiotabfrag = new audioreaderfragment();
+                //  audiotabfrag.setdata(videoobj.getPath());
+                gethelper().replaceFragment(audiotabfrag, false, true);
+
             }
         });
+
         img_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1182,6 +1190,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
         TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
         ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
+
+        txt_share_btn2.setVisibility(View.GONE);
 
         txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
         txt_share_btn2.setText(getResources().getString(R.string.share_partial_audio));

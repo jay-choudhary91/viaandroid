@@ -57,6 +57,7 @@ import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
@@ -696,9 +697,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         frontview.setVisibility(View.GONE);
 
-        if(fragmentgraphic != null && selectedvideouri!=null)
-            fragmentgraphic.setmediaplayer(true,player);
-
+        if(fragmentgraphic != null && selectedvideouri!=null){
+            fragmentgraphic.setmediaplayer(true,null);
+        }else{
+            if(audiourl!=null && fragmentgraphic != null){
+                fragmentgraphic.setmediaplayer(true,null);
+            }
+        }
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
@@ -1260,6 +1265,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             if(! metricmainarraylist.get(i).isIsupdated())
             {
                 metricmainarraylist.get(i).setIsupdated(true);
+                double latt=0,longg=0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
                 for(int j=0;j<metricItemArraylist.size();j++)
                 {
@@ -1267,7 +1273,43 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             metricItemArraylist.get(j).getMetricTrackValue();
                     common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
                             metricItemArraylist.get(j).getMetricTrackValue(),true);
+
+                    if(fragmentgraphic != null)
+                    {
+                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
+                        {
+                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
+                            {
+                                latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
+                                if(longg != 0)
+                                {
+                                    if(fragmentgraphic != null)
+                                    {
+                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
+                                        latt=0;longg=0;
+                                    }
+                                }
+                            }
+                        }
+                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
+                        {
+                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
+                            {
+                                longg=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
+                                if(latt != 0)
+                                {
+                                    if(fragmentgraphic != null)
+                                    {
+                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
+                                        latt=0;longg=0;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
                 }
+
 
                 selectedmetrics=selectedmetrics+"\n";
 
@@ -1345,6 +1387,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         mVisualizer = new Visualizer(player.getAudioSessionId());
 
         mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+
         mVisualizer.setDataCaptureListener(
                 new Visualizer.OnDataCaptureListener() {
                     public void onWaveFormDataCapture(Visualizer visualizer,

@@ -72,7 +72,7 @@
     <string name="file_uri_parse_error">Error on URI parse!</string>
 
     <string name="new_photo">New Photo</string>
-    <string name="view_photo">View Photo</string>
+    <string name="view_photo">Preview</string>
     <string name="share_partial_photo">Share Partial Photo</string>
 
     <string name="description">Media Controls</string>
