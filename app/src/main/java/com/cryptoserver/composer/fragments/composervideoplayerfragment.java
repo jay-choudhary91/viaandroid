@@ -127,11 +127,15 @@ public class composervideoplayerfragment extends basefragment implements Surface
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     public int selectedsection=1;
     public boolean isvideocompleted=false;
+    public int flingactionmindstvac;
+    private static final int flingactionmindspdvac = 10;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
     }
 
+    public composervideoplayerfragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
@@ -162,7 +166,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 recyview_metrices.setAdapter(mhashesadapter);
                 implementscrolllistener();
             }
-
+            flingactionmindstvac=common.getdrawerswipearea();
             {
                 mmetricesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
                     @Override
@@ -479,8 +483,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private final int flingactionmindstvac=common.getdrawerswipearea();
-        private static final int flingactionmindspdvac = 10;
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
                                float flingActionYcoSpdPsgVal)

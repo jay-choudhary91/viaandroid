@@ -18,6 +18,19 @@ public class intro implements Parcelable {
         setDescription(description);
         setImage(image);
     }
+
+    public static final Creator<intro> CREATOR = new Creator<intro>() {
+        @Override
+        public intro createFromParcel(Parcel in) {
+            return new intro(in);
+        }
+
+        @Override
+        public intro[] newArray(int size) {
+            return new intro[size];
+        }
+    };
+
     public String getTitle() {
         return title;
     }
@@ -54,6 +67,8 @@ public class intro implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-
+        parcel.writeString(title);
+        parcel.writeString(description);
+        parcel.writeInt(image);
     }
 }

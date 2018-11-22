@@ -170,6 +170,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private int ontime =0, starttime =0, endtime =0, fTime = 5000, bTime = 5000;
     private Handler hdlr = new Handler();
     RelativeLayout rlcontrollerview;
+    public int flingactionmindstvac;
+    private static final int flingactionmindspdvac = 10;
+
+    public audioreaderfragment() {
+    }
 
     @Override
     public int getlayoutid() {
@@ -287,22 +292,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     player.start();
                 }
             });
-            audiourl=xdata.getinstance().getSetting("selectedaudiourl");
-            if(audiourl != null && (! audiourl.isEmpty())){
-                mvideoframes.clear();
-                mainvideoframes.clear();
-                mallframes.clear();
-                txt_metrics.setText("");
-                txt_hashes.setText("");
-                isnewvideofound=true;
-                audioduration =0;
-                playpausebutton.setImageResource(R.drawable.play);
-                rlcontrollerview.setVisibility(View.VISIBLE);
-                playerposition=0;
-                righthandle.setVisibility(View.VISIBLE);
-                setupaudioplayer(Uri.parse(audiourl));
-
+            if(!BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+               setupaudiodata();
             }
+            flingactionmindstvac=common.getdrawerswipearea();
             if(fragmentgraphic == null) {
                 fragmentgraphic = new graphicalfragment();
 
@@ -469,9 +463,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private final int flingactionmindstvac=common.getdrawerswipearea();
-        private static final int flingactionmindspdvac = 10;
-
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
                                float flingActionYcoSpdPsgVal)
@@ -1481,5 +1472,23 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
        scrollview_hashes.setVisibility(View.INVISIBLE);
        fragment_graphic_container.setVisibility(View.INVISIBLE);
 
+   }
+
+   public void setupaudiodata() {
+       audiourl = xdata.getinstance().getSetting("selectedaudiourl");
+       if (audiourl != null && (!audiourl.isEmpty())) {
+           mvideoframes.clear();
+           mainvideoframes.clear();
+           mallframes.clear();
+           txt_metrics.setText("");
+           txt_hashes.setText("");
+           isnewvideofound = true;
+           audioduration = 0;
+           playpausebutton.setImageResource(R.drawable.play);
+           rlcontrollerview.setVisibility(View.VISIBLE);
+           playerposition = 0;
+           righthandle.setVisibility(View.VISIBLE);
+           setupaudioplayer(Uri.parse(audiourl));
+       }
    }
 }

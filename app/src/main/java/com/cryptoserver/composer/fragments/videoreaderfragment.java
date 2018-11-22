@@ -156,6 +156,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     public int selectedsection=1;
     public boolean isvideocompleted=false;
+    public int flingactionmindstvac;
+    private static final int flingactionmindspdvac = 10;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -317,6 +319,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                 }
             });
+            flingactionmindstvac = common.getdrawerswipearea();
 
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
@@ -348,6 +351,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
             setmetriceshashesdata();
+            Log.e("oncreate","oncreate");
         }
         return rootview;
     }
@@ -509,9 +513,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
     GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private final int flingactionmindstvac=common.getdrawerswipearea();
-        private static final int flingactionmindspdvac = 10;
-
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
                                float flingActionYcoSpdPsgVal)
@@ -648,18 +649,20 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             player.release();
             player=null;
         }
+        Log.e("ondestroy","ondestroy");
     }
 
     @Override
     public void onPause() {
         super.onPause();
         progressdialog.dismisswaitdialog();
+        Log.e("onpause","onpause");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.e("onresume","onresume");
         try {
             if(! issurafcedestroyed)
                 return;
@@ -704,6 +707,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onStop() {
         super.onStop();
+        Log.e("onstop","onstop");
     }
 
     // Implement SurfaceHolder.Callback
@@ -763,7 +767,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
         if(fragmentgraphic != null && selectedvideouri!=null)
             fragmentgraphic.setmediaplayer(true,player);
-
+        Log.e("onprepared","onprepared");
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {

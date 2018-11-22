@@ -349,6 +349,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     String localkey = null;
     private LinearLayoutManager mLayoutManager;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int flingactionmindstvac;
+    private static final int flingactionmindspdvac = 10;
 
 
 
@@ -399,7 +401,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
                 apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
-
+            flingactionmindstvac=common.getdrawerswipearea();
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -702,9 +704,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private final int flingactionmindstvac=common.getdrawerswipearea();
-        private static final int flingactionmindspdvac = 10;
-
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
                                float flingActionYcoSpdPsgVal)

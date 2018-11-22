@@ -131,6 +131,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
     int BytesPerElement = 2; // 2 bytes in 16bit format
     int pastVisiblesItems, visibleItemCount, totalItemCount;
+    public int flingactionmindstvac;
+    private static final int flingactionmindspdvac = 10;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_audiocomposer;
@@ -200,7 +202,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 }
             });
-
+            flingactionmindstvac=common.getdrawerswipearea();
             righthandle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1294,9 +1296,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private static final int flingactionmindstvac = 60;
-        private static final int flingactionmindspdvac = 100;
-
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
                                float flingActionYcoSpdPsgVal)
