@@ -112,8 +112,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewphotofound=false;;
     private boolean ishashprocessing=false;
     JSONArray metadatametricesjson=new JSONArray();
+    public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
+    private static final int flingactionmindspdvac = 10;
 
+    @Override
+    public int getlayoutid() {
+        return R.layout.fragment_phototabreaderfrag;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -202,6 +208,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     });
                 }
             });
+             flingactionmindstvac = common.getdrawerswipearea();
 
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
@@ -265,7 +272,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
 
             setmetriceshashesdata();
-            setupimagedata();
+            if(!BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                setupimagedata();
+            }
+
         }
         return rootview;
     }
@@ -289,10 +300,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         return true;
     }
 
-    @Override
-    public int getlayoutid() {
-        return R.layout.fragment_phototabreaderfrag;
-    }
 
     @Override
     public void onClick(View v) {
@@ -366,8 +373,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     }
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener() {
-        private final int flingactionmindstvac = common.getdrawerswipearea();
-        private static final int flingactionmindspdvac = 10;
 
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
@@ -620,6 +625,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.onDestroy();
         if(myhandler != null && myrunnable != null)
             myhandler.removeCallbacks(myrunnable);
+        Log.e("ondestroy","distroy");
 
     }
     @Override

@@ -1037,7 +1037,7 @@ public class common {
 
     public static int getdrawerswipearea()
     {
-        int[] screenWidthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int[] screenWidthHeight=getScreenWidthHeight(applicationviavideocomposer.getactivity());
         int screenwidth=screenWidthHeight[0];
         int width=((screenwidth)/2);
         return width;

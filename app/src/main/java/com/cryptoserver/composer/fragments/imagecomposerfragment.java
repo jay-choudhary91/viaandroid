@@ -343,6 +343,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private LinearLayoutManager mLayoutManager;
     graphicalfragment fragmentgraphic;
     ImageView captureimage;
+    public int flingactionmindstvac;
+    private static final int flingactionmindspdvac = 10;
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
@@ -534,7 +536,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
 
-
+            flingactionmindstvac=common.getdrawerswipearea();
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1578,8 +1580,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
-        private final int flingactionmindstvac=common.getdrawerswipearea();
-        private static final int flingactionmindspdvac = 10;
+
 
         @Override
         public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
