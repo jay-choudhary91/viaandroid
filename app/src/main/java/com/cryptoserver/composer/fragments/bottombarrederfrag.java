@@ -28,9 +28,9 @@ public class bottombarrederfrag extends basefragment {
     FrameLayout tab_reader_container;
     View rootview = null;
     adapteritemclick madapterclick;
-    videoplayerreaderfragment fragvideotabreader=null;
-    audiotabreaderfrag fragaudiotabreader=null;
-    phototabreaderfrag fragphototabreader=null;
+    videoreaderfragment fragvideotabreader=null;
+    audioreaderfragment fragaudiotabreader=null;
+    imagereaderfragment fragphototabreader=null;
     int selectedtab=0,lastselectedtab=0;
     BottomNavigationView readernavigation;
     public boolean isviewloaded=true;
@@ -78,7 +78,7 @@ public class bottombarrederfrag extends basefragment {
         switch (selectedtab) {
             case 1:
                 if (fragvideotabreader == null)
-                    fragvideotabreader = new videoplayerreaderfragment();
+                    fragvideotabreader = new videoreaderfragment();
 
                 // fragvideocomposer.setData(false, mclick);
                 gethelper().replacetabfragment(fragvideotabreader, false, true);
@@ -87,7 +87,7 @@ public class bottombarrederfrag extends basefragment {
                 break;
             case 2:
                 if (fragaudiotabreader == null)
-                    fragaudiotabreader = new audiotabreaderfrag();
+                    fragaudiotabreader = new audioreaderfragment();
 
                 //    fragaudiocomposer.setData(mclick);
                 gethelper().replacetabfragment(fragaudiotabreader, false, true);
@@ -96,7 +96,7 @@ public class bottombarrederfrag extends basefragment {
                 break;
             case 3:
                 if (fragphototabreader == null)
-                    fragphototabreader = new phototabreaderfrag();
+                    fragphototabreader = new imagereaderfragment();
 
                 // fragimgcapture.setData(mclick);
                 gethelper().replacetabfragment(fragphototabreader, false, true);

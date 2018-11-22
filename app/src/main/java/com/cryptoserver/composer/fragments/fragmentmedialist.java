@@ -634,13 +634,13 @@ public class fragmentmedialist extends basefragment {
         }else if(type == 4){
             if(videoobj.getmimetype().startsWith("image/")){
                 xdata.getinstance().saveSetting("selectedphotourl",""+videoobj.getPath());
-                phototabreaderfrag phototabfrag = new phototabreaderfrag();
+                imagereaderfragment phototabfrag = new imagereaderfragment();
                // phototabfrag.setdata(videoobj.getPath());
                 gethelper().replaceFragment(phototabfrag, false, true);
 
             }else if(videoobj.getmimetype().startsWith("audio/")){
                 xdata.getinstance().saveSetting("selectedaudiourl",""+videoobj.getPath());
-                audiotabreaderfrag audiotabfrag = new audiotabreaderfrag();
+                audioreaderfragment audiotabfrag = new audioreaderfragment();
               //  audiotabfrag.setdata(videoobj.getPath());
                 gethelper().replaceFragment(audiotabfrag, false, true);
 

@@ -23,12 +23,12 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.audiocomposerfragment;
-import com.cryptoserver.composer.fragments.audiotabreaderfrag;
+import com.cryptoserver.composer.fragments.audioreaderfragment;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
-import com.cryptoserver.composer.fragments.phototabreaderfrag;
+import com.cryptoserver.composer.fragments.imagereaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
-import com.cryptoserver.composer.fragments.videoplayerreaderfragment;
+import com.cryptoserver.composer.fragments.videoreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.startvideoinfo;
 import com.cryptoserver.composer.netutils.connectivityreceiver;
@@ -108,9 +108,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     protected void onRestart() {
         super.onRestart();
 
-        if(getcurrentfragment() instanceof videoplayerreaderfragment){
+        if(getcurrentfragment() instanceof videoreaderfragment){
 
-            ((videoplayerreaderfragment) getcurrentfragment()).onRestart();
+            ((videoreaderfragment) getcurrentfragment()).onRestart();
         }
     }
     @Override
@@ -232,8 +232,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             setbackpress();
             onBack();
         }
-        else if(getcurrentfragment() instanceof audiotabreaderfrag
-                || getcurrentfragment() instanceof videoplayerreaderfragment || getcurrentfragment() instanceof phototabreaderfrag)
+        else if(getcurrentfragment() instanceof audioreaderfragment
+                || getcurrentfragment() instanceof videoreaderfragment || getcurrentfragment() instanceof imagereaderfragment)
         {
             setbackpress();
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
