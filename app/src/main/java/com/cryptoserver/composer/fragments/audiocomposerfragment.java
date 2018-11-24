@@ -121,6 +121,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     JSONArray metadatametricesjson=new JSONArray();
     private long currentframenumber =0,mframetorecordcount=0,frameduration =15;
     private ArrayList<videomodel> mvideoframes =new ArrayList<>();
+    String soundamplitudealue = "";
+    StringBuilder sb = new StringBuilder();
+
     noise mNoise;
 
     private static final int RECORDER_SAMPLERATE = 8000;
@@ -759,13 +762,21 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 try {
                     setaudiohashes();
-                    metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
+
+                   // metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
+                    metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson)+"|"+soundamplitudealue);
 
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if(madapterclick != null)
                                 madapterclick.onItemClicked(null,1);
+
+
+                      if(!soundamplitudealue.isEmpty());
+                            soundamplitudealue = "";
+
+
                         }
                     });
 
@@ -966,6 +977,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     if((isaudiorecording))
                     {
                         int x = mrecorder.getMaxAmplitude();
+
+                        if(soundamplitudealue.isEmpty()){
+                            soundamplitudealue = String.valueOf(x);
+                        }else{
+                            soundamplitudealue = soundamplitudealue +","+String.valueOf(x);
+                        }
+
+                        //soundamplitudelist = soundamplitudelist.
+                        Log.e("Amplitudevallue",""+x);
+
                         myvisualizerview.addAmplitude(x); // update the VisualizeView
                         myvisualizerview.invalidate();
                     }

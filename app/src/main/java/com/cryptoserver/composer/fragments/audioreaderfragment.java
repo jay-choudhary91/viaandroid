@@ -56,6 +56,7 @@ import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
+import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -77,9 +78,11 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -153,15 +156,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private videoframeadapter mmetricesadapter,mhashesadapter;
     private framebitmapadapter adapter;
     private graphicalfragment fragmentgraphic;
-    private Handler waveHandler;
-    private Runnable waveRunnable;
+    private Handler wavehandler;
+    private Runnable waverunnable;
     boolean runmethod = false;
     private LinearLayoutManager mLayoutManager;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     public int selectedsection=1;
     public boolean isvideocompleted=false;
     private Visualizer mVisualizer;
-    VisualizerViewaudioMedia myvisualizerviewmedia;
+    visualizeraudiorecorder myvisualizerviewmedia;
     circularImageview playpausebutton;
     private TextView songName, time_current, time;
     StringBuilder mFormatBuilder;
@@ -172,6 +175,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RelativeLayout rlcontrollerview;
     public int flingactionmindstvac;
     private static final int flingactionmindspdvac = 10;
+    String soundamplitudealue = "";
+    String[] soundamplitudealuearray ;
 
     public audioreaderfragment() {
     }
@@ -199,7 +204,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             mFormatBuilder = new StringBuilder();
             mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
 
-            myvisualizerviewmedia = (VisualizerViewaudioMedia) rootview.findViewById(R.id.myvisualizerviewmedia);
+            myvisualizerviewmedia = (visualizeraudiorecorder) rootview.findViewById(R.id.myvisualizerviewmedia);
+
+            myvisualizerviewmedia.setVisibility(View.VISIBLE);
+
             showcontrollers=rootview.findViewById(R.id.video_container);
             {
                 mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
@@ -604,7 +612,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    initAudio();
+                   // initAudio();
                     setaudiodata();
                 }
 
@@ -716,6 +724,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 player.start();
                 hdlr.postDelayed(UpdateSongTime, 100);
                 player.setOnCompletionListener(this);
+                getaudiowave();
             }
             else{
                 if(audiourl!=null){
@@ -723,6 +732,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     player.start();
                     hdlr.postDelayed(UpdateSongTime, 100);
                     player.setOnCompletionListener(this);
+                    getaudiowave();
                 }
             }
         }
@@ -930,6 +940,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(isbitmapprocessing)
                     suspendbitmapqueue=true;
 
+                if(myvisualizerviewmedia != null)
+                    myvisualizerviewmedia.clear();
+
                 setupaudioplayer(selectedvideouri);
                 audioduration =0;
                 playpausebutton.setImageResource(R.drawable.play);
@@ -952,7 +965,21 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     {
         try {
 
-            JSONArray array=new JSONArray(metadata);
+            String item1="",item2="";
+            String[] metadataarray=metadata.split("\\|");
+            if(metadataarray.length > 0)
+            {
+                item1=metadataarray[0];
+                if(metadataarray.length >=1)
+                {
+                    item2=metadataarray[1];
+                    if(! item2.trim().isEmpty())
+                    {
+                        soundamplitudealuearray = item2.split("\\,");
+                    }
+                }
+            }
+            JSONArray array=new JSONArray(item1);
             metricmainarraylist.clear();
             for(int j=0;j<array.length();j++)
             {
@@ -1023,7 +1050,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    initAudio();
+                    //initAudio();
                     setaudiodata();
                 }
 
@@ -1345,55 +1372,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         },200);
 
     }
-
-    private void initAudio() {
-
-        if(player != null){
-
-            applicationviavideocomposer.getactivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
-            myvisualizerviewmedia.setVisibility(View.VISIBLE);
-
-            setupVisualizerFxAndUI();
-            // Make sure the visualizer is enabled only when you actually want to
-            // receive data, and
-            // when it makes sense to receive data.
-            mVisualizer.setEnabled(true);
-            // When the stream ends, we don't need to collect any more data. We
-            // don't do this in
-            // setupVisualizerFxAndUI because we likely want to have more,
-            // non-Visualizer related code
-            // in this callback.
-            player
-                    .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        public void onCompletion(MediaPlayer mediaPlayer) {
-                            //mVisualizer.setEnabled(false);
-                        }
-                    });
-            //mMediaPlayer.start();
-        }
-    }
-
-    private void setupVisualizerFxAndUI() {
-        // Create the Visualizer object and attach it to our media player.
-        mVisualizer = new Visualizer(player.getAudioSessionId());
-
-        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-
-        mVisualizer.setDataCaptureListener(
-                new Visualizer.OnDataCaptureListener() {
-                    public void onWaveFormDataCapture(Visualizer visualizer,
-                                                      byte[] bytes, int samplingRate) {
-
-                        myvisualizerviewmedia.updateVisualizer(bytes);
-
-                    }
-
-                    public void onFftDataCapture(Visualizer visualizer,
-                                                 byte[] bytes, int samplingRate) {
-                    }
-                }, Visualizer.getMaxCaptureRate() / 2, true, false);
-    }
-
     private Runnable UpdateSongTime = new Runnable() {
         @Override
         public void run() {
@@ -1491,4 +1469,19 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
            setupaudioplayer(Uri.parse(audiourl));
        }
    }
+
+    public void getaudiowave() {
+        try {
+            for(int i=0;i<soundamplitudealuearray.length;i++){
+                String value = soundamplitudealuearray[i];
+                int ampliteudevalue = Integer.parseInt(value);
+                myvisualizerviewmedia.addAmplitude(ampliteudevalue); // update the VisualizeView
+                myvisualizerviewmedia.invalidate();
+            }
+            return;
+            //soundamplitudelist = soundamplitudelist.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
