@@ -798,6 +798,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             if(fragmentgraphic == null)
             {
                 fragmentgraphic  = new graphicalfragment();
+                fragmentgraphic.setphotocapture(true);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
                 transaction.commit();
@@ -1294,8 +1295,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     txt_metrics.setVisibility(View.INVISIBLE);
                     resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                    if(fragmentgraphic != null)
-                        fragmentgraphic.setvisualizer();
+                   /* if(fragmentgraphic != null)
+                        fragmentgraphic.setvisualizer();*/
                 }
                 break;
         }
@@ -1379,7 +1380,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
                     fragmentgraphic.setmetricesdata();
-                    fragmentgraphic.setphotocapture(true);
+                //    fragmentgraphic.setphotocapture(true);
                 }
                 myhandler.postDelayed(this, 1000);
             }
