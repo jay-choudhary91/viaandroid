@@ -136,7 +136,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     int BytesPerElement = 2; // 2 bytes in 16bit format
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     public int flingactionmindstvac;
-    private static final int flingactionmindspdvac = 10;
+    private  final int flingactionmindspdvac = 10;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_audiocomposer;

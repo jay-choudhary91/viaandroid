@@ -552,7 +552,7 @@ public class common {
             sharingIntent.setType("audio/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share video using"));
+            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share audio using"));
 
         }
     }
@@ -566,7 +566,7 @@ public class common {
             sharingIntent.setType("image/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share video using"));
+            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share photo using"));
 
         }
     }

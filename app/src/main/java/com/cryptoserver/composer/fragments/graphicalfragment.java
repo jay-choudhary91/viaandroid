@@ -161,6 +161,8 @@ public class graphicalfragment extends basefragment implements
 
     @BindView(R.id.layout_graphical)
     LinearLayout layout_graphical;
+    @BindView(R.id.layout_soundinfo)
+    LinearLayout layout_soundinformation;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
     @BindView(R.id.recyview_encryption)
@@ -228,6 +230,11 @@ public class graphicalfragment extends basefragment implements
             layout_graphical.setVisibility(View.GONE);
             if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
+            if(photocapture==true){
+                layout_soundinformation.setVisibility(View.GONE);
+                myvisualizerviewmedia.setVisibility(View.GONE);
+                myvisualizerview.setVisibility(View.GONE);
+            }
 
             loadmap();
             setchartdata();

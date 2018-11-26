@@ -157,7 +157,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public int selectedsection=1;
     public boolean isvideocompleted=false;
     public int flingactionmindstvac;
-    private static final int flingactionmindspdvac = 10;
+    private  final int flingactionmindspdvac = 10;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;

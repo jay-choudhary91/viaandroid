@@ -128,7 +128,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public int selectedsection=1;
     public boolean isvideocompleted=false;
     public int flingactionmindstvac;
-    private static final int flingactionmindspdvac = 10;
+    private final int flingactionmindspdvac = 10;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
