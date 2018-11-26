@@ -940,8 +940,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(isbitmapprocessing)
                     suspendbitmapqueue=true;
 
-                if(myvisualizerviewmedia != null)
-                    myvisualizerviewmedia.clear();
+                if(myvisualizerviewmedia != null )
+                     myvisualizerviewmedia.clear();
 
                 setupaudioplayer(selectedvideouri);
                 audioduration =0;
@@ -1053,8 +1053,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     //initAudio();
                     setaudiodata();
                 }
-
-
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -1085,16 +1083,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             int totalframes=grabber.getLengthInAudioFrames();
 
             for(int i = 0; i<grabber.getLengthInAudioFrames(); i++){
+             //   grabber.setSampleRate(44100);
                 Frame frame = grabber.grabAudio();
                 if (frame == null)
                     break;
 
                 ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
-                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 2);
+                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
                 bb.asShortBuffer().put(shortbuff);
+
                 byte[] byteData = bb.array();
+                int length =  byteData.length;
+                Log.e("bytedatasize", ""+byteData.length );
                 String keyValue= getkeyvalue(byteData);
-                Log.e("hashes ",""+keyValue);
+                Log.e("hashesaudio ",""+keyValue);
 
                 /*Buffer outputBuffer = frame.samples[0];
                 ByteBuffer byteBuffer=null;
@@ -1348,9 +1350,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)
         {
-            if(fragmentgraphic != null)
+            if(fragmentgraphic != null){
                 fragmentgraphic.setmetricesdata();
-
+                fragmentgraphic.setmediaplayer(soundamplitudealuearray);
+            }
         }
 
     }

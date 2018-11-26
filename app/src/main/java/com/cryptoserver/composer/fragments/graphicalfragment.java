@@ -203,6 +203,7 @@ public class graphicalfragment extends basefragment implements
     private static final PatternItem DOT = new Dot();
     private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
+    String[] visulizerdataarray ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -926,19 +927,46 @@ public class graphicalfragment extends basefragment implements
     }
 
     public void setmediaplayer(boolean ismediaplayer , MediaPlayer mediaPlayer){
-
         this.mMediaPlayer = mediaPlayer;
         this.ismediaplayer = ismediaplayer;
+        setvisualizer();
+    }
+
+    public void setmediaplayer(String[] visulizerdata){
+        this.visulizerdataarray = visulizerdata;
         setvisualizer();
     }
 
     public void setvisualizer(){
         if(ismediaplayer){
             initAudio();
+            if( visulizerdataarray != null && visulizerdataarray.length > 0)
+                     getaudiowavereader();
         }else{
             start();
         }
     }
+
+    public void getaudiowavereader() {
+        try {
+            myvisualizerview.setVisibility(View.VISIBLE);
+
+            if(visulizerdataarray.length > 0){
+                for(int i=0;i<visulizerdataarray.length;i++){
+                    String value = visulizerdataarray[i];
+                    int ampliteudevalue = Integer.parseInt(value);
+                    myvisualizerview.addAmplitude(ampliteudevalue); // update the VisualizeView
+                    myvisualizerview.invalidate();
+                }
+            }
+            return;
+            //soundamplitudelist = soundamplitudelist.
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
 }
 
