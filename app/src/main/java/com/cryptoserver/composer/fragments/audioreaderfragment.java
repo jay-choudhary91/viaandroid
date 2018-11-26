@@ -839,7 +839,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 opengallery();
             } else {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "app needs to be able to save audios", Toast.LENGTH_SHORT).show();
                 }
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         request_read_external_storage);
