@@ -206,6 +206,9 @@ public class graphicalfragment extends basefragment implements
     private static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
     String[] visulizerdataarray ;
+    String soundamplitudealue = "";
+
+    String[] soundamplitudealuearray;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -514,7 +517,16 @@ public class graphicalfragment extends basefragment implements
                         if((gethelper().getrecordingrunning() || ismediaplayer))
                         {
                             int x = mNoise.getAmplitudevoice();
+
+                            if(soundamplitudealue.isEmpty()){
+                                soundamplitudealue = String.valueOf(x);
+                            }else{
+                                soundamplitudealue = soundamplitudealue +","+String.valueOf(x);
+                            }
+
+
                             myvisualizerview.addAmplitude(x); // update the VisualizeView
+
                             myvisualizerview.invalidate();
                         }
 
@@ -543,6 +555,9 @@ public class graphicalfragment extends basefragment implements
                 if (mNoise != null)
                 {
                     myvisualizerview.setVisibility(View.VISIBLE);
+
+
+
                     getaudiowave();
                 }
 
@@ -950,22 +965,27 @@ public class graphicalfragment extends basefragment implements
             if( visulizerdataarray != null && visulizerdataarray.length > 0)
                      getaudiowavereader();
         }else{
+            soundamplitudealue = "";
             start();
         }
     }
 
     public void getaudiowavereader() {
         try {
-            myvisualizerview.setVisibility(View.VISIBLE);
+            if(myvisualizerview != null){
+                myvisualizerview.setVisibility(View.VISIBLE);
+                myvisualizerview.clear();
 
-            if(visulizerdataarray.length > 0){
-                for(int i=0;i<visulizerdataarray.length;i++){
-                    String value = visulizerdataarray[i];
-                    int ampliteudevalue = Integer.parseInt(value);
-                    myvisualizerview.addAmplitude(ampliteudevalue); // update the VisualizeView
-                    myvisualizerview.invalidate();
+                if(visulizerdataarray.length > 0) {
+                    for (int i = 0; i < visulizerdataarray.length; i++) {
+                        String value = visulizerdataarray[i];
+                        int ampliteudevalue = Integer.parseInt(value);
+                        myvisualizerview.addAmplitude(ampliteudevalue); // update the VisualizeView
+                        myvisualizerview.invalidate();
+                    }
                 }
             }
+
             return;
             //soundamplitudelist = soundamplitudelist.
         } catch (Exception e) {
@@ -973,7 +993,13 @@ public class graphicalfragment extends basefragment implements
         }
     }
 
+    public String getvideowavevalues(){
 
+        if(!soundamplitudealue.isEmpty()){
+            return soundamplitudealue;
+        }
+        return soundamplitudealue;
+    }
 
 }
 

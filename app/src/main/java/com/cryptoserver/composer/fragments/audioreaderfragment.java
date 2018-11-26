@@ -1307,6 +1307,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                     {
                                         fragmentgraphic.drawmappoints(new LatLng(latt,longg));
                                         latt=0;longg=0;
+
                                     }
                                 }
                             }
@@ -1322,6 +1323,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                     {
                                         fragmentgraphic.drawmappoints(new LatLng(latt,longg));
                                         latt=0;longg=0;
+
                                     }
                                 }
                             }
@@ -1474,8 +1476,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
    }
 
     public void getaudiowave() {
+
+        myvisualizerviewmedia.clear();
+
         try {
             for(int i=0;i<soundamplitudealuearray.length;i++){
+
+
                 String value = soundamplitudealuearray[i];
                 int ampliteudevalue = Integer.parseInt(value);
                 myvisualizerviewmedia.addAmplitude(ampliteudevalue); // update the VisualizeView
