@@ -115,7 +115,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     JSONArray metadatametricesjson=new JSONArray();
     public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
-    private static final int flingactionmindspdvac = 10;
+    private  final int flingactionmindspdvac = 10;
 
     @Override
     public int getlayoutid() {

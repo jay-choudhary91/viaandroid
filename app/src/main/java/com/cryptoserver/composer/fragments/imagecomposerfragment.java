@@ -344,7 +344,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     graphicalfragment fragmentgraphic;
     ImageView captureimage;
     public int flingactionmindstvac;
-    private static final int flingactionmindspdvac = 10;
+    private  final int flingactionmindspdvac = 10;
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.

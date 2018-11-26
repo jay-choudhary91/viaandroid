@@ -171,7 +171,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private Handler hdlr = new Handler();
     RelativeLayout rlcontrollerview;
     public int flingactionmindstvac;
-    private static final int flingactionmindspdvac = 10;
+    private  final int flingactionmindspdvac = 10;
 
     public audioreaderfragment() {
     }

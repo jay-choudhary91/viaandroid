@@ -350,7 +350,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private LinearLayoutManager mLayoutManager;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     private int flingactionmindstvac;
-    private static final int flingactionmindspdvac = 10;
+    private  final int flingactionmindspdvac = 10;
 
 
 
