@@ -158,6 +158,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public boolean isvideocompleted=false;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
+    String[] soundamplitudealuearray ;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -765,8 +766,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         controller.show();
         frontview.setVisibility(View.GONE);
 
-        if(fragmentgraphic != null && selectedvideouri!=null)
-            fragmentgraphic.setmediaplayer(true,player);
         Log.e("onprepared","onprepared");
     }
 
@@ -1104,6 +1103,22 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     {
         try {
 
+            String item1="",item2="";
+            String[] metadataarray=metadata.split("\\|");
+            if(metadataarray.length > 0)
+            {
+                item1=metadataarray[0];
+                if(metadataarray.length >=1)
+                {
+                    item2=metadataarray[1];
+                    if(! item2.trim().isEmpty())
+                    {
+                        soundamplitudealuearray = item2.split("\\,");
+                    }
+                }
+
+            }
+
             JSONArray array=new JSONArray(metadata);
             metricmainarraylist.clear();
             for(int j=0;j<array.length();j++)
@@ -1286,6 +1301,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 Frame frame = grabber.grabImage();
                 if (frame == null)
                     break;
+
+
+
 
                 ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
                 byte[] byteData = new byte[buffer.remaining()];
@@ -1514,9 +1532,11 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)
         {
-            if(fragmentgraphic != null)
-                fragmentgraphic.setmetricesdata();
 
+            if(fragmentgraphic != null){
+                fragmentgraphic.setmetricesdata();
+                fragmentgraphic.getvisualizerwavereader(soundamplitudealuearray);
+            }
         }
 
     }
