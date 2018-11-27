@@ -372,7 +372,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                visibleItemCount = mLayoutManager.getChildCount();
+                /*visibleItemCount = mLayoutManager.getChildCount();
                 totalItemCount = mLayoutManager.getItemCount();
                 pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                 if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
@@ -382,7 +382,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                         mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                         selectedmetrics="";
                     }
-                }
+                }*/
             }
         });
     }
@@ -768,6 +768,10 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         controller.show();
         frontview.setVisibility(View.GONE);
 
+        if(fragmentgraphic != null && selectedvideouri!=null)
+            fragmentgraphic.setmediaplayer(true,player);
+
+
         Log.e("onprepared","onprepared");
     }
 
@@ -972,7 +976,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_GRANTED ) {
                 opengallery();
             } else {
@@ -1526,18 +1530,19 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                 selectedmetrics=selectedmetrics+"\n";
 
-                if(mmetricsitems.size() == 0 && (! selectedmetrics.toString().trim().isEmpty()))
-                {
-                    mmetricsitems.add(new videomodel(selectedmetrics));
-                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                }
-
-                if((player != null) && (! player.isPlaying()) && (! selectedmetrics.toString().trim().isEmpty()))
+                if((! selectedmetrics.toString().trim().isEmpty()))
                 {
                     mmetricsitems.add(new videomodel(selectedmetrics));
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                     selectedmetrics="";
                 }
+
+                /*if((player != null) && (! player.isPlaying()) && (! selectedmetrics.toString().trim().isEmpty()))
+                {
+                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                    selectedmetrics="";
+                }*/
             }
         }
 

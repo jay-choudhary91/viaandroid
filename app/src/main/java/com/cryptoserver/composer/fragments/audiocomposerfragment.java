@@ -589,7 +589,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void startrecording() throws IOException {
 
-        fragmentgraphic.setvisualizerwave();
+         fragmentgraphic.setvisualizerwave();
         wavevisualizerslist.clear();
         selectedhashes="";
         metadatametricesjson=new JSONArray();

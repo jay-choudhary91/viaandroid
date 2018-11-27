@@ -691,6 +691,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mp.seekTo(100);
             }
 
+            if(fragmentgraphic != null && selectedvideouri!=null){
+                fragmentgraphic.setmediaplayer(true,null);
+            }else{
+                if(audiourl!=null && fragmentgraphic != null){
+                    fragmentgraphic.setmediaplayer(true,null);
+                }
+            }
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -708,6 +716,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         public void onItemClicked(Object object, int type) {
 
         }
+
     };
 
     public void start() {
@@ -996,6 +1005,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
                 metricmainarraylist.add(new arraycontainer(metricItemArraylist));
             }
+
+
         }catch (Exception e)
         {
             e.printStackTrace();

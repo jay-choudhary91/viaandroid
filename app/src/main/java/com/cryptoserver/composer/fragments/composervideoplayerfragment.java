@@ -748,6 +748,10 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
         controller.show();
 
+        if(fragmentgraphic != null)
+            fragmentgraphic.setmediaplayer(true,player);
+
+
 
     }
 
