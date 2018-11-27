@@ -2,6 +2,7 @@ package com.cryptoserver.composer.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,8 +82,17 @@ public class framebitmapadapter extends RecyclerView.Adapter<framebitmapadapter.
         }
         else
         {
+            final LinearLayout.LayoutParams param=new LinearLayout.LayoutParams(100,100);
+            holder.img_item.setLayoutParams(param);
             holder.view_empty.setVisibility(View.GONE);
             holder.img_item.setVisibility(View.VISIBLE);
+
+            holder.img_item.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("width",""+holder.img_item.getWidth());
+                }
+            });
 
             if(mitemlist.get(position).getBitmap() != null)
                 holder.img_item.setImageBitmap(mitemlist.get(position).getBitmap());
