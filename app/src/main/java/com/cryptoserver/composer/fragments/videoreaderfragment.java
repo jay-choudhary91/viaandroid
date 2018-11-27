@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -269,8 +270,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                         @Override
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
-
                             Log.e("listtouched  dragging",""+islisttouched+" "+islistdragging);
+
+                            Log.e("recycleview","dx...."+dx +"dy......" +dy);
                             if(islisttouched && islistdragging)
                             {
                                 if(player != null && player.isPlaying())
@@ -807,6 +809,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         try {
             if(player != null)
             {
+                setmargin();
                 if(player.getCurrentPosition() > maxincreasevideoduration)
                     maxincreasevideoduration=player.getCurrentPosition();
 
@@ -823,7 +826,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     {
                         //Log.e("getCurrentPosition ",""+player.getCurrentPosition());
                       //  recyview_frames.scrollToPosition(second);
-                        recyview_frames.smoothScrollToPosition(second);
+                       // recyview_frames.smoothScrollToPosition(second);
                     }
                 }
 
@@ -864,7 +867,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             Log.e("seek to ",""+i);
             Log.e("recyview_frames",""+i/1000);
             player.seekTo(i);
-            recyview_frames.smoothScrollToPosition(i/1000);
+          // recyview_frames.smoothScrollToPosition(i);
         }
     }
 
@@ -1180,62 +1183,71 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         long hours = duration / 3600;
         long minutes = (duration - hours * 3600) / 60;
         long seconds = duration - (hours * 3600 + minutes * 60);
+        long n;
 
         if(minutes!=0)
             minutes = minutes*60;
 
         seconds = seconds + minutes;
         Log.e("videoseconds  =  ",""+seconds);
-
-        for(int i=1;i<=seconds;i++)
-        {
-            Bitmap m_bitmap = null;
-            try
-            {
-                if(suspendbitmapqueue)
-                {
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mbitmaplist.clear();
-                            adapter.notifyDataSetChanged();
-                            scurraberverticalbar.setVisibility(View.VISIBLE);
-                        }
-                    });
-                    break;
-                }
-
-                m_mediaMetadataRetriever = new MediaMetadataRetriever();
-                m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
-                m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
-
-                if(m_bitmap != null && runmethod)
-                {
-                    Log.e("Bitmap on ",""+i);
-
-                    Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
-                    mbitmaplist.add(new frame(i,bitmap,false));
-
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyDataSetChanged();
-                            scurraberverticalbar.setVisibility(View.VISIBLE);
-                            //runmethod = true;
-                        }
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            finally
-            {
-                if (m_mediaMetadataRetriever != null)
-                    m_mediaMetadataRetriever.release();
-            }
+        if(seconds>60){
+           n=30;
+        }else if(seconds==1){
+            n=1;
+        }else if(seconds==2){
+            n=2;
+        } else{
+          n=seconds/2;
         }
+            for(int i=1;i<=n;i++)
+            {
+                Bitmap m_bitmap = null;
+                try
+                {
+                    if(suspendbitmapqueue)
+                    {
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mbitmaplist.clear();
+                                adapter.notifyDataSetChanged();
+                                scurraberverticalbar.setVisibility(View.VISIBLE);
+                            }
+                        });
+                        break;
+                    }
+
+                    m_mediaMetadataRetriever = new MediaMetadataRetriever();
+                    m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+                    m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
+
+
+                    if(m_bitmap != null && runmethod)
+                    {
+                        Log.e("Bitmap on ",""+i);
+                        Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
+                        mbitmaplist.add(new frame(i,bitmap,false));
+
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                                scurraberverticalbar.setVisibility(View.VISIBLE);
+                                //runmethod = true;
+                            }
+                        });
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                finally
+                {
+                    if (m_mediaMetadataRetriever != null)
+                        m_mediaMetadataRetriever.release();
+                }
+            }
         isbitmapprocessing=false;
         suspendbitmapqueue=false;
 
@@ -1256,7 +1268,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             if(selecteduri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
-
                 player.prepareAsync();
                 //player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
@@ -1560,6 +1571,20 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
         },200);
+
+    }
+
+    public void setmargin(){
+        Log.e("currentduration",""+player.getDuration()/1000 +"bitmapsize........"+mbitmaplist.size());
+
+        if(mbitmaplist.size()>0 && player.getCurrentPosition()>0){
+            float  a= (player.getDuration()/1000)/(mbitmaplist.size()-2);
+            float leftmargin= 100/a;
+            leftmargin=-(leftmargin*(player.getCurrentPosition()/1000));
+            Log.e("leftmargin",""+leftmargin+".............."+player.getCurrentPosition()/1000);
+            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            relativeParams.setMargins((int) leftmargin, 0, 0, 0);
+            recyview_frames.setLayoutParams(relativeParams);}
 
     }
 }
