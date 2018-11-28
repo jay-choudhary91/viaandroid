@@ -1523,7 +1523,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         // Create the Visualizer object and attach it to our media player.
         int sessionid =  player.getAudioSessionId();
-        
+
         Equalizer mEqualizer = new Equalizer(0, sessionid);
         mEqualizer.setEnabled(true); // need to enable equalizer
 
