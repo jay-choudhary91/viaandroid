@@ -833,7 +833,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     currentvideodurationseconds=currentvideoduration/1000;  // Its 4
                 }
 
-                if(mbitmaplist.size() > 0 && (! islisttouched))
+               /* if(mbitmaplist.size() > 0 && (! islisttouched))
                 {
                     int second=player.getCurrentPosition()/1000;
                     if(mbitmaplist.size() >= (second))
@@ -843,7 +843,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                         // recyview_frames.smoothScrollToPosition(second);
                     }
                 }
-
+*/
                 return player.getCurrentPosition();
             }
         }catch (Exception e)
@@ -881,6 +881,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             Log.e("seek to ",""+i);
             Log.e("recyview_frames",""+i/1000);
             player.seekTo(i);
+            setmargin();
             // recyview_frames.smoothScrollToPosition(i);
         }
     }
