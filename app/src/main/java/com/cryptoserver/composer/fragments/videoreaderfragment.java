@@ -281,7 +281,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                     player.pause();
                                     controller.setplaypauuse();
                                 }
-                                int a=0;
+                                double  c=0;
                                 int center = recyview_frames.getWidth()/2;
                                 View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
                                 int centerPos = recyview_frames.getChildAdapterPosition(centerView);
@@ -292,15 +292,19 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                         centerPos = 0;
                                     }
                                 if(mbitmaplist.size()>0) {
-                                    a=(player.getDuration() / 1000) / (mbitmaplist.size() - 2);
+                                    double a=player.getDuration()/1000;
+                                    double b=mbitmaplist.size()-2;
+                                    Log.e("bitmap",""+(a/b));
+                                    c=a/b;
+                                   // a=(player.getDuration() / 1000) / (mbitmaplist.size() - 2);
                                 }
-                                int position=a*centerPos;
+                                double position=c*centerPos;
                                 try {
-                                    int currentduration=position*1000;
+                                    double currentduration=position*1000;
                                     if(player !=null && controller != null)
                                     {
                                         try {
-                                            player.seekTo(currentduration);
+                                            player.seekTo((int) currentduration);
                                             Log.e("playerseekto",""+currentduration);
                                             controller.setProgress();
                                         }catch (Exception e)
