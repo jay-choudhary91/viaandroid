@@ -43,16 +43,20 @@ public class VisualizerView  extends View {
 
     // clear all amplitudes to prepare for a new visualization
     public void clear() {
-        amplitudes.clear();
+
+        if(amplitudes != null)
+            amplitudes.clear();
     }
 
     // add the given amplitude to the amplitudes ArrayList
     public void addAmplitude(float amplitude) {
-        amplitudes.add(amplitude); // add newest to the amplitudes ArrayList
+        if(amplitudes != null){
+            amplitudes.add(amplitude); // add newest to the amplitudes ArrayList
 
-        // if the power lines completely fill the VisualizerView
-        if (amplitudes.size() * LINE_WIDTH >= width) {
-            amplitudes.remove(0); // remove oldest power value
+            // if the power lines completely fill the VisualizerView
+            if (amplitudes.size() * LINE_WIDTH >= width) {
+                amplitudes.remove(0); // remove oldest power value
+            }
         }
     }
 

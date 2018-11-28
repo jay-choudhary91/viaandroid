@@ -42,6 +42,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.encryptiondataadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
+import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.VisualizerView;
 import com.cryptoserver.composer.utils.VisualizerViewMedia;
 import com.cryptoserver.composer.utils.common;
@@ -80,6 +81,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.RoundCap;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -207,6 +209,9 @@ public class graphicalfragment extends basefragment implements
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = Arrays.asList(GAP, DOT);
     String[] visulizerdataarray ;
     String soundamplitudealue = "";
+    int position=0;
+
+
 
     String[] soundamplitudealuearray;
 
@@ -220,6 +225,8 @@ public class graphicalfragment extends basefragment implements
             scrollview_graphical.setVisibility(View.VISIBLE);
             myvisualizerview = (VisualizerView)rootview.findViewById(R.id.myvisualizerview);
             myvisualizerviewmedia = (VisualizerViewMedia) rootview.findViewById(R.id.myvisualizerviewmedia);
+
+            myvisualizerview.setVisibility(View.VISIBLE);
 
             layout_orientation=rootview.findViewById(R.id.layout_orenAna);
             img_compass = (ImageView) rootview.findViewById(R.id.img_compass);
@@ -555,13 +562,8 @@ public class graphicalfragment extends basefragment implements
                 if (mNoise != null)
                 {
                     myvisualizerview.setVisibility(View.VISIBLE);
-
-
-
                     getaudiowave();
                 }
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -945,25 +947,16 @@ public class graphicalfragment extends basefragment implements
             }
 
         }
-
     }
 
     public void setmediaplayer(boolean ismediaplayer , MediaPlayer mediaPlayer){
         this.mMediaPlayer = mediaPlayer;
         this.ismediaplayer = ismediaplayer;
-        setvisualizer();
-    }
-
-    public void setmediaplayer(String[] visulizerdata){
-        this.visulizerdataarray = visulizerdata;
-        setvisualizer();
     }
 
     public void setvisualizer(){
         if(ismediaplayer){
             initAudio();
-            if( visulizerdataarray != null && visulizerdataarray.length > 0)
-                     getaudiowavereader();
         }else{
             soundamplitudealue = "";
             start();
@@ -987,20 +980,46 @@ public class graphicalfragment extends basefragment implements
             }
 
             return;
-            //soundamplitudelist = soundamplitudelist.
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String getvideowavevalues(){
-
-        if(!soundamplitudealue.isEmpty()){
-            return soundamplitudealue;
+    public void getvisualizerwave(ArrayList<wavevisualizer> amplitudevalue) {
+        if(myvisualizerview != null){
+            if(myvisualizerview.getVisibility() == View.VISIBLE){
+               for (;position < amplitudevalue.size();position++){
+                       Log.e("position",""+position);
+                       myvisualizerview.addAmplitude(amplitudevalue.get(position).getVisulizervalue()); // update the VisualizeView
+                       myvisualizerview.invalidate();
+               }
+            }
         }
-        return soundamplitudealue;
     }
 
+    public void getvisualizerwavereader(String[] amplitudearray) {
+
+        if(myvisualizerview != null){
+            if(myvisualizerview.getVisibility() == View.VISIBLE && (amplitudearray.length > 0)){
+
+                setvisualizerwave();
+
+                    for (int i=0; i < amplitudearray.length; i++) {
+                            String value = amplitudearray[i];
+                            int ampliteudevalue = Integer.parseInt(value);
+                            myvisualizerview.addAmplitude(ampliteudevalue); // update the VisualizeView
+                            myvisualizerview.invalidate();
+                }
+            }
+        }
+    }
+
+    public void setvisualizerwave(){
+        position = 0;
+        myvisualizerview.clear();
+    }
 }
+
+
 
 

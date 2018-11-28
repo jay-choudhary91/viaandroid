@@ -42,6 +42,7 @@ import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.metadata.metadatainsert;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
@@ -137,6 +138,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
+    ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
+
+
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_audiocomposer;
@@ -290,7 +295,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             keytype=common.checkkey();
             frameduration=common.checkframeduration();
+
             startnoise();
+
             setmetriceshashesdata();
             try {
                 int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
@@ -519,8 +526,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     txt_metrics.setVisibility(View.INVISIBLE);
                     resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                    if(fragmentgraphic != null)
-                        fragmentgraphic.setvisualizer();
                 }
                 break;
         }
@@ -584,6 +589,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void startrecording() throws IOException {
 
+         fragmentgraphic.setvisualizerwave();
+        wavevisualizerslist.clear();
         selectedhashes="";
         metadatametricesjson=new JSONArray();
         selectedmetrices="";
@@ -975,7 +982,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 try {
 
-                    if((isaudiorecording))
+                    if((isaudiorecording)  && fragmentgraphic != null)
                     {
                         int x = mrecorder.getMaxAmplitude();
 
@@ -984,12 +991,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         }else{
                             soundamplitudealue = soundamplitudealue +","+String.valueOf(x);
                         }
-
                         //soundamplitudelist = soundamplitudelist.
                         Log.e("Amplitudevallue",""+x);
-
                         myvisualizerview.addAmplitude(x); // update the VisualizeView
                         myvisualizerview.invalidate();
+
+                        wavevisualizerslist.add(new wavevisualizer(x,true));
+                        if ((fragment_graphic_container.getVisibility() == View.VISIBLE)) {
+
+                            fragmentgraphic.getvisualizerwave(wavevisualizerslist);
+
+                        }
                     }
 
                 } catch (Exception e) {

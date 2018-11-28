@@ -129,6 +129,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public boolean isvideocompleted=false;
     public int flingactionmindstvac;
     private final int flingactionmindspdvac = 10;
+    String[] soundamplitudealuearray ;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -306,6 +307,22 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public void parsemetadata(String metadata)
     {
         try {
+
+            String item1="",item2="";
+            String[] metadataarray=metadata.split("\\|");
+            if(metadataarray.length > 0)
+            {
+                item1=metadataarray[0];
+                if(metadataarray.length >=1)
+                {
+                    item2=metadataarray[1];
+                    if(! item2.trim().isEmpty())
+                    {
+                        soundamplitudealuearray = item2.split("\\,");
+                    }
+                }
+
+            }
 
             JSONArray array=new JSONArray(metadata);
             metricmainarraylist.clear();
@@ -733,6 +750,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
         if(fragmentgraphic != null)
             fragmentgraphic.setmediaplayer(true,player);
+
+
 
     }
 
@@ -1226,8 +1245,11 @@ public class composervideoplayerfragment extends basefragment implements Surface
         }
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)
         {
-            if(fragmentgraphic != null)
+            if(fragmentgraphic != null){
                 fragmentgraphic.setmetricesdata();
+                fragmentgraphic.getvisualizerwavereader(soundamplitudealuearray);
+
+            }
         }
     }
 
