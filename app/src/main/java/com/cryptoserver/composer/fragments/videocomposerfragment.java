@@ -69,6 +69,7 @@ import com.cryptoserver.composer.metadata.metadatainsert;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.taskresult;
@@ -336,6 +337,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
+    ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
+
     videoframeadapter mmetricesadapter,mhashesadapter;
 
     databasemanager mdbhelper;
@@ -351,6 +354,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     private int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
+    String soundamplitudealue = "";
 
 
 
@@ -1091,6 +1095,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             // Start recording
             mMediaRecorder.start();
             startvideotimer();
+            fragmentgraphic.setvisualizerwave();
+            wavevisualizerslist.clear();
+            startnoise();
             mrecordimagebutton.setEnabled(true);
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -1138,7 +1145,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     public void run() {
                         try {
                             metadatainsert.writemetadata(lastrecordedvideo.getAbsolutePath(),""+
-                                    common.getjson(metadatametricesjson));
+                                    common.getjson(metadatametricesjson)+"|"+soundamplitudealue);
+
+                                if(!soundamplitudealue.isEmpty());
+                                      soundamplitudealue = "";
+
                         }catch (Exception e)
                         {
                             Log.e("Meta data Error","Error");
@@ -1226,8 +1237,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     txt_metrics.setVisibility(View.INVISIBLE);
                     resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
 
-                    if(fragmentgraphic != null)
-                        fragmentgraphic.setvisualizer();
                 }
                 break;
         }
@@ -2349,5 +2358,45 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     }
 
+    private void startnoise() {
+        getaudiowave();
+    }
+
+    public void getaudiowave() {
+        myHandler =new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    if((isvideorecording) && fragmentgraphic != null) {
+
+                        int x = mMediaRecorder.getMaxAmplitude();
+
+                           if(soundamplitudealue.isEmpty()){
+                            soundamplitudealue = String.valueOf(x);
+                        }else{
+                            soundamplitudealue = soundamplitudealue +","+String.valueOf(x);
+                        }
+
+                        wavevisualizerslist.add(new wavevisualizer(x,true));
+
+                        Log.e("Amplitudevallue", "" + x);
+
+                        if ((fragment_graphic_container.getVisibility() == View.VISIBLE)) {
+
+                            fragmentgraphic.getvisualizerwave(wavevisualizerslist);
+
+                        }
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                myHandler.postDelayed(this, 50);
+            }
+        };
+        myHandler.post(myRunnable);
+    }
 }
 

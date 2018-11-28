@@ -31,6 +31,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -120,6 +121,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RecyclerView recyview_hashes;
     @BindView(R.id.fragment_graphic_container)
     FrameLayout fragment_graphic_container;
+
 
     private String audiourl = null;
     private RelativeLayout showcontrollers;
@@ -689,20 +691,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mp.seekTo(100);
             }
 
+            if(fragmentgraphic != null && selectedvideouri!=null){
+                fragmentgraphic.setmediaplayer(true,null);
+            }else{
+                if(audiourl!=null && fragmentgraphic != null){
+                    fragmentgraphic.setmediaplayer(true,null);
+                }
+            }
+
         }catch (Exception e)
         {
             e.printStackTrace();
         }
 
         frontview.setVisibility(View.GONE);
-
-        if(fragmentgraphic != null && selectedvideouri!=null){
-            fragmentgraphic.setmediaplayer(true,null);
-        }else{
-            if(audiourl!=null && fragmentgraphic != null){
-                fragmentgraphic.setmediaplayer(true,null);
-            }
-        }
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
@@ -714,6 +716,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         public void onItemClicked(Object object, int type) {
 
         }
+
     };
 
     public void start() {
@@ -724,7 +727,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 player.start();
                 hdlr.postDelayed(UpdateSongTime, 100);
                 player.setOnCompletionListener(this);
-                getaudiowave();
+                //getaudiowave();
             }
             else{
                 if(audiourl!=null){
@@ -732,7 +735,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     player.start();
                     hdlr.postDelayed(UpdateSongTime, 100);
                     player.setOnCompletionListener(this);
-                    getaudiowave();
+                   // getaudiowave();
                 }
             }
         }
@@ -940,8 +943,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(isbitmapprocessing)
                     suspendbitmapqueue=true;
 
-                if(myvisualizerviewmedia != null)
-                    myvisualizerviewmedia.clear();
+                if(myvisualizerviewmedia != null )
+                     myvisualizerviewmedia.clear();
+
+                if(fragmentgraphic != null)
+                    fragmentgraphic.setvisualizerwave();
 
                 setupaudioplayer(selectedvideouri);
                 audioduration =0;
@@ -976,9 +982,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(! item2.trim().isEmpty())
                     {
                         soundamplitudealuearray = item2.split("\\,");
+                        getaudiowave();
                     }
                 }
+
             }
+
             JSONArray array=new JSONArray(item1);
             metricmainarraylist.clear();
             for(int j=0;j<array.length();j++)
@@ -996,6 +1005,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
                 metricmainarraylist.add(new arraycontainer(metricItemArraylist));
             }
+
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1053,8 +1064,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     //initAudio();
                     setaudiodata();
                 }
-
-
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -1085,16 +1094,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             int totalframes=grabber.getLengthInAudioFrames();
 
             for(int i = 0; i<grabber.getLengthInAudioFrames(); i++){
+             //   grabber.setSampleRate(44100);
                 Frame frame = grabber.grabAudio();
                 if (frame == null)
                     break;
 
                 ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
-                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 2);
+                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
                 bb.asShortBuffer().put(shortbuff);
+
                 byte[] byteData = bb.array();
+                int length =  byteData.length;
+                Log.e("bytedatasize", ""+byteData.length );
                 String keyValue= getkeyvalue(byteData);
-                Log.e("hashes ",""+keyValue);
+                Log.e("hashesaudio ",""+keyValue);
 
                 /*Buffer outputBuffer = frame.samples[0];
                 ByteBuffer byteBuffer=null;
@@ -1249,6 +1262,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     setmetricesgraphicaldata();
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
+
                         graphicopen=true;
                 }
 
@@ -1305,6 +1319,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                     {
                                         fragmentgraphic.drawmappoints(new LatLng(latt,longg));
                                         latt=0;longg=0;
+
                                     }
                                 }
                             }
@@ -1320,6 +1335,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                     {
                                         fragmentgraphic.drawmappoints(new LatLng(latt,longg));
                                         latt=0;longg=0;
+
                                     }
                                 }
                             }
@@ -1348,11 +1364,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)
         {
-            if(fragmentgraphic != null)
+            if(fragmentgraphic != null){
                 fragmentgraphic.setmetricesdata();
-
+                fragmentgraphic.getvisualizerwavereader(soundamplitudealuearray);
+            }
         }
-
     }
 
     @Override
@@ -1471,13 +1487,27 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
    }
 
     public void getaudiowave() {
+
+        myvisualizerviewmedia.clear();
+        //myvisualizerviewmedia.addBar(10);
         try {
             for(int i=0;i<soundamplitudealuearray.length;i++){
-                String value = soundamplitudealuearray[i];
-                int ampliteudevalue = Integer.parseInt(value);
-                myvisualizerviewmedia.addAmplitude(ampliteudevalue); // update the VisualizeView
-                myvisualizerviewmedia.invalidate();
+
+                final int finalI = i;
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        String value = soundamplitudealuearray[finalI];
+                        int ampliteudevalue = Integer.parseInt(value);
+                        myvisualizerviewmedia.addAmplitude(ampliteudevalue); // update the VisualizeView
+                        myvisualizerviewmedia.invalidate();
+
+                    }
+                });
             }
+
             return;
             //soundamplitudelist = soundamplitudelist.
         } catch (Exception e) {

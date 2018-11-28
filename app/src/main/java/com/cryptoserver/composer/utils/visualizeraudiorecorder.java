@@ -41,7 +41,10 @@ public class visualizeraudiorecorder extends View {
 
     // clear all amplitudes to prepare for a new visualization
     public void clear() {
-        amplitudes.clear();
+
+        if(amplitudes != null)
+              amplitudes.clear();
+
     }
 
     // add the given amplitude to the amplitudes ArrayList
