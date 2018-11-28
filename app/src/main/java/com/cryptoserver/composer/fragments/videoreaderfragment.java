@@ -1584,6 +1584,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 {
                     player.seekTo(0);
                     controller.setProgress();
+                    RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    relativeParams.setMargins(0, 0,0, 0);
+                    recyview_frames.setLayoutParams(relativeParams);
                 }
             }
         },200);
@@ -1592,11 +1595,15 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void setmargin(){
         if(mbitmaplist.size()>0 && player.getCurrentPosition()>0){
-            float  a= (player.getDuration()/1000)/(mbitmaplist.size()-2);
-            float leftmargin= 100/a;
-            leftmargin=(leftmargin*(player.getCurrentPosition()/1000));
+            double a=player.getDuration()/1000;
+            double b=mbitmaplist.size()-2;
+            Log.e("bitmap",""+(a/b));
+            double  c=a/b;
+            double leftmargin= 100/c;
+            double currentpostion=(player.getCurrentPosition()/1000);
+            double leftsidemargin=(leftmargin*currentpostion);
             RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            relativeParams.setMargins((int)(-leftmargin) , 0,0, 0);
+            relativeParams.setMargins((int)(-leftsidemargin) , 0,0, 0);
             recyview_frames.setLayoutParams(relativeParams);
             Log.e("recylerview",""+recyview_frames.getLayoutParams());
         }
