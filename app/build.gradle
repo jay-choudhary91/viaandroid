@@ -84,6 +84,7 @@ dependencies {
         transitive = true
     }
 
+    implementation 'kr.pe.burt.android.lib:androidoperationqueue:0.0.2'
     implementation 'com.github.wseemann:FFmpegMediaMetadataRetriever:1.0.+'
     implementation 'com.googlecode.mp4parser:isoparser:1.1.21'
     implementation 'com.squareup.okhttp3:okhttp:3.3.0'
