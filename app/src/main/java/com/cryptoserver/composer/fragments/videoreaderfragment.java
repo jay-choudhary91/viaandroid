@@ -172,6 +172,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
+            gethelper().setrecordingrunning(false);
             frontview.setVisibility(View.VISIBLE);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
             linearLayout=rootview.findViewById(R.id.content);
@@ -779,7 +780,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         frontview.setVisibility(View.GONE);
 
         if(fragmentgraphic != null && selectedvideouri!=null)
-            fragmentgraphic.setmediaplayer(true,player);
+            fragmentgraphic.setmediaplayer(true,null);
 
 
         Log.e("onprepared","onprepared");

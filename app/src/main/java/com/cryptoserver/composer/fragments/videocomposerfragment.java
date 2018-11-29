@@ -2379,6 +2379,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             soundamplitudealue = soundamplitudealue +","+String.valueOf(x);
                         }
 
+
+
                         wavevisualizerslist.add(new wavevisualizer(x,true));
 
                         Log.e("Amplitudevallue", "" + x);
