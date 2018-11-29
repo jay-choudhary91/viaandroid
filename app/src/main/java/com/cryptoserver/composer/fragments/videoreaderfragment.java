@@ -1590,6 +1590,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player != null && controller!= null)
                 {
                     player.seekTo(0);
+                    fragmentgraphic.setvisualizerwave();
+                    wavevisualizerslist.clear();
                     controller.setProgress();
                     RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     relativeParams.setMargins(0, 0,0, 0);
@@ -1675,6 +1677,11 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                 int amplitude = (int)rms;
 
                                 if(player != null && player.isPlaying()){
+
+                                    if(player.getCurrentPosition()==0){
+                                        fragmentgraphic.setvisualizerwave();
+                                        wavevisualizerslist.clear();
+                                    }
 
                                     if(amplitude >=  35)
                                         amplitude = amplitude*2;

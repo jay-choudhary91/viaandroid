@@ -1268,6 +1268,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 if(player != null && controller!= null)
                 {
                     player.seekTo(0);
+                    fragmentgraphic.setvisualizerwave();
+                    wavevisualizerslist.clear();
                     controller.setProgress();
                 }
             }
@@ -1331,6 +1333,11 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
                                 int amplitude = (int)rms;
                                 if(player != null && player.isPlaying()){
+
+                                    if(player.getCurrentPosition()==0){
+                                        fragmentgraphic.setvisualizerwave();
+                                        wavevisualizerslist.clear();
+                                    }
 
                                     if(amplitude >=  35)
                                         amplitude = amplitude*2;

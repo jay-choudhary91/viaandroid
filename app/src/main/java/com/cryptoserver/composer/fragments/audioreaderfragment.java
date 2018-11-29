@@ -1374,6 +1374,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player != null )
                 {
                     player.seekTo(0);
+                        fragmentgraphic.setvisualizerwave();
+                        myvisualizerviewmedia.clear();
+                        wavevisualizerslist.clear();
+
                     playpausebutton.setImageResource(R.drawable.play);
                 }
             }
@@ -1537,6 +1541,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 Log.e("amplitudeValue=",""+ amplitude);
                                 if(player != null && player.isPlaying()){
 
+                                    if(player.getCurrentPosition()==0){
+                                        fragmentgraphic.setvisualizerwave();
+                                         myvisualizerviewmedia.clear();
+                                         wavevisualizerslist.clear();
+                                    }
+
                                     if(amplitude >=  35)
                                         amplitude = amplitude*2;
 
@@ -1549,8 +1559,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                     myvisualizerviewmedia.invalidate();
                                     wavevisualizerslist.add(new wavevisualizer(x,true));
 
-                                    Log.e("waveListValue=",""+ x);
-                                    Log.e("waveListSize=",""+ wavevisualizerslist.size());
                                 }
 
 
