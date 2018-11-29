@@ -87,13 +87,12 @@ public class framebitmapadapter extends RecyclerView.Adapter<framebitmapadapter.
             holder.view_empty.setVisibility(View.GONE);
             holder.img_item.setVisibility(View.VISIBLE);
 
-            holder.img_item.post(new Runnable() {
+           /* holder.img_item.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.e("width",""+holder.img_item.getWidth());
                 }
             });
-
+*/
             if(mitemlist.get(position).getBitmap() != null)
                 holder.img_item.setImageBitmap(mitemlist.get(position).getBitmap());
         }

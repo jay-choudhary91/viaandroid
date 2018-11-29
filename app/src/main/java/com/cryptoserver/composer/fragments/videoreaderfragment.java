@@ -3,6 +3,7 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.location.Location;
@@ -20,6 +21,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -281,11 +283,13 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                 {
                                     player.pause();
                                     controller.setplaypauuse();
+                                    Log.e("isplaying","is playing");
                                 }
                                 double  c=0;
                                 int center = recyview_frames.getWidth()/2;
                                 View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
                                 int centerPos = recyview_frames.getChildAdapterPosition(centerView);
+                                Log.e("centerposition",""+centerPos);
                                 mlinearlayoutmanager.findLastVisibleItemPosition();
 
                                 if(centerPos > 0)
@@ -828,7 +832,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 {
                     setmargin();
                 }
-
                 if(player.getCurrentPosition() > maxincreasevideoduration)
                     maxincreasevideoduration=player.getCurrentPosition();
 
@@ -838,7 +841,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     currentvideodurationseconds=currentvideoduration/1000;  // Its 4
                 }
 
-               /* if(mbitmaplist.size() > 0 && (! islisttouched))
+                /*if(mbitmaplist.size() > 0 && (! islisttouched))
                 {
                     int second=player.getCurrentPosition()/1000;
                     if(mbitmaplist.size() >= (second))
@@ -847,8 +850,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                         //  recyview_frames.scrollToPosition(second);
                         // recyview_frames.smoothScrollToPosition(second);
                     }
-                }
-*/
+                }*/
                 return player.getCurrentPosition();
             }
         }catch (Exception e)
@@ -883,10 +885,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public void seekTo(int i) {
         if(player != null)
         {
-            Log.e("seek to ",""+i);
-            Log.e("recyview_frames",""+i/1000);
+            Log.e("seek to ",""+i +"mDragging" +controller.mDragging);
             player.seekTo(i);
             setmargin();
+           /* if(controller.mDragging){
+                setmargin();
+            }*/
             // recyview_frames.smoothScrollToPosition(i);
         }
     }
@@ -1050,6 +1054,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         if (requestCode == REQUESTCODE_PICK) {
 
             if (resultCode == RESULT_OK) {
+                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                relativeParams.setMargins(0 , 0,0, 0);
+                recyview_frames.setLayoutParams(relativeParams);
                 layout_scrubberview.setVisibility(View.GONE);
                 selectedvideouri = data.getData();
 
@@ -1600,17 +1607,21 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void setmargin(){
         if(mbitmaplist.size()>0 && player.getCurrentPosition()>0){
-            double a=player.getDuration()/1000;
-            double b=mbitmaplist.size()-2;
-            Log.e("bitmap",""+(a/b));
-            double  c=a/b;
-            double leftmargin= 100/c;
-            double currentpostion=(player.getCurrentPosition()/1000);
-            double leftsidemargin=(leftmargin*currentpostion);
-            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            relativeParams.setMargins((int)(-leftsidemargin) , 0,0, 0);
-            recyview_frames.setLayoutParams(relativeParams);
-            Log.e("recylerview",""+recyview_frames.getLayoutParams());
+                double a=player.getDuration()/1000;
+                double b=mbitmaplist.size()-2;
+                double c=a/b;
+                double leftmargin= 100/c;
+                double currentpostion=(player.getCurrentPosition()/1000);
+                Log.e("currenttime",""+player.getCurrentPosition()/1000 +"...leftmargin..." +leftmargin +"....differance..c..." +c);
+                double leftsidemargin=-((leftmargin)*(currentpostion));
+                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                relativeParams.setMargins((int)(leftsidemargin) , 0,0, 0);
+                Log.e("leftsidemargin",""+leftsidemargin);
+                recyview_frames.requestLayout();
+                recyview_frames.setLayoutParams(relativeParams);
+                recyview_frames.scrollToPosition(0);
+
         }
+        //when user scroll rigth its not gives a correct value  :
     }
 }
