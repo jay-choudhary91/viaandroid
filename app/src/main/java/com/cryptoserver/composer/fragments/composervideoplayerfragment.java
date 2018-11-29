@@ -144,6 +144,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
+            gethelper().setrecordingrunning(false);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
             linearLayout=rootview.findViewById(R.id.content);
             handleimageview=rootview.findViewById(R.id.handle);
@@ -749,7 +750,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         controller.show();
 
         if(fragmentgraphic != null)
-            fragmentgraphic.setmediaplayer(true,player);
+            fragmentgraphic.setmediaplayer(true,null);
 
 
 

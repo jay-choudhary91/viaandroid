@@ -933,12 +933,57 @@ public class graphicalfragment extends basefragment implements
                             public void onWaveFormDataCapture(Visualizer visualizer,
                                                               byte[] bytes, int samplingRate) {
 
+                              // int waveform = visualizer.getWaveForm(bytes);
+                              // Log.e("waveform=",""+waveform);
+
+                                double rms = 0;
+                                int[] formattedVizData = getFormattedData(bytes);
+                                if (formattedVizData.length > 0) {
+                                    for (int i = 0; i < formattedVizData.length; i++) {
+                                        int val = formattedVizData[i];
+                                        rms += val * val;
+                                    }
+                                    rms = Math.sqrt(rms / formattedVizData.length);
+                                }
+
+                                int amplitude = (int)rms;
+
+                                myvisualizerview.addAmplitude(amplitude*1000); // update the VisualizeView
+                                myvisualizerview.invalidate();
+
+                                Log.e("waveform=",""+rms);
+
+
+
+                               /* int i = mVisualizer.getWaveForm(bytes);
+
+                                Log.e("Waveform=","" + i);
+
+                                myvisualizerview.addAmplitude(i); // update the VisualizeView
+                                myvisualizerview.invalidate();*/
+
+
+                               /* double sum=0;
+                                for (int i = 0; i < bytes.length/2; i++) {
+                                    double y = (bytes[i*2] | bytes[i*2+1] << 8) / 32768.0;
+                                    sum += y * y;
+                                }
+                                double rms = Math.sqrt(sum / bytes.length/2);
+                                double  dbAmp = (int)20.0*Math.log10(rms);
+
+                                Log.e("dbAmp","" + dbAmp);*/
+
                                 myvisualizerviewmedia.updateVisualizer(bytes);
 
                             }
 
                             public void onFftDataCapture(Visualizer visualizer,
                                                          byte[] bytes, int samplingRate) {
+
+                                int i = mVisualizer.getFft(bytes);
+
+                                Log.e("fftdataform=","" + i);
+
                             }
                         }, Visualizer.getMaxCaptureRate() / 2, true, false);
             }catch (Exception e)
@@ -952,6 +997,7 @@ public class graphicalfragment extends basefragment implements
     public void setmediaplayer(boolean ismediaplayer , MediaPlayer mediaPlayer){
         this.mMediaPlayer = mediaPlayer;
         this.ismediaplayer = ismediaplayer;
+        setvisualizer();
     }
 
     public void setvisualizer(){
@@ -1018,6 +1064,19 @@ public class graphicalfragment extends basefragment implements
         position = 0;
         myvisualizerview.clear();
     }
+
+
+
+    public int[] getFormattedData(byte[] rawVizData) {
+        int[] arraydata=new int[rawVizData.length];
+        for (int i = 0; i < arraydata.length; i++) {
+            // convert from unsigned 8 bit to signed 16 bit
+            int tmp = ((int) rawVizData[i] & 0xFF) - 128;
+            arraydata[i] = tmp;
+        }
+        return arraydata;
+    }
+
 }
 
 
