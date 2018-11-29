@@ -885,7 +885,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public void seekTo(int i) {
         if(player != null)
         {
-            Log.e("seek to ",""+i +"mDragging" +controller.mDragging);
             player.seekTo(i);
             setmargin();
            /* if(controller.mDragging){
@@ -1612,16 +1611,13 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 double c=a/b;
                 double leftmargin= 100/c;
                 double currentpostion=(player.getCurrentPosition()/1000);
-                Log.e("currenttime",""+player.getCurrentPosition()/1000 +"...leftmargin..." +leftmargin +"....differance..c..." +c);
                 double leftsidemargin=-((leftmargin)*(currentpostion));
                 RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 relativeParams.setMargins((int)(leftsidemargin) , 0,0, 0);
-                Log.e("leftsidemargin",""+leftsidemargin);
                 recyview_frames.requestLayout();
                 recyview_frames.setLayoutParams(relativeParams);
                 recyview_frames.scrollToPosition(0);
 
         }
-        //when user scroll rigth its not gives a correct value  :
     }
 }
