@@ -21,7 +21,7 @@ public class VisualizerView  extends View {
     private static final int LINE_WIDTH = 1; // width of visualizer lines
     private static final int LINE_SCALE = 75; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
-    private int width; // width of this View
+    public int width = 0; // width of this View
     private int height; // height of this View
     private Paint linePaint; // specifies line drawing characteristics
 

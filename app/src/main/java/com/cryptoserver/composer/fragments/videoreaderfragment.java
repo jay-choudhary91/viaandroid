@@ -9,6 +9,8 @@ import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.audiofx.Equalizer;
+import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,6 +49,7 @@ import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.common;
@@ -160,6 +163,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
     String[] soundamplitudealuearray ;
+    private Visualizer mVisualizer;
+    ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -694,8 +699,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
 
-                if(player!=null)
+                if(player!=null){
                     changeactionbarcolor();
+                    initAudio();
+                    fragmentgraphic.setvisualizerwave();
+                    wavevisualizerslist.clear();
+                }
 
                 if(! keytype.equalsIgnoreCase(common.checkkey()) || (frameduration != common.checkframeduration()))
                 {
@@ -1126,22 +1135,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     {
         try {
 
-            String item1="",item2="";
-            String[] metadataarray=metadata.split("\\|");
-            if(metadataarray.length > 0)
-            {
-                item1=metadataarray[0];
-                if(metadataarray.length >=1)
-                {
-                    item2=metadataarray[1];
-                    if(! item2.trim().isEmpty())
-                    {
-                        soundamplitudealuearray = item2.split("\\,");
-                    }
-                }
-
-            }
-
             JSONArray array=new JSONArray(metadata);
             metricmainarraylist.clear();
             for(int j=0;j<array.length();j++)
@@ -1291,9 +1284,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 player.prepareAsync();
                 //player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
-                if(player!=null)
+                if(player!=null){
                     changeactionbarcolor();
-
+                    initAudio();
+                    fragmentgraphic.setvisualizerwave();
+                    wavevisualizerslist.clear();
+                }
             }
 
 
@@ -1567,7 +1563,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
             if(fragmentgraphic != null){
                 fragmentgraphic.setmetricesdata();
-                fragmentgraphic.getvisualizerwavereader(soundamplitudealuearray);
+                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
             }
         }
 
@@ -1612,5 +1608,97 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             recyview_frames.setLayoutParams(relativeParams);
             Log.e("recylerview",""+recyview_frames.getLayoutParams());
         }
+    }
+
+
+    private void initAudio() {
+
+        if(player != null){
+
+            applicationviavideocomposer.getactivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            setupVisualizerFxAndUI();
+            // Make sure the visualizer is enabled only when you actually want to
+            // receive data, and
+            // when it makes sense to receive data.
+            mVisualizer.setEnabled(true);
+            // When the stream ends, we don't need to collect any more data. We
+            // don't do this in
+            // setupVisualizerFxAndUI because we likely want to have more,
+            // non-Visualizer related code
+            // in this callback.
+            player
+                    .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            //mVisualizer.setEnabled(false);
+                        }
+                    });
+            //mMediaPlayer.start();
+        }
+    }
+
+    private void setupVisualizerFxAndUI() {
+
+        // Create the Visualizer object and attach it to our media player.
+        int sessionid =  player.getAudioSessionId();
+
+        Equalizer mEqualizer = new Equalizer(0, sessionid);
+        mEqualizer.setEnabled(true); // need to enable equalizer
+
+        mVisualizer = new Visualizer(sessionid);
+
+        if(mVisualizer != null && Visualizer.getCaptureSizeRange() != null && Visualizer.getCaptureSizeRange().length > 0)
+        {
+            try {
+                mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+                mVisualizer.setDataCaptureListener(
+                        new Visualizer.OnDataCaptureListener() {
+                            public void onWaveFormDataCapture(Visualizer visualizer,
+                                                              byte[] bytes, int samplingRate) {
+
+                                double rms = 0;
+                                int[] formattedVizData = getFormattedData(bytes);
+                                if (formattedVizData.length > 0) {
+                                    for (int i = 0; i < formattedVizData.length; i++) {
+                                        int val = formattedVizData[i];
+                                        rms += val * val;
+                                    }
+                                    rms = Math.sqrt(rms / formattedVizData.length);
+                                }
+
+                                int amplitude = (int)rms;
+
+                                if(player != null && player.isPlaying()){
+
+                                    if(amplitude >=  35)
+                                        amplitude = amplitude*2;
+
+                                    int x= amplitude * 100;
+
+                                    wavevisualizerslist.add(new wavevisualizer(x,true));
+                                }
+                                Log.e("waveform=",""+rms);
+                            }
+
+                            public void onFftDataCapture(Visualizer visualizer,
+                                                         byte[] bytes, int samplingRate) {
+                            }
+
+                        }, Visualizer.getMaxCaptureRate() / 2, true, false);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public int[] getFormattedData(byte[] rawVizData) {
+        int[] arraydata=new int[rawVizData.length];
+        for (int i = 0; i < arraydata.length; i++) {
+            // convert from unsigned 8 bit to signed 16 bit
+            int tmp = ((int) rawVizData[i] & 0xFF) - 128;
+            arraydata[i] = tmp;
+        }
+        return arraydata;
     }
 }

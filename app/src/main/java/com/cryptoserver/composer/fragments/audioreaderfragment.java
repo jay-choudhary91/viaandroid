@@ -181,6 +181,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private  final int flingactionmindspdvac = 10;
     String soundamplitudealue = "";
     String[] soundamplitudealuearray ;
+    ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
 
     public audioreaderfragment() {
     }
@@ -305,10 +306,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     player.start();
                 }
             });
-            if(!BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            {
-               setupaudiodata();
-            }
+
             flingactionmindstvac=common.getdrawerswipearea();
             if(fragmentgraphic == null) {
                 fragmentgraphic = new graphicalfragment();
@@ -317,6 +315,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
                 transaction.commit();
             }
+
+            if(!BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                setupaudiodata();
+            }
+
             setmetriceshashesdata();
         }
         return rootview;
@@ -728,11 +732,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         if(player != null)
         {
             if(selectedvideouri!= null){
+                fragmentgraphic.setvisualizerwave();
+                wavevisualizerslist.clear();
                 playpausebutton.setImageResource(R.drawable.pause);
                 player.start();
                 hdlr.postDelayed(UpdateSongTime, 100);
                 player.setOnCompletionListener(this);
-                //getaudiowave();
             }
             else{
                 if(audiourl!=null){
@@ -740,7 +745,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     player.start();
                     hdlr.postDelayed(UpdateSongTime, 100);
                     player.setOnCompletionListener(this);
-                    //getaudiowave();
                 }
             }
         }
@@ -974,25 +978,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void parsemetadata(String metadata)
     {
         try {
-
-            String item1="",item2="";
-            String[] metadataarray=metadata.split("\\|");
-            if(metadataarray.length > 0)
-            {
-                item1=metadataarray[0];
-                if(metadataarray.length >=1)
-                {
-                    item2=metadataarray[1];
-                    if(! item2.trim().isEmpty())
-                    {
-                        soundamplitudealuearray = item2.split("\\,");
-                       // getaudiowave();
-                    }
-                }
-
-            }
-
-            JSONArray array=new JSONArray(item1);
+            JSONArray array=new JSONArray(metadata);
             metricmainarraylist.clear();
             for(int j=0;j<array.length();j++)
             {
@@ -1066,6 +1052,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player!=null){
                     changeactionbarcolor();
                     initAudio();
+                    fragmentgraphic.setvisualizerwave();
+                    wavevisualizerslist.clear();
                     setaudiodata();
                 }
             }
@@ -1370,7 +1358,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             if(fragmentgraphic != null){
                 fragmentgraphic.setmetricesdata();
-                fragmentgraphic.getvisualizerwavereader(soundamplitudealuearray);
+                fragmentgraphic.getvisualizerwave(wavevisualizerslist);
             }
         }
     }
@@ -1490,8 +1478,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
        }
    }
 
-
-
     private void initAudio() {
 
         if(player != null){
@@ -1537,7 +1523,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         new Visualizer.OnDataCaptureListener() {
                             public void onWaveFormDataCapture(Visualizer visualizer,
                                                               byte[] bytes, int samplingRate) {
-
                                 double rms = 0;
                                 int[] formattedVizData = getFormattedData(bytes);
                                 if (formattedVizData.length > 0) {
@@ -1549,18 +1534,31 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 }
 
                                 int amplitude = (int)rms;
-                                if(rms>0){
-                                    myvisualizerviewmedia.addAmplitude(amplitude*100); // update the VisualizeView
-                                    myvisualizerviewmedia.invalidate();
+                                Log.e("amplitudeValue=",""+ amplitude);
+                                if(player != null && player.isPlaying()){
 
+                                    if(amplitude >=  35)
+                                        amplitude = amplitude*2;
+
+                                     int x= amplitude * 100;
+
+                                    myvisualizerviewmedia.addAmplitude(x); // update the VisualizeView
+                                    myvisualizerviewmedia.addAmplitude(50); // update the VisualizeView
+                                    myvisualizerviewmedia.addAmplitude(50); // update the VisualizeView
+                                    myvisualizerviewmedia.addAmplitude(50); // update the VisualizeView
+                                    myvisualizerviewmedia.invalidate();
+                                    wavevisualizerslist.add(new wavevisualizer(x,true));
+
+                                    Log.e("waveListValue=",""+ x);
+                                    Log.e("waveListSize=",""+ wavevisualizerslist.size());
                                 }
-                                Log.e("waveform=",""+rms);
+
 
                             }
-
                             public void onFftDataCapture(Visualizer visualizer,
                                                          byte[] bytes, int samplingRate) {
                             }
+
                         }, Visualizer.getMaxCaptureRate() / 2, true, false);
             }catch (Exception e)
             {
@@ -1569,51 +1567,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         }
     }
-
-    public void getaudiowave() {
-
-        myvisualizerviewmedia.clear();
-      Handler  wavehandler =new Handler();
-
-        try {
-            for(int i=0;i<soundamplitudealuearray.length;i++){
-
-                final int finalI = i;
-                wavehandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-
-                            String value = soundamplitudealuearray[finalI];
-                            int ampliteudevalue = Integer.parseInt(value);
-                            myvisualizerviewmedia.addAmplitude(ampliteudevalue); // update the VisualizeView
-                            myvisualizerviewmedia.invalidate();
-
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },00);
-
-
-                        /*getActivity().runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-
-
-                            }
-                        });*/
-                    }
-
-            return;
-            //soundamplitudelist = soundamplitudelist.
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public int[] getFormattedData(byte[] rawVizData) {
         int[] arraydata=new int[rawVizData.length];
