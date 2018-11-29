@@ -1248,7 +1248,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         {
             if(fragmentgraphic != null){
                 fragmentgraphic.setmetricesdata();
-                fragmentgraphic.getvisualizerwave(wavevisualizerslist);
+                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
 
             }
         }
@@ -1268,7 +1268,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 if(player != null && controller!= null)
                 {
                     player.seekTo(0);
-                    fragmentgraphic.setvisualizerwave();
                     wavevisualizerslist.clear();
                     controller.setProgress();
                 }

@@ -1358,7 +1358,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             if(fragmentgraphic != null){
                 fragmentgraphic.setmetricesdata();
-                fragmentgraphic.getvisualizerwave(wavevisualizerslist);
+                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
             }
         }
     }
@@ -1374,7 +1374,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player != null )
                 {
                     player.seekTo(0);
-                        fragmentgraphic.setvisualizerwave();
                         myvisualizerviewmedia.clear();
                         wavevisualizerslist.clear();
 
