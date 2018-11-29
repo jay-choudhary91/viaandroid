@@ -2369,6 +2369,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         int x = mMediaRecorder.getMaxAmplitude();
 
+                        
                         wavevisualizerslist.add(new wavevisualizer(x,true));
 
                         if ((fragment_graphic_container.getVisibility() == View.VISIBLE)) {
