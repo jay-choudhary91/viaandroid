@@ -251,11 +251,6 @@ public class graphicalfragment extends basefragment implements
 
             if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
-            if(photocapture==true){
-                layout_soundinformation.setVisibility(View.GONE);
-                myvisualizerviewmedia.setVisibility(View.GONE);
-                myvisualizerview.setVisibility(View.GONE);
-            }
 
             loadmap();
             setchartdata();
@@ -376,8 +371,16 @@ public class graphicalfragment extends basefragment implements
             if(layout_datalatency.getVisibility() == View.GONE)
                 layout_datalatency.setVisibility(View.VISIBLE);
 
-            if(layout_soundinformation.getVisibility() == View.GONE)
+            if(photocapture)
+            {
+                layout_soundinformation.setVisibility(View.GONE);
+
+            }
+            else
+            {
                 layout_soundinformation.setVisibility(View.VISIBLE);
+
+            }
         }
 
         if(hitcounter == 5)
