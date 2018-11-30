@@ -1332,27 +1332,25 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 }
                             }
                         }
-
                     }
-                }
-
-
-                selectedmetrics=selectedmetrics+"\n";
-
-                if((! selectedmetrics.toString().trim().isEmpty()))
-                {
-                    if(mmetricsitems.size() > 0)
-                    {
-                        mmetricsitems.set(0,new videomodel(selectedmetrics));
-                    }
-                    else
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrics));
-                    }
-                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                    selectedmetrics="";
                 }
             }
+        }
+
+        selectedmetrics=selectedmetrics+"\n";
+
+        if((! selectedmetrics.toString().trim().isEmpty()))
+        {
+            if(mmetricsitems.size() > 0)
+            {
+                mmetricsitems.set(0,new videomodel(selectedmetrics));
+            }
+            else
+            {
+                mmetricsitems.add(new videomodel(selectedmetrics));
+            }
+            mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+            selectedmetrics="";
         }
 
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)

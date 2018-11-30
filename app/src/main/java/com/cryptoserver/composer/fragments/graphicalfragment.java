@@ -432,6 +432,7 @@ public class graphicalfragment extends basefragment implements
 
         if(hitcounter == 7)
         {
+            hitcounter=0;
             StringBuilder mformatbuilder = new StringBuilder();
             mformatbuilder.append(config.Connectionspeed+System.getProperty("line.separator")+
                     common.getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)));
