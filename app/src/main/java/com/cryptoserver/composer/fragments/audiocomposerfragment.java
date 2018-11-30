@@ -334,7 +334,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                visibleItemCount = mLayoutManager.getChildCount();
+                /*visibleItemCount = mLayoutManager.getChildCount();
                 totalItemCount = mLayoutManager.getItemCount();
                 pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                 if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
@@ -344,7 +344,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                         selectedmetrices="";
                     }
-                }
+                }*/
 
             }
         });
@@ -1044,26 +1044,23 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 {
                     if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
                     {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mhashesitems.add(new videomodel(selectedhashes));
-                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                                selectedhashes="";
-                            }
-                        });
+                        mhashesitems.add(new videomodel(selectedhashes));
+                        mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                        selectedhashes="";
                     }
 
-                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
+                    if((! selectedmetrices.toString().trim().isEmpty()))
                     {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mmetricsitems.add(new videomodel(selectedmetrices));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                selectedmetrices="";
-                            }
-                        });
+                        if(mmetricsitems.size() > 0)
+                        {
+                            mmetricsitems.set(0,new videomodel(selectedmetrices));
+                        }
+                        else
+                        {
+                            mmetricsitems.add(new videomodel(selectedmetrices));
+                        }
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        selectedmetrices="";
                     }
 
                     if((! isaudiorecording) && (! selectedmetrices.toString().trim().isEmpty()))

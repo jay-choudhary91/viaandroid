@@ -339,7 +339,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                visibleItemCount = mLayoutManager.getChildCount();
+                /*visibleItemCount = mLayoutManager.getChildCount();
                 totalItemCount = mLayoutManager.getItemCount();
                 pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                 if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
@@ -349,7 +349,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                         selectedmetrics="";
                     }
-                }
+                }*/
             }
         });
     }
@@ -1339,15 +1339,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 selectedmetrics=selectedmetrics+"\n";
 
-                if(mmetricsitems.size() == 0 && (! selectedmetrics.toString().trim().isEmpty()))
+                if((! selectedmetrics.toString().trim().isEmpty()))
                 {
-                    mmetricsitems.add(new videomodel(selectedmetrics));
-                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                }
-
-                if((player != null) && (! player.isPlaying()) && (! selectedmetrics.toString().trim().isEmpty()))
-                {
-                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    if(mmetricsitems.size() > 0)
+                    {
+                        mmetricsitems.set(0,new videomodel(selectedmetrics));
+                    }
+                    else
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrics));
+                    }
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                     selectedmetrics="";
                 }

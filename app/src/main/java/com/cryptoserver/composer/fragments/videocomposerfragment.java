@@ -559,7 +559,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                visibleItemCount = mLayoutManager.getChildCount();
+                /*visibleItemCount = mLayoutManager.getChildCount();
                 totalItemCount = mLayoutManager.getItemCount();
                 pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
                 if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
@@ -569,7 +569,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                         selectedmetrices="";
                     }
-                }
+                }*/
             }
         });
     }
@@ -1686,7 +1686,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
        // metricesarray.put(object);
         builder.append("\n");
         metadatametricesjson.put(object);
-        selectedmetrices=selectedmetrices+builder.toString();
+        selectedmetrices=builder.toString();
     }
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
@@ -1769,21 +1769,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         });
                     }
 
-                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
+                    if((! selectedmetrices.toString().trim().isEmpty()))
                     {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mmetricsitems.add(new videomodel(selectedmetrices));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                selectedmetrices="";
-                            }
-                        });
-                    }
-
-                    if((! isvideorecording) && (! selectedmetrices.toString().trim().isEmpty()))
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        if(mmetricsitems.size() > 0)
+                        {
+                            mmetricsitems.set(0,new videomodel(selectedmetrices));
+                        }
+                        else
+                        {
+                            mmetricsitems.add(new videomodel(selectedmetrices));
+                        }
                         mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                         selectedmetrices="";
                     }

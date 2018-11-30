@@ -1550,7 +1550,14 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if((! selectedmetrics.toString().trim().isEmpty()))
                 {
-                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    if(mmetricsitems.size() > 0)
+                    {
+                        mmetricsitems.set(0,new videomodel(selectedmetrics));
+                    }
+                    else
+                    {
+                        mmetricsitems.add(new videomodel(selectedmetrics));
+                    }
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                     selectedmetrics="";
                 }

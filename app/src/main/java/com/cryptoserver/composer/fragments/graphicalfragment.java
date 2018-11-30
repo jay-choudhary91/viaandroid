@@ -161,10 +161,24 @@ public class graphicalfragment extends basefragment implements
     @BindView(R.id.txt_hash_formula)
     TextView txt_hash_formula;
 
-    @BindView(R.id.layout_graphical)
-    LinearLayout layout_graphical;
+    @BindView(R.id.layout_encryption)
+    LinearLayout layout_encryption;
+    @BindView(R.id.layout_datalatency)
+    LinearLayout layout_datalatency;
     @BindView(R.id.layout_soundinfo)
     LinearLayout layout_soundinformation;
+    @BindView(R.id.layout_phoneanalytics)
+    LinearLayout layout_phoneanalytics;
+    @BindView(R.id.layout_orientationanalytics)
+    LinearLayout layout_orientationanalytics;
+    @BindView(R.id.layout_locationanalytics)
+    LinearLayout layout_locationanalytics;
+    @BindView(R.id.layout_googlemap)
+    LinearLayout layout_googlemap;
+
+
+    @BindView(R.id.layout_graphical)
+    LinearLayout layout_graphical;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
     @BindView(R.id.recyview_encryption)
@@ -181,7 +195,6 @@ public class graphicalfragment extends basefragment implements
     private Sensor maccelerometersensormanager;
 
     encryptiondataadapter encryptionadapter;
-    LinearLayout layout_orientation;
     RecyclerView.LayoutManager encryptionmanager;
     ImageView img_compass;
     GoogleMap mgooglemap;
@@ -212,7 +225,7 @@ public class graphicalfragment extends basefragment implements
     int position=0;
 
 
-
+    int hitcounter=0;
     String[] soundamplitudealuearray;
 
     @Override
@@ -228,7 +241,6 @@ public class graphicalfragment extends basefragment implements
 
             myvisualizerview.setVisibility(View.VISIBLE);
 
-            layout_orientation=rootview.findViewById(R.id.layout_orenAna);
             img_compass = (ImageView) rootview.findViewById(R.id.img_compass);
             recyview_encryption.setNestedScrollingEnabled(false);
             encryptionadapter=new encryptiondataadapter(frameslist,applicationviavideocomposer.getactivity());
@@ -237,7 +249,6 @@ public class graphicalfragment extends basefragment implements
             recyview_encryption.setLayoutManager(encryptionmanager);
             recyview_encryption.setAdapter(encryptionadapter);
 
-            layout_graphical.setVisibility(View.GONE);
             if(xdata.getinstance().getSetting(config.hashtype).toString().trim().length() == 0)
                 xdata.getinstance().saveSetting(config.hashtype,config.prefs_md5);
             if(photocapture==true){
@@ -317,80 +328,157 @@ public class graphicalfragment extends basefragment implements
         if(! isgraphicopen && (! ismediaplayer))
             return;
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        layout_graphical.setVisibility(View.VISIBLE);
-                        String latitude=xdata.getinstance().getSetting(config.Latitude);
-                        String longitude=xdata.getinstance().getSetting(config.Longitude);
-                        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        if(ismediaplayer || photocapture)
-                        {
-                            if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
-                            {
-                                String strdegree=xdata.getinstance().getSetting(config.orientation);
-                                if(! strdegree.equals(lastsavedangle))
-                                {
-                                    if(strdegree.equalsIgnoreCase("NA"))
-                                        strdegree="0.0";
 
-                                    int degree = Math.abs((int)Double.parseDouble(strdegree));
-                                    rotatecompass(degree);
-                                }
-                                lastsavedangle=strdegree;
+        hitcounter++;
+        if(hitcounter == 1)
+        {
+            if(layout_googlemap.getVisibility() == View.GONE)
+                layout_googlemap.setVisibility(View.VISIBLE);
 
-                            }
-                        }
-                    }
-                });
+            if(layout_locationanalytics.getVisibility() == View.GONE)
+                layout_locationanalytics.setVisibility(View.VISIBLE);
 
-                common.locationAnalyticsdata(txt_latitude,txt_longitude,
-                        txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
+            if(layout_orientationanalytics.getVisibility() == View.GONE)
+                layout_orientationanalytics.setVisibility(View.VISIBLE);
+        }
 
-                common.phoneAnalytics(txt_phonetype,txt_cellprovider,txt_connection_speed,txt_osversion,txt_wifinetwork,
-                        txt_gps_accuracy,txt_screensize,txt_country,txt_cpuusage,txt_brightness,txt_timezone,txt_memoryusage,txt_bluetooth,
-                        txt_localtime,txt_storageavailable,txt_language,txt_systemuptime,txt_battery);
+        if(hitcounter == 2)
+        {
+            common.locationAnalyticsdata(txt_latitude,txt_longitude,
+                    txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
+        }
 
-                if(! common.isnetworkconnected(applicationviavideocomposer.getactivity()))
-                    xdata.getinstance().saveSetting(config.Connectionspeed,"NA");
 
-                txt_data_hash.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_data_hash.setText(currenthashvalue);
-                    }
-                });
-                txt_hash_formula.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
-                    }
-                });
-                txt_xaxis.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_xaxis.setText("X-Axis \n"+xdata.getinstance().getSetting(config.acceleration_x));
-                    }
-                });
-                txt_yaxis.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_yaxis.setText("Y-Axis \n"+xdata.getinstance().getSetting(config.acceleration_y));
-                    }
-                });
-                txt_zaxis.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_zaxis.setText("Z-Axis \n"+xdata.getinstance().getSetting(config.acceleration_z));
-                    }
-                });
+        if(hitcounter == 3)
+        {
+            StringBuilder mformatbuilder = new StringBuilder();
+            mformatbuilder.append("X-Axis  "+System.getProperty("line.separator")+
+                    xdata.getinstance().getSetting(config.acceleration_x));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+"Y-Axis  "+
+                    System.getProperty("line.separator")+xdata.getinstance().getSetting(config.acceleration_y));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+"Z-Axis  "+
+                    System.getProperty("line.separator")+xdata.getinstance().getSetting(config.acceleration_z)
+            );
+
+            txt_xaxis.setText(mformatbuilder.toString());
+        }
+
+        if(hitcounter == 4)
+        {
+            if(layout_phoneanalytics.getVisibility() == View.GONE)
+                layout_phoneanalytics.setVisibility(View.VISIBLE);
+
+            if(layout_encryption.getVisibility() == View.GONE)
+                layout_encryption.setVisibility(View.VISIBLE);
+
+            if(layout_datalatency.getVisibility() == View.GONE)
+                layout_datalatency.setVisibility(View.VISIBLE);
+
+            if(layout_soundinformation.getVisibility() == View.GONE)
+                layout_soundinformation.setVisibility(View.VISIBLE);
+        }
+
+        if(hitcounter == 5)
+        {
+
+            StringBuilder mformatbuilder = new StringBuilder();
+            mformatbuilder.append(config.PhoneType+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.OSversion+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.ScreenSize+System.getProperty("line.separator")+
+                    xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Brightness+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Brightness)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Bluetooth+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Bluetooth)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Language+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Language)));
+
+            txt_phonetype.setText(mformatbuilder.toString());
+        }
+
+        if(hitcounter == 6)
+        {
+            StringBuilder mformatbuilder = new StringBuilder();
+            mformatbuilder.append(config.CellProvider+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.WIFINetwork+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Country+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Country)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.TimeZone+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.TimeZone)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.LocalTime+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.SystemUptime+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)));
+
+            txt_cellprovider.setText(mformatbuilder.toString());
+
+        }
+
+        if(hitcounter == 7)
+        {
+            StringBuilder mformatbuilder = new StringBuilder();
+            mformatbuilder.append(config.Connectionspeed+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.GPSAccuracy+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.CPUUsage+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.MemoryUsage+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.StorageAvailable+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)));
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Battery+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
+
+            txt_connection_speed.setText(mformatbuilder.toString());
+        }
+
+        String latitude=xdata.getinstance().getSetting(config.Latitude);
+        String longitude=xdata.getinstance().getSetting(config.Longitude);
+        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+        if(ismediaplayer || photocapture)
+        {
+            if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
+            {
+                String strdegree=xdata.getinstance().getSetting(config.orientation);
+                if(! strdegree.equals(lastsavedangle))
+                {
+                    if(strdegree.equalsIgnoreCase("NA"))
+                        strdegree="0.0";
+
+                    int degree = Math.abs((int)Double.parseDouble(strdegree));
+                    rotatecompass(degree);
+                }
+                lastsavedangle=strdegree;
+
             }
-        }).start();
+        }
+
+        txt_data_hash.setText(currenthashvalue);
+        txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
     }
 
     @Override
