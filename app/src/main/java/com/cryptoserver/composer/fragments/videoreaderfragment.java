@@ -3,12 +3,15 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.media.audiofx.Equalizer;
+import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +23,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,6 +51,7 @@ import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.customffmpegframegrabber;
 import com.cryptoserver.composer.utils.common;
@@ -160,6 +165,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
     String[] soundamplitudealuearray ;
+    private Visualizer mVisualizer;
+    ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -226,17 +233,17 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 @Override
                 public void run() {
                     adapter = new framebitmapadapter(getActivity(), mbitmaplist,recyview_frames.getWidth(),
-                    new adapteritemclick() {
-                        @Override
-                        public void onItemClicked(Object object) {
+                            new adapteritemclick() {
+                                @Override
+                                public void onItemClicked(Object object) {
 
-                        }
+                                }
 
-                        @Override
-                        public void onItemClicked(Object object, int type) {
+                                @Override
+                                public void onItemClicked(Object object, int type) {
 
-                        }
-                    });
+                                }
+                            });
                     mlinearlayoutmanager = new centerlayoutmanager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
                     recyview_frames.setLayoutManager(mlinearlayoutmanager);
                     recyview_frames.setItemAnimator(new DefaultItemAnimator());
@@ -259,6 +266,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                                     islisttouched = true;
                                     islistdragging = true;
+                                    RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                                    relativeParams.setMargins(0, 0,0, 0);
+                                    recyview_frames.setLayoutParams(relativeParams);
                                     break;
                                 case RecyclerView.SCROLL_STATE_SETTLING:
                                     System.out.println("Scroll Settling");
@@ -272,30 +282,39 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                             super.onScrolled(recyclerView, dx, dy);
                             Log.e("listtouched  dragging",""+islisttouched+" "+islistdragging);
-
-                            Log.e("recycleview","dx...."+dx +"dy......" +dy);
                             if(islisttouched && islistdragging)
                             {
                                 if(player != null && player.isPlaying())
                                 {
                                     player.pause();
                                     controller.setplaypauuse();
+                                    Log.e("isplaying","is playing");
                                 }
-
-                                int center = recyview_frames.getWidth() / 2;
+                                double  c=0;
+                                int center = recyview_frames.getWidth()/2;
                                 View centerView = recyview_frames.findChildViewUnder(center, recyview_frames.getTop());
                                 int centerPos = recyview_frames.getChildAdapterPosition(centerView);
-                                Log.e("centerPos ",""+centerPos);
+                                Log.e("centerposition",""+centerPos);
                                 mlinearlayoutmanager.findLastVisibleItemPosition();
-                                if(centerPos > 0)
-                                    centerPos=centerPos-1;
 
+                                if(centerPos > 0)
+                                    if(centerPos==1){
+                                        centerPos = 0;
+                                    }
+                                if(mbitmaplist.size()>0) {
+                                    double a=player.getDuration()/1000;
+                                    double b=mbitmaplist.size()-2;
+                                    Log.e("bitmap",""+(a/b));
+                                    c=a/b;
+                                   // a=(player.getDuration() / 1000) / (mbitmaplist.size() - 2);
+                                }
+                                double position=c*centerPos;
                                 try {
-                                    int currentduration=centerPos*1000;
+                                    double currentduration=position*1000;
                                     if(player !=null && controller != null)
                                     {
                                         try {
-                                            player.seekTo(currentduration);
+                                            player.seekTo((int) currentduration);
                                             Log.e("playerseekto",""+currentduration);
                                             controller.setProgress();
                                         }catch (Exception e)
@@ -501,16 +520,16 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 flingswipe.onTouchEvent(motionEvent);
                 break;
             case  R.id.videoSurface:
-                {
-                    switch (motionEvent.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            if(player != null && (! isdraweropen)) {
-                                hideshowcontroller();
-                            }
-                            break;
-                    }
+            {
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        if(player != null && (! isdraweropen)) {
+                            hideshowcontroller();
+                        }
+                        break;
                 }
-                break;
+            }
+            break;
         }
         return true;
     }
@@ -684,8 +703,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
 
-                if(player!=null)
-                   changeactionbarcolor();
+                if(player!=null){
+                    changeactionbarcolor();
+                    initAudio();
+                    fragmentgraphic.setvisualizerwave();
+                    wavevisualizerslist.clear();
+                }
 
                 if(! keytype.equalsIgnoreCase(common.checkkey()) || (frameduration != common.checkframeduration()))
                 {
@@ -733,9 +756,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-     //   playerposition=0;
+        //   playerposition=0;
         if (player != null) {
-                playerposition=player.getCurrentPosition();
+            playerposition=player.getCurrentPosition();
             player.pause();
         }
         issurafcedestroyed=true;
@@ -814,7 +837,10 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         try {
             if(player != null)
             {
-                setmargin();
+                if(mbitmaplist.size() > 0 && (! islisttouched))
+                {
+                    setmargin();
+                }
                 if(player.getCurrentPosition() > maxincreasevideoduration)
                     maxincreasevideoduration=player.getCurrentPosition();
 
@@ -824,17 +850,16 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     currentvideodurationseconds=currentvideoduration/1000;  // Its 4
                 }
 
-                if(mbitmaplist.size() > 0 && (! islisttouched))
+                /*if(mbitmaplist.size() > 0 && (! islisttouched))
                 {
                     int second=player.getCurrentPosition()/1000;
                     if(mbitmaplist.size() >= (second))
                     {
                         //Log.e("getCurrentPosition ",""+player.getCurrentPosition());
-                      //  recyview_frames.scrollToPosition(second);
-                       // recyview_frames.smoothScrollToPosition(second);
+                        //  recyview_frames.scrollToPosition(second);
+                        // recyview_frames.smoothScrollToPosition(second);
                     }
-                }
-
+                }*/
                 return player.getCurrentPosition();
             }
         }catch (Exception e)
@@ -869,10 +894,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public void seekTo(int i) {
         if(player != null)
         {
-            Log.e("seek to ",""+i);
-            Log.e("recyview_frames",""+i/1000);
             player.seekTo(i);
-          // recyview_frames.smoothScrollToPosition(i);
+            setmargin();
+           /* if(controller.mDragging){
+                setmargin();
+            }*/
+            // recyview_frames.smoothScrollToPosition(i);
         }
     }
 
@@ -1035,6 +1062,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         if (requestCode == REQUESTCODE_PICK) {
 
             if (resultCode == RESULT_OK) {
+                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                relativeParams.setMargins(0 , 0,0, 0);
+                recyview_frames.setLayoutParams(relativeParams);
                 layout_scrubberview.setVisibility(View.GONE);
                 selectedvideouri = data.getData();
 
@@ -1063,8 +1093,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 frameduration=common.checkframeduration();
                 keytype=common.checkkey();
 
-               if(mbitmaplist.size()!=0)
-                     runmethod = false;
+                if(mbitmaplist.size()!=0)
+                    runmethod = false;
 
                 mbitmaplist.clear();
                 adapter.notifyDataSetChanged();
@@ -1110,22 +1140,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public void parsemetadata(String metadata)
     {
         try {
-
-            String item1="",item2="";
-            String[] metadataarray=metadata.split("\\|");
-            if(metadataarray.length > 0)
-            {
-                item1=metadataarray[0];
-                if(metadataarray.length >=1)
-                {
-                    item2=metadataarray[1];
-                    if(! item2.trim().isEmpty())
-                    {
-                        soundamplitudealuearray = item2.split("\\,");
-                    }
-                }
-
-            }
 
             JSONArray array=new JSONArray(metadata);
             metricmainarraylist.clear();
@@ -1196,68 +1210,68 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         seconds = seconds + minutes;
         Log.e("videoseconds  =  ",""+seconds);
         if(seconds>60){
-           n=30;
+            n=30;
         }else if(seconds==1){
             n=1;
         }else if(seconds==2){
             n=2;
         } else{
-          n=seconds/2;
+            n=seconds/2;
         }
-            for(int i=1;i<=n;i++)
+        for(int i=1;i<=n;i++)
+        {
+            Bitmap m_bitmap = null;
+            try
             {
-                Bitmap m_bitmap = null;
-                try
+                if(suspendbitmapqueue)
                 {
-                    if(suspendbitmapqueue)
-                    {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mbitmaplist.clear();
-                                adapter.notifyDataSetChanged();
-                                scurraberverticalbar.setVisibility(View.VISIBLE);
-                            }
-                        });
-                        break;
-                    }
-
-                    m_mediaMetadataRetriever = new MediaMetadataRetriever();
-                    m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
-                    m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
-
-
-                    if(m_bitmap != null && runmethod)
-                    {
-                        Log.e("Bitmap on ",""+i);
-                        Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
-                        mbitmaplist.add(new frame(i,bitmap,false));
-
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapter.notifyDataSetChanged();
-                                scurraberverticalbar.setVisibility(View.VISIBLE);
-                                //runmethod = true;
-                            }
-                        });
-                    }
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mbitmaplist.clear();
+                            adapter.notifyDataSetChanged();
+                            scurraberverticalbar.setVisibility(View.VISIBLE);
+                        }
+                    });
+                    break;
                 }
-                catch (Exception e)
+
+                m_mediaMetadataRetriever = new MediaMetadataRetriever();
+                m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+                m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
+
+
+                if(m_bitmap != null && runmethod)
                 {
-                    e.printStackTrace();
-                }
-                finally
-                {
-                    if (m_mediaMetadataRetriever != null)
-                        m_mediaMetadataRetriever.release();
+                    Log.e("Bitmap on ",""+i);
+                    Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
+                    mbitmaplist.add(new frame(i,bitmap,false));
+
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            scurraberverticalbar.setVisibility(View.VISIBLE);
+                            //runmethod = true;
+                        }
+                    });
                 }
             }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                if (m_mediaMetadataRetriever != null)
+                    m_mediaMetadataRetriever.release();
+            }
+        }
         isbitmapprocessing=false;
         suspendbitmapqueue=false;
 
         if(mbitmaplist.size()!=0)
-             mbitmaplist.add(new frame(0,null,true));
+            mbitmaplist.add(new frame(0,null,true));
 
     }
 
@@ -1276,9 +1290,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 player.prepareAsync();
                 //player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
-                if(player!=null)
+                if(player!=null){
                     changeactionbarcolor();
-
+                    initAudio();
+                    fragmentgraphic.setvisualizerwave();
+                    wavevisualizerslist.clear();
+                }
             }
 
 
@@ -1294,8 +1311,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     }
 
     public void  changeactionbarcolor(){
-            gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
-                    (R.color.videoPlayer_header));
+        gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
+                (R.color.videoPlayer_header));
     }
 
     public void setVideoAdapter() {
@@ -1552,7 +1569,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
             if(fragmentgraphic != null){
                 fragmentgraphic.setmetricesdata();
-                fragmentgraphic.getvisualizerwavereader(soundamplitudealuearray);
+                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
             }
         }
 
@@ -1573,7 +1590,11 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player != null && controller!= null)
                 {
                     player.seekTo(0);
+                    wavevisualizerslist.clear();
                     controller.setProgress();
+                    RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    relativeParams.setMargins(0, 0,0, 0);
+                    recyview_frames.setLayoutParams(relativeParams);
                 }
             }
         },200);
@@ -1581,16 +1602,116 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     }
 
     public void setmargin(){
-        Log.e("currentduration",""+player.getDuration()/1000 +"bitmapsize........"+mbitmaplist.size());
-
         if(mbitmaplist.size()>0 && player.getCurrentPosition()>0){
-            float  a= (player.getDuration()/1000)/(mbitmaplist.size()-2);
-            float leftmargin= 100/a;
-            leftmargin=-(leftmargin*(player.getCurrentPosition()/1000));
-            Log.e("leftmargin",""+leftmargin+".............."+player.getCurrentPosition()/1000);
-            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            relativeParams.setMargins((int) leftmargin, 0, 0, 0);
-            recyview_frames.setLayoutParams(relativeParams);}
+                double a=player.getDuration()/1000;
+                double b=mbitmaplist.size()-2;
+                double c=a/b;
+                double leftmargin= 100/c;
+                double currentpostion=(player.getCurrentPosition()/1000);
+                double leftsidemargin=-((leftmargin)*(currentpostion));
+                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                relativeParams.setMargins((int)(leftsidemargin) , 0,0, 0);
+                recyview_frames.requestLayout();
+                recyview_frames.setLayoutParams(relativeParams);
+                recyview_frames.scrollToPosition(0);
 
+        }
+    }
+
+
+    private void initAudio() {
+
+        if(player != null){
+
+            applicationviavideocomposer.getactivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+            setupVisualizerFxAndUI();
+            // Make sure the visualizer is enabled only when you actually want to
+            // receive data, and
+            // when it makes sense to receive data.
+            mVisualizer.setEnabled(true);
+            // When the stream ends, we don't need to collect any more data. We
+            // don't do this in
+            // setupVisualizerFxAndUI because we likely want to have more,
+            // non-Visualizer related code
+            // in this callback.
+            player
+                    .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            //mVisualizer.setEnabled(false);
+                        }
+                    });
+            //mMediaPlayer.start();
+        }
+    }
+
+    private void setupVisualizerFxAndUI() {
+
+        // Create the Visualizer object and attach it to our media player.
+        int sessionid =  player.getAudioSessionId();
+
+        Equalizer mEqualizer = new Equalizer(0, sessionid);
+        mEqualizer.setEnabled(true); // need to enable equalizer
+
+        mVisualizer = new Visualizer(sessionid);
+
+        if(mVisualizer != null && Visualizer.getCaptureSizeRange() != null && Visualizer.getCaptureSizeRange().length > 0)
+        {
+            try {
+                mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+                mVisualizer.setDataCaptureListener(
+                        new Visualizer.OnDataCaptureListener() {
+                            public void onWaveFormDataCapture(Visualizer visualizer,
+                                                              byte[] bytes, int samplingRate) {
+
+                                double rms = 0;
+                                int[] formattedVizData = getFormattedData(bytes);
+                                if (formattedVizData.length > 0) {
+                                    for (int i = 0; i < formattedVizData.length; i++) {
+                                        int val = formattedVizData[i];
+                                        rms += val * val;
+                                    }
+                                    rms = Math.sqrt(rms / formattedVizData.length);
+                                }
+
+                                int amplitude = (int)rms;
+
+                                if(player != null && player.isPlaying()){
+
+                                    if(player.getCurrentPosition()==0){
+                                        fragmentgraphic.setvisualizerwave();
+                                        wavevisualizerslist.clear();
+                                    }
+
+                                    if(amplitude >=  35)
+                                        amplitude = amplitude*2;
+
+                                    int x= amplitude * 100;
+
+                                    wavevisualizerslist.add(new wavevisualizer(x,true));
+                                }
+                                Log.e("waveform=",""+rms);
+                            }
+
+                            public void onFftDataCapture(Visualizer visualizer,
+                                                         byte[] bytes, int samplingRate) {
+                            }
+
+                        }, Visualizer.getMaxCaptureRate() / 2, true, false);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public int[] getFormattedData(byte[] rawVizData) {
+        int[] arraydata=new int[rawVizData.length];
+        for (int i = 0; i < arraydata.length; i++) {
+            // convert from unsigned 8 bit to signed 16 bit
+            int tmp = ((int) rawVizData[i] & 0xFF) - 128;
+            arraydata[i] = tmp;
+        }
+        return arraydata;
     }
 }

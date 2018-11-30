@@ -948,30 +948,13 @@ public class graphicalfragment extends basefragment implements
 
                                 int amplitude = (int)rms;
 
-                                myvisualizerview.addAmplitude(amplitude*1000); // update the VisualizeView
-                                myvisualizerview.invalidate();
+                                if(rms>0 && myvisualizerview.width != 0){
+                                    int x= amplitude*100;
+                                    myvisualizerview.addAmplitude(x); // update the VisualizeView
+                                    myvisualizerview.invalidate();
+                                }
 
                                 Log.e("waveform=",""+rms);
-
-
-
-                               /* int i = mVisualizer.getWaveForm(bytes);
-
-                                Log.e("Waveform=","" + i);
-
-                                myvisualizerview.addAmplitude(i); // update the VisualizeView
-                                myvisualizerview.invalidate();*/
-
-
-                               /* double sum=0;
-                                for (int i = 0; i < bytes.length/2; i++) {
-                                    double y = (bytes[i*2] | bytes[i*2+1] << 8) / 32768.0;
-                                    sum += y * y;
-                                }
-                                double rms = Math.sqrt(sum / bytes.length/2);
-                                double  dbAmp = (int)20.0*Math.log10(rms);
-
-                                Log.e("dbAmp","" + dbAmp);*/
 
                                 myvisualizerviewmedia.updateVisualizer(bytes);
 
@@ -1009,35 +992,37 @@ public class graphicalfragment extends basefragment implements
         }
     }
 
-    public void getaudiowavereader() {
-        try {
-            if(myvisualizerview != null){
-                myvisualizerview.setVisibility(View.VISIBLE);
-                myvisualizerview.clear();
 
-                if(visulizerdataarray.length > 0) {
-                    for (int i = 0; i < visulizerdataarray.length; i++) {
-                        String value = visulizerdataarray[i];
-                        int ampliteudevalue = Integer.parseInt(value);
-                        myvisualizerview.addAmplitude(ampliteudevalue); // update the VisualizeView
-                        myvisualizerview.invalidate();
-                    }
-                }
-            }
-
-            return;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void getvisualizerwave(ArrayList<wavevisualizer> amplitudevalue) {
         if(myvisualizerview != null){
-            if(myvisualizerview.getVisibility() == View.VISIBLE){
+            if(myvisualizerview.getVisibility() == View.VISIBLE && myvisualizerview.width != 0){
                for (;position < amplitudevalue.size();position++){
                        Log.e("position",""+position);
-                       myvisualizerview.addAmplitude(amplitudevalue.get(position).getVisulizervalue()); // update the VisualizeView
-                       myvisualizerview.invalidate();
+                    myvisualizerview.addAmplitude(amplitudevalue.get(position).getVisulizervalue()); // update the VisualizeView
+                    myvisualizerview.invalidate();
+
+                   Log.e("wavevaluescomposer", ""+ position);
+
+               }
+            }
+        }
+    }
+
+
+    public void getvisualizerwavecomposer(ArrayList<wavevisualizer> amplitudevalue) {
+        if(myvisualizerview != null){
+            if(myvisualizerview.getVisibility() == View.VISIBLE && myvisualizerview.width != 0){
+               for (;position < amplitudevalue.size();position++){
+
+                    myvisualizerview.addAmplitude(amplitudevalue.get(position).getVisulizervalue());
+                    myvisualizerview.addAmplitude(50); // update the VisualizeView
+                    myvisualizerview.addAmplitude(50); // update the VisualizeView
+                    myvisualizerview.addAmplitude(50);// update the VisualizeView
+                    myvisualizerview.invalidate();
+
+                    Log.e("wavevaluescomposer", ""+ position);
+
                }
             }
         }
@@ -1061,11 +1046,12 @@ public class graphicalfragment extends basefragment implements
     }
 
     public void setvisualizerwave(){
-        position = 0;
-        myvisualizerview.clear();
+        if(myvisualizerview!=null){
+            position = 0;
+            myvisualizerview.clear();
+        }
+
     }
-
-
 
     public int[] getFormattedData(byte[] rawVizData) {
         int[] arraydata=new int[rawVizData.length];

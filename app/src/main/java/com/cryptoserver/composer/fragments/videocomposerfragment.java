@@ -354,7 +354,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     private int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
-    String soundamplitudealue = "";
 
 
 
@@ -1145,10 +1144,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     public void run() {
                         try {
                             metadatainsert.writemetadata(lastrecordedvideo.getAbsolutePath(),""+
-                                    common.getjson(metadatametricesjson)+"|"+soundamplitudealue);
-
-                                if(!soundamplitudealue.isEmpty());
-                                      soundamplitudealue = "";
+                                    common.getjson(metadatametricesjson));
 
                         }catch (Exception e)
                         {
@@ -2373,17 +2369,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         int x = mMediaRecorder.getMaxAmplitude();
 
-                           if(soundamplitudealue.isEmpty()){
-                            soundamplitudealue = String.valueOf(x);
-                        }else{
-                            soundamplitudealue = soundamplitudealue +","+String.valueOf(x);
-                        }
-
-
 
                         wavevisualizerslist.add(new wavevisualizer(x,true));
-
-                        Log.e("Amplitudevallue", "" + x);
 
                         if ((fragment_graphic_container.getVisibility() == View.VISIBLE)) {
 

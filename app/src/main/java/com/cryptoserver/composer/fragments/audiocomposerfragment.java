@@ -123,7 +123,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     JSONArray metadatametricesjson=new JSONArray();
     private long currentframenumber =0,mframetorecordcount=0,frameduration =15;
     private ArrayList<videomodel> mvideoframes =new ArrayList<>();
-    String soundamplitudealue = "";
     StringBuilder sb = new StringBuilder();
 
     noise mNoise;
@@ -772,18 +771,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     setaudiohashes();
 
                    // metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
-                    metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson)+"|"+soundamplitudealue);
+                    metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
 
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if(madapterclick != null)
                                 madapterclick.onItemClicked(null,1);
-
-
-                      if(!soundamplitudealue.isEmpty());
-                            soundamplitudealue = "";
-
 
                         }
                     });
@@ -801,41 +795,28 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
     {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if(array == null || array.length == 0)
-                    return;
-                final String keyvalue= getkeyvalue(array);
 
-                mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
+        if(array == null || array.length == 0)
+            return;
+        final String keyvalue= getkeyvalue(array);
 
-                if(! selectedhashes.trim().isEmpty())
-                    selectedhashes=selectedhashes+"\n";
+        mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
 
-                if(isaudiorecording)
-                {
-                    selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
-                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                    getselectedmetrics(mlocalarraylist);
+        if(! selectedhashes.trim().isEmpty())
+            selectedhashes=selectedhashes+"\n";
 
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(fragmentgraphic != null)
-                            {
-                                fragmentgraphic.currenthashvalue=keyvalue;
-                            }
-                        }
-                    });
-                }
-                else
-                {
-                    selectedhashes="";
-                }
+        if(isaudiorecording)
+        {
+            selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+            ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+            getselectedmetrics(mlocalarraylist);
 
-            }
-        }).start();
+        }
+        else
+        {
+            selectedhashes="";
+        }
+
     }
 
 
@@ -986,20 +967,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     {
                         int x = mrecorder.getMaxAmplitude();
 
-                        if(soundamplitudealue.isEmpty()){
-                            soundamplitudealue = String.valueOf(x);
-                        }else{
-                            soundamplitudealue = soundamplitudealue +","+String.valueOf(x);
-                        }
-                        //soundamplitudelist = soundamplitudelist.
-                        Log.e("Amplitudevallue",""+x);
                         myvisualizerview.addAmplitude(x); // update the VisualizeView
                         myvisualizerview.invalidate();
 
                         wavevisualizerslist.add(new wavevisualizer(x,true));
+
+                        Log.e("waveListValue=",""+ x);
+                        Log.e("waveListSize=",""+ wavevisualizerslist.size());
                         if ((fragment_graphic_container.getVisibility() == View.VISIBLE)) {
 
-                            fragmentgraphic.getvisualizerwave(wavevisualizerslist);
+                            fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
 
                         }
                     }
