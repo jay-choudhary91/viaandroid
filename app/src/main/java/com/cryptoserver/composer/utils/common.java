@@ -1626,109 +1626,79 @@ public class common {
         return true;
     }
 
+    /*public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
+                                             final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
+
+        txt_latitude.setText(config.Latitude);
+        txt_longitude.setText(config.Latitude);
+        txt_altitude.setText(config.Latitude);
+        txt_heading.setText(config.Latitude);
+        txt_orientation.setText(config.Latitude);
+        txt_speed.setText(config.Latitude);
+        txt_address.setText(config.Latitude);
+    }*/
+
+
     public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
                                              final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
 
-
+        {
+            StringBuilder mformatbuilder = new StringBuilder();
             final String latitude=xdata.getinstance().getSetting(config.LatitudeDegree);
             if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA")))
             {
-
-                txt_latitude.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_latitude.setText(config.Latitude+"\n"+ latitude);
-                    }
-                });
-
+                mformatbuilder.append(config.Latitude+System.getProperty("line.separator")+ latitude);
             }
             else
             {
-                txt_latitude.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_latitude.setText(config.Latitude+"\n"+"NA");
-                    }
-                });
-
+                mformatbuilder.append(System.getProperty("line.separator")+config.Latitude+System.getProperty("line.separator")+"NA");
             }
 
+            final String altitude=xdata.getinstance().getSetting(config.Altitude);
+            if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
+            {
+                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Altitude+System.getProperty("line.separator")+
+                        common.getxdatavalue(xdata.getinstance().getSetting(config.Altitude)));
+            }
+            else
+            {
+                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Altitude+System.getProperty("line.separator")+"NA");
+            }
+            String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
+            if((! value.equalsIgnoreCase("NA")) && (! value.equalsIgnoreCase("NA")))
+            {
+                double heading=Double.parseDouble(value);
+                int headingg=(int)heading;
+                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Heading+System.getProperty("line.separator")+headingg);
+            }
+            else
+            {
+                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Heading+System.getProperty("line.separator"));
+            }
+
+            txt_latitude.setText(mformatbuilder.toString());
+        }
+
+        {
+            StringBuilder mformatbuilder = new StringBuilder();
             final String longitude=xdata.getinstance().getSetting(config.LongitudeDegree);
             if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA")))
             {
-                txt_longitude.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_longitude.setText(config.Longitude+"\n"+ longitude);
-                    }
-                });
-
+                mformatbuilder.append(config.Longitude+System.getProperty("line.separator")+
+                        longitude);
             }
             else
             {
-                txt_longitude.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_longitude.setText(config.Longitude+"\n"+"NA");
-                    }
-                });
-
+                mformatbuilder.append(System.getProperty("line.separator")+config.Longitude+System.getProperty("line.separator")+"NA");
             }
 
-            txt_altitude.post(new Runnable() {
-                @Override
-                public void run() {
-                    final String altitude=xdata.getinstance().getSetting(config.Altitude);
-                    if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
-                    {
-                        txt_altitude.setText(config.Altitude+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Altitude))+"");
-                    }
-                    else
-                    {
-                        txt_altitude.setText(config.Altitude+"\n"+"NA");
-                    }
-                }
-            });
-
-            txt_heading.post(new Runnable() {
-                @Override
-                public void run() {
-
-                    String value=getxdatavalue(xdata.getinstance().getSetting(config.Heading));
-                    if((! value.equalsIgnoreCase("NA")) && (! value.equalsIgnoreCase("NA")))
-                    {
-                        double heading=Double.parseDouble(value);
-                        int headingg=(int)heading;
-                        txt_heading.setText(config.Heading+"\n"+headingg);
-                    }
-                    else
-                    {
-                        txt_heading.setText(config.Heading+"\n"+value);
-                    }
-                }
-            });
-
-            txt_orientation.post(new Runnable() {
-                @Override
-                public void run() {
-                    txt_orientation.setText(config.Orientation+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
-                }
-            });
-
-            txt_speed.post(new Runnable() {
-                @Override
-                public void run() {
-                    txt_speed.setText(config.Speed+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
-                }
-            });
-
-            txt_address.post(new Runnable() {
-                @Override
-                public void run() {
-                    txt_address.setText(getxdatavalue(xdata.getinstance().getSetting(config.Address)));
-                }
-            });
-
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Speed+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Orientation+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
+            txt_longitude.setText(mformatbuilder.toString());
+            txt_address.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)));
+        }
     }
 
     public  static String getxdatavalue(String value)
@@ -1746,133 +1716,11 @@ public class common {
                                       final TextView txt_systemuptime, final TextView txt_battery) {
 
 
-                //final int[] widthHeight= getScreenWidthHeight(applicationviavideocomposer.getactivity());
-                txt_screensize.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_screensize.setText(config.ScreenSize+"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +
-                                xdata.getinstance().getSetting(config.ScreenHeight));
-                    }
-                });
-                txt_phonetype.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_phonetype.setText(config.PhoneType+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)));
-                    }
-                });
-                txt_cellprovider.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_cellprovider.setText(config.CellProvider+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)));
-                    }
-                });
-                txt_osversion.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_osversion.setText(config.OSversion+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.OSversion)));
-                    }
-                });
-                txt_wifinetwork.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_wifinetwork.setText(config.WIFINetwork+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)));
-                    }
-                });
-                txt_gps_accuracy.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_gps_accuracy.setText(config.GPSAccuracy+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)));
-                    }
-                });
-                txt_country.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_country.setText(config.Country+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Country)));
-                    }
-                });
-                txt_cpuusage.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_cpuusage.setText(config.CPUUsage+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)));
-                    }
-                });
-                txt_brightness.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_brightness.setText(config.Brightness+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Brightness)));
-                    }
-                });
-                txt_timezone.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_timezone.setText(config.TimeZone+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.TimeZone)));
-                    }
-                });
-                txt_memoryusage.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_memoryusage.setText(config.MemoryUsage+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)));
-                    }
-                });
-                txt_bluetooth.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_bluetooth.setText(config.Bluetooth+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Bluetooth)));
-                    }
-                });
-                txt_localtime.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_localtime.setText(config.LocalTime+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)));
-                    }
-                });
-                txt_language.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_language.setText(config.Language+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Language)));
-                    }
-                });
-                txt_systemuptime.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_systemuptime.setText(config.SystemUptime+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)));
-                    }
-                });
-                txt_storageavailable.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_storageavailable.setText(config.StorageAvailable+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)));
-                    }
-                });
-                txt_battery.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_battery.setText(config.Battery+"\n"+getxdatavalue(xdata.getinstance().getSetting(config.Battery)));
-                    }
-                });
-        txt_connection_speed.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        txt_connection_speed.setText(config.Connectionspeed+"\n"+xdata.getinstance().getSetting(config.Connectionspeed));
-                    }
-                });
 
 
-    }
 
-    public static ArrayList<graphicalmodel> orientationarraylist(ArrayList<metricmodel> metricItemArraylist,ArrayList<graphicalmodel> orientationarraylist) {
 
-        for (int i = 0; i < metricItemArraylist.size(); i++) {
-            if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)) {
-                Log.e("commonlatitude", metricItemArraylist.get(i).getMetricTrackValue());
-                orientationarraylist.add(new graphicalmodel(config.Xaxis, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_y)) {
-                orientationarraylist.add(new graphicalmodel(config.Yaxis, metricItemArraylist.get(i).getMetricTrackValue()));
-            } else if (metricItemArraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_z)) {
-                orientationarraylist.add(new graphicalmodel(config.Zaxis, metricItemArraylist.get(i).getMetricTrackValue()));
-            }
-        }
-        return orientationarraylist;
+
     }
 
     public static String systemuptime(long uptime) {

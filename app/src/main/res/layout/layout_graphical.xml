@@ -2,14 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_graphical">
 
     <LinearLayout
-        android:id="@+id/layout_graphical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="5dp">
+
+        <LinearLayout
+            android:id="@+id/layout_googlemap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
 
         <TextView
             style="@style/txt_drawer_graphical_title"
@@ -27,12 +34,15 @@
                 android:visibility="visible"
                 android:layout_height="150dp"/>
 
+        </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_locationanalytics"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="vertical">
 
 
@@ -71,6 +81,273 @@
                             style="@style/txt_row_encryption"
                             android:layout_weight="0.5"
                             android:text=""/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/txt_address"
+                            app:fontType="OpenSans_Regular"
+                            style="@style/txt_normalview"
+                            android:text=""/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.4"
+                    android:id="@+id/img_compass"
+                    android:src="@drawable/locationanalytics" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_orientationanalytics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/orientation" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/graphical_roundcorner"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.6"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/txt_xaxis"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_normalview"
+                        android:gravity="center"
+                        android:text=""/>
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/txt_yaxis"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_normalview"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:text=""/>
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/txt_zaxis"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_normalview"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:text=""/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_weight="0.4"
+                    android:src="@drawable/orientationimage" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_phoneanalytics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/Phoneanalytics" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/graphical_roundcorner">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/txt_phonetype"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:layout_weight="0.5"
+                        android:text=""/>
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/txt_cellprovider"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:layout_weight="0.5"
+                        android:text=""/>
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/txt_connection_speed"
+                        app:fontType="OpenSans_Regular"
+                        style="@style/txt_row_encryption"
+                        android:layout_weight="0.5"
+                        android:text=""/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_soundinfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_sound"
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/soundinformation" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="vertical"
+                android:background="@drawable/graphical_roundcorner">
+
+                <com.cryptoserver.composer.utils.VisualizerView
+                    android:id="@+id/myvisualizerview"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+                <com.cryptoserver.composer.utils.VisualizerViewMedia
+                    android:id="@+id/myvisualizerviewmedia"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_datalatency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_dataletency"
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/data_latency" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/graphical_roundcorner">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/linechart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_encryption"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_encryption"
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/encryption_information" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/graphical_roundcorner">
+
+                <include layout="@layout/row_encryption"></include>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyview_encryption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+
+            <TextView
+                style="@style/txt_drawer_graphical_title"
+                android:text="@string/locationanalytics" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/graphical_roundcorner"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.6"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
 
                     </LinearLayout>
 
@@ -121,12 +398,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <com.cryptoserver.composer.views.customfonttextview
-                            android:id="@+id/txt_address"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:layout_weight="0.5"
-                            android:text=""/>
+
 
                     </LinearLayout>
 
@@ -134,73 +406,10 @@
 
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.4"
-                    android:id="@+id/img_compass"
-                    android:src="@drawable/locationanalytics" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/txt_drawer_graphical_title"
-                    android:text="@string/orientation" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/graphical_roundcorner"
-                    android:weightSum="1">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="0.6"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <com.cryptoserver.composer.views.customfonttextview
-                            android:id="@+id/txt_xaxis"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_normalview"
-                            android:gravity="center"
-                            android:text=""/>
-
-                        <com.cryptoserver.composer.views.customfonttextview
-                            android:id="@+id/txt_yaxis"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_normalview"
-                            android:gravity="center"
-                            android:text=""/>
-
-                        <com.cryptoserver.composer.views.customfonttextview
-                            android:id="@+id/txt_zaxis"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_normalview"
-                            android:gravity="center"
-                            android:text=""/>
-
-                    </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="150dp"
-                        android:layout_weight="0.4"
-                        android:src="@drawable/orientationimage" />
-                </LinearLayout>
 
 
             </LinearLayout>
+
 
 
 
@@ -214,43 +423,6 @@
 
                 <TextView
                     style="@style/txt_drawer_graphical_title"
-                    android:text="@string/orientation" />
-
-                <LinearLayout
-                    android:id="@+id/layout_orenAna"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/graphical_roundcorner"
-                    android:weightSum="1">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyview_orentation"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.6"
-                        android:visibility="visible">
-
-                    </android.support.v7.widget.RecyclerView>
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="150dp"
-                        android:layout_weight="0.4"
-                        android:src="@drawable/orientationimage" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/txt_drawer_graphical_title"
                     android:text="@string/Phoneanalytics" />
 
                 <LinearLayout
@@ -259,33 +431,7 @@
                     android:orientation="vertical"
                     android:background="@drawable/graphical_roundcorner">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
 
-                        <com.cryptoserver.composer.views.customfonttextview
-                            android:id="@+id/txt_phonetype"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:layout_weight="0.5"
-                            android:text=""/>
-
-                        <com.cryptoserver.composer.views.customfonttextview
-                            android:id="@+id/txt_cellprovider"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:layout_weight="0.5"
-                            android:text=""/>
-
-                        <com.cryptoserver.composer.views.customfonttextview
-                            android:id="@+id/txt_connection_speed"
-                            app:fontType="OpenSans_Regular"
-                            style="@style/txt_row_encryption"
-                            android:layout_weight="0.5"
-                            android:text=""/>
-
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -430,126 +576,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/txt_drawer_graphical_title"
-                    android:text="@string/Phoneanalytics" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/graphical_roundcorner">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyview_phoneanalytics"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="visible"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:visibility="visible"
-                android:id="@+id/layout_soundinfo"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/text_sound"
-                    style="@style/txt_drawer_graphical_title"
-                    android:text="@string/soundinformation" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:orientation="vertical"
-                android:background="@drawable/graphical_roundcorner">
-
-                <com.cryptoserver.composer.utils.VisualizerView
-                    android:id="@+id/myvisualizerview"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"/>
-
-                <com.cryptoserver.composer.utils.VisualizerViewMedia
-                    android:id="@+id/myvisualizerviewmedia"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone"/>
-
-            </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/text_dataletency"
-                    style="@style/txt_drawer_graphical_title"
-                    android:text="@string/data_latency" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/graphical_roundcorner">
-
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/linechart"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/text_encryption"
-                    style="@style/txt_drawer_graphical_title"
-                    android:text="@string/encryption_information" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="@drawable/graphical_roundcorner">
-
-                    <include layout="@layout/row_encryption"></include>
-
-                    <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyview_encryption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
 
         </LinearLayout>
 
