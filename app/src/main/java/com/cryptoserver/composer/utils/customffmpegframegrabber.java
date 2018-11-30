@@ -13,7 +13,6 @@ import org.bytedeco.javacpp.avformat;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacpp.swresample;
 import org.bytedeco.javacpp.swscale;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegLockCallback;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -441,7 +440,7 @@ public class customffmpegframegrabber extends FrameGrabber {
         } else {
             if (samples_frame == null || samples_frame.nb_samples() == 0) {
                 try {
-                    grabFrame(true, false, true, false);
+                    grabFrame(true, false, false, false);
                     frameGrabbed = true;
                 } catch (Exception e) {
                     return 0.0;
@@ -477,6 +476,7 @@ public class customffmpegframegrabber extends FrameGrabber {
     @Override public int getSampleFormat() {
         if (sampleMode == SampleMode.SHORT || sampleMode == SampleMode.FLOAT) {
             if (sampleFormat == AV_SAMPLE_FMT_NONE) {
+                // return sampleMode == SampleMode.SHORT ? AV_SAMPLE_FMT_S16 : AV_SAMPLE_FMT_FLT;
                 return sampleMode == SampleMode.SHORT ? AV_SAMPLE_FMT_S16 : AV_SAMPLE_FMT_FLT;
             } else {
                 return sampleFormat;
@@ -577,9 +577,6 @@ public class customffmpegframegrabber extends FrameGrabber {
             if (audio_c != null) {
                 avcodec_flush_buffers(audio_c);
             }
-
-            FFmpegFrameGrabber ss;
-
             if (pkt2.size() > 0) {
                 pkt2.size(0);
                 av_packet_unref(pkt);
@@ -991,11 +988,6 @@ public class customffmpegframegrabber extends FrameGrabber {
     private void processSamples() throws Exception {
         int ret;
 
-        int codecid=audio_c.codec_id();
-        avcodec.AVCodec codecc=audio_c.codec();
-        int type=audio_c.codec_type();
-        int tag=audio_c.codec_tag();
-
         int sample_format = samples_frame.format();
         int planes = av_sample_fmt_is_planar(sample_format) != 0 ? (int)samples_frame.channels() : 1;
         int data_size = av_samples_get_buffer_size((IntPointer)null, audio_c.channels(),
@@ -1017,9 +1009,9 @@ public class customffmpegframegrabber extends FrameGrabber {
                     case AV_SAMPLE_FMT_U8:
                     case AV_SAMPLE_FMT_U8P:  samples_buf[i] = b; break;
                     case AV_SAMPLE_FMT_S16:
-                    case AV_SAMPLE_FMT_S16P: samples_buf[i] = b.asShortBuffer(); break;
+                    case AV_SAMPLE_FMT_S16P: samples_buf[i] = b.asShortBuffer();  break;
                     case AV_SAMPLE_FMT_S32:
-                    case AV_SAMPLE_FMT_S32P: samples_buf[i] = b.asIntBuffer();   break;
+                    case AV_SAMPLE_FMT_S32P: samples_buf[i] = b.asIntBuffer();    break;
                     case AV_SAMPLE_FMT_FLT:
                     case AV_SAMPLE_FMT_FLTP: samples_buf[i] = b.asFloatBuffer();  break;
                     case AV_SAMPLE_FMT_DBL:
@@ -1032,15 +1024,6 @@ public class customffmpegframegrabber extends FrameGrabber {
 
         if (audio_c.channels() != getAudioChannels() || audio_c.sample_fmt() != getSampleFormat() || audio_c.sample_rate() != getSampleRate()) {
             if (samples_convert_ctx == null || samples_channels != getAudioChannels() || samples_format != getSampleFormat() || samples_rate != getSampleRate()) {
-
-                int a=getSampleFormat();
-                int b=getAudioChannels();
-                int c=getSampleRate();
-
-                int d=audio_c.sample_fmt();
-                int e=audio_c.channels();
-                int f=audio_c.sample_fmt();
-
                 samples_convert_ctx = swr_alloc_set_opts(samples_convert_ctx, av_get_default_channel_layout(getAudioChannels()), getSampleFormat(), getSampleRate(),
                         av_get_default_channel_layout(audio_c.channels()), audio_c.sample_fmt(), audio_c.sample_rate(), 0, null);
                 if (samples_convert_ctx == null) {
@@ -1072,7 +1055,7 @@ public class customffmpegframegrabber extends FrameGrabber {
                         case AV_SAMPLE_FMT_U8:
                         case AV_SAMPLE_FMT_U8P:  samples_buf_out[i] = b; break;
                         case AV_SAMPLE_FMT_S16:
-                        case AV_SAMPLE_FMT_S16P: samples_buf_out[i] = b.asShortBuffer(); break;
+                        case AV_SAMPLE_FMT_S16P: samples_buf_out[i] = b.asShortBuffer();  break;
                         case AV_SAMPLE_FMT_S32:
                         case AV_SAMPLE_FMT_S32P: samples_buf_out[i] = b.asIntBuffer();    break;
                         case AV_SAMPLE_FMT_FLT:
@@ -1086,7 +1069,6 @@ public class customffmpegframegrabber extends FrameGrabber {
             frame.sampleRate = samples_rate;
             frame.audioChannels = samples_channels;
             frame.samples = samples_buf_out;
-            Buffer[] samplee=frame.samples;
 
             if ((ret = swr_convert(samples_convert_ctx, new PointerPointer(samples_ptr_out), sample_size_out, new PointerPointer(samples_ptr), sample_size_in)) < 0) {
                 throw new Exception("swr_convert() error " + ret + ": Cannot convert audio samples.");
@@ -1151,7 +1133,6 @@ public class customffmpegframegrabber extends FrameGrabber {
         boolean done = false;
         while (!done) {
             if (pkt2.size() <= 0) {
-                int av_readdata=av_read_frame(oc, pkt);
                 if (av_read_frame(oc, pkt) < 0) {
                     if (doVideo && video_st != null) {
                         // The video codec may have buffered some frames
@@ -1191,8 +1172,7 @@ public class customffmpegframegrabber extends FrameGrabber {
                     frame.keyFrame = picture.key_frame() != 0;
                     frame.opaque = picture;
                 }
-                    }
-                else if (doAudio && audio_st != null && pkt.stream_index() == audio_st.index()) {
+            } else if (doAudio && audio_st != null && pkt.stream_index() == audio_st.index()) {
                 if (pkt2.size() <= 0) {
                     // HashMap is unacceptably slow on Android
                     // pkt2.put(pkt);
@@ -1208,18 +1188,6 @@ public class customffmpegframegrabber extends FrameGrabber {
                     pkt2.data(pkt2.data().position(len));
                     pkt2.size(pkt2.size() - len);
                     if (got_frame[0] != 0) {
-
-                        /*try {
-                            BytePointer pp=samples_frame.data(0);
-                            ByteBuffer bytebuffer   = pp.asBuffer();
-                            byte[] byteData = bytebuffer.array();
-                            String value= md5.calculatebytemd5(byteData);
-                            Log.e("MD5 audio ",value);
-                        }catch (java.lang.Exception e)
-                        {
-                            e.printStackTrace();
-                        }*/
-
                         long pts = av_frame_get_best_effort_timestamp(samples_frame);
                         avutil.AVRational time_base = audio_st.time_base();
                         timestamp = 1000000L * pts * time_base.num() / time_base.den();
