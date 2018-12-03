@@ -55,6 +55,38 @@ public class databasemanager {
         mDbHelper.close();
     }
 
+    public void insertstartvideoinfo(String header,String type,String location,String localkey,
+                                     String token,String videokey,String sync,String date , String action_type,
+                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,String videocompletedevicedate)
+    {
+        try {
+            lock.lock();
+
+            ContentValues values = new ContentValues();
+            values.put("header", "" + header);
+            values.put("type", ""+type);
+            values.put("location", location);
+            values.put("localkey", ""+localkey);
+            values.put("token", ""+token);
+            values.put("videokey", ""+videokey);
+            values.put("sync", ""+sync);
+            values.put("action_type", ""+action_type);
+            values.put("sync_date",  date);
+            values.put("apirequestdevicedate",  apirequestdevicedate);
+            values.put("videostartdevicedate",  videostartdevicedate);
+            values.put("devicetimeoffset",  devicetimeoffset);
+            values.put("videocompletedevicedate",  videocompletedevicedate);
+
+            long l=mDb.insert("tbstartvideoinfo", null, values);
+            Log.e("Id ",""+l);
+
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
+            throw mSQLException;
+        } finally {
+            lock.unlock();
+        }
+    }
 
     public void insertframemetricesinfo(String blockchain,String valuehash,String hashmethod,String localkey,
                                         String metricdata,String recordate,String rsequenceno,String sequencehash,
@@ -87,6 +119,25 @@ public class databasemanager {
         } finally {
             lock.unlock();
         }
+    }
+
+    public Cursor updatestartvideoinfo(String header , String localkey ,String completedate) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+
+            mDb.execSQL("update tbstartvideoinfo set header='"+ header +"' , videocompletedevicedate = '"+
+                    completedate +"' where localkey='"+localkey+"'");;
+
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
     }
 
     public Cursor fetchmetadata(String finallocalkey) {
@@ -146,22 +197,6 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor updatesyncstatus(String id) {
-        Cursor mCur=null;
-        try {
-            lock.lock();
-            mDb.execSQL("update tblmetadata set hassync=1 where id='"+id+"'");
-            if (mCur != null)
-                mCur.moveToNext();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  mCur;
-    }
-
     public Cursor deletemetadata(String id) {
 
         Cursor mCur=null;
@@ -186,26 +221,6 @@ public class databasemanager {
         return  mCur;
     }
 
-
-    public Cursor fetchlogdata(String user_id, String to_user_id, int limit) {
-
-        Cursor mCur=null;
-        try {
-            lock.lock();
-
-            String sql = "SELECT * FROM tbllog where user_id='" + user_id + "' and to_user_id ='" + to_user_id +
-                    "' or user_id ='" + to_user_id + "' and to_user_id ='" + user_id +"' ORDER BY date_time desc LIMIT "+limit+";";
-            mCur = mDb.rawQuery(sql, null);
-            if (mCur != null) {
-                mCur.moveToNext();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return  mCur;
-    }
-
     public Cursor updatevideoupdateapiresponce(String videoid,String sequence,String serverdate,String serverdictionaryhash) {
         Cursor mCur=null;
         try {
@@ -222,39 +237,6 @@ public class databasemanager {
         return  mCur;
     }
 
-    public void insertstartvideoinfo(String header,String type,String location,String localkey,
-                                      String token,String videokey,String sync,String date , String action_type,
-                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,String videocompletedevicedate)
-    {
-        try {
-            lock.lock();
-
-            ContentValues values = new ContentValues();
-            values.put("header", "" + header);
-            values.put("type", ""+type);
-            values.put("location", location);
-            values.put("localkey", ""+localkey);
-            values.put("token", ""+token);
-            values.put("videokey", ""+videokey);
-            values.put("sync", ""+sync);
-            values.put("action_type", ""+action_type);
-            values.put("sync_date",  date);
-            values.put("apirequestdevicedate",  apirequestdevicedate);
-            values.put("videostartdevicedate",  videostartdevicedate);
-            values.put("devicetimeoffset",  devicetimeoffset);
-            values.put("videocompletedevicedate",  videocompletedevicedate);
-
-            long l=mDb.insert("tbstartvideoinfo", null, values);
-            Log.e("Id ",""+l);
-
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
-            throw mSQLException;
-        } finally {
-            lock.unlock();
-        }
-    }
-
     public Cursor fatchstartvideoinfo() {
 
         Cursor mCur=null;
@@ -262,29 +244,6 @@ public class databasemanager {
             lock.lock();
 
             String sql = "SELECT * FROM tbstartvideoinfo where sync_date = 0 ";
-            //String sql = "SELECT * FROM tblmetadata";
-            mCur = mDb.rawQuery(sql, null);
-            if (mCur != null) {
-                mCur.moveToNext();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-
-        return  mCur;
-    }
-
-    public Cursor fatchstartvideokey(String id) {
-
-        Cursor mCur=null;
-        try {
-            lock.lock();
-
-            String sql = "SELECT * FROM tbstartvideoinfo where sync_date = 0 ";
-            //String sql = "SELECT * FROM tblmetadata";
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
                 mCur.moveToNext();
@@ -347,23 +306,4 @@ public class databasemanager {
         }
         return  mCur;
     }
-
-    public Cursor updatestartvideoinfo(String header , String localkey ,String completedate) {
-        Cursor mCur=null;
-        try {
-            lock.lock();
-
-            mDb.execSQL("update tbstartvideoinfo set header='"+ header +"' , videocompletedevicedate = '"+ completedate +"' where localkey='"+localkey+"'");;
-
-            if (mCur != null)
-                mCur.moveToNext();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-        return  mCur;
-    }
-
 }

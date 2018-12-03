@@ -1523,37 +1523,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         });
     }
 
-
-    public void xapistartvideo(final String hashvalue)
-    {
-        Log.e("videokey"," videokey "+videokey);
-
-        HashMap<String,String> mpairslist=new HashMap<String, String>();
-        mpairslist.put("html","0");
-        mpairslist.put("hashmethod",""+keytype);
-        mpairslist.put("hashvalue",""+hashvalue);
-        mpairslist.put("title","xx");
-        gethelper().xapipost_send(getActivity(),config.type_video_start,mpairslist, new apiresponselistener() {
-            @Override
-            public void onResponse(taskresult response) {
-                if(response.isSuccess())
-                {
-                    try {
-                        JSONObject object = (JSONObject) response.getData();
-                        videokey=object.getString("key");
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    savevideostart(videokey,keytype,hashvalue);
-                }
-            }
-        });
-    }
-
     public void setvideoadapter() {
         int count = 1;
         currentframenumber=0;
@@ -1825,51 +1794,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void savevideoupdate(ArrayList<metricmodel> mmetriceslist, JSONArray metricesjsonarray)
     {
-        JSONArray hasharray=new JSONArray();
         JSONArray metricesarray=new JSONArray();
         String currentdate[] = common.getcurrentdatewithtimezone();
         String sequenceno = "",sequencehash = "", metrichash = "" ;
 
+        for(int i=0;i<muploadframelist.size();i++)
         {
-
-            for(int i=0;i<muploadframelist.size();i++)
+            try {
+                Log.e("framenumber", muploadframelist.get(i).getFramenumber());
+                sequenceno = muploadframelist.get(i).getFramenumber();
+                sequencehash = muploadframelist.get(i).getHashvalue();
+            }catch (Exception e)
             {
-                JSONObject object=new JSONObject();
-                try {
-
-                    Log.e("framenumber", muploadframelist.get(i).getFramenumber());
-
-                    sequenceno = muploadframelist.get(i).getFramenumber();
-                    sequencehash = muploadframelist.get(i).getHashvalue();
-                   /* object.put("framenumber",muploadframelist.get(i).getFramenumber());
-                    object.put("meta",muploadframelist.get(i).getMeta());
-                    object.put("hashvalue",muploadframelist.get(i).getHashvalue());
-                    object.put("hashmethod",muploadframelist.get(i).getHashmethod());
-                    hasharray.put(object);*/
-
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+                e.printStackTrace();
             }
-            muploadframelist.clear();
-            Log.e("Json array ",""+hasharray.toString());
         }
-
-        /*{
-
-            for(int i=0;i<mmetriceslist.size();i++)
-            {
-                JSONObject object=new JSONObject();
-                try {
-                    object.put(mmetriceslist.get(i).getMetricTrackKeyName(),mmetriceslist.get(i).getMetricTrackValue());
-                    metricesarray.put(object);
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }*/
+        muploadframelist.clear();
 
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(getActivity());
@@ -1883,48 +1823,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-            /*mdbhelper.insertframemetricesinfo(videokey,hasharray.toString(),""+metricesarray.toString(),
-                    "","",config.type_video_update);*/
-
             metrichash = md5.calculatestaringmd5(metricesarray.toString());
             mdbhelper.insertframemetricesinfo("", metrichash ,keytype,videokey,""+metricesjsonarray.toString(),currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"","");
-
-            mdbhelper.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void savevideostart(String videokey,String hashmethod,String hashvalue)
-    {
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(getActivity());
-            mdbhelper.createDatabase();
-        }
-
-        try {
-            mdbhelper.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-
-            String currentdate = common.getCurrentDate();
-
-
-            // mdbhelper.insertframemetricesinfo(videokey,hashmethod,hashvalue,hashmethod,hashvalue,config.type_video_start);
-            mdbhelper.insertframemetricesinfo("", hashvalue ,hashmethod,videokey,"",currentdate,"","","","","","","");
-
             mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
+    // Initilize when get 1st frame from recorder
     public void savestartvideoinfo(String firsthash, String hashmethod)
     {
         if (mdbhelper == null) {
@@ -1939,20 +1846,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-
-
-            // String headerdic[] = {"fps"  " 30"  , "firsthash :  " + firsthash  , "hashmethod : " + keytype  ,  "  name : "};
-
-               /* metadict["headers"] = headerdicjson
-                metadict["localkey"] = self.currentVideoKey
-                metadict["location"] = "local"
-                metadict["sync"] = ""
-                metadict["token"] = ""
-                metadict["type"] = "video"
-                metadict["videokey"] = ""*/
-
             HashMap<String, String> map = new HashMap<String, String>();
-
             map.put("fps","30");
             map.put("firsthash", firsthash);
             map.put("hashmethod",keytype);
@@ -1980,17 +1874,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
+    // Calling when frames are getting from recorder
     public void updatestartvideoinfo(String updatefirsthash, String file_name,String completeddate,String lastframe,String lastcount,String videourl)
     {
         String duration = "";
-
-
         if(!videourl.isEmpty())
             duration = common.getvideotimefromurl(videourl);
-
-
-        Log.e("firsthashevalue", updatefirsthash);
-
 
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(getActivity());
@@ -2004,11 +1893,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-
-            Log.e("firstupdatevalue", updatefirsthash +"-----"+ file_name +"-----"+lastframe +"-----"+ lastcount +"-----"+ completeddate +"-----"+duration);
-
             HashMap<String, String> map = new HashMap<String, String>();
-
             map.put("fps","30");
             map.put("firsthash", updatefirsthash);
             map.put("hashmethod",keytype);
@@ -2016,15 +1901,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             map.put("duration",duration);
             map.put("frmaecounts",lastcount);
             map.put("finalhash",lastframe);
-
             Gson gson = new Gson();
             String json = gson.toJson(map);
-
             mdbhelper.updatestartvideoinfo(json,videokey,completeddate);
-
-            //fetchstartvideoinfo();
-
-            //mdbhelper.insertstartvideoinfo(json,"video","local",""+common.getSaltString(),"","","");
             mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -2045,9 +1924,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         try {
-            //mdbhelper.insertframemetricesinfo("","","","","",config.type_video_complete);
-            //mdbhelper.insertframemetricesinfo(videokey,"","","","",config.type_video_complete);
-
             mdbhelper.close();
         } catch (Exception e) {
             e.printStackTrace();

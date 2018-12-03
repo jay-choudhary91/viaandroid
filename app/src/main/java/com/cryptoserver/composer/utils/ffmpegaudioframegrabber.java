@@ -227,9 +227,9 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         release();
     }
 
-    static Map<Pointer,InputStream> inputstreams = Collections.synchronizedMap(new HashMap<Pointer,InputStream>());
+    Map<Pointer,InputStream> inputstreams = Collections.synchronizedMap(new HashMap<Pointer,InputStream>());
 
-    static class ReadCallback extends avformat.Read_packet_Pointer_BytePointer_int {
+    class readcallback extends avformat.Read_packet_Pointer_BytePointer_int {
         @Override public int call(Pointer opaque, BytePointer buf, int buf_size) {
             try {
                 byte[] b = new byte[buf_size];
@@ -249,7 +249,7 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         }
     }
 
-    static class SeekCallback extends avformat.Seek_Pointer_long_int {
+    class seekcallback extends avformat.Seek_Pointer_long_int {
         @Override public long call(Pointer opaque, long offset, int whence) {
             try {
                 InputStream is = inputstreams.get(opaque);
@@ -272,8 +272,8 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         }
     }
 
-    static ReadCallback readcallback = new ReadCallback();
-    static SeekCallback seekcallback = new SeekCallback();
+    ffmpegaudioframegrabber.readcallback readcallback = new readcallback();
+    ffmpegaudioframegrabber.seekcallback seekcallback = new seekcallback();
 
     private InputStream inputstream;
     private avformat.AVIOContext avio;
