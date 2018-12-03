@@ -366,4 +366,27 @@ public class databasemanager {
         return  mCur;
     }
 
+    public void insertreadergetvideoinfo(String framecount,String videotoken,String video,String remainingframes,
+                                     String frames)
+    {
+        try {
+            lock.lock();
+
+            ContentValues values = new ContentValues();
+            values.put("framecount", "" + framecount);
+            values.put("videotoken", ""+videotoken);
+            values.put("video_info", video);
+            values.put("remainingframes", ""+remainingframes);
+            values.put("frames", ""+frames);
+
+            long l=mDb.insert("tblgetvideoinfo", null, values);
+            Log.e("Id ",""+l);
+
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
+            throw mSQLException;
+        } finally {
+            lock.unlock();
+        }
+    }
 }

@@ -1602,21 +1602,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
                         firsthash = keyValue;
-
                         Log.e("videofirsthashvalue ",""+ keyValue);
-
                         updatestartvideoinfo(keyValue, filename,"","","",lastrecordedvideo.getAbsolutePath());
                     }
                 }
                 else
                 {
-                        String updatecompletedate[] = common.getcurrentdatewithtimezone();
-                        String completeddate = updatecompletedate[0];
-                        String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
-                        String lastframe = keyValue;
-
-                        updatestartvideoinfo(firsthash,filename,completeddate,lastframe,"" + count,lastrecordedvideo.getAbsolutePath());
-                        lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                      lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
 
                 }
                 count++;
@@ -1625,11 +1617,26 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(lastframehash != null)
             {
                 mvideoframes.add(lastframehash);
+
+                String updatecompletedate[] = common.getcurrentdatewithtimezone();
+                String completeddate = updatecompletedate[0];
+                String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
+                String lastframe = mvideoframes.get(mvideoframes.size() -1).getkeyvalue();
+
+                updatestartvideoinfo(firsthash,filename,completeddate,lastframe,"" + count,lastrecordedvideo.getAbsolutePath());
             }
             else
             {
-                if(mvideoframes.size() > 1)
+                if(mvideoframes.size() > 1){
+                    String updatecompletedate[] = common.getcurrentdatewithtimezone();
+                    String completeddate = updatecompletedate[0];
+                    String filename = common.getfilename(lastrecordedvideo.getAbsolutePath());
+                    String lastframe = mvideoframes.get(mvideoframes.size() -1).getkeyvalue();
+
+                    updatestartvideoinfo(firsthash,filename,completeddate,lastframe,"" + count,lastrecordedvideo.getAbsolutePath());
+
                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                }
             }
 
             grabber.flush();
@@ -1648,6 +1655,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         mhashesadapter.notifyDataSetChanged();
                         recyview_hashes.scrollToPosition(mhashesitems.size()-1);
                     }
+
+
+
+
                 }
             });
         }catch (Exception e)
