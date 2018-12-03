@@ -3,9 +3,7 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -23,7 +21,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -53,7 +50,7 @@ import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
-import com.cryptoserver.composer.utils.customffmpegframegrabber;
+import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
@@ -1322,7 +1319,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         currentframenumber = currentframenumber + frameduration;
         try
         {
-            customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
+            ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(VIDEO_URL);
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
             String format= common.getvideoformat(VIDEO_URL);
             if(format.equalsIgnoreCase("mp4"))

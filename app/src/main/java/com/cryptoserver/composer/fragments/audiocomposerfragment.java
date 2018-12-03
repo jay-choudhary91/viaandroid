@@ -9,7 +9,6 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -45,7 +44,8 @@ import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.customffmpegframegrabber;
+import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
+import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.progressdialog;
@@ -62,12 +62,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -838,7 +835,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             currentframenumber = currentframenumber + frameduration;
 
 
-            customffmpegframegrabber grabber = new customffmpegframegrabber(new File(selectedfile));
+            ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(selectedfile));
             grabber.start();
             videomodel lastframehash=null;
             int totalframes=grabber.getLengthInAudioFrames();

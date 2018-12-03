@@ -70,7 +70,7 @@ import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
-import com.cryptoserver.composer.utils.customffmpegframegrabber;
+import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.camerautil;
@@ -1571,7 +1571,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         currentframenumber = currentframenumber + frameduration;
         try
         {
-            customffmpegframegrabber grabber = new customffmpegframegrabber(lastrecordedvideo.getAbsolutePath());
+            ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(lastrecordedvideo.getAbsolutePath());
 
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
 

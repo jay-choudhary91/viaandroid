@@ -1,7 +1,5 @@
 package com.cryptoserver.composer.utils;
 
-import android.util.Log;
-
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.javacpp.IntPointer;
@@ -106,15 +104,15 @@ import static org.bytedeco.javacpp.swscale.sws_scale;
  * Created by root on 24/9/18.
  */
 
-public class customffmpegframegrabber extends FrameGrabber {
+public class ffmpegvideoframegrabber extends FrameGrabber {
     public static String[] getDeviceDescriptions() throws Exception {
         tryLoad();
         throw new UnsupportedOperationException("Device enumeration not support by FFmpeg.");
     }
 
-    public static customffmpegframegrabber createDefault(File deviceFile)   throws Exception { return new customffmpegframegrabber(deviceFile); }
-    public static customffmpegframegrabber createDefault(String devicePath) throws Exception { return new customffmpegframegrabber(devicePath); }
-    public static customffmpegframegrabber createDefault(int deviceNumber)  throws Exception { throw new Exception(customffmpegframegrabber.class + " does not support device numbers."); }
+    public static ffmpegvideoframegrabber createDefault(File deviceFile)   throws Exception { return new ffmpegvideoframegrabber(deviceFile); }
+    public static ffmpegvideoframegrabber createDefault(String devicePath) throws Exception { return new ffmpegvideoframegrabber(devicePath); }
+    public static ffmpegvideoframegrabber createDefault(int deviceNumber)  throws Exception { throw new Exception(ffmpegvideoframegrabber.class + " does not support device numbers."); }
 
     private static Exception loadingException = null;
     public static void tryLoad() throws Exception {
@@ -139,7 +137,7 @@ public class customffmpegframegrabber extends FrameGrabber {
                 if (t instanceof Exception) {
                     throw loadingException = (Exception)t;
                 } else {
-                    throw loadingException = new Exception("Failed to load " + customffmpegframegrabber.class, t);
+                    throw loadingException = new Exception("Failed to load " + ffmpegvideoframegrabber.class, t);
                 }
             }
         }
@@ -152,15 +150,15 @@ public class customffmpegframegrabber extends FrameGrabber {
         } catch (Exception ex) { }
     }
 
-    public customffmpegframegrabber(File file) {
+    public ffmpegvideoframegrabber(File file) {
         this(file.getAbsolutePath());
     }
-    public customffmpegframegrabber(String filename) {
+    public ffmpegvideoframegrabber(String filename) {
         this.filename = filename;
         this.pixelFormat = AV_PIX_FMT_NONE;
         this.sampleFormat = AV_SAMPLE_FMT_NONE;
     }
-    public customffmpegframegrabber(InputStream inputStream) {
+    public ffmpegvideoframegrabber(InputStream inputStream) {
         this.inputStream = inputStream;
         this.pixelFormat = AV_PIX_FMT_NONE;
         this.sampleFormat = AV_SAMPLE_FMT_NONE;

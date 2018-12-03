@@ -44,7 +44,7 @@ import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.customffmpegframegrabber;
+import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
@@ -1040,7 +1040,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         currentframenumber = currentframenumber + frameduration;
         try
         {
-            customffmpegframegrabber grabber = new customffmpegframegrabber(VIDEO_URL);
+            ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(VIDEO_URL);
 
             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
             String format= common.getvideoformat(VIDEO_URL);

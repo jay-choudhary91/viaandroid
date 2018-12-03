@@ -11,7 +11,6 @@ import org.bytedeco.javacpp.avformat;
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacpp.swresample;
 import org.bytedeco.javacpp.swscale;
-import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegLockCallback;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
@@ -347,6 +346,14 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
     private Frame frame;
 
     /**
+     * Is there a video stream?
+     * @return  {@code video_st!=null;}
+     */
+    public boolean hasVideo() {
+        return video_st!=null;
+    }
+
+    /**
      * Is there an audio stream?
      * @return  {@code audio_st!=null;}
      */
@@ -371,8 +378,38 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         }
     }
 
+    @Override public int getImageWidth() {
+        return imageWidth > 0 || video_c == null ? super.getImageWidth() : video_c.width();
+    }
+
+    @Override public int getImageHeight() {
+        return imageHeight > 0 || video_c == null ? super.getImageHeight() : video_c.height();
+    }
+
     @Override public int getAudioChannels() {
         return audioChannels > 0 || audio_c == null ? super.getAudioChannels() : audio_c.channels();
+    }
+
+    @Override public int getPixelFormat() {
+        if (imageMode == ImageMode.COLOR || imageMode == ImageMode.GRAY) {
+            if (pixelFormat == AV_PIX_FMT_NONE) {
+                return imageMode == ImageMode.COLOR ? AV_PIX_FMT_BGR24 : AV_PIX_FMT_GRAY8;
+            } else {
+                return pixelFormat;
+            }
+        } else if (video_c != null) { // RAW
+            return video_c.pix_fmt();
+        } else {
+            return super.getPixelFormat();
+        }
+    }
+
+    @Override public int getVideoCodec() {
+        return video_c == null ? super.getVideoCodec() : video_c.codec_id();
+    }
+
+    @Override public int getVideoBitrate() {
+        return video_c == null ? super.getVideoBitrate() : (int)video_c.bit_rate();
     }
 
     @Override public double getAspectRatio() {
@@ -383,6 +420,11 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
             double a = (double)r.num() / r.den();
             return a == 0.0 ? 1.0 : a;
         }
+    }
+
+    /** Returns {@link #getVideoFrameRate()} */
+    @Override public double getFrameRate() {
+        return getVideoFrameRate();
     }
 
     /**Estimation of audio frames per second
@@ -396,7 +438,7 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         } else {
             if (samples_frame == null || samples_frame.nb_samples() == 0) {
                 try {
-                    grabFrame(true, false, true, false);
+                    grabFrame(true, false, false, false);
                     frameGrabbed = true;
                 } catch (Exception e) {
                     return 0.0;
@@ -406,6 +448,18 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
                 return ((double) getSampleRate()) / samples_frame.nb_samples();
             else return 0.0;
 
+        }
+    }
+
+    public double getVideoFrameRate() {
+        if (video_st == null) {
+            return super.getFrameRate();
+        } else {
+            avutil.AVRational r = video_st.avg_frame_rate();
+            if (r.num() == 0 && r.den() == 0) {
+                r = video_st.r_frame_rate();
+            }
+            return (double)r.num() / r.den();
         }
     }
 
@@ -420,6 +474,7 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
     @Override public int getSampleFormat() {
         if (sampleMode == SampleMode.SHORT || sampleMode == SampleMode.FLOAT) {
             if (sampleFormat == AV_SAMPLE_FMT_NONE) {
+                // return sampleMode == SampleMode.SHORT ? AV_SAMPLE_FMT_S16 : AV_SAMPLE_FMT_FLT;
                 return sampleMode == SampleMode.SHORT ? AV_SAMPLE_FMT_S16 : AV_SAMPLE_FMT_FLT;
             } else {
                 return sampleFormat;
@@ -443,6 +498,14 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         return entry == null || entry.value() == null ? null : entry.value().getString();
     }
 
+    @Override public String getVideoMetadata(String key) {
+        if (video_st == null) {
+            return super.getVideoMetadata(key);
+        }
+        avutil.AVDictionaryEntry entry = av_dict_get(video_st.metadata(), key, null, 0);
+        return entry == null || entry.value() == null ? null : entry.value().getString();
+    }
+
     @Override public String getAudioMetadata(String key) {
         if (audio_st == null) {
             return super.getAudioMetadata(key);
@@ -451,9 +514,36 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         return entry == null || entry.value() == null ? null : entry.value().getString();
     }
 
+    /** default override of super.setFrameNumber implies setting
+     *  of a video frame having that number */
+    @Override public void setFrameNumber(int frameNumber) throws Exception {
+        setVideoFrameNumber(frameNumber);
+    }
+
+    /** if there is video stream tries to seek to video frame with corresponding timestamp
+     *  otherwise sets super.frameNumber only because frameRate==0 if there is no video stream */
+    public void setVideoFrameNumber(int frameNumber) throws Exception {
+        // best guess, AVSEEK_FLAG_FRAME has not been implemented in FFmpeg...
+        if (hasVideo()) setVideoTimestamp(Math.round(1000000L * frameNumber / getFrameRate()));
+        else super.frameNumber = frameNumber;
+    }
+
+    /** if there is audio stream tries to seek to audio frame with corresponding timestamp
+     *  ignoring otherwise */
+    public void setAudioFrameNumber(int frameNumber) throws Exception {
+        // best guess, AVSEEK_FLAG_FRAME has not been implemented in FFmpeg...
+        if (hasAudio()) setAudioTimestamp(Math.round(1000000L * frameNumber / getAudioFrameRate()));
+
+    }
+
     /** setTimestamp with disregard of the resulting frame type, video or audio */
     @Override public void setTimestamp(long timestamp) throws Exception {
         setTimestamp(timestamp, EnumSet.of(Frame.Type.VIDEO, Frame.Type.AUDIO));
+    }
+
+    /** setTimestamp with resulting video frame type */
+    public void setVideoTimestamp(long timestamp) throws Exception {
+        setTimestamp(timestamp, EnumSet.of(Frame.Type.VIDEO));
     }
 
     /** setTimestamp with resulting audio frame type */
@@ -485,9 +575,6 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
             if (audio_c != null) {
                 avcodec_flush_buffers(audio_c);
             }
-
-            FFmpegFrameGrabber ss;
-
             if (pkt2.size() > 0) {
                 pkt2.size(0);
                 av_packet_unref(pkt);
@@ -516,7 +603,7 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
              *
             */
 
-            boolean has_video = false;
+            boolean has_video = hasVideo();
             boolean has_audio = hasAudio();
 
             if (has_video || has_audio) {
@@ -571,8 +658,31 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         }
     }
 
+    /** Returns {@link #getLengthInVideoFrames()} */
+    @Override public int getLengthInFrames() {
+        // best guess...
+        return getLengthInVideoFrames();
+    }
+
     @Override public long getLengthInTime() {
         return oc.duration() * 1000000L / AV_TIME_BASE;
+    }
+
+    /** Returns {@code (int) Math.round(getLengthInTime() * getFrameRate() / 1000000L)}, which is an approximation in general. */
+    public int getLengthInVideoFrames() {
+        // best guess...
+        return (int) Math.round(getLengthInTime() * getFrameRate() / 1000000L);
+    }
+
+    public int getLengthInAudioFrames() {
+        // best guess...
+        double afr = getAudioFrameRate();
+        if (afr > 0) return (int) (getLengthInTime() * afr / 1000000L);
+        else return 0;
+    }
+
+    public avformat.AVFormatContext getFormatContext() {
+        return oc;
     }
 
     public void start() throws Exception {
@@ -681,6 +791,50 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
                     + "\" for videoStream == " + videoStream + " and audioStream == " + audioStream + ".");
         }
 
+        if (video_st != null) {
+            // Find the decoder for the video stream
+            avcodec.AVCodec codec = avcodec_find_decoder(video_par.codec_id());
+            if (codec == null) {
+                throw new Exception("avcodec_find_decoder() error: Unsupported video format or codec not found: " + video_par.codec_id() + ".");
+            }
+
+            /* Allocate a codec context for the decoder */
+            if ((video_c = avcodec_alloc_context3(codec)) == null) {
+                throw new Exception("avcodec_alloc_context3() error: Could not allocate video decoding context.");
+            }
+
+            /* copy the stream parameters from the muxer */
+            if ((ret = avcodec_parameters_to_context(video_c, video_st.codecpar())) < 0) {
+                release();
+                throw new Exception("avcodec_parameters_to_context() error: Could not copy the video stream parameters.");
+            }
+
+            options = new avutil.AVDictionary(null);
+            for (Map.Entry<String, String> e : videoOptions.entrySet()) {
+                av_dict_set(options, e.getKey(), e.getValue(), 0);
+            }
+            // Open video codec
+            if ((ret = avcodec_open2(video_c, codec, options)) < 0) {
+                throw new Exception("avcodec_open2() error " + ret + ": Could not open video codec.");
+            }
+            av_dict_free(options);
+
+            // Hack to correct wrong frame rates that seem to be generated by some codecs
+            if (video_c.time_base().num() > 1000 && video_c.time_base().den() == 1) {
+                video_c.time_base().den(1000);
+            }
+
+            // Allocate video frame and an AVFrame structure for the RGB image
+            if ((picture = av_frame_alloc()) == null) {
+                throw new Exception("av_frame_alloc() error: Could not allocate raw picture frame.");
+            }
+            if ((picture_rgb = av_frame_alloc()) == null) {
+                throw new Exception("av_frame_alloc() error: Could not allocate RGB picture frame.");
+            }
+
+            initPictureRGB();
+        }
+
         if (audio_st != null) {
             // Find the decoder for the audio stream
             avcodec.AVCodec codec = avcodec_find_decoder(audio_par.codec_id());
@@ -719,6 +873,46 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         }
     }
 
+    private void initPictureRGB() {
+        int width  = imageWidth  > 0 ? imageWidth  : video_c.width();
+        int height = imageHeight > 0 ? imageHeight : video_c.height();
+
+        switch (imageMode) {
+            case COLOR:
+            case GRAY:
+                // If size changes I new allocation is needed -> free the old one.
+                if (image_ptr != null) {
+                    // First kill all references, then free it.
+                    image_buf = null;
+                    BytePointer[] temp = image_ptr;
+                    image_ptr = null;
+                    av_free(temp[0]);
+                }
+                int fmt = getPixelFormat();
+
+                // Determine required buffer size and allocate buffer
+                int size = av_image_get_buffer_size(fmt, width, height, 1);
+                image_ptr = new BytePointer[] { new BytePointer(av_malloc(size)).capacity(size) };
+                image_buf = new Buffer[] { image_ptr[0].asBuffer() };
+
+                // Assign appropriate parts of buffer to image planes in picture_rgb
+                // Note that picture_rgb is an AVFrame, but AVFrame is a superset of AVPicture
+                av_image_fill_arrays(new PointerPointer(picture_rgb), picture_rgb.linesize(), image_ptr[0], fmt, width, height, 1);
+                picture_rgb.format(fmt);
+                picture_rgb.width(width);
+                picture_rgb.height(height);
+                break;
+
+            case RAW:
+                image_ptr = new BytePointer[] { null };
+                image_buf = new Buffer[] { null };
+                break;
+
+            default:
+                assert false;
+        }
+    }
+
     public void stop() throws Exception {
         release();
     }
@@ -739,18 +933,58 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         }
     }
 
-    @Override
-    public Frame grab() throws Exception {
-        return null;
+    private void processImage() throws Exception {
+        frame.imageWidth  = imageWidth  > 0 ? imageWidth  : video_c.width();
+        frame.imageHeight = imageHeight > 0 ? imageHeight : video_c.height();
+        frame.imageDepth = Frame.DEPTH_UBYTE;
+        switch (imageMode) {
+            case COLOR:
+            case GRAY:
+                // Deinterlace Picture
+                if (deinterlace) {
+                    throw new Exception("Cannot deinterlace: Functionality moved to FFmpegFrameFilter.");
+                }
+
+                // Has the size changed?
+                if (frame.imageWidth != picture_rgb.width() || frame.imageHeight != picture_rgb.height()) {
+                    initPictureRGB();
+                }
+
+                // Convert the image into BGR or GRAY format that OpenCV uses
+                img_convert_ctx = sws_getCachedContext(img_convert_ctx,
+                        video_c.width(), video_c.height(), video_c.pix_fmt(),
+                        frame.imageWidth, frame.imageHeight, getPixelFormat(), SWS_BILINEAR,
+                        null, null, (DoublePointer)null);
+                if (img_convert_ctx == null) {
+                    throw new Exception("sws_getCachedContext() error: Cannot initialize the conversion context.");
+                }
+
+                // Convert the image from its native format to RGB or GRAY
+                sws_scale(img_convert_ctx, new PointerPointer(picture), picture.linesize(), 0,
+                        video_c.height(), new PointerPointer(picture_rgb), picture_rgb.linesize());
+                frame.imageStride = picture_rgb.linesize(0);
+                frame.image = image_buf;
+                break;
+
+            case RAW:
+                frame.imageStride = picture.linesize(0);
+                BytePointer ptr = picture.data(0);
+                if (ptr != null && !ptr.equals(image_ptr[0])) {
+                    image_ptr[0] = ptr.capacity(frame.imageHeight * frame.imageStride);
+                    image_buf[0] = ptr.asBuffer();
+                }
+                frame.image = image_buf;
+                break;
+
+            default:
+                assert false;
+        }
+        frame.image[0].limit(frame.imageHeight * frame.imageStride);
+        frame.imageChannels = frame.imageStride / frame.imageWidth;
     }
 
     private void processSamples() throws Exception {
         int ret;
-
-        int codecid=audio_c.codec_id();
-        avcodec.AVCodec codecc=audio_c.codec();
-        int type=audio_c.codec_type();
-        int tag=audio_c.codec_tag();
 
         int sample_format = samples_frame.format();
         int planes = av_sample_fmt_is_planar(sample_format) != 0 ? (int)samples_frame.channels() : 1;
@@ -773,9 +1007,9 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
                     case AV_SAMPLE_FMT_U8:
                     case AV_SAMPLE_FMT_U8P:  samples_buf[i] = b; break;
                     case AV_SAMPLE_FMT_S16:
-                    case AV_SAMPLE_FMT_S16P: samples_buf[i] = b.asShortBuffer(); break;
+                    case AV_SAMPLE_FMT_S16P: samples_buf[i] = b.asShortBuffer();  break;
                     case AV_SAMPLE_FMT_S32:
-                    case AV_SAMPLE_FMT_S32P: samples_buf[i] = b.asIntBuffer();   break;
+                    case AV_SAMPLE_FMT_S32P: samples_buf[i] = b.asIntBuffer();    break;
                     case AV_SAMPLE_FMT_FLT:
                     case AV_SAMPLE_FMT_FLTP: samples_buf[i] = b.asFloatBuffer();  break;
                     case AV_SAMPLE_FMT_DBL:
@@ -788,15 +1022,6 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
 
         if (audio_c.channels() != getAudioChannels() || audio_c.sample_fmt() != getSampleFormat() || audio_c.sample_rate() != getSampleRate()) {
             if (samples_convert_ctx == null || samples_channels != getAudioChannels() || samples_format != getSampleFormat() || samples_rate != getSampleRate()) {
-
-                int a=getSampleFormat();
-                int b=getAudioChannels();
-                int c=getSampleRate();
-
-                int d=audio_c.sample_fmt();
-                int e=audio_c.channels();
-                int f=audio_c.sample_fmt();
-
                 samples_convert_ctx = swr_alloc_set_opts(samples_convert_ctx, av_get_default_channel_layout(getAudioChannels()), getSampleFormat(), getSampleRate(),
                         av_get_default_channel_layout(audio_c.channels()), audio_c.sample_fmt(), audio_c.sample_rate(), 0, null);
                 if (samples_convert_ctx == null) {
@@ -828,7 +1053,7 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
                         case AV_SAMPLE_FMT_U8:
                         case AV_SAMPLE_FMT_U8P:  samples_buf_out[i] = b; break;
                         case AV_SAMPLE_FMT_S16:
-                        case AV_SAMPLE_FMT_S16P: samples_buf_out[i] = b.asShortBuffer(); break;
+                        case AV_SAMPLE_FMT_S16P: samples_buf_out[i] = b.asShortBuffer();  break;
                         case AV_SAMPLE_FMT_S32:
                         case AV_SAMPLE_FMT_S32P: samples_buf_out[i] = b.asIntBuffer();    break;
                         case AV_SAMPLE_FMT_FLT:
@@ -842,7 +1067,6 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
             frame.sampleRate = samples_rate;
             frame.audioChannels = samples_channels;
             frame.samples = samples_buf_out;
-            Buffer[] samplee=frame.samples;
 
             if ((ret = swr_convert(samples_convert_ctx, new PointerPointer(samples_ptr_out), sample_size_out, new PointerPointer(samples_ptr), sample_size_in)) < 0) {
                 throw new Exception("swr_convert() error " + ret + ": Cannot convert audio samples.");
@@ -853,8 +1077,21 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
             }
         }
     }
+
+    public Frame grab() throws Exception {
+        return grabFrame(true, true, true, false);
+    }
+    public Frame grabImage() throws Exception {
+        return grabFrame(false, true, true, false);
+    }
+    public Frame grabAudio() throws Exception {
+        return grabFrame(true, false, true, false);
+    }
     public Frame grabSamples() throws Exception {
         return grabFrame(true, false, true, false);
+    }
+    public Frame grabKeyFrame() throws Exception {
+        return grabFrame(false, true, true, true);
     }
     public Frame grabFrame(boolean doAudio, boolean doVideo, boolean doProcessing, boolean keyFrames) throws Exception {
         if (oc == null || oc.isNull()) {
@@ -876,7 +1113,14 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         frame.audioChannels = 0;
         frame.samples = null;
         frame.opaque = null;
-        if (doAudio && audioFrameGrabbed) {
+        if (doVideo && videoFrameGrabbed) {
+            if (doProcessing) {
+                processImage();
+            }
+            frame.keyFrame = picture.key_frame() != 0;
+            frame.opaque = picture;
+            return frame;
+        } else if (doAudio && audioFrameGrabbed) {
             if (doProcessing) {
                 processSamples();
             }
@@ -887,7 +1131,6 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
         boolean done = false;
         while (!done) {
             if (pkt2.size() <= 0) {
-                int av_readdata=av_read_frame(oc, pkt);
                 if (av_read_frame(oc, pkt) < 0) {
                     if (doVideo && video_st != null) {
                         // The video codec may have buffered some frames
@@ -901,7 +1144,33 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
                 }
             }
 
-            if (doAudio && audio_st != null && pkt.stream_index() == audio_st.index()) {
+            // Is this a packet from the video stream?
+            if (doVideo && video_st != null && pkt.stream_index() == video_st.index()
+                    && (!keyFrames || pkt.flags() == AV_PKT_FLAG_KEY)) {
+                // Decode video frame
+                int len = avcodec_decode_video2(video_c, picture, got_frame, pkt);
+
+                // Did we get a video frame?
+                if (pkt.data() == null && pkt.size() == 0) {
+                    return null;
+                }else if (len >= 0 && got_frame[0] != 0
+                        && (!keyFrames || picture.pict_type() == AV_PICTURE_TYPE_I)) {
+                    long pts = av_frame_get_best_effort_timestamp(picture);
+
+                    avutil.AVRational time_base = video_st.time_base();
+                    timestamp = 1000000L * pts * time_base.num() / time_base.den();
+                    // best guess, AVCodecContext.frame_number = number of decoded frames...
+                    frameNumber = (int)Math.round(timestamp * getFrameRate() / 1000000L);
+                    frame.image = image_buf;
+                    if (doProcessing) {
+                        processImage();
+                    }
+                    done = true;
+                    frame.timestamp = timestamp;
+                    frame.keyFrame = picture.key_frame() != 0;
+                    frame.opaque = picture;
+                }
+            } else if (doAudio && audio_st != null && pkt.stream_index() == audio_st.index()) {
                 if (pkt2.size() <= 0) {
                     // HashMap is unacceptably slow on Android
                     // pkt2.put(pkt);
@@ -917,18 +1186,6 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
                     pkt2.data(pkt2.data().position(len));
                     pkt2.size(pkt2.size() - len);
                     if (got_frame[0] != 0) {
-
-                        /*try {
-                            BytePointer pp=samples_frame.data(0);
-                            ByteBuffer bytebuffer   = pp.asBuffer();
-                            byte[] byteData = bytebuffer.array();
-                            String value= md5.calculatebytemd5(byteData);
-                            Log.e("MD5 audio ",value);
-                        }catch (java.lang.Exception e)
-                        {
-                            e.printStackTrace();
-                        }*/
-
                         long pts = av_frame_get_best_effort_timestamp(samples_frame);
                         avutil.AVRational time_base = audio_st.time_base();
                         timestamp = 1000000L * pts * time_base.num() / time_base.den();
