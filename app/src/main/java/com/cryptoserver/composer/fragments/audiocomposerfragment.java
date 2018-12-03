@@ -45,7 +45,6 @@ import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.progressdialog;
@@ -838,9 +837,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(selectedfile));
             grabber.start();
             videomodel lastframehash=null;
-            int totalframes=grabber.getLengthInAudioFrames();
-            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
-                Frame frame = grabber.grabAudio();
+            int totalframes=grabber.getlengthinaudioframes();
+            for(int i = 0; i<grabber.getlengthinaudioframes(); i++) {
+                Frame frame = grabber.grabaudio();
                 if (frame == null)
                     break;
 

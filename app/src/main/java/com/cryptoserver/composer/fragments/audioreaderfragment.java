@@ -54,7 +54,6 @@ import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
@@ -1071,11 +1070,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(audiourl));
             grabber.start();
             videomodel lastframehash=null;
-            int totalframes=grabber.getLengthInAudioFrames();
+            int totalframes=grabber.getlengthinaudioframes();
 
-            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++){
+            for(int i = 0; i<grabber.getlengthinaudioframes(); i++){
              //   grabber.setSampleRate(44100);
-                Frame frame = grabber.grabAudio();
+                Frame frame = grabber.grabaudio();
                 if (frame == null)
                     break;
 

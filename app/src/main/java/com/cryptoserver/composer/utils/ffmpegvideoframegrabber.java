@@ -623,7 +623,7 @@ public class ffmpegvideoframegrabber extends FrameGrabber {
                     frameTypes.retainAll(frameTypesToSeek);
                     if (!frameTypes.isEmpty()) {
                         initialSeekPosition = seekFrame.timestamp;
-                        //the position closest to the requested timestamp from which it can be reached by sequential grabFrame calls
+                        //the position closest to the requested timestamp from which it can be reached by sequential grabframe calls
                         break;
                     }
                 }
