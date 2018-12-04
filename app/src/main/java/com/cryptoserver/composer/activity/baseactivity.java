@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -667,7 +666,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                      /*   String sequence = object.getString("sequence");
                         String serverdate = object.getString("serverdate");
                         String serverdictionaryhash = object.getString("serverdictionaryhash");
-                        updatevideoupdateapiresponce(finalselectedid,sequence,serverdate,serverdictionaryhash);*/
+                        updatevideoupdateapiresponse(finalselectedid,sequence,serverdate,serverdictionaryhash);*/
 
                     }catch (Exception e)
                     {
@@ -822,7 +821,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideoupdateapiresponce(selectedid,sequence,serverdate,serverdictionaryhash,sequenceid,videoframetransactionid);
+            mdbhelper.updatevideoupdateapiresponse(selectedid,sequence,serverdate,serverdictionaryhash,sequenceid,videoframetransactionid);
             mdbhelper.close();
         }catch (Exception e)
         {

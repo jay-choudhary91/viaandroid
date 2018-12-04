@@ -231,7 +231,8 @@ public class insertmediadataservice extends Service {
                     ,mdbmiddleitemcontainer.getItem3(),mdbmiddleitemcontainer.getItem4(),mdbmiddleitemcontainer.getItem5()
                     ,mdbmiddleitemcontainer.getItem6(),mdbmiddleitemcontainer.getItem7(),mdbmiddleitemcontainer.getItem8(),
                     mdbmiddleitemcontainer.getItem9(),mdbmiddleitemcontainer.getItem10(),mdbmiddleitemcontainer.getItem11()
-                    ,mdbmiddleitemcontainer.getItem12(),mdbmiddleitemcontainer.getItem13());
+                    ,mdbmiddleitemcontainer.getItem12(),mdbmiddleitemcontainer.getItem13(),mdbmiddleitemcontainer.getItem14(),
+                    mdbmiddleitemcontainer.getItem15());
             try {
                 mdbhelper.close();
             } catch (Exception e) {

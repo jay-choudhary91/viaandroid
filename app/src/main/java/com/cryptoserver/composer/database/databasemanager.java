@@ -257,7 +257,22 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor updatevideoupdateapiresponce(String videoid,String sequence,String serverdate,String serverdictionaryhash) {
+    public Cursor updatevideoupdateapiresponse(String videoid, String sequence, String serverdate, String serverdictionaryhash, String sequenceid, String videoframetransactionid) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            mDb.execSQL("update tblmetadata set rsequenceno = '"+sequence+"',serverdate ='"+serverdate+"', serverdictionaryhash = '"+serverdictionaryhash+"', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where id='"+videoid+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
 
     public Cursor fetchlogdata(String user_id, String to_user_id, int limit) {
 
@@ -275,22 +290,6 @@ public class databasemanager {
             e.printStackTrace();
         }
 
-        return  mCur;
-    }
-
-    public Cursor updatevideoupdateapiresponce(String videoid,String sequence,String serverdate,String serverdictionaryhash,String sequenceid,String videoframetransactionid) {
-        Cursor mCur=null;
-        try {
-            lock.lock();
-            mDb.execSQL("update tblmetadata set rsequenceno = '"+sequence+"',serverdate ='"+serverdate+"', serverdictionaryhash = '"+serverdictionaryhash+"', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where id='"+videoid+"'");
-            if (mCur != null)
-                mCur.moveToNext();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
         return  mCur;
     }
 
@@ -460,30 +459,6 @@ public class databasemanager {
             lock.unlock();
         }
         return  mCur;
-    }
-
-    public void insertreadergetvideoinfo(String framecount,String videotoken,String video,String remainingframes,
-                                     String frames)
-    {
-        try {
-            lock.lock();
-
-            ContentValues values = new ContentValues();
-            values.put("framecount", "" + framecount);
-            values.put("videotoken", ""+videotoken);
-            values.put("video_info", video);
-            values.put("remainingframes", ""+remainingframes);
-            values.put("frames", ""+frames);
-
-            long l=mDb.insert("tblgetvideoinfo", null, values);
-            Log.e("Id ",""+l);
-
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
-            throw mSQLException;
-        } finally {
-            lock.unlock();
-        }
     }
 
     public void insertreadergetvideoinfo(String framecount,String videotoken,String video,String remainingframes,
