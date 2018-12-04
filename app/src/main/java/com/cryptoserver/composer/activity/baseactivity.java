@@ -30,7 +30,8 @@ import com.cryptoserver.composer.fragments.imagereaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
-import com.cryptoserver.composer.models.startvideoinfo;
+import com.cryptoserver.composer.models.mediametadatainfo;
+import com.cryptoserver.composer.models.startmediainfo;
 import com.cryptoserver.composer.netutils.connectivityreceiver;
 import com.cryptoserver.composer.netutils.xapi;
 import com.cryptoserver.composer.netutils.xapipost;
@@ -332,7 +333,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
     public void fetchmetadatadb() {
 
-         String videolist="",hashmethod="",hashvalue="",videoid="",hassync="";
+         String hashmethod="",hashvalue="";
 
          String selectedid="", header = "", type = "", location = "", localkey = "", token = "", videokey = "",
                 sync = "",sync_date = "",action_type="",apirequestdevicedate = "",videostartdevicedate= "",devicetimeoffset = "",
@@ -364,45 +365,25 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
 
-        ArrayList<startvideoinfo> marray=new ArrayList<>();
-
-        try {
-            Cursor cur = mdbhelper.fatchstartvideoinfo();
-
-            if (cur != null) {
-                while (!cur.isAfterLast()) {
-
-                    selectedid= "" + cur.getString(cur.getColumnIndex("id"));
-                    header = "" + cur.getString(cur.getColumnIndex("header"));
-                    type = "" + cur.getString(cur.getColumnIndex("type"));
-                    location = "" + cur.getString(cur.getColumnIndex("location"));
-                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    token = "" + cur.getString(cur.getColumnIndex("token"));
-                    videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
-                    sync = "" + cur.getString(cur.getColumnIndex("sync"));
-                    action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
-                    sync_date = ""+ cur.getString(cur.getColumnIndex("sync_date"));
-                    apirequestdevicedate = ""+ cur.getString(cur.getColumnIndex("apirequestdevicedate"));
-                    videostartdevicedate = ""+ cur.getString(cur.getColumnIndex("videostartdevicedate"));
-                    devicetimeoffset = ""+ cur.getString(cur.getColumnIndex("devicetimeoffset"));
-                    videocompletedevicedate = ""+ cur.getString(cur.getColumnIndex("videocompletedevicedate"));
-
-                    marray.add(new startvideoinfo(header, type, location,localkey,token, videokey,sync, action_type,sync_date));
-                    //  cur.moveToLast();
-
-                    //  cur.moveToLast();
-                    Log.e("Marray =", "" + marray);
-
-                    break;
+        ArrayList<startmediainfo> marray = mdbhelper.setmediainfo();
+                if(marray != null && marray.size()>0){
+                    selectedid= marray.get(0).getId().toString();
+                    header = marray.get(0).getHeader().toString();
+                    type = marray.get(0).getType().toString();
+                    location = marray.get(0).getLocation().toString();
+                    localkey = marray.get(0).getLocalkey().toString();
+                    token = marray.get(0).getToken().toString();
+                    videokey = marray.get(0).getVideokey().toString();
+                    sync = marray.get(0).getSync().toString();
+                    action_type = marray.get(0).getAction_type().toString();
+                    sync_date = marray.get(0).getSync_date().toString();
+                    apirequestdevicedate = marray.get(0).getApirequestdevicedate().toString();
+                    videostartdevicedate = marray.get(0).getVideostartdevicedate().toString();
+                    devicetimeoffset = marray.get(0).getDevicetimeoffset().toString();
+                    videocompletedevicedate = marray.get(0).getVideocompletedevicedate().toString();
                 }
-            }
 
             mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
 
         if(sync.equalsIgnoreCase("0")){
 
@@ -458,6 +439,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             mpairslist.put("devicetimeoffset",devicetimeoffset);
 
 
+            Log.e("hashvalue",hashvalue +"--"+ hashmethod);
+
+
             xapipost_sendjson(baseactivity.this,config.type_video_start,mpairslist, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response)
@@ -465,15 +449,11 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                     if(response.isSuccess())
                     {
                          try {
-                                //String videokey = common.getSaltString();
-                                // String token = common.getSaltString();
-                                // updatevideokeytoken(finalSelectedid,videokey,token,"1");
-                                // callUpdateapi(finalSelectedid);
-
                                 JSONObject object = (JSONObject) response.getData();
                                 String videokey=object.getString("key");
                                 String videotoken=object.getString("videotoken");
-                                updatevideokeytoken(finalselectedid,videokey,videotoken);
+                                String transactionid = object.getString("videostarttransactionid");
+                                updatevideokeytoken(finalselectedid,videokey,videotoken,transactionid);
 
                             }catch (Exception e)
                             {
@@ -491,6 +471,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         }
 
+
+
     public void callUpdateapi(String finalheader,String finallocalkey, String finalvideokey, String finaltoken, String finalsync, String finaldevicetimeoffset,String finalapirequestdevicedate, String startselectedid,String finalvideocompletedevicedate){
 
         String selectedid = "", blockchain= "",valuehash= "",hashmethod= "",localkey= "",metricdata= "",
@@ -504,6 +486,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
         String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
 
+        String currentdate[] = common.getcurrentdatewithtimezone();
+        videoupdatedevicedate = currentdate[0];
+
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(baseactivity.this);
             mdbhelper.createDatabase();
@@ -516,36 +501,30 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
         try {
 
-            Cursor cur =  mdbhelper.fetchmetadata(finallocalkey);
+           ArrayList<mediametadatainfo>  mediametadatainfosarray  =  mdbhelper.setmediametadatainfo(finallocalkey);
 
-            if (cur != null && cur.getCount() > 0) {
-                while (!cur.isAfterLast()) {
 
-                    selectedid= "" + cur.getString(cur.getColumnIndex("id"));
-                    blockchain = "" + cur.getString(cur.getColumnIndex("blockchain"));
-                    valuehash = "" + cur.getString(cur.getColumnIndex("valuehash"));
-                    hashmethod = "" + cur.getString(cur.getColumnIndex("hashmethod"));
-                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    metricdata = "" + cur.getString(cur.getColumnIndex("metricdata"));
-                    recordate = "" + cur.getString(cur.getColumnIndex("recordate"));
-                    rsequenceno = "" + cur.getString(cur.getColumnIndex("rsequenceno"));
-                    sequencehash = "" + cur.getString(cur.getColumnIndex("sequencehash"));
-                    sequenceno = ""+ cur.getString(cur.getColumnIndex("sequenceno"));
-                    serverdate = ""+ cur.getString(cur.getColumnIndex("serverdate"));
-                    sequencedevicedate = ""+ cur.getString(cur.getColumnIndex("sequencedevicedate"));
+            if(mediametadatainfosarray != null && mediametadatainfosarray.size()>0){
 
-                    videoupdatedevicedate = currenttimewithoffset[0];
+                selectedid= mediametadatainfosarray.get(0).getId();
+                blockchain = mediametadatainfosarray.get(0).getBlockchain();
+                valuehash =mediametadatainfosarray.get(0).getValuehash();
+                hashmethod = mediametadatainfosarray.get(0).getHashmethod();
+                localkey = mediametadatainfosarray.get(0).getLocalkey();
+                metricdata = mediametadatainfosarray.get(0).getMetricdata();
+                recordate = mediametadatainfosarray.get(0).getRecordate();
+                rsequenceno = mediametadatainfosarray.get(0).getRsequenceno();
+                sequencehash =mediametadatainfosarray.get(0).getSequencehash();
+                sequenceno =mediametadatainfosarray.get(0).getSequenceno();
+                serverdate = mediametadatainfosarray.get(0).getServerdate();
+                sequencedevicedate = mediametadatainfosarray.get(0).getSequencedevicedate();
 
-                    break;
-                }
             }else{
 
                 callvideocompletedapi(startselectedid,finalheader,finallocalkey,finalapirequestdevicedate,finalvideokey,finaldevicetimeoffset,finaltoken,finalvideocompletedevicedate,finalsync);
+                return ;
+
             }
-
-            int count = cur.getCount();
-
-            Log.e("cursercount",""+count );
 
             final String finalselectedid =  selectedid;
 
@@ -577,6 +556,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 mpairslist.put("videoupdatedevicedate",""+videoupdatedevicedate);
                 mpairslist.put("sequencelist",  array);
 
+            final String finalSequenceno = sequenceno;
 
             xapipost_sendjson(baseactivity.this,config.type_video_update, mpairslist, new apiresponselistener() {
                 @Override
@@ -587,11 +567,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                         try {
 
                             JSONObject object = (JSONObject) response.getData();
+                            JSONObject jsonObject = object.getJSONObject("sequences");
+                            String sequenceid =  "",videoframetransactionid = "",serverdictionaryhash="",sequencekey = "";
 
-                            String sequence = object.getString("sequence");
+                            Iterator itr = jsonObject.keys();
+                            while(itr.hasNext()){
+                                 sequencekey = (String)itr.next();
+                                JSONObject issue = jsonObject.getJSONObject(sequencekey);
+
+                                //  get id from  issue
+                                 sequenceid = issue.getString("sequenceid");
+                                 videoframetransactionid = issue.getString("videoframetransactionid");
+                                 serverdictionaryhash = issue.getString("serverdictionaryhash");
+                            }
+
                             String serverdate = object.getString("serverdate");
-                            String serverdictionaryhash = object.getString("serverdictionaryhash");
-                            updatevideoupdateapiresponce(finalselectedid,sequence,serverdate,serverdictionaryhash);
+                            updatevideoupdateapiresponce(finalselectedid,sequencekey,serverdate,serverdictionaryhash,sequenceid,videoframetransactionid);
+
 
                         }catch (Exception e)
                         {
@@ -606,7 +598,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
     }
-
 
     public void callvideocompletedapi(String startselectedid,String finalheader,String finallocalkey,String finalapirequestdevicedate,String finalvideokey,String finaldevicetimeoffset,String finaltoken,String finalvideocompletedevicedate,String finalsync){
 
@@ -634,7 +625,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("version",synchdefaultversion);
@@ -686,10 +676,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 }
             }
         });
-
-
-
     }
+
 
 
     public void deletemetadatarecord(String selectedid)
@@ -798,7 +786,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
     }
 
-    public void updatevideokeytoken(String videoid,String videokey,String tokan)
+    public void updatevideokeytoken(String videoid,String videokey,String tokan,String transactionid)
     {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(baseactivity.this);
@@ -811,7 +799,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideokeytoken(videoid,videokey,tokan);
+            mdbhelper.updatevideokeytoken(videoid,videokey,tokan,transactionid);
             mdbhelper.close();
         }catch (Exception e)
         {
@@ -820,7 +808,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
 
-    public void updatevideoupdateapiresponce(String selectedid,String sequence,String serverdate,String serverdictionaryhash)
+    public void updatevideoupdateapiresponce(String selectedid,String sequence,String serverdate,String serverdictionaryhash,String sequenceid,String videoframetransactionid)
     {
 
         if (mdbhelper == null) {
@@ -834,7 +822,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideoupdateapiresponce(selectedid,sequence,serverdate,serverdictionaryhash);
+            mdbhelper.updatevideoupdateapiresponce(selectedid,sequence,serverdate,serverdictionaryhash,sequenceid,videoframetransactionid);
             mdbhelper.close();
         }catch (Exception e)
         {
@@ -882,7 +870,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         api.execute();
     }
 
-
+    @Override
     public void xapipost_sendjson(Context mContext, String Action, HashMap<String,Object> mPairList, apiresponselistener mListener) {
         xapipostjson api = new xapipostjson(mContext,Action,mListener);
         Set keys = mPairList.keySet();
