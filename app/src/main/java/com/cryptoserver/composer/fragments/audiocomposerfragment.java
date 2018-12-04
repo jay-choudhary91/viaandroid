@@ -767,7 +767,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     setaudiohashes();
 
                    // metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
-                    metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
 
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
