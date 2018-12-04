@@ -65,6 +65,7 @@ import com.cryptoserver.composer.models.metricmodel;
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -1699,6 +1700,67 @@ public class common {
             txt_longitude.setText(mformatbuilder.toString());
             txt_address.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)));
         }
+    }
+
+    public static String getkeyvalue(byte[] data,String keytype)
+    {
+        String value="";
+        String salt="";
+
+        switch (keytype)
+        {
+            case config.prefs_md5:
+                value= md5.calculatebytemd5(data);
+                break;
+
+            case config.prefs_md5_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= md5.calculatebytemd5(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= md5.calculatebytemd5(data);
+                }
+
+                break;
+            case config.prefs_sha:
+                value= sha.sha1(data);
+                break;
+            case config.prefs_sha_salt:
+                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
+                if(! salt.trim().isEmpty())
+                {
+                    byte[] saltbytes=salt.getBytes();
+                    try {
+                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
+                        outputstream.write(saltbytes);
+                        outputstream.write(data);
+                        byte updatedarray[] = outputstream.toByteArray();
+                        value= sha.sha1(updatedarray);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    value= sha.sha1(data);
+                }
+                break;
+        }
+        return value;
     }
 
     public  static String getxdatavalue(String value)

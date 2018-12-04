@@ -112,31 +112,6 @@ public class md5
         }
         return returnVal;
     }
-
-    public static String calculatebitmapmd5(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        String md5 = "";
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("md5");
-            digest.reset();
-            digest.update(byteArray);
-            byte[] a = digest.digest();
-            int len = a.length;
-            StringBuilder sb = new StringBuilder(len << 1);
-            for (int i = 0; i < len; i++) {
-                sb.append(Character.forDigit((a[i] & 0xf0) >> 4, 16));
-                sb.append(Character.forDigit(a[i] & 0x0f, 16));
-            }
-            md5 = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return md5;
-    }
-
     public static String calculatebytemd5(byte[] array) {
         String md5 = "";
         MessageDigest digest;
@@ -158,7 +133,7 @@ public class md5
         return md5;
     }
 
-    public static final String calculatestaringmd5(final String s) {
+    public static final String calculatestringtomd5(final String s) {
         final String md5 = "md5";
         try {
             // Create md5 Hash
