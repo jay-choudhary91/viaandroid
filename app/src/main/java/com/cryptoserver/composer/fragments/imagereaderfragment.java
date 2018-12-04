@@ -565,6 +565,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     return;
                 }
 
+                File file=new File(photo_url);
+                int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                if(file_size == 0)
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_is_empty));
+                    return;
+                }
+
                 keytype=common.checkkey();
 
                 mmetricsitems.clear();
