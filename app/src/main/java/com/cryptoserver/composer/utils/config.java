@@ -33,6 +33,8 @@ public class config {
     public static final String type_video_update = "video_update";
     public static final String type_video_start = "video_start";
     public static final String type_video_complete = "video_complete";
+    public static final String type_video_find = "video_find";
+    public static final String type_videoframes_get = "videoframes_get";
 
     public static final String metriclist = "metriclist";
     public static final String framecount = "framecount";

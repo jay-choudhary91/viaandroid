@@ -1596,6 +1596,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         mhashesadapter.notifyDataSetChanged();
                         recyview_hashes.scrollToPosition(mhashesitems.size()-1);
                     }
+
+
+
+
                 }
             });
         }catch (Exception e)

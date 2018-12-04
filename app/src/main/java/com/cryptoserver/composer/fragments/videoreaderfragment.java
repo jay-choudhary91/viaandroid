@@ -44,6 +44,7 @@ import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
@@ -56,6 +57,7 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
+import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
@@ -70,6 +72,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import butterknife.BindView;
@@ -1332,9 +1335,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 if (frame == null)
                     break;
 
-
-
-
                 ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
                 byte[] byteData = new byte[buffer.remaining()];
                 buffer.get(byteData);
@@ -1354,6 +1354,10 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+
+                    if(count == frameduration){
+                         xapigetmediainfo(keyValue);
+                      }
 
                     currentframenumber = currentframenumber + frameduration;
                 }
@@ -1717,5 +1721,30 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             arraydata[i] = tmp;
         }
         return arraydata;
+    }
+
+
+    public void xapigetmediainfo(final String hashvalue)
+    {
+
+        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+
+        mpairslist.put("hashvalue",hashvalue);
+
+        gethelper().xapipost_sendjson(getActivity(),config.type_video_find,mpairslist, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                if(response.isSuccess())
+                {
+                    try {
+                        JSONObject object = (JSONObject) response.getData();
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 }
