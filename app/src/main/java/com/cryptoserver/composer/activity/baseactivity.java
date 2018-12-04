@@ -365,7 +365,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         ArrayList<startmediainfo> marray = mdbhelper.setmediainfo();
-                if(marray != null && marray.size()>0){
+                if(marray != null && marray.size()>0)
+                {
                     selectedid= marray.get(0).getId().toString();
                     header = marray.get(0).getHeader().toString();
                     type = marray.get(0).getType().toString();

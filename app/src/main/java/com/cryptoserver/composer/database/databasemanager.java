@@ -257,6 +257,28 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor getlocalkeycount(String localkey)
+    {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+
+            String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey;
+            //String sql = "SELECT * FROM tblmetadata";
+            mCur = mDb.rawQuery(sql, null);
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+
+        return  mCur;
+    }
+
     public Cursor updatevideoupdateapiresponse(String videoid, String sequence, String serverdate, String serverdictionaryhash, String sequenceid, String videoframetransactionid) {
         Cursor mCur=null;
         try {

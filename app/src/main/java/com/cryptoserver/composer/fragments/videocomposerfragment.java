@@ -1135,22 +1135,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 resetvideotimer();
                 clearvideolist();
+                showsharepopupmain();
 
-                new Thread(new Runnable() {
+                /*new Thread(new Runnable() {
                     @Override
                     public void run() {
                         setvideoadapter();
-                        /*try {
-                            metadatainsert.writemetadata(lastrecordedvideo.getAbsolutePath(),""+
-                                    common.getjson(metadatametricesjson));
-
-                        }catch (Exception e)
-                        {
-                            Log.e("Meta data Error","Error");
-                            e.printStackTrace();
-                        }*/
                     }
-                }).start();
+                }).start();*/
 
                 Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
                 intent.putExtra("liststart",mdbstartitemcontainer);
@@ -1160,8 +1152,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 applicationviavideocomposer.getactivity().startService(intent);
 
                 mrecordimagebutton.setEnabled(true);
-                showsharepopupmain();
-                setmetricesadapter();
+                //setmetricesadapter();
                 //fetchmetadatadb();
                 firsthashvalue = true;
             }

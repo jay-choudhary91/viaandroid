@@ -265,8 +265,9 @@ public class fragmentmedialist extends basefragment {
                 File[] files = videodir.listFiles();
                 for (File file : files)
                 {
-                    int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
-                    if(file_size > 0)
+                    long file_size = file.length();
+                    Log.e("Filesize ",""+file.getAbsolutePath()+" "+file_size);
+                    if(file_size >= 0)
                     {
                         Date lastModDate = new Date(file.lastModified());
                         DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");

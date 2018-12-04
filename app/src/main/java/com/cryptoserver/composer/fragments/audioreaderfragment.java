@@ -919,7 +919,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
 
                 File file=new File(audiourl);
-                int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
+                long file_size = file.length();
                 if(file_size == 0)
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_is_empty));
