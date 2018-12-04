@@ -837,9 +837,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(selectedfile));
             grabber.start();
             videomodel lastframehash=null;
-            int totalframes=grabber.getlengthinaudioframes();
-            for(int i = 0; i<grabber.getlengthinaudioframes(); i++) {
-                Frame frame = grabber.grabaudio();
+            int totalframes=grabber.getLengthInAudioFrames();
+            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
+                Frame frame = grabber.grabAudio();
                 if (frame == null)
                     break;
 
