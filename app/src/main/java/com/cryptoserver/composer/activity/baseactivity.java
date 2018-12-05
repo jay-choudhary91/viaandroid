@@ -539,9 +539,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 mainobject.put("sequenceno",sequenceno);
                 mainobject.put("recorddate",""+recordate);
                 mainobject.put("dictionaryhashmethod",""+hashmethod);
-                mainobject.put("sequencehash",sequencehash);
+                mainobject.put("sequencehashvalue",sequencehash);
                 mainobject.put("dictionaryhashvalue",""+valuehash);
                 mainobject.put("sequencedevicedate",""+sequencedevicedate);
+                mainobject.put("sequencehashmethod",""+hashmethod);
 
                 array.put(mainobject);
 
