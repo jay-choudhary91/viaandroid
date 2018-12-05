@@ -37,8 +37,10 @@ import android.widget.TextView;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.arraycontainer;
+import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
@@ -241,16 +243,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 setupVideoPlayer();
                 gethash();
 
-                new Thread(){
-                    public void run(){
-                        getmetadata();
-                    }
-                }.start();
-
-
                 setmetriceshashesdata();
-
-
             }
             else
             {
@@ -291,7 +284,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
     public void getmetadata()
     {
-        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
+        /*MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
         m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
         String metadataWriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
         String metadataAlbum=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
@@ -309,7 +302,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         else if(metadataAlbum != null && (! metadataAlbum.trim().isEmpty()) && (! metadataAlbum.equalsIgnoreCase("null")))
         {
             parsemetadata(metadataAlbum);
-        }
+        }*/
     }
 
     public void parsemetadata(String metadata)
@@ -317,7 +310,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
         try {
 
             JSONArray array=new JSONArray(metadata);
-            metricmainarraylist.clear();
             for(int j=0;j<array.length();j++)
             {
                 ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
@@ -1066,17 +1058,22 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
 
+                if(i == 0)
+                {
+                    getmediadata(keyValue);
+                }
+
                 if (count == currentframenumber) {
                     lastframehash=null;
                     mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
 
-                    if(! selectedhaeshes.trim().isEmpty())
+                    /*if(! selectedhaeshes.trim().isEmpty())
                         selectedhaeshes=selectedhaeshes+"\n";
 
                     selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();*/
 
                     currentframenumber = currentframenumber + frameduration;
 
@@ -1091,26 +1088,26 @@ public class composervideoplayerfragment extends basefragment implements Surface
             if(lastframehash != null)
             {
                 mvideoframes.add(lastframehash);
-                if(! selectedhaeshes.trim().isEmpty())
+                /*if(! selectedhaeshes.trim().isEmpty())
                     selectedhaeshes=selectedhaeshes+"\n";
 
                 selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
                         +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                         mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();*/
             }
             else
             {
                 if(mvideoframes.size() > 1)
                 {
                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-                    if(! selectedhaeshes.trim().isEmpty())
+                    /*if(! selectedhaeshes.trim().isEmpty())
                         selectedhaeshes=selectedhaeshes+"\n";
 
                     selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
                             +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();*/
                 }
             }
 
@@ -1121,6 +1118,51 @@ public class composervideoplayerfragment extends basefragment implements Surface
             e.printStackTrace();
         }
     }
+
+    public void getmediadata(String hashvalue)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(hashvalue);
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        if(mitemlist != null && mitemlist.size()>0)
+        {
+            metricmainarraylist.clear();
+            for(int i=0;i<mitemlist.size();i++)
+            {
+                String metricdata=mitemlist.get(i).getMetricdata();
+                parsemetadata(metricdata);
+                selectedhaeshes=selectedhaeshes+"\n";
+                selectedhaeshes=selectedhaeshes+"Frame "+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                        mitemlist.get(i).getSequencehash();
+            }
+
+/*            new Thread(){
+                public void run(){
+                    getmetadata();
+                }
+            }.start();*/
+        }
+    }
+
 
     public void setmetriceshashesdata()
     {

@@ -29,7 +29,9 @@ import android.widget.Toast;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adaptermedialist;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
@@ -368,6 +370,36 @@ public class fragmentmedialist extends basefragment {
         }).start();
 
     }
+
+    /*public void getlocalkey(String hashvalue)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(hashvalue);
+        if(mitemlist != null && mitemlist.size()>0)
+        {
+
+        }
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }*/
 
     /*public Bitmap getthumbnail(String filepath)
     {
