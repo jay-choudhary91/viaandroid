@@ -40,14 +40,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.activity.baseactivity;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
+import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.models.startmediainfo;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
@@ -1364,7 +1368,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
 
                     if(count == frameduration){
-                         xapigetmediainfo(keyValue);
+                        getmediadata(keyValue);
                       }
 
                     currentframenumber = currentframenumber + frameduration;
@@ -1729,6 +1733,37 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             arraydata[i] = tmp;
         }
         return arraydata;
+    }
+
+
+    public void getmediadata(String hashvalue)
+    {
+        /*databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(hashvalue);
+        if(mitemlist != null && mitemlist.size()>0)
+        {
+
+        }
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
     }
 
 

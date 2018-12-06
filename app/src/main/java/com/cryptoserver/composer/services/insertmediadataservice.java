@@ -88,8 +88,11 @@ public class insertmediadataservice extends Service {
                                 byte[] byteData = new byte[buffer.remaining()];
                                 buffer.get(byteData);
                                 String keyValue= common.getkeyvalue(byteData,keytype);
-
+                                Log.e("md5 ",""+count+" "+keyValue);
                                 // update 1st frame into database
+
+                                mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
+
                                 if(i == 0 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
                                 {
                                     randomstring gen = new randomstring(20, ThreadLocalRandom.current());
@@ -106,21 +109,23 @@ public class insertmediadataservice extends Service {
                                     Gson gson = new Gson();
                                     String json = gson.toJson(map);
 
+                                    firsthash=keyValue;
                                     Log.e("call with ",mediapath+" "+keyValue);
 
+                                    String filename = common.getfilename(mediapath);
                                     mdbstartitemcontainer.get(0).setItem1(json);
+                                    mdbstartitemcontainer.get(0).setItem3(filename);
                                     mdbstartitemcontainer.get(0).setItem4(videokey);
                                     updatestartframes(mdbstartitemcontainer);
                                 }
 
                                 if (count == currentframenumber) {
                                     lastframehash=null;
-                                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
                                     currentframenumber = currentframenumber + frameduration;
 
                                     // update 1st duration frame in database
-                                    if(count == frameduration)
-                                        firsthash = keyValue;
+                                    /*if(count == frameduration)
+                                        firsthash = keyValue;*/
 
                                     // update every duration frame in database
                                     for(int j=0;j<mdbmiddleitemcontainer.size();j++)
@@ -145,7 +150,8 @@ public class insertmediadataservice extends Service {
                             if(lastframehash != null)
                                 mvideoframes.add(lastframehash);
 
-                            if(mvideoframes.size() > 1){
+                            if(mvideoframes.size() > 0)
+                            {
                                 String updatecompletedate[] = common.getcurrentdatewithtimezone();
                                 String completeddate = updatecompletedate[0];
                                 String filename = common.getfilename(mediapath);

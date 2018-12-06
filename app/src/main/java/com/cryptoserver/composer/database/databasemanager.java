@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.cryptoserver.composer.models.mediametadatainfo;
+import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.startmediainfo;
 
 import java.io.IOException;
@@ -169,6 +170,30 @@ public class databasemanager {
 
         return  mCur;
     }
+
+    /*public ArrayList<metadatahash> getlocalkeyfrommedia(String frame) {
+        ArrayList<metadatahash> mitemlist=new ArrayList<>();
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tblgetvideoinfo where frames = '"+frame;
+            cur = mDb.rawQuery(sql, null);
+            if (cur != null) {
+                String id = "" + cur.getString(cur.getColumnIndex("id"));
+                String video_info = "" + cur.getString(cur.getColumnIndex("video_info"));
+                String frames = "" + cur.getString(cur.getColumnIndex("frames"));
+
+                mitemlist.add(new metadatahash(video_info,frames));
+                cur.moveToNext();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mitemlist;
+    }*/
 
 
     public ArrayList<mediametadatainfo> setmediametadatainfo(String finallocalkey) {
@@ -505,5 +530,65 @@ public class databasemanager {
         } finally {
             lock.unlock();
         }
+    }
+
+    //=========================  Methods for reader implementation
+
+    public ArrayList<metadatahash> getmediametadata(String sequencehash) {
+        ArrayList<metadatahash> mitemlist=new ArrayList<>();
+        String localkey=getlocalkeyfrommetadata(sequencehash);
+        if(! localkey.trim().isEmpty())
+        {
+            Cursor cur=null;
+            try {
+                lock.lock();
+                String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey+"'";
+                cur = mDb.rawQuery(sql, null);
+                if (cur.moveToFirst())
+                {
+                    do{
+                        mitemlist.add(new metadatahash(cur.getString(cur.getColumnIndex("id")),cur.getString(cur.getColumnIndex("blockchain")),
+                                cur.getString(cur.getColumnIndex("valuehash")),cur.getString(cur.getColumnIndex("hashmethod")),
+                                cur.getString(cur.getColumnIndex("localkey")),cur.getString(cur.getColumnIndex("recordate")),
+                                cur.getString(cur.getColumnIndex("metricdata")),cur.getString(cur.getColumnIndex("rsequenceno")),
+                                cur.getString(cur.getColumnIndex("sequencehash")),cur.getString(cur.getColumnIndex("sequenceno")),
+                                cur.getString(cur.getColumnIndex("serverdate")),cur.getString(cur.getColumnIndex("sequencedevicedate")),
+                                cur.getString(cur.getColumnIndex("videostarttransactionid"))));
+                    }while(cur.moveToNext());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                lock.unlock();
+            }
+        }
+        return  mitemlist;
+    }
+
+    public String getlocalkeyfrommetadata(String sequencehash) {
+        ArrayList<metadatahash> mitemlist=new ArrayList<>();
+        String localkey="";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tbstartvideoinfo";
+            cur = mDb.rawQuery(sql, null);
+            if (cur.moveToFirst()) {
+
+                do{
+                    String key = "" + cur.getString(cur.getColumnIndex("localkey"));
+                    String header = "" + cur.getString(cur.getColumnIndex("header"));
+                    if(header.contains(sequencehash))
+                        localkey=key;
+                }while(cur.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  localkey;
     }
 }

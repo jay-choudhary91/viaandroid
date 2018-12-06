@@ -6,24 +6,6 @@
     android:gravity="center"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-
-        <com.cryptoserver.composer.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            style="@style/txt_row_encryption"
-            android:layout_weight="0.3"
-            android:text="Blockchain ID"/>
-
-        <com.cryptoserver.composer.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            style="@style/txt_row_encryption"
-            android:layout_weight="0.7"
-            android:text="JFJFKHL64OPHFHP6KGFDGK3JF"/>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,53 +16,15 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.3"
-            android:text="Block ID"/>
+            android:text="Blockchain"/>
 
 
         <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_videoupdatetransactionid"
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
-            android:text="JFJFKHL64OPHFHP6KGFDGK3JF"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-
-        <com.cryptoserver.composer.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            style="@style/txt_row_encryption"
-            android:layout_weight="0.3"
-            android:text="Block Number"/>
-
-
-        <com.cryptoserver.composer.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            style="@style/txt_row_encryption"
-            android:layout_weight="0.7"
-            android:text="4"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-
-        <com.cryptoserver.composer.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            style="@style/txt_row_encryption"
-            android:layout_weight="0.3"
-            android:text="Total Blocks"/>
-
-        <com.cryptoserver.composer.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            style="@style/txt_row_encryption"
-            android:layout_weight="0.7"
-            android:text="4"/>
+            android:text=""/>
 
     </LinearLayout>
 
@@ -100,7 +44,7 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
-            android:text="43E"/>
+            android:text=""/>
 
     </LinearLayout>
 
@@ -136,6 +80,7 @@
             android:text="Metric Hash"/>
 
         <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_dictionary_hash"
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"

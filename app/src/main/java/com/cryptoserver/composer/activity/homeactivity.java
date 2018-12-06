@@ -249,7 +249,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          else if(fragment instanceof fragmentmedialist){
              imgaddicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setVisibility(View.VISIBLE);
-             imguploadicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.GONE);
              imgsettingsicon.setEnabled(true);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
 
