@@ -1129,7 +1129,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 startPreview();
                 stopvideotimer();
-                madapterclick.onItemClicked(null,1);
                 mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
                 layout_bottom.setVisibility(View.GONE);
 
@@ -1155,6 +1154,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 //setmetricesadapter();
                 //fetchmetadatadb();
                 firsthashvalue = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            madapterclick.onItemClicked(null,1);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },2500);
+
             }
         },100);
     }
