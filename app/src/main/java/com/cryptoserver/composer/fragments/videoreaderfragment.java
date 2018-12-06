@@ -1356,6 +1356,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     fragmentgraphic.sethashesdata(keyValue);
 
                 mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
+                //xapigetmediainfo(keyValue);
                 if (count == currentframenumber) {
                     lastframehash=null;
                     mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
@@ -1367,10 +1368,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
 
-                    if(count == frameduration){
+                    if(count == frameduration)
                         getmediadata(keyValue);
-                       // xapigetmediainfo(keyValue);
-                      }
+
 
                     currentframenumber = currentframenumber + frameduration;
                 }
@@ -1768,14 +1768,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     }
 
 
-   /* public void xapigetmediainfo(final String hashvalue)
+    public void xapigetmediainfo(final String hashvalue)
     {
-
-        String videohashvalue = "7055bc800d7ce993b2204263db1e8a2e";
 
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
 
-        mpairslist.put("hashvalue",videohashvalue);
+        mpairslist.put("hashvalue",hashvalue);
 
         gethelper().xapipost_sendjson(getActivity(),config.type_video_find,mpairslist, new apiresponselistener() {
             @Override
@@ -1821,7 +1819,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public void xapigetmediaframesinfo (){
 
 
-    }*/
+    }
 
 
 
