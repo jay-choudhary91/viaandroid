@@ -1146,12 +1146,18 @@ public class composervideoplayerfragment extends basefragment implements Surface
         if(mitemlist != null && mitemlist.size()>0)
         {
             metricmainarraylist.clear();
+            String framelabel="";
             for(int i=0;i<mitemlist.size();i++)
             {
                 String metricdata=mitemlist.get(i).getMetricdata();
                 parsemetadata(metricdata);
                 selectedhaeshes=selectedhaeshes+"\n";
-                selectedhaeshes=selectedhaeshes+"Frame "+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                framelabel="Frame ";
+                if(i == mitemlist.size()-1)
+                {
+                    framelabel="Last Frame ";
+                }
+                selectedhaeshes=selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
                         mitemlist.get(i).getSequencehash();
             }
 

@@ -65,7 +65,7 @@ public class insertmediadataservice extends Service {
                         if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                             frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
-                        int count = 1;
+                        int count = 1,arrayupdator=0;
                         String videokey="",firsthash="";
                         final ArrayList<videomodel> mvideoframes =new ArrayList<>();
                         currentframenumber = currentframenumber + frameduration;
@@ -128,17 +128,19 @@ public class insertmediadataservice extends Service {
                                         firsthash = keyValue;*/
 
                                     // update every duration frame in database
-                                    for(int j=0;j<mdbmiddleitemcontainer.size();j++)
+                                    if(mdbmiddleitemcontainer.size() > 0 && arrayupdator == mdbmiddleitemcontainer.size()-1)
                                     {
-                                        if(mdbmiddleitemcontainer.get(j).getItem8().isEmpty())
-                                        {
-                                            mdbmiddleitemcontainer.get(j).setItem4(videokey);
-                                            mdbmiddleitemcontainer.get(j).setItem8(keyValue);
-                                            updatemiddleframes(mdbmiddleitemcontainer.get(j));
-                                            //Log.e("final frames ",""+ mdbmiddleitemcontainer.get(j).getItem8());
-                                            break;
-                                        }
+                                        mdbmiddleitemcontainer.add(mdbmiddleitemcontainer.get(mdbmiddleitemcontainer.size()-1));
                                     }
+
+                                    if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
+                                    {
+                                        mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
+                                        mdbmiddleitemcontainer.get(arrayupdator).setItem8(keyValue);
+                                        mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
+                                        updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
+                                    }
+                                    arrayupdator++;
                                 }
                                 else
                                 {
@@ -148,7 +150,23 @@ public class insertmediadataservice extends Service {
                             }
 
                             if(lastframehash != null)
+                            {
                                 mvideoframes.add(lastframehash);
+                                // update every duration frame in database
+                                if(mdbmiddleitemcontainer.size() > 0 && arrayupdator == mdbmiddleitemcontainer.size()-1)
+                                {
+                                    mdbmiddleitemcontainer.add(mdbmiddleitemcontainer.get(mdbmiddleitemcontainer.size()-1));
+                                }
+
+                                if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
+                                {
+                                    mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
+                                    mdbmiddleitemcontainer.get(arrayupdator).setItem8(lastframehash.getkeyvalue());
+                                    mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
+                                    updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
+                                }
+                            }
+
 
                             if(mvideoframes.size() > 0)
                             {

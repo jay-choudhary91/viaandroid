@@ -1789,7 +1789,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         try {
             metrichash = md5.calculatestringtomd5(metricesarray.toString());
             mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype,videokey,""+metricesjsonarray.toString(),
-                    currentdate[0],"0","",sequenceno,"",currentdate[0],"",""));
+                    currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1816,7 +1816,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            mdbstartitemcontainer.add(new dbitemcontainer(json,"video","local",videokey,"","","0","0",
+            mdbstartitemcontainer.add(new dbitemcontainer(json,"video","Local storage path",videokey,"","","0","0",
                     config.type_video_start,devicestartdate,devicestartdate,timeoffset,devicestartdate));
         } catch (Exception e) {
             e.printStackTrace();
