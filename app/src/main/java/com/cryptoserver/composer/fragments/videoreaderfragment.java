@@ -1369,6 +1369,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                     if(count == frameduration){
                         getmediadata(keyValue);
+                       // xapigetmediainfo(keyValue);
                       }
 
                     currentframenumber = currentframenumber + frameduration;
@@ -1767,12 +1768,14 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     }
 
 
-    public void xapigetmediainfo(final String hashvalue)
+   /* public void xapigetmediainfo(final String hashvalue)
     {
+
+        String videohashvalue = "7055bc800d7ce993b2204263db1e8a2e";
 
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
 
-        mpairslist.put("hashvalue",hashvalue);
+        mpairslist.put("hashvalue",videohashvalue);
 
         gethelper().xapipost_sendjson(getActivity(),config.type_video_find,mpairslist, new apiresponselistener() {
             @Override
@@ -1782,6 +1785,29 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     try {
                         JSONObject object = (JSONObject) response.getData();
 
+                        String videoid = object.getString("videoid");
+                        String videokey = object.getString("videokey");
+                        String videohashmethod = object.getString("videohashmethod");
+                        String videohashvalue = object.getString("videohashvalue");
+                        String videostartdevicedatetime = object.getString("videostartdevicedatetime");
+                        String videocompletedevicedatetime = object.getString("videocompletedevicedatetime");
+                        String videoframecount = object.getString("videoframecount");
+                        String videostarttransactionid = object.getString("videostarttransactionid");
+                        String videocompletetransactionid = object.getString("videocompletetransactionid");
+                        String videodevicetimeoffset = object.getString("videodevicetimeoffset");
+                        String videopublickey = object.getString("videopublickey");
+                        String videotypeid = object.getString("videotypeid");
+                        String videocreateddate = object.getString("videocreateddate");
+                        String videoupdateddate = object.getString("videoupdateddate");
+                        String videorank = object.getString("videorank");
+                        String videotypeshortname = object.getString("videotypeshortname");
+                        String framecount = object.getString("framecount");
+                        String videotoken = object.getString("videotoken");
+
+
+
+
+
                     }catch (Exception e)
                     {
                         e.printStackTrace();
@@ -1790,4 +1816,16 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             }
         });
     }
+
+
+    public void xapigetmediaframesinfo (){
+
+
+    }*/
+
+
+
+
+
+
 }
