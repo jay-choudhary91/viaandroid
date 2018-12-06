@@ -1082,7 +1082,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             int totalframes=grabber.getLengthInAudioFrames();
 
             for(int i = 0; i<grabber.getLengthInAudioFrames(); i++){
-             //   grabber.setSampleRate(44100);
+                grabber.setSampleRate(44100);
                 Frame frame = grabber.grabAudio();
                 if (frame == null)
                     break;

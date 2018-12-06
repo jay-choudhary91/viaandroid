@@ -129,7 +129,7 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
                 // Register all formats and codecs
                 avcodec_register_all();
                 av_register_all();
-                avformat_network_init();
+               // avformat_network_init();
 
                 Loader.load(org.bytedeco.javacpp.avdevice.class);
                 avdevice_register_all();
@@ -748,6 +748,8 @@ public class ffmpegaudioframegrabber extends FrameGrabber {
             filename = inputStream.toString();
             inputStreams.put(oc, inputStream);
         }
+        ret = avformat_open_input(oc, filename, f, options);
+
         if ((ret = avformat_open_input(oc, filename, f, options)) < 0) {
             av_dict_set(options, "pixel_format", null, 0);
             if ((ret = avformat_open_input(oc, filename, f, options)) < 0) {
