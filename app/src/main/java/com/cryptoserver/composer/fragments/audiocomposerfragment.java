@@ -604,7 +604,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         selectedfile = getfile().getAbsolutePath();
         Log.d("filename",selectedfile);
         mrecorder.setOutputFile(selectedfile);
-        mrecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mrecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         try {
             mrecorder.prepare();
