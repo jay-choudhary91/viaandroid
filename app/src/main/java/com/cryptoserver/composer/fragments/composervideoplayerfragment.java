@@ -367,7 +367,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
             mallframes.clear();
             Thread thread = new Thread(){
                 public void run(){
-                    setVideoAdapter();
+                    getmediadata(VIDEO_URL);
                 }
             };
             thread.start();
@@ -1026,100 +1026,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     (R.color.videoPlayer_header));
     }
 
-    public void setVideoAdapter() {
-        int count = 1;
-        currentframenumber=0;
-        currentframenumber = currentframenumber + frameduration;
-        try
-        {
-            ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(VIDEO_URL);
-
-            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-            String format= common.getvideoformat(VIDEO_URL);
-            if(format.equalsIgnoreCase("mp4"))
-                grabber.setFormat(format);
-
-
-            grabber.start();
-            videomodel lastframehash=null;
-            for(int i = 0; i<grabber.getLengthInFrames(); i++){
-                Frame frame = grabber.grabImage();
-                if (frame == null)
-                    break;
-
-                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
-
-                String keyValue= getkeyvalue(byteData);
-
-                if(fragmentgraphic != null)
-                    fragmentgraphic.sethashesdata(keyValue);
-
-                mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
-
-                if(i == 0)
-                {
-                    getmediadata(keyValue);
-                }
-
-                if (count == currentframenumber) {
-                    lastframehash=null;
-                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-
-                    /*if(! selectedhaeshes.trim().isEmpty())
-                        selectedhaeshes=selectedhaeshes+"\n";
-
-                    selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();*/
-
-                    currentframenumber = currentframenumber + frameduration;
-
-                }
-                else
-                {
-                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                }
-                count++;
-            }
-
-            if(lastframehash != null)
-            {
-                mvideoframes.add(lastframehash);
-                /*if(! selectedhaeshes.trim().isEmpty())
-                    selectedhaeshes=selectedhaeshes+"\n";
-
-                selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                        +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();*/
-            }
-            else
-            {
-                if(mvideoframes.size() > 1)
-                {
-                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-                    /*if(! selectedhaeshes.trim().isEmpty())
-                        selectedhaeshes=selectedhaeshes+"\n";
-
-                    selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();*/
-                }
-            }
-
-            grabber.flush();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public void getmediadata(String hashvalue)
+    public void getmediadata(String filelocation)
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -1134,7 +1041,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
             e.printStackTrace();
         }
 
-        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(hashvalue);
+        String filename = common.getfilename(filelocation);
+        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(filename);
         try
         {
             mdbhelper.close();

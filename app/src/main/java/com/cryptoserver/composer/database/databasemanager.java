@@ -534,9 +534,9 @@ public class databasemanager {
 
     //=========================  Methods for reader implementation
 
-    public ArrayList<metadatahash> getmediametadata(String sequencehash) {
+    public ArrayList<metadatahash> getmediametadata(String filelocation) {
         ArrayList<metadatahash> mitemlist=new ArrayList<>();
-        String localkey=getlocalkeyfrommetadata(sequencehash);
+        String localkey=getlocalkeybylocation(filelocation);
         if(! localkey.trim().isEmpty())
         {
             Cursor cur=null;
@@ -566,21 +566,17 @@ public class databasemanager {
         return  mitemlist;
     }
 
-    public String getlocalkeyfrommetadata(String sequencehash) {
-        ArrayList<metadatahash> mitemlist=new ArrayList<>();
+    public String getlocalkeybylocation(String filename) {
         String localkey="";
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tbstartvideoinfo";
+            String sql = "SELECT localkey FROM tbstartvideoinfo where location = '"+filename+"'";
             cur = mDb.rawQuery(sql, null);
-            if (cur.moveToFirst()) {
-
+            if (cur.moveToFirst())
+            {
                 do{
-                    String key = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    String header = "" + cur.getString(cur.getColumnIndex("header"));
-                    if(header.contains(sequencehash))
-                        localkey=key;
+                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {
@@ -590,5 +586,18 @@ public class databasemanager {
             lock.unlock();
         }
         return  localkey;
+    }
+
+    public void updatemedialocationname(String localkey,String location) {
+        try {
+            lock.lock();
+            mDb.execSQL("update tbstartvideoinfo set location ='"+location+"' where localkey='"+localkey+"'");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
     }
 }

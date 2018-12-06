@@ -15,6 +15,7 @@ public class video
     public String md5="";
     public String mimetype="";
     public String extension="";
+    public String localkey="";
     public long lastmodifiedtime=0;
     public Bitmap thumbnail=null;
     public boolean isSelected = false;
@@ -107,6 +108,13 @@ public class video
         this.md5 = md5;
     }
 
+    public String getLocalkey() {
+        return localkey;
+    }
+
+    public void setLocalkey(String localkey) {
+        this.localkey = localkey;
+    }
 
     public boolean isSelected() {
         return isSelected;
