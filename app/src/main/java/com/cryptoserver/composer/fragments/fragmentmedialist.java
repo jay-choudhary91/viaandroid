@@ -400,6 +400,32 @@ public class fragmentmedialist extends basefragment {
         return localkey;
     }
 
+    public String deletemediainfo(String localkey)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        mdbhelper.deletefrommetadatabylocalkey(localkey);
+        mdbhelper.deletefromstartvideoinfobylocalkey(localkey);
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return localkey;
+    }
+
     public String updatemedialocation(String localkey,String mediapath)
     {
         databasemanager mdbhelper=null;
@@ -749,6 +775,9 @@ public class fragmentmedialist extends basefragment {
                                 System.out.println("file Deleted :" + videoobj.getPath());
                                 arrayvideolist.remove(videoobj);
                                 dialog.dismiss();
+                                if(! videoobj.getLocalkey().trim().isEmpty())
+                                    deletemediainfo(videoobj.getLocalkey());
+
                             } else {
                                 System.out.println("file not Deleted :" + videoobj.getPath());
                             }

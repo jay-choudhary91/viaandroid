@@ -600,4 +600,28 @@ public class databasemanager {
             lock.unlock();
         }
     }
+
+    public void deletefrommetadatabylocalkey(String localkey) {
+        try {
+            lock.lock();
+            mDb.execSQL("delete from tblmetadata where localkey='"+localkey+"'");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
+    public void deletefromstartvideoinfobylocalkey(String localkey) {
+        try {
+            lock.lock();
+            mDb.execSQL("delete from tbstartvideoinfo where localkey='"+localkey+"'");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
 }
