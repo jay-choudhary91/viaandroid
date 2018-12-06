@@ -147,7 +147,7 @@
                 />
             <com.cryptoserver.composer.views.customfonttextview
                 app:fontType="OpenSans_Regular"
-                android:id="@+id/tv_videodescription"
+                android:id="@+id/tv_localkey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
@@ -156,7 +156,7 @@
                 android:layout_below="@+id/tv_videoduration"
                 android:textColor="@color/lightgray"
                 android:maxLines="1"
-                android:text="Its dummy text."
+                android:text=""
                 />
         </LinearLayout>
     </LinearLayout>

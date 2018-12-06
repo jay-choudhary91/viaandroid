@@ -308,6 +308,8 @@ public class fragmentmedialist extends basefragment {
 
                                             if (mime.startsWith("video/") || mime.startsWith("audio/"))
                                             {
+                                                String localkey=getlocalkey(common.getfilename(videoobj.getPath()));
+                                                videoobj.setLocalkey(localkey);
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                                     long seconds = format.getLong(MediaFormat.KEY_DURATION);
                                                     seconds=seconds/1000000;
@@ -371,8 +373,9 @@ public class fragmentmedialist extends basefragment {
 
     }
 
-    /*public void getlocalkey(String hashvalue)
+    public String getlocalkey(String filename)
     {
+        String localkey="";
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
@@ -386,12 +389,7 @@ public class fragmentmedialist extends basefragment {
             e.printStackTrace();
         }
 
-        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(hashvalue);
-        if(mitemlist != null && mitemlist.size()>0)
-        {
-
-        }
-
+        localkey = mdbhelper.getlocalkeybylocation(filename);
         try
         {
             mdbhelper.close();
@@ -399,29 +397,60 @@ public class fragmentmedialist extends basefragment {
         {
             e.printStackTrace();
         }
-    }*/
+        return localkey;
+    }
 
-    /*public Bitmap getthumbnail(String filepath)
+    public String deletemediainfo(String localkey)
     {
-        Bitmap bitmap=null;
-        try {
-            RequestOptions myOptions = new RequestOptions()
-                    .fitCenter()
-                    .override(100, 100);
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
 
-            bitmap = Glide.
-                    with(getActivity()).
-                    asBitmap().
-                    load(filepath).
-                    apply(myOptions).
-                    submit().
-                    get();// Width and height
+        try {
+            mdbhelper.open();
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-        return bitmap;
-    }*/
+        mdbhelper.deletefrommetadatabylocalkey(localkey);
+        mdbhelper.deletefromstartvideoinfobylocalkey(localkey);
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return localkey;
+    }
+
+    public String updatemedialocation(String localkey,String mediapath)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        String filename=common.getfilename(mediapath);
+        mdbhelper.updatemedialocationname(localkey,filename);
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return localkey;
+    }
 
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -665,6 +694,13 @@ public class fragmentmedialist extends basefragment {
                 @Override
                 public void run() {
                     adapter.notifyDataSetChanged();
+
+                    if(! videoobj.getLocalkey().isEmpty())
+                    {
+                        updatemedialocation(videoobj.getLocalkey(),videoobj.getPath());
+                    }
+
+
                 }
             },500);
 
@@ -739,6 +775,9 @@ public class fragmentmedialist extends basefragment {
                                 System.out.println("file Deleted :" + videoobj.getPath());
                                 arrayvideolist.remove(videoobj);
                                 dialog.dismiss();
+                                if(! videoobj.getLocalkey().trim().isEmpty())
+                                    deletemediainfo(videoobj.getLocalkey());
+
                             } else {
                                 System.out.println("file not Deleted :" + videoobj.getPath());
                             }

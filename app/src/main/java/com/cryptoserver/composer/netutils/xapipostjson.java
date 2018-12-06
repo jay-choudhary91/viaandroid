@@ -82,13 +82,10 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             return taskresult.NO_INTERNET;
         }
 
-        String responseString = "";
-
         String baseUrl = useurl+"action="+action;
         Log.d("URL>>", baseUrl);
 
         try {
-
 
             URL url = new URL(baseUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -97,13 +94,13 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             urlConnection.setRequestMethod("POST");
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestProperty("Accept", "application/json");
-//set headers and method
+            //set headers and method
             Writer writer = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream(), "UTF-8"));
             writer.write(valuepairobject.toString());
-// json data
+            // json data
             writer.close();
             InputStream inputStream = urlConnection.getInputStream();
-//input stream
+            //input stream
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
@@ -119,7 +116,7 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
                 return null;
             }
             JsonResponse = buffer.toString();
-//response data
+            //response data
             Log.e("TAG",JsonResponse);
             //send to post execute
             return JsonResponse;
@@ -142,48 +139,6 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             }
         }
         return null;
-        /*String responseString = "";
-
-        String baseUrl = useurl+"action="+action;
-        Log.d("URL>>", baseUrl);
-        HttpClient httpclient = new DefaultHttpClient();
-
-        HttpPost httppost = new HttpPost(baseUrl);
-        jsondata = valuepairobject.toString();
-
-        try {
-            StringEntity se = new StringEntity(jsondata);
-            //se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-            httppost.setHeader("Accept", "application/json");
-            httppost.setHeader("Content-type", "application/json");
-
-            httppost.setEntity((se));
-
-            HttpResponse response = httpclient.execute(httppost);
-
-            // According to the JAVA API, InputStream constructor do nothing.
-            //So we can't initialize InputStream although it is not an interface
-            InputStream inputStream = response.getEntity().getContent();
-
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            String bufferedStrChunk = null;
-
-            while((bufferedStrChunk = bufferedReader.readLine()) != null){
-                stringBuilder.append(bufferedStrChunk);
-            }
-
-            responseString=stringBuilder.toString();
-        } catch (ClientProtocolException e) {
-
-        } catch (IOException e) {
-
-        }
-        return responseString;*/
     }
 
     @Override

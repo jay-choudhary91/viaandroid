@@ -46,7 +46,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     HashMap<String, Bitmap> cacheBitmap;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tvvideodescription;
+        public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tv_localkey;
         EditText edtvideoname;
         public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_full_screen,img_play_pause;
         public Button btnedit;
@@ -57,7 +57,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
             tvvideocreatedate = (TextView) view.findViewById(R.id.tv_videocreatedate);
             tvvideoduration = (TextView) view.findViewById(R.id.tv_videoduration);
-            tvvideodescription = (TextView) view.findViewById(R.id.tv_videodescription);
+            tv_localkey = (TextView) view.findViewById(R.id.tv_localkey);
             imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
             imgdeleteicon = (ImageView) view.findViewById(R.id.img_deleteicon);
             img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
@@ -111,6 +111,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         }
 
         holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
+        holder.tv_localkey.setText(arrayvideolist.get(position).getLocalkey());
 
         if (arrayvideolist.get(position).getmimetype().contains("image/"))
         {
