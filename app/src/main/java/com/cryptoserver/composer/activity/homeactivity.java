@@ -330,6 +330,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              fragment_container.setLayoutParams(params);
          }
          else if(fragment instanceof readermedialist){
+             img_menu.setVisibility(View.VISIBLE);
              imgsettingsicon.setVisibility(View.VISIBLE);
              imguploadicon.setVisibility(View.GONE);
              imgsettingsicon.setEnabled(true);
