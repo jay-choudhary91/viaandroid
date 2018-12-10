@@ -341,6 +341,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
+         }else if(fragment instanceof bottombarfragment){
+
          }
         else
         {
