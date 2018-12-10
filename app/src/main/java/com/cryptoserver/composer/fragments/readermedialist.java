@@ -1,13 +1,18 @@
 package com.cryptoserver.composer.fragments;
 
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +64,9 @@ public class readermedialist extends basefragment {
     View rootview;
     RelativeLayout listreaderlayout;
     private static final int request_permissions = 1;
+    private static final int request_read_external_storage = 2;
+    private int REQUESTCODE_PICK=201;
+    int mediatype;
 
     @BindView(R.id.rv_readervideolist)
     RecyclerView recyrviewvideolist;
@@ -158,9 +166,87 @@ public class readermedialist extends basefragment {
                 fragmentsettings fragmatriclist = new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
+
+            case R.id.img_menu:
+                checkwritestoragepermission();
+                break;
         }
     }
 
+    private void checkwritestoragepermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED ) {
+                opengallery();
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        request_read_external_storage);
+            }
+        }
+        else
+        {
+            opengallery();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_read_external_storage) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted) {
+                opengallery();
+            }
+        }
+    }
+
+    public  void opengallery()
+    {
+        Intent intent = null;
+        String type = null;
+        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+        {
+            if(mediatype==1){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                 type="video/*";
+            }else if(mediatype==2){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                type="audio/*";
+            }else if(mediatype==3){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI); 
+                type="image/*";
+            }
+        }
+        else
+        {
+            if(mediatype==1){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+                type="video/*";
+            }else if(mediatype==2){
+                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
+                type="audio/*";
+            }else if(mediatype==3){
+                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                type="image/*";
+            }
+            
+            
+        }
+        intent.setType(type);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent,REQUESTCODE_PICK);
+    }
+    
     public void getVideoList()
     {
         /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -565,4 +651,17 @@ public class readermedialist extends basefragment {
         gethelper().replaceFragment(fragbottombar, false, true);
     }
 
+    public int settype(int mediatype){
+      if(mediatype==1){
+          mediatype=1;
+          Log.e("video","video");
+      }else if(mediatype==2){
+          mediatype=2;
+          Log.e("audio","audio");
+      }else if(mediatype==3){
+          mediatype=3;
+          Log.e("image","image");
+      }
+      return mediatype;
+    }
 }
