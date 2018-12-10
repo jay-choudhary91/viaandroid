@@ -1,11 +1,14 @@
 package com.cryptoserver.composer.fragments;
 
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -51,6 +54,8 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -67,6 +72,10 @@ public class readermedialist extends basefragment {
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adapterreadermedialist adapter;
     private RecyclerTouchListener onTouchListener;
+
+    private static final int request_read_external_storage = 1;
+    private int REQUESTCODE_PICK=201;
+
 
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
@@ -144,14 +153,14 @@ public class readermedialist extends basefragment {
         recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
     }
 
-    @Override
+    /*@Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
         switch (btnid) {
-          /*  case R.id.img_share_icon:
+          *//*  case R.id.img_share_icon:
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
                     common.sharevideo(getActivity(),VIDEO_URL);
-                break;*/
+                break;*//*
 
             case R.id.img_setting:
               //  destroyvideoplayer();
@@ -159,7 +168,7 @@ public class readermedialist extends basefragment {
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
         }
-    }
+    }*/
 
     public void getVideoList()
     {
@@ -565,4 +574,84 @@ public class readermedialist extends basefragment {
         gethelper().replaceFragment(fragbottombar, false, true);
     }
 
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid){
+           /* case R.id.img_share_icon:
+                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
+                    common.sharevideo(getActivity(),VIDEO_URL);
+                break;*/
+            case R.id.img_menu:
+                checkwritestoragepermission();
+                break;
+            case R.id.img_setting:
+                //destroyvideoplayer();
+                fragmentsettings fragmatriclist=new fragmentsettings();
+                gethelper().replaceFragment(fragmatriclist, false, true);
+                break;
+        }
+    }
+
+
+    private void checkwritestoragepermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED ) {
+                opengallery();
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        request_read_external_storage);
+            }
+        }
+        else
+        {
+            opengallery();
+        }
+    }
+
+
+    public  void opengallery()
+    {
+        Intent intent;
+
+        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+        {
+
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        }
+        else
+        {
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+        }
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent,REQUESTCODE_PICK);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUESTCODE_PICK) {
+            if (resultCode == RESULT_OK) {
+               Uri selectedvideouri = data.getData();
+
+                try {
+                    //VIDEO_URL=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
+                  String  video_url = common.getpath(getActivity(), selectedvideouri);
+                  setcopyvideo(video_url);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    common.showalert(getActivity(), getResources().getString(R.string.file_uri_parse_error));
+                    return;
+                }
+
+            }
+        }
+    }
 }
