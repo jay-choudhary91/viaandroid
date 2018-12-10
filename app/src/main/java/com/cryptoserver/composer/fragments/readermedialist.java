@@ -75,6 +75,7 @@ public class readermedialist extends basefragment {
 
     private static final int request_read_external_storage = 1;
     private int REQUESTCODE_PICK=201;
+    int mediatype;
 
 
     @Override
@@ -201,71 +202,63 @@ public class readermedialist extends basefragment {
 
                         if(! isexistinarraay(file.getName(),outputdatestr))
                         {
-                            video videoobj=new video();
-                            videoobj.setPath(file.getAbsolutePath());
-                            videoobj.setExtension(common.getvideoextension(file.getAbsolutePath()));
-                            videoobj.setName(file.getName());
-                            videoobj.setCreatedate(outputdatestr);
-                            videoobj.setLastmodifiedtime(file.lastModified());
-
                             boolean ismedia=false;
+                            video videoobj = null;
                             MediaExtractor extractor = new MediaExtractor();
-                            try {
 
-                                if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png"))
-                                {
-                                    videoobj.setmimetype("image/");
-                                    ismedia=true;
-                                }
-                                else
-                                {
+                            if(mediatype == 3 && (common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".jpg") ||
+                                    common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".png"))) {
+                                videoobj = new video();
+                                videoobj.setPath(file.getAbsolutePath());
+                                videoobj.setExtension(common.getvideoextension(file.getAbsolutePath()));
+                                videoobj.setName(file.getName());
+                                videoobj.setCreatedate(outputdatestr);
+                                videoobj.setLastmodifiedtime(file.lastModified());
+
+                                videoobj.setmimetype("image/");
+                                ismedia = true;
+                            }
+                            else {
+                                try {
                                     //Adjust data source as per the requirement if file, URI, etc.
+                                    String keymime = "";
                                     extractor.setDataSource(file.getAbsolutePath());
                                     int numTracks = extractor.getTrackCount();
-                                    if(numTracks > 0)
-                                    {
+                                    if (numTracks > 0) {
                                         for (int i = 0; i < numTracks; ++i) {
                                             MediaFormat format = extractor.getTrackFormat(i);
                                             String mime = format.getString(MediaFormat.KEY_MIME);
-                                            if(i == 0)
-                                                videoobj.setmimetype(mime);
 
-                                            if (mime.startsWith("video/") || mime.startsWith("audio/"))
-                                            {
-                                               // String localkey=getlocalkey(common.getfilename(videoobj.getPath()));
-                                                //videoobj.setLocalkey(localkey);
+                                            if(i ==0)
+                                                keymime = mime;
+
+                                            if (mediatype == 2 && keymime.startsWith("audio/")) {
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
-                                                    long seconds = format.getLong(MediaFormat.KEY_DURATION);
-                                                    seconds=seconds/1000000;
-                                                    int day = (int) TimeUnit.SECONDS.toDays(seconds);
-                                                    long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
-                                                    long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
-                                                    long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
-                                                    videoobj.setDuration(""+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                                    if(second > 0 || minute > 0 || hours > 0)
-                                                    {
-                                                        videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                                        ismedia=true;
-                                                    }
+
+                                                    videoobj = setvideoaudiodata(file,outputdatestr ,format,keymime);
+                                                    ismedia = true;
+
                                                 }
+                                            }else if(mediatype == 1 && mime.startsWith("video/")){
+                                                  videoobj = setvideoaudiodata(file,outputdatestr ,format,keymime);
+                                                  ismedia = true;
                                             }
-                                            else if (mime.startsWith("image/"))
-                                            {
-                                                ismedia=true;
+                                            else if (mime.startsWith("image/")) {
+                                                ismedia = true;
                                             }
                                         }
                                     }
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    //Release stuff
+                                    extractor.release();
                                 }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }finally {
-                                //Release stuff
-                                extractor.release();
                             }
                             //String md= md5.calculatemd5(file);
                             //videoobj.setMd5(""+md);
-                            if(ismedia)
-                                arrayvideolist.add(videoobj);
+                            if( videoobj != null && ismedia)
+                                   arrayvideolist.add(videoobj);
                         }
                     }
                     else
@@ -616,18 +609,37 @@ public class readermedialist extends basefragment {
 
     public  void opengallery()
     {
-        Intent intent;
-
+        Intent intent = null;
+        String type = null;
         if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
         {
-
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+            if(mediatype==1){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                type="video/*";
+            }else if(mediatype==2){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                type="audio/*";
+            }else if(mediatype==3){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                type="image/*";
+            }
         }
         else
         {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+            if(mediatype==1){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+                type="video/*";
+            }else if(mediatype==2){
+                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
+                type="audio/*";
+            }else if(mediatype==3){
+                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                type="image/*";
+            }
+
+
         }
-        intent.setType("video/*");
+        intent.setType(type);
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.putExtra("return-data", true);
         startActivityForResult(intent,REQUESTCODE_PICK);
@@ -653,5 +665,47 @@ public class readermedialist extends basefragment {
 
             }
         }
+    }
+
+
+    public video setvideoaudiodata(File file ,String outputdatestr,MediaFormat format, String mime ){
+
+        video videoobj = new video();
+        videoobj.setPath(file.getAbsolutePath());
+        videoobj.setExtension(common.getvideoextension(file.getAbsolutePath()));
+        videoobj.setName(file.getName());
+        videoobj.setCreatedate(outputdatestr);
+        videoobj.setLastmodifiedtime(file.lastModified());
+        videoobj.setmimetype(mime);
+
+        if (format.containsKey(MediaFormat.KEY_DURATION)) {
+            long seconds = format.getLong(MediaFormat.KEY_DURATION);
+            seconds = seconds / 1000000;
+            int day = (int) TimeUnit.SECONDS.toDays(seconds);
+            long hours = TimeUnit.SECONDS.toHours(seconds) - (day * 24);
+            long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds) * 60);
+            long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) * 60);
+            videoobj.setDuration("" + common.appendzero(minute) + ":" + common.appendzero(second) + "");
+            if (second > 0 || minute > 0 || hours > 0) {
+                videoobj.setDuration("" + common.appendzero(hours) + ":" + common.appendzero(minute) + ":" + common.appendzero(second) + "");
+            }
+        }
+
+
+        return videoobj;
+    }
+
+    public int settype(int type){
+        if(type==1){
+            mediatype=1;
+            Log.e("video","video");
+        }else if(type==2){
+            mediatype=2;
+            Log.e("audio","audio");
+        }else if(type==3){
+            mediatype=3;
+            Log.e("image","image");
+        }
+        return mediatype;
     }
 }
