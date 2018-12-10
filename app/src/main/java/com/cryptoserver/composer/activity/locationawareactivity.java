@@ -612,7 +612,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                         if (getcurrentfragment() instanceof videocomposerfragment) {
                             isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                            if (isrecording)
+                            String datainsertion=xdata.getinstance().getSetting("mediadatainsertion");
+                            if (isrecording || (datainsertion.equalsIgnoreCase("1")))
                                 return;
                         }
 
