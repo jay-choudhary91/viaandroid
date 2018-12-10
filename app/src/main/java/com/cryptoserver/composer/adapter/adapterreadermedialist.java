@@ -9,9 +9,11 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,10 +24,13 @@ import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
+import com.cryptoserver.composer.utils.common;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import static android.content.ContentValues.TAG;
 
 public class adapterreadermedialist extends RecyclerView.Adapter<adapterreadermedialist.myViewHolder>{
 
@@ -48,7 +53,7 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
         this.adapter = adapter;
     }
     @Override
-    public void onBindViewHolder(@NonNull myViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
         if(arrayvideolist.get(position).getName().contains("."))
         {
             holder.edtvideoname.setText(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().lastIndexOf(".")));
@@ -121,7 +126,7 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
             holder.edtvideoname.setKeyListener(null);
         }
 
-      /*  holder.imgshareicon.setOnClickListener(new View.OnClickListener() {
+        holder.imgshareicon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 adapter.onItemClicked(arrayvideolist.get(position),1);
@@ -135,7 +140,6 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
                 adapter.onItemClicked(arrayvideolist.get(position),2);
             }
         });
-*/
 
         holder.img_videothumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -145,11 +149,11 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
             }
         });
 
-      /*  holder.edtvideoname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        holder.edtvideoname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
-                  *//*  Log.i(TAG,"Here you can write the code");*//*
+                    Log.i(TAG,"Here you can write the code");
                   if(arrayvideolist.size()>0){
                       String renamevalue = holder.edtvideoname.getText().toString();
                       String path = arrayvideolist.get(position).getPath();
@@ -219,7 +223,7 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
                     Log.e("Focaus change ", "Focus change");
                 }
             }
-        });*/
+        });
 
     }
 

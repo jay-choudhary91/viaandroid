@@ -428,21 +428,12 @@ public class readermedialist extends basefragment {
 
             }
         }else if(type == 3){
-            //arrayvideolist.clear();
-            myhandler.postDelayed(new Runnable() {
+            new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     adapter.notifyDataSetChanged();
-
-                    if(! videoobj.getLocalkey().isEmpty())
-                    {
-                        //updatemedialocation(videoobj.getLocalkey(),videoobj.getPath());
-                    }
-
-
                 }
             },500);
-
             //getVideoList();
 
         }else if(type == 4){
