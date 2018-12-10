@@ -171,6 +171,11 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     String[] soundamplitudealuearray ;
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
+    ArrayList<String> addhashvaluelist = new ArrayList<>();
+
+
+    int count = 0;
+
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -1129,6 +1134,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 if(isbitmapprocessing)
                     suspendbitmapqueue=true;
 
+                count = 0;
+
                 scurraberverticalbar.setVisibility(View.INVISIBLE);
 
                 setupVideoPlayer(selectedvideouri);
@@ -1137,6 +1144,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 playerposition=0;
                 righthandle.setVisibility(View.VISIBLE);
                 framecount=0;
+
                 if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
                     mvideoframes.clear();
                     mainvideoframes.clear();
@@ -1351,6 +1359,14 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 byte[] byteData = new byte[buffer.remaining()];
                 buffer.get(byteData);
                 String keyValue= getkeyvalue(byteData);
+
+                if(count <= 30){
+                    addhashvaluelist.add(keyValue);
+                }
+
+                if(count == 1){
+                    gethashvalue();
+                }
 
                 if(fragmentgraphic != null)
                     fragmentgraphic.sethashesdata(keyValue);
@@ -1788,42 +1804,65 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                         String videohashmethod = object.getString("videohashmethod");
                         String videohashvalue = object.getString("videohashvalue");
                         String videostartdevicedatetime = object.getString("videostartdevicedatetime");
-                        String videocompletedevicedatetime = object.getString("videocompletedevicedatetime");
-                        String videoframecount = object.getString("videoframecount");
                         String videostarttransactionid = object.getString("videostarttransactionid");
-                        String videocompletetransactionid = object.getString("videocompletetransactionid");
                         String videodevicetimeoffset = object.getString("videodevicetimeoffset");
                         String videopublickey = object.getString("videopublickey");
                         String videotypeid = object.getString("videotypeid");
                         String videocreateddate = object.getString("videocreateddate");
-                        String videoupdateddate = object.getString("videoupdateddate");
                         String videorank = object.getString("videorank");
                         String videotypeshortname = object.getString("videotypeshortname");
                         String framecount = object.getString("framecount");
                         String videotoken = object.getString("videotoken");
 
 
+                        databasemanager mdbhelper=null;
+                        if (mdbhelper == null) {
+                            mdbhelper = new databasemanager(getActivity());
+                            mdbhelper.createDatabase();
+                        }
+
+                        try {
+                            mdbhelper.open();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        mdbhelper.insertfindmediainfo(videoid,videokey,videohashmethod,videohashvalue,videostartdevicedatetime,videostarttransactionid,
+                                videodevicetimeoffset,videopublickey,videotypeid,videocreateddate,videorank,videotypeshortname,framecount,videotoken,
+                                "pending");
 
 
+                        try {
+                            mdbhelper.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                     }catch (Exception e)
                     {
                         e.printStackTrace();
                     }
+                }else{
+
+                    if(count <=30)
+                         gethashvalue();
+
                 }
             }
         });
     }
 
 
+    public  void gethashvalue(){
+
+         String hashvalue =  addhashvaluelist.get(count);
+         xapigetmediainfo(hashvalue);
+         count++;
+
+    }
+
     public void xapigetmediaframesinfo (){
 
 
     }
-
-
-
-
-
-
 }
