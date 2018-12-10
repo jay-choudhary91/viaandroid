@@ -28,6 +28,7 @@ import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
 import com.cryptoserver.composer.fragments.imagereaderfragment;
+import com.cryptoserver.composer.fragments.readermedialist;
 import com.cryptoserver.composer.fragments.videoreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
@@ -152,7 +153,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 || getcurrentfragment() instanceof composervideoplayerfragment
                 || getcurrentfragment() instanceof fragmentmedialist || getcurrentfragment() instanceof bottombarfragment
                 || getcurrentfragment() instanceof bottombarrederfrag || getcurrentfragment() instanceof audioreaderfragment
-                || getcurrentfragment() instanceof imagereaderfragment
+                || getcurrentfragment() instanceof imagereaderfragment || getcurrentfragment() instanceof readermedialist
                 )
         {
             txt_title.setText("");
@@ -239,7 +240,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         else if(fragment instanceof videoreaderfragment){
             imgsettingsicon.setVisibility(View.VISIBLE);
             img_menu.setVisibility(View.VISIBLE);
-            imgshareicon.setVisibility(View.VISIBLE);
+            imgaddicon.setVisibility(View.VISIBLE);
+            //imgshareicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setEnabled(true);
             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -327,8 +329,15 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }
-         else if(fragment instanceof bottombarfragment){
+         else if(fragment instanceof readermedialist){
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.GONE);
+             imgsettingsicon.setEnabled(true);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
 
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
          }
         else
         {
