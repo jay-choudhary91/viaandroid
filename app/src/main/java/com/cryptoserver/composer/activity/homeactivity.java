@@ -66,6 +66,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     FrameLayout fragment_container;
 
     private bottombarfragment fragbottombar;
+    private readermedialist fragreaderlist;
     private fragmentmedialist fragvideolist;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,10 +76,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-           /* videoreaderfragment frag=new videoreaderfragment();
-            replaceFragment(frag, false, true);*/
-            bottombarrederfrag bottombarfrag=new bottombarrederfrag();
-            replaceFragment(bottombarfrag,false,true);
+            fragreaderlist=new readermedialist();
+            replaceFragment(fragreaderlist,false,true);
         }
         else
         {

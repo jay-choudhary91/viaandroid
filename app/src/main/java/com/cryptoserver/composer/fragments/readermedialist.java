@@ -78,10 +78,6 @@ public class readermedialist extends basefragment {
     adapterreadermedialist adapter;
     private RecyclerTouchListener onTouchListener;
 
-    private static final int request_read_external_storage = 1;
-    private int REQUESTCODE_PICK=201;
-
-
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
@@ -137,6 +133,7 @@ public class readermedialist extends basefragment {
                             Log.e("selected Position = " ,""+ position);
                         }
                     });
+            launchbottombarfragment();
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();
@@ -157,27 +154,6 @@ public class readermedialist extends basefragment {
         super.onPause();
         recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
     }
-
-    /*@Override
-    public void onHeaderBtnClick(int btnid) {
-        super.onHeaderBtnClick(btnid);
-        switch (btnid) {
-          *//*  case R.id.img_share_icon:
-                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
-                    common.sharevideo(getActivity(),VIDEO_URL);
-                break;*//*
-
-            case R.id.img_setting:
-              //  destroyvideoplayer();
-                fragmentsettings fragmatriclist = new fragmentsettings();
-                gethelper().replaceFragment(fragmatriclist, false, true);
-                break;
-
-            case R.id.img_menu:
-                checkwritestoragepermission();
-                break;
-        }
-    }*/
 
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -247,10 +223,13 @@ public class readermedialist extends basefragment {
 
 
         }
-        intent.setType(type);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent,REQUESTCODE_PICK);
+        if(type!=null){
+            intent.setType(type);
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.putExtra("return-data", true);
+            startActivityForResult(intent,REQUESTCODE_PICK);
+        }
+
     }
 
     public void getVideoList()
@@ -489,11 +468,11 @@ public class readermedialist extends basefragment {
 
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
 
-                launchbottombarfragment();
+              /*  launchbottombarfragment();*/
 
 
-              /*  videoreaderfragment readervideofragment=new videoreaderfragment();
-                gethelper().replaceFragment(readervideofragment, false, true);*/
+                videoreaderfragment readervideofragment=new videoreaderfragment();
+                gethelper().replaceFragment(readervideofragment, false, true);
 
             }
 
@@ -657,14 +636,14 @@ public class readermedialist extends basefragment {
         gethelper().replaceFragment(fragbottombar, false, true);
     }
 
-    public int settype(int mediatype){
-      if(mediatype==1){
+    public int settype(int type){
+      if(type==1){
           mediatype=1;
           Log.e("video","video");
-      }else if(mediatype==2){
+      }else if(type==2){
           mediatype=2;
           Log.e("audio","audio");
-      }else if(mediatype==3){
+      }else if(type==3){
           mediatype=3;
           Log.e("image","image");
       }
@@ -687,46 +666,6 @@ public class readermedialist extends basefragment {
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
         }
-    }
-
-
-    private void checkwritestoragepermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED ) {
-                opengallery();
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        request_read_external_storage);
-            }
-        }
-        else
-        {
-            opengallery();
-        }
-    }
-
-
-    public  void opengallery()
-    {
-        Intent intent;
-
-        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-        {
-
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        }
-        else
-        {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
-        }
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent,REQUESTCODE_PICK);
     }
 
     @Override

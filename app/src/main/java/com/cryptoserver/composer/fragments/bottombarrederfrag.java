@@ -79,7 +79,7 @@ public class bottombarrederfrag extends basefragment {
         switch (selectedtab) {
             case 1:
                 if (fragvideotabreader == null)
-                  //  fragvideotabreader = new videoreaderfragment();
+               // fragvideotabreader = new videoreaderfragment();
                    fragreaderlist=new readermedialist();
                    fragreaderlist.settype(1);
 
