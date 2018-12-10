@@ -16,6 +16,7 @@ import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
+import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.gson.Gson;
@@ -57,6 +58,7 @@ public class insertmediadataservice extends Service {
 
                 if(mediapath != null && (! mediapath.isEmpty()))
                 {
+                    xdata.getinstance().saveSetting("mediadatainsertion","1");
                     File file=new File(mediapath);
                     if(file.exists())
                     {
@@ -184,6 +186,13 @@ public class insertmediadataservice extends Service {
                         }
                     }
                 }
+                xdata.getinstance().saveSetting("mediadatainsertion","0");
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressdialog.dismisswaitdialog();
+                    }
+                });
             }
         }).start();
         /**/
@@ -325,5 +334,6 @@ public class insertmediadataservice extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        xdata.getinstance().saveSetting("mediadatainsertion","0");
     }
 }
