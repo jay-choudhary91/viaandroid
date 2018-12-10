@@ -87,11 +87,6 @@ public class bottombarrederfrag extends basefragment {
                     fragreadervideolist = new readermedialist();
 
                 fragreadervideolist.settype(1);
-                if (fragvideotabreader == null)
-               // fragvideotabreader = new videoreaderfragment();
-                   fragreaderlist=new readermedialist();
-                   fragreaderlist.settype(1);
-
                 // fragvideocomposer.setData(false, mclick);
                 gethelper().replacetabfragment(fragreadervideolist, false, true);
                 isviewloaded = false;

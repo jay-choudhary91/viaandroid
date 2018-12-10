@@ -232,12 +232,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             setbackpress();
             onBack();
         }
+
         else if(getcurrentfragment() instanceof audioreaderfragment
                 || getcurrentfragment() instanceof videoreaderfragment || getcurrentfragment() instanceof imagereaderfragment)
         {
             setbackpress();
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-                onBack();
+
         }
         else
         {

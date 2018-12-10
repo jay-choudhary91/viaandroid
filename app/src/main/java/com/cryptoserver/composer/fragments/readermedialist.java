@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -133,7 +134,8 @@ public class readermedialist extends basefragment {
                             Log.e("selected Position = " ,""+ position);
                         }
                     });
-            launchbottombarfragment();
+            //launchbottombarfragment();
+
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();
@@ -172,24 +174,7 @@ public class readermedialist extends basefragment {
         }
     }*/
 
-    private void checkwritestoragepermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED ) {
-                opengallery();
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        request_read_external_storage);
-            }
-        }
-        else
-        {
-            opengallery();
-        }
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -574,7 +559,7 @@ public class readermedialist extends basefragment {
                             @Override
                             public void run() {
                                 progressdialog.dismisswaitdialog();
-                                Toast.makeText(getActivity(),"Video upload successfully!",Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getActivity(),"Video upload successfully!",Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -645,19 +630,7 @@ public class readermedialist extends basefragment {
         gethelper().replaceFragment(fragbottombar, false, true);
     }
 
-    public int settype(int type){
-      if(type==1){
-          mediatype=1;
-          Log.e("video","video");
-      }else if(type==2){
-          mediatype=2;
-          Log.e("audio","audio");
-      }else if(type==3){
-          mediatype=3;
-          Log.e("image","image");
-      }
-      return mediatype;
-    }
+
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
@@ -698,43 +671,6 @@ public class readermedialist extends basefragment {
     }
 
 
-    public  void opengallery()
-    {
-        Intent intent = null;
-        String type = null;
-        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-        {
-            if(mediatype==1){
-                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-                type="video/*";
-            }else if(mediatype==2){
-                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-                type="audio/*";
-            }else if(mediatype==3){
-                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                type="image/*";
-            }
-        }
-        else
-        {
-            if(mediatype==1){
-                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
-                type="video/*";
-            }else if(mediatype==2){
-                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
-                type="audio/*";
-            }else if(mediatype==3){
-                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                type="image/*";
-            }
-
-
-        }
-        intent.setType(type);
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent,REQUESTCODE_PICK);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

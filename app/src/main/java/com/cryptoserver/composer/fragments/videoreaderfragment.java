@@ -1002,7 +1002,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     common.sharevideo(getActivity(),VIDEO_URL);
                 break;
             case R.id.img_menu:
-                checkwritestoragepermission();
+                gethelper().onBack();
                 break;
             case R.id.img_setting:
                 destroyvideoplayer();
