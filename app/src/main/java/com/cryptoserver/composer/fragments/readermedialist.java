@@ -133,6 +133,7 @@ public class readermedialist extends basefragment {
                             Log.e("selected Position = " ,""+ position);
                         }
                     });
+            launchbottombarfragment();
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 getVideoList();
@@ -170,6 +171,83 @@ public class readermedialist extends basefragment {
                 break;
         }
     }*/
+
+    private void checkwritestoragepermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED ) {
+                opengallery();
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        request_read_external_storage);
+            }
+        }
+        else
+        {
+            opengallery();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_read_external_storage) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted) {
+                opengallery();
+            }
+        }
+    }
+
+    public  void opengallery()
+    {
+        Intent intent = null;
+        String type = null;
+        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+        {
+            if(mediatype==1){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                 type="video/*";
+            }else if(mediatype==2){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                type="audio/*";
+            }else if(mediatype==3){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                type="image/*";
+            }
+        }
+        else
+        {
+            if(mediatype==1){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+                type="video/*";
+            }else if(mediatype==2){
+                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
+                type="audio/*";
+            }else if(mediatype==3){
+                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                type="image/*";
+            }
+
+
+        }
+        if(type!=null){
+            intent.setType(type);
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.putExtra("return-data", true);
+            startActivityForResult(intent,REQUESTCODE_PICK);
+        }
+
+    }
 
     public void getVideoList()
     {
@@ -399,11 +477,11 @@ public class readermedialist extends basefragment {
 
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
 
-                launchbottombarfragment();
+              /*  launchbottombarfragment();*/
 
 
-              /*  videoreaderfragment readervideofragment=new videoreaderfragment();
-                gethelper().replaceFragment(readervideofragment, false, true);*/
+                videoreaderfragment readervideofragment=new videoreaderfragment();
+                gethelper().replaceFragment(readervideofragment, false, true);
 
             }
 
@@ -567,6 +645,19 @@ public class readermedialist extends basefragment {
         gethelper().replaceFragment(fragbottombar, false, true);
     }
 
+    public int settype(int type){
+      if(type==1){
+          mediatype=1;
+          Log.e("video","video");
+      }else if(type==2){
+          mediatype=2;
+          Log.e("audio","audio");
+      }else if(type==3){
+          mediatype=3;
+          Log.e("image","image");
+      }
+      return mediatype;
+    }
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);

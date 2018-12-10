@@ -263,10 +263,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
 
             setmetriceshashesdata();
-            if(!BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            {
+
                 setupimagedata();
-            }
 
         }
         return rootview;
@@ -479,11 +477,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_menu:
-                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
+                /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
                     checkwritestoragepermission();
-                }else{
+                }else{*/
                     gethelper().onBack();
-                }
+             //  }
                 break;
 
         }
