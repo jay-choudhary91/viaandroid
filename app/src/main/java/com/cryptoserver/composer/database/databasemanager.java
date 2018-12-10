@@ -624,4 +624,39 @@ public class databasemanager {
             lock.unlock();
         }
     }
+
+    public void insertfindmediainfo(String videoid,String videokey,String videohashmethod,String videohashvalue,
+                                     String videostartdevicedatetime,String videostarttransactionid,String videodevicetimeoffset,String videotypeid , String videopublickey,
+                                     String videocreateddate,String videorank,String videotypeshortname,String framecount,String videotoken,String status)
+    {
+        try {
+            lock.lock();
+
+            ContentValues values = new ContentValues();
+            values.put("videoid", "" + videoid);
+            values.put("videokey", ""+videokey);
+            values.put("videohashmethod", videohashmethod);
+            values.put("videohashvalue", ""+videohashvalue);
+            values.put("videostartdevicedatetime", ""+videostartdevicedatetime);
+            values.put("videostarttransactionid", ""+videostarttransactionid);
+            values.put("videodevicetimeoffset", ""+videodevicetimeoffset);
+            values.put("videopublickey", ""+videopublickey);
+            values.put("videotypeid",  videotypeid);
+            values.put("videocreateddate",  videocreateddate);
+            values.put("videorank",  videorank);
+            values.put("videotypeshortname",  videotypeshortname);
+            values.put("framecount",  framecount);
+            values.put("videotoken",  videotoken);
+            values.put("status", status);
+
+            long l=mDb.insert("tbstartvideoinfo", null, values);
+            Log.e("Id ",""+l);
+
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
+            throw mSQLException;
+        } finally {
+            lock.unlock();
+        }
+    }
 }
