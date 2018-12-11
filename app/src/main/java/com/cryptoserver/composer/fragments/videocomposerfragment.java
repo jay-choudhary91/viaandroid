@@ -1136,7 +1136,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 clearvideolist();
                 showsharepopupmain();
 
-                //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                 /*new Thread(new Runnable() {
                     @Override
                     public void run() {

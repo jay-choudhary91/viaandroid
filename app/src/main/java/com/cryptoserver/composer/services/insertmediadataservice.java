@@ -187,12 +187,7 @@ public class insertmediadataservice extends Service {
                     }
                 }
                 xdata.getinstance().saveSetting("mediadatainsertion","0");
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //progressdialog.dismisswaitdialog();
-                    }
-                });
+
             }
         }).start();
         /**/
