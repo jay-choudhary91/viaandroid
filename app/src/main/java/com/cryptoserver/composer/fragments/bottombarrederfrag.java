@@ -31,6 +31,12 @@ public class bottombarrederfrag extends basefragment {
     videoreaderfragment fragvideotabreader=null;
     audioreaderfragment fragaudiotabreader=null;
     imagereaderfragment fragphototabreader=null;
+
+    readermedialist fragreadervideolist=null;
+    readermedialist fragreaderaudiolist=null;
+    readermedialist fragreaderphotolist=null;
+
+
     int selectedtab=0,lastselectedtab=0;
     BottomNavigationView readernavigation;
     public boolean isviewloaded=true;
@@ -77,29 +83,32 @@ public class bottombarrederfrag extends basefragment {
     public void loadfragments() {
         switch (selectedtab) {
             case 1:
-                if (fragvideotabreader == null)
-                    fragvideotabreader = new videoreaderfragment();
+                if (fragreadervideolist == null)
+                    fragreadervideolist = new readermedialist();
 
+                fragreadervideolist.settype(1);
                 // fragvideocomposer.setData(false, mclick);
-                gethelper().replacetabfragment(fragvideotabreader, false, true);
+                gethelper().replacetabfragment(fragreadervideolist, false, true);
                 isviewloaded = false;
                 startloadtimer(1500);
                 break;
             case 2:
-                if (fragaudiotabreader == null)
-                    fragaudiotabreader = new audioreaderfragment();
+                if (fragreaderaudiolist == null)
+                    fragreaderaudiolist = new readermedialist();
 
+                fragreaderaudiolist.settype(2);
                 //    fragaudiocomposer.setData(mclick);
-                gethelper().replacetabfragment(fragaudiotabreader, false, true);
+                gethelper().replacetabfragment(fragreaderaudiolist, false, true);
                 isviewloaded = false;
                 startloadtimer(1000);
                 break;
             case 3:
-                if (fragphototabreader == null)
-                    fragphototabreader = new imagereaderfragment();
+                if (fragreaderphotolist == null)
+                      fragreaderphotolist = new readermedialist();
 
+                fragreaderphotolist.settype(3);
                 // fragimgcapture.setData(mclick);
-                gethelper().replacetabfragment(fragphototabreader, false, true);
+                gethelper().replacetabfragment(fragreaderphotolist, false, true);
                 isviewloaded = false;
                 startloadtimer(1500);
                 break;

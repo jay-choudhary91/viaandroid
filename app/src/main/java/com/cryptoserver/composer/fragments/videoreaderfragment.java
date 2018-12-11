@@ -383,6 +383,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
             setmetriceshashesdata();
+            setupvideodata();
+            // seturldata();
             Log.e("oncreate","oncreate");
         }
         return rootview;
@@ -704,7 +706,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 controller.removeAllViews();
 
             controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
-            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
+            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()) && selectedvideouri !=null )
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selectedvideouri);
@@ -1000,7 +1002,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     common.sharevideo(getActivity(),VIDEO_URL);
                 break;
             case R.id.img_menu:
-                checkwritestoragepermission();
+                gethelper().onBack();
                 break;
             case R.id.img_setting:
                 destroyvideoplayer();
@@ -1308,7 +1310,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
                 player.prepareAsync();
-                //player.setOnPreparedListener(this);
+                player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
                 if(player!=null){
                     changeactionbarcolor();
@@ -1365,7 +1367,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 }
 
                 if(count == 1){
-                    gethashvalue();
+                    //gethashvalue();
                 }
 
                 if(fragmentgraphic != null)
@@ -1844,8 +1846,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 }else{
 
-                    if(count <=30)
-                         gethashvalue();
+                    /*if(count <=30)
+                         gethashvalue();*/
 
                 }
             }
@@ -1864,5 +1866,87 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     public void xapigetmediaframesinfo (){
 
 
+    }
+
+    public void setupvideodata() {
+        VIDEO_URL = xdata.getinstance().getSetting("selectedvideourl");
+
+        if (VIDEO_URL.equalsIgnoreCase("blank")) {
+            frontview.setVisibility(View.VISIBLE);
+        } else {
+            if (VIDEO_URL != null && (!VIDEO_URL.isEmpty())) {
+
+                if(VIDEO_URL == null || (VIDEO_URL.trim().isEmpty()))
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                    return;
+                }
+
+                if(! (new File(VIDEO_URL).exists()))
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                    return;
+                }
+
+                File file=new File(VIDEO_URL);
+                long file_size = file.length();
+                if(file_size == 0)
+                {
+                    common.showalert(getActivity(),getResources().getString(R.string.file_is_empty));
+                    return;
+                }
+
+                frameduration = common.checkframeduration();
+                keytype = common.checkkey();
+
+                if (mbitmaplist.size() != 0)
+                    runmethod = false;
+
+           /* mbitmaplist.clear();
+            adapter.notifyDataSetChanged();
+
+            mmetricsitems.clear();
+            mmetricesadapter.notifyDataSetChanged();
+
+            mhashesitems.clear();
+            mhashesadapter.notifyDataSetChanged();*/
+
+                selectedhaeshes = "";
+                selectedmetrics = "";
+
+                suspendframequeue = false;
+                suspendbitmapqueue = false;
+
+                if (ishashprocessing)
+                    suspendframequeue = true;
+
+                if (isbitmapprocessing)
+                    suspendbitmapqueue = true;
+
+                scurraberverticalbar.setVisibility(View.INVISIBLE);
+
+                setupVideoPlayer(Uri.parse(VIDEO_URL));
+                videoduration = 0;
+                layout_scrubberview.setVisibility(View.VISIBLE);
+                playerposition = 0;
+                righthandle.setVisibility(View.VISIBLE);
+                framecount = 0;
+                if (VIDEO_URL != null && (!VIDEO_URL.isEmpty())) {
+                    mvideoframes.clear();
+                    mainvideoframes.clear();
+                    mallframes.clear();
+                    txt_metrics.setText("");
+                    txt_hashes.setText("");
+                    isnewvideofound = true;
+
+                    frontview.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
+    public void resetscrubbermargin(){
+        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        relativeParams.setMargins(0 , 0,0, 0);
+        recyview_frames.setLayoutParams(relativeParams);
     }
 }

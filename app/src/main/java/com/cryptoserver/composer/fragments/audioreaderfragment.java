@@ -304,10 +304,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 transaction.commit();
             }
 
-            if(!BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            {
                 setupaudiodata();
-            }
 
             setmetriceshashesdata();
         }
@@ -816,11 +813,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     common.shareaudio(getActivity(), audiourl);
                 break;
             case R.id.img_menu:
-                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
+               /* if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
                     checkwritestoragepermission();
-                }else{
+                }else{*/
                     gethelper().onBack();
-                }
+              //  }
+
                 break;
             case R.id.img_setting:
                 destroyvideoplayer();
