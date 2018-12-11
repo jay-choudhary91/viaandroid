@@ -138,8 +138,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     String[] soundamplitudealuearray;
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist = new ArrayList<>();
-    ArrayList<metadatahash> tempmitemlist = new ArrayList<>();
-   private BroadcastReceiver getmetadatabroadcastreceiver;
+    private BroadcastReceiver getmetadatabroadcastreceiver;
 
     @Override
     public int getlayoutid() {
@@ -648,7 +647,12 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public void onStop() {
         super.onStop();
         isinbackground = true;
-        getActivity().unregisterReceiver(getmetadatabroadcastreceiver);
+        try {
+            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     // Implement SurfaceHolder.Callback
@@ -931,10 +935,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 controller.removeAllViews();
 
             controller = new videocontrollerview(applicationviavideocomposer.getactivity(), mitemclick, isscrubbing);
-
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
             player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(VIDEO_URL));
-
             player.prepareAsync();
             player.setOnPreparedListener(this);
             player.setOnCompletionListener(this);
@@ -963,8 +965,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
     }
 
     public void getmediadata(String filelocation) {
-        tempmitemlist.clear();
-
         databasemanager mdbhelper = null;
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
@@ -977,23 +977,15 @@ public class composervideoplayerfragment extends basefragment implements Surface
             e.printStackTrace();
         }
 
-
         final String filename = common.getfilename(filelocation);
-
         String completedate = mdbhelper.getcompletedate(filename);
-
         if (!completedate.isEmpty()){
-
             ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(filename);
-
             metricmainarraylist.clear();
-
             String framelabel="";
             for(int i=0;i<mitemlist.size();i++)
             {
                 String metricdata=mitemlist.get(i).getMetricdata();
-
-
                 parsemetadata(metricdata);
                 selectedhaeshes = selectedhaeshes+"\n";
                 framelabel="Frame ";
@@ -1001,12 +993,10 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 {
                     framelabel="Last Frame ";
                 }
-
                 selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
                         mitemlist.get(i).getSequencehash();
             }
             try
-
             {
                 mdbhelper.close();
             }catch (Exception e)
@@ -1014,16 +1004,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 e.printStackTrace();
             }
         }
-
-        /*
-                new Thread(){
-        public void run(){
-            getmetadata();
-        }
-    }.start();*/
-
     }
-
 
     public void setmetriceshashesdata()
     {
@@ -1210,9 +1191,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     @Override
     public void onStart() {
         super.onStart();
-
         registerbroadcastreciver();
-
     }
 
     private void setupVisualizerFxAndUI() {
@@ -1275,32 +1254,23 @@ public class composervideoplayerfragment extends basefragment implements Surface
         }
     }
 
-
-    public void registerbroadcastreciver(){
-
+    public void registerbroadcastreciver()
+    {
         IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
-
         getmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
                 Thread thread = new Thread() {
                     public void run() {
-
                         if(mhashesitems.size() == 0)
                               getmediadata(VIDEO_URL);
-
                     }
                 };
                 thread.start();
-
             }
         };
-
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
-
     }
-
 
 
     public int[] getFormattedData(byte[] rawVizData) {

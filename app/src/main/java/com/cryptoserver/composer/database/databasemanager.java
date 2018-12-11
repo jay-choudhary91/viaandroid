@@ -724,7 +724,7 @@ public class databasemanager {
 
     //* call from reader. Checking sync status of requested media.
 
-    public Cursor getsyncstatusbymedianame(String filename) {
+    public Cursor getmediainfobymedianame(String filename) {
         String videotoken="";
         Cursor cur=null;
         try {
@@ -739,6 +739,24 @@ public class databasemanager {
         }
         return  cur;
     }
+
+
+    public Cursor readallmetabyvideoid(String videoid) {
+        String videotoken="";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tblreadermetadata where objectid = '"+videoid+"'";
+            cur = mDb.rawQuery(sql, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  cur;
+    }
+
 
     //* call from reader. Update staus from sync_pending to sync_complete.
     public void updatefindmediainfosyncstatus(String filename,boolean isvideofound) {
