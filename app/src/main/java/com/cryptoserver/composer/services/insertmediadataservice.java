@@ -1,23 +1,16 @@
 package com.cryptoserver.composer.services;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.IBinder;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
-import com.cryptoserver.composer.utils.progressdialog;
-import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.gson.Gson;
 
@@ -27,9 +20,7 @@ import org.bytedeco.javacv.Frame;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by root on 21/5/18.
@@ -187,42 +178,12 @@ public class insertmediadataservice extends Service {
                     }
                 }
                 xdata.getinstance().saveSetting("mediadatainsertion","0");
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //progressdialog.dismisswaitdialog();
-                    }
-                });
             }
         }).start();
-        /**/
+
         return START_NOT_STICKY;
     }
 
-
-    // Calling when frames are getting from ffmpegframegrabber
-    /*public void updatestartvideoinfo(String updatefirsthash, String file_name,String completeddate,String lastframe,String lastcount,String videourl)
-    {
-        String duration = "";
-        if(!videourl.isEmpty())
-            duration = common.getvideotimefromurl(videourl);
-
-        try {
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("fps","30");
-            map.put("firsthash", updatefirsthash);
-            map.put("hashmethod",keytype);
-            map.put("name",file_name);
-            map.put("duration",duration);
-            map.put("frmaecounts",lastcount);
-            map.put("finalhash",lastframe);
-            Gson gson = new Gson();
-            String json = gson.toJson(map);
-            mdbenditemcontainer.add(new dbitemcontainer(json,videokey,completeddate));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     public void updatestartframes(ArrayList<dbitemcontainer> mdbstartitemcontainer)
     {
@@ -330,11 +291,8 @@ public class insertmediadataservice extends Service {
             e.printStackTrace();
         }
 
-        Intent i = new Intent(config.broadcast_getmetadata);
+        Intent i = new Intent(config.composer_service_savemetadata);
         this.sendBroadcast(i);
-
-
-
     }
 
     @Override

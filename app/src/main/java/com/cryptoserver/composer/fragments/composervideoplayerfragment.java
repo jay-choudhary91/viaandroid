@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
@@ -49,7 +48,6 @@ import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
@@ -57,14 +55,11 @@ import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -1283,7 +1278,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
     public void registerbroadcastreciver(){
 
-        IntentFilter intentFilter = new IntentFilter(config.broadcast_getmetadata);
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
 
         getmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
