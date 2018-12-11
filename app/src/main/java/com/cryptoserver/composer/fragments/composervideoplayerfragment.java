@@ -94,6 +94,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
     RecyclerView recyview_hashes;
     @BindView(R.id.fragment_graphic_container)
     FrameLayout fragment_graphic_container;
+    @BindView(R.id.textfetchdata)
+    TextView textfetchdata;
 
     private String VIDEO_URL = null;
     private SurfaceView videoSurface;
@@ -159,6 +161,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
             linearLayout = rootview.findViewById(R.id.content);
             handleimageview = rootview.findViewById(R.id.handle);
             righthandle = rootview.findViewById(R.id.righthandle);
+
+            textfetchdata.setVisibility(View.VISIBLE);
 
             {
                 mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mmetricsitems, new adapteritemclick() {
@@ -971,6 +975,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
             mdbhelper.createDatabase();
         }
 
+
         try {
             mdbhelper.open();
         } catch (Exception e) {
@@ -980,6 +985,14 @@ public class composervideoplayerfragment extends basefragment implements Surface
         final String filename = common.getfilename(filelocation);
         String completedate = mdbhelper.getcompletedate(filename);
         if (!completedate.isEmpty()){
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textfetchdata.setVisibility(View.GONE);
+                }
+            });
+
             ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(filename);
             metricmainarraylist.clear();
             String framelabel="";
@@ -1264,6 +1277,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     public void run() {
                         if(mhashesitems.size() == 0)
                               getmediadata(VIDEO_URL);
+
                     }
                 };
                 thread.start();
