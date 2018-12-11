@@ -108,7 +108,6 @@ public class readmediadataservice extends Service {
                                     grabber.setFormat(format);
 
                                 grabber.start();
-                                videomodel lastframehash=null;
                                 for(int i = 0; i<grabber.getLengthInFrames(); i++){
                                     Frame frame = grabber.grabImage();
                                     if (frame == null)
@@ -120,19 +119,18 @@ public class readmediadataservice extends Service {
                                     String keyValue= common.getkeyvalue(byteData,keytype);
 
                                     framearraylist.add(new videomodel("Frame ", keytype,count,keyValue));
-                                    if(count >= 30)
+                                    if(count > 30)
                                         break;
 
                                     count++;
                                 }
-
-                                runxapicounter();
                                 grabber.flush();
 
                             }catch (Exception e)
                             {
                                 e.printStackTrace();
                             }
+                            runxapicounter();
                         }
                         else if(status.equalsIgnoreCase(config.sync_pending))
                         {

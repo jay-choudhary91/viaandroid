@@ -329,6 +329,8 @@ public class insertmediadataservice extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     @Override
