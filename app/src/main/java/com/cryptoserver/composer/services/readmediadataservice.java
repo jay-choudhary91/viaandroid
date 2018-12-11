@@ -134,7 +134,8 @@ public class readmediadataservice extends Service {
                         }
                         else if(status.equalsIgnoreCase(config.sync_pending))
                         {
-                            getvideoframes(videotoken);
+                            int framestart=1;int maxframes=50;
+                            getvideoframes(videotoken,framestart,maxframes);
                         }
                     }
                 }
@@ -206,7 +207,8 @@ public class readmediadataservice extends Service {
                             e.printStackTrace();
                         }
 
-                        getvideoframes(videotoken);
+                        int framestart=1;int maxframes=50;
+                        getvideoframes(videotoken,framestart,maxframes);
 
                     }catch (Exception e)
                     {
@@ -221,21 +223,24 @@ public class readmediadataservice extends Service {
         });
     }
 
-    public void getvideoframes(String videotoken)
+    public void getvideoframes(final String videotoken, final int framestart, final int maxframes)
     {
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
         mpairslist.put("videotoken",videotoken);
-        mpairslist.put("framestart","1");
-        mpairslist.put("maxframes","50");
+        mpairslist.put("framestart",""+framestart);
+        mpairslist.put("maxframes",""+maxframes);
 
         xapipost_sendjson(getApplicationContext(),config.type_videoframes_get,mpairslist, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 if(response.isSuccess())
                 {
-                    String videotoken="";
+                    int remainingframes=0;
                     try {
                         JSONObject jobject = (JSONObject) response.getData();
+                        if(jobject.has("remainingframes"))
+                            remainingframes=jobject.getInt("remainingframes");
+
                         if(jobject.has("frames"))
                         {
                             databasemanager mdbhelper=null;
@@ -299,9 +304,17 @@ public class readmediadataservice extends Service {
                                 e.printStackTrace();
                             }
 
-                            updatefindmediainfosyncstatus(true);
+                            if(remainingframes > 0)
+                            {
+                                int newframestart=maxframes+1;
+                                int newmaxframes=maxframes+50;
+                                getvideoframes(videotoken,newframestart,newmaxframes);
+                            }
+                            else
+                            {
+                                updatefindmediainfosyncstatus(true);
+                            }
                         }
-
                     }catch (Exception e)
                     {
                         e.printStackTrace();
@@ -311,7 +324,15 @@ public class readmediadataservice extends Service {
         });
     }
 
-    //* Broadcast for
+    //* Broadcast for notify reader controller to get data from database
+
+
+
+
+
+
+
+    //* End of broadcast register
 
     public void updatefindmediainfosyncstatus(boolean isvideofound)
     {
