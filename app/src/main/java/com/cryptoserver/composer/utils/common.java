@@ -44,6 +44,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.text.format.Formatter;
@@ -534,7 +535,9 @@ public class common {
         File file = new File(videoPath);
         if (file.exists()) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            Uri uri = Uri.fromFile(file);
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", file);
+          //  Uri uri = Uri.fromFile(file);
             //Uri uri = Uri.fromFile(file);
             sharingIntent.setType("video/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -548,7 +551,9 @@ public class common {
         File file = new File(videoPath);
         if (file.exists()) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            Uri uri = Uri.fromFile(file);
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", file);
+           // Uri uri = Uri.fromFile(file);
             //Uri uri = Uri.fromFile(file);
             sharingIntent.setType("audio/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -562,7 +567,9 @@ public class common {
         File file = new File(videoPath);
         if (file.exists()) {
             Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-            Uri uri = Uri.fromFile(file);
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", file);
+           // Uri uri = Uri.fromFile(file);
             //Uri uri = Uri.fromFile(file);
             sharingIntent.setType("image/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
