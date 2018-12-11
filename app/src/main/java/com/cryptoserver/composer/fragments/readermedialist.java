@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -27,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adapterreadermedialist;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -391,14 +393,19 @@ public class readermedialist extends basefragment {
         if(type == 1)
         {
             if(videoobj.getmimetype().startsWith("image/")){
-                Uri uri = Uri.parse("file://"+videoobj.getPath());
+                File file = new File(videoobj.getPath());
+           //     Uri uri = Uri.parse("file://"+videoobj.getPath());
+                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                        BuildConfig.APPLICATION_ID + ".provider", file);
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("image/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 getActivity().startActivity(Intent.createChooser(share, "Share photo"));
             }else if(videoobj.getmimetype().startsWith("audio/")){
-                Uri uri = Uri.parse("file://"+videoobj.getPath());
+                File file = new File(videoobj.getPath());
+                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                        BuildConfig.APPLICATION_ID + ".provider", file);
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("audio/*");
@@ -406,7 +413,9 @@ public class readermedialist extends basefragment {
                 getActivity().startActivity(Intent.createChooser(share, "Share audio"));
 
             }else if(videoobj.getmimetype().startsWith("video/")){
-                Uri uri = Uri.parse("file://"+videoobj.getPath());
+                File file = new File(videoobj.getPath());
+                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                        BuildConfig.APPLICATION_ID + ".provider", file);
                 Intent share = new Intent(Intent.ACTION_SEND);
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("video/*");

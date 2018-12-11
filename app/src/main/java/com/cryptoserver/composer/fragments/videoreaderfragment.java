@@ -384,7 +384,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
             setmetriceshashesdata();
             setupvideodata();
-            // seturldata();
             Log.e("oncreate","oncreate");
         }
         return rootview;
@@ -706,7 +705,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 controller.removeAllViews();
 
             controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
-            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()) && selectedvideouri !=null )
+            selectedvideouri=Uri.parse(VIDEO_URL);
+            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()) && selectedvideouri !=null)
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selectedvideouri);
@@ -1005,7 +1005,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 gethelper().onBack();
                 break;
             case R.id.img_setting:
-                destroyvideoplayer();
+              //  destroyvideoplayer();
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
@@ -1642,9 +1642,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void setmargin(){
         if(mbitmaplist.size()>0 && player.getCurrentPosition()>0){
-                double a=player.getDuration()/1000;
-                double b=mbitmaplist.size()-2;
-                double c=a/b;
+                double totalduration=player.getDuration()/1000;
+                double totalbitmapframe=mbitmaplist.size()-2;
+                double c=totalduration/totalbitmapframe;
                 double leftmargin= 100/c;
                 double currentpostion=(player.getCurrentPosition()/1000);
                 double leftsidemargin=-((leftmargin)*(currentpostion));
@@ -1728,7 +1728,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                                     wavevisualizerslist.add(new wavevisualizer(x,true));
                                 }
-                                Log.e("waveform=",""+rms);
+
                             }
 
                             public void onFftDataCapture(Visualizer visualizer,
