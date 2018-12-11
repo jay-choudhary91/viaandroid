@@ -534,6 +534,7 @@ public class databasemanager {
 
     //=========================  Methods for reader implementation
 
+
     public ArrayList<metadatahash> getmediametadata(String filelocation) {
         ArrayList<metadatahash> mitemlist=new ArrayList<>();
         String localkey=getlocalkeybylocation(filelocation);
@@ -586,6 +587,29 @@ public class databasemanager {
             lock.unlock();
         }
         return  localkey;
+    }
+
+    public String getcompletedate(String filename){
+
+        String completedevicedate = "";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT videocompletedevicedate FROM tbstartvideoinfo where location = '"+filename+"'";
+            cur = mDb.rawQuery(sql, null);
+            if (cur.moveToFirst())
+            {
+                do{
+                    completedevicedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                }while(cur.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  completedevicedate;
     }
 
     public void updatemedialocationname(String localkey,String location) {

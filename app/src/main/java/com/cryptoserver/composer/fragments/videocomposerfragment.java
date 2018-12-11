@@ -1136,7 +1136,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 clearvideolist();
                 showsharepopupmain();
 
-                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                //progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                 /*new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -1830,7 +1830,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String timeoffset = currenttimewithoffset[1];
 
             mdbstartitemcontainer.add(new dbitemcontainer(json,"video","Local storage path",videokey,"","","0","0",
-                    config.type_video_start,devicestartdate,devicestartdate,timeoffset,devicestartdate));
+                    config.type_video_start,devicestartdate,devicestartdate,timeoffset,""));
         } catch (Exception e) {
             e.printStackTrace();
         }
