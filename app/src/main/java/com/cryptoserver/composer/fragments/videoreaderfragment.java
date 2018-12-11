@@ -40,7 +40,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.baseactivity;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -49,11 +48,10 @@ import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
-import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
-import com.cryptoserver.composer.models.startmediainfo;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
+import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.common;
@@ -120,7 +118,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     FrameLayout fragment_graphic_container;
 
     private RelativeLayout scurraberverticalbar;
-    private String VIDEO_URL = null;
+    private String mediafilepath = null;
     private RelativeLayout showcontrollers;
     private SurfaceView videoSurface;
     private MediaPlayer player;
@@ -384,7 +382,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
             setmetriceshashesdata();
             setupvideodata();
-            // seturldata();
             Log.e("oncreate","oncreate");
         }
         return rootview;
@@ -706,7 +703,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 controller.removeAllViews();
 
             controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
-            if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()) && selectedvideouri !=null )
+            selectedvideouri=Uri.parse(mediafilepath);
+            if(mediafilepath != null && (! mediafilepath.isEmpty()) && selectedvideouri !=null)
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selectedvideouri);
@@ -860,17 +858,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     currentvideoduration=player.getCurrentPosition();  // suppose its on 4th pos means 4000
                     currentvideodurationseconds=currentvideoduration/1000;  // Its 4
                 }
-
-                /*if(mbitmaplist.size() > 0 && (! islisttouched))
-                {
-                    int second=player.getCurrentPosition()/1000;
-                    if(mbitmaplist.size() >= (second))
-                    {
-                        //Log.e("getCurrentPosition ",""+player.getCurrentPosition());
-                        //  recyview_frames.scrollToPosition(second);
-                        // recyview_frames.smoothScrollToPosition(second);
-                    }
-                }*/
                 return player.getCurrentPosition();
             }
         }catch (Exception e)
@@ -907,10 +894,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         {
             player.seekTo(i);
             setmargin();
-           /* if(controller.mDragging){
-                setmargin();
-            }*/
-            // recyview_frames.smoothScrollToPosition(i);
         }
     }
 
@@ -998,37 +981,17 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         super.onHeaderBtnClick(btnid);
         switch (btnid){
             case R.id.img_share_icon:
-                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
-                    common.sharevideo(getActivity(),VIDEO_URL);
+                if(mediafilepath != null && (! mediafilepath.isEmpty()))
+                    common.sharevideo(getActivity(), mediafilepath);
                 break;
             case R.id.img_menu:
                 gethelper().onBack();
                 break;
             case R.id.img_setting:
-                destroyvideoplayer();
+              //  destroyvideoplayer();
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
-        }
-    }
-
-
-    private void checkwritestoragepermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED ) {
-                opengallery();
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        request_read_external_storage);
-            }
-        }
-        else
-        {
-            opengallery();
         }
     }
 
@@ -1080,8 +1043,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 selectedvideouri = data.getData();
 
                 try {
-                    //VIDEO_URL=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
-                    VIDEO_URL = common.getpath(getActivity(), selectedvideouri);
+                    //mediafilepath=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
+                    mediafilepath = common.getpath(getActivity(), selectedvideouri);
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -1089,19 +1052,19 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     return;
                 }
 
-                if(VIDEO_URL == null || (VIDEO_URL.trim().isEmpty()))
+                if(mediafilepath == null || (mediafilepath.trim().isEmpty()))
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
 
-                if(! (new File(VIDEO_URL).exists()))
+                if(! (new File(mediafilepath).exists()))
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
 
-                File file=new File(VIDEO_URL);
+                File file=new File(mediafilepath);
                 long file_size = file.length();
                 if(file_size == 0)
                 {
@@ -1147,7 +1110,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 righthandle.setVisibility(View.VISIBLE);
                 framecount=0;
 
-                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty())){
+                if(mediafilepath != null && (! mediafilepath.isEmpty())){
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
@@ -1201,7 +1164,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         mbitmaplist.add(new frame(0,null,true));
 
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+        m_mediaMetadataRetriever.setDataSource(mediafilepath);
 
         String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         String metadatawriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
@@ -1259,7 +1222,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 }
 
                 m_mediaMetadataRetriever = new MediaMetadataRetriever();
-                m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+                m_mediaMetadataRetriever.setDataSource(mediafilepath);
                 m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
 
 
@@ -1337,117 +1300,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 (R.color.videoPlayer_header));
     }
 
-    public void setVideoAdapter() {
-        int count = 1;
-        ishashprocessing=true;
-        currentframenumber=0;
-        currentframenumber = currentframenumber + frameduration;
-        try
-        {
-            ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(VIDEO_URL);
-            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-            String format= common.getvideoformat(VIDEO_URL);
-            if(format.equalsIgnoreCase("mp4"))
-                grabber.setFormat(format);
-
-            grabber.start();
-            videomodel lastframehash=null;
-            for(int i = 0; i<grabber.getLengthInFrames(); i++){
-                Frame frame = grabber.grabImage();
-                if (frame == null)
-                    break;
-
-                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
-                String keyValue= getkeyvalue(byteData);
-
-                if(count <= 30){
-                    addhashvaluelist.add(keyValue);
-                }
-
-                if(count == 1){
-                    //gethashvalue();
-                }
-
-                if(fragmentgraphic != null)
-                    fragmentgraphic.sethashesdata(keyValue);
-
-                mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
-                //xapigetmediainfo(keyValue);
-                if (count == currentframenumber) {
-                    lastframehash=null;
-                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-                    if(! selectedhaeshes.trim().isEmpty())
-                        selectedhaeshes=selectedhaeshes+"\n";
-
-                    selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-
-                    if(count == frameduration)
-                        getmediadata(keyValue);
-
-
-                    currentframenumber = currentframenumber + frameduration;
-                }
-                else
-                {
-                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                }
-                count++;
-                if(suspendframequeue)
-                {
-                    selectedmetrics="";
-                    selectedhaeshes="";
-                    mhashesitems.clear();
-                    mhashesadapter.notifyDataSetChanged();
-                    break;
-                }
-            }
-
-            if(! suspendframequeue)
-            {
-                if(lastframehash != null)
-                {
-                    mvideoframes.add(lastframehash);
-                    if(! selectedhaeshes.trim().isEmpty())
-                        selectedhaeshes=selectedhaeshes+"\n";
-
-                    selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-                }
-                else
-                {
-                    if(mvideoframes.size() > 1)
-                    {
-                        mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-                        if(! selectedhaeshes.trim().isEmpty())
-                            selectedhaeshes=selectedhaeshes+"\n";
-
-                        selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                                +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                                mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                                mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-                    }
-                }
-            }
-
-            ishashprocessing=false;
-            grabber.flush();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            ishashprocessing=false;
-        }
-
-        suspendframequeue=false;
-    }
-
     public void setmetriceshashesdata()
     {
         if(myHandler != null && myRunnable != null)
@@ -1468,11 +1320,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                         mhashesitems.clear();
                         mhashesadapter.notifyDataSetChanged();
 
-                        new Thread(){
-                            public void run(){
-                                setVideoAdapter();
-                            }
-                        }.start();
                         new Thread(){
                             public void run(){
                                 getFramesBitmap();
@@ -1593,13 +1440,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                     selectedmetrics="";
                 }
-
-                /*if((player != null) && (! player.isPlaying()) && (! selectedmetrics.toString().trim().isEmpty()))
-                {
-                    mmetricsitems.add(new videomodel(selectedmetrics));
-                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                    selectedmetrics="";
-                }*/
             }
         }
 
@@ -1642,9 +1482,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void setmargin(){
         if(mbitmaplist.size()>0 && player.getCurrentPosition()>0){
-                double a=player.getDuration()/1000;
-                double b=mbitmaplist.size()-2;
-                double c=a/b;
+                double totalduration=player.getDuration()/1000;
+                double totalbitmapframe=mbitmaplist.size()-2;
+                double c=totalduration/totalbitmapframe;
                 double leftmargin= 100/c;
                 double currentpostion=(player.getCurrentPosition()/1000);
                 double leftsidemargin=-((leftmargin)*(currentpostion));
@@ -1673,8 +1513,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             // setupVisualizerFxAndUI because we likely want to have more,
             // non-Visualizer related code
             // in this callback.
-            player
-                    .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         public void onCompletion(MediaPlayer mediaPlayer) {
                             //mVisualizer.setEnabled(false);
                         }
@@ -1728,7 +1567,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                                     wavevisualizerslist.add(new wavevisualizer(x,true));
                                 }
-                                Log.e("waveform=",""+rms);
+
                             }
 
                             public void onFftDataCapture(Visualizer visualizer,
@@ -1754,141 +1593,32 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         return arraydata;
     }
 
-
-    public void getmediadata(String hashvalue)
-    {
-        /*databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
-
-        try {
-            mdbhelper.open();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(hashvalue);
-        if(mitemlist != null && mitemlist.size()>0)
-        {
-
-        }
-
-        try
-        {
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }*/
-    }
-
-
-    public void xapigetmediainfo(final String hashvalue)
-    {
-
-        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
-
-        mpairslist.put("hashvalue",hashvalue);
-
-        gethelper().xapipost_sendjson(getActivity(),config.type_video_find,mpairslist, new apiresponselistener() {
-            @Override
-            public void onResponse(taskresult response) {
-                if(response.isSuccess())
-                {
-                    try {
-                        JSONObject object = (JSONObject) response.getData();
-
-                        String videoid = object.getString("videoid");
-                        String videokey = object.getString("videokey");
-                        String videohashmethod = object.getString("videohashmethod");
-                        String videohashvalue = object.getString("videohashvalue");
-                        String videostartdevicedatetime = object.getString("videostartdevicedatetime");
-                        String videostarttransactionid = object.getString("videostarttransactionid");
-                        String videodevicetimeoffset = object.getString("videodevicetimeoffset");
-                        String videopublickey = object.getString("videopublickey");
-                        String videotypeid = object.getString("videotypeid");
-                        String videocreateddate = object.getString("videocreateddate");
-                        String videorank = object.getString("videorank");
-                        String videotypeshortname = object.getString("videotypeshortname");
-                        String framecount = object.getString("framecount");
-                        String videotoken = object.getString("videotoken");
-
-
-                        databasemanager mdbhelper=null;
-                        if (mdbhelper == null) {
-                            mdbhelper = new databasemanager(getActivity());
-                            mdbhelper.createDatabase();
-                        }
-
-                        try {
-                            mdbhelper.open();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        mdbhelper.insertfindmediainfo(videoid,videokey,videohashmethod,videohashvalue,videostartdevicedatetime,videostarttransactionid,
-                                videodevicetimeoffset,videopublickey,videotypeid,videocreateddate,videorank,videotypeshortname,framecount,videotoken,
-                                "pending");
-
-
-                        try {
-                            mdbhelper.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }else{
-
-                    /*if(count <=30)
-                         gethashvalue();*/
-
-                }
-            }
-        });
-    }
-
-
-    public  void gethashvalue(){
-
-         String hashvalue =  addhashvaluelist.get(count);
-         xapigetmediainfo(hashvalue);
-         count++;
-
-    }
-
-    public void xapigetmediaframesinfo (){
-
-
-    }
-
     public void setupvideodata() {
-        VIDEO_URL = xdata.getinstance().getSetting("selectedvideourl");
+        mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
 
-        if (VIDEO_URL.equalsIgnoreCase("blank")) {
+        if (mediafilepath.equalsIgnoreCase("blank")) {
             frontview.setVisibility(View.VISIBLE);
         } else {
-            if (VIDEO_URL != null && (!VIDEO_URL.isEmpty())) {
+            if (mediafilepath != null && (!mediafilepath.isEmpty())) {
 
-                if(VIDEO_URL == null || (VIDEO_URL.trim().isEmpty()))
+                if(mediafilepath == null || (mediafilepath.trim().isEmpty()))
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
 
-                if(! (new File(VIDEO_URL).exists()))
+                if(! (new File(mediafilepath).exists()))
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
 
-                File file=new File(VIDEO_URL);
+                Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
+                intent.putExtra("mediapath", mediafilepath);
+                intent.putExtra("keytype",keytype);
+                applicationviavideocomposer.getactivity().startService(intent);
+
+                File file=new File(mediafilepath);
                 long file_size = file.length();
                 if(file_size == 0)
                 {
@@ -1901,15 +1631,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if (mbitmaplist.size() != 0)
                     runmethod = false;
-
-           /* mbitmaplist.clear();
-            adapter.notifyDataSetChanged();
-
-            mmetricsitems.clear();
-            mmetricesadapter.notifyDataSetChanged();
-
-            mhashesitems.clear();
-            mhashesadapter.notifyDataSetChanged();*/
 
                 selectedhaeshes = "";
                 selectedmetrics = "";
@@ -1925,13 +1646,13 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                 scurraberverticalbar.setVisibility(View.INVISIBLE);
 
-                setupVideoPlayer(Uri.parse(VIDEO_URL));
+                setupVideoPlayer(Uri.parse(mediafilepath));
                 videoduration = 0;
                 layout_scrubberview.setVisibility(View.VISIBLE);
                 playerposition = 0;
                 righthandle.setVisibility(View.VISIBLE);
                 framecount = 0;
-                if (VIDEO_URL != null && (!VIDEO_URL.isEmpty())) {
+                if (mediafilepath != null && (!mediafilepath.isEmpty())) {
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
@@ -1943,10 +1664,5 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
         }
-    }
-    public void resetscrubbermargin(){
-        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        relativeParams.setMargins(0 , 0,0, 0);
-        recyview_frames.setLayoutParams(relativeParams);
     }
 }

@@ -26,7 +26,7 @@ public class config {
     public static final String build_flavor_videocreater = "creater";
     public static final String build_flavor_videoviewer = "viewer";
     public static final String broadcast_call = "com.matraex.call_broadcast";
-    public static final String broadcast_getmetadata = "com.matraex.get_metadata";
+    public static final String composer_service_savemetadata = "composer_service_savemetadata";
     public static final String build_flavor_reader = "reader";
     public static final String build_flavor_composer = "composer";
     public static Location MyLastLocation = null;
@@ -106,5 +106,8 @@ public class config {
     public static final String SystemUptime="System Uptime";
     public static final String Battery="Battery";
     public static final String Address="Address";
+
+    public static final String sync_pending="sync_pending";
+    public static final String sync_complete="sync_complete";
 
 }

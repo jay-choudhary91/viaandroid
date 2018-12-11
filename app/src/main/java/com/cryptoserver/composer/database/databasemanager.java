@@ -11,6 +11,7 @@ import android.util.Log;
 import com.cryptoserver.composer.models.mediametadatainfo;
 import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.startmediainfo;
+import com.cryptoserver.composer.utils.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -317,26 +318,6 @@ public class databasemanager {
         finally {
             lock.unlock();
         }
-        return  mCur;
-    }
-
-
-    public Cursor fetchlogdata(String user_id, String to_user_id, int limit) {
-
-        Cursor mCur=null;
-        try {
-            lock.lock();
-
-            String sql = "SELECT * FROM tbllog where user_id='" + user_id + "' and to_user_id ='" + to_user_id +
-                    "' or user_id ='" + to_user_id + "' and to_user_id ='" + user_id +"' ORDER BY date_time desc LIMIT "+limit+";";
-            mCur = mDb.rawQuery(sql, null);
-            if (mCur != null) {
-                mCur.moveToNext();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         return  mCur;
     }
 
@@ -651,7 +632,8 @@ public class databasemanager {
 
     public void insertfindmediainfo(String videoid,String videokey,String videohashmethod,String videohashvalue,
                                      String videostartdevicedatetime,String videostarttransactionid,String videodevicetimeoffset,String videotypeid , String videopublickey,
-                                     String videocreateddate,String videorank,String videotypeshortname,String framecount,String videotoken,String status)
+                                     String videocreateddate,String videorank,String videotypeshortname,String framecount,String videotoken,
+                                    String status,String medianame,boolean isvideofound)
     {
         try {
             lock.lock();
@@ -672,14 +654,102 @@ public class databasemanager {
             values.put("framecount",  framecount);
             values.put("videotoken",  videotoken);
             values.put("status", status);
+            values.put("medianame", medianame);
+            values.put("isvideofound", isvideofound);
 
-            long l=mDb.insert("tbstartvideoinfo", null, values);
+            long l=mDb.insert("tblfindmediainfo", null, values);
             Log.e("Id ",""+l);
 
         } catch (SQLException mSQLException) {
             Log.e(TAG, "gettestdata >>" + mSQLException.toString());
             throw mSQLException;
         } finally {
+            lock.unlock();
+        }
+    }
+
+    public void insertvideoframedata(String videoframeid,String objectid,String videoframenumber,String videoframehashvalue,String videoframehashmethod,
+             String videoframemeta,String videoframemetahash,String videoframemetahashmethod,String videoframedevicedatetime,String videoframetransactionid
+            ,String videoid,String videokey,String  videoduration,String videohashmethod,String videohashvalue,String videostartdevicedatetime,String videocompletedevicedatetime
+            ,String videocompleteddate,String videoframecount,String videostarttransactionid,String videocompletetransactionid,String videostartmeta
+            ,String videodevicetimeoffset,String videoprivatekey,String videopublickey,String sequenceno,String meta,String hashvalue,String hashmethod
+            ,String metahash,String metahashmethod)
+    {
+        try {
+            lock.lock();
+
+            ContentValues values = new ContentValues();
+            values.put("videoframeid", videoframeid);
+            values.put("objectid", objectid);
+            values.put("videoframenumber", videoframenumber);
+            values.put("videoframehashvalue", videoframehashvalue);
+            values.put("videoframehashmethod", videoframehashmethod);
+            values.put("videoframemeta", videoframemeta);
+            values.put("videoframemetahash", videoframemetahash);
+            values.put("videoframemetahashmethod", videoframemetahashmethod);
+            values.put("videoframedevicedatetime", videoframedevicedatetime);
+            values.put("videoframetransactionid", videoframetransactionid);
+            values.put("videoid", videoid);
+            values.put("videokey", videokey);
+            values.put("videoduration", videoduration);
+            values.put("videohashmethod", videohashmethod);
+            values.put("videohashvalue", videohashvalue);
+            values.put("videostartdevicedatetime", videostartdevicedatetime);
+            values.put("videocompletedevicedatetime", videocompletedevicedatetime);
+            values.put("videocompleteddate", videocompleteddate);
+            values.put("videoframecount", videoframecount);
+            values.put("videostarttransactionid", videostarttransactionid);
+            values.put("videocompletetransactionid", videocompletetransactionid);
+            values.put("videostartmeta", videostartmeta);
+            values.put("videodevicetimeoffset", videodevicetimeoffset);
+            values.put("videoprivatekey", videoprivatekey);
+            values.put("videopublickey", videopublickey);
+            values.put("sequenceno", sequenceno);
+            values.put("meta", meta);
+            values.put("hashvalue", hashvalue);
+            values.put("hashmethod", hashmethod);
+            values.put("metahash", metahash);
+            values.put("metahashmethod", metahashmethod);
+
+            long l=mDb.insert("tblreadermetadata", null, values);
+            Log.e("Id ",""+l);
+
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
+            throw mSQLException;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    //* call from reader. Checking sync status of requested media.
+
+    public Cursor getsyncstatusbymedianame(String filename) {
+        String videotoken="";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tblfindmediainfo where medianame = '"+filename+"'";
+            cur = mDb.rawQuery(sql, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  cur;
+    }
+
+    //* call from reader. Update staus from sync_pending to sync_complete.
+    public void updatefindmediainfosyncstatus(String filename,boolean isvideofound) {
+        Cursor cur=null;
+        try {
+            lock.lock();
+            mDb.execSQL("update tblfindmediainfo set status ='"+config.sync_complete+"' where medianame='"+filename+"'");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
             lock.unlock();
         }
     }

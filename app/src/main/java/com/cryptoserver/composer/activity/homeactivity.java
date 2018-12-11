@@ -243,7 +243,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgsettingsicon.setVisibility(View.VISIBLE);
             img_menu.setVisibility(View.VISIBLE);
             imgaddicon.setVisibility(View.GONE);
-            //imgshareicon.setVisibility(View.VISIBLE);
+            imgshareicon.setVisibility(View.VISIBLE);
             imgsettingsicon.setEnabled(true);
             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,

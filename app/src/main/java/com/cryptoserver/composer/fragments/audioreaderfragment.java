@@ -304,9 +304,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 transaction.commit();
             }
 
-                setupaudiodata();
-
             setmetriceshashesdata();
+            setupaudiodata();
         }
         return rootview;
     }
@@ -813,15 +812,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     common.shareaudio(getActivity(), audiourl);
                 break;
             case R.id.img_menu:
-               /* if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
-                    checkwritestoragepermission();
-                }else{*/
-                    gethelper().onBack();
-              //  }
+
+                gethelper().onBack();
 
                 break;
             case R.id.img_setting:
-                destroyvideoplayer();
+                //destroyvideoplayer();
                 fragmentsettings fragmatriclist=new fragmentsettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;

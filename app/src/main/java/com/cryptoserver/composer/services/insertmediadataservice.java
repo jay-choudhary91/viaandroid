@@ -187,37 +187,12 @@ public class insertmediadataservice extends Service {
                     }
                 }
                 xdata.getinstance().saveSetting("mediadatainsertion","0");
-
             }
         }).start();
-        /**/
+
         return START_NOT_STICKY;
     }
 
-
-    // Calling when frames are getting from ffmpegframegrabber
-    /*public void updatestartvideoinfo(String updatefirsthash, String file_name,String completeddate,String lastframe,String lastcount,String videourl)
-    {
-        String duration = "";
-        if(!videourl.isEmpty())
-            duration = common.getvideotimefromurl(videourl);
-
-        try {
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("fps","30");
-            map.put("firsthash", updatefirsthash);
-            map.put("hashmethod",keytype);
-            map.put("name",file_name);
-            map.put("duration",duration);
-            map.put("frmaecounts",lastcount);
-            map.put("finalhash",lastframe);
-            Gson gson = new Gson();
-            String json = gson.toJson(map);
-            mdbenditemcontainer.add(new dbitemcontainer(json,videokey,completeddate));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     public void updatestartframes(ArrayList<dbitemcontainer> mdbstartitemcontainer)
     {
@@ -325,9 +300,8 @@ public class insertmediadataservice extends Service {
             e.printStackTrace();
         }
 
-        Intent i = new Intent(config.broadcast_getmetadata);
+        Intent i = new Intent(config.composer_service_savemetadata);
         this.sendBroadcast(i);
-
     }
 
     @Override
