@@ -311,6 +311,8 @@ public class readmediadataservice extends Service {
         });
     }
 
+    //* Broadcast for
+
     public void updatefindmediainfosyncstatus(boolean isvideofound)
     {
         databasemanager mdbhelper=null;
