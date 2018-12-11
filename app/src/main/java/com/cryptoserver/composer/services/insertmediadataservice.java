@@ -190,7 +190,7 @@ public class insertmediadataservice extends Service {
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        progressdialog.dismisswaitdialog();
+                        //progressdialog.dismisswaitdialog();
                     }
                 });
             }
@@ -329,6 +329,10 @@ public class insertmediadataservice extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Intent i = new Intent(config.broadcast_getmetadata);
+        this.sendBroadcast(i);
+
 
 
     }

@@ -1,6 +1,9 @@
 package com.cryptoserver.composer.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.AudioManager;
@@ -141,6 +144,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist = new ArrayList<>();
     ArrayList<metadatahash> tempmitemlist = new ArrayList<>();
+   private BroadcastReceiver getmetadatabroadcastreceiver;
 
     @Override
     public int getlayoutid() {
@@ -649,6 +653,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public void onStop() {
         super.onStop();
         isinbackground = true;
+        getActivity().unregisterReceiver(getmetadatabroadcastreceiver);
     }
 
     // Implement SurfaceHolder.Callback
@@ -980,36 +985,41 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
         final String filename = common.getfilename(filelocation);
 
-        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(filename);
+        String completedate = mdbhelper.getcompletedate(filename);
 
-        metricmainarraylist.clear();
+        if (!completedate.isEmpty()){
 
-        String framelabel="";
-        for(int i=0;i<mitemlist.size();i++)
-        {
-            String metricdata=mitemlist.get(i).getMetricdata();
+            ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(filename);
 
+            metricmainarraylist.clear();
 
-            parsemetadata(metricdata);
-            selectedhaeshes = selectedhaeshes+"\n";
-            framelabel="Frame ";
-            if(i == mitemlist.size()-1)
+            String framelabel="";
+            for(int i=0;i<mitemlist.size();i++)
             {
-                framelabel="Last Frame ";
+                String metricdata=mitemlist.get(i).getMetricdata();
+
+
+                parsemetadata(metricdata);
+                selectedhaeshes = selectedhaeshes+"\n";
+                framelabel="Frame ";
+                if(i == mitemlist.size()-1)
+                {
+                    framelabel="Last Frame ";
+                }
+
+                selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                        mitemlist.get(i).getSequencehash();
             }
+            try
 
-            selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                    mitemlist.get(i).getSequencehash();
+            {
+                mdbhelper.close();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
-        try
-
-        {
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
         /*
                 new Thread(){
         public void run(){
@@ -1017,68 +1027,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
         }
     }.start();*/
 
-
-
-       /* final databasemanager finalmdbhelper = mdbhelper;
-
-        mymediarunnable = new Runnable() {
-            @Override
-            public void run() {
-
-                ArrayList<metadatahash> mitemlist = finalmdbhelper.getmediametadata(filename);
-                ArrayList<metadatahash> sapratelist = new ArrayList<>();
-
-
-                if(mitemlist != null && mitemlist.size()>0)
-                {
-
-                  if(tempmitemlist.size() < mitemlist.size())  {
-
-                      metricmainarraylist.clear();
-                      String framelabel="";
-                      for(int i=0;i<mitemlist.size();i++)
-                      {
-                          if (!tempmitemlist.contains(mitemlist)) {
-
-                              String metricdata=mitemlist.get(i).getMetricdata();
-                              parsemetadata(metricdata);
-                              selectedhaeshes=selectedhaeshes+"\n";
-                              framelabel="Frame ";
-                              if(i == mitemlist.size()-1)
-                              {
-                                  framelabel="Last Frame ";
-                              }
-
-                              selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                                      mitemlist.get(i).getSequencehash();
-
-                          }
-                      }
-                  }else{
-
-                      try
-                      {
-                          finalmdbhelper.close();
-                      }catch (Exception e)
-                      {
-                          e.printStackTrace();
-                      }
-                  }
-
-                    tempmitemlist.clear();
-                    tempmitemlist = mitemlist;
-
-           *//* new Thread(){
-                public void run(){
-                    getmetadata();
-                }
-            }.start();*//*
-                }
-
-                mymideahandler.postDelayed(this, 1000);
-            }
-        };
-        mymideahandler.post(mymediarunnable);*/
     }
 
 
@@ -1264,6 +1212,14 @@ public class composervideoplayerfragment extends basefragment implements Surface
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        registerbroadcastreciver();
+
+    }
+
     private void setupVisualizerFxAndUI() {
 
         // Create the Visualizer object and attach it to our media player.
@@ -1323,6 +1279,34 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
         }
     }
+
+
+    public void registerbroadcastreciver(){
+
+        IntentFilter intentFilter = new IntentFilter(config.broadcast_getmetadata);
+
+        getmetadatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Thread thread = new Thread() {
+                    public void run() {
+
+                        if(mhashesitems.size() == 0)
+                              getmediadata(VIDEO_URL);
+
+                    }
+                };
+                thread.start();
+
+            }
+        };
+
+        getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
+
+    }
+
+
 
     public int[] getFormattedData(byte[] rawVizData) {
         int[] arraydata=new int[rawVizData.length];

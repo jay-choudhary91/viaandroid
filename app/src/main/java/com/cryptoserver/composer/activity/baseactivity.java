@@ -26,6 +26,7 @@ import com.cryptoserver.composer.fragments.audioreaderfragment;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
 import com.cryptoserver.composer.fragments.imagereaderfragment;
+import com.cryptoserver.composer.fragments.readermedialist;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoreaderfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
@@ -225,6 +226,13 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             finish();
             return;
         }
+
+
+        if(getcurrentfragment() instanceof readermedialist){
+            finish();
+            return;
+        }
+
 
         if(getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
                 || getcurrentfragment() instanceof imagecomposerfragment)
