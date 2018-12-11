@@ -292,7 +292,7 @@ public class insertmediadataservice extends Service {
         }
 
         Intent i = new Intent(config.composer_service_savemetadata);
-        this.sendBroadcast(i);
+        sendBroadcast(i);
     }
 
     @Override

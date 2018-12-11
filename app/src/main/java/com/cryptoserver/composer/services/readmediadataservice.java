@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
-import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.netutils.xapipostjson;
 import com.cryptoserver.composer.utils.common;
@@ -18,8 +16,6 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.taskresult;
-import com.cryptoserver.composer.utils.xdata;
-import com.google.gson.Gson;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
@@ -75,7 +71,7 @@ public class readmediadataservice extends Service {
                         }
 
                         String medianame=common.getfilename(mediapath);
-                        Cursor cursor=mdbhelper.getsyncstatusbymedianame(medianame);
+                        Cursor cursor=mdbhelper.getmediainfobymedianame(medianame);
                         String status="",videotoken="";
                         if(cursor != null && cursor.getCount() > 0)
                         {
@@ -136,6 +132,10 @@ public class readmediadataservice extends Service {
                         {
                             int framestart=1;int maxframes=50;
                             getvideoframes(videotoken,framestart,maxframes);
+                        }
+                        else if(status.equalsIgnoreCase(config.sync_complete))
+                        {
+                            sendbroadcastreader();
                         }
                     }
                 }
@@ -324,16 +324,6 @@ public class readmediadataservice extends Service {
         });
     }
 
-    //* Broadcast for notify reader controller to get data from database
-
-
-
-
-
-
-
-    //* End of broadcast register
-
     public void updatefindmediainfosyncstatus(boolean isvideofound)
     {
         databasemanager mdbhelper=null;
@@ -355,7 +345,16 @@ public class readmediadataservice extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        sendbroadcastreader();
     }
+
+    //* Broadcast for notify reader controller to get data from database
+    public void sendbroadcastreader()
+    {
+        Intent i = new Intent(config.reader_service_getmetadata);
+        sendBroadcast(i);
+    }
+    //* End of broadcast register
 
 
     public  void runxapicounter(){

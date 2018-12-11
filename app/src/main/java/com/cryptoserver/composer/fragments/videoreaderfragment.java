@@ -1,8 +1,11 @@
 package com.cryptoserver.composer.fragments;
 
-import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.media.AudioManager;
@@ -11,7 +14,6 @@ import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -37,7 +39,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
@@ -45,7 +46,6 @@ import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
@@ -53,28 +53,22 @@ import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
-import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import butterknife.BindView;
@@ -144,7 +138,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
     private boolean isdraweropen=false;
     private LinearLayoutManager mlinearlayoutmanager;
-    private String selectedhaeshes="";
+    private String selectedhashes ="";
     private int lastmetricescount=0;
     private SurfaceHolder holder;
     private ArrayList<videomodel> mainvideoframes =new ArrayList<>();
@@ -170,7 +164,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     ArrayList<String> addhashvaluelist = new ArrayList<>();
-
+    private BroadcastReceiver coredatabroadcastreceiver;
 
     int count = 0;
 
@@ -370,7 +364,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
             fragment_graphic_container.setVisibility(View.INVISIBLE);
-
 
             if(fragmentgraphic == null) {
                 fragmentgraphic = new graphicalfragment();
@@ -741,8 +734,94 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
+        coredatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Thread thread = new Thread() {
+                    public void run() {
+                        if(mhashesitems.size() == 0)
+                            getmediametadata();
+                    }
+                };
+                thread.start();
+            }
+        };
+        getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);
+    }
+
+    public void getmediametadata()
+    {
+        if(mediafilepath != null && (! mediafilepath.isEmpty())) {
+            File file = new File(mediafilepath);
+            if (file.exists()) {
+                databasemanager mdbhelper = null;
+                if (mdbhelper == null) {
+                    mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                    mdbhelper.createDatabase();
+                }
+
+                try {
+                    mdbhelper.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String medianame = common.getfilename(mediafilepath);
+                Cursor mediainfocursor = mdbhelper.getmediainfobymedianame(medianame);
+                String videoid = "", videotoken = "";
+                if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
+                    if (mediainfocursor.moveToFirst()) {
+                        do {
+                            videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
+                        } while (mediainfocursor.moveToNext());
+                    }
+                }
+
+                if(! videoid.trim().isEmpty())
+                {
+                    Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
+                    if (metadatacursor != null && metadatacursor.getCount() > 0) {
+                        if (metadatacursor.moveToFirst()) {
+                            do {
+                                String videoframehashvalue = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videoframehashvalue"));
+                                String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
+                                String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
+                                //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
+                                mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue));
+                            } while (metadatacursor.moveToNext());
+                        }
+                    }
+                }
+
+                try {
+                    mdbhelper.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                        selectedhashes ="";
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
+        try {
+            applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         Log.e("onstop","onstop");
     }
 
@@ -1087,7 +1166,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 mhashesitems.clear();
                 mhashesadapter.notifyDataSetChanged();
 
-                selectedhaeshes="";
+                selectedhashes ="";
                 selectedmetrics="";
 
                 suspendframequeue=false;
@@ -1316,7 +1395,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     {
                         isnewvideofound=false;
                         selectedmetrics="";
-                        selectedhaeshes="";
+                        selectedhashes ="";
                         mhashesitems.clear();
                         mhashesadapter.notifyDataSetChanged();
 
@@ -1330,14 +1409,14 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(isdraweropen)
                 {
-                    if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
+                    if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
                     {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mhashesitems.add(new videomodel(selectedhaeshes));
+                                mhashesitems.add(new videomodel(selectedhashes));
                                 mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                                selectedhaeshes="";
+                                selectedhashes ="";
                             }
                         });
 
@@ -1632,7 +1711,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 if (mbitmaplist.size() != 0)
                     runmethod = false;
 
-                selectedhaeshes = "";
+                selectedhashes = "";
                 selectedmetrics = "";
 
                 suspendframequeue = false;
