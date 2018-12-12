@@ -809,7 +809,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                 {
                                     e.printStackTrace();
                                 }
-
                                 mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue));
                             } while (metadatacursor.moveToNext());
                         }
@@ -825,9 +824,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-
                         mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                         selectedhashes ="";
                     }
@@ -1529,19 +1525,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                 selectedmetrics=selectedmetrics+"\n";
 
-                /*if((! selectedmetrics.toString().trim().isEmpty()))
+                if((! selectedmetrics.toString().trim().isEmpty()))
                 {
-                    if(mmetricsitems.size() > 0)
-                    {
-                        mmetricsitems.set(0,new videomodel(selectedmetrics));
-                    }
-                    else
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrics));
-                    }
+                    mmetricsitems.add(new videomodel(selectedmetrics));
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                     selectedmetrics="";
-                }*/
+                }
             }
         }
 
