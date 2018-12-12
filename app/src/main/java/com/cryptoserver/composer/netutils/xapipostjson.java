@@ -84,6 +84,7 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
 
         String baseUrl = useurl+"action="+action;
         Log.d("URL>>", baseUrl);
+        Log.d("REQUEST >>", valuepairobject.toString());
 
         try {
 

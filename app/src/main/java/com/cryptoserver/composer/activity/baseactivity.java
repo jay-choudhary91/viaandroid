@@ -41,6 +41,7 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.taskresult;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -543,7 +544,9 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
                 JSONObject mainobject=new JSONObject();
                 finalobject=new JSONObject();
 
-                mainobject.put("dictionary",""+jsonArray.get(0));
+                Gson userGson=new GsonBuilder().create();
+
+                mainobject.put("dictionary",jsonArray.get(0));
                 mainobject.put("sequenceno",sequenceno);
                 mainobject.put("recorddate",""+recordate);
                 mainobject.put("dictionaryhashmethod",""+hashmethod);

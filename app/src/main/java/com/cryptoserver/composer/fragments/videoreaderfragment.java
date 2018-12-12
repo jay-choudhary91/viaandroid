@@ -789,7 +789,27 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                 String videoframehashvalue = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videoframehashvalue"));
                                 String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
                                 String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
+                                String meta = "" + metadatacursor.getString(metadatacursor.getColumnIndex("meta"));
                                 //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
+
+                                try {
+                                    ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                                    JSONObject object=new JSONObject(meta);
+                                    Iterator<String> myIter = object.keys();
+                                    while (myIter.hasNext()) {
+                                        String key = myIter.next();
+                                        String value = object.optString(key);
+                                        metricmodel model=new metricmodel();
+                                        model.setMetricTrackKeyName(key);
+                                        model.setMetricTrackValue(value);
+                                        metricItemArraylist.add(model);
+                                    }
+                                    metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+
                                 mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue));
                             } while (metadatacursor.moveToNext());
                         }
@@ -805,6 +825,9 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+
                         mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                         selectedhashes ="";
                     }
@@ -1249,14 +1272,14 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         String metadatawriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
         String metadataAlbum=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
 
-        if(metadatawriter != null && (! metadatawriter.trim().isEmpty()) && (! metadatawriter.equalsIgnoreCase("null")))
+        /*if(metadatawriter != null && (! metadatawriter.trim().isEmpty()) && (! metadatawriter.equalsIgnoreCase("null")))
         {
             parsemetadata(metadatawriter);
         }
         else if(metadataAlbum != null && (! metadataAlbum.trim().isEmpty()) && (! metadataAlbum.equalsIgnoreCase("null")))
         {
             parsemetadata(metadataAlbum);
-        }
+        }*/
 
         long timeInmillisec=0;
         if(time != null)
@@ -1506,7 +1529,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                 selectedmetrics=selectedmetrics+"\n";
 
-                if((! selectedmetrics.toString().trim().isEmpty()))
+                /*if((! selectedmetrics.toString().trim().isEmpty()))
                 {
                     if(mmetricsitems.size() > 0)
                     {
@@ -1518,7 +1541,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                     selectedmetrics="";
-                }
+                }*/
             }
         }
 

@@ -72,7 +72,7 @@ public class readmediadataservice extends Service {
 
                         String medianame=common.getfilename(mediapath);
                         Cursor cursor=mdbhelper.getmediainfobymedianame(medianame);
-                        String status="",videotoken="";
+                        String status="",videotoken="",remainingframes="50",lastframe="1";
                         if(cursor != null && cursor.getCount() > 0)
                         {
                             if (cursor.moveToFirst())
@@ -80,6 +80,8 @@ public class readmediadataservice extends Service {
                                 do{
                                     status = "" + cursor.getString(cursor.getColumnIndex("status"));
                                     videotoken = "" + cursor.getString(cursor.getColumnIndex("videotoken"));
+                                    remainingframes = "" + cursor.getString(cursor.getColumnIndex("remainingframes"));
+                                    lastframe = "" + cursor.getString(cursor.getColumnIndex("lastframe"));
                                 }while(cursor.moveToNext());
                             }
                         }
@@ -130,7 +132,9 @@ public class readmediadataservice extends Service {
                         }
                         else if(status.equalsIgnoreCase(config.sync_pending))
                         {
-                            int framestart=1;int maxframes=50;
+                            int framestart=Integer.parseInt(lastframe);
+                            framestart=framestart+1;
+                            int maxframes=framestart+50;
                             getvideoframes(videotoken,framestart,maxframes);
                         }
                         else if(status.equalsIgnoreCase(config.sync_complete))
@@ -163,7 +167,7 @@ public class readmediadataservice extends Service {
             public void onResponse(taskresult response) {
                 if(response.isSuccess())
                 {
-                    String videotoken="";
+                    String videotoken="",remainingframes="50",lastframe="0";
                     try {
                         JSONObject object = (JSONObject) response.getData();
 
@@ -198,7 +202,7 @@ public class readmediadataservice extends Service {
 
                         mdbhelper.insertfindmediainfo(videoid,videokey,videohashmethod,videohashvalue,videostartdevicedatetime,videostarttransactionid,
                                 videodevicetimeoffset,videopublickey,videotypeid,videocreateddate,videorank,videotypeshortname,savedsequencecount,videotoken,
-                                config.sync_pending,medianame,true);
+                                config.sync_pending,medianame,true,remainingframes,lastframe);
 
 
                         try {
@@ -207,8 +211,8 @@ public class readmediadataservice extends Service {
                             e.printStackTrace();
                         }
 
-                        int framestart=1;int maxframes=50;
-                        getvideoframes(videotoken,framestart,maxframes);
+                       int framestart=1;int maxframes=50;
+                       getvideoframes(videotoken,framestart,maxframes);
 
                     }catch (Exception e)
                     {
@@ -260,6 +264,7 @@ public class readmediadataservice extends Service {
                                 JSONObject object =array.getJSONObject(i);
                                 String videoframeid = (object.has("videoframeid")?object.getString("videoframeid"):"");
                                 String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                                String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
                                 String videoframenumber = (object.has("videoframenumber")?object.getString("videoframenumber"):"");
                                 String videoframehashvalue = (object.has("videoframehashvalue")?object.getString("videoframehashvalue"):"");
                                 String videoframehashmethod = (object.has("videoframehashmethod")?object.getString("videoframehashmethod"):"");
@@ -268,21 +273,6 @@ public class readmediadataservice extends Service {
                                 String videoframemetahashmethod = (object.has("videoframemetahashmethod")?object.getString("videoframemetahashmethod"):"");
                                 String videoframedevicedatetime = (object.has("videoframedevicedatetime")?object.getString("videoframedevicedatetime"):"");
                                 String videoframetransactionid = (object.has("videoframetransactionid")?object.getString("videoframetransactionid"):"");
-                                String videoid = (object.has("videoid")?object.getString("videoid"):"");
-                                String videokey = (object.has("videokey")?object.getString("videokey"):"");
-                                String videoduration = (object.has("videoduration")?object.getString("videoduration"):"");
-                                String videohashmethod = (object.has("videohashmethod")?object.getString("videohashmethod"):"");
-                                String videohashvalue = (object.has("videohashvalue")?object.getString("videohashvalue"):"");
-                                String videostartdevicedatetime = (object.has("videostartdevicedatetime")?object.getString("videostartdevicedatetime"):"");
-                                String videocompletedevicedatetime = (object.has("videocompletedevicedatetime")?object.getString("videocompletedevicedatetime"):"");
-                                String videocompleteddate = (object.has("videocompleteddate")?object.getString("videocompleteddate"):"");
-                                String videoframecount = (object.has("videoframecount")?object.getString("videoframecount"):"");
-                                String videostarttransactionid = (object.has("videostarttransactionid")?object.getString("videostarttransactionid"):"");
-                                String videocompletetransactionid = (object.has("videocompletetransactionid")?object.getString("videocompletetransactionid"):"");
-                                String videostartmeta = (object.has("videostartmeta")?object.getString("videostartmeta"):"");
-                                String videodevicetimeoffset = (object.has("videodevicetimeoffset")?object.getString("videodevicetimeoffset"):"");
-                                String videoprivatekey = (object.has("videoprivatekey")?object.getString("videoprivatekey"):"");
-                                String videopublickey = (object.has("videopublickey")?object.getString("videopublickey"):"");
                                 String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
                                 String meta = (object.has("meta")?object.getString("meta"):"");
                                 String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
@@ -292,9 +282,7 @@ public class readmediadataservice extends Service {
 
                                 mdbhelper.insertvideoframedata(videoframeid,objectid,videoframenumber,videoframehashvalue,videoframehashmethod,
                                         videoframemeta,videoframemetahash,videoframemetahashmethod,videoframedevicedatetime,videoframetransactionid
-                                        ,videoid,videokey,videoduration,videohashmethod,videohashvalue,videostartdevicedatetime,videocompletedevicedatetime
-                                        ,videocompleteddate,videoframecount,videostarttransactionid,videocompletetransactionid,videostartmeta
-                                        ,videodevicetimeoffset,videoprivatekey,videopublickey,sequenceno,meta,hashvalue,hashmethod
+                                        ,objectparentid,sequenceno,meta,hashvalue,hashmethod
                                         ,metahash,metahashmethod);
                             }
 
@@ -304,15 +292,17 @@ public class readmediadataservice extends Service {
                                 e.printStackTrace();
                             }
 
+                            int lastframe=maxframes;
                             if(remainingframes > 0)
                             {
                                 int newframestart=maxframes+1;
                                 int newmaxframes=maxframes+50;
+                                updatefindmediainfosyncstatus(videotoken,""+lastframe,""+remainingframes,config.sync_pending);
                                 getvideoframes(videotoken,newframestart,newmaxframes);
                             }
                             else
                             {
-                                updatefindmediainfosyncstatus(true);
+                                updatefindmediainfosyncstatus(videotoken,""+lastframe,""+remainingframes,config.sync_complete);
                             }
                         }
                     }catch (Exception e)
@@ -324,7 +314,7 @@ public class readmediadataservice extends Service {
         });
     }
 
-    public void updatefindmediainfosyncstatus(boolean isvideofound)
+    public void updatefindmediainfosyncstatus(String videotoken,String lastframe,String remainingframes,String syncstatus)
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -337,8 +327,7 @@ public class readmediadataservice extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        String medianame=common.getfilename(mediapath);
-        mdbhelper.updatefindmediainfosyncstatus(medianame,isvideofound);
+        mdbhelper.updatefindmediainfosyncstatus(videotoken,lastframe,remainingframes,syncstatus);
 
         try {
             mdbhelper.close();

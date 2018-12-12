@@ -633,7 +633,7 @@ public class databasemanager {
     public void insertfindmediainfo(String videoid,String videokey,String videohashmethod,String videohashvalue,
                                      String videostartdevicedatetime,String videostarttransactionid,String videodevicetimeoffset,String videotypeid , String videopublickey,
                                      String videocreateddate,String videorank,String videotypeshortname,String framecount,String videotoken,
-                                    String status,String medianame,boolean isvideofound)
+                                    String status,String medianame,boolean isvideofound,String remainingframes,String lastframe)
     {
         try {
             lock.lock();
@@ -656,6 +656,8 @@ public class databasemanager {
             values.put("status", status);
             values.put("medianame", medianame);
             values.put("isvideofound", isvideofound);
+            values.put("remainingframes", remainingframes);
+            values.put("lastframe", lastframe);
 
             long l=mDb.insert("tblfindmediainfo", null, values);
             Log.e("Id ",""+l);
@@ -670,9 +672,7 @@ public class databasemanager {
 
     public void insertvideoframedata(String videoframeid,String objectid,String videoframenumber,String videoframehashvalue,String videoframehashmethod,
              String videoframemeta,String videoframemetahash,String videoframemetahashmethod,String videoframedevicedatetime,String videoframetransactionid
-            ,String videoid,String videokey,String  videoduration,String videohashmethod,String videohashvalue,String videostartdevicedatetime,String videocompletedevicedatetime
-            ,String videocompleteddate,String videoframecount,String videostarttransactionid,String videocompletetransactionid,String videostartmeta
-            ,String videodevicetimeoffset,String videoprivatekey,String videopublickey,String sequenceno,String meta,String hashvalue,String hashmethod
+            ,String objectparentid,String sequenceno,String meta,String hashvalue,String hashmethod
             ,String metahash,String metahashmethod)
     {
         try {
@@ -689,21 +689,7 @@ public class databasemanager {
             values.put("videoframemetahashmethod", videoframemetahashmethod);
             values.put("videoframedevicedatetime", videoframedevicedatetime);
             values.put("videoframetransactionid", videoframetransactionid);
-            values.put("videoid", videoid);
-            values.put("videokey", videokey);
-            values.put("videoduration", videoduration);
-            values.put("videohashmethod", videohashmethod);
-            values.put("videohashvalue", videohashvalue);
-            values.put("videostartdevicedatetime", videostartdevicedatetime);
-            values.put("videocompletedevicedatetime", videocompletedevicedatetime);
-            values.put("videocompleteddate", videocompleteddate);
-            values.put("videoframecount", videoframecount);
-            values.put("videostarttransactionid", videostarttransactionid);
-            values.put("videocompletetransactionid", videocompletetransactionid);
-            values.put("videostartmeta", videostartmeta);
-            values.put("videodevicetimeoffset", videodevicetimeoffset);
-            values.put("videoprivatekey", videoprivatekey);
-            values.put("videopublickey", videopublickey);
+            values.put("objectparentid", objectparentid);
             values.put("sequenceno", sequenceno);
             values.put("meta", meta);
             values.put("hashvalue", hashvalue);
@@ -741,12 +727,12 @@ public class databasemanager {
     }
 
 
-    public Cursor readallmetabyvideoid(String videoid) {
+    public Cursor readallmetabyvideoid(String objectparentid) {
         String videotoken="";
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tblreadermetadata where objectid = '"+videoid+"'";
+            String sql = "SELECT * FROM tblreadermetadata where objectparentid = '"+objectparentid+"'";
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -759,11 +745,11 @@ public class databasemanager {
 
 
     //* call from reader. Update staus from sync_pending to sync_complete.
-    public void updatefindmediainfosyncstatus(String filename,boolean isvideofound) {
+    public void updatefindmediainfosyncstatus(String videotoken,String lastframe,String remainingframes,String syncstatus) {
         Cursor cur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tblfindmediainfo set status ='"+config.sync_complete+"' where medianame='"+filename+"'");
+            mDb.execSQL("update tblfindmediainfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where videotoken='"+videotoken+"'");
         } catch (Exception e) {
             e.printStackTrace();
         }
