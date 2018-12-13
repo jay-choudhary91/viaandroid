@@ -63,7 +63,9 @@ public class databasemanager {
 
     public void insertstartvideoinfo(String header,String type,String location,String localkey,
                                      String token,String videokey,String sync,String date , String action_type,
-                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,String videocompletedevicedate)
+                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
+                                     String videocompletedevicedate,String videoid,
+                                     String status,String remainingframes,String lastframe)
     {
         try {
             lock.lock();
@@ -82,6 +84,10 @@ public class databasemanager {
             values.put("videostartdevicedate",  videostartdevicedate);
             values.put("devicetimeoffset",  devicetimeoffset);
             values.put("videocompletedevicedate",  videocompletedevicedate);
+            values.put("videoid",""+videoid);
+            values.put("status",""+status);
+            values.put("remainingframes",""+remainingframes);
+            values.put("lastframe",""+lastframe);
 
             long l=mDb.insert("tbstartvideoinfo", null, values);
             Log.e("Id ",""+l);
@@ -378,37 +384,34 @@ public class databasemanager {
     }
 
 
-    public ArrayList<startmediainfo> setmediainfo(){
+    public ArrayList<startmediainfo> fetchunsynceddata(){
 
         ArrayList<startmediainfo> marray=new ArrayList<>();
 
         try {
             Cursor cur = fatchstartvideoinfo();
-
-            if (cur != null) {
-              {
-
-                  String  selectedid= "" + cur.getString(cur.getColumnIndex("id"));
-                  String  header = "" + cur.getString(cur.getColumnIndex("header"));
-                  String  type = "" + cur.getString(cur.getColumnIndex("type"));
-                  String  location = "" + cur.getString(cur.getColumnIndex("location"));
-                  String  localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
-                  String  token = "" + cur.getString(cur.getColumnIndex("token"));
-                  String  videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
-                  String  sync = "" + cur.getString(cur.getColumnIndex("sync"));
-                  String  action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
-                  String  sync_date = ""+ cur.getString(cur.getColumnIndex("sync_date"));
-                  String  apirequestdevicedate = ""+ cur.getString(cur.getColumnIndex("apirequestdevicedate"));
-                  String  videostartdevicedate = ""+ cur.getString(cur.getColumnIndex("videostartdevicedate"));
-                  String  devicetimeoffset = ""+ cur.getString(cur.getColumnIndex("devicetimeoffset"));
-                  String  videocompletedevicedate = ""+ cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+            if (cur != null && cur.moveToFirst())
+            {
+                do{
+                    String  selectedid= "" + cur.getString(cur.getColumnIndex("id"));
+                    String  header = "" + cur.getString(cur.getColumnIndex("header"));
+                    String  type = "" + cur.getString(cur.getColumnIndex("type"));
+                    String  location = "" + cur.getString(cur.getColumnIndex("location"));
+                    String  localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
+                    String  token = "" + cur.getString(cur.getColumnIndex("token"));
+                    String  videokey = "" + cur.getString(cur.getColumnIndex("videokey"));
+                    String  sync = "" + cur.getString(cur.getColumnIndex("sync"));
+                    String  action_type = "" + cur.getString(cur.getColumnIndex("action_type"));
+                    String  sync_date = ""+ cur.getString(cur.getColumnIndex("sync_date"));
+                    String  apirequestdevicedate = ""+ cur.getString(cur.getColumnIndex("apirequestdevicedate"));
+                    String  videostartdevicedate = ""+ cur.getString(cur.getColumnIndex("videostartdevicedate"));
+                    String  devicetimeoffset = ""+ cur.getString(cur.getColumnIndex("devicetimeoffset"));
+                    String  videocompletedevicedate = ""+ cur.getString(cur.getColumnIndex("videocompletedevicedate"));
 
                     marray.add(new startmediainfo(selectedid, header, type, location,localkey,token, videokey,
                             sync, action_type,sync_date,apirequestdevicedate,videostartdevicedate,
                             devicetimeoffset,videocompletedevicedate));
-
-                  Log.e("Marray =", "" + marray);
-                }
+                }while(cur.moveToNext());
             }
         }catch (Exception e)
         {
@@ -630,92 +633,14 @@ public class databasemanager {
         }
     }
 
-    public void insertfindmediainfo(String videoid,String videokey,String videohashmethod,String videohashvalue,
-                                     String videostartdevicedatetime,String videostarttransactionid,String videodevicetimeoffset,String videotypeid , String videopublickey,
-                                     String videocreateddate,String videorank,String videotypeshortname,String framecount,String videotoken,
-                                    String status,String medianame,boolean isvideofound,String remainingframes,String lastframe)
-    {
-        try {
-            lock.lock();
-
-            ContentValues values = new ContentValues();
-            values.put("videoid", "" + videoid);
-            values.put("videokey", ""+videokey);
-            values.put("videohashmethod", videohashmethod);
-            values.put("videohashvalue", ""+videohashvalue);
-            values.put("videostartdevicedatetime", ""+videostartdevicedatetime);
-            values.put("videostarttransactionid", ""+videostarttransactionid);
-            values.put("videodevicetimeoffset", ""+videodevicetimeoffset);
-            values.put("videopublickey", ""+videopublickey);
-            values.put("videotypeid",  videotypeid);
-            values.put("videocreateddate",  videocreateddate);
-            values.put("videorank",  videorank);
-            values.put("videotypeshortname",  videotypeshortname);
-            values.put("framecount",  framecount);
-            values.put("videotoken",  videotoken);
-            values.put("status", status);
-            values.put("medianame", medianame);
-            values.put("isvideofound", isvideofound);
-            values.put("remainingframes", remainingframes);
-            values.put("lastframe", lastframe);
-
-            long l=mDb.insert("tblfindmediainfo", null, values);
-            Log.e("Id ",""+l);
-
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
-            throw mSQLException;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    public void insertvideoframedata(String videoframeid,String objectid,String videoframenumber,String videoframehashvalue,String videoframehashmethod,
-             String videoframemeta,String videoframemetahash,String videoframemetahashmethod,String videoframedevicedatetime,String videoframetransactionid
-            ,String objectparentid,String sequenceno,String meta,String hashvalue,String hashmethod
-            ,String metahash,String metahashmethod)
-    {
-        try {
-            lock.lock();
-
-            ContentValues values = new ContentValues();
-            values.put("videoframeid", videoframeid);
-            values.put("objectid", objectid);
-            values.put("videoframenumber", videoframenumber);
-            values.put("videoframehashvalue", videoframehashvalue);
-            values.put("videoframehashmethod", videoframehashmethod);
-            values.put("videoframemeta", videoframemeta);
-            values.put("videoframemetahash", videoframemetahash);
-            values.put("videoframemetahashmethod", videoframemetahashmethod);
-            values.put("videoframedevicedatetime", videoframedevicedatetime);
-            values.put("videoframetransactionid", videoframetransactionid);
-            values.put("objectparentid", objectparentid);
-            values.put("sequenceno", sequenceno);
-            values.put("meta", meta);
-            values.put("hashvalue", hashvalue);
-            values.put("hashmethod", hashmethod);
-            values.put("metahash", metahash);
-            values.put("metahashmethod", metahashmethod);
-
-            long l=mDb.insert("tblreadermetadata", null, values);
-            Log.e("Id ",""+l);
-
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
-            throw mSQLException;
-        } finally {
-            lock.unlock();
-        }
-    }
-
     //* call from reader. Checking sync status of requested media.
 
-    public Cursor getmediainfobymedianame(String filename) {
+    public Cursor getmediainfobyfirsthash(String firsthash) {
         String videotoken="";
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tblfindmediainfo where medianame = '"+filename+"'";
+            String sql = "SELECT * FROM tbstartvideoinfo where header = '"+firsthash+"'";
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -732,7 +657,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tblreadermetadata where objectparentid = '"+objectparentid+"'";
+            String sql = "SELECT * FROM tblmetadata where localkey = '"+objectparentid+"'";
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -749,7 +674,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tblfindmediainfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where videotoken='"+videotoken+"'");
+            mDb.execSQL("update tbstartvideoinfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where token='"+videotoken+"'");
         } catch (Exception e) {
             e.printStackTrace();
         }

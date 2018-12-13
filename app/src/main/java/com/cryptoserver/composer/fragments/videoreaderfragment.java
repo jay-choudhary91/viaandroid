@@ -55,6 +55,7 @@ import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
@@ -62,12 +63,15 @@ import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -165,7 +169,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     ArrayList<String> addhashvaluelist = new ArrayList<>();
     private BroadcastReceiver coredatabroadcastreceiver;
-
+    String firsthash="";
     int count = 0;
 
     @Override
@@ -769,59 +773,67 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     e.printStackTrace();
                 }
 
-                String medianame = common.getfilename(mediafilepath);
-                Cursor mediainfocursor = mdbhelper.getmediainfobymedianame(medianame);
-                String videoid = "", videotoken = "";
-                if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
-                    if (mediainfocursor.moveToFirst()) {
-                        do {
-                            videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
-                        } while (mediainfocursor.moveToNext());
-                    }
-                }
+                try {
+                    if(! firsthash.trim().isEmpty())
+                    {
+                        Cursor mediainfocursor = mdbhelper.getmediainfobyfirsthash(firsthash);
+                        String videoid = "", videotoken = "";
+                        if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
+                            if (mediainfocursor.moveToFirst()) {
+                                do {
+                                    videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
+                                } while (mediainfocursor.moveToNext());
+                            }
+                        }
 
-                if(! videoid.trim().isEmpty())
-                {
-                    Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
-                    if (metadatacursor != null && metadatacursor.getCount() > 0) {
-                        if (metadatacursor.moveToFirst()) {
-                            do {
-                                String videoframehashvalue = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videoframehashvalue"));
-                                String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
-                                String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
-                                String meta = "" + metadatacursor.getString(metadatacursor.getColumnIndex("meta"));
-                                //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
+                        if(! videoid.trim().isEmpty())
+                        {
+                            Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
+                            if (metadatacursor != null && metadatacursor.getCount() > 0) {
+                                if (metadatacursor.moveToFirst()) {
+                                    do {
+                                        String sequencehash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequencehash"));
+                                        String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
+                                        String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
+                                        String metricdata = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metricdata"));
+                                        //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
 
-                                try {
-                                    ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-                                    JSONObject object=new JSONObject(meta);
-                                    Iterator<String> myIter = object.keys();
-                                    while (myIter.hasNext()) {
-                                        String key = myIter.next();
-                                        String value = object.optString(key);
-                                        metricmodel model=new metricmodel();
-                                        model.setMetricTrackKeyName(key);
-                                        model.setMetricTrackValue(value);
-                                        metricItemArraylist.add(model);
-                                    }
-                                    metricmainarraylist.add(new arraycontainer(metricItemArraylist));
-                                }catch (Exception e)
-                                {
-                                    e.printStackTrace();
+                                        try {
+                                            ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                                            JSONObject object=new JSONObject(metricdata);
+                                            Iterator<String> myIter = object.keys();
+                                            while (myIter.hasNext()) {
+                                                String key = myIter.next();
+                                                String value = object.optString(key);
+                                                metricmodel model=new metricmodel();
+                                                model.setMetricTrackKeyName(key);
+                                                model.setMetricTrackValue(value);
+                                                metricItemArraylist.add(model);
+                                            }
+                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+                                        mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
+                                    } while (metadatacursor.moveToNext());
                                 }
-                                mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue));
-                            } while (metadatacursor.moveToNext());
+                            }
                         }
                     }
-                }
 
-                try {
-                    mdbhelper.close();
-                } catch (Exception e) {
+
+                    try {
+                        mdbhelper.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }catch (Exception e)
+                {
                     e.printStackTrace();
                 }
-
-                getActivity().runOnUiThread(new Runnable() {
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
@@ -830,6 +842,49 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 });
             }
         }
+    }
+
+    public void findmediafirsthash()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediafilepath);
+                    grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+                    String format = common.getvideoformat(mediafilepath);
+                    if (format.equalsIgnoreCase("mp4"))
+                        grabber.setFormat(format);
+
+                    grabber.start();
+                    for (int i = 0; i < grabber.getLengthInFrames(); i++) {
+                        Frame frame = grabber.grabImage();
+                        if (frame == null)
+                            break;
+
+                        ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
+                        byte[] byteData = new byte[buffer.remaining()];
+                        buffer.get(byteData);
+                        firsthash = common.getkeyvalue(byteData, keytype);
+                        break;
+                    }
+                    grabber.flush();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                if(! firsthash.trim().isEmpty())
+                {
+                    Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
+                    intent.putExtra("firsthash", firsthash);
+                    intent.putExtra("mediapath", mediafilepath);
+                    intent.putExtra("keytype",keytype);
+                    applicationviavideocomposer.getactivity().startService(intent);
+                }
+
+            }
+        }).start();
     }
 
     @Override
@@ -1365,7 +1420,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
+            controller = new videocontrollerview(applicationviavideocomposer.getactivity(),mitemclick,isscrubbing);
 
             if(selecteduri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -1704,10 +1759,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     return;
                 }
 
-                Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
-                intent.putExtra("mediapath", mediafilepath);
-                intent.putExtra("keytype",keytype);
-                applicationviavideocomposer.getactivity().startService(intent);
+                findmediafirsthash();
 
                 File file=new File(mediafilepath);
                 long file_size = file.length();

@@ -61,18 +61,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.activity.homeactivity;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.metadata.metadatainsert;
 import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
-import com.cryptoserver.composer.services.callservice;
 import com.cryptoserver.composer.services.insertmediadataservice;
 import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.randomstring;
@@ -191,7 +187,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                       try {
                           if(isvideorecording)
                           {
-                              if(mframetorecordcount == currentframenumber || (videokey.trim().isEmpty()))
+                              if(mframetorecordcount == currentframenumber || (mediakey.trim().isEmpty()))
                               {
                                   Bitmap bitmap = mTextureView.getBitmap(10,10);
                                   bitmap = Bitmap.createBitmap( bitmap, 0, 0, bitmap.getWidth(),
@@ -200,13 +196,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                   bitmap.compress(Bitmap.CompressFormat.PNG, 5, stream);
                                   byte[] byteArray = stream.toByteArray();
 
-                                  if(videokey.trim().isEmpty())
+                                  if(mediakey.trim().isEmpty())
                                   {
                                       randomstring gen = new randomstring(20, ThreadLocalRandom.current());
-                                      videokey=gen.nextString();
+                                      mediakey =gen.nextString();
                                       String keyvalue= getkeyvalue(byteArray);
 
-                                      savestartvideoinfo(keyvalue);
+                                      savestartmediainfo(keyvalue);
                                   }
 
                                   if(mframetorecordcount == currentframenumber)
@@ -335,7 +331,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
     File lastrecordedvideo=null;
-    String selectedvideofile ="",videokey="",selectedmetrices="", selectedhashes ="";
+    String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="";
     int metriceslastupdatedposition=0;
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
@@ -1091,7 +1087,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         try {
             // UI
             metadatametricesjson=new JSONArray();
-            videokey="";
+            mediakey ="";
             issavedtofolder=false;
             isvideorecording = true;
             // Start recording
@@ -1152,7 +1148,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 mrecordimagebutton.setEnabled(true);
                 //setmetricesadapter();
-                //fetchmetadatadb();
+                //syncmediadatabase();
                 firsthashvalue = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -1681,7 +1677,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     try {
                         metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
                         muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
-                        savevideoupdate(metricesarray);
+                        savemediaupdate(metricesarray);
                     }catch (Exception e)
                     {
                         e.printStackTrace();
@@ -1786,7 +1782,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     // Calling after 1 by 1 frame duration.
-    public void savevideoupdate(JSONArray metricesjsonarray)
+    public void savemediaupdate(JSONArray metricesjsonarray)
     {
         JSONArray metricesarray=new JSONArray();
         String currentdate[] = common.getcurrentdatewithtimezone();
@@ -1807,7 +1803,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         try {
             metrichash = md5.calculatestringtomd5(metricesarray.toString());
-            mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype,videokey,""+metricesjsonarray.toString(),
+            mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
         } catch (Exception e) {
             e.printStackTrace();
@@ -1815,7 +1811,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     // Initilize when get 1st frame from recorder
-    public void savestartvideoinfo(String firsthash)
+    public void savestartmediainfo(String firsthash)
     {
         try {
             HashMap<String, String> map = new HashMap<String, String>();
@@ -1835,7 +1831,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            mdbstartitemcontainer.add(new dbitemcontainer(json,"video","Local storage path",videokey,"","","0","0",
+            mdbstartitemcontainer.add(new dbitemcontainer(json,"video","Local storage path", mediakey,"","","0","0",
                     config.type_video_start,devicestartdate,devicestartdate,timeoffset,""));
         } catch (Exception e) {
             e.printStackTrace();

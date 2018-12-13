@@ -1251,7 +1251,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
                                     wavevisualizerslist.add(new wavevisualizer(x,true));
                                 }
-                                Log.e("waveform=",""+rms);
+                                //Log.e("waveform=",""+rms);
                             }
 
                             public void onFftDataCapture(Visualizer visualizer,

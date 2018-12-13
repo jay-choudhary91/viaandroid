@@ -3,6 +3,7 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -38,19 +39,23 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.metadata.metadatainsert;
+import com.cryptoserver.composer.models.dbitemcontainer;
+import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
+import com.cryptoserver.composer.services.insertmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.progressdialog;
+import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
+import com.google.gson.Gson;
 
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
@@ -65,7 +70,9 @@ import java.nio.ShortBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,7 +109,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
     videoframeadapter mmetricesadapter,mhashesadapter;
     private MediaRecorder mrecorder;
-    private String selectedfile = null,selectedmetrices="", selectedhashes ="";;
+    private String recordedmediafile = null,selectedmetrices="", selectedhashes ="";;
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
     View rootview;
@@ -115,7 +122,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private graphicalfragment fragmentgraphic;
     private Handler wavehandler;
     private Runnable waverunnable;
-    private String keytype =config.prefs_md5;
+    private String keytype =config.prefs_md5,mediakey="";
     JSONArray metadatametricesjson=new JSONArray();
     private long currentframenumber =0,mframetorecordcount=0,frameduration =15;
     private ArrayList<videomodel> mvideoframes =new ArrayList<>();
@@ -134,8 +141,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
-
-
+    ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
+    ArrayList<dbitemcontainer> mdbmiddleitemcontainer =new ArrayList<>();
+    ArrayList<frameinfo> muploadframelist =new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -432,9 +440,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             resettimer();
 
             try {
-                if(common.getstoragedeniedpermissions().isEmpty() && (selectedfile != null )
-                        && new File(selectedfile).exists())
-                    common.deletefile(selectedfile);
+                if(common.getstoragedeniedpermissions().isEmpty() && (recordedmediafile != null )
+                        && new File(recordedmediafile).exists())
+                    common.deletefile(recordedmediafile);
             }catch (Exception e)
             {
                 e.printStackTrace();
@@ -584,7 +592,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void startrecording() throws IOException {
 
-         fragmentgraphic.setvisualizerwave();
+        mediakey ="";
+        mdbstartitemcontainer.clear();
+        mdbmiddleitemcontainer.clear();
+        fragmentgraphic.setvisualizerwave();
         wavevisualizerslist.clear();
         selectedhashes="";
         metadatametricesjson=new JSONArray();
@@ -601,9 +612,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         mrecorder = new MediaRecorder();
         mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mrecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        selectedfile = getfile().getAbsolutePath();
-        Log.d("filename",selectedfile);
-        mrecorder.setOutputFile(selectedfile);
+        recordedmediafile = getfile().getAbsolutePath();
+        Log.d("filename", recordedmediafile);
+        mrecorder.setOutputFile(recordedmediafile);
         mrecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         try {
@@ -670,6 +681,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     Log.e("Frame count ",""+mframetorecordcount);
                     if(framegap == 2)
                     {
+                        if(mediakey.trim().isEmpty())
+                        {
+                            randomstring gen = new randomstring(20, ThreadLocalRandom.current());
+                            mediakey =gen.nextString();
+                            String keyvalue= getkeyvalue(data);
+                            savestartmediainfo(keyvalue);
+                        }
+
                         framegap=0;
                         updatelistitemnotify(data,currentframenumber,"Frame");
                         currentframenumber = currentframenumber + frameduration;
@@ -686,6 +705,34 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         try {
             os.close();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Initilize when get 1st frame from recorder
+    public void savestartmediainfo(String firsthash)
+    {
+        try {
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("fps","30");
+            map.put("firsthash", firsthash);
+            map.put("hashmethod",keytype);
+            map.put("name","");
+            map.put("duration","");
+            map.put("frmaecounts","");
+            map.put("finalhash","");
+
+            Gson gson = new Gson();
+            String json = gson.toJson(map);
+
+            //common.getCurrentDate();
+            String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
+            String devicestartdate = currenttimewithoffset[0];
+            String timeoffset = currenttimewithoffset[1];
+
+            mdbstartitemcontainer.add(new dbitemcontainer(json,"audio","Local storage path", mediakey,"","","0","0",
+                    config.type_audio_start,devicestartdate,devicestartdate,timeoffset,""));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -759,6 +806,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             myvisualizerview.setVisibility(View.INVISIBLE);
         }
 
+        Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
+        intent.putExtra("liststart",mdbstartitemcontainer);
+        intent.putExtra("listmiddle",mdbmiddleitemcontainer);
+        intent.putExtra("mediapath",recordedmediafile);
+        intent.putExtra("keytype",keytype);
+        applicationviavideocomposer.getactivity().startService(intent);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -766,7 +820,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 try {
                     setaudiohashes();
 
-                   // metadatainsert.writemetadata(selectedfile,""+common.getjson(metadatametricesjson));
+                   // metadatainsert.writemetadata(recordedmediafile,""+common.getjson(metadatametricesjson));
 
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
@@ -805,7 +859,18 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
             ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
             getselectedmetrics(mlocalarraylist);
-
+            JSONArray metricesarray=new JSONArray();
+            if(metadatametricesjson.length() > 0)
+            {
+                try {
+                    metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
+                    muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
+                    savemediaupdate(metricesarray);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
         }
         else
         {
@@ -814,7 +879,34 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     }
 
+    // Calling after 1 by 1 frame duration.
+    public void savemediaupdate(JSONArray metricesjsonarray)
+    {
+        JSONArray metricesarray=new JSONArray();
+        String currentdate[] = common.getcurrentdatewithtimezone();
+        String sequenceno = "",sequencehash = "", metrichash = "" ;
 
+        for(int i=0;i<muploadframelist.size();i++)
+        {
+            try {
+                Log.e("framenumber", muploadframelist.get(i).getFramenumber());
+                sequenceno = muploadframelist.get(i).getFramenumber();
+                sequencehash = muploadframelist.get(i).getHashvalue();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        muploadframelist.clear();
+
+        try {
+            metrichash = md5.calculatestringtomd5(metricesarray.toString());
+            mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
+                    currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void setaudiohashes()
     {
@@ -833,7 +925,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             currentframenumber = currentframenumber + frameduration;
 
 
-            ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(selectedfile));
+            ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(recordedmediafile));
             grabber.start();
             videomodel lastframehash=null;
             int totalframes=grabber.getLengthInAudioFrames();
@@ -1152,7 +1244,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(maindialogshare != null && maindialogshare.isShowing())
                     maindialogshare.dismiss();
 
-                xdata.getinstance().saveSetting("selectedaudiourl",""+ selectedfile);
+                xdata.getinstance().saveSetting("selectedaudiourl",""+ recordedmediafile);
                 audioreaderfragment audiotabfrag = new audioreaderfragment();
                 //  audiotabfrag.setdata(videoobj.getPath());
                 gethelper().replaceFragment(audiotabfrag, false, true);
@@ -1221,7 +1313,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        common.exportaudio(new File(selectedfile),true);
+                        common.exportaudio(new File(recordedmediafile),true);
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

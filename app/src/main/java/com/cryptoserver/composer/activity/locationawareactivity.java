@@ -56,13 +56,18 @@ import android.view.Display;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
+import com.cryptoserver.composer.interfaces.apiresponselistener;
+import com.cryptoserver.composer.models.mediametadatainfo;
 import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.models.startmediainfo;
 import com.cryptoserver.composer.services.locationservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.googleutils;
 import com.cryptoserver.composer.utils.noise;
+import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -70,7 +75,12 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -82,6 +92,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -144,6 +156,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     List<CellInfo> towerinfolist=new ArrayList<>() ;
     private boolean isservicebound=false;
+    private databasemanager mdbhelper;
+    boolean updatesync = true;
+    ArrayList<startmediainfo> unsyncedmediaitems=new ArrayList<>();
+    int syncupdationcounter=0;
+    boolean isdatasyncing=false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -620,7 +637,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         dbtoxapiupdatecounter++;
                         if (dbtoxapiupdatecounter > 1) {
                             dbtoxapiupdatecounter = 0;
-                            fetchmetadatadb();
+
+                            if(! isdatasyncing)
+                                syncmediadatabase();
                         }
                     }
                 }).start();
@@ -1652,8 +1671,495 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         return infos;
     }
 
+    public void syncmediadatabase()
+    {
+        Log.e("Method ","syncmediadatabase");
+        if(getcurrentfragment() instanceof videocomposerfragment)
+        {
+            boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
+            if(isrecording)
+            {
+                isdatasyncing=false;
+                return;
+            }
+
+            if(! common.isnetworkconnected(locationawareactivity.this))
+            {
+                isdatasyncing=false;
+                return;
+            }
+
+        }
+
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        // Fetch data which are unsynced or sync = 0
+        unsyncedmediaitems = mdbhelper.fetchunsynceddata();
+        try {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        syncupdationcounter=0;
+        if(unsyncedmediaitems.size() > 0)
+        {
+            isdatasyncing=true;
+            updateunsynceditems();
+        }
+        else
+        {
+            isdatasyncing=false;
+        }
+    }
+
+    public void updateunsynceditems()
+    {
+        String hashmethod="",hashvalue="",mediatitle="",selectedid="", header = "", type = "",localkey = "", token = "", mediakey = "",
+                sync = "",sync_date = "",action_type="",apirequestdevicedate = "",videostartdevicedate= "",devicetimeoffset = "",
+                videocompletedevicedate = "";
+
+        String synchdefaultversion = "1", synchstatus = "inprogress", synchcompletedate = "", synchlastsequence = "";
+
+        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+
+        if(unsyncedmediaitems != null && unsyncedmediaitems.size() > 0 && syncupdationcounter < unsyncedmediaitems.size())
+        {
+            selectedid= unsyncedmediaitems.get(syncupdationcounter).getId().toString();
+            header = unsyncedmediaitems.get(syncupdationcounter).getHeader().toString();
+            type = unsyncedmediaitems.get(syncupdationcounter).getType().toString();
+            localkey = unsyncedmediaitems.get(syncupdationcounter).getLocalkey().toString();
+            token = unsyncedmediaitems.get(syncupdationcounter).getToken().toString();
+            mediakey = unsyncedmediaitems.get(syncupdationcounter).getVideokey().toString();
+            sync = unsyncedmediaitems.get(syncupdationcounter).getSync().toString();
+            action_type = unsyncedmediaitems.get(syncupdationcounter).getAction_type().toString();
+            sync_date = unsyncedmediaitems.get(syncupdationcounter).getSync_date().toString();
+            apirequestdevicedate = unsyncedmediaitems.get(syncupdationcounter).getApirequestdevicedate().toString();
+            videostartdevicedate = unsyncedmediaitems.get(syncupdationcounter).getVideostartdevicedate().toString();
+            devicetimeoffset = unsyncedmediaitems.get(syncupdationcounter).getDevicetimeoffset().toString();
+            videocompletedevicedate = unsyncedmediaitems.get(syncupdationcounter).getVideocompletedevicedate().toString();
+        }
+
+        if(sync.equalsIgnoreCase("0")){
+
+            String currentdate[] = common.getcurrentdatewithtimezone();
+            String firstdate = currentdate[0];
+
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("version",synchdefaultversion);
+            map.put("firstdate",firstdate);
+            map.put("lastdate",firstdate);
+            map.put("lastsequence",synchlastsequence);
+            map.put("status",synchstatus);
+            map.put("completedate",synchcompletedate);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(map);
+            Log.e("json",""+json);
+            updatedatasync(json,selectedid);
+        }
+
+        Log.e("video_updateid ",""+selectedid);
+
+        if(!header.isEmpty()){
+            try {
+                JSONObject obj = new JSONObject(header);
+                hashmethod  = obj.getString("hashmethod");
+                hashvalue  = obj.getString("firsthash");
+                mediatitle  = obj.getString("name");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        final String  finalselectedid = selectedid;
+
+        mpairslist.put("html","0");
+        mpairslist.put("hashmethod",""+hashmethod);
+        mpairslist.put("hashvalue",""+hashvalue);
+        mpairslist.put("title",mediatitle);
+        mpairslist.put("apirequestdevicedate",apirequestdevicedate);
+        mpairslist.put("devicetimeoffset",devicetimeoffset);
+
+        if(type.equalsIgnoreCase("video"))
+        {
+            mpairslist.put("videostartdevicedate",videostartdevicedate);
+        }
+        else if(type.equalsIgnoreCase("audio"))
+        {
+            mpairslist.put("audiostartdevicedate",videostartdevicedate);
+        }
+
+        if(mediakey.trim().isEmpty())
+        {
+            // api calling for video_start or audio_start
+            xapipost_sendjson(locationawareactivity.this,action_type,mpairslist, new apiresponselistener() {
+                @Override
+                public void onResponse(taskresult response)
+                {
+                    if(response.isSuccess())
+                    {
+                        try {
+                            JSONObject object = (JSONObject) response.getData();
+                            String videokey=object.getString("key");
+                            String videotoken=object.getString("videotoken");
+                            String transactionid = object.getString("videostarttransactionid");
+                            updatevideokeytoken(finalselectedid,videokey,videotoken,transactionid);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                    triggersyncstatus();
+                }
+            });
+        }else{
+            if(sync_date.equalsIgnoreCase("0"))
+                runmediaupdate(header,localkey,mediakey,token,sync,devicetimeoffset,apirequestdevicedate,finalselectedid,videocompletedevicedate,type);
+        }
+    }
+
+    public void triggersyncstatus()
+    {
+        syncupdationcounter++;
+        if(syncupdationcounter < unsyncedmediaitems.size() && unsyncedmediaitems.size() > 0)
+        {
+            updateunsynceditems();
+        }
+        else
+        {
+            isdatasyncing=false;
+        }
+    }
+
+    public void runmediaupdate(String finalheader, String finallocalkey, String finalvideokey, String finaltoken, String finalsync,
+                               String finaldevicetimeoffset, String finalapirequestdevicedate, String startselectedid,
+                               String finalvideocompletedevicedate,String type){
+
+        String selectedid = "", blockchain= "",valuehash= "",hashmethod= "",localkey= "",metricdata= "",
+                recordate= "",rsequenceno= "",sequencehash= "",sequenceno= "",serverdate= "",videoupdatedevicedate= "",sequencedevicedate = "";
+
+        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+        JSONObject finalobject = null;
+
+        JSONArray array=new JSONArray();
+        String matadata[] = new String[0];
+
+        String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
+
+        String currentdate[] = common.getcurrentdatewithtimezone();
+        videoupdatedevicedate = currentdate[0];
+
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+
+            ArrayList<mediametadatainfo>  mediametadatainfosarray  =  mdbhelper.setmediametadatainfo(finallocalkey);
 
 
+            if(mediametadatainfosarray != null && mediametadatainfosarray.size()>0){
 
+                selectedid= mediametadatainfosarray.get(0).getId();
+                blockchain = mediametadatainfosarray.get(0).getBlockchain();
+                valuehash =mediametadatainfosarray.get(0).getValuehash();
+                hashmethod = mediametadatainfosarray.get(0).getHashmethod();
+                localkey = mediametadatainfosarray.get(0).getLocalkey();
+                metricdata = mediametadatainfosarray.get(0).getMetricdata();
+                recordate = mediametadatainfosarray.get(0).getRecordate();
+                rsequenceno = mediametadatainfosarray.get(0).getRsequenceno();
+                sequencehash =mediametadatainfosarray.get(0).getSequencehash();
+                sequenceno =mediametadatainfosarray.get(0).getSequenceno();
+                serverdate = mediametadatainfosarray.get(0).getServerdate();
+                sequencedevicedate = mediametadatainfosarray.get(0).getSequencedevicedate();
+
+            }else{
+
+                callvideocompletedapi(startselectedid,finalheader,finallocalkey,finalapirequestdevicedate,finalvideokey,finaldevicetimeoffset,finaltoken,finalvideocompletedevicedate,finalsync);
+                return ;
+
+            }
+
+            final String finalselectedid =  selectedid;
+
+            try {
+
+                JSONArray jsonArray = new JSONArray(metricdata);
+
+                JSONObject mainobject=new JSONObject();
+                finalobject=new JSONObject();
+
+                Gson userGson=new GsonBuilder().create();
+
+                mainobject.put("dictionary",jsonArray.get(0));
+                mainobject.put("sequenceno",sequenceno);
+                mainobject.put("recorddate",""+recordate);
+                mainobject.put("dictionaryhashmethod",""+hashmethod);
+                mainobject.put("sequencehashvalue",sequencehash);
+                mainobject.put("dictionaryhashvalue",""+valuehash);
+                mainobject.put("sequencedevicedate",""+sequencedevicedate);
+                mainobject.put("sequencehashmethod",""+hashmethod);
+
+                array.put(mainobject);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            mpairslist.put("html","0");
+            mpairslist.put("key",""+finalvideokey);
+            mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
+            mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
+            mpairslist.put("videotoken",finaltoken);
+            mpairslist.put("videoupdatedevicedate",""+videoupdatedevicedate);
+            mpairslist.put("sequencelist",  array);
+
+            final String finalSequenceno = sequenceno;
+
+            // api calling for video_update or audio_update
+            xapipost_sendjson(locationawareactivity.this,config.type_video_update, mpairslist, new apiresponselistener() {
+                @Override
+                public void onResponse(taskresult response)
+                {
+                    if(response.isSuccess())
+                    {
+                        try {
+
+                            JSONObject object = (JSONObject) response.getData();
+                            JSONObject jsonObject = object.getJSONObject("sequences");
+                            String sequenceid =  "",videoframetransactionid = "",serverdictionaryhash="",sequencekey = "";
+
+                            Iterator itr = jsonObject.keys();
+                            while(itr.hasNext()){
+                                sequencekey = (String)itr.next();
+                                JSONObject issue = jsonObject.getJSONObject(sequencekey);
+
+                                //  get id from  issue
+                                sequenceid = issue.getString("sequenceid");
+                                videoframetransactionid = issue.getString("videoframetransactionid");
+                                serverdictionaryhash = issue.getString("serverdictionaryhash");
+                            }
+
+                            String serverdate = object.getString("serverdate");
+                            updatevideoupdateapiresponce(finalselectedid,sequencekey,serverdate,serverdictionaryhash,sequenceid,videoframetransactionid);
+
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                    triggersyncstatus();
+                }
+            });
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void callvideocompletedapi(String startselectedid,String finalheader,String finallocalkey,String finalapirequestdevicedate,String finalvideokey,String finaldevicetimeoffset,String finaltoken,String finalvideocompletedevicedate,String finalsync){
+
+        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+        final String localkey = finallocalkey;
+        final String header = finalheader,sync =finalsync;
+        String synchdefaultversion = "1", synchstatus = "completed", synchcompletedate = "", synchlastsequence = "";
+
+        String framecount="",videocompletedevicedate="",videoduration="",hassync="",synccurrentdate = "";
+
+        String currentdate[] = common.getcurrentdatewithtimezone();
+        String Lastdate = currentdate[0];
+
+        try {
+
+            JSONObject obj = new JSONObject(sync);
+            JSONObject objheader = new JSONObject(header);
+
+
+            framecount  = objheader.getString("frmaecounts");
+            videoduration  = objheader.getString("duration");
+
+            synccurrentdate = obj.getString("firstdate");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("version",synchdefaultversion);
+        map.put("firstdate",synccurrentdate);
+        map.put("lastdate",Lastdate);
+        map.put("lastsequence",framecount);
+        map.put("status",synchstatus);
+        map.put("completedate",finalvideocompletedevicedate);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(map);
+        Log.e("json",""+json);
+
+        updatedatasync(json,startselectedid);
+
+        mpairslist.put("html","0");
+        mpairslist.put("key",""+finalvideokey);
+        mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
+        mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
+        mpairslist.put("videocompletedevicedate",""+finalvideocompletedevicedate);
+        mpairslist.put("videotoken",finaltoken);
+        mpairslist.put("framecount", framecount);
+        mpairslist.put("videoduration", videoduration);
+
+        xapipost_sendjson(locationawareactivity.this,config.type_video_complete, mpairslist, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response)
+            {
+                if(response.isSuccess())
+                {
+                    try {
+
+                        JSONObject object = (JSONObject) response.getData();
+                        String valuehash = object.getString("hashvalue");
+
+                        updatecompletehashvalue(localkey,valuehash);
+                        updatedatasyncdate(localkey,common.getCurrentDate());
+
+
+                     /*   String sequence = object.getString("sequence");
+                        String serverdate = object.getString("serverdate");
+                        String serverdictionaryhash = object.getString("serverdictionaryhash");
+                        updatevideoupdateapiresponse(finalselectedid,sequence,serverdate,serverdictionaryhash);*/
+
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                triggersyncstatus();
+            }
+        });
+    }
+
+    public void updatedatasync(String sync,String selectedid)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatesyncvalue(sync,selectedid);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatedatasyncdate(String localkey,String syncdate)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatevideosyncdate(localkey,syncdate);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void updatecompletehashvalue(String localkey,String valuehash)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatecompletehashvalue(localkey,valuehash);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatevideokeytoken(String videoid,String videokey,String tokan,String transactionid)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatevideokeytoken(videoid,videokey,tokan,transactionid);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void updatevideoupdateapiresponce(String selectedid,String sequence,String serverdate,String serverdictionaryhash,String sequenceid,String videoframetransactionid)
+    {
+
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatevideoupdateapiresponse(selectedid,sequence,serverdate,serverdictionaryhash,sequenceid,videoframetransactionid);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
 }

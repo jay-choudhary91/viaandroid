@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
@@ -36,7 +37,7 @@ import java.util.Set;
 public class readmediadataservice extends Service {
 
     ArrayList<videomodel> framearraylist =new ArrayList<>();
-    String mediapath="";
+    String mediapath="",firsthash="";
     int xapicounter = 0;
     @Override
     public IBinder onBind(Intent arg0) {
@@ -50,105 +51,105 @@ public class readmediadataservice extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mediapath = intent.getExtras().getString("mediapath");
-                String keytype = intent.getExtras().getString("keytype");
-                if(mediapath != null && (! mediapath.isEmpty()))
-                {
-                    File file=new File(mediapath);
-                    if(file.exists())
+                try {
+                    xapicounter = 0;
+                    framearraylist =new ArrayList<>();
+                    mediapath = intent.getExtras().getString("mediapath");
+                    String keytype = intent.getExtras().getString("keytype");
+                    firsthash = intent.getExtras().getString("firsthash");
+                    if(mediapath != null && (! mediapath.isEmpty()))
                     {
-                        long currentframenumber=0,frameduration =15;
-                        databasemanager mdbhelper=null;
-                        if (mdbhelper == null) {
-                            mdbhelper = new databasemanager(getApplicationContext());
-                            mdbhelper.createDatabase();
-                        }
-
-                        try {
-                            mdbhelper.open();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        String medianame=common.getfilename(mediapath);
-                        Cursor cursor=mdbhelper.getmediainfobymedianame(medianame);
-                        String status="",videotoken="",remainingframes="50",lastframe="1";
-                        if(cursor != null && cursor.getCount() > 0)
+                        File file=new File(mediapath);
+                        if(file.exists())
                         {
-                            if (cursor.moveToFirst())
-                            {
-                                do{
-                                    status = "" + cursor.getString(cursor.getColumnIndex("status"));
-                                    videotoken = "" + cursor.getString(cursor.getColumnIndex("videotoken"));
-                                    remainingframes = "" + cursor.getString(cursor.getColumnIndex("remainingframes"));
-                                    lastframe = "" + cursor.getString(cursor.getColumnIndex("lastframe"));
-                                }while(cursor.moveToNext());
+                            databasemanager mdbhelper=null;
+                            if (mdbhelper == null) {
+                                mdbhelper = new databasemanager(getApplicationContext());
+                                mdbhelper.createDatabase();
                             }
-                        }
 
-                        try {
-                            mdbhelper.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        if(status.trim().isEmpty())
-                        {
-                            int count = 1;
-                            currentframenumber=0;
-                            currentframenumber = currentframenumber + frameduration;
-                            try
-                            {
-                                ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediapath);
-                                grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-                                String format= common.getvideoformat(mediapath);
-                                if(format.equalsIgnoreCase("mp4"))
-                                    grabber.setFormat(format);
-
-                                grabber.start();
-                                for(int i = 0; i<grabber.getLengthInFrames(); i++){
-                                    Frame frame = grabber.grabImage();
-                                    if (frame == null)
-                                        break;
-
-                                    ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-                                    byte[] byteData = new byte[buffer.remaining()];
-                                    buffer.get(byteData);
-                                    String keyValue= common.getkeyvalue(byteData,keytype);
-
-                                    framearraylist.add(new videomodel("Frame ", keytype,count,keyValue));
-                                    if(count > 30)
-                                        break;
-
-                                    count++;
-                                }
-                                grabber.flush();
-
-                            }catch (Exception e)
-                            {
+                            try {
+                                mdbhelper.open();
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            runxapicounter();
-                        }
-                        else if(status.equalsIgnoreCase(config.sync_pending))
-                        {
-                            int framestart=Integer.parseInt(lastframe);
-                            framestart=framestart+1;
-                            int maxframes=framestart+50;
-                            getvideoframes(videotoken,framestart,maxframes);
-                        }
-                        else if(status.equalsIgnoreCase(config.sync_complete))
-                        {
-                            sendbroadcastreader();
+
+                            Cursor cursor=mdbhelper.getmediainfobyfirsthash(firsthash);
+                            String status="",videotoken="",remainingframes="50",lastframe="1";
+                            if(cursor != null && cursor.getCount() > 0)
+                            {
+                                if (cursor.moveToFirst())
+                                {
+                                    do{
+                                        status = "" + cursor.getString(cursor.getColumnIndex("status"));
+                                        videotoken = "" + cursor.getString(cursor.getColumnIndex("token"));
+                                        remainingframes = "" + cursor.getString(cursor.getColumnIndex("remainingframes"));
+                                        lastframe = "" + cursor.getString(cursor.getColumnIndex("lastframe"));
+                                    }while(cursor.moveToNext());
+                                }
+                            }
+
+                            try {
+                                mdbhelper.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            if(status.trim().isEmpty())
+                            {
+                                int count = 1;
+                                try
+                                {
+                                    ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediapath);
+                                    grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+                                    String format= common.getvideoformat(mediapath);
+                                    if(format.equalsIgnoreCase("mp4"))
+                                        grabber.setFormat(format);
+
+                                    grabber.start();
+                                    for(int i = 0; i<grabber.getLengthInFrames(); i++){
+                                        Frame frame = grabber.grabImage();
+                                        if (frame == null)
+                                            break;
+
+                                        ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
+                                        byte[] byteData = new byte[buffer.remaining()];
+                                        buffer.get(byteData);
+                                        String keyValue= common.getkeyvalue(byteData,keytype);
+
+                                        framearraylist.add(new videomodel("Frame ", keytype,count,keyValue));
+                                        if(count > 30)
+                                            break;
+
+                                        count++;
+                                    }
+                                    grabber.flush();
+
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                runxapicounter();
+                            }
+                            else if(status.equalsIgnoreCase(config.sync_pending))
+                            {
+                                int framestart=Integer.parseInt(lastframe);
+                                framestart=framestart+1;
+                                int maxframes=framestart+50;
+                                getvideoframes(videotoken,framestart,maxframes);
+                            }
+                            else if(status.equalsIgnoreCase(config.sync_complete))
+                            {
+                                sendbroadcastreader();
+                            }
                         }
                     }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressdialog.dismisswaitdialog();
-                    }
-                });
+
+
             }
         }).start();
         /**/
@@ -167,7 +168,8 @@ public class readmediadataservice extends Service {
             public void onResponse(taskresult response) {
                 if(response.isSuccess())
                 {
-                    String videotoken="",remainingframes="50",lastframe="0";
+                    Log.e("Found hash ",""+hashvalue);
+                    String videotoken="",remainingframes="50",lastframe="0",videotitle="";
                     try {
                         JSONObject object = (JSONObject) response.getData();
 
@@ -185,6 +187,7 @@ public class readmediadataservice extends Service {
                         String videotypeshortname = (object.has("videotypeshortname")?object.getString("videotypeshortname"):"");
                         String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                         videotoken = (object.has("videotoken")?object.getString("videotoken"):"");
+                        videotitle = (object.has("videotitle")?object.getString("videotitle"):"");
 
                         String medianame=common.getfilename(mediapath);
 
@@ -200,9 +203,16 @@ public class readmediadataservice extends Service {
                             e.printStackTrace();
                         }
 
-                        mdbhelper.insertfindmediainfo(videoid,videokey,videohashmethod,videohashvalue,videostartdevicedatetime,videostarttransactionid,
+                        /*mdbhelper.insertfindmediainfo(videoid,videokey,videohashmethod,videohashvalue,videostartdevicedatetime,videostarttransactionid,
                                 videodevicetimeoffset,videopublickey,videotypeid,videocreateddate,videorank,videotypeshortname,savedsequencecount,videotoken,
-                                config.sync_pending,medianame,true,remainingframes,lastframe);
+                                config.sync_pending,medianame,true,remainingframes,lastframe);*/
+
+                        String syncdate[] = common.getcurrentdatewithtimezone();
+
+                        mdbhelper.insertstartvideoinfo(firsthash,videotypeshortname,videotitle,videokey,
+                                videotoken,videokey,"",syncdate[0] , "videoframe_get",
+                                "",videostartdevicedatetime,videodevicetimeoffset,
+                                "",videoid,config.sync_pending,remainingframes,lastframe);
 
 
                         try {
@@ -280,10 +290,15 @@ public class readmediadataservice extends Service {
                                 String metahash = (object.has("metahash")?object.getString("metahash"):"");
                                 String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
 
-                                mdbhelper.insertvideoframedata(videoframeid,objectid,videoframenumber,videoframehashvalue,videoframehashmethod,
+                                /*mdbhelper.insertvideoframedata(videoframeid,objectid,videoframenumber,videoframehashvalue,videoframehashmethod,
                                         videoframemeta,videoframemetahash,videoframemetahashmethod,videoframedevicedatetime,videoframetransactionid
                                         ,objectparentid,sequenceno,meta,hashvalue,hashmethod
-                                        ,metahash,metahashmethod);
+                                        ,metahash,metahashmethod);*/
+
+                                mdbhelper.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                        meta,videoframedevicedatetime,hashmethod,hashvalue,
+                                        sequenceno,"",videoframedevicedatetime,"",
+                                        "","0",videoframetransactionid);
                             }
 
                             try {

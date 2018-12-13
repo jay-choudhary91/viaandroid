@@ -38,6 +38,12 @@ public class config {
     public static final String type_video_find = "video_find";
     public static final String type_videoframes_get = "videoframes_get";
 
+    public static final String type_audio_update = "audio_update";
+    public static final String type_audio_start = "audio_start";
+    public static final String type_audio_complete = "audio_complete";
+    public static final String type_audio_find = "audio_find";
+    public static final String type_audioframes_get = "audioframes_get";
+
     public static final String metriclist = "metriclist";
     public static final String framecount = "framecount";
     public static final String frameupdateevery = "frameupdateevery";

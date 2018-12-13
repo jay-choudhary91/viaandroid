@@ -1046,7 +1046,7 @@ public class graphicalfragment extends basefragment implements
                                     myvisualizerview.invalidate();
                                 }
 
-                                Log.e("waveform=",""+rms);
+                                //Log.e("waveform=",""+rms);
 
                                 myvisualizerviewmedia.updateVisualizer(bytes);
 
