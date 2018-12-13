@@ -287,7 +287,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                             {
                                 if(player != null && player.isPlaying())
                                 {
-                                    player.pause();
+                                   // player.pause();
                                     controller.setplaypauuse();
                                     Log.e("isplaying","is playing");
                                 }
@@ -312,12 +312,21 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                 double position=c*centerPos;
                                 try {
                                     double currentduration=position*1000;
+
+                                    Log.e("currentduration" ,"" + currentduration);
+
+
                                     if(player !=null && controller != null)
                                     {
                                         try {
+
+                                            if(player.getDuration() <= (int)currentduration)
+                                                      currentduration = player.getDuration();
+
                                             player.seekTo((int) currentduration);
                                             Log.e("playerseekto",""+currentduration);
-                                            controller.setProgress();
+
+                                            controller.setProgress((int) currentduration,true);
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
@@ -1561,10 +1570,13 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 {
                     player.seekTo(0);
                     wavevisualizerslist.clear();
-                    controller.setProgress();
+                    controller.setProgress(0,true);
+
                     RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                     relativeParams.setMargins(0, 0,0, 0);
                     recyview_frames.setLayoutParams(relativeParams);
+
+
                 }
             }
         },200);
