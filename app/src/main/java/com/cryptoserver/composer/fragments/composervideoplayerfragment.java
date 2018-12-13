@@ -1169,7 +1169,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 {
                     player.seekTo(0);
                     wavevisualizerslist.clear();
-                    controller.setProgress();
+                    controller.setProgress(0,false);
                 }
             }
         },200);
