@@ -171,7 +171,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     private BroadcastReceiver coredatabroadcastreceiver;
     String firsthash="";
     int count = 0;
-
+    @BindView(R.id.textfetchdata)
+    TextView textfetchdata;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -193,6 +194,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
 
+            textfetchdata.setVisibility(View.VISIBLE);
 
             {
 
@@ -845,6 +847,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        textfetchdata.setVisibility(View.GONE);
                         mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                         selectedhashes ="";
                     }
