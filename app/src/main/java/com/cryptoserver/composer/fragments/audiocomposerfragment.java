@@ -1368,7 +1368,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         super.onHeaderBtnClick(btnid);
         switch (btnid){
             case R.id.img_menu:
-                gethelper().onBack();
+                if(isaudiorecording)
+                {
+                    stoprecording();
+                }
+                else
+                {
+                    gethelper().onBack();
+                }
                 break;
         }
     }
