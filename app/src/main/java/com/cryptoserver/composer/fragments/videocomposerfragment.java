@@ -1454,7 +1454,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         super.onHeaderBtnClick(btnid);
         switch (btnid){
             case R.id.img_menu:
-                gethelper().onBack();
+                if(isvideorecording)
+                {
+                    startstopvideo();
+                }
+                else
+                {
+                    gethelper().onBack();
+                }
                 break;
         }
     }
