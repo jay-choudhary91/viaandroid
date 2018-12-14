@@ -691,7 +691,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mp.seekTo(100);
             }
 
-            if(fragmentgraphic != null && selectedvideouri!=null){
+            if(fragmentgraphic != null){
                 fragmentgraphic.setmediaplayer(true,null);
             }else{
                 if(audiourl!=null && fragmentgraphic != null){
@@ -976,7 +976,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     {
         try {
             JSONArray array=new JSONArray(metadata);
-            metricmainarraylist.clear();
             for(int j=0;j<array.length();j++)
             {
                 ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
@@ -998,38 +997,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
-    }
-
-    public void getFramesBitmap()
-    {
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        runmethod = true;
-        isbitmapprocessing=true;
-
-        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        m_mediaMetadataRetriever.setDataSource(audiourl);
-
-        String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        String metadatawriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
-        String metadataAlbum=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-
-        if(metadatawriter != null && (! metadatawriter.trim().isEmpty()) && (! metadatawriter.equalsIgnoreCase("null")))
-        {
-            parsemetadata(metadatawriter);
-        }
-        else if(metadataAlbum != null && (! metadataAlbum.trim().isEmpty()) && (! metadataAlbum.equalsIgnoreCase("null")))
-        {
-            parsemetadata(metadataAlbum);
-        }
-
-        isbitmapprocessing=false;
-        suspendbitmapqueue=false;
-
     }
 
     public void setupaudioplayer(final Uri selecteduri)
@@ -1220,11 +1187,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         new Thread(){
                             public void run(){
                                 setVideoAdapter();
-                            }
-                        }.start();
-                        new Thread(){
-                            public void run(){
-                                getFramesBitmap();
                             }
                         }.start();
                     }
