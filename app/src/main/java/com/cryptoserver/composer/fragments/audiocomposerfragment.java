@@ -806,12 +806,22 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             myvisualizerview.setVisibility(View.INVISIBLE);
         }
 
-        Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
-        intent.putExtra("liststart",mdbstartitemcontainer);
-        intent.putExtra("listmiddle",mdbmiddleitemcontainer);
-        intent.putExtra("mediapath",recordedmediafile);
-        intent.putExtra("keytype",keytype);
-        applicationviavideocomposer.getactivity().startService(intent);
+        try {
+            Gson gson = new Gson();
+            String list1 = gson.toJson(mdbstartitemcontainer);
+            String list2 = gson.toJson(mdbmiddleitemcontainer);
+            xdata.getinstance().saveSetting("liststart",list1);
+            xdata.getinstance().saveSetting("listmiddle",list2);
+            xdata.getinstance().saveSetting("mediapath",recordedmediafile);
+            xdata.getinstance().saveSetting("keytype",keytype);
+
+            Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
+            applicationviavideocomposer.getactivity().startService(intent);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
 
         new Thread(new Runnable() {
             @Override

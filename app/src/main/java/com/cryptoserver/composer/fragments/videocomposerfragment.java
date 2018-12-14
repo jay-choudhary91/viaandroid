@@ -1132,19 +1132,22 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 clearvideolist();
                 showsharepopupmain();
 
-                /*new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        setvideoadapter();
-                    }
-                }).start();*/
+                try {
 
-                Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
-                intent.putExtra("liststart",mdbstartitemcontainer);
-                intent.putExtra("listmiddle",mdbmiddleitemcontainer);
-                intent.putExtra("mediapath",lastrecordedvideo.getAbsolutePath());
-                intent.putExtra("keytype",keytype);
-                applicationviavideocomposer.getactivity().startService(intent);
+                    Gson gson = new Gson();
+                    String list1 = gson.toJson(mdbstartitemcontainer);
+                    String list2 = gson.toJson(mdbmiddleitemcontainer);
+                    xdata.getinstance().saveSetting("liststart",list1);
+                    xdata.getinstance().saveSetting("listmiddle",list2);
+                    xdata.getinstance().saveSetting("mediapath",lastrecordedvideo.getAbsolutePath());
+                    xdata.getinstance().saveSetting("keytype",keytype);
+
+                    Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
+                    applicationviavideocomposer.getactivity().startService(intent);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
 
                 mrecordimagebutton.setEnabled(true);
                 //setmetricesadapter();

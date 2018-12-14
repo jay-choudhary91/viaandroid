@@ -1798,6 +1798,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         {
             mpairslist.put("audiostartdevicedate",videostartdevicedate);
         }
+        else if(type.equalsIgnoreCase("image"))
+        {
+            mpairslist.put("imagestartdevicedate",videostartdevicedate);
+        }
 
         if(mediakey.trim().isEmpty())
         {
@@ -1809,11 +1813,28 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     if(response.isSuccess())
                     {
                         try {
+                            String token="",transactionid="";
                             JSONObject object = (JSONObject) response.getData();
-                            String videokey=object.getString("key");
-                            String videotoken=object.getString("videotoken");
-                            String transactionid = object.getString("videostarttransactionid");
-                            updatevideokeytoken(finalselectedid,videokey,videotoken,transactionid);
+                            String key=object.getString("key");
+                            if(object.has("videotoken"))
+                                token=object.getString("videotoken");
+
+                            if(object.has("audiotoken"))
+                                token=object.getString("audiotoken");
+
+                            if(object.has("imagetoken"))
+                                token=object.getString("imagetoken");
+
+                            if(object.has("videostarttransactionid"))
+                                transactionid=object.getString("videostarttransactionid");
+
+                            if(object.has("audiostarttransactionid"))
+                                transactionid=object.getString("audiostarttransactionid");
+
+                            if(object.has("imagestarttransactionid"))
+                                transactionid=object.getString("imagestarttransactionid");
+
+                            updatevideokeytoken(finalselectedid,key,token,transactionid);
                         }catch (Exception e)
                         {
                             e.printStackTrace();
@@ -1891,7 +1912,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             }else{
 
-                callvideocompletedapi(startselectedid,finalheader,finallocalkey,finalapirequestdevicedate,finalvideokey,finaldevicetimeoffset,finaltoken,finalvideocompletedevicedate,finalsync);
+                callvideocompletedapi(startselectedid,finalheader,finallocalkey,finalapirequestdevicedate,finalvideokey,
+                        finaldevicetimeoffset,finaltoken,finalvideocompletedevicedate,finalsync,type);
                 return ;
 
             }
@@ -1925,14 +1947,33 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             mpairslist.put("key",""+finalvideokey);
             mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
             mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
-            mpairslist.put("videotoken",finaltoken);
-            mpairslist.put("videoupdatedevicedate",""+videoupdatedevicedate);
+
             mpairslist.put("sequencelist",  array);
 
             final String finalSequenceno = sequenceno;
+            String actiontype = "";
+
+            if(type.equalsIgnoreCase("video"))
+            {
+                actiontype = config.type_video_update;
+                mpairslist.put("videotoken",finaltoken);
+                mpairslist.put("videoupdatedevicedate",""+videoupdatedevicedate);
+            }
+            else if(type.equalsIgnoreCase("audio"))
+            {
+                actiontype = config.type_audio_update;
+                mpairslist.put("audiotoken",finaltoken);
+                mpairslist.put("audioupdatedevicedate",""+videoupdatedevicedate);
+            }
+            else if(type.equalsIgnoreCase("image"))
+            {
+                actiontype = config.type_image_update;
+                mpairslist.put("imagetoken",finaltoken);
+                mpairslist.put("imageupdatedevicedate",""+videoupdatedevicedate);
+            }
 
             // api calling for video_update or audio_update
-            xapipost_sendjson(locationawareactivity.this,config.type_video_update, mpairslist, new apiresponselistener() {
+            xapipost_sendjson(locationawareactivity.this,actiontype, mpairslist, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response)
                 {
@@ -1942,21 +1983,30 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                             JSONObject object = (JSONObject) response.getData();
                             JSONObject jsonObject = object.getJSONObject("sequences");
-                            String sequenceid =  "",videoframetransactionid = "",serverdictionaryhash="",sequencekey = "";
+                            String sequenceid =  "",mediaframetransactionid = "",serverdictionaryhash="",sequencekey = "";
 
                             Iterator itr = jsonObject.keys();
                             while(itr.hasNext()){
                                 sequencekey = (String)itr.next();
-                                JSONObject issue = jsonObject.getJSONObject(sequencekey);
+                                JSONObject jobject = jsonObject.getJSONObject(sequencekey);
 
                                 //  get id from  issue
-                                sequenceid = issue.getString("sequenceid");
-                                videoframetransactionid = issue.getString("videoframetransactionid");
-                                serverdictionaryhash = issue.getString("serverdictionaryhash");
+                                sequenceid = jobject.getString("sequenceid");
+
+                                if(jobject.has("videoframetransactionid"))
+                                    mediaframetransactionid = jobject.getString("videoframetransactionid");
+
+                                if(jobject.has("audioframetransactionid"))
+                                    mediaframetransactionid = jobject.getString("audioframetransactionid");
+
+                                if(jobject.has("imageframetransactionid"))
+                                    mediaframetransactionid = jobject.getString("imageframetransactionid");
+
+                                serverdictionaryhash = jobject.getString("serverdictionaryhash");
                             }
 
                             String serverdate = object.getString("serverdate");
-                            updatevideoupdateapiresponce(finalselectedid,sequencekey,serverdate,serverdictionaryhash,sequenceid,videoframetransactionid);
+                            updatevideoupdateapiresponce(finalselectedid,sequencekey,serverdate,serverdictionaryhash,sequenceid,mediaframetransactionid);
 
 
                         }catch (Exception e)
@@ -1974,7 +2024,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
 
-    public void callvideocompletedapi(String startselectedid,String finalheader,String finallocalkey,String finalapirequestdevicedate,String finalvideokey,String finaldevicetimeoffset,String finaltoken,String finalvideocompletedevicedate,String finalsync){
+    public void callvideocompletedapi(String startselectedid,String finalheader,String finallocalkey,String finalapirequestdevicedate,
+                                      String finalvideokey,String finaldevicetimeoffset,String finaltoken,
+                                      String finalvideocompletedevicedate,String finalsync,String type){
 
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
         final String localkey = finallocalkey;
@@ -2019,12 +2071,32 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         mpairslist.put("key",""+finalvideokey);
         mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
         mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
-        mpairslist.put("videocompletedevicedate",""+finalvideocompletedevicedate);
-        mpairslist.put("videotoken",finaltoken);
         mpairslist.put("framecount", framecount);
-        mpairslist.put("videoduration", videoduration);
 
-        xapipost_sendjson(locationawareactivity.this,config.type_video_complete, mpairslist, new apiresponselistener() {
+        String actiontype="";
+        if(type.equalsIgnoreCase("video"))
+        {
+            actiontype = config.type_video_complete;
+            mpairslist.put("videocompletedevicedate",""+finalvideocompletedevicedate);
+            mpairslist.put("videotoken",finaltoken);
+            mpairslist.put("videoduration", videoduration);
+        }
+        else if(type.equalsIgnoreCase("audio"))
+        {
+            actiontype = config.type_audio_complete;
+            mpairslist.put("audiocompletedevicedate",""+finalvideocompletedevicedate);
+            mpairslist.put("audiotoken",finaltoken);
+            mpairslist.put("audioduration", videoduration);
+        }
+        else if(type.equalsIgnoreCase("image"))
+        {
+            actiontype = config.type_image_complete;
+            mpairslist.put("imagecompletedevicedate",""+finalvideocompletedevicedate);
+            mpairslist.put("imagetoken",finaltoken);
+            mpairslist.put("imageduration", videoduration);
+        }
+
+        xapipost_sendjson(locationawareactivity.this,actiontype, mpairslist, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response)
             {

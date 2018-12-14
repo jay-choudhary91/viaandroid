@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -63,14 +64,18 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.services.insertmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
+import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -87,8 +92,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -331,7 +338,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     String keytype = config.prefs_md5;
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     adapteritemclick madapterclick;
-    String selectedvideofile ="",selectedmetrices="", selectedhashes ="";
+    String selectedvideofile ="",selectedmetrices="", selectedhashes ="",mediakey="";
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
     videoframeadapter mmetricesadapter,mhashesadapter;
@@ -345,6 +352,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     ImageView captureimage;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
+    ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
+    ArrayList<dbitemcontainer> mdbmiddleitemcontainer =new ArrayList<>();
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
@@ -653,10 +662,91 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    public void setimagehash() throws FileNotFoundException {
-        selectedhashes =  md5.fileToMD5(capturedimagefile.getAbsolutePath());
-        selectedhashes=keytype+" : "+selectedhashes;
-        Log.e("keyhash = ","" +selectedhashes);
+    // Initilize when get 1st frame
+    public void savestartmediainfo(String firsthash)
+    {
+        try {
+
+            randomstring gen = new randomstring(20, ThreadLocalRandom.current());
+            mediakey =gen.nextString();
+
+            String filename = common.getfilename(capturedimagefile.getAbsolutePath());
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("fps","30");
+            map.put("firsthash", firsthash);
+            map.put("hashmethod",keytype);
+            map.put("name",filename);
+            map.put("duration","1");
+            map.put("frmaecounts","1");
+            map.put("finalhash",firsthash);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(map);
+
+            //common.getCurrentDate();
+            String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
+            String devicestartdate = currenttimewithoffset[0];
+            String timeoffset = currenttimewithoffset[1];
+
+            String updatecompletedate[] = common.getcurrentdatewithtimezone();
+            String completeddate = updatecompletedate[0];
+
+            mdbstartitemcontainer.add(new dbitemcontainer(json,"image",filename,
+                    mediakey,"","","0","0",
+                    config.type_image_start,devicestartdate,devicestartdate,timeoffset,completeddate));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Calling after 1 by 1 frame duration.
+    public void savemediaupdate(JSONArray metricesjsonarray,String sequenceno,String sequencehash)
+    {
+        JSONArray metricesarray=new JSONArray();
+        String currentdate[] = common.getcurrentdatewithtimezone();
+        String metrichash = "" ;
+        try {
+            metrichash = md5.calculatestringtomd5(metricesarray.toString());
+            mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
+                    currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void setimagehash() throws FileNotFoundException
+    {
+        try {
+
+            String keyvalue =  md5.fileToMD5(capturedimagefile.getAbsolutePath());
+            selectedhashes =  keyvalue;
+            selectedhashes=keytype+" : "+selectedhashes;
+            Log.e("keyhash = ","" +selectedhashes);
+
+            ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+            getselectedmetrics(mlocalarraylist);
+
+            JSONArray metricesarray=new JSONArray();
+            metricesarray.put(metadatametricesjson);
+
+            savestartmediainfo(keyvalue);
+            savemediaupdate(metricesarray,"1",keyvalue);
+
+            Gson gson = new Gson();
+            String list1 = gson.toJson(mdbstartitemcontainer);
+            String list2 = gson.toJson(mdbmiddleitemcontainer);
+            xdata.getinstance().saveSetting("liststart",list1);
+            xdata.getinstance().saveSetting("listmiddle",list2);
+            xdata.getinstance().saveSetting("mediapath",capturedimagefile.getAbsolutePath());
+            xdata.getinstance().saveSetting("keytype",keytype);
+
+            Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
+            applicationviavideocomposer.getactivity().startService(intent);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
@@ -1124,6 +1214,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 return;
             }
             selectedmetrices="";
+            mdbstartitemcontainer.clear();
+            mdbmiddleitemcontainer.clear();
             mmetricsitems.clear();
             mmetricesadapter.notifyDataSetChanged();
 
@@ -1727,21 +1819,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 if (null != output) {
                     try {
                         output.close();
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                try {
-                                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
-                                    getselectedmetrics(mlocalarraylist);
-                                    //saveimagemetadata(mFile,""+ metadatametricesjson);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        },1000);
 
                     } catch (IOException e) {
                         e.printStackTrace();

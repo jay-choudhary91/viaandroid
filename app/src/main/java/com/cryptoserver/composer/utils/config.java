@@ -44,6 +44,12 @@ public class config {
     public static final String type_audio_find = "audio_find";
     public static final String type_audioframes_get = "audioframes_get";
 
+    public static final String type_image_update = "image_update";
+    public static final String type_image_start = "image_start";
+    public static final String type_image_complete = "image_complete";
+    public static final String type_image_find = "image_find";
+    public static final String type_imageframes_get = "imageframes_get";
+
     public static final String metriclist = "metriclist";
     public static final String framecount = "framecount";
     public static final String frameupdateevery = "frameupdateevery";
