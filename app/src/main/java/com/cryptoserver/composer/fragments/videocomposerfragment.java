@@ -32,6 +32,7 @@ import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -64,9 +65,11 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.customsharepopupmain;
 import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.models.showsharepopupsub;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.services.insertmediadataservice;
@@ -115,6 +118,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     protected Rect zoom;
     boolean firsthashvalue = true;
     graphicalfragment fragmentgraphic;
+    customsharepopupmain dialog;
+    showsharepopupsub sharepopupsub;
+    FragmentManager fm ;
 
     public static final String CAMERA_FRONT = "1";
     public static final String CAMERA_BACK = "0";
@@ -310,6 +316,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
     boolean isflashon = false,inPreview = true;
+    adapteritemclick popupclickmain;
+    adapteritemclick popupclicksub;
 
     TextView txtSlot1;
     TextView txtSlot2;
@@ -1901,196 +1909,94 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void showsharepopupmain()
     {
-        if(maindialogshare != null && maindialogshare.isShowing())
-            maindialogshare.dismiss();
-
-        maindialogshare=new Dialog(applicationviavideocomposer.getactivity());
-        maindialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        maindialogshare.setCanceledOnTouchOutside(true);
-        maindialogshare.setContentView(R.layout.popup_sharescreen);
-        //maindialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int width=widthHeight[0];
-        double height=widthHeight[1]/1.6;
-        maindialogshare.getWindow().setLayout(width-20, (int)height);
-        maindialogshare.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        fm = getActivity().getSupportFragmentManager();
+        popupclickmain=new adapteritemclick() {
             @Override
-            public void onDismiss(DialogInterface dialogInterface) {
+            public void onItemClicked(Object object) {
+                int i= (int) object;
+                if(i==1){
+                    Log.e("popup","popup");
+                    showsharepopupsub();
+                }
+                else if(i==2){
+                    Log.e("popup 2","popup 2");
 
+                }
+                else if(i==3){
+                    xdata.getinstance().saveSetting("selectedvideourl",""+lastrecordedvideo.getAbsolutePath());
+                    composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
+                    videoplayercomposerfragment.setdata(lastrecordedvideo.getAbsolutePath());
+                    gethelper().replaceFragment(videoplayercomposerfragment, false, true);
+                }
             }
-        });
-        TextView txt_share_btn1 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn1);
-        TextView txt_share_btn2 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn2);
-        TextView txt_share_btn3 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn3);
-        TextView txt_title1 = (TextView)maindialogshare.findViewById(R.id.txt_title1);
-        TextView txt_title2 = (TextView)maindialogshare.findViewById(R.id.txt_title2);
-        ImageView img_cancel=maindialogshare.findViewById(R.id.img_cancelicon);
-
-        txt_share_btn1.setText(getResources().getString(R.string.share));
-        txt_share_btn2.setText(getResources().getString(R.string.new_video));
-        txt_share_btn3.setText(getResources().getString(R.string.watch));
-
-        txt_title1.setText(getResources().getString(R.string.video_has_been_encrypted));
-        txt_title2.setText(getResources().getString(R.string.congratulations_video));
-
-        common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),20);
-        common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),20);
-        common.changeFocusStyle(txt_share_btn3,getResources().getColor(R.color.share_c),20);
-
-        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
-
-                showsharepopupsub();
-            }
-        });
-
-        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
-            }
-        });
-
-        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
-
-                xdata.getinstance().saveSetting("selectedvideourl",""+lastrecordedvideo.getAbsolutePath());
-                composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
-                videoplayercomposerfragment.setdata(lastrecordedvideo.getAbsolutePath());
-                gethelper().replaceFragment(videoplayercomposerfragment, false, true);
-            }
-        });
-        img_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
+            public void onItemClicked(Object object, int type) {
 
             }
-        });
-        maindialogshare.show();
+        };
+
+        dialog=new customsharepopupmain(popupclickmain);
+        dialog.show(fm, "fragment_name");
     }
 
 
-    public void showsharepopupsub()
-    {
-        if(subdialogshare != null && subdialogshare.isShowing())
-            subdialogshare.dismiss();
+    public void showsharepopupsub() {
 
-        subdialogshare=new Dialog(applicationviavideocomposer.getactivity());
-        subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        subdialogshare.setCanceledOnTouchOutside(true);
-
-        subdialogshare.setContentView(R.layout.popup_sharescreen);
-        //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int width=widthHeight[0];
-        double height=widthHeight[1]/1.6;
-        subdialogshare.getWindow().setLayout(width-20, (int)height);
-
-        TextView txt_share_btn1 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn1);
-        TextView txt_share_btn2 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn2);
-        TextView txt_share_btn3 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn3);
-        TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
-        TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
-        ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
-
-        txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
-        txt_share_btn2.setText(getResources().getString(R.string.share_partial_video));
-        txt_share_btn3.setText(getResources().getString(R.string.cancel_viewlist));
-
-        txt_title1.setText(getResources().getString(R.string.how_would_you));
-        txt_title2.setText("");
-
-        common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),5);
-        common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),5);
-        common.changeFocusStyle(txt_share_btn3,getResources().getColor(R.color.share_c),5);
-
-        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
-
+        fm = getActivity().getSupportFragmentManager();
+        popupclicksub=new adapteritemclick() {
             @Override
-            public void onClick(View v) {
+            public void onItemClicked(Object object) {
+                int i= (int) object;
+                if(i==4){
+                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            common.exportvideo(lastrecordedvideo,true);
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressdialog.dismisswaitdialog();
+                                    launchmedialist();
+                                }
+                            });
+                        }
+                    }).start();
+                }
+                else if(i==5){
+                    Uri selectedimageuri =Uri.fromFile(new File(lastrecordedvideo.getAbsolutePath()));
 
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
-
-                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        common.exportvideo(lastrecordedvideo,true);
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(),selectedimageuri);
+                    if(mp != null)
+                    {
+                        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                             @Override
-                            public void run() {
-                                progressdialog.dismisswaitdialog();
-                                launchmedialist();
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                int duration = mp.getDuration();
+                                videoplayfragment videoplayfragment =new videoplayfragment();
+                                videoplayfragment.setdata(lastrecordedvideo.getAbsolutePath(), duration);
+                                gethelper().replaceFragment(videoplayfragment, false, true);
                             }
                         });
                     }
-                }).start();
-            }
-        });
-
-        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
-
-                Uri selectedimageuri =Uri.fromFile(new File(lastrecordedvideo.getAbsolutePath()));
-
-                final MediaPlayer mp = MediaPlayer.create(applicationviavideocomposer.getactivity(),selectedimageuri);
-                if(mp != null)
-                {
-                    mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                        @Override
-                        public void onPrepared(MediaPlayer mediaPlayer) {
-                            int duration = mp.getDuration();
-                            videoplayfragment videoplayfragment =new videoplayfragment();
-                            videoplayfragment.setdata(lastrecordedvideo.getAbsolutePath(), duration);
-                            gethelper().replaceFragment(videoplayfragment, false, true);
-                        }
-                    });
+                }
+                else if(i==6){
+                    launchmedialist();
                 }
             }
-        });
-
-        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
-                launchmedialist();
-            }
-        });
+            public void onItemClicked(Object object, int type) {
 
-        img_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
             }
-        });
-        subdialogshare.show();
+        };
+
+        sharepopupsub=new showsharepopupsub(popupclicksub);
+        sharepopupsub.show(fm, "fragment_name");
     }
 
-    public void launchmedialist()
+            public void launchmedialist()
     {
         gethelper().onBack();
     }
