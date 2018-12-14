@@ -204,8 +204,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                                   if(mediakey.trim().isEmpty())
                                   {
-                                      randomstring gen = new randomstring(20, ThreadLocalRandom.current());
-                                      mediakey =gen.nextString();
+                                      String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                                      //randomstring gen = new randomstring(20, ThreadLocalRandom.current());
+                                      mediakey=currenttimestamp;
+                                      Log.e("localkey ",mediakey);
                                       String keyvalue= getkeyvalue(byteArray);
 
                                       savestartmediainfo(keyvalue);

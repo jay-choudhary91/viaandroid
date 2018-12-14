@@ -2,7 +2,10 @@ package com.cryptoserver.composer.fragments;
 
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.AudioManager;
@@ -45,11 +48,14 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.arraycontainer;
+import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
+import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -62,6 +68,7 @@ import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,6 +76,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -111,6 +119,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RecyclerView recyview_hashes;
     @BindView(R.id.fragment_graphic_container)
     FrameLayout fragment_graphic_container;
+    @BindView(R.id.textfetchdata)
+    TextView textfetchdata;
 
 
     private String audiourl = null;
@@ -170,6 +180,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     String soundamplitudealue = "";
     String[] soundamplitudealuearray ;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
+    private BroadcastReceiver getmetadatabroadcastreceiver;
 
     public audioreaderfragment() {
     }
@@ -201,6 +212,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             myvisualizerviewmedia = (visualizeraudiorecorder) rootview.findViewById(R.id.myvisualizerviewmedia);
 
             myvisualizerviewmedia.setVisibility(View.VISIBLE);
+            textfetchdata.setVisibility(View.VISIBLE);
 
             showcontrollers=rootview.findViewById(R.id.video_container);
             {
@@ -633,11 +645,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
     // Implement SurfaceHolder.Callback
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -991,7 +998,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
-
     }
 
     public void getFramesBitmap()
@@ -1073,11 +1079,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(audiourl));
             grabber.start();
             videomodel lastframehash=null;
-            int totalframes=grabber.getLengthInAudioFrames();
 
             for(int i = 0; i<grabber.getLengthInAudioFrames(); i++){
-               // grabber.setAudioChannels(1);
-             //   grabber.setSampleRate(44100);
                 Frame frame = grabber.grabAudio();
                 if (frame == null)
                     break;
@@ -1332,14 +1335,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         if((! selectedmetrics.toString().trim().isEmpty()))
         {
-            if(mmetricsitems.size() > 0)
-            {
-                mmetricsitems.set(0,new videomodel(selectedmetrics));
-            }
-            else
-            {
-                mmetricsitems.add(new videomodel(selectedmetrics));
-            }
+            mmetricsitems.add(new videomodel(selectedmetrics));
             mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
             selectedmetrics="";
         }
@@ -1468,8 +1464,152 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
            playerposition = 0;
            righthandle.setVisibility(View.VISIBLE);
            setupaudioplayer(Uri.parse(audiourl));
+           Thread thread = new Thread() {
+               public void run() {
+                   getmediadata();
+               }
+           };
+           thread.start();
        }
    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerbroadcastreciver();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void registerbroadcastreciver()
+    {
+        IntentFilter intentFilter = null;
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            intentFilter = new IntentFilter(config.reader_service_getmetadata);
+        }
+        else
+        {
+            intentFilter = new IntentFilter(config.composer_service_savemetadata);
+        }
+        getmetadatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Thread thread = new Thread() {
+                    public void run() {
+                        if(mhashesitems.size() == 0)
+                            getmediadata();
+                    }
+                };
+                thread.start();
+            }
+        };
+        getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
+    }
+
+    public void getmediadata()
+    {
+        try {
+            databasemanager mdbhelper = null;
+            if (mdbhelper == null) {
+                mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                mdbhelper.createDatabase();
+            }
+
+            try {
+                mdbhelper.open();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            final String firsthash = findmediafirsthash();
+            String completedate = mdbhelper.getcompletedate(firsthash);
+            if (!completedate.isEmpty()){
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textfetchdata.setVisibility(View.GONE);
+                }
+            });
+
+            ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
+            metricmainarraylist.clear();
+            String framelabel="";
+            for(int i=0;i<mitemlist.size();i++)
+            {
+                String metricdata=mitemlist.get(i).getMetricdata();
+                parsemetadata(metricdata);
+                selectedhaeshes = selectedhaeshes+"\n";
+                framelabel="Frame ";
+                if(i == mitemlist.size()-1)
+                {
+                    framelabel="Last Frame ";
+                }
+                selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                        mitemlist.get(i).getSequencehash();
+            }
+            try
+            {
+                mdbhelper.close();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+         }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public String findmediafirsthash()
+    {
+        String firsthash="";
+        try {
+            ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(audiourl));
+            grabber.start();
+            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
+                Frame frame = grabber.grabAudio();
+                if (frame == null)
+                    break;
+
+                ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
+                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
+                bb.asShortBuffer().put(shortbuff);
+                byte[] byteData = bb.array();
+                firsthash = common.getkeyvalue(byteData, keytype);
+                break;
+            }
+            grabber.flush();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            /*if(! firsthash.trim().isEmpty())
+            {
+                Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
+                intent.putExtra("firsthash", firsthash);
+                intent.putExtra("mediapath", audiourl);
+                intent.putExtra("keytype",keytype);
+                intent.putExtra("mediatype","audio");
+                applicationviavideocomposer.getactivity().startService(intent);
+            }*/
+        }
+        return firsthash;
+    }
 
     private void initAudio() {
 

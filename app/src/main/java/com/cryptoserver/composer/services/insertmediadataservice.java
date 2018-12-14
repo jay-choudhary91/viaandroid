@@ -111,7 +111,6 @@ public class insertmediadataservice extends Service {
                                             byte[] byteData = new byte[buffer.remaining()];
                                             buffer.get(byteData);
                                             String keyValue= common.getkeyvalue(byteData,keytype);
-                                            Log.e("md5 ",""+count+" "+keyValue);
                                             mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
 
                                             if(i == 0 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
@@ -129,12 +128,12 @@ public class insertmediadataservice extends Service {
                                                 String json = gson.toJson(map);
 
                                                 firsthash=keyValue;
-                                                Log.e("call with ",mediapath+" "+keyValue);
 
                                                 videokey=mdbstartitemcontainer.get(0).getItem4();
 
                                                 mdbstartitemcontainer.get(0).setItem1(json);
                                                 mdbstartitemcontainer.get(0).setItem3(filename);
+                                                mdbstartitemcontainer.get(0).setItem14(firsthash);
                                                 updatestartframes(mdbstartitemcontainer);
                                             }
 
@@ -202,12 +201,12 @@ public class insertmediadataservice extends Service {
                                                 String json = gson.toJson(map);
 
                                                 firsthash=keyValue;
-                                                Log.e("call with ",mediapath+" "+keyValue);
 
                                                 videokey=mdbstartitemcontainer.get(0).getItem4();
 
                                                 mdbstartitemcontainer.get(0).setItem1(json);
                                                 mdbstartitemcontainer.get(0).setItem3(filename);
+                                                mdbstartitemcontainer.get(0).setItem14(firsthash);
                                                 updatestartframes(mdbstartitemcontainer);
                                             }
 
@@ -322,7 +321,8 @@ public class insertmediadataservice extends Service {
                         ,mdbstartitemcontainer.get(i).getItem3(),mdbstartitemcontainer.get(i).getItem4(),mdbstartitemcontainer.get(i).getItem5()
                         ,mdbstartitemcontainer.get(i).getItem6(),mdbstartitemcontainer.get(i).getItem7(),mdbstartitemcontainer.get(i).getItem8(),
                         mdbstartitemcontainer.get(i).getItem9(),mdbstartitemcontainer.get(i).getItem10(),mdbstartitemcontainer.get(i).getItem11()
-                        ,mdbstartitemcontainer.get(i).getItem12(),mdbstartitemcontainer.get(i).getItem13(),"0","sync_pending","","");
+                        ,mdbstartitemcontainer.get(i).getItem12(),mdbstartitemcontainer.get(i).getItem13(),mdbstartitemcontainer.get(i).getItem14()
+                        ,"0","sync_pending","","");
             }
 
             try {

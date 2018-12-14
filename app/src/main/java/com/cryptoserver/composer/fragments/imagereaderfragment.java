@@ -2,7 +2,10 @@ package com.cryptoserver.composer.fragments;
 
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -37,17 +40,21 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.arraycontainer;
+import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +62,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -89,7 +97,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ArrayList<videomodel> mhashesitems = new ArrayList<>();
     private int REQUESTCODE_PICK = 301;
     private Uri selectedphotouri =null;
-    private String photo_url = null;
+    private String imageurl = null;
     private ArrayList<videomodel> mainphotoframes =new ArrayList<>();
     private ArrayList<videomodel> mphotoframes =new ArrayList<>();
     private ArrayList<videomodel> mallframes =new ArrayList<>();
@@ -106,7 +114,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
     private  final int flingactionmindspdvac = 10;
-
+    private BroadcastReceiver getmetadatabroadcastreceiver;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_phototabreaderfrag;
@@ -263,9 +271,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
 
             setmetriceshashesdata();
-
-                setupimagedata();
-
+            setupimagedata();
         }
         return rootview;
     }
@@ -466,8 +472,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.onHeaderBtnClick(btnid);
         switch (btnid) {
             case R.id.img_share_icon:
-                if(photo_url != null && (! photo_url.isEmpty()))
-                    common.shareimage(getActivity(),photo_url);
+                if(imageurl != null && (! imageurl.isEmpty()))
+                    common.shareimage(getActivity(), imageurl);
                 break;
             case R.id.img_upload_icon:
                 //  checkwritestoragepermission();
@@ -545,25 +551,25 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                   selectedphotouri = data.getData();
 
                 try {
-                    photo_url = common.getpath(getActivity(), selectedphotouri);
+                    imageurl = common.getpath(getActivity(), selectedphotouri);
                 } catch (Exception e) {
                     e.printStackTrace();
                     common.showalert(getActivity(), getResources().getString(R.string.file_uri_parse_error));
                     return;
                 }
-                if(photo_url == null || (photo_url.trim().isEmpty()))
+                if(imageurl == null || (imageurl.trim().isEmpty()))
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
 
-                if(! (new File(photo_url).exists()))
+                if(! (new File(imageurl).exists()))
                 {
                     common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
                     return;
                 }
 
-                File file=new File(photo_url);
+                File file=new File(imageurl);
                 int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
                 if(file_size == 0)
                 {
@@ -582,7 +588,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 selectedhashes="";
                 selectedmetrices="";
 
-                xdata.getinstance().saveSetting("selectedphotourl",""+photo_url);
+                xdata.getinstance().saveSetting("selectedphotourl",""+ imageurl);
                 suspendframequeue=false;
                 suspendbitmapqueue=false;
 
@@ -593,15 +599,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void setupimagedata()
     {
-        photo_url=xdata.getinstance().getSetting("selectedphotourl");
-        if(photo_url != null && (! photo_url.isEmpty())){
-            setupphoto(Uri.parse(photo_url));
-            getmetricsmetadata();
+        imageurl =xdata.getinstance().getSetting("selectedphotourl");
+        if(imageurl != null && (! imageurl.isEmpty())){
+            setupphoto(Uri.parse(imageurl));
             new Thread(){
                 public void run(){
                     try {
-                        setimagehash();
-                    } catch (FileNotFoundException e) {
+                        getmediadata();
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -611,7 +616,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void setupphoto(final Uri selectedphotouri)
     {
-        if(photo_url!=null){
+        if(imageurl !=null){
             tab_photoreader.setImageURI(selectedphotouri);
         }
     }
@@ -741,70 +746,157 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void setimagehash() throws FileNotFoundException {
-        selectedhashes =  md5.fileToMD5(photo_url);
-        selectedhashes=keytype+" : "+selectedhashes;
-        Log.e("keyhash = ","" +selectedhashes);
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerbroadcastreciver();
+    }
 
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void registerbroadcastreciver()
+    {
+        IntentFilter intentFilter = null;
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            intentFilter = new IntentFilter(config.reader_service_getmetadata);
+        }
+        else
+        {
+            intentFilter = new IntentFilter(config.composer_service_savemetadata);
+        }
+        getmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
-            public void run() {
-                mhashesitems.clear();
-                mhashesadapter.notifyDataSetChanged();
-
-                mphotoframes.add(new videomodel(selectedhashes));
-                mhashesadapter.notifyDataSetChanged();
-                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-            }
-        });
-    }
-
-    public void getmetricsmetadata() {
-        String phnmetadata=null;
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        ExifInterface exif = null;
-
-        try {
-            exif = new ExifInterface(photo_url);
-            if (exif != null) {
-                String photometadata = exif.getAttribute(ExifInterface.TAG_USER_COMMENT);
-                String artistdata = exif.getAttribute(ExifInterface.TAG_ARTIST);
-                Log.e("usercomment", "" + photometadata);
-                if(photometadata != null && (! photometadata.trim().isEmpty()) && !photometadata.equals("null")){
-                    String split[]=photometadata.split("\\|");
-                    String title = (split.length >= 1) ? split[0] : "";
-                    String data = (split.length >= 2) ? split[1] : "";
-                    data=data.replace("?","");
-                    if(data!=null){
-                        JSONObject jsonobject=new JSONObject(data);
-                        Log.e("jsonobject",jsonobject.toString());
-                        metricmainarraylist.clear();
-                        ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-                        Iterator<String> myIter = jsonobject.keys();
-                        while (myIter.hasNext()) {
-                            String key = myIter.next();
-                            String value = jsonobject.optString(key);
-                            metricmodel model=new metricmodel();
-                            model.setMetricTrackKeyName(key);
-                            model.setMetricTrackValue(value);
-                            metricItemArraylist.add(model);
-                        }
-                        metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+            public void onReceive(Context context, Intent intent) {
+                Thread thread = new Thread() {
+                    public void run() {
+                        if(mhashesitems.size() == 0)
+                            getmediadata();
                     }
-                }
+                };
+                thread.start();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        };
+        getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
+    }
 
-        } catch (JSONException e) {
+    public void getmediadata()
+    {
+        try {
+            databasemanager mdbhelper = null;
+            if (mdbhelper == null) {
+                mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                mdbhelper.createDatabase();
+            }
+
+            try {
+                mdbhelper.open();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            final String firsthash = findmediafirsthash();
+            String completedate = mdbhelper.getcompletedate(firsthash);
+            if (!completedate.isEmpty()){
+
+                /*getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textfetchdata.setVisibility(View.GONE);
+                    }
+                });*/
+
+                ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
+                metricmainarraylist.clear();
+                String framelabel="";
+                for(int i=0;i<mitemlist.size();i++)
+                {
+                    String metricdata=mitemlist.get(i).getMetricdata();
+                    parsemetadata(metricdata);
+                    selectedhashes = selectedhashes+"\n";
+                    framelabel="Frame ";
+                    selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                            mitemlist.get(i).getSequencehash();
+                }
+                try
+                {
+                    mdbhelper.close();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mhashesitems.clear();
+                        mhashesadapter.notifyDataSetChanged();
+
+                        mphotoframes.add(new videomodel(selectedhashes));
+                        mhashesadapter.notifyDataSetChanged();
+                        recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+                    }
+                });
+            }
+        }catch (Exception e)
+        {
             e.printStackTrace();
         }
     }
 
 
+    public void parsemetadata(String metadata)
+    {
+        try {
+            JSONArray array=new JSONArray(metadata);
+            metricmainarraylist.clear();
+            for(int j=0;j<array.length();j++)
+            {
+                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                JSONObject object=array.getJSONObject(j);
+                Iterator<String> myIter = object.keys();
+                while (myIter.hasNext()) {
+                    String key = myIter.next();
+                    String value = object.optString(key);
+                    metricmodel model=new metricmodel();
+                    model.setMetricTrackKeyName(key);
+                    model.setMetricTrackValue(value);
+                    metricItemArraylist.add(model);
+                }
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+            }
 
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public String findmediafirsthash()
+    {
+        String firsthash=md5.fileToMD5(imageurl);
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            /*if(! firsthash.trim().isEmpty())
+            {
+                Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
+                intent.putExtra("firsthash", firsthash);
+                intent.putExtra("mediapath", audiourl);
+                intent.putExtra("keytype",keytype);
+                intent.putExtra("mediatype","audio");
+                applicationviavideocomposer.getactivity().startService(intent);
+            }*/
+        }
+        return firsthash;
+    }
 }

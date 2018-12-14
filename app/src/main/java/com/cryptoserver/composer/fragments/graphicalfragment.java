@@ -337,11 +337,8 @@ public class graphicalfragment extends basefragment implements
                 layout_orientationanalytics.setVisibility(View.VISIBLE);
         }
 
-        if(hitcounter == 2)
-        {
-            common.locationAnalyticsdata(txt_latitude,txt_longitude,
-                    txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
-        }
+        common.locationAnalyticsdata(txt_latitude,txt_longitude,
+                txt_altitude,txt_heading,txt_orientation,txt_speed,txt_address);
 
 
         if(hitcounter == 3)

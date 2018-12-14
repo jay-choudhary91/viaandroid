@@ -667,8 +667,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     {
         try {
 
-            randomstring gen = new randomstring(20, ThreadLocalRandom.current());
-            mediakey =gen.nextString();
+            String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            //randomstring gen = new randomstring(20, ThreadLocalRandom.current());
+            mediakey=currenttimestamp;
+            Log.e("localkey ",mediakey);
 
             String filename = common.getfilename(capturedimagefile.getAbsolutePath());
             HashMap<String, String> map = new HashMap<String, String>();
@@ -693,7 +695,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             mdbstartitemcontainer.add(new dbitemcontainer(json,"image",filename,
                     mediakey,"","","0","0",
-                    config.type_image_start,devicestartdate,devicestartdate,timeoffset,completeddate));
+                    config.type_image_start,devicestartdate,devicestartdate,timeoffset,completeddate,firsthash));
         } catch (Exception e) {
             e.printStackTrace();
         }

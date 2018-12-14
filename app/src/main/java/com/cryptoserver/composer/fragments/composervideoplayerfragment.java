@@ -46,8 +46,10 @@ import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
+import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
@@ -55,11 +57,14 @@ import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -97,7 +102,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     @BindView(R.id.textfetchdata)
     TextView textfetchdata;
 
-    private String VIDEO_URL = null;
+    private String mediafilepath = null;
     private SurfaceView videoSurface;
     private MediaPlayer player;
     private videocontrollerview controller;
@@ -227,9 +232,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
             scrollview_hashes.setVisibility(View.INVISIBLE);
             fragment_graphic_container.setVisibility(View.INVISIBLE);
 
-            VIDEO_URL = xdata.getinstance().getSetting("selectedvideourl");
+            mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
 
-            if (VIDEO_URL != null && (!VIDEO_URL.isEmpty())) {
+            if (mediafilepath != null && (!mediafilepath.isEmpty())) {
                 mvideoframes.clear();
                 mainvideoframes.clear();
                 mallframes.clear();
@@ -288,7 +293,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
     public void getmetadata() {
         /*MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        m_mediaMetadataRetriever.setDataSource(VIDEO_URL);
+        m_mediaMetadataRetriever.setDataSource(mediafilepath);
         String metadataWriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
         String metadataAlbum=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         for (int i = 0; i < 1000; i++){
@@ -333,7 +338,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     }
 
     public void setdata(String VIDEO_URL) {
-        //this.VIDEO_URL = VIDEO_URL;
+        //this.mediafilepath = mediafilepath;
     }
 
 
@@ -354,13 +359,13 @@ public class composervideoplayerfragment extends basefragment implements Surface
             keytype = config.prefs_sha_salt;
         }
 
-        if (VIDEO_URL != null && (!VIDEO_URL.isEmpty())) {
+        if (mediafilepath != null && (!mediafilepath.isEmpty())) {
             currentframenumber = 0;
             mvideoframes.clear();
             mallframes.clear();
             Thread thread = new Thread() {
                 public void run() {
-                    getmediadata(VIDEO_URL);
+                    getmediadata();
                 }
             };
             thread.start();
@@ -611,10 +616,10 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 controller.removeAllViews();
 
             controller = new videocontrollerview(applicationviavideocomposer.getactivity(), mitemclick, isscrubbing);
-            VIDEO_URL = xdata.getinstance().getSetting("selectedvideourl");
-            if (VIDEO_URL != null && (!VIDEO_URL.isEmpty())) {
+            mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
+            if (mediafilepath != null && (!mediafilepath.isEmpty())) {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(VIDEO_URL));
+                player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(mediafilepath));
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
@@ -643,18 +648,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        isinbackground = true;
-        try {
-            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
-        }catch (Exception e)
-        {
             e.printStackTrace();
         }
     }
@@ -864,8 +857,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
         super.onHeaderBtnClick(btnid);
         switch (btnid) {
             case R.id.img_share_icon:
-                if (VIDEO_URL != null && (!VIDEO_URL.isEmpty())) {
-                    common.sharevideo(applicationviavideocomposer.getactivity(), VIDEO_URL);
+                if (mediafilepath != null && (!mediafilepath.isEmpty())) {
+                    common.sharevideo(applicationviavideocomposer.getactivity(), mediafilepath);
                 }
                 break;
 
@@ -940,7 +933,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
             controller = new videocontrollerview(applicationviavideocomposer.getactivity(), mitemclick, isscrubbing);
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(VIDEO_URL));
+            player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(mediafilepath));
             player.prepareAsync();
             player.setOnPreparedListener(this);
             player.setOnCompletionListener(this);
@@ -966,57 +959,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public void changeactionbarcolor() {
         gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
                 (R.color.videoPlayer_header));
-    }
-
-    public void getmediadata(String filelocation) {
-        databasemanager mdbhelper = null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
-
-
-        try {
-            mdbhelper.open();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        final String filename = common.getfilename(filelocation);
-        String completedate = mdbhelper.getcompletedate(filename);
-        if (!completedate.isEmpty()){
-
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    textfetchdata.setVisibility(View.GONE);
-                }
-            });
-
-            ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(filename);
-            metricmainarraylist.clear();
-            String framelabel="";
-            for(int i=0;i<mitemlist.size();i++)
-            {
-                String metricdata=mitemlist.get(i).getMetricdata();
-                parsemetadata(metricdata);
-                selectedhaeshes = selectedhaeshes+"\n";
-                framelabel="Frame ";
-                if(i == mitemlist.size()-1)
-                {
-                    framelabel="Last Frame ";
-                }
-                selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                        mitemlist.get(i).getSequencehash();
-            }
-            try
-            {
-                mdbhelper.close();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
     }
 
     public void setmetriceshashesdata()
@@ -1207,6 +1149,130 @@ public class composervideoplayerfragment extends basefragment implements Surface
         registerbroadcastreciver();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        isinbackground = true;
+        try {
+            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void registerbroadcastreciver()
+    {
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
+        getmetadatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Thread thread = new Thread() {
+                    public void run() {
+                        if(mhashesitems.size() == 0)
+                            getmediadata();
+                    }
+                };
+                thread.start();
+            }
+        };
+        getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
+    }
+
+    public void getmediadata() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    databasemanager mdbhelper = null;
+                    if (mdbhelper == null) {
+                        mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                        mdbhelper.createDatabase();
+                    }
+
+                    try {
+                        mdbhelper.open();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    final String firsthash = findmediafirsthash();
+                    String completedate = mdbhelper.getcompletedate(firsthash);
+                    if (!completedate.isEmpty()){
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                textfetchdata.setVisibility(View.GONE);
+                            }
+                        });
+
+                        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
+                        metricmainarraylist.clear();
+                        String framelabel="";
+                        for(int i=0;i<mitemlist.size();i++)
+                        {
+                            String metricdata=mitemlist.get(i).getMetricdata();
+                            parsemetadata(metricdata);
+                            selectedhaeshes = selectedhaeshes+"\n";
+                            framelabel="Frame ";
+                            if(i == mitemlist.size()-1)
+                            {
+                                framelabel="Last Frame ";
+                            }
+                            selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                                    mitemlist.get(i).getSequencehash();
+                        }
+                        try
+                        {
+                            mdbhelper.close();
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+
+
+    }
+
+    public String findmediafirsthash()
+    {
+        String firsthash="";
+        try {
+            ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediafilepath);
+            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+            String format = common.getvideoformat(mediafilepath);
+            if (format.equalsIgnoreCase("mp4"))
+                grabber.setFormat(format);
+
+            grabber.start();
+            for (int i = 0; i < grabber.getLengthInFrames(); i++) {
+                Frame frame = grabber.grabImage();
+                if (frame == null)
+                    break;
+
+                ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
+                byte[] byteData = new byte[buffer.remaining()];
+                buffer.get(byteData);
+                firsthash = common.getkeyvalue(byteData, keytype);
+                break;
+            }
+            grabber.flush();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return firsthash;
+    }
+
+
     private void setupVisualizerFxAndUI() {
 
         // Create the Visualizer object and attach it to our media player.
@@ -1266,26 +1332,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
         }
     }
-
-    public void registerbroadcastreciver()
-    {
-        IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
-        getmetadatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Thread thread = new Thread() {
-                    public void run() {
-                        if(mhashesitems.size() == 0)
-                              getmediadata(VIDEO_URL);
-
-                    }
-                };
-                thread.start();
-            }
-        };
-        getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
-    }
-
 
     public int[] getFormattedData(byte[] rawVizData) {
         int[] arraydata=new int[rawVizData.length];

@@ -64,7 +64,7 @@ public class databasemanager {
     public void insertstartvideoinfo(String header,String type,String location,String localkey,
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
-                                     String videocompletedevicedate,String videoid,
+                                     String videocompletedevicedate,String firsthash,String videoid,
                                      String status,String remainingframes,String lastframe)
     {
         try {
@@ -88,6 +88,7 @@ public class databasemanager {
             values.put("status",""+status);
             values.put("remainingframes",""+remainingframes);
             values.put("lastframe",""+lastframe);
+            values.put("firsthash",""+firsthash);
 
             long l=mDb.insert("tbstartvideoinfo", null, values);
             Log.e("Id ",""+l);
@@ -141,7 +142,7 @@ public class databasemanager {
         try {
             lock.lock();
 
-            mDb.execSQL("update tbstartvideoinfo set header='"+ header +"' , videocompletedevicedate = '"+
+            mDb.execSQL("update tbstartvideoinfo set header='"+ header +"',videocompletedevicedate = '"+
                     completedate +"' where localkey='"+localkey+"'");;
 
             if (mCur != null)
@@ -519,9 +520,9 @@ public class databasemanager {
     //=========================  Methods for reader implementation
 
 
-    public ArrayList<metadatahash> getmediametadata(String filelocation) {
+    public ArrayList<metadatahash> getmediametadata(String firsthash) {
         ArrayList<metadatahash> mitemlist=new ArrayList<>();
-        String localkey=getlocalkeybylocation(filelocation);
+        String localkey=getlocalkeybyfirsthash(firsthash);
         if(! localkey.trim().isEmpty())
         {
             Cursor cur=null;
@@ -573,13 +574,35 @@ public class databasemanager {
         return  localkey;
     }
 
-    public String getcompletedate(String filename){
+    public String getlocalkeybyfirsthash(String firsthash) {
+        String localkey="";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT localkey FROM tbstartvideoinfo where firsthash = '"+firsthash+"'";
+            cur = mDb.rawQuery(sql, null);
+            if (cur.moveToFirst())
+            {
+                do{
+                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
+                }while(cur.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  localkey;
+    }
+
+    public String getcompletedate(String firsthash){
 
         String completedevicedate = "";
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT videocompletedevicedate FROM tbstartvideoinfo where location = '"+filename+"'";
+            String sql = "SELECT videocompletedevicedate FROM tbstartvideoinfo where firsthash = '"+firsthash+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
@@ -640,7 +663,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tbstartvideoinfo where header = '"+firsthash+"'";
+            String sql = "SELECT * FROM tbstartvideoinfo where firsthash = '"+firsthash+"'";
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();

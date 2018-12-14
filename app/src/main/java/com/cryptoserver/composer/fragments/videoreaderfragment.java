@@ -826,7 +826,15 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                         {
                                             e.printStackTrace();
                                         }
-                                        mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
+                                        if(mhashesitems.size() == (metadatacursor.getCount()-1))
+                                        {
+                                            mhashesitems.add(new videomodel("Last Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
+                                        }
+                                        else
+                                        {
+                                            mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
+                                        }
+
                                     } while (metadatacursor.moveToNext());
                                 }
                             }
@@ -893,6 +901,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     intent.putExtra("firsthash", firsthash);
                     intent.putExtra("mediapath", mediafilepath);
                     intent.putExtra("keytype",keytype);
+                    intent.putExtra("mediatype","video");
                     applicationviavideocomposer.getactivity().startService(intent);
                 }
 
@@ -967,7 +976,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         controller.show();
         frontview.setVisibility(View.GONE);
 
-        if(fragmentgraphic != null && selectedvideouri!=null)
+        if(fragmentgraphic != null)
             fragmentgraphic.setmediaplayer(true,null);
 
 

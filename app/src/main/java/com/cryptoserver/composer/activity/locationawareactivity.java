@@ -852,6 +852,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     if (key.equalsIgnoreCase("wifiname"))
                         metricItemValue = connectionInfo.getSSID();
 
+                    metricItemValue=metricItemValue.replace("\"", "");
                     if (key.equalsIgnoreCase("connectedwifiquality")) {
                         int rssi = connectionInfo.getRssi();
                         if (rssi >= -50) {
@@ -1143,7 +1144,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
             else
             {
-                metricItemValue = "" + towerinfolist.size();
+                metricItemValue = "0";
+                if(towerinfolist != null)
+                    metricItemValue = "" + towerinfolist.size();
             }
         } else if (key.equalsIgnoreCase("connectionspeed")) {
             metricItemValue = "" + connectionspeed;

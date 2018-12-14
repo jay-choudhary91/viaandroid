@@ -212,7 +212,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
                 satelliteangle = "" +angle ;
 
                  xdata.getinstance().saveSetting("satelliteid", satelliteid);
-                 xdata.getinstance().saveSetting("satelliteangle", satelliteangle +"°");
+                 xdata.getinstance().saveSetting("satelliteangle", satelliteangle);
 
             satellites++;
         }
