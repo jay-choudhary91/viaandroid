@@ -1130,6 +1130,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 try{
                     mMediaRecorder.stop();
                 }catch(RuntimeException stopException){
+                    Log.e("exception", String.valueOf(stopException));
                 }
                 mMediaRecorder.reset();
 
@@ -1435,6 +1436,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     @Override
     public void onPause() {
+        Log.e("onpause","onpause");
         if(camerastatusok)
         {
             closeCamera();
@@ -1928,10 +1930,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 }
                 else if(i==3){
+                    Log.e("popup 3","popup 3");
                     xdata.getinstance().saveSetting("selectedvideourl",""+lastrecordedvideo.getAbsolutePath());
                     composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
                     videoplayercomposerfragment.setdata(lastrecordedvideo.getAbsolutePath());
-                    gethelper().replaceFragment(videoplayercomposerfragment, false, true);
+                    gethelper().addFragment(videoplayercomposerfragment, false, true);
                 }
             }
 
@@ -1981,7 +1984,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 int duration = mp.getDuration();
                                 videoplayfragment videoplayfragment =new videoplayfragment();
                                 videoplayfragment.setdata(lastrecordedvideo.getAbsolutePath(), duration);
-                                gethelper().replaceFragment(videoplayfragment, false, true);
+                                gethelper().addFragment(videoplayfragment, false, true);
                             }
                         });
                     }
