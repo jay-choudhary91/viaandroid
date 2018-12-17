@@ -65,11 +65,11 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.models.customsharepopupmain;
 import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.frameinfo;
+import com.cryptoserver.composer.models.mediacompletiondialogmain;
+import com.cryptoserver.composer.models.mediacompletiondialogsub;
 import com.cryptoserver.composer.models.metricmodel;
-import com.cryptoserver.composer.models.showsharepopupsub;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.services.insertmediadataservice;
@@ -118,8 +118,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     protected Rect zoom;
     boolean firsthashvalue = true;
     graphicalfragment fragmentgraphic;
-    customsharepopupmain dialog;
-    showsharepopupsub sharepopupsub;
+    mediacompletiondialogmain mediacompletionpopupmain;
+    mediacompletiondialogsub mediacompletionpopupsub;
     FragmentManager fm ;
 
     public static final String CAMERA_FRONT = "1";
@@ -1941,8 +1941,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         };
 
-        dialog=new customsharepopupmain(popupclickmain);
-        dialog.show(fm, "fragment_name");
+        mediacompletionpopupmain=new mediacompletiondialogmain(popupclickmain);
+        mediacompletionpopupmain.show(fm, "fragment_name");
     }
 
 
@@ -1997,8 +1997,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         };
 
-        sharepopupsub=new showsharepopupsub(popupclicksub);
-        sharepopupsub.show(fm, "fragment_name");
+        mediacompletionpopupsub=new mediacompletiondialogsub(popupclicksub);
+        mediacompletionpopupsub.show(fm, "fragment_name");
     }
 
             public void launchmedialist()
