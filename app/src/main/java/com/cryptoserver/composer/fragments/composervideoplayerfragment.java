@@ -1238,8 +1238,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
             }
         }).start();
-
-
     }
 
     public String findmediafirsthash()

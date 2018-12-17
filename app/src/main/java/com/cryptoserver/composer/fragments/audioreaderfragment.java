@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -181,6 +182,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     String[] soundamplitudealuearray ;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     private BroadcastReceiver getmetadatabroadcastreceiver;
+    String firsthash="";
 
     public audioreaderfragment() {
     }
@@ -621,7 +623,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     setaudiodata();
                 }
 
-
                 if(! keytype.equalsIgnoreCase(common.checkkey()) || (frameduration != common.checkframeduration()))
                 {
                     frameduration=common.checkframeduration();
@@ -631,8 +632,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     mallframes.clear();
                     isnewvideofound=true;
                 }
-
-
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -1414,6 +1413,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
    public void setupaudiodata() {
        audiourl = xdata.getinstance().getSetting("selectedaudiourl");
        if (audiourl != null && (!audiourl.isEmpty())) {
+
+
            mvideoframes.clear();
            mainvideoframes.clear();
            mallframes.clear();
@@ -1421,14 +1422,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
            txt_hashes.setText("");
            isnewvideofound = true;
            audioduration = 0;
+           if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+           {
+               firsthash = findmediafirsthash();
+           }
            playpausebutton.setImageResource(R.drawable.play);
            rlcontrollerview.setVisibility(View.VISIBLE);
            playerposition = 0;
            righthandle.setVisibility(View.VISIBLE);
+
            setupaudioplayer(Uri.parse(audiourl));
            Thread thread = new Thread() {
                public void run() {
-                   getmediadata();
+                   if(! BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                           getmediadata();
                }
            };
            thread.start();
@@ -1470,13 +1477,120 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 Thread thread = new Thread() {
                     public void run() {
                         if(mhashesitems.size() == 0)
-                            getmediadata();
+                        {
+                            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                            {
+                                getmediametadata();
+                            }
+                            else
+                            {
+                                getmediadata();
+                            }
+                        }
                     }
                 };
                 thread.start();
             }
         };
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
+    }
+
+    public void getmediametadata()
+    {
+        if(audiourl != null && (! audiourl.isEmpty())) {
+            File file = new File(audiourl);
+            if (file.exists()) {
+                databasemanager mdbhelper = null;
+                if (mdbhelper == null) {
+                    mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                    mdbhelper.createDatabase();
+                }
+
+                try {
+                    mdbhelper.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    if(! firsthash.trim().isEmpty())
+                    {
+                        Cursor mediainfocursor = mdbhelper.getmediainfobyfirsthash(firsthash);
+                        String videoid = "", videotoken = "";
+                        if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
+                            if (mediainfocursor.moveToFirst()) {
+                                do {
+                                    videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
+                                } while (mediainfocursor.moveToNext());
+                            }
+                        }
+
+                        if(! videoid.trim().isEmpty())
+                        {
+                            Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
+                            if (metadatacursor != null && metadatacursor.getCount() > 0) {
+                                if (metadatacursor.moveToFirst()) {
+                                    do {
+                                        String sequencehash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequencehash"));
+                                        String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
+                                        String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
+                                        String metricdata = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metricdata"));
+                                        //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
+
+                                        try {
+                                            ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                                            JSONObject object=new JSONObject(metricdata);
+                                            Iterator<String> myIter = object.keys();
+                                            while (myIter.hasNext()) {
+                                                String key = myIter.next();
+                                                String value = object.optString(key);
+                                                metricmodel model=new metricmodel();
+                                                model.setMetricTrackKeyName(key);
+                                                model.setMetricTrackValue(value);
+                                                metricItemArraylist.add(model);
+                                            }
+                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+                                        if(mhashesitems.size() == (metadatacursor.getCount()-1))
+                                        {
+                                            mhashesitems.add(new videomodel("Last Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
+                                        }
+                                        else
+                                        {
+                                            mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
+                                        }
+
+                                    } while (metadatacursor.moveToNext());
+                                }
+                            }
+                        }
+                    }
+
+
+                    try {
+                        mdbhelper.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        textfetchdata.setVisibility(View.GONE);
+                        mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                        selectedhaeshes ="";
+                    }
+                });
+            }
+        }
     }
 
     public void getmediadata()
@@ -1560,7 +1674,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-            /*if(! firsthash.trim().isEmpty())
+            if(! firsthash.trim().isEmpty())
             {
                 Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
                 intent.putExtra("firsthash", firsthash);
@@ -1568,7 +1682,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 intent.putExtra("keytype",keytype);
                 intent.putExtra("mediatype","audio");
                 applicationviavideocomposer.getactivity().startService(intent);
-            }*/
+            }
         }
         return firsthash;
     }

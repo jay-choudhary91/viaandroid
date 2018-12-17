@@ -16,6 +16,7 @@ import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
 import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
+import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.taskresult;
 
@@ -39,8 +40,10 @@ import java.util.Set;
 public class readmediadataservice extends Service {
 
     ArrayList<videomodel> framearraylist =new ArrayList<>();
-    String mediapath="",firsthash="",mediatype="";
+    String mediapath="",firsthash="",mediatype="",actiontype = "";
     int xapicounter = 0;
+
+
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -158,9 +161,9 @@ public class readmediadataservice extends Service {
                                     }
                                     else if(mediatype.equalsIgnoreCase("image"))
                                     {
+                                        framearraylist.add(new videomodel("Frame ", keytype,count,firsthash));
 
                                     }
-
                                 }catch (Exception e)
                                 {
                                     e.printStackTrace();
@@ -196,34 +199,102 @@ public class readmediadataservice extends Service {
     {
 
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
-
         mpairslist.put("hashvalue",hashvalue);
 
-        xapipost_sendjson(getApplicationContext(),config.type_video_find,mpairslist, new apiresponselistener() {
+        if(mediatype.equalsIgnoreCase("video"))
+        {
+            actiontype = config.type_video_find;
+        }
+        else if(mediatype.equalsIgnoreCase("audio"))
+        {
+            actiontype = config.type_audio_find;
+        }
+        else if(mediatype.equalsIgnoreCase("image"))
+        {
+            actiontype = config.type_image_find;
+        }
+
+        xapipost_sendjson(getApplicationContext(),actiontype,mpairslist, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 if(response.isSuccess())
                 {
                     Log.e("Found hash ",""+hashvalue);
-                    String videotoken="",remainingframes="50",lastframe="0",videotitle="";
+                    String videotoken="",videotitle="";
+                    String mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
+                            remainingframes="50",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "";
+
                     try {
                         JSONObject object = (JSONObject) response.getData();
+                        if(mediatype.equalsIgnoreCase("video"))
+                        {
+                            mediaid = (object.has("videoid")?object.getString("videoid"):"");
+                            mediakey = (object.has("videokey")?object.getString("videokey"):"");
+                            String videohashmethod = (object.has("videohashmethod")?object.getString("videohashmethod"):"");
+                            String videohashvalue = (object.has("videohashvalue")?object.getString("videohashvalue"):"");
+                            mediastartdevicedatetime = (object.has("videostartdevicedatetime")?object.getString("videostartdevicedatetime"):"");
+                            String videostarttransactionid = (object.has("videostarttransactionid")?object.getString("videostarttransactionid"):"");
+                            mediadevicetimeoffset = (object.has("videodevicetimeoffset")?object.getString("videodevicetimeoffset"):"");
+                            String videopublickey = (object.has("videopublickey")?object.getString("videopublickey"):"");
+                            String videotypeid = (object.has("videotypeid")?object.getString("videotypeid"):"");
+                            String videocreateddate = (object.has("videocreateddate")?object.getString("videocreateddate"):"");
+                            String videorank = (object.has("videorank")?object.getString("videorank"):"");
+                            mediatypeshortname = (object.has("videotypeshortname")?object.getString("videotypeshortname"):"");
+                            String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
+                            mediatoken = (object.has("videotoken")?object.getString("videotoken"):"");
+                            mediatitle = (object.has("videotitle")?object.getString("videotitle"):"");
 
-                        String videoid = (object.has("videoid")?object.getString("videoid"):"");
-                        String videokey = (object.has("videokey")?object.getString("videokey"):"");
-                        String videohashmethod = (object.has("videohashmethod")?object.getString("videohashmethod"):"");
-                        String videohashvalue = (object.has("videohashvalue")?object.getString("videohashvalue"):"");
-                        String videostartdevicedatetime = (object.has("videostartdevicedatetime")?object.getString("videostartdevicedatetime"):"");
-                        String videostarttransactionid = (object.has("videostarttransactionid")?object.getString("videostarttransactionid"):"");
-                        String videodevicetimeoffset = (object.has("videodevicetimeoffset")?object.getString("videodevicetimeoffset"):"");
-                        String videopublickey = (object.has("videopublickey")?object.getString("videopublickey"):"");
-                        String videotypeid = (object.has("videotypeid")?object.getString("videotypeid"):"");
-                        String videocreateddate = (object.has("videocreateddate")?object.getString("videocreateddate"):"");
-                        String videorank = (object.has("videorank")?object.getString("videorank"):"");
-                        String videotypeshortname = (object.has("videotypeshortname")?object.getString("videotypeshortname"):"");
-                        String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
-                        videotoken = (object.has("videotoken")?object.getString("videotoken"):"");
-                        videotitle = (object.has("videotitle")?object.getString("videotitle"):"");
+                            actiontype = config.type_videoframes_get;
+                        }
+                        else if(mediatype.equalsIgnoreCase("audio"))
+                        {
+                            mediaid = (object.has("audioid")?object.getString("audioid"):"");
+                            mediakey = (object.has("audiokey")?object.getString("audiokey"):"");
+                            String audiohashmethod = (object.has("audiohashmethod")?object.getString("audiohashmethod"):"");
+                            String audiohashvalue = (object.has("audiohashvalue")?object.getString("audiohashvalue"):"");
+                            mediastartdevicedatetime = (object.has("audiostartdevicedatetime")?object.getString("audiostartdevicedatetime"):"");
+                            String audiocompletedevicedatetime = (object.has("audiocompletedevicedatetime")?object.getString("audiocompletedevicedatetime"):"");
+                            String audiostarttransactionid = (object.has("audiostarttransactionid")?object.getString("audiostarttransactionid"):"");
+                            String audiocompletetransactionid = (object.has("audiocompletetransactionid")?object.getString("audiocompletetransactionid"):"");
+                            mediadevicetimeoffset = (object.has("audiodevicetimeoffset")?object.getString("audiodevicetimeoffset"):"");
+                            String audiopublickey = (object.has("audiopublickey")?object.getString("audiopublickey"):"");
+                            String audiotypeid = (object.has("audiotypeid")?object.getString("audiotypeid"):"");
+                            String audiocreateddate = (object.has("audiocreateddate")?object.getString("audiocreateddate"):"");
+                            String audioupdateddate = (object.has("audioupdateddate")?object.getString("audioupdateddate"):"");
+                            String audiorank = (object.has("audiorank")?object.getString("audiorank"):"");
+                            String audioname = (object.has("audioname")?object.getString("audioname"):"");
+                            mediatypeshortname = (object.has("audiotypeshortname")?object.getString("audiotypeshortname"):"");
+                            String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
+                            mediatoken = (object.has("audiotoken")?object.getString("audiotoken"):"");
+                            mediatitle = (object.has("audioname")?object.getString("audioname"):"");
+
+                            actiontype = config.type_audioframes_get;
+                        }
+                        else if(mediatype.equalsIgnoreCase("image"))
+                        {
+
+                            mediaid = (object.has("imageid")?object.getString("imageid"):"");
+                            mediakey = (object.has("imagekey")?object.getString("imagekey"):"");
+                            String imagehashmethod = (object.has("imagehashmethod")?object.getString("imagehashmethod"):"");
+                            String imagehashvalue = (object.has("imagehashvalue")?object.getString("imagehashvalue"):"");
+                            mediastartdevicedatetime = (object.has("imagestartdevicedatetime")?object.getString("imagestartdevicedatetime"):"");
+                            String imagecompletedevicedatetime = (object.has("imagecompletedevicedatetime")?object.getString("imagecompletedevicedatetime"):"");
+                            String imagestarttransactionid = (object.has("imagestarttransactionid")?object.getString("imagestarttransactionid"):"");
+                            String imagecompletetransactionid = (object.has("imagecompletetransactionid")?object.getString("imagecompletetransactionid"):"");
+                            mediadevicetimeoffset = (object.has("imagedevicetimeoffset")?object.getString("imagedevicetimeoffset"):"");
+                            String imagepublickey = (object.has("imagepublickey")?object.getString("imagepublickey"):"");
+                            String imagetypeid = (object.has("imagetypeid")?object.getString("imagetypeid"):"");
+                            String imagecreateddate = (object.has("imagecreateddate")?object.getString("imagecreateddate"):"");
+                            String imageupdateddate = (object.has("imageupdateddate")?object.getString("imageupdateddate"):"");
+                            String imagerank = (object.has("imagerank")?object.getString("imagerank"):"");
+                            String imagename = (object.has("imagename")?object.getString("imagename"):"");
+                            mediatypeshortname = (object.has("imagetypeshortname")?object.getString("imagetypeshortname"):"");
+                            String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
+                            mediatoken = (object.has("imagetoken")?object.getString("imagetoken"):"");
+                            mediatitle = (object.has("imagename")?object.getString("imagename"):"");
+
+                            actiontype = config.type_imageframes_get;
+                        }
 
                         String medianame=common.getfilename(mediapath);
 
@@ -245,10 +316,16 @@ public class readmediadataservice extends Service {
 
                         String syncdate[] = common.getcurrentdatewithtimezone();
 
-                        mdbhelper.insertstartvideoinfo(firsthash,videotypeshortname,videotitle,videokey,
+                       /* mdbhelper.insertstartvideoinfo(firsthash,videotypeshortname,videotitle,videokey,
                                 videotoken,videokey,"",syncdate[0] , "videoframe_get",
                                 "",videostartdevicedatetime,videodevicetimeoffset,"",
-                                firsthash,videoid,config.sync_pending,remainingframes,lastframe);
+                                firsthash,videoid,config.sync_pending,remainingframes,lastframe);*/
+
+
+                        mdbhelper.insertstartvideoinfo(firsthash,mediatypeshortname,mediatitle,mediakey,
+                                mediatoken,mediakey,"",syncdate[0] , actiontype,
+                                "",mediastartdevicedatetime,mediadevicetimeoffset,"",
+                                firsthash,mediaid,config.sync_pending,remainingframes,lastframe);
 
 
                         try {
@@ -258,7 +335,7 @@ public class readmediadataservice extends Service {
                         }
 
                        int framestart=1;int maxframes=50;
-                       getvideoframes(videotoken,framestart,maxframes);
+                       getvideoframes(mediatoken,framestart,maxframes);
 
                     }catch (Exception e)
                     {
@@ -273,14 +350,33 @@ public class readmediadataservice extends Service {
         });
     }
 
-    public void getvideoframes(final String videotoken, final int framestart, final int maxframes)
+    public void getvideoframes(final String mediatoken, final int framestart, final int maxframes)
     {
-        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
-        mpairslist.put("videotoken",videotoken);
-        mpairslist.put("framestart",""+framestart);
-        mpairslist.put("maxframes",""+maxframes);
 
-        xapipost_sendjson(getApplicationContext(),config.type_videoframes_get,mpairslist, new apiresponselistener() {
+        HashMap<String,Object> mpairslist=new HashMap<String, Object>();
+        if(mediatype.equalsIgnoreCase("video"))
+        {
+            actiontype = config.type_videoframes_get;
+            mpairslist.put("videotoken",mediatoken);
+            mpairslist.put("framestart",""+framestart);
+            mpairslist.put("maxframes",""+maxframes);
+        }
+        else if(mediatype.equalsIgnoreCase("audio"))
+        {
+            actiontype = config.type_audioframes_get;
+            mpairslist.put("audiotoken",mediatoken);
+            mpairslist.put("framestart",""+framestart);
+            mpairslist.put("maxframes",""+maxframes);
+        }
+        else if(mediatype.equalsIgnoreCase("image"))
+        {
+            actiontype = config.type_imageframes_get;
+            mpairslist.put("imagetoken",mediatoken);
+            mpairslist.put("framestart",""+framestart);
+            mpairslist.put("maxframes",""+maxframes);
+        }
+
+        xapipost_sendjson(getApplicationContext(),actiontype,mpairslist, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 if(response.isSuccess())
@@ -305,36 +401,109 @@ public class readmediadataservice extends Service {
                                 e.printStackTrace();
                             }
                             JSONArray array=jobject.getJSONArray("frames");
-                            for(int i=0;i<array.length();i++)
+
+                            if(mediatype.equalsIgnoreCase("video"))
                             {
-                                JSONObject object =array.getJSONObject(i);
-                                String videoframeid = (object.has("videoframeid")?object.getString("videoframeid"):"");
-                                String objectid = (object.has("objectid")?object.getString("objectid"):"");
-                                String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
-                                String videoframenumber = (object.has("videoframenumber")?object.getString("videoframenumber"):"");
-                                String videoframehashvalue = (object.has("videoframehashvalue")?object.getString("videoframehashvalue"):"");
-                                String videoframehashmethod = (object.has("videoframehashmethod")?object.getString("videoframehashmethod"):"");
-                                String videoframemeta = (object.has("videoframemeta")?object.getString("videoframemeta"):"");
-                                String videoframemetahash = (object.has("videoframemetahash")?object.getString("videoframemetahash"):"");
-                                String videoframemetahashmethod = (object.has("videoframemetahashmethod")?object.getString("videoframemetahashmethod"):"");
-                                String videoframedevicedatetime = (object.has("videoframedevicedatetime")?object.getString("videoframedevicedatetime"):"");
-                                String videoframetransactionid = (object.has("videoframetransactionid")?object.getString("videoframetransactionid"):"");
-                                String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
-                                String meta = (object.has("meta")?object.getString("meta"):"");
-                                String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
-                                String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                String metahash = (object.has("metahash")?object.getString("metahash"):"");
-                                String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
+                                for(int i=0;i<array.length();i++)
+                                {
+                                    JSONObject object =array.getJSONObject(i);
+                                    String videoframeid = (object.has("videoframeid")?object.getString("videoframeid"):"");
+                                    String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                                    String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
+                                    String videoframenumber = (object.has("videoframenumber")?object.getString("videoframenumber"):"");
+                                    String videoframehashvalue = (object.has("videoframehashvalue")?object.getString("videoframehashvalue"):"");
+                                    String videoframehashmethod = (object.has("videoframehashmethod")?object.getString("videoframehashmethod"):"");
+                                    String videoframemeta = (object.has("videoframemeta")?object.getString("videoframemeta"):"");
+                                    String videoframemetahash = (object.has("videoframemetahash")?object.getString("videoframemetahash"):"");
+                                    String videoframemetahashmethod = (object.has("videoframemetahashmethod")?object.getString("videoframemetahashmethod"):"");
+                                    String videoframedevicedatetime = (object.has("videoframedevicedatetime")?object.getString("videoframedevicedatetime"):"");
+                                    String videoframetransactionid = (object.has("videoframetransactionid")?object.getString("videoframetransactionid"):"");
+                                    String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
+                                    String meta = (object.has("meta")?object.getString("meta"):"");
+                                    String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
+                                    String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
+                                    String metahash = (object.has("metahash")?object.getString("metahash"):"");
+                                    String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
 
-                                meta=meta.replace("u00b0","°");
-                                meta=meta.replace("&#39;","\'");
-                                meta=meta.replace("&#36;","\'");
-                                meta=meta.replace("&#34;","");
+                                    meta=meta.replace("u00b0","°");
+                                    meta=meta.replace("&#39;","\'");
+                                    meta=meta.replace("&#36;","\'");
+                                    meta=meta.replace("&#34;","");
 
-                                mdbhelper.insertframemetricesinfo("","",hashmethod,objectparentid,
-                                        meta,videoframedevicedatetime,hashmethod,hashvalue,
-                                        sequenceno,"",videoframedevicedatetime,"",
-                                        "","0",videoframetransactionid);
+                                    mdbhelper.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                            meta,videoframedevicedatetime,hashmethod,hashvalue,
+                                            sequenceno,"",videoframedevicedatetime,"",
+                                            "","0",videoframetransactionid);
+                                }
+                            }
+                            else if(mediatype.equalsIgnoreCase("audio"))
+                            {
+                                for(int i=0;i<array.length();i++)
+                                {
+                                    JSONObject object =array.getJSONObject(i);
+                                    String videoframeid = (object.has("audioframeid")?object.getString("audioframeid"):"");
+                                    String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                                    String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
+                                    String videoframenumber = (object.has("audioframenumber")?object.getString("audioframenumber"):"");
+                                    String videoframehashvalue = (object.has("audioframehashvalue")?object.getString("audioframehashvalue"):"");
+                                    String videoframehashmethod = (object.has("audioframehashmethod")?object.getString("audioframehashmethod"):"");
+                                    String videoframemeta = (object.has("audioframemeta")?object.getString("audioframemeta"):"");
+                                    String videoframemetahash = (object.has("audioframemetahash")?object.getString("audioframemetahash"):"");
+                                    String videoframemetahashmethod = (object.has("audioframemetahashmethod")?object.getString("audioframemetahashmethod"):"");
+                                    String videoframedevicedatetime = (object.has("audioframedevicedatetime")?object.getString("audioframedevicedatetime"):"");
+                                    String videoframetransactionid = (object.has("audioframetransactionid")?object.getString("audioframetransactionid"):"");
+                                    String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
+                                    String meta = (object.has("meta")?object.getString("meta"):"");
+                                    String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
+                                    String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
+                                    String metahash = (object.has("metahash")?object.getString("metahash"):"");
+                                    String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
+
+                                    meta=meta.replace("u00b0","°");
+                                    meta=meta.replace("&#39;","\'");
+                                    meta=meta.replace("&#36;","\'");
+                                    meta=meta.replace("&#34;","");
+
+                                    mdbhelper.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                            meta,videoframedevicedatetime,hashmethod,hashvalue,
+                                            sequenceno,"",videoframedevicedatetime,"",
+                                            "","0",videoframetransactionid);
+                                }
+                            }
+                            else if(mediatype.equalsIgnoreCase("image"))
+                            {
+                               /* for(int i=0;i<array.length();i++)
+                                {
+                                    JSONObject object =array.getJSONObject(i);
+                                    String audioframeid = (object.has("videoframeid")?object.getString("videoframeid"):"");
+                                    String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                                    String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
+                                    String audioframenumber = (object.has("videoframenumber")?object.getString("videoframenumber"):"");
+                                    String audioframehashvalue = (object.has("videoframehashvalue")?object.getString("videoframehashvalue"):"");
+                                    String audioframehashmethod = (object.has("videoframehashmethod")?object.getString("videoframehashmethod"):"");
+                                    String audioframemeta = (object.has("videoframemeta")?object.getString("videoframemeta"):"");
+                                    String audioframemetahash = (object.has("videoframemetahash")?object.getString("videoframemetahash"):"");
+                                    String audioframemetahashmethod = (object.has("videoframemetahashmethod")?object.getString("videoframemetahashmethod"):"");
+                                    String audioframedevicedatetime = (object.has("videoframedevicedatetime")?object.getString("videoframedevicedatetime"):"");
+                                    String audioframetransactionid = (object.has("videoframetransactionid")?object.getString("videoframetransactionid"):"");
+                                    String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
+                                    String meta = (object.has("meta")?object.getString("meta"):"");
+                                    String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
+                                    String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
+                                    String metahash = (object.has("metahash")?object.getString("metahash"):"");
+                                    String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
+
+                                    meta=meta.replace("u00b0","°");
+                                    meta=meta.replace("&#39;","\'");
+                                    meta=meta.replace("&#36;","\'");
+                                    meta=meta.replace("&#34;","");
+
+                                    mdbhelper.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                            meta,audioframedevicedatetime,hashmethod,hashvalue,
+                                            sequenceno,"",audioframedevicedatetime,"",
+                                            "","0",audioframetransactionid);
+                                }*/
+
                             }
 
                             try {
@@ -348,12 +517,12 @@ public class readmediadataservice extends Service {
                             {
                                 int newframestart=maxframes+1;
                                 int newmaxframes=maxframes+50;
-                                updatefindmediainfosyncstatus(videotoken,""+lastframe,""+remainingframes,config.sync_pending);
-                                getvideoframes(videotoken,newframestart,newmaxframes);
+                                updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_pending);
+                                getvideoframes(mediatoken,newframestart,newmaxframes);
                             }
                             else
                             {
-                                updatefindmediainfosyncstatus(videotoken,""+lastframe,""+remainingframes,config.sync_complete);
+                                updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_complete);
                                 sendbroadcastreader();
                             }
                         }

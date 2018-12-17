@@ -46,6 +46,7 @@ import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
@@ -887,15 +888,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         String firsthash=md5.fileToMD5(imageurl);
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-            /*if(! firsthash.trim().isEmpty())
+            if(! firsthash.trim().isEmpty())
             {
                 Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
                 intent.putExtra("firsthash", firsthash);
-                intent.putExtra("mediapath", audiourl);
+                intent.putExtra("mediapath", imageurl);
                 intent.putExtra("keytype",keytype);
-                intent.putExtra("mediatype","audio");
+                intent.putExtra("mediatype","image");
                 applicationviavideocomposer.getactivity().startService(intent);
-            }*/
+            }
         }
         return firsthash;
     }
