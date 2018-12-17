@@ -20,19 +20,19 @@ import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.utils.common;
 
 
-public class showsharepopupsub extends DialogFragment {
+public class mediacompletiondialogsub extends DialogFragment {
 
     View rootView;
     adapteritemclick madapterclickpopup;
 
 
     @SuppressLint("ValidFragment")
-    public  showsharepopupsub(adapteritemclick popupclick) {
+    public mediacompletiondialogsub(adapteritemclick popupclick) {
         this.madapterclickpopup=popupclick;
     }
 
     @SuppressLint("ValidFragment")
-    public showsharepopupsub() {
+    public mediacompletiondialogsub() {
 
     }
 

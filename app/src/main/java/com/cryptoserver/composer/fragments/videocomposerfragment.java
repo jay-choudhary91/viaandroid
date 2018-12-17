@@ -65,11 +65,11 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.models.customsharepopupmain;
 import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.frameinfo;
+import com.cryptoserver.composer.models.mediacompletiondialogmain;
+import com.cryptoserver.composer.models.mediacompletiondialogsub;
 import com.cryptoserver.composer.models.metricmodel;
-import com.cryptoserver.composer.models.showsharepopupsub;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.services.insertmediadataservice;
@@ -118,8 +118,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     protected Rect zoom;
     boolean firsthashvalue = true;
     graphicalfragment fragmentgraphic;
-    customsharepopupmain dialog;
-    showsharepopupsub sharepopupsub;
+    mediacompletiondialogmain mediacompletionpopupmain;
+    mediacompletiondialogsub mediacompletionpopupsub;
     FragmentManager fm ;
 
     public static final String CAMERA_FRONT = "1";
@@ -1130,6 +1130,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 try{
                     mMediaRecorder.stop();
                 }catch(RuntimeException stopException){
+                    Log.e("exception", String.valueOf(stopException));
                 }
                 mMediaRecorder.reset();
 
@@ -1435,6 +1436,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     @Override
     public void onPause() {
+        Log.e("onpause","onpause");
         if(camerastatusok)
         {
             closeCamera();
@@ -1928,10 +1930,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 }
                 else if(i==3){
+                    Log.e("popup 3","popup 3");
                     xdata.getinstance().saveSetting("selectedvideourl",""+lastrecordedvideo.getAbsolutePath());
                     composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
                     videoplayercomposerfragment.setdata(lastrecordedvideo.getAbsolutePath());
-                    gethelper().replaceFragment(videoplayercomposerfragment, false, true);
+                    gethelper().addFragment(videoplayercomposerfragment, false, true);
                 }
             }
 
@@ -1941,8 +1944,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         };
 
-        dialog=new customsharepopupmain(popupclickmain);
-        dialog.show(fm, "fragment_name");
+        mediacompletionpopupmain=new mediacompletiondialogmain(popupclickmain);
+        mediacompletionpopupmain.show(fm, "fragment_name");
     }
 
 
@@ -1981,7 +1984,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 int duration = mp.getDuration();
                                 videoplayfragment videoplayfragment =new videoplayfragment();
                                 videoplayfragment.setdata(lastrecordedvideo.getAbsolutePath(), duration);
-                                gethelper().replaceFragment(videoplayfragment, false, true);
+                                gethelper().addFragment(videoplayfragment, false, true);
                             }
                         });
                     }
@@ -1997,8 +2000,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         };
 
-        sharepopupsub=new showsharepopupsub(popupclicksub);
-        sharepopupsub.show(fm, "fragment_name");
+        mediacompletionpopupsub=new mediacompletiondialogsub(popupclicksub);
+        mediacompletionpopupsub.show(fm, "fragment_name");
     }
 
             public void launchmedialist()
