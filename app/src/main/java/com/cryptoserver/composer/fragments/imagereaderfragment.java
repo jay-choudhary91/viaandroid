@@ -108,7 +108,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private Handler myhandler;
     private Runnable myrunnable;
     String selectedmetrices="", selectedhashes ="";
-    private String keytype = config.prefs_md5;
+    private String keytype = config.prefs_md5,firsthash="";
     private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewphotofound=false;;
     private boolean ishashprocessing=false;
     JSONArray metadatametricesjson=new JSONArray();
@@ -484,117 +484,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_menu:
-                /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
-                    checkwritestoragepermission();
-                }else{*/
-                    gethelper().onBack();
-             //  }
+                gethelper().onBack();
                 break;
 
-        }
-    }
-    private void checkwritestoragepermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                opengallery();
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "app needs to be able to save photos", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        request_read_external_storage);
-            }
-        }
-        else
-        {
-            opengallery();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == request_read_external_storage) {
-            boolean permissionsallgranted = true;
-            for (int grantResult : grantResults) {
-                if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                    permissionsallgranted = false;
-                    break;
-                }
-            }
-            if (permissionsallgranted) {
-                opengallery();
-            }
-        }
-    }
-    public void opengallery() {
-        Intent intent;
-        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        } else {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        }
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent, REQUESTCODE_PICK);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUESTCODE_PICK) {
-
-            if (resultCode == RESULT_OK) {
-                  selectedphotouri = data.getData();
-
-                try {
-                    imageurl = common.getpath(getActivity(), selectedphotouri);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    common.showalert(getActivity(), getResources().getString(R.string.file_uri_parse_error));
-                    return;
-                }
-                if(imageurl == null || (imageurl.trim().isEmpty()))
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
-                    return;
-                }
-
-                if(! (new File(imageurl).exists()))
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
-                    return;
-                }
-
-                File file=new File(imageurl);
-                int file_size = Integer.parseInt(String.valueOf(file.length()/1024));
-                if(file_size == 0)
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_is_empty));
-                    return;
-                }
-
-                keytype=common.checkkey();
-
-                mmetricsitems.clear();
-                mmetricesadapter.notifyDataSetChanged();
-
-                mhashesitems.clear();
-                mhashesadapter.notifyDataSetChanged();
-
-                selectedhashes="";
-                selectedmetrices="";
-
-                xdata.getinstance().saveSetting("selectedphotourl",""+ imageurl);
-                suspendframequeue=false;
-                suspendbitmapqueue=false;
-
-                setupimagedata();
-            }
         }
     }
 
@@ -606,6 +498,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             new Thread(){
                 public void run(){
                     try {
+                        findmediafirsthash();
                         getmediadata();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -805,7 +698,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 e.printStackTrace();
             }
 
-            final String firsthash = findmediafirsthash();
             String completedate = mdbhelper.getcompletedate(firsthash);
             if (!completedate.isEmpty()){
 
@@ -826,7 +718,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     selectedhashes = selectedhashes+"\n";
                     framelabel="Frame ";
                     selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                            mitemlist.get(i).getSequencehash();
+                            ": "+mitemlist.get(i).getSequencehash();
                 }
                 try
                 {
@@ -858,25 +750,18 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void parsemetadata(String metadata)
     {
         try {
-            JSONArray array=new JSONArray(metadata);
-            metricmainarraylist.clear();
-            for(int j=0;j<array.length();j++)
-            {
-                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-                JSONObject object=array.getJSONObject(j);
-                Iterator<String> myIter = object.keys();
-                while (myIter.hasNext()) {
-                    String key = myIter.next();
-                    String value = object.optString(key);
-                    metricmodel model=new metricmodel();
-                    model.setMetricTrackKeyName(key);
-                    model.setMetricTrackValue(value);
-                    metricItemArraylist.add(model);
-                }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+            JSONObject object=new JSONObject(metadata);
+            Iterator<String> myIter = object.keys();
+            ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+            while (myIter.hasNext()) {
+                String key = myIter.next();
+                String value = object.optString(key);
+                metricmodel model=new metricmodel();
+                model.setMetricTrackKeyName(key);
+                model.setMetricTrackValue(value);
+                metricItemArraylist.add(model);
             }
-
-
+            metricmainarraylist.add(new arraycontainer(metricItemArraylist));
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -885,7 +770,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public String findmediafirsthash()
     {
-        String firsthash=md5.fileToMD5(imageurl);
+        firsthash=md5.fileToMD5(imageurl);
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             if(! firsthash.trim().isEmpty())

@@ -41,7 +41,7 @@ public class readmediadataservice extends Service {
 
     ArrayList<videomodel> framearraylist =new ArrayList<>();
     String mediapath="",firsthash="",mediatype="",actiontype = "";
-    int xapicounter = 0;
+    int xapicounter = 0,maximumframechecklimit=30;
 
 
     @Override
@@ -81,14 +81,14 @@ public class readmediadataservice extends Service {
                             }
 
                             Cursor cursor=mdbhelper.getmediainfobyfirsthash(firsthash);
-                            String status="",videotoken="",remainingframes="50",lastframe="1";
+                            String status="",mediatoken="",remainingframes="10",lastframe="1";
                             if(cursor != null && cursor.getCount() > 0)
                             {
                                 if (cursor.moveToFirst())
                                 {
                                     do{
                                         status = "" + cursor.getString(cursor.getColumnIndex("status"));
-                                        videotoken = "" + cursor.getString(cursor.getColumnIndex("token"));
+                                        mediatoken = "" + cursor.getString(cursor.getColumnIndex("token"));
                                         remainingframes = "" + cursor.getString(cursor.getColumnIndex("remainingframes"));
                                         lastframe = "" + cursor.getString(cursor.getColumnIndex("lastframe"));
                                     }while(cursor.moveToNext());
@@ -126,7 +126,7 @@ public class readmediadataservice extends Service {
                                             String keyValue= common.getkeyvalue(byteData,keytype);
 
                                             framearraylist.add(new videomodel("Frame ", keytype,count,keyValue));
-                                            if(count > 30)
+                                            if(count >= maximumframechecklimit)
                                                 break;
 
                                             count++;
@@ -143,15 +143,19 @@ public class readmediadataservice extends Service {
                                                 if (frame == null)
                                                     break;
 
-                                                ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
-                                                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                                                bb.asShortBuffer().put(shortbuff);
-                                                byte[] byteData = bb.array();
-                                                String hash = common.getkeyvalue(byteData, keytype);
+                                                if(count > 10)
+                                                {
+                                                    ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
+                                                    java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
+                                                    bb.asShortBuffer().put(shortbuff);
+                                                    byte[] byteData = bb.array();
+                                                    String hash = common.getkeyvalue(byteData, keytype);
 
-                                                framearraylist.add(new videomodel("Frame ", keytype,count,hash));
-                                                if(count > 30)
-                                                    break;
+                                                    framearraylist.add(new videomodel("Frame ", keytype,count,hash));
+                                                    if(count >= maximumframechecklimit)
+                                                        break;
+                                                }
+                                                count++;
                                             }
                                             grabber.flush();
                                         }catch (Exception e)
@@ -162,7 +166,6 @@ public class readmediadataservice extends Service {
                                     else if(mediatype.equalsIgnoreCase("image"))
                                     {
                                         framearraylist.add(new videomodel("Frame ", keytype,count,firsthash));
-
                                     }
                                 }catch (Exception e)
                                 {
@@ -174,8 +177,8 @@ public class readmediadataservice extends Service {
                             {
                                 int framestart=Integer.parseInt(lastframe);
                                 framestart=framestart+1;
-                                int maxframes=framestart+50;
-                                getvideoframes(videotoken,framestart,maxframes);
+                                int maxframes=framestart+10;
+                                getvideoframes(mediatoken,framestart,maxframes);
                             }
                             else if(status.equalsIgnoreCase(config.sync_complete))
                             {
@@ -222,7 +225,8 @@ public class readmediadataservice extends Service {
                     Log.e("Found hash ",""+hashvalue);
                     String videotoken="",videotitle="";
                     String mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
-                            remainingframes="50",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "";
+                            remainingframes="10",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",
+                    mediacompleteddevicedatetime="";
 
                     try {
                         JSONObject object = (JSONObject) response.getData();
@@ -237,7 +241,7 @@ public class readmediadataservice extends Service {
                             mediadevicetimeoffset = (object.has("videodevicetimeoffset")?object.getString("videodevicetimeoffset"):"");
                             String videopublickey = (object.has("videopublickey")?object.getString("videopublickey"):"");
                             String videotypeid = (object.has("videotypeid")?object.getString("videotypeid"):"");
-                            String videocreateddate = (object.has("videocreateddate")?object.getString("videocreateddate"):"");
+                            mediacompleteddevicedatetime = (object.has("videocreateddate")?object.getString("videocreateddate"):"");
                             String videorank = (object.has("videorank")?object.getString("videorank"):"");
                             mediatypeshortname = (object.has("videotypeshortname")?object.getString("videotypeshortname"):"");
                             String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
@@ -253,7 +257,7 @@ public class readmediadataservice extends Service {
                             String audiohashmethod = (object.has("audiohashmethod")?object.getString("audiohashmethod"):"");
                             String audiohashvalue = (object.has("audiohashvalue")?object.getString("audiohashvalue"):"");
                             mediastartdevicedatetime = (object.has("audiostartdevicedatetime")?object.getString("audiostartdevicedatetime"):"");
-                            String audiocompletedevicedatetime = (object.has("audiocompletedevicedatetime")?object.getString("audiocompletedevicedatetime"):"");
+                            mediacompleteddevicedatetime = (object.has("audiocompletedevicedatetime")?object.getString("audiocompletedevicedatetime"):"");
                             String audiostarttransactionid = (object.has("audiostarttransactionid")?object.getString("audiostarttransactionid"):"");
                             String audiocompletetransactionid = (object.has("audiocompletetransactionid")?object.getString("audiocompletetransactionid"):"");
                             mediadevicetimeoffset = (object.has("audiodevicetimeoffset")?object.getString("audiodevicetimeoffset"):"");
@@ -278,7 +282,7 @@ public class readmediadataservice extends Service {
                             String imagehashmethod = (object.has("imagehashmethod")?object.getString("imagehashmethod"):"");
                             String imagehashvalue = (object.has("imagehashvalue")?object.getString("imagehashvalue"):"");
                             mediastartdevicedatetime = (object.has("imagestartdevicedatetime")?object.getString("imagestartdevicedatetime"):"");
-                            String imagecompletedevicedatetime = (object.has("imagecompletedevicedatetime")?object.getString("imagecompletedevicedatetime"):"");
+                            mediacompleteddevicedatetime = (object.has("imagecompletedevicedatetime")?object.getString("imagecompletedevicedatetime"):"");
                             String imagestarttransactionid = (object.has("imagestarttransactionid")?object.getString("imagestarttransactionid"):"");
                             String imagecompletetransactionid = (object.has("imagecompletetransactionid")?object.getString("imagecompletetransactionid"):"");
                             mediadevicetimeoffset = (object.has("imagedevicetimeoffset")?object.getString("imagedevicetimeoffset"):"");
@@ -296,8 +300,6 @@ public class readmediadataservice extends Service {
                             actiontype = config.type_imageframes_get;
                         }
 
-                        String medianame=common.getfilename(mediapath);
-
                         databasemanager mdbhelper=null;
                         if (mdbhelper == null) {
                             mdbhelper = new databasemanager(getApplicationContext());
@@ -310,21 +312,11 @@ public class readmediadataservice extends Service {
                             e.printStackTrace();
                         }
 
-                        /*mdbhelper.insertfindmediainfo(videoid,videokey,videohashmethod,videohashvalue,videostartdevicedatetime,videostarttransactionid,
-                                videodevicetimeoffset,videopublickey,videotypeid,videocreateddate,videorank,videotypeshortname,savedsequencecount,videotoken,
-                                config.sync_pending,medianame,true,remainingframes,lastframe);*/
-
                         String syncdate[] = common.getcurrentdatewithtimezone();
 
-                       /* mdbhelper.insertstartvideoinfo(firsthash,videotypeshortname,videotitle,videokey,
-                                videotoken,videokey,"",syncdate[0] , "videoframe_get",
-                                "",videostartdevicedatetime,videodevicetimeoffset,"",
-                                firsthash,videoid,config.sync_pending,remainingframes,lastframe);*/
-
-
-                        mdbhelper.insertstartvideoinfo(firsthash,mediatypeshortname,mediatitle,mediakey,
+                        mdbhelper.insertstartvideoinfo(firsthash,mediatypeshortname,mediatitle,mediaid,
                                 mediatoken,mediakey,"",syncdate[0] , actiontype,
-                                "",mediastartdevicedatetime,mediadevicetimeoffset,"",
+                                "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,
                                 firsthash,mediaid,config.sync_pending,remainingframes,lastframe);
 
 
@@ -334,7 +326,7 @@ public class readmediadataservice extends Service {
                             e.printStackTrace();
                         }
 
-                       int framestart=1;int maxframes=50;
+                       int framestart=1;int maxframes=10;
                        getvideoframes(mediatoken,framestart,maxframes);
 
                     }catch (Exception e)
@@ -358,23 +350,19 @@ public class readmediadataservice extends Service {
         {
             actiontype = config.type_videoframes_get;
             mpairslist.put("videotoken",mediatoken);
-            mpairslist.put("framestart",""+framestart);
-            mpairslist.put("maxframes",""+maxframes);
         }
         else if(mediatype.equalsIgnoreCase("audio"))
         {
             actiontype = config.type_audioframes_get;
             mpairslist.put("audiotoken",mediatoken);
-            mpairslist.put("framestart",""+framestart);
-            mpairslist.put("maxframes",""+maxframes);
         }
         else if(mediatype.equalsIgnoreCase("image"))
         {
             actiontype = config.type_imageframes_get;
             mpairslist.put("imagetoken",mediatoken);
-            mpairslist.put("framestart",""+framestart);
-            mpairslist.put("maxframes",""+maxframes);
         }
+        mpairslist.put("framestart",""+framestart);
+        mpairslist.put("maxframes",""+maxframes);
 
         xapipost_sendjson(getApplicationContext(),actiontype,mpairslist, new apiresponselistener() {
             @Override
@@ -389,18 +377,20 @@ public class readmediadataservice extends Service {
 
                         if(jobject.has("frames"))
                         {
-                            databasemanager mdbhelper=null;
-                            if (mdbhelper == null) {
-                                mdbhelper = new databasemanager(getApplicationContext());
-                                mdbhelper.createDatabase();
+                            databasemanager dbmanager=null;
+                            if (dbmanager == null) {
+                                dbmanager = new databasemanager(getApplicationContext());
+                                dbmanager.createDatabase();
                             }
 
                             try {
-                                mdbhelper.open();
+                                dbmanager.open();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            JSONArray array=jobject.getJSONArray("frames");
+                            JSONArray array=new JSONArray();
+                            if(! mediatype.equalsIgnoreCase("image"))
+                                array=jobject.getJSONArray("frames");
 
                             if(mediatype.equalsIgnoreCase("video"))
                             {
@@ -430,7 +420,7 @@ public class readmediadataservice extends Service {
                                     meta=meta.replace("&#36;","\'");
                                     meta=meta.replace("&#34;","");
 
-                                    mdbhelper.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                    dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
                                             "","0",videoframetransactionid);
@@ -464,7 +454,7 @@ public class readmediadataservice extends Service {
                                     meta=meta.replace("&#36;","\'");
                                     meta=meta.replace("&#34;","");
 
-                                    mdbhelper.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                    dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
                                             "","0",videoframetransactionid);
@@ -472,42 +462,42 @@ public class readmediadataservice extends Service {
                             }
                             else if(mediatype.equalsIgnoreCase("image"))
                             {
-                               /* for(int i=0;i<array.length();i++)
-                                {
-                                    JSONObject object =array.getJSONObject(i);
-                                    String audioframeid = (object.has("videoframeid")?object.getString("videoframeid"):"");
-                                    String objectid = (object.has("objectid")?object.getString("objectid"):"");
-                                    String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
-                                    String audioframenumber = (object.has("videoframenumber")?object.getString("videoframenumber"):"");
-                                    String audioframehashvalue = (object.has("videoframehashvalue")?object.getString("videoframehashvalue"):"");
-                                    String audioframehashmethod = (object.has("videoframehashmethod")?object.getString("videoframehashmethod"):"");
-                                    String audioframemeta = (object.has("videoframemeta")?object.getString("videoframemeta"):"");
-                                    String audioframemetahash = (object.has("videoframemetahash")?object.getString("videoframemetahash"):"");
-                                    String audioframemetahashmethod = (object.has("videoframemetahashmethod")?object.getString("videoframemetahashmethod"):"");
-                                    String audioframedevicedatetime = (object.has("videoframedevicedatetime")?object.getString("videoframedevicedatetime"):"");
-                                    String audioframetransactionid = (object.has("videoframetransactionid")?object.getString("videoframetransactionid"):"");
-                                    String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
-                                    String meta = (object.has("meta")?object.getString("meta"):"");
-                                    String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
-                                    String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                    String metahash = (object.has("metahash")?object.getString("metahash"):"");
-                                    String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
+                                JSONObject frameobject=jobject.getJSONObject("frames");
+                                JSONObject object=frameobject.getJSONObject("");
+                                String frameid = (object.has("imageframeid")?object.getString("imageframeid"):"");
+                                String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                                String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
+                                String framenumber = (object.has("imageframenumber")?object.getString("imageframenumber"):"");
+                                String framehashvalue = (object.has("imageframehashvalue")?object.getString("imageframehashvalue"):"");
+                                String framehashmethod = (object.has("imageframehashmethod")?object.getString("imageframehashmethod"):"");
+                                String framemeta = (object.has("imageframemeta")?object.getString("imageframemeta"):"");
+                                String framemetahash = (object.has("imageframemetahash")?object.getString("imageframemetahash"):"");
+                                String framemetahashmethod = (object.has("imageframemetahashmethod")?object.getString("imageframemetahashmethod"):"");
+                                String devicedatetime = (object.has("imageframedevicedatetime")?object.getString("imageframedevicedatetime"):"");
+                                String frametransactionid = (object.has("imageframetransactionid")?object.getString("imageframetransactionid"):"");
+                                String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
+                                String meta = (object.has("meta")?object.getString("meta"):"");
+                                String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
+                                String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
+                                String metahash = (object.has("metahash")?object.getString("metahash"):"");
+                                String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
 
-                                    meta=meta.replace("u00b0","°");
-                                    meta=meta.replace("&#39;","\'");
-                                    meta=meta.replace("&#36;","\'");
-                                    meta=meta.replace("&#34;","");
+                                if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
+                                    sequenceno="1";
 
-                                    mdbhelper.insertframemetricesinfo("","",hashmethod,objectparentid,
-                                            meta,audioframedevicedatetime,hashmethod,hashvalue,
-                                            sequenceno,"",audioframedevicedatetime,"",
-                                            "","0",audioframetransactionid);
-                                }*/
+                                meta=meta.replace("u00b0","°");
+                                meta=meta.replace("&#39;","\'");
+                                meta=meta.replace("&#36;","\'");
+                                meta=meta.replace("&#34;","");
 
+                                dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                        meta,devicedatetime,hashmethod,hashvalue,
+                                        sequenceno,"",devicedatetime,"",
+                                        "","0",frametransactionid);
                             }
 
                             try {
-                                mdbhelper.close();
+                                dbmanager.close();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -516,7 +506,7 @@ public class readmediadataservice extends Service {
                             if(remainingframes > 0)
                             {
                                 int newframestart=maxframes+1;
-                                int newmaxframes=maxframes+50;
+                                int newmaxframes=maxframes+10;
                                 updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_pending);
                                 getvideoframes(mediatoken,newframestart,newmaxframes);
                             }
@@ -567,7 +557,7 @@ public class readmediadataservice extends Service {
 
 
     public  void runxapicounter(){
-        if(xapicounter != framearraylist.size())
+        if(xapicounter < framearraylist.size() && xapicounter <= maximumframechecklimit)
         {
             String hashvalue =  framearraylist.get(xapicounter).getkeyvalue();
             xapigetmediainfo(hashvalue);

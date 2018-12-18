@@ -63,6 +63,8 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
 import com.cryptoserver.composer.models.metricmodel;
 
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
@@ -77,6 +79,8 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -653,6 +657,70 @@ public class common {
             default:
                 return NETWORK_UNKOWN;
         }
+    }
+
+    public static String getmediafirstframehash(String mediafilepath,String type)
+    {
+        String firsthash="";
+        if(type.equalsIgnoreCase("video"))
+        {
+            try {
+                ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediafilepath);
+                grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+                String format = common.getvideoformat(mediafilepath);
+                if (format.equalsIgnoreCase("mp4"))
+                    grabber.setFormat(format);
+
+                grabber.start();
+                for (int i = 0; i < grabber.getLengthInFrames(); i++) {
+                    Frame frame = grabber.grabImage();
+                    if (frame == null)
+                        break;
+
+                    ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
+                    byte[] byteData = new byte[buffer.remaining()];
+                    buffer.get(byteData);
+                    firsthash = common.getkeyvalue(byteData, config.prefs_md5);
+                    break;
+                }
+                grabber.flush();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else if(type.equalsIgnoreCase("audio"))
+        {
+            try {
+                ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(mediafilepath));
+                grabber.start();
+                for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
+                    Frame frame = grabber.grabAudio();
+                    if (frame == null)
+                        break;
+
+                    if(i > 9)
+                    {
+                        ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
+                        java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
+                        bb.asShortBuffer().put(shortbuff);
+                        byte[] byteData = bb.array();
+                        firsthash = common.getkeyvalue(byteData, config.prefs_md5);
+                        break;
+                    }
+
+                }
+                grabber.flush();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else if(type.equalsIgnoreCase("image"))
+        {
+            firsthash=md5.fileToMD5(mediafilepath);
+        }
+        return firsthash;
     }
     public static String executeTop() {
         java.lang.Process p = null;

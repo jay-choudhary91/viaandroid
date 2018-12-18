@@ -656,6 +656,7 @@ public class databasemanager {
         }
     }
 
+
     //* call from reader. Checking sync status of requested media.
 
     public Cursor getmediainfobyfirsthash(String firsthash) {
@@ -697,7 +698,9 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where token='"+videotoken+"'");
+            String sql="update tbstartvideoinfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where token='"+videotoken+"'";
+            Log.e("Sql tbstartvideoinfo ",sql);
+            mDb.execSQL(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }

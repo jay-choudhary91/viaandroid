@@ -32,6 +32,7 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adapterreadermedialist;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
@@ -480,15 +481,25 @@ public class readermedialist extends basefragment {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        File fdelete = new File(videoobj.getPath());
-                        if (fdelete.exists()) {
-                            if (fdelete.delete()) {
+                        File file = new File(videoobj.getPath());
+                        if (file.exists()) {
+                            String type="video";
+                            if(videoobj.getmimetype().startsWith("image/")){
+                                type="image";
+                            }else if(videoobj.getmimetype().startsWith("audio/")){
+                                type="audio";
+                            }else if(videoobj.getmimetype().startsWith("video/")){
+                                type="video";
+                            }
+
+                            String firsthash=common.getmediafirstframehash(videoobj.getPath(),type);
+                            if(! firsthash.trim().isEmpty())
+                                deletemediainfo(firsthash);
+
+                            if (file.delete()) {
                                 System.out.println("file Deleted :" + videoobj.getPath());
                                 arrayvideolist.remove(videoobj);
                                 dialog.dismiss();
-                                if(! videoobj.getLocalkey().trim().isEmpty());
-                                 //   deletemediainfo(videoobj.getLocalkey());
-
                             } else {
                                 System.out.println("file not Deleted :" + videoobj.getPath());
                             }
@@ -502,6 +513,37 @@ public class readermedialist extends basefragment {
                         dialog.dismiss();
                     }
                 }).show();
+    }
+
+    public String deletemediainfo(String firsthash)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        String localkey=mdbhelper.getlocalkeybyfirsthash(firsthash);
+        if(! localkey.trim().isEmpty())
+        {
+            mdbhelper.deletefrommetadatabylocalkey(localkey);
+            mdbhelper.deletefromstartvideoinfobylocalkey(localkey);
+        }
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return localkey;
     }
 
     public void setcopyvideo(final String selectedvideopath){

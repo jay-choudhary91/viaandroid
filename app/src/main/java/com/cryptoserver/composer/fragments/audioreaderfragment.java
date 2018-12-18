@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
@@ -61,7 +60,6 @@ import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
@@ -69,7 +67,6 @@ import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -77,7 +74,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -144,7 +140,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private Handler myHandler,handlerrecycler;
     private Runnable myRunnable,runnablerecycler;
     private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0, currentaudiodurationseconds =0;
-    private boolean suspendframequeue=false,suspendbitmapqueue = false,isnewvideofound=false;
     private boolean isdraweropen=false;
     private LinearLayoutManager mlinearlayoutmanager;
     private String selectedhaeshes="";
@@ -165,7 +160,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private LinearLayoutManager mLayoutManager;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     public int selectedsection=1;
-    public boolean isvideocompleted=false;
+    public boolean imediacompleted =false;
     private Visualizer mVisualizer;
     visualizeraudiorecorder myvisualizerviewmedia;
     circularImageview playpausebutton;
@@ -351,24 +346,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         });
     }
-
-    public void disabletouchedevents()
-    {
-        if(handlerrecycler != null && runnablerecycler != null)
-            handlerrecycler.removeCallbacks(runnablerecycler);
-
-        handlerrecycler=new Handler();
-        runnablerecycler = new Runnable() {
-            @Override
-            public void run() {
-                islisttouched = false;
-                islistdragging = false;
-            }
-        };
-        handlerrecycler.postDelayed(runnablerecycler,1000);
-    }
-
-
 
     @Override
     public void onClick(View view) {
@@ -568,10 +545,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         });
     }
 
-
-    public void onRestart() {
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -630,7 +603,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
-                    isnewvideofound=true;
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -674,7 +646,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onPrepared(MediaPlayer mp)
     {
-        isvideocompleted=false;
+        imediacompleted =false;
         maxincreasevideoduration=0;
 
         audioduration =mp.getDuration();
@@ -830,147 +802,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-
-    private void checkwritestoragepermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED ) {
-                opengallery();
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "app needs to be able to save audios", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        request_read_external_storage);
-            }
-        }
-        else
-        {
-            opengallery();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == request_read_external_storage) {
-            boolean permissionsallgranted = true;
-            for (int grantResult : grantResults) {
-                if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                    permissionsallgranted = false;
-                    break;
-                }
-            }
-            if (permissionsallgranted) {
-                opengallery();
-            }
-        }
-    }
-
-    public  void opengallery()
-    {
-        destroyvideoplayer();
-        Intent intent;
-        if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
-        {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-        }
-        else
-        {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
-        }
-        intent.setType("audio/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra("return-data", true);
-        startActivityForResult(intent,REQUESTCODE_PICK);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUESTCODE_PICK) {
-
-            if (resultCode == RESULT_OK) {
-
-                rlcontrollerview.setVisibility(View.VISIBLE);
-                selectedvideouri = data.getData();
-                selectionmetadata();
-
-                try {
-                    //audiourl=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
-                    audiourl = common.getpath(getActivity(), selectedvideouri);
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                    common.showalert(getActivity(),getResources().getString(R.string.file_uri_parse_error));
-                    return;
-                }
-
-                if(audiourl == null || (audiourl.trim().isEmpty()))
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
-                    return;
-                }
-
-                if(! (new File(audiourl).exists()))
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
-                    return;
-                }
-
-                File file=new File(audiourl);
-                long file_size = file.length();
-                if(file_size == 0)
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_is_empty));
-                    return;
-                }
-
-                frameduration=common.checkframeduration();
-                keytype=common.checkkey();
-
-                mmetricsitems.clear();
-                mmetricesadapter.notifyDataSetChanged();
-
-                mhashesitems.clear();
-                mhashesadapter.notifyDataSetChanged();
-
-                selectedhaeshes="";
-                selectedmetrics="";
-
-                suspendframequeue=false;
-                suspendbitmapqueue=false;
-
-                if(ishashprocessing)
-                    suspendframequeue=true;
-
-                if(isbitmapprocessing)
-                    suspendbitmapqueue=true;
-
-                if(myvisualizerviewmedia != null )
-                     myvisualizerviewmedia.clear();
-
-                if(fragmentgraphic != null)
-                    fragmentgraphic.setvisualizerwave();
-
-                setupaudioplayer(selectedvideouri);
-                audioduration =0;
-                playpausebutton.setImageResource(R.drawable.play);
-                rlcontrollerview.setVisibility(View.VISIBLE);
-                playerposition=0;
-                righthandle.setVisibility(View.VISIBLE);
-                if(audiourl != null && (! audiourl.isEmpty())){
-                    mvideoframes.clear();
-                    mainvideoframes.clear();
-                    mallframes.clear();
-                    txt_metrics.setText("");
-                    txt_hashes.setText("");
-                    isnewvideofound=true;
-                }
-            }
-        }
-    }
-
     public void parsemetadata(String metadata)
     {
         try {
@@ -1112,21 +943,24 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
                 }
                 count++;
-                if(suspendframequeue)
-                {
-                    selectedmetrics="";
-                    selectedhaeshes="";
-                    mhashesitems.clear();
-                    mhashesadapter.notifyDataSetChanged();
-                    break;
-                }
             }
 
-            if(! suspendframequeue)
+            if(lastframehash != null)
             {
-                if(lastframehash != null)
+                mvideoframes.add(lastframehash);
+                if(! selectedhaeshes.trim().isEmpty())
+                    selectedhaeshes=selectedhaeshes+"\n";
+
+                selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
+                        +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
+                        mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
+                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
+            }
+            else
+            {
+                if(mvideoframes.size() > 1)
                 {
-                    mvideoframes.add(lastframehash);
+                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
                     if(! selectedhaeshes.trim().isEmpty())
                         selectedhaeshes=selectedhaeshes+"\n";
 
@@ -1135,22 +969,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
                             mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
                 }
-                else
-                {
-                    if(mvideoframes.size() > 1)
-                    {
-                        mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-                        if(! selectedhaeshes.trim().isEmpty())
-                            selectedhaeshes=selectedhaeshes+"\n";
-
-                        selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                                +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                                mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                                mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-                    }
-                }
             }
-
             ishashprocessing=false;
             grabber.flush();
 
@@ -1159,8 +978,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             e.printStackTrace();
             ishashprocessing=false;
         }
-
-        suspendframequeue=false;
     }
 
     public void setmetriceshashesdata()
@@ -1173,24 +990,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void run() {
                 boolean graphicopen=false;
-                if(isnewvideofound)
-                {
-                    if((! suspendframequeue) && (! suspendbitmapqueue))
-                    {
-                        isnewvideofound=false;
-                        selectedmetrics="";
-                        selectedhaeshes="";
-                        mhashesitems.clear();
-                        mhashesadapter.notifyDataSetChanged();
-
-                        new Thread(){
-                            public void run(){
-                                setVideoAdapter();
-                            }
-                        }.start();
-                    }
-                }
-
                 if(isdraweropen)
                 {
                     if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
@@ -1234,7 +1033,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         currentduration=currentduration/frameduration;
 
         int n=(int)currentduration;
-        if(n> metricmainarraylist.size() || isvideocompleted)
+        if(n> metricmainarraylist.size() || imediacompleted)
             n=metricmainarraylist.size();
 
         Log.e("Current duration ",""+n+" "+currentduration+" "+metricmainarraylist.size());
@@ -1312,7 +1111,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        isvideocompleted=true;
+        imediacompleted =true;
         maxincreasevideoduration= audioduration;
 
         new Handler().postDelayed(new Runnable() {
@@ -1414,13 +1213,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
        audiourl = xdata.getinstance().getSetting("selectedaudiourl");
        if (audiourl != null && (!audiourl.isEmpty())) {
 
-
            mvideoframes.clear();
            mainvideoframes.clear();
            mallframes.clear();
-           txt_metrics.setText("");
-           txt_hashes.setText("");
-           isnewvideofound = true;
            audioduration = 0;
            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
            {
@@ -1660,12 +1455,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if (frame == null)
                     break;
 
-                ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
-                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                bb.asShortBuffer().put(shortbuff);
-                byte[] byteData = bb.array();
-                firsthash = common.getkeyvalue(byteData, keytype);
-                break;
+                if(i > 9)
+                {
+                    ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
+                    java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
+                    bb.asShortBuffer().put(shortbuff);
+                    byte[] byteData = bb.array();
+                    firsthash = common.getkeyvalue(byteData, keytype);
+                    break;
+                }
             }
             grabber.flush();
         }catch (Exception e)
