@@ -499,7 +499,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 public void run(){
                     try {
                         findmediafirsthash();
-                        getmediadata();
+                        if(!BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                                        getmediadata();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
