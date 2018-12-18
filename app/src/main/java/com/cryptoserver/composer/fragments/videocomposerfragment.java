@@ -49,7 +49,6 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -74,7 +73,6 @@ import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.services.insertmediadataservice;
 import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
-import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.camerautil;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -101,7 +99,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -249,7 +246,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     /**
      * MediaRecorder
      */
-    private MediaRecorder mMediaRecorder;
+    private MediaRecorder mediarecorder;
     /**
      * Whether the app is recording video now
      */
@@ -916,7 +913,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
 
             configureTransform(width, height);
-            mMediaRecorder = new MediaRecorder();
+            mediarecorder = new MediaRecorder();
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
@@ -940,9 +937,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 mCameraDevice.close();
                 mCameraDevice = null;
             }
-            if (null != mMediaRecorder) {
-                mMediaRecorder.release();
-                mMediaRecorder = null;
+            if (null != mediarecorder) {
+                mediarecorder.release();
+                mediarecorder = null;
             }
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera closing.");
@@ -967,7 +964,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             Surface previewSurface = new Surface(texture);
             surfaces.add(previewSurface);
             mPreviewBuilder.addTarget(previewSurface);
-            Surface recorderSurface = mMediaRecorder.getSurface();
+            Surface recorderSurface = mediarecorder.getSurface();
             surfaces.add(recorderSurface);
             mPreviewBuilder.addTarget(recorderSurface);
             mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
@@ -1049,32 +1046,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             return;
         }
 
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mMediaRecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
-        mMediaRecorder.setVideoEncodingBitRate(1000000);
-        mMediaRecorder.setVideoFrameRate(10);
-        mMediaRecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
-        mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mediarecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediarecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediarecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
+        mediarecorder.setVideoEncodingBitRate(1000000);
+        mediarecorder.setVideoFrameRate(10);
+        mediarecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
+        mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
        // int orientation = ORIENTATIONS.get(rotation);
         int orientation =  camerautil.getOrientation(rotation, upsideDown);
 
-        mMediaRecorder.setOrientationHint(orientation);
+        mediarecorder.setOrientationHint(orientation);
 
-        /*mMediaRecorder.setVideoEncodingBitRate(1000000);
-        mMediaRecorder.setVideoSize(720, 1280);
-        mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mMediaRecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
-        mMediaRecorder.setVideoFrameRate(18);
+        /*mediarecorder.setVideoEncodingBitRate(1000000);
+        mediarecorder.setVideoSize(720, 1280);
+        mediarecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
+        mediarecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
+        mediarecorder.setVideoFrameRate(18);
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         // int orientation = ORIENTATIONS.get(rotation);
         int orientation =  camerautil.getOrientation(rotation, upsideDown);
-        mMediaRecorder.setOrientationHint(orientation);*/
+        mediarecorder.setOrientationHint(orientation);*/
 
-        mMediaRecorder.prepare();
+        mediarecorder.prepare();
     }
     private File getVideoFile(Context context) {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -1100,14 +1097,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mediakey ="";
             issavedtofolder=false;
             isvideorecording = true;
-            // Start recording
-            mMediaRecorder.start();
-            startvideotimer();
-            fragmentgraphic.setvisualizerwave();
-            wavevisualizerslist.clear();
-            startnoise();
-            mrecordimagebutton.setEnabled(true);
-        } catch (IllegalStateException e) {
+            if(mediarecorder != null)
+            {
+                // Start recording
+                mediarecorder.start();
+                startvideotimer();
+                fragmentgraphic.setvisualizerwave();
+                wavevisualizerslist.clear();
+                startnoise();
+                mrecordimagebutton.setEnabled(true);
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1128,11 +1129,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             @Override
             public void run() {
                 try{
-                    mMediaRecorder.stop();
+                    mediarecorder.stop();
                 }catch(RuntimeException stopException){
                     Log.e("exception", String.valueOf(stopException));
                 }
-                mMediaRecorder.reset();
+                mediarecorder.reset();
 
                 startPreview();
                 stopvideotimer();
@@ -2060,7 +2061,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 try {
                     if((isvideorecording) && fragmentgraphic != null) {
 
-                        int x = mMediaRecorder.getMaxAmplitude();
+                        int x = mediarecorder.getMaxAmplitude();
 
 
                         wavevisualizerslist.add(new wavevisualizer(x,true));

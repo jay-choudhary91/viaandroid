@@ -389,8 +389,7 @@ public class readmediadataservice extends Service {
                                 e.printStackTrace();
                             }
                             JSONArray array=new JSONArray();
-                            if(! mediatype.equalsIgnoreCase("image"))
-                                array=jobject.getJSONArray("frames");
+                            array=jobject.getJSONArray("frames");
 
                             if(mediatype.equalsIgnoreCase("video"))
                             {
@@ -462,38 +461,39 @@ public class readmediadataservice extends Service {
                             }
                             else if(mediatype.equalsIgnoreCase("image"))
                             {
-                                JSONObject frameobject=jobject.getJSONObject("frames");
-                                JSONObject object=frameobject.getJSONObject("");
-                                String frameid = (object.has("imageframeid")?object.getString("imageframeid"):"");
-                                String objectid = (object.has("objectid")?object.getString("objectid"):"");
-                                String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
-                                String framenumber = (object.has("imageframenumber")?object.getString("imageframenumber"):"");
-                                String framehashvalue = (object.has("imageframehashvalue")?object.getString("imageframehashvalue"):"");
-                                String framehashmethod = (object.has("imageframehashmethod")?object.getString("imageframehashmethod"):"");
-                                String framemeta = (object.has("imageframemeta")?object.getString("imageframemeta"):"");
-                                String framemetahash = (object.has("imageframemetahash")?object.getString("imageframemetahash"):"");
-                                String framemetahashmethod = (object.has("imageframemetahashmethod")?object.getString("imageframemetahashmethod"):"");
-                                String devicedatetime = (object.has("imageframedevicedatetime")?object.getString("imageframedevicedatetime"):"");
-                                String frametransactionid = (object.has("imageframetransactionid")?object.getString("imageframetransactionid"):"");
-                                String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
-                                String meta = (object.has("meta")?object.getString("meta"):"");
-                                String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
-                                String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                String metahash = (object.has("metahash")?object.getString("metahash"):"");
-                                String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
+                                for(int i=0;i<array.length();i++) {
+                                    JSONObject object = array.getJSONObject(i);
+                                    String frameid = (object.has("imageframeid")?object.getString("imageframeid"):"");
+                                    String objectid = (object.has("objectid")?object.getString("objectid"):"");
+                                    String objectparentid = (object.has("objectparentid")?object.getString("objectparentid"):"");
+                                    String framenumber = (object.has("imageframenumber")?object.getString("imageframenumber"):"");
+                                    String framehashvalue = (object.has("imageframehashvalue")?object.getString("imageframehashvalue"):"");
+                                    String framehashmethod = (object.has("imageframehashmethod")?object.getString("imageframehashmethod"):"");
+                                    String framemeta = (object.has("imageframemeta")?object.getString("imageframemeta"):"");
+                                    String framemetahash = (object.has("imageframemetahash")?object.getString("imageframemetahash"):"");
+                                    String framemetahashmethod = (object.has("imageframemetahashmethod")?object.getString("imageframemetahashmethod"):"");
+                                    String devicedatetime = (object.has("imageframedevicedatetime")?object.getString("imageframedevicedatetime"):"");
+                                    String frametransactionid = (object.has("imageframetransactionid")?object.getString("imageframetransactionid"):"");
+                                    String sequenceno = (object.has("sequenceno")?object.getString("sequenceno"):"");
+                                    String meta = (object.has("meta")?object.getString("meta"):"");
+                                    String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
+                                    String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
+                                    String metahash = (object.has("metahash")?object.getString("metahash"):"");
+                                    String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
 
-                                if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
-                                    sequenceno="1";
+                                    if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
+                                        sequenceno="1";
 
-                                meta=meta.replace("u00b0","°");
-                                meta=meta.replace("&#39;","\'");
-                                meta=meta.replace("&#36;","\'");
-                                meta=meta.replace("&#34;","");
+                                    meta=meta.replace("u00b0","°");
+                                    meta=meta.replace("&#39;","\'");
+                                    meta=meta.replace("&#36;","\'");
+                                    meta=meta.replace("&#34;","");
 
-                                dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
-                                        meta,devicedatetime,hashmethod,hashvalue,
-                                        sequenceno,"",devicedatetime,"",
-                                        "","0",frametransactionid);
+                                    dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                            meta,devicedatetime,hashmethod,hashvalue,
+                                            sequenceno,"",devicedatetime,"",
+                                            "","0",frametransactionid);
+                                }
                             }
 
                             try {
