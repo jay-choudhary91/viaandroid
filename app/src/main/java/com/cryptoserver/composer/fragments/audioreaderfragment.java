@@ -1185,7 +1185,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                         new Thread(){
                             public void run(){
-                                setVideoAdapter();
+                               // setVideoAdapter();
                             }
                         }.start();
                     }

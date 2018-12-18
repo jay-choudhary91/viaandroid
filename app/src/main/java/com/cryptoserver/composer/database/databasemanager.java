@@ -697,7 +697,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where token='"+videotoken+"'");
+            mDb.execSQL("update tbstartvideoinfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where  token='"+videotoken+"'");
         } catch (Exception e) {
             e.printStackTrace();
         }
