@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
@@ -210,6 +211,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             myvisualizerviewmedia.setVisibility(View.VISIBLE);
             textfetchdata.setVisibility(View.VISIBLE);
+            playpausebutton.setImageResource(R.drawable.play);
 
             showcontrollers=rootview.findViewById(R.id.video_container);
             {
@@ -1407,37 +1409,37 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             String completedate = mdbhelper.getcompletedate(firsthash);
             if (!completedate.isEmpty()){
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    textfetchdata.setVisibility(View.GONE);
-                }
-            });
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textfetchdata.setVisibility(View.GONE);
+                    }
+                });
 
-            ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
-            metricmainarraylist.clear();
-            String framelabel="";
-            for(int i=0;i<mitemlist.size();i++)
-            {
-                String metricdata=mitemlist.get(i).getMetricdata();
-                parsemetadata(metricdata);
-                selectedhaeshes = selectedhaeshes+"\n";
-                framelabel="Frame ";
-                if(i == mitemlist.size()-1)
+                ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
+                metricmainarraylist.clear();
+                String framelabel="";
+                for(int i=0;i<mitemlist.size();i++)
                 {
-                    framelabel="Last Frame ";
+                    String metricdata=mitemlist.get(i).getMetricdata();
+                    parsemetadata(metricdata);
+                    selectedhaeshes = selectedhaeshes+"\n";
+                    framelabel="Frame ";
+                    if(i == mitemlist.size()-1)
+                    {
+                        framelabel="Last Frame ";
+                    }
+                    selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                            mitemlist.get(i).getSequencehash();
                 }
-                selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                        mitemlist.get(i).getSequencehash();
+                try
+                {
+                    mdbhelper.close();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
-            try
-            {
-                mdbhelper.close();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-         }
         }catch (Exception e)
         {
             e.printStackTrace();

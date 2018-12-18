@@ -1259,7 +1259,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 xdata.getinstance().saveSetting("selectedaudiourl",""+ recordedmediafile);
                 audioreaderfragment audiotabfrag = new audioreaderfragment();
                 //  audiotabfrag.setdata(videoobj.getPath());
-                gethelper().replaceFragment(audiotabfrag, false, true);
+                gethelper().addFragment(audiotabfrag, false, true);
 
             }
         });

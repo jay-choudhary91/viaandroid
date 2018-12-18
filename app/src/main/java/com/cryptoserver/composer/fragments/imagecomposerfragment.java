@@ -1555,7 +1555,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 xdata.getinstance().saveSetting("selectedphotourl",""+filepath);
                 imagereaderfragment phototabfrag = new imagereaderfragment();
                 // phototabfrag.setdata(videoobj.getPath());
-                gethelper().replaceFragment(phototabfrag, false, true);
+                gethelper().addFragment(phototabfrag, false, true);
 
 
             }
