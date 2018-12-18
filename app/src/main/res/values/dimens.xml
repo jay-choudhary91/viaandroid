@@ -25,4 +25,7 @@
     <!-- Semantic definitions -->
     <dimen name="horizontal_page_margin">@dimen/margin_medium</dimen>
     <dimen name="vertical_page_margin">@dimen/margin_medium</dimen>
+
+    <dimen name="image_height">50dp</dimen>
+    <dimen name="image_width">50dp</dimen>
 </resources>

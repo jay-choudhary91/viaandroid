@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.videomodel;
@@ -82,7 +83,8 @@ public class framebitmapadapter extends RecyclerView.Adapter<framebitmapadapter.
         }
         else
         {
-            final LinearLayout.LayoutParams param=new LinearLayout.LayoutParams(100,100);
+            int img_height = (int) applicationviavideocomposer.getactivity().getResources().getDimension(R.dimen.image_height);
+            final LinearLayout.LayoutParams param=new LinearLayout.LayoutParams(100, img_height);
             holder.img_item.setLayoutParams(param);
             holder.view_empty.setVisibility(View.GONE);
             holder.img_item.setVisibility(View.VISIBLE);
