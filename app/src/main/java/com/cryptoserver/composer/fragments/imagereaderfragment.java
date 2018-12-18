@@ -750,18 +750,44 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void parsemetadata(String metadata)
     {
         try {
-            JSONObject object=new JSONObject(metadata);
-            Iterator<String> myIter = object.keys();
-            ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-            while (myIter.hasNext()) {
-                String key = myIter.next();
-                String value = object.optString(key);
-                metricmodel model=new metricmodel();
-                model.setMetricTrackKeyName(key);
-                model.setMetricTrackValue(value);
-                metricItemArraylist.add(model);
+
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                JSONObject object=new JSONObject(metadata);
+                Iterator<String> myIter = object.keys();
+                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                while (myIter.hasNext()) {
+                    String key = myIter.next();
+                    String value = object.optString(key);
+                    metricmodel model=new metricmodel();
+                    model.setMetricTrackKeyName(key);
+                    model.setMetricTrackValue(value);
+                    metricItemArraylist.add(model);
+                }
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
             }
-            metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+            else
+            {
+                JSONArray array=new JSONArray(metadata);
+                if(array.length() > 0)
+                {
+                    JSONObject object=array.getJSONObject(0);
+                    Iterator<String> myIter = object.keys();
+                    ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                    while (myIter.hasNext()) {
+                        String key = myIter.next();
+                        String value = object.optString(key);
+                        metricmodel model=new metricmodel();
+                        model.setMetricTrackKeyName(key);
+                        model.setMetricTrackValue(value);
+                        metricItemArraylist.add(model);
+                    }
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                }
+
+            }
+
+
         }catch (Exception e)
         {
             e.printStackTrace();

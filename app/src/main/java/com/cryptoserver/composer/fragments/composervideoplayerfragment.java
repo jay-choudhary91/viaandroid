@@ -1221,7 +1221,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                                 framelabel="Last Frame ";
                             }
                             selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                                    mitemlist.get(i).getSequencehash();
+                                    ": "+mitemlist.get(i).getSequencehash();
                         }
                         try
                         {
