@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -236,6 +237,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
+
             recyview_frames.post(new Runnable() {
                 @Override
                 public void run() {
@@ -1378,6 +1380,22 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         } else{
             n=seconds/2;
         }
+
+        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.imagebitmap);
+
+        for(int j=1;j<=n;j++){
+
+           // Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+           // Bitmap bmp = Bitmap.createBitmap(image,100, 100, false);
+            Bitmap bitmap = Bitmap.createScaledBitmap(image, 100, 100, false);
+            mbitmaplist.add(new frame(j,bitmap,false));
+
+        }
+
+        if(mbitmaplist.size()!=0)
+            mbitmaplist.add(new frame(0,null,true));
+
+
         for(int i=1;i<=n;i++)
         {
             Bitmap m_bitmap = null;
@@ -1404,15 +1422,21 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 if(m_bitmap != null && runmethod)
                 {
                     Log.e("Bitmap on ",""+i);
-                    Bitmap bitmap=Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
-                    mbitmaplist.add(new frame(i,bitmap,false));
+                    Bitmap bitmap = Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
+                    /*mbitmaplist.add(new frame(i,bitmap,false));
+                    mbitmaplist.set(i,bitmap);*/
+
+                    mbitmaplist.set(i,new frame(i,bitmap,false));
 
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adapter.notifyDataSetChanged();
-                            scurraberverticalbar.setVisibility(View.VISIBLE);
-                            //runmethod = true;
+                            if(adapter != null){
+                                adapter.notifyDataSetChanged();
+                                scurraberverticalbar.setVisibility(View.VISIBLE);
+                                //runmethod = true;
+                            }
+
                         }
                     });
                 }
@@ -1430,8 +1454,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         isbitmapprocessing=false;
         suspendbitmapqueue=false;
 
-        if(mbitmaplist.size()!=0)
-            mbitmaplist.add(new frame(0,null,true));
+        /*if(mbitmaplist.size()!=0)
+            mbitmaplist.add(new frame(0,null,true));*/
 
     }
 

@@ -182,7 +182,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     String[] soundamplitudealuearray ;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     private BroadcastReceiver getmetadatabroadcastreceiver;
-    String firsthash="";
 
     public audioreaderfragment() {
     }
@@ -215,6 +214,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             myvisualizerviewmedia.setVisibility(View.VISIBLE);
             textfetchdata.setVisibility(View.VISIBLE);
+            playpausebutton.setImageResource(R.drawable.play);
 
             showcontrollers=rootview.findViewById(R.id.video_container);
             {
@@ -1423,9 +1423,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
            isnewvideofound = true;
            audioduration = 0;
            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-           {
-               firsthash = findmediafirsthash();
-           }
+               // findmediafirsthash();
+
            playpausebutton.setImageResource(R.drawable.play);
            rlcontrollerview.setVisibility(View.VISIBLE);
            playerposition = 0;
@@ -1512,6 +1511,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     e.printStackTrace();
                 }
 
+                String firsthash = findmediafirsthash();
+
                 try {
                     if(! firsthash.trim().isEmpty())
                     {
@@ -1593,6 +1594,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
+
     public void getmediadata()
     {
         try {
@@ -1612,37 +1614,37 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             String completedate = mdbhelper.getcompletedate(firsthash);
             if (!completedate.isEmpty()){
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    textfetchdata.setVisibility(View.GONE);
-                }
-            });
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        textfetchdata.setVisibility(View.GONE);
+                    }
+                });
 
-            ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
-            metricmainarraylist.clear();
-            String framelabel="";
-            for(int i=0;i<mitemlist.size();i++)
-            {
-                String metricdata=mitemlist.get(i).getMetricdata();
-                parsemetadata(metricdata);
-                selectedhaeshes = selectedhaeshes+"\n";
-                framelabel="Frame ";
-                if(i == mitemlist.size()-1)
+                ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
+                metricmainarraylist.clear();
+                String framelabel="";
+                for(int i=0;i<mitemlist.size();i++)
                 {
-                    framelabel="Last Frame ";
+                    String metricdata=mitemlist.get(i).getMetricdata();
+                    parsemetadata(metricdata);
+                    selectedhaeshes = selectedhaeshes+"\n";
+                    framelabel="Frame ";
+                    if(i == mitemlist.size()-1)
+                    {
+                        framelabel="Last Frame ";
+                    }
+                    selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                            mitemlist.get(i).getSequencehash();
                 }
-                selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                        mitemlist.get(i).getSequencehash();
+                try
+                {
+                    mdbhelper.close();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
-            try
-            {
-                mdbhelper.close();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-         }
         }catch (Exception e)
         {
             e.printStackTrace();
