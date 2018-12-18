@@ -186,7 +186,7 @@ public class insertmediadataservice extends Service {
                                             Log.e("md5 ",""+count+" "+keyValue);
                                             mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
 
-                                            if(i == 0 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
+                                            if(i == 10 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
                                             {
                                                 String filename = common.getfilename(mediapath);
                                                 HashMap<String, String> map = new HashMap<String, String>();
