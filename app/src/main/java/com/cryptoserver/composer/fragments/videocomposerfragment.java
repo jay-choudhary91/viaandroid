@@ -1945,7 +1945,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         };
 
-        mediacompletionpopupmain=new mediacompletiondialogmain(popupclickmain);
+        mediacompletionpopupmain=new mediacompletiondialogmain(popupclickmain,getResources().getString(R.string.share),getResources().getString(R.string.new_video),getResources().getString(R.string.watch),getResources().getString(R.string.video_has_been_encrypted),getResources().getString(R.string.congratulations_video));
         mediacompletionpopupmain.show(fm, "fragment_name");
     }
 
@@ -2001,7 +2001,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         };
 
-        mediacompletionpopupsub=new mediacompletiondialogsub(popupclicksub);
+        mediacompletionpopupsub=new mediacompletiondialogsub(popupclicksub,getResources().getString(R.string.save_to_camera),getResources().getString(R.string.share_partial_video),getResources().getString(R.string.cancel_viewlist),getResources().getString(R.string.how_would_you),"");
         mediacompletionpopupsub.show(fm, "fragment_name");
     }
 
