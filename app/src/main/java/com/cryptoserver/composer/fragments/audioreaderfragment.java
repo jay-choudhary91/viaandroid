@@ -75,6 +75,13 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Formatter;
@@ -317,6 +324,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             setmetriceshashesdata();
             setupaudiodata();
+            sethashesdata();
         }
         return rootview;
     }
@@ -868,118 +876,66 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 (R.color.videoPlayer_header));
     }
 
-    public void setVideoAdapter() {
-        int count = 1;
-        ishashprocessing=true;
-        currentframenumber=0;
-        currentframenumber = currentframenumber + frameduration;
-        try
-        {
-            ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(audiourl));
-            grabber.start();
-            videomodel lastframehash=null;
+    public void sethashesdata() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++){
-                Frame frame = grabber.grabAudio();
-                if (frame == null)
-                    break;
+                try {
+                    ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(audiourl));
+                    grabber.start();
 
-                ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
-                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                bb.asShortBuffer().put(shortbuff);
+                    for(int i = 0; i<grabber.getLengthInAudioFrames(); i++){
+                        Frame frame = grabber.grabAudio();
+                        if (frame == null)
+                            break;
 
-                byte[] byteData = bb.array();
-                int length =  byteData.length;
-                Log.e("bytedatasize", ""+byteData.length );
-                String keyValue= getkeyvalue(byteData);
-                Log.e("hashesaudio ",""+keyValue);
+                        /*ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
+                        java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
+                        bb.asShortBuffer().put(shortbuff);
 
-                /*Buffer outputBuffer = frame.samples[0];
-                ByteBuffer byteBuffer=null;
-                if (outputBuffer instanceof ByteBuffer) {
-                    byteBuffer = (ByteBuffer) outputBuffer;
-                } else if (outputBuffer instanceof CharBuffer) {
-                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity());
-                    byteBuffer.asCharBuffer().put((CharBuffer) outputBuffer);
-                } else if (outputBuffer instanceof ShortBuffer) {
-                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 2);
-                    byteBuffer.asShortBuffer().put((ShortBuffer) outputBuffer);
-                } else if (outputBuffer instanceof IntBuffer) {
-                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
-                    byteBuffer.asIntBuffer().put((IntBuffer) outputBuffer);
-                } else if (outputBuffer instanceof LongBuffer) {
-                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
-                    byteBuffer.asLongBuffer().put((LongBuffer) outputBuffer);
-                } else if (outputBuffer instanceof FloatBuffer) {
-                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
-                    byteBuffer.asFloatBuffer().put((FloatBuffer) outputBuffer);
-                } else if (outputBuffer instanceof DoubleBuffer) {
-                    byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
-                    byteBuffer.asDoubleBuffer().put((DoubleBuffer) outputBuffer);
-                }
+                        byte[] byteData = bb.array();
+                        int length =  byteData.length;
+                        String keyValue= getkeyvalue(byteData);
+                        Log.e("hashesaudio ",""+keyValue);*/
 
-                byte[] byteData = new byte[byteBuffer.remaining()];
-                byteBuffer.get(byteData);
-                String keyValue= getkeyvalue(byteData);
-                Log.e("hashes ",""+keyValue);*/
+                        Buffer outputBuffer = frame.samples[0];
+                        ByteBuffer byteBuffer=null;
+                        if (outputBuffer instanceof ByteBuffer) {
+                            byteBuffer = (ByteBuffer) outputBuffer;
+                        } else if (outputBuffer instanceof CharBuffer) {
+                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity());
+                            byteBuffer.asCharBuffer().put((CharBuffer) outputBuffer);
+                        } else if (outputBuffer instanceof ShortBuffer) {
+                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 2);
+                            byteBuffer.asShortBuffer().put((ShortBuffer) outputBuffer);
+                        } else if (outputBuffer instanceof IntBuffer) {
+                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
+                            byteBuffer.asIntBuffer().put((IntBuffer) outputBuffer);
+                        } else if (outputBuffer instanceof LongBuffer) {
+                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
+                            byteBuffer.asLongBuffer().put((LongBuffer) outputBuffer);
+                        } else if (outputBuffer instanceof FloatBuffer) {
+                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
+                            byteBuffer.asFloatBuffer().put((FloatBuffer) outputBuffer);
+                        } else if (outputBuffer instanceof DoubleBuffer) {
+                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
+                            byteBuffer.asDoubleBuffer().put((DoubleBuffer) outputBuffer);
+                        }
 
-                if(fragmentgraphic != null)
-                    fragmentgraphic.sethashesdata(keyValue);
-
-                mallframes.add(new videomodel("Frame ", keytype,count,keyValue));
-                if (count == currentframenumber) {
-                    lastframehash=null;
-                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-                    if(! selectedhaeshes.trim().isEmpty())
-                        selectedhaeshes=selectedhaeshes+"\n";
-
-                    selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-
-                    currentframenumber = currentframenumber + frameduration;
-                }
-                else
+                        byte[] byteData = new byte[byteBuffer.remaining()];
+                        byteBuffer.get(byteData);
+                        String keyValue= getkeyvalue(byteData);
+                        Log.e("hashes "+i+": ",""+keyValue);
+                    }
+                    grabber.flush();
+                }catch (Exception e)
                 {
-                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                    e.printStackTrace();
                 }
-                count++;
+
             }
-
-            if(lastframehash != null)
-            {
-                mvideoframes.add(lastframehash);
-                if(! selectedhaeshes.trim().isEmpty())
-                    selectedhaeshes=selectedhaeshes+"\n";
-
-                selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                        +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                        mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-            }
-            else
-            {
-                if(mvideoframes.size() > 1)
-                {
-                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-                    if(! selectedhaeshes.trim().isEmpty())
-                        selectedhaeshes=selectedhaeshes+"\n";
-
-                    selectedhaeshes=selectedhaeshes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-                }
-            }
-            ishashprocessing=false;
-            grabber.flush();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            ishashprocessing=false;
-        }
+        }).start();
     }
 
     public void setmetriceshashesdata()
