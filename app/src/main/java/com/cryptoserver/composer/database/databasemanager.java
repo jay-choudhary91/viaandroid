@@ -65,7 +65,7 @@ public class databasemanager {
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
                                      String videocompletedevicedate,String firsthash,String videoid,
-                                     String status,String remainingframes,String lastframe)
+                                     String status,String remainingframes,String lastframe,String framecount)
     {
         try {
             lock.lock();
@@ -89,6 +89,7 @@ public class databasemanager {
             values.put("remainingframes",""+remainingframes);
             values.put("lastframe",""+lastframe);
             values.put("firsthash",""+firsthash);
+            values.put("framecount",""+framecount);
 
             long l=mDb.insert("tbstartvideoinfo", null, values);
             Log.e("Id ",""+l);

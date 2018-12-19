@@ -223,8 +223,7 @@ public class readmediadataservice extends Service {
                 if(response.isSuccess())
                 {
                     Log.e("Found hash ",""+hashvalue);
-                    String videotoken="",videotitle="";
-                    String mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
+                    String framecount="",mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
                             remainingframes="10",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",
                     mediacompleteddevicedatetime="";
 
@@ -234,6 +233,7 @@ public class readmediadataservice extends Service {
                         {
                             mediaid = (object.has("videoid")?object.getString("videoid"):"");
                             mediakey = (object.has("videokey")?object.getString("videokey"):"");
+                            framecount = (object.has("videoframecount")?object.getString("videoframecount"):"1");
                             String videohashmethod = (object.has("videohashmethod")?object.getString("videohashmethod"):"");
                             String videohashvalue = (object.has("videohashvalue")?object.getString("videohashvalue"):"");
                             mediastartdevicedatetime = (object.has("videostartdevicedatetime")?object.getString("videostartdevicedatetime"):"");
@@ -254,6 +254,7 @@ public class readmediadataservice extends Service {
                         {
                             mediaid = (object.has("audioid")?object.getString("audioid"):"");
                             mediakey = (object.has("audiokey")?object.getString("audiokey"):"");
+                            framecount = (object.has("audioframecount")?object.getString("audioframecount"):"1");
                             String audiohashmethod = (object.has("audiohashmethod")?object.getString("audiohashmethod"):"");
                             String audiohashvalue = (object.has("audiohashvalue")?object.getString("audiohashvalue"):"");
                             mediastartdevicedatetime = (object.has("audiostartdevicedatetime")?object.getString("audiostartdevicedatetime"):"");
@@ -279,6 +280,7 @@ public class readmediadataservice extends Service {
 
                             mediaid = (object.has("imageid")?object.getString("imageid"):"");
                             mediakey = (object.has("imagekey")?object.getString("imagekey"):"");
+                            framecount = (object.has("imageframecount")?object.getString("imageframecount"):"1");
                             String imagehashmethod = (object.has("imagehashmethod")?object.getString("imagehashmethod"):"");
                             String imagehashvalue = (object.has("imagehashvalue")?object.getString("imagehashvalue"):"");
                             mediastartdevicedatetime = (object.has("imagestartdevicedatetime")?object.getString("imagestartdevicedatetime"):"");
@@ -317,7 +319,7 @@ public class readmediadataservice extends Service {
                         mdbhelper.insertstartvideoinfo(firsthash,mediatypeshortname,mediatitle,mediaid,
                                 mediatoken,mediakey,"",syncdate[0] , actiontype,
                                 "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,
-                                firsthash,mediaid,config.sync_pending,remainingframes,lastframe);
+                                firsthash,mediaid,config.sync_pending,remainingframes,lastframe,framecount);
 
 
                         try {
