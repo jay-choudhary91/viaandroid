@@ -908,6 +908,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     applicationviavideocomposer.getactivity().startService(intent);
                 }
 
+                getframesbitmap();
+
             }
         }).start();
     }
@@ -1608,7 +1610,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 }
 
                 findmediafirsthash();
-                getframesbitmap();
 
                 File file=new File(mediafilepath);
                 long file_size = file.length();
