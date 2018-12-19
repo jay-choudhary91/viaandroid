@@ -414,10 +414,7 @@ public class readmediadataservice extends Service {
                                     String metahash = (object.has("metahash")?object.getString("metahash"):"");
                                     String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
 
-                                    meta=meta.replace("u00b0","°");
-                                    meta=meta.replace("&#39;","\'");
-                                    meta=meta.replace("&#36;","\'");
-                                    meta=meta.replace("&#34;","");
+                                    meta=common.refactordegreequotesformat(meta);
 
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
@@ -448,10 +445,7 @@ public class readmediadataservice extends Service {
                                     String metahash = (object.has("metahash")?object.getString("metahash"):"");
                                     String metahashmethod = (object.has("metahashmethod")?object.getString("metahashmethod"):"");
 
-                                    meta=meta.replace("u00b0","°");
-                                    meta=meta.replace("&#39;","\'");
-                                    meta=meta.replace("&#36;","\'");
-                                    meta=meta.replace("&#34;","");
+                                    meta=common.refactordegreequotesformat(meta);
 
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
@@ -484,10 +478,7 @@ public class readmediadataservice extends Service {
                                     if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
                                         sequenceno="1";
 
-                                    meta=meta.replace("u00b0","°");
-                                    meta=meta.replace("&#39;","\'");
-                                    meta=meta.replace("&#36;","\'");
-                                    meta=meta.replace("&#34;","");
+                                    meta=common.refactordegreequotesformat(meta);
 
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,devicedatetime,hashmethod,hashvalue,

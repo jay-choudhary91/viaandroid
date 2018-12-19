@@ -659,6 +659,15 @@ public class common {
         }
     }
 
+    public static String refactordegreequotesformat(String meta)
+    {
+        meta=meta.replace("u00b0","°");
+        meta=meta.replace("&#39;","\'");
+        meta=meta.replace("&#36;","\'");
+        meta=meta.replace("&#34;","");
+        return meta;
+    }
+
     public static String getmediafirstframehash(String mediafilepath,String type)
     {
         String firsthash="";
