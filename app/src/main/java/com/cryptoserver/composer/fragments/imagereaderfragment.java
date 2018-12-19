@@ -589,6 +589,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 double latt=0,longg=0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size()-1).getMetricItemArraylist();
+
+                fragmentgraphic.getencryptiondata(metricmainarraylist.get(0).getHashmethod(),metricmainarraylist.get(0).getVideostarttransactionid(),
+                        metricmainarraylist.get(0).getValuehash(),metricmainarraylist.get(0).getMetahash());
+
+
                 for (int j = 0; j < metricItemArraylist.size(); j++) {
                     selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
                             metricItemArraylist.get(j).getMetricTrackValue();
@@ -715,7 +720,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 for(int i=0;i<mitemlist.size();i++)
                 {
                     String metricdata=mitemlist.get(i).getMetricdata();
-                    parsemetadata(metricdata);
+                    String valuehash =mitemlist.get(i).getSequencehash();
+                    String hashmethod =mitemlist.get(i).getHashmethod();
+                    String videostarttransactionid =mitemlist.get(i).getVideostarttransactionid();
+                    String metahash =mitemlist.get(i).getMetahash();
+
+
+
+                    parsemetadata(metricdata,valuehash,hashmethod,videostarttransactionid,metahash);
                     selectedhashes = selectedhashes+"\n";
                     framelabel="Frame ";
                     selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
@@ -748,7 +760,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     }
 
 
-    public void parsemetadata(String metadata)
+    public void parsemetadata(String metadata,String valuehash,String hashmethod,String videostarttransactionid,String metahash)
     {
         try {
 
@@ -765,7 +777,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,valuehash,metahash));
+
             }
             else
             {
@@ -783,7 +796,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,"","","",""));
+
                 }
 
             }

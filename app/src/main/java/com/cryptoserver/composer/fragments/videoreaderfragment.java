@@ -810,6 +810,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                         String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
                                         String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
                                         String metricdata = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metricdata"));
+                                        String videostarttransactionid = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videostarttransactionid"));
+                                        String metahash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metahash"));
                                         //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
 
                                         try {
@@ -824,7 +826,8 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                                                 model.setMetricTrackValue(value);
                                                 metricItemArraylist.add(model);
                                             }
-                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+
+                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,sequencehash,metahash));
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
@@ -1273,9 +1276,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     m_mediaMetadataRetriever.release();
             }
         }
-        if(mbitmaplist.size()!=0)
-            mbitmaplist.add(new frame(0,null,true));
-
     }
 
     public void setupVideoPlayer(final Uri selecteduri)
@@ -1300,8 +1300,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     wavevisualizerslist.clear();
                 }
             }
-
-
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (SecurityException e) {
@@ -1382,6 +1380,11 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 metricmainarraylist.get(i).setIsupdated(true);
                 double latt=0,longg=0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
+
+                fragmentgraphic.getencryptiondata(metricmainarraylist.get(i).getHashmethod(),metricmainarraylist.get(i).getVideostarttransactionid(),
+                            metricmainarraylist.get(i).getValuehash(),metricmainarraylist.get(i).getMetahash());
+
+
                 for(int j=0;j<metricItemArraylist.size();j++)
                 {
                     selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
@@ -1393,6 +1396,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     {
                         if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
                         {
+
                             if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
                             {
                                 latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
@@ -1425,6 +1429,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 }
 
+
                 selectedmetrics=selectedmetrics+"\n";
 
                 if((! selectedmetrics.toString().trim().isEmpty()))
@@ -1446,7 +1451,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         }
 
     }
-
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {

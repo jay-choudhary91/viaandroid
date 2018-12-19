@@ -329,7 +329,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,"","","",""));
             }
         } catch (Exception e) {
             e.printStackTrace();

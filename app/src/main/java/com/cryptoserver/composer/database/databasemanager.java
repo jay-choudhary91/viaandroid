@@ -105,7 +105,7 @@ public class databasemanager {
     public void insertframemetricesinfo(String blockchain,String valuehash,String hashmethod,String localkey,
                                         String metricdata,String recordate,String rsequenceno,String sequencehash,
                                         String sequenceno,String serverdate,String sequencedevicedate,String serverdictionaryhash,
-                                        String completehashvalue,String sequenceid,String videostarttransactionid)
+                                        String completehashvalue,String sequenceid,String videostarttransactionid,String metahash)
     {
         try {
             lock.lock();
@@ -126,6 +126,7 @@ public class databasemanager {
             values.put("completehashvalue", ""+completehashvalue);
             values.put("sequenceid", ""+sequenceid);
             values.put("videostarttransactionid",  videostarttransactionid);
+            values.put("metahash",  metahash);
 
             long l=mDb.insert("tblmetadata", null, values);
             Log.e("Id ",""+l);
@@ -540,7 +541,7 @@ public class databasemanager {
                                 cur.getString(cur.getColumnIndex("metricdata")),cur.getString(cur.getColumnIndex("rsequenceno")),
                                 cur.getString(cur.getColumnIndex("sequencehash")),cur.getString(cur.getColumnIndex("sequenceno")),
                                 cur.getString(cur.getColumnIndex("serverdate")),cur.getString(cur.getColumnIndex("sequencedevicedate")),
-                                cur.getString(cur.getColumnIndex("videostarttransactionid"))));
+                                cur.getString(cur.getColumnIndex("videostarttransactionid")), cur.getString(cur.getColumnIndex("metahash"))));
                     }while(cur.moveToNext());
                 }
             } catch (Exception e) {

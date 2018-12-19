@@ -156,10 +156,14 @@ public class graphicalfragment extends basefragment implements
     TextView txt_systemuptime;
     @BindView(R.id.txt_battery)
     TextView txt_battery;
-    @BindView(R.id.txt_data_hash)
-    TextView txt_data_hash;
     @BindView(R.id.txt_hash_formula)
     TextView txt_hash_formula;
+    @BindView(R.id.txt_data_hash)
+    TextView txt_data_hash;
+    @BindView(R.id.txt_dictionary_hash)
+    TextView txt_dictionary_hash;
+    @BindView(R.id.txt_videoupdatetransactionid)
+    TextView txt_videoupdatetransactionid;
 
     @BindView(R.id.layout_encryption)
     LinearLayout layout_encryption;
@@ -223,6 +227,7 @@ public class graphicalfragment extends basefragment implements
     String[] visulizerdataarray ;
     String soundamplitudealue = "";
     int position=0;
+    String hashmethod= "",videostarttransactionid = "",valuehash = "",metahash = "";
 
 
     int hitcounter=0;
@@ -478,9 +483,20 @@ public class graphicalfragment extends basefragment implements
             }
         }
 
-        txt_data_hash.setText(currenthashvalue);
-        txt_hash_formula.setText(xdata.getinstance().getSetting(config.hashtype));
+        txt_data_hash.setText(valuehash);
+        txt_hash_formula.setText(hashmethod);
+        txt_dictionary_hash.setText(metahash);
+        txt_videoupdatetransactionid.setText(videostarttransactionid);
     }
+
+        public void getencryptiondata(String hashmethod, String videostarttransactionid, String valuehash, String metahash){
+
+                this.hashmethod = hashmethod;
+                this.videostarttransactionid = videostarttransactionid;
+                this.valuehash = valuehash;
+                this.metahash = metahash;
+        }
+
 
     @Override
     public int getlayoutid() {

@@ -302,6 +302,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(player!=null)
                     {
                         player.pause();
+                        playpausebutton.setImageResource(R.drawable.play);
                     }
                 }
 
@@ -309,7 +310,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 public void onStopTrackingTouch(SeekBar seekBar) {
 
                     player.seekTo(seekBar.getProgress());
-                    player.start();
                 }
             });
 
@@ -829,7 +829,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,"","","",""));
             }
 
 
@@ -1003,6 +1003,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 metricmainarraylist.get(i).setIsupdated(true);
                 double latt=0,longg=0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
+
+                fragmentgraphic.getencryptiondata(metricmainarraylist.get(i).getHashmethod(),metricmainarraylist.get(i).getVideostarttransactionid(),
+                        metricmainarraylist.get(i).getValuehash(),metricmainarraylist.get(i).getMetahash());
+
                 for(int j=0;j<metricItemArraylist.size();j++)
                 {
                     selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
@@ -1288,6 +1292,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                         String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
                                         String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
                                         String metricdata = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metricdata"));
+                                        String videostarttransactionid = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videostarttransactionid"));
+                                        String metahash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metahash"));
+
+
                                         //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
 
                                         try {
@@ -1302,7 +1310,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                                 model.setMetricTrackValue(value);
                                                 metricItemArraylist.add(model);
                                             }
-                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist));
+                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,sequencehash,metahash));
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();

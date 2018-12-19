@@ -421,7 +421,7 @@ public class readmediadataservice extends Service {
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
-                                            "","0",videoframetransactionid);
+                                            "","0",videoframetransactionid,metahash);
                                 }
                             }
                             else if(mediatype.equalsIgnoreCase("audio"))
@@ -452,7 +452,7 @@ public class readmediadataservice extends Service {
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
-                                            "","0",videoframetransactionid);
+                                            "","0",videoframetransactionid,metahash);
                                 }
                             }
                             else if(mediatype.equalsIgnoreCase("image"))
@@ -485,7 +485,7 @@ public class readmediadataservice extends Service {
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,devicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",devicedatetime,"",
-                                            "","0",frametransactionid);
+                                            "","0",frametransactionid,metahash);
                                 }
                             }
 
