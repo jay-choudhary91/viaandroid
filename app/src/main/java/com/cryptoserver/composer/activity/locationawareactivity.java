@@ -1355,7 +1355,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         system=system.substring(system.indexOf("Tasks"),system.length());
                         system=  system.replace("Tasks:","");
                     }
-                    Log.e("system",system);
                     String[] cpuArray = system.split(",");
                     final String[] value1 = {cpuArray[0]};
                     final String[] value2 = {cpuArray[1]};
