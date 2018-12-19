@@ -240,7 +240,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
         }
         else if(fragment instanceof videoreaderfragment){
-            imgsettingsicon.setVisibility(View.VISIBLE);
+            imgsettingsicon.setVisibility(View.GONE);
             img_menu.setVisibility(View.VISIBLE);
             imgaddicon.setVisibility(View.GONE);
             imgshareicon.setVisibility(View.VISIBLE);
@@ -288,7 +288,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }else if(fragment instanceof audioreaderfragment){
              if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
              {
-                 imgsettingsicon.setVisibility(View.VISIBLE);
+                 imgsettingsicon.setVisibility(View.GONE);
                  img_menu.setVisibility(View.VISIBLE);
                  imgshareicon.setVisibility(View.VISIBLE);
                  imgsettingsicon.setEnabled(true);
@@ -306,7 +306,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          } else if(fragment instanceof imagereaderfragment){
              if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
              {
-                 imgsettingsicon.setVisibility(View.VISIBLE);
+                 imgsettingsicon.setVisibility(View.GONE);
                  img_menu.setVisibility(View.VISIBLE);
                  imgshareicon.setVisibility(View.VISIBLE);
                  imgsettingsicon.setEnabled(true);
