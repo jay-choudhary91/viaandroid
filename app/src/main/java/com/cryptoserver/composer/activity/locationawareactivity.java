@@ -2117,8 +2117,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         updatecompletehashvalue(localkey,valuehash);
                         updatedatasyncdate(localkey,common.getCurrentDate());
 
-
-                     /*   String sequence = object.getString("sequence");
+                        Intent i = new Intent(config.composer_service_getencryptionmetadata);
+                        sendBroadcast(i);
+                     /* String sequence = object.getString("sequence");
                         String serverdate = object.getString("serverdate");
                         String serverdictionaryhash = object.getString("serverdictionaryhash");
                         updatevideoupdateapiresponse(finalselectedid,sequence,serverdate,serverdictionaryhash);*/

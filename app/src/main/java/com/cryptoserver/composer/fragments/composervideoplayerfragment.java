@@ -35,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
@@ -145,7 +146,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     String[] soundamplitudealuearray;
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist = new ArrayList<>();
-    private BroadcastReceiver getmetadatabroadcastreceiver;
+    private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
 
     @Override
     public int getlayoutid() {
@@ -1147,6 +1148,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     public void onStart() {
         super.onStart();
         registerbroadcastreciver();
+        registerbroadcastreciverforencryptionmetadata();
     }
 
     @Override
@@ -1177,6 +1179,27 @@ public class composervideoplayerfragment extends basefragment implements Surface
             }
         };
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
+    }
+
+    public void registerbroadcastreciverforencryptionmetadata()
+    {
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
+        getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
+
+               /* Thread thread = new Thread() {
+                    public void run() {
+                        if(mhashesitems.size() == 0)
+                            getmediadata();
+                    }
+                };
+                thread.start();*/
+            }
+        };
+        getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
     }
 
     public void getmediadata() {
