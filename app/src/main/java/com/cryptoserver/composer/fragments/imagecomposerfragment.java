@@ -33,6 +33,7 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -65,6 +66,8 @@ import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.dbitemcontainer;
+import com.cryptoserver.composer.models.mediacompletiondialogmain;
+import com.cryptoserver.composer.models.mediacompletiondialogsub;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.services.insertmediadataservice;
@@ -354,6 +357,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private  final int flingactionmindspdvac = 10;
     ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
     ArrayList<dbitemcontainer> mdbmiddleitemcontainer =new ArrayList<>();
+
+    mediacompletiondialogmain mediacompletionpopupmain;
+    mediacompletiondialogsub mediacompletionpopupsub;
+    FragmentManager fm ;
+    adapteritemclick popupclickmain;
+    adapteritemclick popupclicksub;
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
@@ -1485,182 +1494,85 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void showsharepopupmain()
     {
-        if(maindialogshare != null && maindialogshare.isShowing())
-            maindialogshare.dismiss();
 
-        maindialogshare=new Dialog(applicationviavideocomposer.getactivity());
-        maindialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        maindialogshare.setCanceledOnTouchOutside(true);
-        maindialogshare.setContentView(R.layout.popup_sharescreen);
-        //maindialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int width=widthHeight[0];
-        double height=widthHeight[1]/1.6;
-        maindialogshare.getWindow().setLayout(width-20, (int)height);
-        maindialogshare.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        fm = getActivity().getSupportFragmentManager();
+        popupclickmain=new adapteritemclick() {
             @Override
-            public void onDismiss(DialogInterface dialogInterface) {
+            public void onItemClicked(Object object) {
+                int i= (int) object;
+                if(i==1){
+                    Log.e("popup","popup");
+                    showsharepopupsub();
+                }
+                else if(i==2){
+                    Log.e("popup 2","popup 2");
 
+                }
+                else if(i==3){
+                    if(maindialogshare != null && maindialogshare.isShowing())
+                        maindialogshare.dismiss();
+
+                    String filepath =  capturedimagefile.getAbsolutePath();
+
+                    xdata.getinstance().saveSetting("selectedphotourl",""+filepath);
+                    imagereaderfragment phototabfrag = new imagereaderfragment();
+                    gethelper().addFragment(phototabfrag, false, true);
+                }
             }
-        });
-        TextView txt_share_btn1 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn1);
-        TextView txt_share_btn2 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn2);
-        TextView txt_share_btn3 = (TextView)maindialogshare.findViewById(R.id.txt_share_btn3);
-        TextView txt_title1 = (TextView)maindialogshare.findViewById(R.id.txt_title1);
-        TextView txt_title2 = (TextView)maindialogshare.findViewById(R.id.txt_title2);
-        ImageView img_cancel=maindialogshare.findViewById(R.id.img_cancelicon);
-
-        txt_share_btn1.setText(getResources().getString(R.string.share));
-        txt_share_btn2.setText(getResources().getString(R.string.new_photo));
-        txt_share_btn3.setText(getResources().getString(R.string.view_photo));
-
-        txt_title1.setText(getResources().getString(R.string.photo_has_been_encrypted));
-        txt_title2.setText(getResources().getString(R.string.congratulations_photo));
-
-        common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),20);
-        common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),20);
-        common.changeFocusStyle(txt_share_btn3,getResources().getColor(R.color.share_c),20);
-
-        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v) {
-
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
-
-                showsharepopupsub();
-            }
-        });
-
-        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
-            }
-        });
-
-        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
-
-                String filepath =  capturedimagefile.getAbsolutePath();
-
-                xdata.getinstance().saveSetting("selectedphotourl",""+filepath);
-                imagereaderfragment phototabfrag = new imagereaderfragment();
-                // phototabfrag.setdata(videoobj.getPath());
-                gethelper().addFragment(phototabfrag, false, true);
-
+            public void onItemClicked(Object object, int type) {
 
             }
-        });
-        img_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(maindialogshare != null && maindialogshare.isShowing())
-                    maindialogshare.dismiss();
+        };
 
-            }
-        });
-        maindialogshare.show();
+        mediacompletionpopupmain=new mediacompletiondialogmain(popupclickmain,getResources().getString(R.string.share),getResources().getString(R.string.new_photo),getResources().getString(R.string.view_photo),getResources().getString(R.string.photo_has_been_encrypted),getResources().getString(R.string.congratulations_photo));
+        mediacompletionpopupmain.show(fm, "fragment_name");
+
     }
 
 
     public void showsharepopupsub()
     {
-        if(subdialogshare != null && subdialogshare.isShowing())
-            subdialogshare.dismiss();
 
-        subdialogshare=new Dialog(applicationviavideocomposer.getactivity());
-        subdialogshare.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        subdialogshare.setCanceledOnTouchOutside(true);
+        fm = getActivity().getSupportFragmentManager();
+        popupclicksub=new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+                int i= (int) object;
+                if(i==4){
+                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            common.exportimage(capturedimagefile,true);
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressdialog.dismisswaitdialog();
+                                    launchmedialist();
+                                }
+                            });
+                        }
+                    }).start();
+                }
+                else if(i==5){
 
-        subdialogshare.setContentView(R.layout.popup_sharescreen);
-        //subdialogshare.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        int[] widthHeight=common.getScreenWidthHeight(applicationviavideocomposer.getactivity());
-        int width=widthHeight[0];
-        double height=widthHeight[1]/1.6;
-        subdialogshare.getWindow().setLayout(width-20, (int)height);
-
-        TextView txt_share_btn1 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn1);
-        TextView txt_share_btn2 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn2);
-        TextView txt_share_btn3 = (TextView)subdialogshare.findViewById(R.id.txt_share_btn3);
-        TextView txt_title1 = (TextView)subdialogshare.findViewById(R.id.txt_title1);
-        TextView txt_title2 = (TextView)subdialogshare.findViewById(R.id.txt_title2);
-        ImageView img_cancel= subdialogshare.findViewById(R.id.img_cancelicon);
-
-        txt_share_btn2.setVisibility(View.GONE);
-
-        txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
-        txt_share_btn2.setText(getResources().getString(R.string.share_partial_photo));
-        txt_share_btn3.setText(getResources().getString(R.string.cancel_viewlist));
-
-        txt_title1.setText(getResources().getString(R.string.photo_how_would_you));
-        txt_title2.setText("");
-
-        common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),5);
-        common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),5);
-        common.changeFocusStyle(txt_share_btn3,getResources().getColor(R.color.share_c),5);
-
-        txt_share_btn1.setOnClickListener(new View.OnClickListener() {
+                }
+                else if(i==6){
+                    launchmedialist();
+                }
+            }
 
             @Override
-            public void onClick(View v) {
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
+            public void onItemClicked(Object object, int type) {
 
-                progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        common.exportimage(capturedimagefile,true);
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                progressdialog.dismisswaitdialog();
-                                launchmedialist();
-                            }
-                        });
-                    }
-                }).start();
             }
-        });
+        };
 
-        txt_share_btn2.setOnClickListener(new View.OnClickListener() {
+        mediacompletionpopupsub=new mediacompletiondialogsub(popupclicksub,getResources().getString(R.string.save_to_camera),getResources().getString(R.string.share_partial_photo),getResources().getString(R.string.cancel_viewlist),getResources().getString(R.string.photo_how_would_you),"");
+        mediacompletionpopupsub.show(fm, "fragment_name");
 
-            @Override
-            public void onClick(View v) {
-
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
-            }
-        });
-
-        txt_share_btn3.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
-
-                launchmedialist();
-            }
-        });
-        img_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(subdialogshare != null && subdialogshare.isShowing())
-                    subdialogshare.dismiss();
-            }
-        });
-        subdialogshare.show();
     }
 
     public void launchmedialist()

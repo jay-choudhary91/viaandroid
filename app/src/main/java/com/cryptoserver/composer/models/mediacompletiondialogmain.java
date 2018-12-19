@@ -30,15 +30,21 @@ public class mediacompletiondialogmain extends DialogFragment {
     TextView txt_title2;
     adapteritemclick madapterclickpopup;
     View rootView;
+    String share,newmedia,playmedia,media_has_been_encrypted,congratulations_media;
 
-    @SuppressLint("ValidFragment")
-    public mediacompletiondialogmain(adapteritemclick popupclick) {
-        this.madapterclickpopup=popupclick;
-    }
 
     @SuppressLint("ValidFragment")
     public mediacompletiondialogmain() {
 
+    }
+    @SuppressLint("ValidFragment")
+    public mediacompletiondialogmain(adapteritemclick popupclickmain, String share, String newmedia, String playmedia, String media_has_been_encrypted, String congratulations_media) {
+        this.madapterclickpopup=popupclickmain;
+        this.share=share;
+        this.newmedia=newmedia;
+        this.playmedia=playmedia;
+        this.media_has_been_encrypted=media_has_been_encrypted;
+        this.congratulations_media=congratulations_media;
     }
 
 
@@ -69,12 +75,12 @@ public class mediacompletiondialogmain extends DialogFragment {
             }
         });
 
-        txt_share_btn1.setText(getResources().getString(R.string.share));
-        txt_share_btn2.setText(getResources().getString(R.string.new_video));
-        txt_share_btn3.setText(getResources().getString(R.string.watch));
+        txt_share_btn1.setText(share);
+        txt_share_btn2.setText(newmedia);
+        txt_share_btn3.setText(playmedia);
 
-        txt_title1.setText(getResources().getString(R.string.video_has_been_encrypted));
-        txt_title2.setText(getResources().getString(R.string.congratulations_video));
+        txt_title1.setText(media_has_been_encrypted);
+        txt_title2.setText(congratulations_media);
 
         common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),20);
         common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),20);

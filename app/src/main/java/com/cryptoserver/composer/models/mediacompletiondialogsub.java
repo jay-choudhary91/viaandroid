@@ -24,16 +24,21 @@ public class mediacompletiondialogsub extends DialogFragment {
 
     View rootView;
     adapteritemclick madapterclickpopup;
+    String saveto_camera,share_partialmedia,cancel_viewlist,how_would_you,blank;
 
-
-    @SuppressLint("ValidFragment")
-    public mediacompletiondialogsub(adapteritemclick popupclick) {
-        this.madapterclickpopup=popupclick;
-    }
 
     @SuppressLint("ValidFragment")
     public mediacompletiondialogsub() {
 
+    }
+    @SuppressLint("ValidFragment")
+    public mediacompletiondialogsub(adapteritemclick popupclicksub, String saveto_camera, String share_partialvideo, String cancel_viewlist, String how_wpuld_you, String blank) {
+        this.madapterclickpopup=popupclicksub;
+        this.saveto_camera=saveto_camera;
+        this.share_partialmedia=share_partialvideo;
+        this.cancel_viewlist=cancel_viewlist;
+        this.how_would_you=how_wpuld_you;
+        this.blank=blank;
     }
 
     @Override
@@ -63,12 +68,16 @@ public class mediacompletiondialogsub extends DialogFragment {
         TextView txt_title2 = (TextView)rootView.findViewById(R.id.txt_title2);
         ImageView img_cancel= rootView.findViewById(R.id.img_cancelicon);
 
-        txt_share_btn1.setText(getResources().getString(R.string.shave_to_camera));
-        txt_share_btn2.setText(getResources().getString(R.string.share_partial_video));
-        txt_share_btn3.setText(getResources().getString(R.string.cancel_viewlist));
 
-        txt_title1.setText(getResources().getString(R.string.how_would_you));
-        txt_title2.setText("");
+        if(share_partialmedia.endsWith("Photo") || share_partialmedia.endsWith("Audio")){
+            txt_share_btn2.setVisibility(View.GONE);
+        }
+        txt_share_btn1.setText(saveto_camera);
+        txt_share_btn2.setText(share_partialmedia);
+        txt_share_btn3.setText(cancel_viewlist);
+
+        txt_title1.setText(how_would_you);
+        txt_title2.setText(blank);
 
         common.changeFocusStyle(txt_share_btn1,getResources().getColor(R.color.share_a),5);
         common.changeFocusStyle(txt_share_btn2,getResources().getColor(R.color.share_b),5);
