@@ -1173,7 +1173,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    public void getFramesBitmap()
+    public void getframesbitmap()
     {
         try {
             Thread.sleep(500);
@@ -1608,6 +1608,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 }
 
                 findmediafirsthash();
+                getframesbitmap();
 
                 File file=new File(mediafilepath);
                 long file_size = file.length();
