@@ -207,7 +207,7 @@ public class fragmentmedialist extends basefragment {
                 }
             });
 
-            detectdevelopermode();
+        //    detectdevelopermode();
 
         }
         return rootview;
