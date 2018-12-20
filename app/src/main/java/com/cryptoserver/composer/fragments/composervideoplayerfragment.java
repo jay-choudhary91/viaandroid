@@ -1190,9 +1190,12 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
                 Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
 
+
+
+
                /* Thread thread = new Thread() {
                     public void run() {
-                        if(mhashesitems.size() == 0)
+                        if(mhashesitems.size() == 0)    
                             getmediadata();
                     }
                 };
