@@ -1188,7 +1188,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
+             //   Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
 
                /* Thread thread = new Thread() {
                     public void run() {
