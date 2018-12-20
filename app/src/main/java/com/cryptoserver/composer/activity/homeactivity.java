@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -361,6 +362,16 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 break;
             case R.id.img_share_icon:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_share_icon);
+              //  imgshareicon.setEnabled(false);
+                imgshareicon.setClickable(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        imgshareicon.setClickable(true);
+                    }
+                }, 150);
+
                 break;
             case R.id.img_add_icon:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_add_icon);

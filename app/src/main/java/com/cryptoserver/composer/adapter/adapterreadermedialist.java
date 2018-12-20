@@ -3,6 +3,7 @@ package com.cryptoserver.composer.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -130,6 +131,15 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
             @Override
             public void onClick(View view) {
                 adapter.onItemClicked(arrayvideolist.get(position),1);
+                holder.imgshareicon.setClickable(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        holder.imgshareicon.setClickable(true);
+                    }
+                }, 150);
+
 
             }
         });

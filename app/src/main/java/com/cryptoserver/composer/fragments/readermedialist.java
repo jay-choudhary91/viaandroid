@@ -2,6 +2,7 @@ package com.cryptoserver.composer.fragments;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -228,7 +229,8 @@ public class readermedialist extends basefragment {
 
 
         }
-        if(type!=null){
+        Activity activity=getActivity();
+        if(type!=null || activity!=null){
             intent.setType(type);
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.putExtra("return-data", true);
