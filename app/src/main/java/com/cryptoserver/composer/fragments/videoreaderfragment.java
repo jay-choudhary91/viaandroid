@@ -1219,7 +1219,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
             n=seconds/2;
         }
 
-        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.imagebitmap);
+        Bitmap image = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(), R.drawable.imagebitmap);
 
         for(int j=1;j<=n;j++){
 
