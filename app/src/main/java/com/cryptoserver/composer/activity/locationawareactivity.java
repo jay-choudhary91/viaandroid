@@ -54,6 +54,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
@@ -2117,8 +2118,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         updatecompletehashvalue(localkey,valuehash);
                         updatedatasyncdate(localkey,common.getCurrentDate());
 
-                        Intent i = new Intent(config.composer_service_getencryptionmetadata);
-                        sendBroadcast(i);
+                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
+                            Intent i = new Intent(config.composer_service_getencryptionmetadata);
+                            sendBroadcast(i);
+                        }
                      /* String sequence = object.getString("sequence");
                         String serverdate = object.getString("serverdate");
                         String serverdictionaryhash = object.getString("serverdictionaryhash");

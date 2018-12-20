@@ -115,7 +115,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
     private  final int flingactionmindspdvac = 10;
-    private BroadcastReceiver getmetadatabroadcastreceiver;
+    private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_phototabreaderfrag;
@@ -650,6 +650,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void onStart() {
         super.onStart();
         registerbroadcastreciver();
+        registerbroadcastreciverforencryptionmetadata();
     }
 
     @Override
@@ -657,6 +658,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.onStop();
         try {
             applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
+            applicationviavideocomposer.getactivity().unregisterReceiver(getencryptionmetadatabroadcastreceiver);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -689,6 +691,20 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
     }
 
+
+    public void registerbroadcastreciverforencryptionmetadata()
+    {
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
+        getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
+                getmediadata();
+            }
+        };
+        getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
+    }
+
     public void getmediadata()
     {
         try {
@@ -715,24 +731,41 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 });*/
 
                 ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
-                metricmainarraylist.clear();
+                //metricmainarraylist.clear();
                 String framelabel="";
-                for(int i=0;i<mitemlist.size();i++)
-                {
-                    String metricdata=mitemlist.get(i).getMetricdata();
-                    String valuehash =mitemlist.get(i).getSequencehash();
-                    String hashmethod =mitemlist.get(i).getHashmethod();
-                    String videostarttransactionid =mitemlist.get(i).getVideostarttransactionid();
-                    String metahash =mitemlist.get(i).getMetahash();
 
+                if(metricmainarraylist.size()>0 && BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
 
+                    for(int i=0;i<mitemlist.size();i++) {
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
 
-                    parsemetadata(metricdata,valuehash,hashmethod,videostarttransactionid,metahash);
-                    selectedhashes = selectedhashes+"\n";
-                    framelabel="Frame ";
-                    selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                            ": "+mitemlist.get(i).getSequencehash();
+                        metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
+                    }
+
+                }else{
+                    for(int i=0;i<mitemlist.size();i++)
+                    {
+                        String metahash = "";
+                        String metricdata=mitemlist.get(i).getMetricdata();
+                        String valuehash =mitemlist.get(i).getSequencehash();
+                        String hashmethod =mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid =mitemlist.get(i).getVideostarttransactionid();
+                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
+                            metahash =mitemlist.get(i).getValuehash();
+                        }else{
+                            metahash =mitemlist.get(i).getMetahash();
+                        }
+                        parsemetadata(metricdata,valuehash,hashmethod,videostarttransactionid,metahash);
+                        selectedhashes = selectedhashes+"\n";
+                        framelabel="Frame ";
+                        selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                                ": "+mitemlist.get(i).getSequencehash();
+                    }
                 }
+
                 try
                 {
                     mdbhelper.close();
@@ -796,8 +829,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,"","","",""));
-
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,valuehash,metahash));
                 }
 
             }

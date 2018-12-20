@@ -184,7 +184,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     String soundamplitudealue = "";
     String[] soundamplitudealuearray ;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
-    private BroadcastReceiver getmetadatabroadcastreceiver;
+    private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
     String firsthash="";
 
     public audioreaderfragment() {
@@ -812,31 +812,28 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    public void parsemetadata(String metadata)
-    {
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
         try {
-            JSONArray array=new JSONArray(metadata);
-            for(int j=0;j<array.length();j++)
-            {
+
+            JSONArray array = new JSONArray(metadata);
+            for (int j = 0; j < array.length(); j++) {
                 ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-                JSONObject object=array.getJSONObject(j);
+                JSONObject object = array.getJSONObject(j);
                 Iterator<String> myIter = object.keys();
                 while (myIter.hasNext()) {
                     String key = myIter.next();
                     String value = object.optString(key);
-                    metricmodel model=new metricmodel();
+                    metricmodel model = new metricmodel();
                     model.setMetricTrackKeyName(key);
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist,"","","",""));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
             }
-
-
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public void setupaudioplayer(final Uri selecteduri)
@@ -1204,6 +1201,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void onStart() {
         super.onStart();
         registerbroadcastreciver();
+        registerbroadcastreciverforencryptionmetadata();
     }
 
     @Override
@@ -1211,6 +1209,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         super.onStop();
         try {
             applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
+            applicationviavideocomposer.getactivity().unregisterReceiver(getencryptionmetadatabroadcastreceiver);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1251,6 +1250,21 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         };
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
     }
+
+    public void registerbroadcastreciverforencryptionmetadata()
+    {
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
+        getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
+                getmediadata();
+            }
+        };
+        getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
+    }
+
+
 
     public void getmediametadata()
     {
@@ -1381,20 +1395,38 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 });
 
                 ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
-                metricmainarraylist.clear();
+               // metricmainarraylist.clear();
                 String framelabel="";
-                for(int i=0;i<mitemlist.size();i++)
-                {
-                    String metricdata=mitemlist.get(i).getMetricdata();
-                    parsemetadata(metricdata);
-                    selectedhaeshes = selectedhaeshes+"\n";
-                    framelabel="Frame ";
-                    if(i == mitemlist.size()-1)
-                    {
-                        framelabel="Last Frame ";
+                if(metricmainarraylist.size()>0){
+
+                    for(int i=0;i<mitemlist.size();i++) {
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
+
+                        metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
                     }
-                    selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                            mitemlist.get(i).getSequencehash();
+
+                }else{
+                    for(int i=0;i<mitemlist.size();i++)
+                    {
+                        String metricdata=mitemlist.get(i).getMetricdata();
+                        String sequencehash = mitemlist.get(i).getSequencehash();
+                        String hashmethod = mitemlist.get(i).getHashmethod();
+                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
+
+                        parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
+                        selectedhaeshes = selectedhaeshes+"\n";
+                        framelabel="Frame ";
+                        if(i == mitemlist.size()-1)
+                        {
+                            framelabel="Last Frame ";
+                        }
+                        selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                                ": "+mitemlist.get(i).getSequencehash();
+                    }
                 }
                 try
                 {

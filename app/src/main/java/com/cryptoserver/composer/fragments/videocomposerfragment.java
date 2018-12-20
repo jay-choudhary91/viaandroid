@@ -338,7 +338,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
     File lastrecordedvideo=null;
-    String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="";
+    String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
     int metriceslastupdatedposition=0;
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
@@ -1675,11 +1675,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 apicurrentduration++;
 
                 mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
+                hashvalue = keyvalue;
 
                 if(! selectedhashes.trim().isEmpty())
                     selectedhashes=selectedhashes+"\n";
 
                 selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+
+
                 if(apicurrentduration > apicallduration)
                     apicurrentduration=apicallduration;
 
@@ -1692,6 +1695,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     try {
                         metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
+                        metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
                         muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
                         savemediaupdate(metricesarray);
                     }catch (Exception e)
@@ -1736,6 +1740,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+
                                 mhashesitems.add(new videomodel(selectedhashes));
                                 mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                                 selectedhashes="";
@@ -1764,7 +1769,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
+                    fragmentgraphic.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
                     fragmentgraphic.setmetricesdata();
+                    hashvalue ="";
+                    metrichashvalue = "";
                 }
 
                 myHandler.postDelayed(this, 1000);
@@ -1818,7 +1826,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         muploadframelist.clear();
 
         try {
-            metrichash = md5.calculatestringtomd5(metricesarray.toString());
+
+            metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
+
             mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
         } catch (Exception e) {

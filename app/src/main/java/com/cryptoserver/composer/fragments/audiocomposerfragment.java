@@ -132,7 +132,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private long currentframenumber =0,mframetorecordcount=0,frameduration =15;
     private ArrayList<videomodel> mvideoframes =new ArrayList<>();
     StringBuilder sb = new StringBuilder();
-
+    String hashvalue = "",metrichashvalue = "";
     noise mNoise;
 
     private static final int RECORDER_SAMPLERATE = 8000;
@@ -874,6 +874,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
 
+        hashvalue = keyvalue;
+
         if(! selectedhashes.trim().isEmpty())
             selectedhashes=selectedhashes+"\n";
 
@@ -887,6 +889,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             {
                 try {
                     metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
+                    metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
+
                     muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
                     savemediaupdate(metricesarray);
                 }catch (Exception e)
@@ -923,7 +927,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         muploadframelist.clear();
 
         try {
-            metrichash = md5.calculatestringtomd5(metricesarray.toString());
+            metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
             mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
         } catch (Exception e) {
@@ -1188,7 +1192,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
+                    fragmentgraphic.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
                     fragmentgraphic.setmetricesdata();
+                    hashvalue ="";
+                    metrichashvalue = "";
                 }
 
                 myHandler.postDelayed(this, 1000);

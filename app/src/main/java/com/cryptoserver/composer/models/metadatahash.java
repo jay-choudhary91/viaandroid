@@ -21,13 +21,14 @@ public class metadatahash
     public String serverdate="";
     public String sequencedevicedate="";
     public String videostarttransactionid="";
+    public String serverdictionaryhash="";
 
 
     public String metahash="";
 
     public metadatahash(String id,String blockchain,String valuehash,String hashmethod,
                         String localkey,String recorddate,String metricdata,String rsequenceno,String sequencehash,String sequenceno,
-                        String serverdate,String sequencedevicedate,String videostarttransactionid,String metahash)
+                        String serverdate,String sequencedevicedate,String videostarttransactionid,String serverdictionaryhash,String metahash)
     {
         setId(id);
         setBlockchain(blockchain);
@@ -42,6 +43,7 @@ public class metadatahash
         setServerdate(serverdate);
         setSequencedevicedate(sequencedevicedate);
         setVideostarttransactionid(videostarttransactionid);
+        setServerdictionaryhash(serverdictionaryhash);
         setMetahash(metahash);
     }
 
@@ -155,5 +157,14 @@ public class metadatahash
     public void setMetahash(String metahash) {
         this.metahash = metahash;
     }
+
+    public String getServerdictionaryhash() {
+        return serverdictionaryhash;
+    }
+
+    public void setServerdictionaryhash(String serverdictionaryhash) {
+        this.serverdictionaryhash = serverdictionaryhash;
+    }
+
 
 }

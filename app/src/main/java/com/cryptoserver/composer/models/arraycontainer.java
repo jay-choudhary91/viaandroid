@@ -28,6 +28,16 @@ public class arraycontainer implements Serializable {
         setMetahash(metahash);
     }
 
+    public arraycontainer( String hashmethod,String videostarttransactionid,
+                          String valuehash,String metahash)
+    {
+        setMetricItemArraylist(metricItemArraylist);
+        setHashmethod(hashmethod);
+        setVideostarttransactionid(videostarttransactionid);
+        setValuehash(valuehash);
+        setMetahash(metahash);
+    }
+
     public ArrayList<metricmodel> getMetricItemArraylist() {
         return metricItemArraylist;
     }

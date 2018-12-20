@@ -363,6 +363,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     FragmentManager fm ;
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
+    String hashvalue = "",metrichashvalue = "";
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
@@ -717,7 +718,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         String currentdate[] = common.getcurrentdatewithtimezone();
         String metrichash = "" ;
         try {
-            metrichash = md5.calculatestringtomd5(metricesarray.toString());
+            metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
             mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
         } catch (Exception e) {
@@ -734,6 +735,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             selectedhashes =  keyvalue;
             selectedhashes=keytype+" : "+selectedhashes;
             Log.e("keyhash = ","" +selectedhashes);
+            hashvalue = selectedhashes;
 
             ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
             getselectedmetrics(mlocalarraylist);
@@ -1426,7 +1428,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             try {
                 object.put(metric.getMetricTrackKeyName(),value);
                 metadatametricesjson.put(metric.getMetricTrackKeyName(),value);
-                Log.e("jsondata",metadatametricesjson.toString());
+                metrichashvalue = md5.calculatestringtomd5(metadatametricesjson.toString());
+
+               Log.e("jsondata",metadatametricesjson.toString());
 
             }catch (Exception e)
             {
@@ -1434,7 +1438,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
         }
         builder.append("\n");
-        selectedmetrices=selectedmetrices+builder.toString();
+        selectedmetrices =selectedmetrices+builder.toString();
+        metrichashvalue = md5.calculatestringtomd5(selectedmetrices);
     }
 
     public void setmetriceshashesdata()
@@ -1482,7 +1487,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
                 {
                     fragmentgraphic.setdrawerproperty(graphicopen);
+                    fragmentgraphic.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
                     fragmentgraphic.setmetricesdata();
+
                 //    fragmentgraphic.setphotocapture(true);
                 }
                 myhandler.postDelayed(this, 1000);

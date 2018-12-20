@@ -314,7 +314,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         }*/
     }
 
-    public void parsemetadata(String metadata) {
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
         try {
 
             JSONArray array = new JSONArray(metadata);
@@ -330,7 +330,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist,"","","",""));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1027,6 +1027,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 double latt=0,longg=0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
 
+                fragmentgraphic.getencryptiondata(metricmainarraylist.get(i).getHashmethod(),metricmainarraylist.get(i).getVideostarttransactionid(),
+                        metricmainarraylist.get(i).getValuehash(),metricmainarraylist.get(i).getMetahash());
+
                 for(int j=0;j<metricItemArraylist.size();j++)
                 {
                     selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
@@ -1157,6 +1160,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         isinbackground = true;
         try {
             applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
+            applicationviavideocomposer.getactivity().unregisterReceiver(getencryptionmetadatabroadcastreceiver);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1187,19 +1191,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
         getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-
-                Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
-
-
-
-
-               /* Thread thread = new Thread() {
-                    public void run() {
-                        if(mhashesitems.size() == 0)    
-                            getmediadata();
-                    }
-                };
-                thread.start();*/
+                //Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
+                getmediadata();
             }
         };
         getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
@@ -1234,20 +1227,39 @@ public class composervideoplayerfragment extends basefragment implements Surface
                         });
 
                         ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
-                        metricmainarraylist.clear();
+                       // metricmainarraylist.clear();
                         String framelabel="";
-                        for(int i=0;i<mitemlist.size();i++)
-                        {
-                            String metricdata=mitemlist.get(i).getMetricdata();
-                            parsemetadata(metricdata);
-                            selectedhaeshes = selectedhaeshes+"\n";
-                            framelabel="Frame ";
-                            if(i == mitemlist.size()-1)
+
+                        if(metricmainarraylist.size()>0){
+
+                            for(int i=0;i<mitemlist.size();i++) {
+                                String sequencehash = mitemlist.get(i).getSequencehash();
+                                String hashmethod = mitemlist.get(i).getHashmethod();
+                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
+
+                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
+                                }
+
+                        }else{
+                            for(int i=0;i<mitemlist.size();i++)
                             {
-                                framelabel="Last Frame ";
+                                String metricdata=mitemlist.get(i).getMetricdata();
+                                String sequencehash = mitemlist.get(i).getSequencehash();
+                                String hashmethod = mitemlist.get(i).getHashmethod();
+                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
+
+                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
+                                selectedhaeshes = selectedhaeshes+"\n";
+                                framelabel="Frame ";
+                                if(i == mitemlist.size()-1)
+                                {
+                                    framelabel="Last Frame ";
+                                }
+                                selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                                        ": "+mitemlist.get(i).getSequencehash();
                             }
-                            selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                                    ": "+mitemlist.get(i).getSequencehash();
                         }
                         try
                         {
@@ -1265,6 +1277,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
             }
         }).start();
     }
+
+
+
 
     public String findmediafirsthash()
     {
