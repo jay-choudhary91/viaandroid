@@ -122,7 +122,10 @@ public class config {
     public static final String Battery="Battery";
     public static final String Address="Address";
 
-    public static final String sync_pending="sync_pending";
-    public static final String sync_complete="sync_complete";
+    public static final String sync_offline="offline";
+    public static final String sync_pending="pending";
+    public static final String sync_complete="complete";
+    public static final String sync_inprogress="inprogress";
+    public static final String sync_notfound="notfound";
 
 }

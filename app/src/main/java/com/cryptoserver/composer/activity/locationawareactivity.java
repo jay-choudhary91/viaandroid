@@ -2116,7 +2116,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         String valuehash = object.getString("hashvalue");
 
                         updatecompletehashvalue(localkey,valuehash);
-                        updatedatasyncdate(localkey,common.getCurrentDate());
+                        updatedatasyncdate(localkey,common.getCurrentDate(),"complete");
 
                         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
                             Intent i = new Intent(config.composer_service_getencryptionmetadata);
@@ -2158,7 +2158,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
 
-    public void updatedatasyncdate(String localkey,String syncdate)
+    public void updatedatasyncdate(String localkey,String syncdate,String syncstatus)
     {
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(locationawareactivity.this);
@@ -2171,7 +2171,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideosyncdate(localkey,syncdate);
+            mdbhelper.updatevideosyncdate(localkey,syncdate,syncstatus);
             mdbhelper.close();
         }catch (Exception e)
         {

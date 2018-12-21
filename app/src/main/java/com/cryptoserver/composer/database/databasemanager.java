@@ -65,7 +65,7 @@ public class databasemanager {
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
                                      String videocompletedevicedate,String firsthash,String videoid,
-                                     String status,String remainingframes,String lastframe,String framecount)
+                                     String status,String remainingframes,String lastframe,String framecount,String sync_status)
     {
         try {
             lock.lock();
@@ -90,6 +90,7 @@ public class databasemanager {
             values.put("lastframe",""+lastframe);
             values.put("firsthash",""+firsthash);
             values.put("framecount",""+framecount);
+            values.put("sync_status",""+sync_status);
 
             long l=mDb.insert("tbstartvideoinfo", null, values);
             Log.e("Id ",""+l);
@@ -463,11 +464,11 @@ public class databasemanager {
     }
 
 
-    public Cursor updatevideosyncdate(String localkey,String syncdate) {
+    public Cursor updatevideosyncdate(String localkey,String syncdate,String syncstatus) {
         Cursor mCur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set sync_date ='"+syncdate+"' where localkey='"+localkey+"'");
+            mDb.execSQL("update tbstartvideoinfo set sync_date ='"+syncdate+"',sync_status ='"+syncstatus+"' where localkey='"+localkey+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -554,17 +555,41 @@ public class databasemanager {
         return  mitemlist;
     }
 
-    public String getlocalkeybylocation(String filename) {
-        String localkey="";
+    public String[] getlocalkeybylocation(String filename) {
+        String[] localkey ={"",""};
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT localkey FROM tbstartvideoinfo where location = '"+filename+"'";
+            String sql = "SELECT  sync_status, videostarttransactionid FROM tbstartvideoinfo where location = '"+filename+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
                 do{
-                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
+                    localkey[0] = "" + cur.getString(cur.getColumnIndex("sync_status"));
+                    localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                }while(cur.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  localkey;
+    }
+
+    public String[] getreaderlocalkeybylocation(String filename) {
+        String[] localkey ={"",""};
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT  status, videostarttransactionid FROM tbstartvideoinfo where location = '"+filename+"'";
+            cur = mDb.rawQuery(sql, null);
+            if (cur.moveToFirst())
+            {
+                do{
+                    localkey[0] = "" + cur.getString(cur.getColumnIndex("sync_status"));
+                    localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {

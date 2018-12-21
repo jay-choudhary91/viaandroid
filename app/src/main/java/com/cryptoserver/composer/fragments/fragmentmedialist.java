@@ -1,8 +1,11 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -35,12 +38,17 @@ import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.video;
+import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
+
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.Frame;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,6 +56,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,6 +97,7 @@ public class fragmentmedialist extends basefragment {
     private static final int request_write_external_storage = 2;
     private Uri selectedimageuri =null;
     private String selectedvideopath ="";
+    private BroadcastReceiver coredatabroadcastreceiver;
 
     @Override
     public int getlayoutid() {
@@ -101,10 +111,13 @@ public class fragmentmedialist extends basefragment {
         ButterKnife.bind(this,parent);
     }
 
+
+
     @Override
     public void onStop() {
         super.onStop();
         isinbackground=true;
+        removehandler();
     }
 
     @Override
@@ -293,6 +306,9 @@ public class fragmentmedialist extends basefragment {
                                 if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png"))
                                 {
                                     videoobj.setmimetype("image/");
+                                    String[] getdata = getlocalkey(common.getfilename(videoobj.getPath()));
+                                    videoobj.setMediastatus(getdata[0]);
+                                    videoobj.setVideostarttransactionid(getdata[1]);
                                     ismedia=true;
                                 }
                                 else
@@ -310,8 +326,10 @@ public class fragmentmedialist extends basefragment {
 
                                             if (mime.startsWith("video/") || mime.startsWith("audio/"))
                                             {
-                                                String localkey=getlocalkey(common.getfilename(videoobj.getPath()));
-                                                videoobj.setLocalkey(localkey);
+                                                String[] getdata = getlocalkey(common.getfilename(videoobj.getPath()));
+                                                videoobj.setMediastatus(getdata[0]);
+                                                videoobj.setVideostarttransactionid(getdata[1]);
+
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                                     long seconds = format.getLong(MediaFormat.KEY_DURATION);
                                                     seconds=seconds/1000000;
@@ -368,14 +386,52 @@ public class fragmentmedialist extends basefragment {
                             }
                         });
                         setmediaadapter();
+                        resetmedialist();
                     }
                 });
             }
         }).start();
 
+
     }
 
-    public String getlocalkey(String filename)
+    public void resetmedialist(){
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
+            @Override
+            public void run() {
+               if (arrayvideolist.size()!= 0){
+
+                       for(int i = 0 ;i < arrayvideolist.size();i++){
+                           String status =   arrayvideolist.get(i).getMediastatus();
+
+                           if(status.equalsIgnoreCase("inprogress") && !common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
+
+                               arrayvideolist.get(i).setMediastatus("offline");
+
+                           }else if(status.equalsIgnoreCase("offline") && common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
+
+                               String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
+                               arrayvideolist.get(i).setMediastatus(getdata[0]);
+                               arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+
+                           }else if(!status.equalsIgnoreCase("complete")){
+                               String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
+                               arrayvideolist.get(i).setMediastatus(getdata[0]);
+                               arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                           }
+                       }
+                       adapter.notifyDataSetChanged();
+               }
+                myhandler.postDelayed(this, 10000);
+            }
+        };
+        myhandler.post(myrunnable);
+    }
+
+
+
+    public String[] getlocalkey(String filename)
     {
         String localkey="";
         databasemanager mdbhelper=null;
@@ -391,7 +447,9 @@ public class fragmentmedialist extends basefragment {
             e.printStackTrace();
         }
 
-        localkey = mdbhelper.getlocalkeybylocation(filename);
+        String[] getdata = mdbhelper.getlocalkeybylocation(filename);
+
+
         try
         {
             mdbhelper.close();
@@ -399,7 +457,7 @@ public class fragmentmedialist extends basefragment {
         {
             e.printStackTrace();
         }
-        return localkey;
+        return getdata;
     }
 
     public String deletemediainfo(String localkey)

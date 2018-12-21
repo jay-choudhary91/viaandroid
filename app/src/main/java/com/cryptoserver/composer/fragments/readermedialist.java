@@ -3,8 +3,11 @@ package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -36,11 +39,18 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
+import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
+import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
+import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
+import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
+
+import org.bytedeco.javacpp.avutil;
+import org.bytedeco.javacv.Frame;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,6 +58,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,6 +85,7 @@ public class readermedialist extends basefragment {
     @BindView(R.id.rv_readervideolist)
     RecyclerView recyrviewvideolist;
     private Handler myhandler;
+    private Runnable myrunnable;
 
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adapterreadermedialist adapter;
@@ -81,6 +94,9 @@ public class readermedialist extends basefragment {
     private static final int request_read_external_storage = 1;
     private int REQUESTCODE_PICK=201;
     int mediatype;
+    String keytype= "";
+    private BroadcastReceiver coredatabroadcastreceiver;
+    Date initialdate ;
 
 
     @Override
@@ -98,7 +114,7 @@ public class readermedialist extends basefragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //removehandler();
+        removehandler();
     }
 
     @Override
@@ -109,6 +125,24 @@ public class readermedialist extends basefragment {
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
+        coredatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Thread thread = new Thread() {
+                    public void run() {
+                        if(arrayvideolist.size() == 0)
+                            resetmedialist();
+                    }
+                };
+                thread.start();
+            }
+        };
+        getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -145,7 +179,8 @@ public class readermedialist extends basefragment {
                 getVideoList();
             }
 
-
+            initialdate = new Date();
+            recallservice();
         }
 
         return rootview;
@@ -303,12 +338,27 @@ public class readermedialist extends basefragment {
                                             if (mediatype == 2 && keymime.startsWith("audio/")) {
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
 
+                                                    String[] getdata = getlocalkey(common.getfilename(file.getAbsolutePath()));
+                                                    videoobj.setMediastatus(getdata[0]);
+                                                    videoobj.setVideostarttransactionid(getdata[1]);
                                                     videoobj = setvideoaudiodata(file,outputdatestr ,format,keymime);
+
                                                     ismedia = true;
 
                                                 }
                                             }else if(mediatype == 1 && mime.startsWith("video/")){
-                                                  videoobj = setvideoaudiodata(file,outputdatestr ,format,keymime);
+
+                                                String[] getdata = getlocalkey(common.getfilename(file.getAbsolutePath()));
+
+                                               if(getdata[0].isEmpty() && getdata[0].equalsIgnoreCase("null")){
+
+                                                   videoobj.setMediastatus(config.sync_inprogress);
+                                               }else{
+                                                   videoobj.setMediastatus(getdata[0]);
+                                               }
+
+                                               videoobj.setVideostarttransactionid(getdata[1]);
+                                                videoobj = setvideoaudiodata(file,outputdatestr ,format,keymime);
                                                   ismedia = true;
                                             }
                                             else if (mime.startsWith("image/")) {
@@ -357,6 +407,218 @@ public class readermedialist extends basefragment {
         }).start();
 
     }
+
+    public void resetmedialist(){
+
+        if (arrayvideolist != null && arrayvideolist.size() > 0)
+        {
+            for (int i = 0; i < arrayvideolist.size(); i++) {
+                String status = arrayvideolist.get(i).getMediastatus();
+
+                String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
+                if (getdata[0].isEmpty() && getdata[0].equalsIgnoreCase("null")) {
+                    arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
+                } else if (status.equalsIgnoreCase(config.sync_inprogress)) {
+                    arrayvideolist.get(i).setMediastatus(status);
+                } else if (status.equalsIgnoreCase(config.sync_pending)) {
+                    arrayvideolist.get(i).setMediastatus(status);
+                } else if (status.equalsIgnoreCase(config.sync_notfound)) {
+                    arrayvideolist.get(i).setMediastatus(status);
+                }
+            }
+        }
+
+        if (arrayvideolist != null && arrayvideolist.size() > 0) {
+            for (int i = 0; i < arrayvideolist.size(); i++) {
+                String status = arrayvideolist.get(i).getMediastatus();
+                if (status.equalsIgnoreCase(config.sync_complete)) {
+
+                } else if (status.equalsIgnoreCase(config.sync_inprogress)) {
+
+                    arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
+
+                    if (!common.isnetworkconnected(applicationviavideocomposer.getappcontext()))
+                        arrayvideolist.get(i).setMediastatus(config.sync_offline);
+
+                    if (! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_offline))
+                    {
+                        initialdate = new Date();
+                        findmediafirsthash(arrayvideolist.get(i).getPath(),arrayvideolist.get(i).getmimetype());
+                        break;
+                    }
+                } else if (status.equalsIgnoreCase(config.sync_offline) && common.isnetworkconnected(applicationviavideocomposer.getappcontext())) {
+                    arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
+                }
+            }
+        }
+        adapter.notifyDataSetChanged();
+
+        /*if (arrayvideolist != null && arrayvideolist.size() > 0) {
+             for (int i = 0; i < arrayvideolist.size(); i++) {
+                String status = arrayvideolist.get(i).getMediastatus();
+
+                if (status.equalsIgnoreCase(config.sync_complete)) {
+                    arrayvideolist.get(i).setMediastatus(status);
+
+                } else if (status.equalsIgnoreCase(config.sync_inprogress)) {
+
+                    if(!common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
+                          arrayvideolist.get(i).setMediastatus(config.sync_offline);
+                    }else{
+                        if (!arrayvideolist.get(i).isIscheck()) {
+
+                            arrayvideolist.get(i).setIscheck(true);
+                            findmediafirsthash(arrayvideolist.get(i).getPath(),mediatype);
+                            break;
+
+                        }
+                    }
+                }
+            }
+        }*/
+
+    }
+
+    public void findmediafirsthash(String mediafilepath,String mimetype)
+    {
+            keytype = common.checkkey();
+            String firsthash="";
+
+     if(mimetype.startsWith("video/")){
+
+         try {
+             ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediafilepath);
+             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+             String format = common.getvideoformat(mediafilepath);
+             if (format.equalsIgnoreCase("mp4"))
+                 grabber.setFormat(format);
+
+             grabber.start();
+             for (int i = 0; i < grabber.getLengthInFrames(); i++) {
+                 Frame frame = grabber.grabImage();
+                 if (frame == null)
+                     break;
+
+                 ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
+                 byte[] byteData = new byte[buffer.remaining()];
+                 buffer.get(byteData);
+                 firsthash = common.getkeyvalue(byteData, keytype);
+                 break;
+             }
+             grabber.flush();
+         }catch (Exception e)
+         {
+             e.printStackTrace();
+         }
+     }else if(mimetype.startsWith("audio/")){
+
+         try {
+             ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(mediafilepath));
+             grabber.start();
+             for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
+                 Frame frame = grabber.grabAudio();
+                 if (frame == null)
+                     break;
+
+                 if(i > 9)
+                 {
+                     ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
+                     java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
+                     bb.asShortBuffer().put(shortbuff);
+                     byte[] byteData = bb.array();
+                     firsthash = common.getkeyvalue(byteData, keytype);
+                     break;
+                 }
+             }
+             grabber.flush();
+         }catch (Exception e)
+         {
+             e.printStackTrace();
+         }
+     }else if(mimetype.startsWith("image/")){
+
+         firsthash= md5.fileToMD5(mediafilepath);
+
+     }
+
+        if(! firsthash.trim().isEmpty())
+        {
+            Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
+            intent.putExtra("firsthash", firsthash);
+            intent.putExtra("mediapath", mediafilepath);
+            intent.putExtra("keytype", keytype);
+            if(mimetype.startsWith("video"))
+            {
+                intent.putExtra("mediatype","video");
+            }
+            else if(mimetype.startsWith("audio"))
+            {
+                intent.putExtra("mediatype","audio");
+            }
+            else if(mimetype.startsWith("image"))
+            {
+                intent.putExtra("mediatype","image");
+            }
+
+            applicationviavideocomposer.getactivity().startService(intent);
+        }
+    }
+
+    public void recallservice(){
+
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                    Date currentdate=new Date();
+                    int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
+                    if(seconddifference > 15)
+                    {
+                        resetmedialist();
+                }
+                myhandler.postDelayed(this, 10000);
+            }
+        };
+        myhandler.post(myrunnable);
+
+    }
+
+    public String[] getlocalkey(String filename)
+    {
+        String localkey="";
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String[] getdata = mdbhelper.getreaderlocalkeybylocation(filename);
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return getdata;
+    }
+
+
+    public void removehandler()
+    {
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
+    }
+
 
     public boolean isexistinarraay(String name,String modifieddatetime)
     {
@@ -650,6 +912,8 @@ public class readermedialist extends basefragment {
         if (common.getstoragedeniedpermissions().isEmpty()) {
             // All permissions are granted
             getVideoList();
+
+
         } else {
             String[] array = new String[common.getstoragedeniedpermissions().size()];
             array = common.getstoragedeniedpermissions().toArray(array);
