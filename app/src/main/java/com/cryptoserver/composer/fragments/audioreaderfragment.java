@@ -1257,7 +1257,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
                 getmediadata();
             }
         };
@@ -1468,6 +1467,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
+
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             if(! firsthash.trim().isEmpty())

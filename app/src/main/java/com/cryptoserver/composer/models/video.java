@@ -19,9 +19,13 @@ public class video
     public long lastmodifiedtime=0;
     public Bitmap thumbnail=null;
     public boolean isSelected = false;
+    public String mediastatus = "";
+    public String videostarttransactionid = "";
+    public boolean ischeck = false;
 
 
-    public video(String path, String name, String createdate, String duration, String md5,long lastmodifiedtime)
+
+    public video(String path, String name, String createdate, String duration, String md5, long lastmodifiedtime)
     {
         setPath(path);
         setName(name);
@@ -123,4 +127,31 @@ public class video
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
+
+    public String getMediastatus() {
+        return mediastatus;
+    }
+
+    public void setMediastatus(String mediastatus) {
+        this.mediastatus = mediastatus;
+    }
+
+    public String getVideostarttransactionid() {
+        return videostarttransactionid;
+    }
+
+    public void setVideostarttransactionid(String videostarttransactionid) {
+        this.videostarttransactionid = videostarttransactionid;
+    }
+
+    public boolean isIscheck() {
+        return ischeck;
+    }
+
+    public void setIscheck(boolean ischeck) {
+        this.ischeck = ischeck;
+    }
+
+
+
 }

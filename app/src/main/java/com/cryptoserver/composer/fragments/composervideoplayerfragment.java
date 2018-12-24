@@ -1191,7 +1191,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
         getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                //Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
                 getmediadata();
             }
         };

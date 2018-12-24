@@ -158,6 +158,20 @@
                 android:maxLines="1"
                 android:text=""
                 />
+
+            <com.cryptoserver.composer.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                android:id="@+id/tv_sync_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:textSize="13sp"
+                android:layout_marginTop="3dp"
+                android:layout_below="@+id/tv_localkey"
+                android:textColor="@color/lightgray"
+                android:maxLines="1"
+                android:text=""
+                />
         </LinearLayout>
     </LinearLayout>
   </RelativeLayout>

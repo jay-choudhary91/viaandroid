@@ -173,7 +173,7 @@ public class readmediadataservice extends Service {
                                 }
                                 runxapicounter();
                             }
-                            else if(status.equalsIgnoreCase(config.sync_pending))
+                            else if(status.equalsIgnoreCase(config.sync_inprogress))
                             {
                                 int framestart=Integer.parseInt(lastframe);
                                 framestart=framestart+1;
@@ -319,7 +319,7 @@ public class readmediadataservice extends Service {
                         mdbhelper.insertstartvideoinfo(firsthash,mediatypeshortname,mediatitle,mediaid,
                                 mediatoken,mediakey,"",syncdate[0] , actiontype,
                                 "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,
-                                firsthash,mediaid,config.sync_pending,remainingframes,lastframe,framecount);
+                                firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"");
 
 
                         try {
@@ -500,7 +500,7 @@ public class readmediadataservice extends Service {
                             {
                                 int newframestart=maxframes+1;
                                 int newmaxframes=maxframes+10;
-                                updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_pending);
+                                updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_inprogress);
                                 getvideoframes(mediatoken,newframestart,newmaxframes);
                             }
                             else

@@ -698,7 +698,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Toast.makeText(getActivity(),"from complete api",Toast.LENGTH_LONG).show();
                 getmediadata();
             }
         };
@@ -753,6 +752,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         String valuehash =mitemlist.get(i).getSequencehash();
                         String hashmethod =mitemlist.get(i).getHashmethod();
                         String videostarttransactionid =mitemlist.get(i).getVideostarttransactionid();
+
                         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
                             metahash =mitemlist.get(i).getValuehash();
                         }else{
