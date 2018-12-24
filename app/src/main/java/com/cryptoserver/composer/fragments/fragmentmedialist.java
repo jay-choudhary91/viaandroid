@@ -131,6 +131,7 @@ public class fragmentmedialist extends basefragment {
         super.onResume();
         isinbackground=false;
         recyrviewvideolist.addOnItemTouchListener(onTouchListener);
+        resetmedialist();
     }
 
     public void requestpermissions()
@@ -144,8 +145,6 @@ public class fragmentmedialist extends basefragment {
             ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
         }
     }
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -219,6 +218,9 @@ public class fragmentmedialist extends basefragment {
                     return false;
                 }
             });
+
+
+
 
         //    detectdevelopermode();
 

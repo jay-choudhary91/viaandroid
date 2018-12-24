@@ -772,25 +772,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }else{
 
                     if(audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0){
-                        for(int i=0;i<mitemlist.size();i++)
-                        {
-                            String metahash = "";
-                            String metricdata=mitemlist.get(i).getMetricdata();
-                            String valuehash =mitemlist.get(i).getSequencehash();
-                            String hashmethod =mitemlist.get(i).getHashmethod();
-                            String videostarttransactionid =mitemlist.get(i).getVideostarttransactionid();
-
-                            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
-                                metahash =mitemlist.get(i).getValuehash();
-                            }else{
-                                metahash =mitemlist.get(i).getMetahash();
-                            }
-                            parsemetadata(metricdata,valuehash,hashmethod,videostarttransactionid,metahash);
-                            selectedhashes = selectedhashes+"\n";
-                            framelabel="Frame ";
-                            selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                                    ": "+mitemlist.get(i).getSequencehash();
-                        }
+                        setmetricdata(mitemlist);
+                    }else{
+                        setmetricdata(mitemlist);
                     }
                 }
 
@@ -817,6 +801,29 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    public void setmetricdata(ArrayList<metadatahash> mitemlist){
+        String framelabel="";
+        for(int i=0;i<mitemlist.size();i++)
+        {
+            String metahash = "";
+            String metricdata=mitemlist.get(i).getMetricdata();
+            String valuehash =mitemlist.get(i).getSequencehash();
+            String hashmethod =mitemlist.get(i).getHashmethod();
+            String videostarttransactionid =mitemlist.get(i).getVideostarttransactionid();
+
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
+                metahash =mitemlist.get(i).getValuehash();
+            }else{
+                metahash =mitemlist.get(i).getMetahash();
+            }
+            parsemetadata(metricdata,valuehash,hashmethod,videostarttransactionid,metahash);
+            selectedhashes = selectedhashes+"\n";
+            framelabel="Frame ";
+            selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                    ": "+mitemlist.get(i).getSequencehash();
         }
     }
 
