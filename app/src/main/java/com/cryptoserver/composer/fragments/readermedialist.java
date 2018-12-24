@@ -94,7 +94,7 @@ public class readermedialist extends basefragment {
     private static final int request_read_external_storage = 1;
     private int REQUESTCODE_PICK=201;
     int mediatype;
-    String keytype= "";
+    String keytype= "",mediatitle = "";
     private BroadcastReceiver coredatabroadcastreceiver;
     Date initialdate ;
 
@@ -108,6 +108,7 @@ public class readermedialist extends basefragment {
     @Override
     public void onStop() {
         super.onStop();
+        applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
        // isinbackground=true;
     }
 
@@ -121,7 +122,7 @@ public class readermedialist extends basefragment {
     public void onResume() {
         super.onResume();
         //isinbackground=false;
-        recyrviewvideolist.addOnItemTouchListener(onTouchListener);
+       // recyrviewvideolist.addOnItemTouchListener(onTouchListener);
     }
 
 
@@ -132,15 +133,12 @@ public class readermedialist extends basefragment {
         coredatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Thread thread = new Thread() {
-                    public void run() {
-                        if(arrayvideolist.size() == 0)
-                            resetmedialist();
-                    }
-                };
-                thread.start();
+                if(arrayvideolist.size() != 0)
+                    resetmedialist();
             }
         };
+
+
         getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);
     }
 
@@ -162,7 +160,7 @@ public class readermedialist extends basefragment {
             recyrviewvideolist.addItemDecoration(itemDecor);
 
 
-            onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
+           /* onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
             onTouchListener.setSwipeOptionViews(R.id.btn_edit).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
                     new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                         @Override
@@ -171,7 +169,7 @@ public class readermedialist extends basefragment {
                             adapter.notifyDataSetChanged();
                             Log.e("selected Position = " ,""+ position);
                         }
-                    });
+                    });*/
             //launchbottombarfragment();
 
             if (common.getstoragedeniedpermissions().isEmpty()) {
@@ -180,7 +178,7 @@ public class readermedialist extends basefragment {
             }
 
             initialdate = new Date();
-            recallservice();
+
         }
 
         return rootview;
@@ -193,7 +191,7 @@ public class readermedialist extends basefragment {
     @Override
     public void onPause() {
         super.onPause();
-        recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
+        //recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
     }
 
     /*@Override
@@ -338,9 +336,6 @@ public class readermedialist extends basefragment {
                                             if (mediatype == 2 && keymime.startsWith("audio/")) {
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
 
-                                                    String[] getdata = getlocalkey(common.getfilename(file.getAbsolutePath()));
-                                                    videoobj.setMediastatus(getdata[0]);
-                                                    videoobj.setVideostarttransactionid(getdata[1]);
                                                     videoobj = setvideoaudiodata(file,outputdatestr ,format,keymime);
 
                                                     ismedia = true;
@@ -348,17 +343,7 @@ public class readermedialist extends basefragment {
                                                 }
                                             }else if(mediatype == 1 && mime.startsWith("video/")){
 
-                                                String[] getdata = getlocalkey(common.getfilename(file.getAbsolutePath()));
-
-                                               if(getdata[0].isEmpty() && getdata[0].equalsIgnoreCase("null")){
-
-                                                   videoobj.setMediastatus(config.sync_inprogress);
-                                               }else{
-                                                   videoobj.setMediastatus(getdata[0]);
-                                               }
-
-                                               videoobj.setVideostarttransactionid(getdata[1]);
-                                                videoobj = setvideoaudiodata(file,outputdatestr ,format,keymime);
+                                                  videoobj = setvideoaudiodata(file,outputdatestr ,format,keymime);
                                                   ismedia = true;
                                             }
                                             else if (mime.startsWith("image/")) {
@@ -401,11 +386,12 @@ public class readermedialist extends basefragment {
                             }
                         });
                         setmediaadapter();
+                        resetmedialist();
+                        recallservice();
                     }
                 });
             }
         }).start();
-
     }
 
     public void resetmedialist(){
@@ -413,17 +399,22 @@ public class readermedialist extends basefragment {
         if (arrayvideolist != null && arrayvideolist.size() > 0)
         {
             for (int i = 0; i < arrayvideolist.size(); i++) {
-                String status = arrayvideolist.get(i).getMediastatus();
+                //String status = arrayvideolist.get(i).getMediastatus();
 
                 String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
-                if (getdata[0].isEmpty() && getdata[0].equalsIgnoreCase("null")) {
-                    arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
-                } else if (status.equalsIgnoreCase(config.sync_inprogress)) {
+                String status = getdata[0];
+
+                if (getdata[0].isEmpty() || getdata[0].equalsIgnoreCase("null")) {
+                    arrayvideolist.get(i).setMediastatus(config.sync_pending);
+                }else if (status.equalsIgnoreCase(config.sync_inprogress)) {
                     arrayvideolist.get(i).setMediastatus(status);
-                } else if (status.equalsIgnoreCase(config.sync_pending)) {
+                }else if (status.equalsIgnoreCase(config.sync_pending)) {
                     arrayvideolist.get(i).setMediastatus(status);
-                } else if (status.equalsIgnoreCase(config.sync_notfound)) {
+                }else if (status.equalsIgnoreCase(config.sync_notfound)) {
                     arrayvideolist.get(i).setMediastatus(status);
+                }else if (status.equalsIgnoreCase(config.sync_complete)) {
+                    arrayvideolist.get(i).setMediastatus(status);
+                    arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
                 }
             }
         }
@@ -433,51 +424,33 @@ public class readermedialist extends basefragment {
                 String status = arrayvideolist.get(i).getMediastatus();
                 if (status.equalsIgnoreCase(config.sync_complete)) {
 
-                } else if (status.equalsIgnoreCase(config.sync_inprogress)) {
+                } else if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending) ) {
 
                     arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
 
                     if (!common.isnetworkconnected(applicationviavideocomposer.getappcontext()))
-                        arrayvideolist.get(i).setMediastatus(config.sync_offline);
+                            arrayvideolist.get(i).setMediastatus(config.sync_offline);
 
-                    if (! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_offline))
+                    if (!arrayvideolist.get(i).isIscheck() && ! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_offline))
                     {
                         initialdate = new Date();
+                        arrayvideolist.get(i).setIscheck(true);
                         findmediafirsthash(arrayvideolist.get(i).getPath(),arrayvideolist.get(i).getmimetype());
                         break;
                     }
                 } else if (status.equalsIgnoreCase(config.sync_offline) && common.isnetworkconnected(applicationviavideocomposer.getappcontext())) {
                     arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
+                    arrayvideolist.get(i).setIscheck(true);
+                    initialdate = new Date();
+                    findmediafirsthash(arrayvideolist.get(i).getPath(),arrayvideolist.get(i).getmimetype());
+                    break;
                 }
             }
         }
-        adapter.notifyDataSetChanged();
 
-        /*if (arrayvideolist != null && arrayvideolist.size() > 0) {
-             for (int i = 0; i < arrayvideolist.size(); i++) {
-                String status = arrayvideolist.get(i).getMediastatus();
-
-                if (status.equalsIgnoreCase(config.sync_complete)) {
-                    arrayvideolist.get(i).setMediastatus(status);
-
-                } else if (status.equalsIgnoreCase(config.sync_inprogress)) {
-
-                    if(!common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
-                          arrayvideolist.get(i).setMediastatus(config.sync_offline);
-                    }else{
-                        if (!arrayvideolist.get(i).isIscheck()) {
-
-                            arrayvideolist.get(i).setIscheck(true);
-                            findmediafirsthash(arrayvideolist.get(i).getPath(),mediatype);
-                            break;
-
-                        }
-                    }
-                }
-            }
-        }*/
-
+       adapter.notifyDataSetChanged();
     }
+
 
     public void findmediafirsthash(String mediafilepath,String mimetype)
     {
@@ -547,6 +520,7 @@ public class readermedialist extends basefragment {
             intent.putExtra("firsthash", firsthash);
             intent.putExtra("mediapath", mediafilepath);
             intent.putExtra("keytype", keytype);
+            intent.putExtra("mediatitle",common.getfilename(mediafilepath) );
             if(mimetype.startsWith("video"))
             {
                 intent.putExtra("mediatype","video");

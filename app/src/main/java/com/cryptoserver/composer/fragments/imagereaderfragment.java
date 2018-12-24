@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -115,6 +116,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
     private  final int flingactionmindspdvac = 10;
+
+
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
     @Override
     public int getlayoutid() {
@@ -499,8 +502,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 public void run(){
                     try {
                         findmediafirsthash();
-                        if(!BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-                                        getmediadata();
+                        getmediadata();
+                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+                            getmetadetareader();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -534,6 +539,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void onResume() {
         super.onResume();
     }
+
     public void setmetriceshashesdata()
     {
         if(myhandler != null && myrunnable != null)
@@ -668,21 +674,24 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void registerbroadcastreciver()
     {
         IntentFilter intentFilter = null;
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-            intentFilter = new IntentFilter(config.reader_service_getmetadata);
+            //intentFilter = new IntentFilter(config.reader_service_getmetadata);
         }
         else
         {
-            intentFilter = new IntentFilter(config.composer_service_savemetadata);
-        }
+
+        }*/
+
+        intentFilter = new IntentFilter(config.composer_service_savemetadata);
+
         getmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Thread thread = new Thread() {
                     public void run() {
                         if(mhashesitems.size() == 0)
-                            getmediadata();
+                             getmediadata();
                     }
                 };
                 thread.start();
@@ -708,6 +717,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     {
         try {
             databasemanager mdbhelper = null;
+            String videoid = "", videotoken = "",audiostatus ="";
             if (mdbhelper == null) {
                 mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
                 mdbhelper.createDatabase();
@@ -719,6 +729,22 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 e.printStackTrace();
             }
 
+
+            if(! firsthash.trim().isEmpty())
+            {
+                Cursor mediainfocursor = mdbhelper.getmediainfobyfirsthash(firsthash);
+
+                if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
+                    if (mediainfocursor.moveToFirst()) {
+                        do {
+                            audiostatus = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("status"));
+                            videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
+                        } while (mediainfocursor.moveToNext());
+                    }
+                }
+            }
+
+
             String completedate = mdbhelper.getcompletedate(firsthash);
             if (!completedate.isEmpty()){
 
@@ -728,7 +754,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         textfetchdata.setVisibility(View.GONE);
                     }
                 });*/
-
                 ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
                 //metricmainarraylist.clear();
                 String framelabel="";
@@ -745,24 +770,27 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
 
                 }else{
-                    for(int i=0;i<mitemlist.size();i++)
-                    {
-                        String metahash = "";
-                        String metricdata=mitemlist.get(i).getMetricdata();
-                        String valuehash =mitemlist.get(i).getSequencehash();
-                        String hashmethod =mitemlist.get(i).getHashmethod();
-                        String videostarttransactionid =mitemlist.get(i).getVideostarttransactionid();
 
-                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
-                            metahash =mitemlist.get(i).getValuehash();
-                        }else{
-                            metahash =mitemlist.get(i).getMetahash();
+                    if(audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0){
+                        for(int i=0;i<mitemlist.size();i++)
+                        {
+                            String metahash = "";
+                            String metricdata=mitemlist.get(i).getMetricdata();
+                            String valuehash =mitemlist.get(i).getSequencehash();
+                            String hashmethod =mitemlist.get(i).getHashmethod();
+                            String videostarttransactionid =mitemlist.get(i).getVideostarttransactionid();
+
+                            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
+                                metahash =mitemlist.get(i).getValuehash();
+                            }else{
+                                metahash =mitemlist.get(i).getMetahash();
+                            }
+                            parsemetadata(metricdata,valuehash,hashmethod,videostarttransactionid,metahash);
+                            selectedhashes = selectedhashes+"\n";
+                            framelabel="Frame ";
+                            selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                                    ": "+mitemlist.get(i).getSequencehash();
                         }
-                        parsemetadata(metricdata,valuehash,hashmethod,videostarttransactionid,metahash);
-                        selectedhashes = selectedhashes+"\n";
-                        framelabel="Frame ";
-                        selectedhashes = selectedhashes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                                ": "+mitemlist.get(i).getSequencehash();
                     }
                 }
 
@@ -777,8 +805,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mhashesitems.clear();
-                        mhashesadapter.notifyDataSetChanged();
+                       /* mhashesitems.clear();
+                        mhashesadapter.notifyDataSetChanged();*/
 
                         mphotoframes.add(new videomodel(selectedhashes));
                         mhashesadapter.notifyDataSetChanged();
@@ -844,7 +872,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public String findmediafirsthash()
     {
         firsthash=md5.fileToMD5(imageurl);
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             if(! firsthash.trim().isEmpty())
             {
@@ -855,7 +883,21 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 intent.putExtra("mediatype","image");
                 applicationviavideocomposer.getactivity().startService(intent);
             }
-        }
+        }*/
         return firsthash;
+    }
+
+    public void getmetadetareader(){
+        myhandler=new Handler();
+        myrunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                getmediadata();
+
+                myhandler.postDelayed(this, 5000);
+            }
+        };
+        myhandler.post(myrunnable);
     }
 }

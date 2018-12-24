@@ -690,7 +690,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(isaudiorecording)
                 {
                     Log.e("Frame count ",""+mframetorecordcount);
-                    if(framegap == 2)
+                    if(framegap == frameduration)
                     {
                         if(mediakey.trim().isEmpty())
                         {

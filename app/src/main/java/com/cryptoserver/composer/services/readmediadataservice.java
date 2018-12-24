@@ -40,7 +40,7 @@ import java.util.Set;
 public class readmediadataservice extends Service {
 
     ArrayList<videomodel> framearraylist =new ArrayList<>();
-    String mediapath="",firsthash="",mediatype="",actiontype = "";
+    String mediapath="",firsthash="",mediatype="",actiontype = "",medianotfoundtitle = "";
     int xapicounter = 0,maximumframechecklimit=30;
 
 
@@ -62,6 +62,7 @@ public class readmediadataservice extends Service {
                     mediapath = intent.getExtras().getString("mediapath");
                     String keytype = intent.getExtras().getString("keytype");
                     firsthash = intent.getExtras().getString("firsthash");
+                    medianotfoundtitle = intent.getExtras().getString("mediatitle");
                     mediatype = intent.getExtras().getString("mediatype");
                     if(mediapath != null && (! mediapath.isEmpty()))
                     {
@@ -225,7 +226,7 @@ public class readmediadataservice extends Service {
                     Log.e("Found hash ",""+hashvalue);
                     String framecount="",mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
                             remainingframes="10",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",
-                    mediacompleteddevicedatetime="";
+                    mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "";
 
                     try {
                         JSONObject object = (JSONObject) response.getData();
@@ -237,12 +238,13 @@ public class readmediadataservice extends Service {
                             String videohashmethod = (object.has("videohashmethod")?object.getString("videohashmethod"):"");
                             String videohashvalue = (object.has("videohashvalue")?object.getString("videohashvalue"):"");
                             mediastartdevicedatetime = (object.has("videostartdevicedatetime")?object.getString("videostartdevicedatetime"):"");
-                            String videostarttransactionid = (object.has("videostarttransactionid")?object.getString("videostarttransactionid"):"");
+                            mediatarttransactionid = (object.has("videostarttransactionid")?object.getString("videostarttransactionid"):"");
                             mediadevicetimeoffset = (object.has("videodevicetimeoffset")?object.getString("videodevicetimeoffset"):"");
                             String videopublickey = (object.has("videopublickey")?object.getString("videopublickey"):"");
                             String videotypeid = (object.has("videotypeid")?object.getString("videotypeid"):"");
                             mediacompleteddevicedatetime = (object.has("videocreateddate")?object.getString("videocreateddate"):"");
                             String videorank = (object.has("videorank")?object.getString("videorank"):"");
+                            medianame = (object.has("videoname")?object.getString("videoname"):"");
                             mediatypeshortname = (object.has("videotypeshortname")?object.getString("videotypeshortname"):"");
                             String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("videotoken")?object.getString("videotoken"):"");
@@ -259,7 +261,7 @@ public class readmediadataservice extends Service {
                             String audiohashvalue = (object.has("audiohashvalue")?object.getString("audiohashvalue"):"");
                             mediastartdevicedatetime = (object.has("audiostartdevicedatetime")?object.getString("audiostartdevicedatetime"):"");
                             mediacompleteddevicedatetime = (object.has("audiocompletedevicedatetime")?object.getString("audiocompletedevicedatetime"):"");
-                            String audiostarttransactionid = (object.has("audiostarttransactionid")?object.getString("audiostarttransactionid"):"");
+                            mediatarttransactionid = (object.has("audiostarttransactionid")?object.getString("audiostarttransactionid"):"");
                             String audiocompletetransactionid = (object.has("audiocompletetransactionid")?object.getString("audiocompletetransactionid"):"");
                             mediadevicetimeoffset = (object.has("audiodevicetimeoffset")?object.getString("audiodevicetimeoffset"):"");
                             String audiopublickey = (object.has("audiopublickey")?object.getString("audiopublickey"):"");
@@ -267,7 +269,7 @@ public class readmediadataservice extends Service {
                             String audiocreateddate = (object.has("audiocreateddate")?object.getString("audiocreateddate"):"");
                             String audioupdateddate = (object.has("audioupdateddate")?object.getString("audioupdateddate"):"");
                             String audiorank = (object.has("audiorank")?object.getString("audiorank"):"");
-                            String audioname = (object.has("audioname")?object.getString("audioname"):"");
+                            medianame = (object.has("audioname")?object.getString("audioname"):"");
                             mediatypeshortname = (object.has("audiotypeshortname")?object.getString("audiotypeshortname"):"");
                             String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("audiotoken")?object.getString("audiotoken"):"");
@@ -285,7 +287,7 @@ public class readmediadataservice extends Service {
                             String imagehashvalue = (object.has("imagehashvalue")?object.getString("imagehashvalue"):"");
                             mediastartdevicedatetime = (object.has("imagestartdevicedatetime")?object.getString("imagestartdevicedatetime"):"");
                             mediacompleteddevicedatetime = (object.has("imagecompletedevicedatetime")?object.getString("imagecompletedevicedatetime"):"");
-                            String imagestarttransactionid = (object.has("imagestarttransactionid")?object.getString("imagestarttransactionid"):"");
+                            mediatarttransactionid = (object.has("imagestarttransactionid")?object.getString("imagestarttransactionid"):"");
                             String imagecompletetransactionid = (object.has("imagecompletetransactionid")?object.getString("imagecompletetransactionid"):"");
                             mediadevicetimeoffset = (object.has("imagedevicetimeoffset")?object.getString("imagedevicetimeoffset"):"");
                             String imagepublickey = (object.has("imagepublickey")?object.getString("imagepublickey"):"");
@@ -293,7 +295,7 @@ public class readmediadataservice extends Service {
                             String imagecreateddate = (object.has("imagecreateddate")?object.getString("imagecreateddate"):"");
                             String imageupdateddate = (object.has("imageupdateddate")?object.getString("imageupdateddate"):"");
                             String imagerank = (object.has("imagerank")?object.getString("imagerank"):"");
-                            String imagename = (object.has("imagename")?object.getString("imagename"):"");
+                            medianame = (object.has("imagename")?object.getString("imagename"):"");
                             mediatypeshortname = (object.has("imagetypeshortname")?object.getString("imagetypeshortname"):"");
                             String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("imagetoken")?object.getString("imagetoken"):"");
@@ -316,9 +318,14 @@ public class readmediadataservice extends Service {
 
                         String syncdate[] = common.getcurrentdatewithtimezone();
 
+
+                        if(mediatitle.isEmpty() || mediatitle.equalsIgnoreCase("null"))
+                                  mediatitle = medianotfoundtitle;
+
+
                         mdbhelper.insertstartvideoinfo(firsthash,mediatypeshortname,mediatitle,mediaid,
                                 mediatoken,mediakey,"",syncdate[0] , actiontype,
-                                "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,
+                                "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
                                 firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"");
 
 
@@ -554,6 +561,32 @@ public class readmediadataservice extends Service {
         {
             String hashvalue =  framearraylist.get(xapicounter).getkeyvalue();
             xapigetmediainfo(hashvalue);
+        }else{
+
+
+            databasemanager mdbhelper=null;
+            if (mdbhelper == null) {
+                mdbhelper = new databasemanager(getApplicationContext());
+                mdbhelper.createDatabase();
+            }
+
+            try {
+                mdbhelper.open();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String syncdate[] = common.getcurrentdatewithtimezone();
+
+            mdbhelper.insertstartvideoinfo(firsthash,mediatype,medianotfoundtitle,"",
+                    "","","",syncdate[0]  , actiontype,
+                    "","","","","",
+                    firsthash,"",config.sync_notfound,"","","","");
+            try {
+                mdbhelper.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

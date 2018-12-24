@@ -2016,7 +2016,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             String serverdate = object.getString("serverdate");
                             updatevideoupdateapiresponce(finalselectedid,sequencekey,serverdate,serverdictionaryhash,sequenceid,mediaframetransactionid);
 
-
                         }catch (Exception e)
                         {
                             e.printStackTrace();
