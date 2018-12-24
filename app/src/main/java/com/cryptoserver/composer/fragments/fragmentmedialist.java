@@ -423,7 +423,7 @@ public class fragmentmedialist extends basefragment {
                        }
                        adapter.notifyDataSetChanged();
                }
-                myhandler.postDelayed(this, 10000);
+                myhandler.postDelayed(this, 3000);
             }
         };
         myhandler.post(myrunnable);

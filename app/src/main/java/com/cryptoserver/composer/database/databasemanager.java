@@ -64,7 +64,7 @@ public class databasemanager {
     public void insertstartvideoinfo(String header,String type,String location,String localkey,
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
-                                     String videocompletedevicedate,String firsthash,String videoid,
+                                     String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
                                      String status,String remainingframes,String lastframe,String framecount,String sync_status)
     {
         try {
@@ -84,6 +84,7 @@ public class databasemanager {
             values.put("videostartdevicedate",  videostartdevicedate);
             values.put("devicetimeoffset",  devicetimeoffset);
             values.put("videocompletedevicedate",  videocompletedevicedate);
+            values.put("videostarttransactionid",  videostarttransactionid);
             values.put("videoid",""+videoid);
             values.put("status",""+status);
             values.put("remainingframes",""+remainingframes);
@@ -451,7 +452,7 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set videokey='"+videokey+"', token='"+token+"' , videostarttransactionid='"+transactionid+"'where id='"+videoid+"'");
+            mDb.execSQL("update tbstartvideoinfo set videokey='"+videokey+"', token='"+ token+"' , videostarttransactionid='"+transactionid+"'where id='"+videoid+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -588,7 +589,7 @@ public class databasemanager {
             if (cur.moveToFirst())
             {
                 do{
-                    localkey[0] = "" + cur.getString(cur.getColumnIndex("sync_status"));
+                    localkey[0] = "" + cur.getString(cur.getColumnIndex("status"));
                     localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                 }while(cur.moveToNext());
             }

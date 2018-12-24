@@ -76,7 +76,7 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
 
         if(arrayvideolist.get(position).getMediastatus().isEmpty() ||  arrayvideolist.get(position).getMediastatus().equalsIgnoreCase("null")){
 
-            holder.tv_sync_status.setText("Status : offline");
+            holder.tv_sync_status.setText("Status : pendding");
         }else{
 
             holder.tv_sync_status.setText("Status : " + arrayvideolist.get(position).getMediastatus());

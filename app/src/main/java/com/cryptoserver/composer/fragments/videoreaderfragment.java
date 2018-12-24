@@ -41,6 +41,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
 import com.cryptoserver.composer.adapter.videoframeadapter;
@@ -394,6 +395,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
             setmetriceshashesdata();
             setupvideodata();
+
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                getmediametadata();
+                getmetadetareader();
+            }
             Log.e("oncreate","oncreate");
         }
         return rootview;
@@ -754,7 +761,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onStart() {
         super.onStart();
-        IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
+        /*IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
         coredatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -767,7 +774,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 thread.start();
             }
         };
-        getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);
+        getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);*/
     }
 
     public void getmediametadata()
@@ -791,57 +798,60 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     if(! firsthash.trim().isEmpty())
                     {
                         Cursor mediainfocursor = mdbhelper.getmediainfobyfirsthash(firsthash);
-                        String videoid = "", videotoken = "";
+                        String videoid = "", videotoken = "",audiostatus ="";
                         if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
                             if (mediainfocursor.moveToFirst()) {
                                 do {
+                                    audiostatus = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("status"));
                                     videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
                                 } while (mediainfocursor.moveToNext());
                             }
                         }
 
-                        if(! videoid.trim().isEmpty())
-                        {
-                            Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
-                            if (metadatacursor != null && metadatacursor.getCount() > 0) {
-                                if (metadatacursor.moveToFirst()) {
-                                    do {
-                                        String sequencehash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequencehash"));
-                                        String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
-                                        String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
-                                        String metricdata = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metricdata"));
-                                        String videostarttransactionid = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videostarttransactionid"));
-                                        String metahash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metahash"));
-                                        //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
+                        if(audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0){
+                            if(! videoid.trim().isEmpty())
+                            {
+                                Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
+                                if (metadatacursor != null && metadatacursor.getCount() > 0) {
+                                    if (metadatacursor.moveToFirst()) {
+                                        do {
+                                            String sequencehash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequencehash"));
+                                            String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
+                                            String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
+                                            String metricdata = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metricdata"));
+                                            String videostarttransactionid = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videostarttransactionid"));
+                                            String metahash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metahash"));
+                                            //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
 
-                                        try {
-                                            ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-                                            JSONObject object=new JSONObject(metricdata);
-                                            Iterator<String> myIter = object.keys();
-                                            while (myIter.hasNext()) {
-                                                String key = myIter.next();
-                                                String value = object.optString(key);
-                                                metricmodel model=new metricmodel();
-                                                model.setMetricTrackKeyName(key);
-                                                model.setMetricTrackValue(value);
-                                                metricItemArraylist.add(model);
+                                            try {
+                                                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                                                JSONObject object=new JSONObject(metricdata);
+                                                Iterator<String> myIter = object.keys();
+                                                while (myIter.hasNext()) {
+                                                    String key = myIter.next();
+                                                    String value = object.optString(key);
+                                                    metricmodel model=new metricmodel();
+                                                    model.setMetricTrackKeyName(key);
+                                                    model.setMetricTrackValue(value);
+                                                    metricItemArraylist.add(model);
+                                                }
+
+                                                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,sequencehash,metahash));
+                                            }catch (Exception e)
+                                            {
+                                                e.printStackTrace();
+                                            }
+                                            if(mhashesitems.size() == (metadatacursor.getCount()-1))
+                                            {
+                                                mhashesitems.add(new videomodel("Last Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
+                                            }
+                                            else
+                                            {
+                                                mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
                                             }
 
-                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,sequencehash,metahash));
-                                        }catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
-                                        if(mhashesitems.size() == (metadatacursor.getCount()-1))
-                                        {
-                                            mhashesitems.add(new videomodel("Last Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
-                                        }
-                                        else
-                                        {
-                                            mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
-                                        }
-
-                                    } while (metadatacursor.moveToNext());
+                                        } while (metadatacursor.moveToNext());
+                                    }
                                 }
                             }
                         }
@@ -862,9 +872,12 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     @Override
                     public void run() {
 
-                        textfetchdata.setVisibility(View.GONE);
-                        mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                        selectedhashes ="";
+                        if(mhashesitems.size() !=0){
+                            textfetchdata.setVisibility(View.GONE);
+                            mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
+                            selectedhashes ="";
+                        }
+
                     }
                 });
             }
@@ -901,7 +914,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     e.printStackTrace();
                 }
 
-                if(! firsthash.trim().isEmpty())
+                /*if(! firsthash.trim().isEmpty())
                 {
                     Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
                     intent.putExtra("firsthash", firsthash);
@@ -909,7 +922,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                     intent.putExtra("keytype",keytype);
                     intent.putExtra("mediatype","video");
                     applicationviavideocomposer.getactivity().startService(intent);
-                }
+                }*/
 
                 getframesbitmap();
 
@@ -1647,5 +1660,18 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
         }
+    }
+    public void getmetadetareader(){
+        myHandler=new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                getmediametadata();
+
+                myHandler.postDelayed(this, 5000);
+            }
+        };
+        myHandler.post(myRunnable);
     }
 }
