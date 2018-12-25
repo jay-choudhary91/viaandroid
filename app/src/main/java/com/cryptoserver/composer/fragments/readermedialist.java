@@ -401,20 +401,25 @@ public class readermedialist extends basefragment {
             for (int i = 0; i < arrayvideolist.size(); i++) {
                 //String status = arrayvideolist.get(i).getMediastatus();
 
-                String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
-                String status = getdata[0];
+                if(! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_complete)) {
 
-                if (getdata[0].isEmpty() || getdata[0].equalsIgnoreCase("null")) {
-                    arrayvideolist.get(i).setMediastatus(config.sync_pending);
-                }else if (status.equalsIgnoreCase(config.sync_inprogress)) {
-                    arrayvideolist.get(i).setMediastatus(status);
-                }else if (status.equalsIgnoreCase(config.sync_pending)) {
-                    arrayvideolist.get(i).setMediastatus(status);
-                }else if (status.equalsIgnoreCase(config.sync_notfound)) {
-                    arrayvideolist.get(i).setMediastatus(status);
-                }else if (status.equalsIgnoreCase(config.sync_complete)) {
-                    arrayvideolist.get(i).setMediastatus(status);
-                    arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                    String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
+                    String status = getdata[0];
+
+                    if (getdata[0].isEmpty() || getdata[0].equalsIgnoreCase("null")) {
+                        arrayvideolist.get(i).setMediastatus(config.sync_pending);
+                    } else if (status.equalsIgnoreCase(config.sync_inprogress)) {
+                        arrayvideolist.get(i).setMediastatus(status);
+                    } else if (status.equalsIgnoreCase(config.sync_pending)) {
+                        arrayvideolist.get(i).setMediastatus(status);
+                    } else if (status.equalsIgnoreCase(config.sync_notfound)) {
+                        arrayvideolist.get(i).setMediastatus(status);
+                    } else if (status.equalsIgnoreCase(config.sync_complete)) {
+                        arrayvideolist.get(i).setMediastatus(status);
+                        arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                    }
+
+                    arrayvideolist.get(i).setIscheck(false);
                 }
             }
         }

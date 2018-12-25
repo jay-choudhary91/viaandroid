@@ -834,11 +834,12 @@ public class fragmentmedialist extends basefragment {
                         File fdelete = new File(videoobj.getPath());
                         if (fdelete.exists()) {
                             if (fdelete.delete()) {
+                                String localkey=videoobj.getLocalkey();
                                 System.out.println("file Deleted :" + videoobj.getPath());
                                 arrayvideolist.remove(videoobj);
                                 dialog.dismiss();
-                                if(! videoobj.getLocalkey().trim().isEmpty())
-                                    deletemediainfo(videoobj.getLocalkey());
+                                if(! localkey.trim().isEmpty())
+                                    deletemediainfo(localkey);
 
                             } else {
                                 System.out.println("file not Deleted :" + videoobj.getPath());
