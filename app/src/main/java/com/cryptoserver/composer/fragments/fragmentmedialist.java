@@ -117,7 +117,6 @@ public class fragmentmedialist extends basefragment {
     public void onStop() {
         super.onStop();
         isinbackground=true;
-        removehandler();
     }
 
     @Override
@@ -131,7 +130,6 @@ public class fragmentmedialist extends basefragment {
         super.onResume();
         isinbackground=false;
         recyrviewvideolist.addOnItemTouchListener(onTouchListener);
-        resetmedialist();
     }
 
     public void requestpermissions()
@@ -219,8 +217,7 @@ public class fragmentmedialist extends basefragment {
                 }
             });
 
-
-
+            resetmedialist();
 
         //    detectdevelopermode();
 
@@ -402,25 +399,27 @@ public class fragmentmedialist extends basefragment {
         myrunnable = new Runnable() {
             @Override
             public void run() {
-               if (arrayvideolist.size()!= 0){
+               if (arrayvideolist != null && arrayvideolist.size() > 0){
 
                        for(int i = 0 ;i < arrayvideolist.size();i++){
                            String status =   arrayvideolist.get(i).getMediastatus();
+                           if(! status.equalsIgnoreCase(config.sync_complete))
+                           {
+                               if(status.equalsIgnoreCase(config.sync_inprogress) && !common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
 
-                           if(status.equalsIgnoreCase("inprogress") && !common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
+                                   arrayvideolist.get(i).setMediastatus(config.sync_offline);
 
-                               arrayvideolist.get(i).setMediastatus("offline");
+                               }else if(status.equalsIgnoreCase(config.sync_offline) && common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
 
-                           }else if(status.equalsIgnoreCase("offline") && common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
+                                   String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
+                                   arrayvideolist.get(i).setMediastatus(getdata[0]);
+                                   arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
 
-                               String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
-                               arrayvideolist.get(i).setMediastatus(getdata[0]);
-                               arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
-
-                           }else if(!status.equalsIgnoreCase("complete")){
-                               String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
-                               arrayvideolist.get(i).setMediastatus(getdata[0]);
-                               arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                               }else if(!status.equalsIgnoreCase(config.sync_complete)){
+                                   String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
+                                   arrayvideolist.get(i).setMediastatus(getdata[0]);
+                                   arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                               }
                            }
                        }
                        adapter.notifyDataSetChanged();
