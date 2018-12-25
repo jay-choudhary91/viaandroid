@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -155,7 +156,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist = new ArrayList<>();
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-    FFmpeg ffmpeg;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -261,7 +261,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     transaction.commit();
                 }
 
-                loadffmpegbinary();
                 setupVideoPlayer();
                 gethash();
 
@@ -299,28 +298,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 }
             }
         });
-    }
-
-    public void getmetadata() {
-        /*MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        m_mediaMetadataRetriever.setDataSource(mediafilepath);
-        String metadataWriter=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
-        String metadataAlbum=m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-        for (int i = 0; i < 1000; i++){
-            //only Metadata != null is printed!
-            if(m_mediaMetadataRetriever.extractMetadata(i)!=null) {
-                Log.i("Metadata"+i, "Metadata :: " + m_mediaMetadataRetriever.extractMetadata(i));
-            }
-        }
-
-        if(metadataWriter != null && (! metadataWriter.trim().isEmpty()) && (! metadataWriter.equalsIgnoreCase("null")))
-        {
-            parsemetadata(metadataWriter);
-        }
-        else if(metadataAlbum != null && (! metadataAlbum.trim().isEmpty()) && (! metadataAlbum.equalsIgnoreCase("null")))
-        {
-            parsemetadata(metadataAlbum);
-        }*/
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
@@ -954,8 +931,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 wavevisualizerslist.clear();
             }
 
-          //executeframegrabcommand();
-
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (SecurityException e) {
@@ -964,127 +939,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void loadffmpegbinary() {
-        try {
-            if (ffmpeg == null) {
-                Log.d("tagg", "ffmpeg : era nulo");
-
-                ffmpeg = FFmpeg.getInstance(getContext());
-            }
-            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
-                @Override
-                public void onFailure() {
-                    // showUnsupportedExceptionDialog();
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d("tagg", "ffmpeg : correct Loaded");
-                }
-            });
-        } catch (FFmpegNotSupportedException e) {
-            //showUnsupportedExceptionDialog();
-        } catch (Exception e) {
-            Log.d("tagg", "EXception no controlada : " + e);
-        }
-    }
-
-    /*final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-    final String fileName = "FRAME_" + timeStamp + ".md4";
-    File folder = Environment.getExternalStorageDirectory();
-    String mfinalpath = folder.getPath() + File.separator;
-    String destinationpath = mfinalpath + fileName;
-
-    String[] complexcommand = { "-i", mediafilepath,"-f", "framemd5" ,destinationpath};
-    String[] complexcommand = { "-i", mediafilepath,"-f", "framehash" ,destinationpath};
-    execffmpegbinary(complexcommand);*/
-
-    private void executeframegrabcommand() {
-
-        try {
-            ffmpegvideoframegrabber videograbber = new ffmpegvideoframegrabber(mediafilepath);
-            videograbber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-            String format = common.getvideoformat(mediafilepath);
-            if (format.equalsIgnoreCase("mp4"))
-                videograbber.setFormat(format);
-
-            videograbber.start();
-            for (int i = 0; i < videograbber.getLengthInFrames(); i++) {
-                Frame frame = videograbber.grabImage();
-                if (frame == null)
-                    break;
-
-                ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
-                String keyValue = common.getkeyvalue(byteData, keytype);
-                Log.e("Md5 "+i+" ",keyValue);
-            }
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-
-        /*final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        final String fileName = "FRAME_" + timeStamp + ".framemd5";
-        File folder = Environment.getExternalStorageDirectory();
-        String destinationpath = folder.getPath() + File.separator + fileName;
-
-        String[] complexcommand = { "-i", mediafilepath,"-f", "framemd5" ,destinationpath};
-        execffmpegbinary(complexcommand);*/
-
-        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        final String fileName = "FRAME_" + timeStamp + ".framemd5";
-        File folder = Environment.getExternalStorageDirectory();
-        String mfinalpath = folder.getPath() + File.separator;
-        String destinationpath = mfinalpath + fileName;
-
-        String[] complexcommand = {"-i", mediafilepath,"-f", "framemd5" ,destinationpath};
-        //String[] complexcommand = {"-i", mediafilepath,"-f", "framehash" ,destinationpath};
-        execffmpegbinary(complexcommand);
-    }
-
-
-    private void execffmpegbinary(final String[] command) {
-        try {
-            ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
-                @Override
-                public void onFailure(String s) {
-                    Log.e("Failure with output : ","IN onFailure");
-                }
-
-                @Override
-                public void onSuccess(String s) {
-                    Log.e("SUCCESS with output : ",s);
-
-                }
-
-                @Override
-                public void onProgress(String s) {
-                    Log.e( "Progress bar : " , "In Progress");
-
-                }
-
-                @Override
-                public void onStart() {
-                    Log.e("Start with output : ","IN START");
-                    Log.d("tagg", "Started command : ffmpeg " + command);
-                    //progressdialog.showwaitingdialog(getContext());
-                }
-
-                @Override
-                public void onFinish() {
-                    Log.e("Start with output : ","IN Finish");
-
-
-                }
-            });
-        } catch (FFmpegCommandAlreadyRunningException e) {
-            // do nothing for now
         }
     }
 
@@ -1345,8 +1199,15 @@ public class composervideoplayerfragment extends basefragment implements Surface
                         e.printStackTrace();
                     }
 
-                    final String firsthash = findmediafirsthash();
-                    String completedate = mdbhelper.getcompletedate(firsthash);
+                    Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
+                    String completedate="";
+                    if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
+                    {
+                        do{
+                            completedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                        }while(cur.moveToNext());
+                    }
+
                     if (!completedate.isEmpty()){
 
                         getActivity().runOnUiThread(new Runnable() {
@@ -1356,20 +1217,18 @@ public class composervideoplayerfragment extends basefragment implements Surface
                             }
                         });
 
-                        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
-                       // metricmainarraylist.clear();
                         String framelabel="";
-
+                        ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
                         if(metricmainarraylist.size()>0){
 
-                            for(int i=0;i<mitemlist.size();i++) {
+                            for(int i=0;i<mitemlist.size();i++)
+                            {
                                 String sequencehash = mitemlist.get(i).getSequencehash();
                                 String hashmethod = mitemlist.get(i).getHashmethod();
                                 String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
-
                                 metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
-                                }
+                            }
 
                         }else{
                             for(int i=0;i<mitemlist.size();i++)
@@ -1407,37 +1266,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
             }
         }).start();
     }
-
-    public String findmediafirsthash()
-    {
-        String firsthash="";
-        try {
-            ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediafilepath);
-            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-            String format = common.getvideoformat(mediafilepath);
-            if (format.equalsIgnoreCase("mp4"))
-                grabber.setFormat(format);
-
-            grabber.start();
-            for (int i = 0; i < grabber.getLengthInFrames(); i++) {
-                Frame frame = grabber.grabImage();
-                if (frame == null)
-                    break;
-
-                ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
-                firsthash = common.getkeyvalue(byteData, keytype);
-                break;
-            }
-            grabber.flush();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return firsthash;
-    }
-
 
     private void setupVisualizerFxAndUI() {
 
