@@ -773,6 +773,22 @@ public class databasemanager {
         return  cur;
     }
 
+    public Cursor getmediainfobyfilename(String filename) {
+        String videotoken="";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tbstartvideoinfo where firsthash = '"+filename+"'";
+            cur = mDb.rawQuery(sql, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  cur;
+    }
+
 
     public Cursor readallmetabyvideoid(String objectparentid) {
         String videotoken="";
