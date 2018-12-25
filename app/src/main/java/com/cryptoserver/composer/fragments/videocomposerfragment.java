@@ -329,7 +329,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     View rootview = null;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
-    int Seconds, Minutes, MilliSeconds ;
+    int Seconds, Minutes, MilliSeconds,framepersecond=30 ;
     String keytype =config.prefs_md5,currenthashvalue="";
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
@@ -1051,7 +1051,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediarecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
         mediarecorder.setVideoEncodingBitRate(1000000);
-        mediarecorder.setVideoFrameRate(10);
+        mediarecorder.setVideoFrameRate(framepersecond);
         mediarecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
@@ -1060,16 +1060,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         int orientation =  camerautil.getOrientation(rotation, upsideDown);
 
         mediarecorder.setOrientationHint(orientation);
-
-        /*mediarecorder.setVideoEncodingBitRate(1000000);
-        mediarecorder.setVideoSize(720, 1280);
-        mediarecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-        mediarecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
-        mediarecorder.setVideoFrameRate(18);
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-        // int orientation = ORIENTATIONS.get(rotation);
-        int orientation =  camerautil.getOrientation(rotation, upsideDown);
-        mediarecorder.setOrientationHint(orientation);*/
 
         mediarecorder.prepare();
     }
@@ -1165,18 +1155,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 //setmetricesadapter();
                 //syncmediadatabase();
                 firsthashvalue = true;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            madapterclick.onItemClicked(null,1);
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-
-                    }
-                },2500);
+                madapterclick.onItemClicked(null,1);
 
             }
         },100);
