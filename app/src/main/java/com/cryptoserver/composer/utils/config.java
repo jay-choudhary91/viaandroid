@@ -16,6 +16,9 @@ public class config {
     public static final String videodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID+File.separator+"media";
 
+    public static final String hashesdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
+            BuildConfig.APPLICATION_ID+File.separator+"hashes";
+
     public static final double STATIC_LAT = 43.65844179931329;
     public static final double STATIC_LNG = -116.69653460383417;
 

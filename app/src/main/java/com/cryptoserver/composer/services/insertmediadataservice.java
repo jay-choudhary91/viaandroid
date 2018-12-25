@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Environment;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -20,19 +21,30 @@ import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.xdata;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.bytedeco.javacpp.avutil;
 import org.bytedeco.javacv.Frame;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ShortBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -41,6 +53,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class insertmediadataservice extends Service {
 
+    FFmpeg ffmpeg;
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -50,254 +63,268 @@ public class insertmediadataservice extends Service {
     public int onStartCommand(final Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    new Thread(new Runnable() {
+        @Override
+        public void run() {
 
-                Gson gsonobject = new Gson();
-                String list1 = xdata.getinstance().getSetting("liststart");
-                String list2 = xdata.getinstance().getSetting("listmiddle");
+        try {
+            if (ffmpeg == null) {
+                Log.d("ffmpeg", "ffmpeg : is loading..");
 
-                if(! list1.trim().isEmpty() && (! list2.trim().isEmpty()))
-                {
-                    Type type = new TypeToken<ArrayList<dbitemcontainer>>(){}.getType();
-                    ArrayList<dbitemcontainer> mdbstartitemcontainer = gsonobject.fromJson(list1, type);
-                    ArrayList<dbitemcontainer> mdbmiddleitemcontainer = gsonobject.fromJson(list2, type);
-
-                    // ArrayList<dbitemcontainer> mdbstartitemcontainer = (ArrayList<dbitemcontainer>) intent.getSerializableExtra("liststart");
-                    //  ArrayList<dbitemcontainer> mdbmiddleitemcontainer = (ArrayList<dbitemcontainer>) intent.getSerializableExtra("listmiddle");
-                    String mediapath = xdata.getinstance().getSetting("mediapath");
-                    String keytype = xdata.getinstance().getSetting("keytype");
-
-                    //getmediahashes(mediapath,keytype);
-
-                    if(mediapath != null && (! mediapath.isEmpty()))
-                    {
-                        xdata.getinstance().saveSetting("mediadatainsertion","1");
-                        File file=new File(mediapath);
-                        if(file.exists())
-                        {
-                            long currentframenumber=0,frameduration =15;
-
-                            if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-                                frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
-
-                            int count = 1,arrayupdator=0;
-                            String videokey="",firsthash="";
-                            final ArrayList<videomodel> mvideoframes =new ArrayList<>();
-                            currentframenumber = currentframenumber + frameduration;
-                            try
-                            {
-                                if(mdbstartitemcontainer.size() > 0)
-                                {
-                                    ffmpegvideoframegrabber videograbber = null;
-                                    ffmpegaudioframegrabber audiograbber = null;
-                                    videomodel lastframehash=null;
-                                    if(mdbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("video"))
-                                    {
-                                        videograbber = new ffmpegvideoframegrabber(mediapath);
-                                        videograbber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-                                        String format= common.getvideoformat(mediapath);
-                                        if(format.equalsIgnoreCase("mp4"))
-                                            videograbber.setFormat(format);
-
-                                        videograbber.start();
-                                        for(int i = 0; i<videograbber.getLengthInFrames(); i++){
-                                            Frame frame = videograbber.grabImage();
-                                            if (frame == null)
-                                                break;
-
-                                            ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-                                            byte[] byteData = new byte[buffer.remaining()];
-                                            buffer.get(byteData);
-                                            String keyValue= common.getkeyvalue(byteData,keytype);
-                                            mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-
-                                            if(i == 0 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
-                                            {
-                                                String filename = common.getfilename(mediapath);
-                                                HashMap<String, String> map = new HashMap<String, String>();
-                                                map.put("fps","30");
-                                                map.put("firsthash", keyValue);
-                                                map.put("hashmethod",keytype);
-                                                map.put("name",filename);
-                                                map.put("duration","");
-                                                map.put("frmaecounts","");
-                                                map.put("finalhash","");
-                                                Gson gson = new Gson();
-                                                String json = gson.toJson(map);
-
-                                                firsthash=keyValue;
-
-                                                videokey=mdbstartitemcontainer.get(0).getItem4();
-
-                                                mdbstartitemcontainer.get(0).setItem1(json);
-                                                mdbstartitemcontainer.get(0).setItem3(filename);
-                                                mdbstartitemcontainer.get(0).setItem14(firsthash);
-                                                updatestartframes(mdbstartitemcontainer);
-                                            }
-
-                                            if (count == currentframenumber) {
-                                                lastframehash=null;
-                                                currentframenumber = currentframenumber + frameduration;
-
-                                                // update 1st duration frame in database
-                                                if(count == frameduration)
-                                                    firsthash = keyValue;
-
-                                                // update every duration frame in database
-                                                if(mdbmiddleitemcontainer.size() > 0 && arrayupdator == mdbmiddleitemcontainer.size()-1)
-                                                {
-                                                    mdbmiddleitemcontainer.add(mdbmiddleitemcontainer.get(mdbmiddleitemcontainer.size()-1));
-                                                }
-
-                                                if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
-                                                {
-                                                    mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
-                                                    mdbmiddleitemcontainer.get(arrayupdator).setItem8(keyValue);
-                                                    mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
-                                                    updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
-                                                }
-                                                arrayupdator++;
-                                            }
-                                            else
-                                            {
-                                                lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                                            }
-                                            count++;
-                                        }
-                                        videograbber.flush();
-                                    }
-                                    else if(mdbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("audio"))
-                                    {
-                                        audiograbber = new ffmpegaudioframegrabber(mediapath);
-                                        audiograbber.start();
-                                        for(int i = 0; i<audiograbber.getLengthInAudioFrames(); i++){
-                                            Frame frame = audiograbber.grabAudio();
-                                            if (frame == null)
-                                                break;
-
-                                            ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
-                                            java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                                            bb.asShortBuffer().put(shortbuff);
-
-                                            byte[] byteData = bb.array();
-                                            String keyValue= common.getkeyvalue(byteData,keytype);
-                                            Log.e("md5 ",""+count+" "+keyValue);
-                                            mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-
-                                            if(i == 10 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
-                                            {
-                                                String filename = common.getfilename(mediapath);
-                                                HashMap<String, String> map = new HashMap<String, String>();
-                                                map.put("fps","30");
-                                                map.put("firsthash", keyValue);
-                                                map.put("hashmethod",keytype);
-                                                map.put("name",filename);
-                                                map.put("duration","");
-                                                map.put("frmaecounts","");
-                                                map.put("finalhash","");
-                                                Gson gson = new Gson();
-                                                String json = gson.toJson(map);
-
-                                                firsthash=keyValue;
-
-                                                videokey=mdbstartitemcontainer.get(0).getItem4();
-
-                                                mdbstartitemcontainer.get(0).setItem1(json);
-                                                mdbstartitemcontainer.get(0).setItem3(filename);
-                                                mdbstartitemcontainer.get(0).setItem14(firsthash);
-                                                updatestartframes(mdbstartitemcontainer);
-                                            }
-
-                                            if (count == currentframenumber) {
-                                                lastframehash=null;
-                                                currentframenumber = currentframenumber + frameduration;
-
-                                                // update 1st duration frame in database
-                                                if(count == frameduration)
-                                                    firsthash = keyValue;
-
-                                                // update every duration frame in database
-                                                if(mdbmiddleitemcontainer.size() > 0 && arrayupdator == mdbmiddleitemcontainer.size()-1)
-                                                {
-                                                    mdbmiddleitemcontainer.add(mdbmiddleitemcontainer.get(mdbmiddleitemcontainer.size()-1));
-                                                }
-
-                                                if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
-                                                {
-                                                    mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
-                                                    mdbmiddleitemcontainer.get(arrayupdator).setItem8(keyValue);
-                                                    mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
-                                                    updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
-                                                }
-                                                arrayupdator++;
-                                            }
-                                            else
-                                            {
-                                                lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                                            }
-                                            count++;
-                                        }
-                                        audiograbber.flush();
-                                    }
-                                    else if(mdbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("image"))
-                                    {
-                                        updatestartframes(mdbstartitemcontainer);
-                                        updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
-
-                                        lastframehash=null;
-                                        mvideoframes.clear();
-                                    }
-
-                                    if(lastframehash != null)
-                                    {
-                                        mvideoframes.add(lastframehash);
-                                        // update every duration frame in database
-                                        if(mdbmiddleitemcontainer.size() > 0 && arrayupdator == mdbmiddleitemcontainer.size()-1)
-                                        {
-                                            mdbmiddleitemcontainer.add(mdbmiddleitemcontainer.get(mdbmiddleitemcontainer.size()-1));
-                                        }
-
-                                        if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
-                                        {
-                                            mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
-                                            mdbmiddleitemcontainer.get(arrayupdator).setItem8(lastframehash.getkeyvalue());
-                                            mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
-                                            updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
-                                        }
-                                    }
-
-                                    if(mvideoframes.size() > 0)
-                                    {
-                                        String updatecompletedate[] = common.getcurrentdatewithtimezone();
-                                        String completeddate = updatecompletedate[0];
-                                        String filename = common.getfilename(mediapath);
-                                        String lastframe="";
-                                        if(mvideoframes.size() > 0)
-                                        {
-                                            lastframe = mvideoframes.get(mvideoframes.size() -1).getkeyvalue();
-                                        }
-                                        // update last frame in database
-                                        updateendvideoinfo(firsthash,filename,completeddate,lastframe,"" + count,mediapath,keytype,videokey);
-                                        mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-                                    }
-                                }
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+                ffmpeg = FFmpeg.getInstance(getApplicationContext());
+            }
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                @Override
+                public void onFailure() {
+                    // showUnsupportedExceptionDialog();
                 }
 
-                xdata.getinstance().saveSetting("mediadatainsertion","0");
+                @Override
+                public void onSuccess() {
+
+                    Log.d("ffmpeg", "ffmpeg : is now Loaded");
+                try {
+
+                    final String mediapath = xdata.getinstance().getSetting("mediapath");
+                    final String keytype = xdata.getinstance().getSetting("keytype");
+                    final Gson gsonobject = new Gson();
+                    final String list1 = xdata.getinstance().getSetting("liststart");
+                    final String list2 = xdata.getinstance().getSetting("listmiddle");
+
+                    Type type = new TypeToken<ArrayList<dbitemcontainer>>(){}.getType();
+
+                    final ArrayList<dbitemcontainer> mdbstartitemcontainer = gsonobject.fromJson(list1, type);
+                    final ArrayList<dbitemcontainer> mdbmiddleitemcontainer = gsonobject.fromJson(list2, type);
+
+                    if(mediapath != null && (! mediapath.isEmpty()) && (! list1.trim().isEmpty()))
+                    {
+                        final String destinationpath = gettempfileforhash().getAbsolutePath();
+                        String[] complexcommand = {"-i", mediapath,"-f", "framemd5" ,destinationpath};
+
+                        if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 && (mdbstartitemcontainer.get(0).
+                                getItem2().equalsIgnoreCase("video") || mdbstartitemcontainer.get(0).
+                                getItem2().equalsIgnoreCase("audio")))
+                        {
+                            ffmpeg.execute(complexcommand, new ExecuteBinaryResponseHandler() {
+                                @Override
+                                public void onFailure(String s) {
+                                    Log.e("Failure with output : ","IN onFailure");
+                                }
+
+                                @Override
+                                public void onSuccess(String s) {
+                                    Log.e("SUCCESS with output : ",s);
+
+                                    ArrayList<String> hasharray=new ArrayList<>();
+                                    StringBuilder text = new StringBuilder();
+                                    BufferedReader br=null;
+                                    try {
+                                        br = new BufferedReader(new FileReader(new File(destinationpath)));
+                                        String line;
+                                        while ((line = br.readLine()) != null) {
+                                            text.append(line);
+
+                                            if(line.trim().length() > 0)
+                                            {
+                                                String[] splitarray=line.split(",");
+                                                if(splitarray.length > 5)
+                                                {
+                                                    String hash=splitarray[splitarray.length-1];
+                                                    if(hash.trim().length() > 20)
+                                                        hasharray.add(hash.trim().toString());
+                                                }
+                                            }
+                                            Log.i("Test", "text : "+text+" : end");
+                                            text.append('\n');
+                                        } }
+                                    catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    finally{
+                                        try {
+                                            if(br != null)
+                                                br.close();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+
+                                    xdata.getinstance().saveSetting("mediadatainsertion","1");
+                                    File file=new File(mediapath);
+                                    if(file.exists())
+                                    {
+                                        long currentframenumber=0,frameduration =15;
+                                        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+                                            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+                                        int count = 1,arrayupdator=0;
+                                        String videokey="",firsthash="";
+                                        final ArrayList<videomodel> mvideoframes =new ArrayList<>();
+                                        currentframenumber = currentframenumber + frameduration;
+                                        try
+                                        {
+                                            if(mdbstartitemcontainer.size() > 0)
+                                            {
+                                                ffmpegaudioframegrabber audiograbber = null;
+                                                videomodel lastframehash=null;
+                                                for(int i = 0; i<hasharray.size(); i++){
+
+                                                    String keyValue=hasharray.get(i);
+                                                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
+
+                                                    if(i == 0 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
+                                                    {
+                                                        String filename = common.getfilename(mediapath);
+                                                        HashMap<String, String> map = new HashMap<String, String>();
+                                                        map.put("fps","30");
+                                                        map.put("firsthash", keyValue);
+                                                        map.put("hashmethod",keytype);
+                                                        map.put("name",filename);
+                                                        map.put("duration","");
+                                                        map.put("frmaecounts","");
+                                                        map.put("finalhash","");
+                                                        Gson gson = new Gson();
+                                                        String json = gson.toJson(map);
+
+                                                        firsthash=keyValue;
+
+                                                        videokey=mdbstartitemcontainer.get(0).getItem4();
+
+                                                        mdbstartitemcontainer.get(0).setItem1(json);
+                                                        mdbstartitemcontainer.get(0).setItem3(filename);
+                                                        mdbstartitemcontainer.get(0).setItem14(firsthash);
+                                                        updatestartframes(mdbstartitemcontainer);
+                                                    }
+
+                                                    if (count == currentframenumber) {
+                                                        lastframehash=null;
+                                                        currentframenumber = currentframenumber + frameduration;
+
+                                                        // update 1st duration frame in database
+                                                        if(count == frameduration)
+                                                            firsthash = keyValue;
+
+                                                        // update every duration frame in database
+                                                        if(mdbmiddleitemcontainer.size() > 0 && arrayupdator == mdbmiddleitemcontainer.size()-1)
+                                                        {
+                                                            mdbmiddleitemcontainer.add(mdbmiddleitemcontainer.get(mdbmiddleitemcontainer.size()-1));
+                                                        }
+
+                                                        if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
+                                                        {
+                                                            mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
+                                                            mdbmiddleitemcontainer.get(arrayupdator).setItem8(keyValue);
+                                                            mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
+                                                            updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
+                                                        }
+                                                        arrayupdator++;
+                                                    }
+                                                    else
+                                                    {
+                                                        lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
+                                                    }
+                                                    count++;
+                                                }
+
+                                                if(lastframehash != null)
+                                                {
+                                                    mvideoframes.add(lastframehash);
+                                                    // update every duration frame in database
+                                                    if(mdbmiddleitemcontainer.size() > 0 && arrayupdator == mdbmiddleitemcontainer.size()-1)
+                                                    {
+                                                        mdbmiddleitemcontainer.add(mdbmiddleitemcontainer.get(mdbmiddleitemcontainer.size()-1));
+                                                    }
+
+                                                    if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
+                                                    {
+                                                        mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
+                                                        mdbmiddleitemcontainer.get(arrayupdator).setItem8(lastframehash.getkeyvalue());
+                                                        mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
+                                                        updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
+                                                    }
+                                                }
+
+                                                if(mvideoframes.size() > 0)
+                                                {
+                                                    String updatecompletedate[] = common.getcurrentdatewithtimezone();
+                                                    String completeddate = updatecompletedate[0];
+                                                    String filename = common.getfilename(mediapath);
+                                                    String lastframe="";
+                                                    if(mvideoframes.size() > 0)
+                                                        lastframe = mvideoframes.get(mvideoframes.size() -1).getkeyvalue();
+
+                                                    // update last frame in database
+                                                    updateendvideoinfo(firsthash,filename,completeddate,lastframe,"" + count,mediapath,keytype,videokey);
+                                                    mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
+                                                }
+                                            }
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onProgress(String s) {
+                                    Log.e( "Progress bar : " , "In Progress");
+                                }
+
+                                @Override
+                                public void onStart() {
+                                    Log.e("Start with output : ","IN START");
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    Log.e("Start with output : ","IN Finish");
+                                }
+                            });
+                        }
+                        else if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 && (mdbstartitemcontainer.get(0).
+                                getItem2().equalsIgnoreCase("image")))
+                        {
+                            updatestartframes(mdbstartitemcontainer);
+                            updatemiddleframes(mdbmiddleitemcontainer.get(0));
+                        }
+
+                    }
+
+                } catch (FFmpegCommandAlreadyRunningException e) {
+                    // do nothing for now
+                }
+
             }
-        }).start();
+        });
+    } catch (FFmpegNotSupportedException e) {
+        //showUnsupportedExceptionDialog();
+    } catch (Exception e) {
+        Log.d("tagg", "EXception no controlada : " + e);
+    }
+
+         xdata.getinstance().saveSetting("mediadatainsertion","0");
+        }
+    }).start();
 
         return START_NOT_STICKY;
     }
 
+    private File gettempfileforhash() {
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File file=new File(config.hashesdir, fileName+".framemd5");
+
+        File destinationDir=new File(config.hashesdir);
+        try {
+
+            if (!destinationDir.exists())
+                destinationDir.mkdirs();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return file;
+    }
 
     public void updatestartframes(ArrayList<dbitemcontainer> mdbstartitemcontainer)
     {
