@@ -556,6 +556,38 @@ public class databasemanager {
         return  mitemlist;
     }
 
+    public ArrayList<metadatahash> getmediametadatabyfilename(String filename) {
+        ArrayList<metadatahash> mitemlist=new ArrayList<>();
+        String localkey=getlocalkeybyfilename(filename);
+        if(! localkey.trim().isEmpty())
+        {
+            Cursor cur=null;
+            try {
+                lock.lock();
+                String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey+"'";
+                cur = mDb.rawQuery(sql, null);
+                if (cur.moveToFirst())
+                {
+                    do{
+                        mitemlist.add(new metadatahash(cur.getString(cur.getColumnIndex("id")),cur.getString(cur.getColumnIndex("blockchain")),
+                                cur.getString(cur.getColumnIndex("valuehash")),cur.getString(cur.getColumnIndex("hashmethod")),
+                                cur.getString(cur.getColumnIndex("localkey")),cur.getString(cur.getColumnIndex("recordate")),
+                                cur.getString(cur.getColumnIndex("metricdata")),cur.getString(cur.getColumnIndex("rsequenceno")),
+                                cur.getString(cur.getColumnIndex("sequencehash")),cur.getString(cur.getColumnIndex("sequenceno")),
+                                cur.getString(cur.getColumnIndex("serverdate")),cur.getString(cur.getColumnIndex("sequencedevicedate")),
+                                cur.getString(cur.getColumnIndex("videostarttransactionid")),cur.getString(cur.getColumnIndex("serverdictionaryhash")), cur.getString(cur.getColumnIndex("metahash"))));
+                    }while(cur.moveToNext());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                lock.unlock();
+            }
+        }
+        return  mitemlist;
+    }
+
     public String[] getlocalkeybylocation(String filename) {
         String[] localkey ={"",""};
         Cursor cur=null;
@@ -624,6 +656,28 @@ public class databasemanager {
         return  localkey;
     }
 
+    public String getlocalkeybyfilename(String location) {
+        String localkey="";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT localkey FROM tbstartvideoinfo where location = '"+location+"'";
+            cur = mDb.rawQuery(sql, null);
+            if (cur.moveToFirst())
+            {
+                do{
+                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
+                }while(cur.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  localkey;
+    }
+
     public String getcompletedate(String firsthash){
 
         String completedevicedate = "";
@@ -645,6 +699,22 @@ public class databasemanager {
             lock.unlock();
         }
         return  completedevicedate;
+    }
+
+    public Cursor getstartmediainfo(String filename){
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tbstartvideoinfo where location = '"+filename+"'";
+            cur = mDb.rawQuery(sql, null);
+            return cur;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return null;
     }
 
     public void updatemedialocationname(String localkey,String location) {

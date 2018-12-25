@@ -1155,7 +1155,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 //setmetricesadapter();
                 //syncmediadatabase();
                 firsthashvalue = true;
-                madapterclick.onItemClicked(null,1);
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,1);
 
             }
         },100);
