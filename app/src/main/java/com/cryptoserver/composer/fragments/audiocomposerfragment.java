@@ -953,6 +953,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
 
             ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(recordedmediafile));
+            //grabber.setFrameRate(44100);
             grabber.start();
             videomodel lastframehash=null;
             int totalframes=grabber.getLengthInAudioFrames();
