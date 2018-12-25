@@ -1736,7 +1736,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 sync = "",sync_date = "",action_type="",apirequestdevicedate = "",videostartdevicedate= "",devicetimeoffset = "",
                 videocompletedevicedate = "";
 
-        String synchdefaultversion = "1", synchstatus = "inprogress", synchcompletedate = "", synchlastsequence = "";
+        String synchdefaultversion = "1", synchstatus = config.sync_inprogress, synchcompletedate = "", synchlastsequence = "";
 
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
 
@@ -2115,7 +2115,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         String valuehash = object.getString("hashvalue");
 
                         updatecompletehashvalue(localkey,valuehash);
-                        updatedatasyncdate(localkey,common.getCurrentDate(),"complete");
+                        updatedatasyncdate(localkey,common.getCurrentDate(),config.sync_complete);
 
                         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
                             Intent i = new Intent(config.composer_service_getencryptionmetadata);

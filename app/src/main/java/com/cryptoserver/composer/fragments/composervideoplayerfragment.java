@@ -12,6 +12,7 @@ import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
@@ -35,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
@@ -47,7 +47,6 @@ import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
-import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
@@ -56,6 +55,11 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.bytedeco.javacpp.avutil;
@@ -64,10 +68,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -147,7 +155,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist = new ArrayList<>();
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-
+    FFmpeg ffmpeg;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -253,6 +261,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     transaction.commit();
                 }
 
+                loadffmpegbinary();
                 setupVideoPlayer();
                 gethash();
 
@@ -945,6 +954,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 wavevisualizerslist.clear();
             }
 
+          //executeframegrabcommand();
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -954,6 +964,127 @@ public class composervideoplayerfragment extends basefragment implements Surface
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void loadffmpegbinary() {
+        try {
+            if (ffmpeg == null) {
+                Log.d("tagg", "ffmpeg : era nulo");
+
+                ffmpeg = FFmpeg.getInstance(getContext());
+            }
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                @Override
+                public void onFailure() {
+                    // showUnsupportedExceptionDialog();
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.d("tagg", "ffmpeg : correct Loaded");
+                }
+            });
+        } catch (FFmpegNotSupportedException e) {
+            //showUnsupportedExceptionDialog();
+        } catch (Exception e) {
+            Log.d("tagg", "EXception no controlada : " + e);
+        }
+    }
+
+    /*final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+    final String fileName = "FRAME_" + timeStamp + ".md4";
+    File folder = Environment.getExternalStorageDirectory();
+    String mfinalpath = folder.getPath() + File.separator;
+    String destinationpath = mfinalpath + fileName;
+
+    String[] complexcommand = { "-i", mediafilepath,"-f", "framemd5" ,destinationpath};
+    String[] complexcommand = { "-i", mediafilepath,"-f", "framehash" ,destinationpath};
+    execffmpegbinary(complexcommand);*/
+
+    private void executeframegrabcommand() {
+
+        try {
+            ffmpegvideoframegrabber videograbber = new ffmpegvideoframegrabber(mediafilepath);
+            videograbber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
+            String format = common.getvideoformat(mediafilepath);
+            if (format.equalsIgnoreCase("mp4"))
+                videograbber.setFormat(format);
+
+            videograbber.start();
+            for (int i = 0; i < videograbber.getLengthInFrames(); i++) {
+                Frame frame = videograbber.grabImage();
+                if (frame == null)
+                    break;
+
+                ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
+                byte[] byteData = new byte[buffer.remaining()];
+                buffer.get(byteData);
+                String keyValue = common.getkeyvalue(byteData, keytype);
+                Log.e("Md5 "+i+" ",keyValue);
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+        /*final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        final String fileName = "FRAME_" + timeStamp + ".framemd5";
+        File folder = Environment.getExternalStorageDirectory();
+        String destinationpath = folder.getPath() + File.separator + fileName;
+
+        String[] complexcommand = { "-i", mediafilepath,"-f", "framemd5" ,destinationpath};
+        execffmpegbinary(complexcommand);*/
+
+        final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        final String fileName = "FRAME_" + timeStamp + ".framemd5";
+        File folder = Environment.getExternalStorageDirectory();
+        String mfinalpath = folder.getPath() + File.separator;
+        String destinationpath = mfinalpath + fileName;
+
+        String[] complexcommand = {"-i", mediafilepath,"-f", "framemd5" ,destinationpath};
+        //String[] complexcommand = {"-i", mediafilepath,"-f", "framehash" ,destinationpath};
+        execffmpegbinary(complexcommand);
+    }
+
+
+    private void execffmpegbinary(final String[] command) {
+        try {
+            ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                @Override
+                public void onFailure(String s) {
+                    Log.e("Failure with output : ","IN onFailure");
+                }
+
+                @Override
+                public void onSuccess(String s) {
+                    Log.e("SUCCESS with output : ",s);
+
+                }
+
+                @Override
+                public void onProgress(String s) {
+                    Log.e( "Progress bar : " , "In Progress");
+
+                }
+
+                @Override
+                public void onStart() {
+                    Log.e("Start with output : ","IN START");
+                    Log.d("tagg", "Started command : ffmpeg " + command);
+                    //progressdialog.showwaitingdialog(getContext());
+                }
+
+                @Override
+                public void onFinish() {
+                    Log.e("Start with output : ","IN Finish");
+
+
+                }
+            });
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            // do nothing for now
         }
     }
 
