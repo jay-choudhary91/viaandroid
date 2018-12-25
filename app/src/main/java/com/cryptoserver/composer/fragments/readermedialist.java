@@ -308,7 +308,8 @@ public class readermedialist extends basefragment {
                             MediaExtractor extractor = new MediaExtractor();
 
                             if(mediatype == 3 && (common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".jpg") ||
-                                    common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".png"))) {
+                                    common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".png") ||
+                                    common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".jpeg"))) {
                                 videoobj = new video();
                                 videoobj.setPath(file.getAbsolutePath());
                                 videoobj.setExtension(common.getvideoextension(file.getAbsolutePath()));
