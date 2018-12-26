@@ -188,6 +188,7 @@ public class insertmediadataservice extends Service {
 
                                                         if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
                                                         {
+                                                            Log.e("md5 "+count," "+keyValue);
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem8(keyValue);
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
