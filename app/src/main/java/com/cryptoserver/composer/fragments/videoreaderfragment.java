@@ -1450,23 +1450,29 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
         if(player != null){
 
-            applicationviavideocomposer.getactivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
-            setupVisualizerFxAndUI();
-            // Make sure the visualizer is enabled only when you actually want to
-            // receive data, and
-            // when it makes sense to receive data.
-            mVisualizer.setEnabled(true);
-            // When the stream ends, we don't need to collect any more data. We
-            // don't do this in
-            // setupVisualizerFxAndUI because we likely want to have more,
-            // non-Visualizer related code
-            // in this callback.
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        public void onCompletion(MediaPlayer mediaPlayer) {
-                            //mVisualizer.setEnabled(false);
-                        }
-                    });
-            //mMediaPlayer.start();
+            try {
+                applicationviavideocomposer.getactivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+                setupVisualizerFxAndUI();
+                // Make sure the visualizer is enabled only when you actually want to
+                // receive data, and
+                // when it makes sense to receive data.
+                mVisualizer.setEnabled(true);
+                // When the stream ends, we don't need to collect any more data. We
+                // don't do this in
+                // setupVisualizerFxAndUI because we likely want to have more,
+                // non-Visualizer related code
+                // in this callback.
+                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        //mVisualizer.setEnabled(false);
+                    }
+                });
+                //mMediaPlayer.start();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
         }
     }
 

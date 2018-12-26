@@ -14,6 +14,7 @@ import com.cryptoserver.composer.netutils.xapipostjson;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.taskresult;
+import com.cryptoserver.composer.utils.xdata;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
@@ -80,6 +81,7 @@ public class readmediadataservice extends Service {
 
                 if(mediapath != null && (! mediapath.isEmpty()))
                 {
+                    xdata.getinstance().saveSetting(config.ismediadataservicerunning,"1");
                     File file=new File(mediapath);
                     if(file.exists())
                     {
@@ -218,6 +220,9 @@ public class readmediadataservice extends Service {
                         }
                         else if(status.equalsIgnoreCase(config.sync_inprogress))
                         {
+                            if(lastframe.isEmpty())
+                                lastframe="0";
+
                             int framestart=Integer.parseInt(lastframe);
                             framestart=framestart+1;
                             int maxframes=framestart+50;
@@ -268,7 +273,7 @@ public class readmediadataservice extends Service {
                     Log.e("Found hash ",""+hashvalue);
                     String framecount="",mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
                             remainingframes="50",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",
-                    mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "";
+                    mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "",mediacompleteddate="";
 
                     try {
                         JSONObject object = (JSONObject) response.getData();
@@ -291,6 +296,7 @@ public class readmediadataservice extends Service {
                             String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("videotoken")?object.getString("videotoken"):"");
                             mediatitle = (object.has("videotitle")?object.getString("videotitle"):"");
+                            mediacompleteddate = (object.has("videocompleteddate")?object.getString("videocompleteddate"):"");
 
                             actiontype = config.type_videoframes_get;
                         }
@@ -316,6 +322,7 @@ public class readmediadataservice extends Service {
                             String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("audiotoken")?object.getString("audiotoken"):"");
                             mediatitle = (object.has("audioname")?object.getString("audioname"):"");
+                            mediacompleteddate = (object.has("audiocompleteddate")?object.getString("audiocompleteddate"):"");
 
                             actiontype = config.type_audioframes_get;
                         }
@@ -341,8 +348,9 @@ public class readmediadataservice extends Service {
                             mediatypeshortname = (object.has("imagetypeshortname")?object.getString("imagetypeshortname"):"");
                             String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("imagetoken")?object.getString("imagetoken"):"");
+                            //mediacompleteddate = (object.has("imagecompleteddate")?object.getString("imagecompleteddate"):"");
                             //mediatitle = (object.has("imagename")?object.getString("imagename"):"");
-
+                            mediacompleteddate="xyz";
                             actiontype = config.type_imageframes_get;
                         }
 
@@ -358,27 +366,32 @@ public class readmediadataservice extends Service {
                             e.printStackTrace();
                         }
 
-                        String syncdate[] = common.getcurrentdatewithtimezone();
+                        if((! mediacompleteddate.trim().isEmpty() && (! mediacompleteddate.equalsIgnoreCase("null"))))
+                        {
+                            String syncdate[] = common.getcurrentdatewithtimezone();
+                            mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
+                                    mediatoken,mediakey,"",syncdate[0] , actiontype,
+                                    "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
+                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"");
 
-
-                        /*if(mediatitle.isEmpty() || mediatitle.equalsIgnoreCase("null"))
-                                  mediatitle = medianotfoundtitle;*/
-
-
-                        mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
-                                mediatoken,mediakey,"",syncdate[0] , actiontype,
-                                "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
-                                firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"");
-
+                            int framestart=1;int maxframes=50;
+                            getvideoframes(mediatoken,framestart,maxframes);
+                        }
+                        else
+                        {
+                            String syncdate[] = common.getcurrentdatewithtimezone();
+                            mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
+                                    mediatoken,mediakey,"",syncdate[0] , actiontype,
+                                    "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
+                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"");
+                            sendbroadcastreader();
+                        }
 
                         try {
                             mdbhelper.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
-                       int framestart=1;int maxframes=50;
-                       getvideoframes(mediatoken,framestart,maxframes);
 
                     }catch (Exception e)
                     {
@@ -592,6 +605,7 @@ public class readmediadataservice extends Service {
     //* Broadcast for notify reader controller to get data from database
     public void sendbroadcastreader()
     {
+        xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
         Intent i = new Intent(config.reader_service_getmetadata);
         sendBroadcast(i);
     }
@@ -603,6 +617,10 @@ public class readmediadataservice extends Service {
         {
             String hashvalue =  framearraylist.get(xapicounter).getkeyvalue();
             xapigetmediainfo(hashvalue);
+        }
+        else
+        {
+            xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
         }
     }
 
@@ -616,5 +634,11 @@ public class readmediadataservice extends Service {
             api.add(key,argvalue);
         }
         api.execute();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
     }
 }

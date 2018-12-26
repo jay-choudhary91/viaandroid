@@ -3,6 +3,7 @@ package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -119,6 +120,15 @@ public class readermedialist extends basefragment {
        // recyrviewvideolist.addOnItemTouchListener(onTouchListener);
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) applicationviavideocomposer.getactivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public void onStart() {
@@ -127,12 +137,15 @@ public class readermedialist extends basefragment {
         coredatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(arrayvideolist.size() != 0)
-                    resetmedialist();
+                try {
+                    if(arrayvideolist.size() != 0)
+                        resetmedialist();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         };
-
-
         getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);
     }
 
@@ -412,7 +425,6 @@ public class readermedialist extends basefragment {
                         arrayvideolist.get(i).setMediastatus(status);
                         arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
                     }
-                    arrayvideolist.get(i).setIscheck(false);
                 }
             }
         }
@@ -420,28 +432,21 @@ public class readermedialist extends basefragment {
         if (arrayvideolist != null && arrayvideolist.size() > 0) {
             for (int i = 0; i < arrayvideolist.size(); i++) {
                 String status = arrayvideolist.get(i).getMediastatus();
-                if (status.equalsIgnoreCase(config.sync_complete)) {
 
-                } else if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending) ) {
-
-                    arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
-
+                if (! arrayvideolist.get(i).isIscheck())
+                {
                     if (!common.isnetworkconnected(applicationviavideocomposer.getappcontext()))
-                            arrayvideolist.get(i).setMediastatus(config.sync_offline);
+                        arrayvideolist.get(i).setMediastatus(config.sync_offline);
 
-                    if (!arrayvideolist.get(i).isIscheck() && ! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_offline))
-                    {
-                        initialdate = new Date();
+                    if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending)
+                            || (status.equalsIgnoreCase(config.sync_offline) && common.isnetworkconnected(applicationviavideocomposer.getappcontext()))) {
+
+                        arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
                         arrayvideolist.get(i).setIscheck(true);
+                        initialdate = new Date();
                         findmediafirsthash(arrayvideolist.get(i).getPath(),arrayvideolist.get(i).getmimetype());
                         break;
                     }
-                } else if (status.equalsIgnoreCase(config.sync_offline) && common.isnetworkconnected(applicationviavideocomposer.getappcontext())) {
-                    arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
-                    arrayvideolist.get(i).setIscheck(true);
-                    initialdate = new Date();
-                    findmediafirsthash(arrayvideolist.get(i).getPath(),arrayvideolist.get(i).getmimetype());
-                    break;
                 }
             }
         }
@@ -455,17 +460,8 @@ public class readermedialist extends basefragment {
         keytype = common.checkkey();
         String firsthash="";
 
-         if(mimetype.startsWith("video/")){
-
-
-         }else if(mimetype.startsWith("audio/")){
-
-
-         }else if(mimetype.startsWith("image/")){
-
-             firsthash= md5.fileToMD5(mediafilepath);
-
-         }
+        if(mimetype.startsWith("image/"))
+            firsthash= md5.fileToMD5(mediafilepath);
 
         Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
         intent.putExtra("firsthash", firsthash);
@@ -483,7 +479,6 @@ public class readermedialist extends basefragment {
         {
             intent.putExtra("mediatype","image");
         }
-
         applicationviavideocomposer.getactivity().startService(intent);
     }
 
@@ -494,11 +489,14 @@ public class readermedialist extends basefragment {
             @Override
             public void run() {
 
-                    Date currentdate=new Date();
-                    int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
-                    if(seconddifference > 20)
-                    {
-                        resetmedialist();
+                Date currentdate=new Date();
+                int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
+                if(arrayvideolist != null && seconddifference > 20)
+                {
+                    for (int i = 0; i < arrayvideolist.size(); i++)
+                        arrayvideolist.get(i).setIscheck(false);
+
+                    resetmedialist();
                 }
                 myhandler.postDelayed(this, 10000);
             }

@@ -126,7 +126,7 @@ public class insertmediadataservice extends Service {
                                         }
                                     }
 
-                                    xdata.getinstance().saveSetting("mediadatainsertion","1");
+                                    xdata.getinstance().saveSetting(config.ismediadataservicerunning,"1");
                                     File file=new File(mediapath);
                                     if(file.exists())
                                     {
@@ -278,7 +278,7 @@ public class insertmediadataservice extends Service {
         Log.d("tagg", "EXception no controlada : " + e);
     }
 
-         xdata.getinstance().saveSetting("mediadatainsertion","0");
+         xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
         }
     }).start();
 
@@ -399,6 +399,6 @@ public class insertmediadataservice extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        xdata.getinstance().saveSetting("mediadatainsertion","0");
+        xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
     }
 }
