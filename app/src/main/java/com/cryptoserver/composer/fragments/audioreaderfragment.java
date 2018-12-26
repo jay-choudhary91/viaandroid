@@ -1,24 +1,19 @@
 package com.cryptoserver.composer.fragments;
 
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -42,7 +37,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
@@ -56,11 +50,9 @@ import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
-import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
@@ -68,7 +60,6 @@ import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -90,8 +81,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -324,7 +313,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             setmetriceshashesdata();
             setupaudiodata();
-            sethashesdata();
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 getmediametadata();
@@ -879,67 +867,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 (R.color.videoPlayer_header));
     }
 
-    public void sethashesdata() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(audiourl));
-                    grabber.start();
-
-                    for(int i = 0; i<grabber.getLengthInAudioFrames(); i++){
-                        Frame frame = grabber.grabAudio();
-                        if (frame == null)
-                            break;
-
-                        /*ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
-                        java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                        bb.asShortBuffer().put(shortbuff);
-
-                        byte[] byteData = bb.array();
-                        int length =  byteData.length;
-                        String keyValue= getkeyvalue(byteData);
-                        Log.e("hashesaudio ",""+keyValue);*/
-
-                        Buffer outputBuffer = frame.samples[0];
-                        ByteBuffer byteBuffer=null;
-                        if (outputBuffer instanceof ByteBuffer) {
-                            byteBuffer = (ByteBuffer) outputBuffer;
-                        } else if (outputBuffer instanceof CharBuffer) {
-                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity());
-                            byteBuffer.asCharBuffer().put((CharBuffer) outputBuffer);
-                        } else if (outputBuffer instanceof ShortBuffer) {
-                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 2);
-                            byteBuffer.asShortBuffer().put((ShortBuffer) outputBuffer);
-                        } else if (outputBuffer instanceof IntBuffer) {
-                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
-                            byteBuffer.asIntBuffer().put((IntBuffer) outputBuffer);
-                        } else if (outputBuffer instanceof LongBuffer) {
-                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
-                            byteBuffer.asLongBuffer().put((LongBuffer) outputBuffer);
-                        } else if (outputBuffer instanceof FloatBuffer) {
-                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 4);
-                            byteBuffer.asFloatBuffer().put((FloatBuffer) outputBuffer);
-                        } else if (outputBuffer instanceof DoubleBuffer) {
-                            byteBuffer = ByteBuffer.allocate(outputBuffer.capacity() * 8);
-                            byteBuffer.asDoubleBuffer().put((DoubleBuffer) outputBuffer);
-                        }
-
-                        byte[] byteData = new byte[byteBuffer.remaining()];
-                        byteBuffer.get(byteData);
-                        String keyValue= getkeyvalue(byteData);
-                        Log.e("hashes "+i+": ",""+keyValue);
-                    }
-                    grabber.flush();
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }).start();
-    }
 
     public void setmetriceshashesdata()
     {
@@ -1010,6 +937,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 fragmentgraphic.getencryptiondata(metricmainarraylist.get(i).getHashmethod(),metricmainarraylist.get(i).getVideostarttransactionid(),
                         metricmainarraylist.get(i).getValuehash(),metricmainarraylist.get(i).getMetahash());
 
+                selectedmetrics=selectedmetrics+"\n";
                 for(int j=0;j<metricItemArraylist.size();j++)
                 {
                     selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
@@ -1446,48 +1374,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
-    }
-
-    public String findmediafirsthash()
-    {
-        String firsthash="";
-        try {
-            ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(audiourl));
-            grabber.start();
-            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
-                Frame frame = grabber.grabAudio();
-                if (frame == null)
-                    break;
-
-                if(i > 9)
-                {
-                    ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
-                    java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                    bb.asShortBuffer().put(shortbuff);
-                    byte[] byteData = bb.array();
-                    firsthash = common.getkeyvalue(byteData, keytype);
-                    break;
-                }
-            }
-            grabber.flush();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-            if(! firsthash.trim().isEmpty())
-            {
-                Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
-                intent.putExtra("firsthash", firsthash);
-                intent.putExtra("mediapath", audiourl);
-                intent.putExtra("keytype",keytype);
-                intent.putExtra("mediatype","audio");
-                applicationviavideocomposer.getactivity().startService(intent);
-            }
-        }*/
-        return firsthash;
     }
 
     private void initAudio() {

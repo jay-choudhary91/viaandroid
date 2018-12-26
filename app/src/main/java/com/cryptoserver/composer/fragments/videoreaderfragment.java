@@ -1,10 +1,6 @@
 package com.cryptoserver.composer.fragments;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +13,6 @@ import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -53,21 +48,15 @@ import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
-import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.android.gms.maps.model.LatLng;
-
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -79,8 +68,6 @@ import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by devesh on 21/8/18.
@@ -886,48 +873,7 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void findmediafirsthash()
     {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediafilepath);
-                    grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-                    String format = common.getvideoformat(mediafilepath);
-                    if (format.equalsIgnoreCase("mp4"))
-                        grabber.setFormat(format);
 
-                    grabber.start();
-                    for (int i = 0; i < grabber.getLengthInFrames(); i++) {
-                        Frame frame = grabber.grabImage();
-                        if (frame == null)
-                            break;
-
-                        ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
-                        byte[] byteData = new byte[buffer.remaining()];
-                        buffer.get(byteData);
-                        firsthash = common.getkeyvalue(byteData, keytype);
-                        break;
-                    }
-                    grabber.flush();
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-                /*if(! firsthash.trim().isEmpty())
-                {
-                    Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
-                    intent.putExtra("firsthash", firsthash);
-                    intent.putExtra("mediapath", mediafilepath);
-                    intent.putExtra("keytype",keytype);
-                    intent.putExtra("mediatype","video");
-                    applicationviavideocomposer.getactivity().startService(intent);
-                }*/
-
-                getframesbitmap();
-
-            }
-        }).start();
     }
 
     @Override
@@ -1441,9 +1387,6 @@ public class videoreaderfragment extends basefragment implements SurfaceHolder.C
 
                     }
                 }
-
-
-                selectedmetrics=selectedmetrics+"\n";
 
                 if((! selectedmetrics.toString().trim().isEmpty()))
                 {
