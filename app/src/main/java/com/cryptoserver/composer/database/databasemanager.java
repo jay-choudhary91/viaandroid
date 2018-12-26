@@ -778,7 +778,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tbstartvideoinfo where firsthash = '"+filename+"'";
+            String sql = "SELECT * FROM tbstartvideoinfo where location = '"+filename+"'";
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();

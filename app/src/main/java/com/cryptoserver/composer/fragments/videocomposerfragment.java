@@ -72,7 +72,6 @@ import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.services.insertmediadataservice;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.camerautil;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -81,9 +80,6 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.gson.Gson;
-
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -1530,85 +1526,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     public void setvideoadapter() {
-        int count = 1;
-        currentframenumber=0;
-        selectedhashes="";
-        final ArrayList<videomodel> mvideoframes =new ArrayList<>();
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mhashesitems.clear();
-                mhashesadapter.notifyDataSetChanged();
-            }
-        });
 
-        currentframenumber = currentframenumber + frameduration;
-        try
-        {
-            ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(lastrecordedvideo.getAbsolutePath());
-            grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-            String format= common.getvideoformat(lastrecordedvideo.getAbsolutePath());
-            if(format.equalsIgnoreCase("mp4"))
-                grabber.setFormat(format);
-
-            grabber.start();
-            videomodel lastframehash=null;
-            for(int i = 0; i<grabber.getLengthInFrames(); i++){
-                Frame frame = grabber.grabImage();
-                if (frame == null)
-                    break;
-
-                if(isvideorecording)
-                    break;
-
-                ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-                byte[] byteData = new byte[buffer.remaining()];
-                buffer.get(byteData);
-                String keyValue= getkeyvalue(byteData);
-                if (count == currentframenumber) {
-                    lastframehash=null;
-                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-                    currentframenumber = currentframenumber + frameduration;
-                }
-                else
-                {
-                      lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                }
-                count++;
-            }
-
-            if(lastframehash != null)
-                mvideoframes.add(lastframehash);
-
-            if(mvideoframes.size() > 1)
-                mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
-
-            grabber.flush();
-
-            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mhashesitems.clear();
-                    mhashesadapter.notifyDataSetChanged();
-
-                    if(! isvideorecording)
-                    {
-                        for(int i=0;i<mvideoframes.size();i++)
-                            mhashesitems.add(mvideoframes.get(i));
-
-                        mhashesadapter.notifyDataSetChanged();
-                        recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-                    }
-
-
-
-
-                }
-            });
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)

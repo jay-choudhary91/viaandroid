@@ -2,10 +2,8 @@ package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -36,19 +34,13 @@ import com.cryptoserver.composer.adapter.adaptermedialist;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
-import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.video;
-import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
-
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,7 +48,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

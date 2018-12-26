@@ -42,16 +42,10 @@ import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
-
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -465,55 +459,10 @@ public class readermedialist extends basefragment {
 
      if(mimetype.startsWith("video/")){
 
-         try {
-             ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediafilepath);
-             grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-             String format = common.getvideoformat(mediafilepath);
-             if (format.equalsIgnoreCase("mp4"))
-                 grabber.setFormat(format);
 
-             grabber.start();
-             for (int i = 0; i < grabber.getLengthInFrames(); i++) {
-                 Frame frame = grabber.grabImage();
-                 if (frame == null)
-                     break;
-
-                 ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
-                 byte[] byteData = new byte[buffer.remaining()];
-                 buffer.get(byteData);
-                 firsthash = common.getkeyvalue(byteData, keytype);
-                 break;
-             }
-             grabber.flush();
-         }catch (Exception e)
-         {
-             e.printStackTrace();
-         }
      }else if(mimetype.startsWith("audio/")){
 
-         try {
-             ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(mediafilepath));
-             grabber.start();
-             for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
-                 Frame frame = grabber.grabAudio();
-                 if (frame == null)
-                     break;
 
-                 if(i > 9)
-                 {
-                     ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
-                     java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                     bb.asShortBuffer().put(shortbuff);
-                     byte[] byteData = bb.array();
-                     firsthash = common.getkeyvalue(byteData, keytype);
-                     break;
-                 }
-             }
-             grabber.flush();
-         }catch (Exception e)
-         {
-             e.printStackTrace();
-         }
      }else if(mimetype.startsWith("image/")){
 
          firsthash= md5.fileToMD5(mediafilepath);
@@ -526,7 +475,6 @@ public class readermedialist extends basefragment {
             intent.putExtra("firsthash", firsthash);
             intent.putExtra("mediapath", mediafilepath);
             intent.putExtra("keytype", keytype);
-            intent.putExtra("mediatitle",common.getfilename(mediafilepath) );
             if(mimetype.startsWith("video"))
             {
                 intent.putExtra("mediatype","video");

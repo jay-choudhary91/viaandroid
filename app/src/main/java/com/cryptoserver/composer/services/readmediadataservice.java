@@ -7,27 +7,24 @@ import android.database.Cursor;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.netutils.xapipostjson;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
-import com.cryptoserver.composer.utils.md5;
-import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.taskresult;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,7 +39,7 @@ public class readmediadataservice extends Service {
     ArrayList<videomodel> framearraylist =new ArrayList<>();
     String mediapath="",firsthash="",mediatype="",actiontype = "",medianotfoundtitle = "";
     int xapicounter = 0,maximumframechecklimit=30;
-
+    FFmpeg ffmpeg;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -53,150 +50,187 @@ public class readmediadataservice extends Service {
     public int onStartCommand(final Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        new Thread(new Runnable() {
+    new Thread(new Runnable() {
+        @Override
+        public void run()
+        {
+
+        try
+        {
+
+        if (ffmpeg == null) {
+            Log.d("ffmpeg", "ffmpeg : is loading..");
+            ffmpeg = FFmpeg.getInstance(getApplicationContext());
+        }
+        ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
             @Override
-            public void run() {
-                try {
-                    xapicounter = 0;
-                    framearraylist =new ArrayList<>();
-                    mediapath = intent.getExtras().getString("mediapath");
-                    String keytype = intent.getExtras().getString("keytype");
-                    firsthash = intent.getExtras().getString("firsthash");
-                    medianotfoundtitle = intent.getExtras().getString("mediatitle");
-                    mediatype = intent.getExtras().getString("mediatype");
-                    if(mediapath != null && (! mediapath.isEmpty()))
+            public void onFailure() {
+                // showUnsupportedExceptionDialog();
+            }
+
+            @Override
+            public void onSuccess() {
+
+                xapicounter = 0;
+                framearraylist =new ArrayList<>();
+                mediapath = intent.getExtras().getString("mediapath");
+                final String keytype = intent.getExtras().getString("keytype");
+                firsthash = intent.getExtras().getString("firsthash");
+                mediatype = intent.getExtras().getString("mediatype");
+
+                medianotfoundtitle=common.getfilename(mediapath);
+                if(mediapath != null && (! mediapath.isEmpty()))
+                {
+                    File file=new File(mediapath);
+                    if(file.exists())
                     {
-                        File file=new File(mediapath);
-                        if(file.exists())
+                        databasemanager mdbhelper=null;
+                        if (mdbhelper == null) {
+                            mdbhelper = new databasemanager(getApplicationContext());
+                            mdbhelper.createDatabase();
+                        }
+
+                        try {
+                            mdbhelper.open();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        Cursor cursor=mdbhelper.getmediainfobyfilename(common.getfilename(mediapath));
+                        String status="",mediatoken="",remainingframes="10",lastframe="1";
+                        if(cursor != null && cursor.getCount() > 0)
                         {
-                            databasemanager mdbhelper=null;
-                            if (mdbhelper == null) {
-                                mdbhelper = new databasemanager(getApplicationContext());
-                                mdbhelper.createDatabase();
-                            }
-
-                            try {
-                                mdbhelper.open();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            Cursor cursor=mdbhelper.getmediainfobyfirsthash(firsthash);
-                            String status="",mediatoken="",remainingframes="10",lastframe="1";
-                            if(cursor != null && cursor.getCount() > 0)
+                            if (cursor.moveToFirst())
                             {
-                                if (cursor.moveToFirst())
-                                {
-                                    do{
-                                        status = "" + cursor.getString(cursor.getColumnIndex("status"));
-                                        mediatoken = "" + cursor.getString(cursor.getColumnIndex("token"));
-                                        remainingframes = "" + cursor.getString(cursor.getColumnIndex("remainingframes"));
-                                        lastframe = "" + cursor.getString(cursor.getColumnIndex("lastframe"));
-                                    }while(cursor.moveToNext());
-                                }
-                            }
-
-                            try {
-                                mdbhelper.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            if(status.trim().isEmpty())
-                            {
-                                int count = 1;
-                                try
-                                {
-                                    if(mediatype.equalsIgnoreCase("video"))
-                                    {
-                                        ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediapath);
-                                        grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-                                        String format= common.getvideoformat(mediapath);
-                                        if(format.equalsIgnoreCase("mp4"))
-                                            grabber.setFormat(format);
-
-                                        grabber.start();
-                                        for(int i = 0; i<grabber.getLengthInFrames(); i++){
-                                            Frame frame = grabber.grabImage();
-                                            if (frame == null)
-                                                break;
-
-                                            ByteBuffer buffer= ((ByteBuffer) frame.image[0].position(0));
-                                            byte[] byteData = new byte[buffer.remaining()];
-                                            buffer.get(byteData);
-                                            String keyValue= common.getkeyvalue(byteData,keytype);
-
-                                            framearraylist.add(new videomodel("Frame ", keytype,count,keyValue));
-                                            if(count >= maximumframechecklimit)
-                                                break;
-
-                                            count++;
-                                        }
-                                        grabber.flush();
-                                    }
-                                    else if(mediatype.equalsIgnoreCase("audio"))
-                                    {
-                                        try {
-                                            ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(mediapath));
-                                            grabber.start();
-                                            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
-                                                Frame frame = grabber.grabAudio();
-                                                if (frame == null)
-                                                    break;
-
-                                                if(count > 10)
-                                                {
-                                                    ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
-                                                    java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                                                    bb.asShortBuffer().put(shortbuff);
-                                                    byte[] byteData = bb.array();
-                                                    String hash = common.getkeyvalue(byteData, keytype);
-
-                                                    framearraylist.add(new videomodel("Frame ", keytype,count,hash));
-                                                    if(count >= maximumframechecklimit)
-                                                        break;
-                                                }
-                                                count++;
-                                            }
-                                            grabber.flush();
-                                        }catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                    else if(mediatype.equalsIgnoreCase("image"))
-                                    {
-                                        framearraylist.add(new videomodel("Frame ", keytype,count,firsthash));
-                                    }
-                                }catch (Exception e)
-                                {
-                                    e.printStackTrace();
-                                }
-                                runxapicounter();
-                            }
-                            else if(status.equalsIgnoreCase(config.sync_inprogress))
-                            {
-                                int framestart=Integer.parseInt(lastframe);
-                                framestart=framestart+1;
-                                int maxframes=framestart+10;
-                                getvideoframes(mediatoken,framestart,maxframes);
-                            }
-                            else if(status.equalsIgnoreCase(config.sync_complete))
-                            {
-                                sendbroadcastreader();
+                                do{
+                                    status = "" + cursor.getString(cursor.getColumnIndex("status"));
+                                    mediatoken = "" + cursor.getString(cursor.getColumnIndex("token"));
+                                    remainingframes = "" + cursor.getString(cursor.getColumnIndex("remainingframes"));
+                                    lastframe = "" + cursor.getString(cursor.getColumnIndex("lastframe"));
+                                    firsthash = "" + cursor.getString(cursor.getColumnIndex("firsthash"));
+                                }while(cursor.moveToNext());
                             }
                         }
+
+                        try {
+                            mdbhelper.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        if(status.trim().isEmpty())
+                        {
+                            int count = 1;
+                            try
+                            {
+                                if(mediatype.equalsIgnoreCase("video") || mediatype.equalsIgnoreCase("audio"))
+                                {
+                                    final String destinationpath = common.gettempfileforhash().getAbsolutePath();
+                                    String[] complexcommand = {"-i", mediapath,"-f", "framemd5" ,destinationpath};
+
+                                    try {
+                                        ffmpeg.execute(complexcommand, new ExecuteBinaryResponseHandler() {
+                                            @Override
+                                            public void onFailure(String s) {
+                                                Log.e("Failure with output : ","IN onFailure");
+                                            }
+
+                                            @Override
+                                            public void onSuccess(String s) {
+                                                Log.e("SUCCESS with output : ",s);
+
+                                                BufferedReader br=null;
+                                                try {
+                                                    br = new BufferedReader(new FileReader(new File(destinationpath)));
+                                                    String line;
+                                                    while ((line = br.readLine()) != null)
+                                                    {
+                                                      if(line.trim().length() > 0)
+                                                      {
+                                                        String[] splitarray=line.split(",");
+                                                        if(splitarray.length > 5)
+                                                        {
+                                                           String hash=splitarray[splitarray.length-1];
+                                                           if(hash.trim().length() > 20)
+                                                           {
+                                                               if(framearraylist.size() == 0)
+                                                                   firsthash=hash.trim().toString();
+
+                                                              framearraylist.add(new videomodel("Frame ", keytype,framearraylist.size(),hash.trim().toString()));
+                                                              if(framearraylist.size() >= maximumframechecklimit)
+                                                                        break;
+                                                           }
+                                                         }
+                                                       }
+                                                    }
+                                                    runxapicounter();
+                                                }
+                                                catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                finally{
+                                                    try {
+                                                        if(br != null)
+                                                            br.close();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onProgress(String s) {
+                                                Log.e( "Progress bar : " , "In Progress");
+                                            }
+
+                                            @Override
+                                            public void onStart() {
+                                                Log.e("Start with output : ","IN START");
+                                            }
+
+                                            @Override
+                                            public void onFinish() {
+                                                Log.e("Start with output : ","IN Finish");
+                                            }
+                                        });
+                                    }catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else if(mediatype.equalsIgnoreCase("image"))
+                                {
+                                    framearraylist.add(new videomodel("Frame ", keytype,count,firsthash));
+                                    runxapicounter();
+                                }
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if(status.equalsIgnoreCase(config.sync_inprogress))
+                        {
+                            int framestart=Integer.parseInt(lastframe);
+                            framestart=framestart+1;
+                            int maxframes=framestart+10;
+                            getvideoframes(mediatoken,framestart,maxframes);
+                        }
+                        else if(status.equalsIgnoreCase(config.sync_complete))
+                        {
+                            sendbroadcastreader();
+                        }
                     }
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
                 }
-
-
             }
-        }).start();
-        /**/
-        return START_NOT_STICKY;
+        });
+    }catch (Exception e)
+    {
+        e.printStackTrace();
+    }
+   }
+     }).start();
+
+      return START_NOT_STICKY;
     }
 
     public void xapigetmediainfo(final String hashvalue)

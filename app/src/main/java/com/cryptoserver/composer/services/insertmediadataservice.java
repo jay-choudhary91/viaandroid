@@ -1,25 +1,15 @@
 package com.cryptoserver.composer.services;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Environment;
 import android.os.IBinder;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
-import com.cryptoserver.composer.utils.ffmpegvideoframegrabber;
-import com.cryptoserver.composer.utils.progressdialog;
-import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.xdata;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
@@ -29,23 +19,13 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedExceptio
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by root on 21/5/18.
@@ -98,13 +78,13 @@ public class insertmediadataservice extends Service {
 
                     if(mediapath != null && (! mediapath.isEmpty()) && (! list1.trim().isEmpty()))
                     {
-                        final String destinationpath = gettempfileforhash().getAbsolutePath();
-                        String[] complexcommand = {"-i", mediapath,"-f", "framemd5" ,destinationpath};
-
                         if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 && (mdbstartitemcontainer.get(0).
                                 getItem2().equalsIgnoreCase("video") || mdbstartitemcontainer.get(0).
                                 getItem2().equalsIgnoreCase("audio")))
                         {
+                            final String destinationpath = common.gettempfileforhash().getAbsolutePath();
+                            String[] complexcommand = {"-i", mediapath,"-f", "framemd5" ,destinationpath};
+
                             ffmpeg.execute(complexcommand, new ExecuteBinaryResponseHandler() {
                                 @Override
                                 public void onFailure(String s) {
@@ -116,14 +96,11 @@ public class insertmediadataservice extends Service {
                                     Log.e("SUCCESS with output : ",s);
 
                                     ArrayList<String> hasharray=new ArrayList<>();
-                                    StringBuilder text = new StringBuilder();
                                     BufferedReader br=null;
                                     try {
                                         br = new BufferedReader(new FileReader(new File(destinationpath)));
                                         String line;
                                         while ((line = br.readLine()) != null) {
-                                            text.append(line);
-
                                             if(line.trim().length() > 0)
                                             {
                                                 String[] splitarray=line.split(",");
@@ -134,9 +111,8 @@ public class insertmediadataservice extends Service {
                                                         hasharray.add(hash.trim().toString());
                                                 }
                                             }
-                                            Log.i("Test", "text : "+text+" : end");
-                                            text.append('\n');
-                                        } }
+                                        }
+                                    }
                                     catch (IOException e) {
                                         e.printStackTrace();
                                     }
@@ -165,7 +141,6 @@ public class insertmediadataservice extends Service {
                                         {
                                             if(mdbstartitemcontainer.size() > 0)
                                             {
-                                                ffmpegaudioframegrabber audiograbber = null;
                                                 videomodel lastframehash=null;
                                                 for(int i = 0; i<hasharray.size(); i++){
 
@@ -307,23 +282,6 @@ public class insertmediadataservice extends Service {
     }).start();
 
         return START_NOT_STICKY;
-    }
-
-    private File gettempfileforhash() {
-        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.hashesdir, fileName+".framemd5");
-
-        File destinationDir=new File(config.hashesdir);
-        try {
-
-            if (!destinationDir.exists())
-                destinationDir.mkdirs();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return file;
     }
 
     public void updatestartframes(ArrayList<dbitemcontainer> mdbstartitemcontainer)

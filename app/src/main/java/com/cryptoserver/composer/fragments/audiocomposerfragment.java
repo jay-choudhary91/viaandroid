@@ -2,14 +2,11 @@ package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -27,7 +24,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
@@ -52,17 +48,14 @@ import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.services.insertmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.ffmpegaudioframegrabber;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.progressdialog;
-import com.cryptoserver.composer.utils.randomstring;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.gson.Gson;
 
-import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -77,7 +70,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -937,71 +929,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void setaudiohashes()
     {
-        try {
 
-            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mhashesitems.clear();
-                    mhashesadapter.notifyDataSetChanged();
-                }
-            });
-            selectedhashes="";
-            int count = 1;
-            currentframenumber=0;
-            currentframenumber = currentframenumber + frameduration;
-
-
-            ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(recordedmediafile));
-            //grabber.setFrameRate(44100);
-            grabber.start();
-            videomodel lastframehash=null;
-            int totalframes=grabber.getLengthInAudioFrames();
-            for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
-                Frame frame = grabber.grabAudio();
-                if (frame == null)
-                    break;
-
-                if(isaudiorecording)
-                    break;
-
-                ShortBuffer shortbuff= ((ShortBuffer) frame.samples[0].position(0));
-                java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 2);
-                bb.asShortBuffer().put(shortbuff);
-                byte[] byteData = bb.array();
-                String keyValue= getkeyvalue(byteData);
-
-                if (count == currentframenumber) {
-                    lastframehash=null;
-                    mvideoframes.add(new videomodel("Frame ", keytype, currentframenumber,keyValue));
-                    if(! selectedhashes.trim().isEmpty())
-                        selectedhashes=selectedhashes+"\n";
-
-                    selectedhashes=selectedhashes+mvideoframes.get(mvideoframes.size()-1).gettitle()
-                            +" "+ mvideoframes.get(mvideoframes.size()-1).getcurrentframenumber()+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeytype()+":"+" "+
-                            mvideoframes.get(mvideoframes.size()-1).getkeyvalue();
-
-                    currentframenumber = currentframenumber + frameduration;
-                }
-                else
-                {
-                    lastframehash=new videomodel("Last Frame ",keytype,count,keyValue);
-                }
-                count++;
-            }
-
-            if(lastframehash != null && (! isaudiorecording))
-            {
-                selectedhashes=selectedhashes+"\n"+lastframehash.gettitle()+" "+ lastframehash.getcurrentframenumber()+" "+
-                        lastframehash.getkeytype()+":"+" "+lastframehash.getkeyvalue();
-            }
-            grabber.flush();
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 
     public String getkeyvalue(byte[] data)
