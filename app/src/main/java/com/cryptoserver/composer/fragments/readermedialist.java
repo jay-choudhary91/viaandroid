@@ -394,25 +394,24 @@ public class readermedialist extends basefragment {
         {
             for (int i = 0; i < arrayvideolist.size(); i++) {
                 //String status = arrayvideolist.get(i).getMediastatus();
-
-                if(! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_complete)) {
-
+                if(! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_complete))
+                {
                     String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
                     String status = getdata[0];
 
                     if (getdata[0].isEmpty() || getdata[0].equalsIgnoreCase("null")) {
                         arrayvideolist.get(i).setMediastatus(config.sync_pending);
-                    } else if (status.equalsIgnoreCase(config.sync_inprogress)) {
+                    }
+                    else if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending)
+                                || status.equalsIgnoreCase(config.sync_notfound))
+                    {
                         arrayvideolist.get(i).setMediastatus(status);
-                    } else if (status.equalsIgnoreCase(config.sync_pending)) {
-                        arrayvideolist.get(i).setMediastatus(status);
-                    } else if (status.equalsIgnoreCase(config.sync_notfound)) {
-                        arrayvideolist.get(i).setMediastatus(status);
-                    } else if (status.equalsIgnoreCase(config.sync_complete)) {
+                    }
+                    else if (status.equalsIgnoreCase(config.sync_complete))
+                    {
                         arrayvideolist.get(i).setMediastatus(status);
                         arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
                     }
-
                     arrayvideolist.get(i).setIscheck(false);
                 }
             }
@@ -453,42 +452,39 @@ public class readermedialist extends basefragment {
 
     public void findmediafirsthash(String mediafilepath,String mimetype)
     {
-            keytype = common.checkkey();
-            String firsthash="";
+        keytype = common.checkkey();
+        String firsthash="";
 
-     if(mimetype.startsWith("video/")){
-
-
-     }else if(mimetype.startsWith("audio/")){
+         if(mimetype.startsWith("video/")){
 
 
-     }else if(mimetype.startsWith("image/")){
+         }else if(mimetype.startsWith("audio/")){
 
-         firsthash= md5.fileToMD5(mediafilepath);
 
-     }
+         }else if(mimetype.startsWith("image/")){
 
-        if(! firsthash.trim().isEmpty())
+             firsthash= md5.fileToMD5(mediafilepath);
+
+         }
+
+        Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
+        intent.putExtra("firsthash", firsthash);
+        intent.putExtra("mediapath", mediafilepath);
+        intent.putExtra("keytype", keytype);
+        if(mimetype.startsWith("video"))
         {
-            Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
-            intent.putExtra("firsthash", firsthash);
-            intent.putExtra("mediapath", mediafilepath);
-            intent.putExtra("keytype", keytype);
-            if(mimetype.startsWith("video"))
-            {
-                intent.putExtra("mediatype","video");
-            }
-            else if(mimetype.startsWith("audio"))
-            {
-                intent.putExtra("mediatype","audio");
-            }
-            else if(mimetype.startsWith("image"))
-            {
-                intent.putExtra("mediatype","image");
-            }
-
-            applicationviavideocomposer.getactivity().startService(intent);
+            intent.putExtra("mediatype","video");
         }
+        else if(mimetype.startsWith("audio"))
+        {
+            intent.putExtra("mediatype","audio");
+        }
+        else if(mimetype.startsWith("image"))
+        {
+            intent.putExtra("mediatype","image");
+        }
+
+        applicationviavideocomposer.getactivity().startService(intent);
     }
 
     public void recallservice(){
@@ -500,7 +496,7 @@ public class readermedialist extends basefragment {
 
                     Date currentdate=new Date();
                     int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
-                    if(seconddifference > 15)
+                    if(seconddifference > 20)
                     {
                         resetmedialist();
                 }

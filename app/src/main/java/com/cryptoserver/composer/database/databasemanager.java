@@ -93,13 +93,38 @@ public class databasemanager {
             values.put("framecount",""+framecount);
             values.put("sync_status",""+sync_status);
 
-            long l=mDb.insert("tbstartvideoinfo", null, values);
+            long l=mDb.insert("tblstartmediainfo", null, values);
             Log.e("Id ",""+l);
 
         } catch (SQLException mSQLException) {
             Log.e(TAG, "gettestdata >>" + mSQLException.toString());
             throw mSQLException;
         } finally {
+            lock.unlock();
+        }
+    }
+
+    public void updatestartvideoinfo(String header,String type,String location,String localkey,
+                                     String token,String videokey,String sync,String date , String action_type,
+                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
+                                     String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
+                                     String status,String remainingframes,String lastframe,String framecount,String sync_status)
+    {
+        try {
+            lock.lock();
+            String query="update tblstartmediainfo set header='"+ header +"',type = '"+type +"',localkey='"+ localkey +"',token = '"+token +"'" +
+                    ",videokey='"+ videokey +"',sync = '"+sync +"',sync_date='"+ date +"',action_type = '"+action_type +"'," +
+                    "apirequestdevicedate='"+ apirequestdevicedate +"',videostartdevicedate = '"+videostartdevicedate +"',devicetimeoffset='"+
+                    devicetimeoffset +"',videocompletedevicedate = '"+videocompletedevicedate +"'," +
+                    "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
+                    "status = '"+status +"'," +
+                    "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
+                    "sync_status = '"+sync_status +"' where location='"+location+"'";
+            mDb.execSQL(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
             lock.unlock();
         }
     }
@@ -146,7 +171,7 @@ public class databasemanager {
         try {
             lock.lock();
 
-            mDb.execSQL("update tbstartvideoinfo set header='"+ header +"',videocompletedevicedate = '"+
+            mDb.execSQL("update tblstartmediainfo set header='"+ header +"',videocompletedevicedate = '"+
                     completedate +"' where localkey='"+localkey+"'");;
 
             if (mCur != null)
@@ -355,7 +380,7 @@ public class databasemanager {
             values.put("videocompletedevicedate",  videocompletedevicedate);
             values.put("videostarttransactionid",  videostarttransactionid);
 
-            long l=mDb.insert("tbstartvideoinfo", null, values);
+            long l=mDb.insert("tblstartmediainfo", null, values);
             Log.e("Id ",""+l);
 
         } catch (SQLException mSQLException) {
@@ -372,7 +397,7 @@ public class databasemanager {
         try {
             lock.lock();
 
-            String sql = "SELECT * FROM tbstartvideoinfo where sync_date = 0 ";
+            String sql = "SELECT * FROM tblstartmediainfo where sync_date = 0 ";
             //String sql = "SELECT * FROM tblmetadata";
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
@@ -432,7 +457,7 @@ public class databasemanager {
         try {
             lock.lock();
 
-            String sql = "SELECT * FROM tbstartvideoinfo where sync_date = 0 ";
+            String sql = "SELECT * FROM tblstartmediainfo where sync_date = 0 ";
             //String sql = "SELECT * FROM tblmetadata";
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
@@ -452,7 +477,7 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set videokey='"+videokey+"', token='"+ token+"' , videostarttransactionid='"+transactionid+"'where id='"+videoid+"'");
+            mDb.execSQL("update tblstartmediainfo set videokey='"+videokey+"', token='"+ token+"' , videostarttransactionid='"+transactionid+"'where id='"+videoid+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -469,7 +494,7 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set sync_date ='"+syncdate+"',sync_status ='"+syncstatus+"' where localkey='"+localkey+"'");
+            mDb.execSQL("update tblstartmediainfo set sync_date ='"+syncdate+"',sync_status ='"+syncstatus+"' where localkey='"+localkey+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -485,7 +510,7 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set sync='"+sync+"' where id='"+selectedid+"'");
+            mDb.execSQL("update tblstartmediainfo set sync='"+sync+"' where id='"+selectedid+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -593,7 +618,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT  sync_status, videostarttransactionid FROM tbstartvideoinfo where location = '"+filename+"'";
+            String sql = "SELECT  sync_status, videostarttransactionid FROM tblstartmediainfo where location = '"+filename+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
@@ -616,7 +641,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT  status, videostarttransactionid FROM tbstartvideoinfo where location = '"+filename+"'";
+            String sql = "SELECT  status, videostarttransactionid FROM tblstartmediainfo where location = '"+filename+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
@@ -639,7 +664,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT localkey FROM tbstartvideoinfo where firsthash = '"+firsthash+"'";
+            String sql = "SELECT localkey FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
@@ -661,7 +686,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT localkey FROM tbstartvideoinfo where location = '"+location+"'";
+            String sql = "SELECT localkey FROM tblstartmediainfo where location = '"+location+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
@@ -684,7 +709,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT videocompletedevicedate FROM tbstartvideoinfo where firsthash = '"+firsthash+"'";
+            String sql = "SELECT videocompletedevicedate FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
@@ -705,7 +730,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tbstartvideoinfo where location = '"+filename+"'";
+            String sql = "SELECT * FROM tblstartmediainfo where location = '"+filename+"'";
             cur = mDb.rawQuery(sql, null);
             return cur;
         } catch (Exception e) {
@@ -717,10 +742,10 @@ public class databasemanager {
         return null;
     }
 
-    public void updatemedialocationname(String localkey,String location) {
+    public void updatemedialocationname(String starttransactionid,String location) {
         try {
             lock.lock();
-            mDb.execSQL("update tbstartvideoinfo set location ='"+location+"' where localkey='"+localkey+"'");
+            mDb.execSQL("update tblstartmediainfo set location ='"+location+"' where videostarttransactionid='"+starttransactionid+"'");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -745,7 +770,7 @@ public class databasemanager {
     public void deletefromstartvideoinfobylocalkey(String localkey) {
         try {
             lock.lock();
-            mDb.execSQL("delete from tbstartvideoinfo where localkey='"+localkey+"'");
+            mDb.execSQL("delete from tblstartmediainfo where localkey='"+localkey+"'");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -762,7 +787,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tbstartvideoinfo where firsthash = '"+firsthash+"'";
+            String sql = "SELECT * FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -778,7 +803,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tbstartvideoinfo where location = '"+filename+"'";
+            String sql = "SELECT * FROM tblstartmediainfo where location = '"+filename+"'";
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -812,8 +837,8 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql="update tbstartvideoinfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where token='"+videotoken+"'";
-            Log.e("Sql tbstartvideoinfo ",sql);
+            String sql="update tblstartmediainfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where token='"+videotoken+"'";
+            Log.e("Sql tblstartmediainfo ",sql);
             mDb.execSQL(sql);
         } catch (Exception e) {
             e.printStackTrace();

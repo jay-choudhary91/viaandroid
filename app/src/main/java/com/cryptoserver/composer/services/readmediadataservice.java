@@ -37,7 +37,7 @@ import java.util.Set;
 public class readmediadataservice extends Service {
 
     ArrayList<videomodel> framearraylist =new ArrayList<>();
-    String mediapath="",firsthash="",mediatype="",actiontype = "",medianotfoundtitle = "";
+    String mediapath="",firsthash="",mediatype="",actiontype = "";
     int xapicounter = 0,maximumframechecklimit=30;
     FFmpeg ffmpeg;
 
@@ -78,7 +78,6 @@ public class readmediadataservice extends Service {
                 firsthash = intent.getExtras().getString("firsthash");
                 mediatype = intent.getExtras().getString("mediatype");
 
-                medianotfoundtitle=common.getfilename(mediapath);
                 if(mediapath != null && (! mediapath.isEmpty()))
                 {
                     File file=new File(mediapath);
@@ -97,7 +96,7 @@ public class readmediadataservice extends Service {
                         }
 
                         Cursor cursor=mdbhelper.getmediainfobyfilename(common.getfilename(mediapath));
-                        String status="",mediatoken="",remainingframes="10",lastframe="1";
+                        String status="",mediatoken="",remainingframes="50",lastframe="1";
                         if(cursor != null && cursor.getCount() > 0)
                         {
                             if (cursor.moveToFirst())
@@ -110,6 +109,14 @@ public class readmediadataservice extends Service {
                                     firsthash = "" + cursor.getString(cursor.getColumnIndex("firsthash"));
                                 }while(cursor.moveToNext());
                             }
+                        }
+                        else
+                        {
+                            String syncdate[] = common.getcurrentdatewithtimezone();
+                            mdbhelper.insertstartvideoinfo(firsthash,mediatype,common.getfilename(mediapath),"",
+                                    "","","",syncdate[0]  , "",
+                                    "","","","","",
+                                    firsthash,"",config.sync_notfound,"","","","");
                         }
 
                         try {
@@ -151,7 +158,8 @@ public class readmediadataservice extends Service {
                                                         if(splitarray.length > 5)
                                                         {
                                                            String hash=splitarray[splitarray.length-1];
-                                                           if(hash.trim().length() > 20)
+                                                           if(hash.trim().length() > 20 && splitarray[0].equalsIgnoreCase("0")
+                                                                    && (! hash.trim().equalsIgnoreCase("c99a74c555371a433d121f551d6c6398")))
                                                            {
                                                                if(framearraylist.size() == 0)
                                                                    firsthash=hash.trim().toString();
@@ -212,7 +220,7 @@ public class readmediadataservice extends Service {
                         {
                             int framestart=Integer.parseInt(lastframe);
                             framestart=framestart+1;
-                            int maxframes=framestart+10;
+                            int maxframes=framestart+50;
                             getvideoframes(mediatoken,framestart,maxframes);
                         }
                         else if(status.equalsIgnoreCase(config.sync_complete))
@@ -259,7 +267,7 @@ public class readmediadataservice extends Service {
                 {
                     Log.e("Found hash ",""+hashvalue);
                     String framecount="",mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
-                            remainingframes="10",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",
+                            remainingframes="50",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",
                     mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "";
 
                     try {
@@ -333,7 +341,7 @@ public class readmediadataservice extends Service {
                             mediatypeshortname = (object.has("imagetypeshortname")?object.getString("imagetypeshortname"):"");
                             String savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("imagetoken")?object.getString("imagetoken"):"");
-                            mediatitle = (object.has("imagename")?object.getString("imagename"):"");
+                            //mediatitle = (object.has("imagename")?object.getString("imagename"):"");
 
                             actiontype = config.type_imageframes_get;
                         }
@@ -353,11 +361,11 @@ public class readmediadataservice extends Service {
                         String syncdate[] = common.getcurrentdatewithtimezone();
 
 
-                        if(mediatitle.isEmpty() || mediatitle.equalsIgnoreCase("null"))
-                                  mediatitle = medianotfoundtitle;
+                        /*if(mediatitle.isEmpty() || mediatitle.equalsIgnoreCase("null"))
+                                  mediatitle = medianotfoundtitle;*/
 
 
-                        mdbhelper.insertstartvideoinfo(firsthash,mediatypeshortname,mediatitle,mediaid,
+                        mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
                                 mediatoken,mediakey,"",syncdate[0] , actiontype,
                                 "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
                                 firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"");
@@ -369,7 +377,7 @@ public class readmediadataservice extends Service {
                             e.printStackTrace();
                         }
 
-                       int framestart=1;int maxframes=10;
+                       int framestart=1;int maxframes=50;
                        getvideoframes(mediatoken,framestart,maxframes);
 
                     }catch (Exception e)
@@ -540,7 +548,7 @@ public class readmediadataservice extends Service {
                             if(remainingframes > 0)
                             {
                                 int newframestart=maxframes+1;
-                                int newmaxframes=maxframes+10;
+                                int newmaxframes=maxframes+50;
                                 updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_inprogress);
                                 getvideoframes(mediatoken,newframestart,newmaxframes);
                             }
@@ -595,32 +603,6 @@ public class readmediadataservice extends Service {
         {
             String hashvalue =  framearraylist.get(xapicounter).getkeyvalue();
             xapigetmediainfo(hashvalue);
-        }else{
-
-
-            databasemanager mdbhelper=null;
-            if (mdbhelper == null) {
-                mdbhelper = new databasemanager(getApplicationContext());
-                mdbhelper.createDatabase();
-            }
-
-            try {
-                mdbhelper.open();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String syncdate[] = common.getcurrentdatewithtimezone();
-
-            mdbhelper.insertstartvideoinfo(firsthash,mediatype,medianotfoundtitle,"",
-                    "","","",syncdate[0]  , actiontype,
-                    "","","","","",
-                    firsthash,"",config.sync_notfound,"","","","");
-            try {
-                mdbhelper.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
