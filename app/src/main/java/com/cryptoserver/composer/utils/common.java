@@ -63,8 +63,6 @@ import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.models.graphicalmodel;
 import com.cryptoserver.composer.models.metricmodel;
 
-import org.bytedeco.javacpp.avutil;
-import org.bytedeco.javacv.Frame;
 import org.json.JSONArray;
 
 import java.io.BufferedReader;
@@ -671,64 +669,7 @@ public class common {
     public static String getmediafirstframehash(String mediafilepath,String type)
     {
         String firsthash="";
-        if(type.equalsIgnoreCase("video"))
-        {
-            try {
-                ffmpegvideoframegrabber grabber = new ffmpegvideoframegrabber(mediafilepath);
-                grabber.setPixelFormat(avutil.AV_PIX_FMT_RGB24);
-                String format = common.getvideoformat(mediafilepath);
-                if (format.equalsIgnoreCase("mp4"))
-                    grabber.setFormat(format);
 
-                grabber.start();
-                for (int i = 0; i < grabber.getLengthInFrames(); i++) {
-                    Frame frame = grabber.grabImage();
-                    if (frame == null)
-                        break;
-
-                    ByteBuffer buffer = ((ByteBuffer) frame.image[0].position(0));
-                    byte[] byteData = new byte[buffer.remaining()];
-                    buffer.get(byteData);
-                    firsthash = common.getkeyvalue(byteData, config.prefs_md5);
-                    break;
-                }
-                grabber.flush();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else if(type.equalsIgnoreCase("audio"))
-        {
-            try {
-                ffmpegaudioframegrabber grabber = new ffmpegaudioframegrabber(new File(mediafilepath));
-                grabber.start();
-                for(int i = 0; i<grabber.getLengthInAudioFrames(); i++) {
-                    Frame frame = grabber.grabAudio();
-                    if (frame == null)
-                        break;
-
-                    if(i > 9)
-                    {
-                        ShortBuffer shortbuff = ((ShortBuffer) frame.samples[0].position(0));
-                        java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(shortbuff.capacity() * 4);
-                        bb.asShortBuffer().put(shortbuff);
-                        byte[] byteData = bb.array();
-                        firsthash = common.getkeyvalue(byteData, config.prefs_md5);
-                        break;
-                    }
-
-                }
-                grabber.flush();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else if(type.equalsIgnoreCase("image"))
-        {
-            firsthash=md5.fileToMD5(mediafilepath);
-        }
         return firsthash;
     }
     public static String executeTop() {
@@ -2125,5 +2066,22 @@ public class common {
         Log.e("videoseconds  =  ",""+seconds);
 
         return ""+ minutes + ":" +seconds;
+    }
+
+    public static File gettempfileforhash() {
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File file=new File(config.hashesdir, fileName+".framemd5");
+
+        File destinationDir=new File(config.hashesdir);
+        try {
+
+            if (!destinationDir.exists())
+                destinationDir.mkdirs();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return file;
     }
 }
