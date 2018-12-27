@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -59,6 +61,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -591,7 +594,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
             mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
             if (mediafilepath != null && (!mediafilepath.isEmpty())) {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(mediafilepath));
+                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                        BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
+                player.setDataSource(applicationviavideocomposer.getactivity(), uri);
                 player.prepareAsync();
                 player.setOnPreparedListener(this);
                 player.setOnCompletionListener(this);
@@ -905,7 +910,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
             controller = new videocontrollerview(applicationviavideocomposer.getactivity(), mitemclick, isscrubbing);
             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            player.setDataSource(applicationviavideocomposer.getactivity(), Uri.parse(mediafilepath));
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
+            player.setDataSource(applicationviavideocomposer.getactivity(), uri);
             player.prepareAsync();
             player.setOnPreparedListener(this);
             player.setOnCompletionListener(this);
