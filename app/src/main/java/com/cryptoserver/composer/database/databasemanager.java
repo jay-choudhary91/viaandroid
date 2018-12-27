@@ -92,6 +92,7 @@ public class databasemanager {
             values.put("firsthash",""+firsthash);
             values.put("framecount",""+framecount);
             values.put("sync_status",""+sync_status);
+            values.put("completeddate","0");
 
             long l=mDb.insert("tblstartmediainfo", null, values);
             Log.e("Id ",""+l);
@@ -108,7 +109,7 @@ public class databasemanager {
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
                                      String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
-                                     String status,String remainingframes,String lastframe,String framecount,String sync_status)
+                                     String status,String remainingframes,String lastframe,String framecount,String sync_status,String completeddate)
     {
         try {
             lock.lock();
@@ -118,6 +119,7 @@ public class databasemanager {
                     devicetimeoffset +"',videocompletedevicedate = '"+videocompletedevicedate +"'," +
                     "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
                     "status = '"+status +"'," +
+                    "completeddate = '"+completeddate +"'," +
                     "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
                     "sync_status = '"+sync_status +"' where location='"+location+"'";
             mDb.execSQL(query);
@@ -636,6 +638,22 @@ public class databasemanager {
         return  localkey;
     }
 
+    public Cursor getallmediastartdata() {
+        String[] localkey ={"",""};
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tblstartmediainfo";
+            cur = mDb.rawQuery(sql, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return cur;
+    }
+
     public String[] getreaderlocalkeybylocation(String filename) {
         String[] localkey ={"",""};
         Cursor cur=null;
@@ -686,7 +704,7 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT localkey FROM tblstartmediainfo where location = '"+location+"'";
+            String sql = "SELECT * FROM tblstartmediainfo where location = '"+location+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
