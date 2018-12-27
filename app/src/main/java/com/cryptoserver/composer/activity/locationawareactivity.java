@@ -58,6 +58,8 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
+import com.cryptoserver.composer.fragments.bottombarrederfrag;
+import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.mediametadatainfo;
@@ -172,9 +174,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        registerallbroadcast();
-        getconnectionspeed();
-
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+        {
+            registerallbroadcast();
+            getconnectionspeed();
+        }
+        else
+        {
+            startmetrices();
+        }
     }
 
     @Override
@@ -613,26 +621,25 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     @Override
                     public void run() {
 
-                        getconnectionspeed();
+                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                        {
+                            getconnectionspeed();
+                            towerinfolist = gettowerinfo();
+                            for (int i = 0; i < metricitemarraylist.size(); i++) {
+                                if (metricitemarraylist.get(i).isSelected()) {
+                                    String value = metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
+                                    metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
 
-                        towerinfolist = gettowerinfo();
-
-                        for (int i = 0; i < metricitemarraylist.size(); i++) {
-                            if (metricitemarraylist.get(i).isSelected()) {
-                                String value = metric_read(metricitemarraylist.get(i).getMetricTrackKeyName());
-                                metricitemarraylist.get(i).setMetricTrackValue(metricitemarraylist.get(i).getMetricTrackValue());
-
-                                if (!value.trim().isEmpty())
-                                    metricitemarraylist.get(i).setMetricTrackValue(value);
-
+                                    if (!value.trim().isEmpty())
+                                        metricitemarraylist.get(i).setMetricTrackValue(value);
+                                }
                             }
-                        }
-
-                        if (getcurrentfragment() instanceof videocomposerfragment) {
-                            isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
-                            String datainsertion=xdata.getinstance().getSetting("mediadatainsertion");
-                            if (isrecording || (datainsertion.equalsIgnoreCase("1")))
-                                return;
+                            if (getcurrentfragment() instanceof videocomposerfragment) {
+                                isrecording = ((videocomposerfragment) getcurrentfragment()).isvideorecording();
+                                String datainsertion=xdata.getinstance().getSetting(config.ismediadataservicerunning);
+                                if (isrecording || (datainsertion.equalsIgnoreCase("1")))
+                                    return;
+                            }
                         }
 
                         dbtoxapiupdatecounter++;
@@ -642,6 +649,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             if(! isdatasyncing)
                                 syncmediadatabase();
                         }
+
                     }
                 }).start();
 
@@ -1251,10 +1259,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onResume() {
         super.onResume();
-
-        getallpermissions();
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+        {
+            getallpermissions();
+        }
     }
-
 
     @Override
     public void registerAccelerometerSensor() {
@@ -1682,42 +1691,50 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     public void syncmediadatabase()
     {
         Log.e("Method ","syncmediadatabase");
-        if(getcurrentfragment() instanceof videocomposerfragment)
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
-            boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
-            if(isrecording)
+            if(getcurrentfragment() instanceof videocomposerfragment)
             {
-                isdatasyncing=false;
-                return;
+                boolean isrecording=((videocomposerfragment) getcurrentfragment()).isvideorecording();
+                if(isrecording)
+                {
+                    isdatasyncing=false;
+                    return;
+                }
+
+                if(! common.isnetworkconnected(locationawareactivity.this))
+                {
+                    isdatasyncing=false;
+                    return;
+                }
+
             }
 
-            if(! common.isnetworkconnected(locationawareactivity.this))
-            {
-                isdatasyncing=false;
-                return;
+            if (mdbhelper == null) {
+                mdbhelper = new databasemanager(locationawareactivity.this);
+                mdbhelper.createDatabase();
             }
 
+            try {
+                mdbhelper.open();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            // Fetch data which are unsynced or sync = 0
+            unsyncedmediaitems = mdbhelper.fetchunsynceddata();
+            try {
+                mdbhelper.close();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+
         }
 
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(locationawareactivity.this);
-            mdbhelper.createDatabase();
-        }
-
-        try {
-            mdbhelper.open();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        // Fetch data which are unsynced or sync = 0
-        unsyncedmediaitems = mdbhelper.fetchunsynceddata();
-        try {
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
         syncupdationcounter=0;
         if(unsyncedmediaitems.size() > 0)
         {

@@ -596,7 +596,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    initAudio();
+                    //initAudio();
                     setaudiodata();
                 }
 
@@ -845,7 +845,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    initAudio();
+                    //initAudio();
                     fragmentgraphic.setvisualizerwave();
                     wavevisualizerslist.clear();
                     setaudiodata();

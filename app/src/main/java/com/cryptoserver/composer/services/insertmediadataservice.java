@@ -107,7 +107,8 @@ public class insertmediadataservice extends Service {
                                                 if(splitarray.length > 5)
                                                 {
                                                     String hash=splitarray[splitarray.length-1];
-                                                    if(hash.trim().length() > 20)
+                                                    if(hash.trim().length() > 20 && splitarray[0].equalsIgnoreCase("0")
+                                                            && (! hash.trim().equalsIgnoreCase("c99a74c555371a433d121f551d6c6398")))
                                                         hasharray.add(hash.trim().toString());
                                                 }
                                             }
@@ -125,7 +126,7 @@ public class insertmediadataservice extends Service {
                                         }
                                     }
 
-                                    xdata.getinstance().saveSetting("mediadatainsertion","1");
+                                    xdata.getinstance().saveSetting(config.ismediadataservicerunning,"1");
                                     File file=new File(mediapath);
                                     if(file.exists())
                                     {
@@ -187,6 +188,7 @@ public class insertmediadataservice extends Service {
 
                                                         if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
                                                         {
+                                                            Log.e("md5 "+count," "+keyValue);
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem8(keyValue);
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
@@ -277,7 +279,7 @@ public class insertmediadataservice extends Service {
         Log.d("tagg", "EXception no controlada : " + e);
     }
 
-         xdata.getinstance().saveSetting("mediadatainsertion","0");
+         xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
         }
     }).start();
 
@@ -398,6 +400,6 @@ public class insertmediadataservice extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        xdata.getinstance().saveSetting("mediadatainsertion","0");
+        xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
     }
 }

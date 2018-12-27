@@ -32,6 +32,7 @@ public class config {
     public static final String composer_service_savemetadata = "composer_service_savemetadata";
     public static final String reader_service_getmetadata = "reader_service_getmetadata";
     public static final String composer_service_getencryptionmetadata = "composer_service_getencryptionmetadata";
+    public static final String ismediadataservicerunning = "ismediadataservicerunning";
 
     public static final String build_flavor_reader = "reader";
     public static final String build_flavor_composer = "composer";

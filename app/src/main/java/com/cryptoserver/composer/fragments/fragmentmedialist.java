@@ -479,7 +479,7 @@ public class fragmentmedialist extends basefragment {
         return localkey;
     }
 
-    public String updatemedialocation(String localkey,String mediapath)
+    public void updatemedialocation(String transactionid,String mediapath)
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -494,7 +494,7 @@ public class fragmentmedialist extends basefragment {
             e.printStackTrace();
         }
         String filename=common.getfilename(mediapath);
-        mdbhelper.updatemedialocationname(localkey,filename);
+        mdbhelper.updatemedialocationname(transactionid,filename);
         try
         {
             mdbhelper.close();
@@ -502,7 +502,6 @@ public class fragmentmedialist extends basefragment {
         {
             e.printStackTrace();
         }
-        return localkey;
     }
 
     private void checkwritestoragepermission() {
@@ -750,10 +749,8 @@ public class fragmentmedialist extends basefragment {
                 @Override
                 public void run() {
                     adapter.notifyDataSetChanged();
-                    if(! videoobj.getLocalkey().isEmpty())
-                    {
-                        updatemedialocation(videoobj.getLocalkey(),videoobj.getPath());
-                    }
+                    if(! videoobj.getVideostarttransactionid().isEmpty())
+                        updatemedialocation(videoobj.getVideostarttransactionid(),videoobj.getPath());
                 }
             },500);
 
