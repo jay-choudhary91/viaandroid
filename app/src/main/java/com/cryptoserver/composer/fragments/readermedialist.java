@@ -315,7 +315,8 @@ public class readermedialist extends basefragment {
                             MediaExtractor extractor = new MediaExtractor();
 
                             if(mediatype == 3 && (common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".jpg") ||
-                                    common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".png"))) {
+                                    common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".png") ||
+                                    common.getvideoextension(file.getAbsolutePath()).equalsIgnoreCase(".jpeg"))) {
                                 videoobj = new video();
                                 videoobj.setPath(file.getAbsolutePath());
                                 videoobj.setExtension(common.getvideoextension(file.getAbsolutePath()));
@@ -808,7 +809,7 @@ public class readermedialist extends basefragment {
                         }
 
                         in.close();
-                        out.close();
+                         out.close();
 
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
@@ -909,6 +910,10 @@ public class readermedialist extends basefragment {
 
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+
+            }
             if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_GRANTED  &&  ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.RECORD_AUDIO) ==
                     PackageManager.PERMISSION_GRANTED ) {
@@ -929,8 +934,6 @@ public class readermedialist extends basefragment {
             opengallery();
         }
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -293,7 +293,7 @@ public class fragmentmedialist extends basefragment {
                             MediaExtractor extractor = new MediaExtractor();
                             try {
 
-                                if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png"))
+                                if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png") || videoobj.getPath().contains(".jpeg"))
                                 {
                                     videoobj.setmimetype("image/");
                                     String[] getdata = getlocalkey(common.getfilename(videoobj.getPath()));
@@ -773,7 +773,7 @@ public class fragmentmedialist extends basefragment {
 
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
                 composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
-                videoplayercomposerfragment.setdata(videoobj.getPath());
+                //videoplayercomposerfragment.setdata(videoobj.getPath());
                 gethelper().replaceFragment(videoplayercomposerfragment, false, true);
             }
 

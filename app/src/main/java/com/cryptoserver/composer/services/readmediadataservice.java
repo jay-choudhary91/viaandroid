@@ -472,7 +472,7 @@ public class readmediadataservice extends Service {
                                     String meta = (object.has("meta")?object.getString("meta"):"");
                                     String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
                                     String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                    String metahash = (object.has("videoframeservermetahashvalue")?object.getString("videoframeservermetahashvalue"):"");
+                                    String metahash = (object.has("videoframedevicemetahashvalue")?object.getString("videoframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("videoframeservermetahashmethod")?object.getString("videoframeservermetahashmethod"):"");
 
                                     meta=common.refactordegreequotesformat(meta);
@@ -503,7 +503,7 @@ public class readmediadataservice extends Service {
                                     String meta = (object.has("meta")?object.getString("meta"):"");
                                     String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
                                     String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                    String metahash = (object.has("audioframeservermetahashvalue")?object.getString("audioframeservermetahashvalue"):"");
+                                    String metahash = (object.has("audioframedevicemetahashvalue")?object.getString("audioframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("audioframeservermetahashmethod")?object.getString("audioframeservermetahashmethod"):"");
 
                                     meta=common.refactordegreequotesformat(meta);
@@ -533,7 +533,7 @@ public class readmediadataservice extends Service {
                                     String meta = (object.has("meta")?object.getString("meta"):"");
                                     String hashvalue = (object.has("hashvalue")?object.getString("hashvalue"):"");
                                     String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
-                                    String metahash = (object.has("imageframeservermetahashvalue")?object.getString("imageframeservermetahashvalue"):"");
+                                    String metahash = (object.has("imageframedevicemetahashvalue")?object.getString("imageframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("imageframeservermetahashmethod")?object.getString("imageframeservermetahashmethod"):"");
 
                                     if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
