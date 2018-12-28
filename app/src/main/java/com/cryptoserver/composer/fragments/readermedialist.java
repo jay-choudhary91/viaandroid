@@ -103,7 +103,6 @@ public class readermedialist extends basefragment {
     @Override
     public void onStop() {
         super.onStop();
-        applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
        // isinbackground=true;
     }
 
@@ -133,20 +132,6 @@ public class readermedialist extends basefragment {
     @Override
     public void onStart() {
         super.onStart();
-        IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
-        coredatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                try {
-                    if(arrayvideolist.size() != 0)
-                        resetmedialist();
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        };
-        getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);
     }
 
     @Override
@@ -166,28 +151,12 @@ public class readermedialist extends basefragment {
             itemDecor.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.devidercolor));
             recyrviewvideolist.addItemDecoration(itemDecor);
 
-
-           /* onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
-            onTouchListener.setSwipeOptionViews(R.id.btn_edit).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
-                    new RecyclerTouchListener.OnSwipeOptionsClickListener() {
-                        @Override
-                        public void onSwipeOptionClicked(int viewID, int position) {
-                            arrayvideolist.get(position).setSelected(true);
-                            adapter.notifyDataSetChanged();
-                            Log.e("selected Position = " ,""+ position);
-                        }
-                    });*/
-            //launchbottombarfragment();
-
-            if (common.getstoragedeniedpermissions().isEmpty()) {
-                // All permissions are granted
+            if (common.getstoragedeniedpermissions().isEmpty())
                 getVideoList();
-            }
 
             initialdate = new Date();
-
+            recallservice();
         }
-
         return rootview;
     }
 
@@ -198,27 +167,7 @@ public class readermedialist extends basefragment {
     @Override
     public void onPause() {
         super.onPause();
-        //recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
     }
-
-    /*@Override
-    public void onHeaderBtnClick(int btnid) {
-        super.onHeaderBtnClick(btnid);
-        switch (btnid) {
-          *//*  case R.id.img_share_icon:
-                if(VIDEO_URL != null && (! VIDEO_URL.isEmpty()))
-                    common.sharevideo(getActivity(),VIDEO_URL);
-                break;*//*
-
-            case R.id.img_setting:
-              //  destroyvideoplayer();
-                fragmentsettings fragmatriclist = new fragmentsettings();
-                gethelper().replaceFragment(fragmatriclist, false, true);
-                break;
-        }
-    }*/
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -281,14 +230,6 @@ public class readermedialist extends basefragment {
 
     public void getVideoList()
     {
-        /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                arrayvideolist.clear();
-                adapter.notifyDataSetChanged();
-            }
-        });
-*/
         new Thread(new Runnable() {
             @Override
             public void run()
@@ -394,7 +335,6 @@ public class readermedialist extends basefragment {
                         });
                         setmediaadapter();
                         resetmedialist();
-                        recallservice();
                     }
                 });
             }
@@ -411,6 +351,7 @@ public class readermedialist extends basefragment {
                 {
                     String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
                     String status = getdata[0];
+                    String localkey = getdata[2];
 
                     if (getdata[0].isEmpty() || getdata[0].equalsIgnoreCase("null")) {
                         arrayvideolist.get(i).setMediastatus(config.sync_pending);
@@ -447,95 +388,36 @@ public class readermedialist extends basefragment {
                                 || status.equalsIgnoreCase(config.sync_notfound))
                     {
                         arrayvideolist.get(i).setMediastatus(status);
+                        arrayvideolist.get(i).setLocalkey(status);
                     }
                     else if (status.equalsIgnoreCase(config.sync_complete))
                     {
                         arrayvideolist.get(i).setMediastatus(status);
+                        arrayvideolist.get(i).setLocalkey(status);
                         arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
                     }
                 }
             }
         }
 
-        /*if (arrayvideolist != null && arrayvideolist.size() > 0) {
-            for (int i = 0; i < arrayvideolist.size(); i++) {
-                String status = arrayvideolist.get(i).getMediastatus();
-
-                if (! arrayvideolist.get(i).isIscheck())
-                {
-                    if (!common.isnetworkconnected(applicationviavideocomposer.getappcontext()))
-                        arrayvideolist.get(i).setMediastatus(config.sync_offline);
-
-                    if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending)
-                            || (status.equalsIgnoreCase(config.sync_offline) && common.isnetworkconnected(applicationviavideocomposer.getappcontext()))) {
-
-                        arrayvideolist.get(i).setMediastatus(config.sync_inprogress);
-                        arrayvideolist.get(i).setIscheck(true);
-                        initialdate = new Date();
-                        findmediafirsthash(arrayvideolist.get(i).getPath(),arrayvideolist.get(i).getmimetype());
-                        break;
-                    }
-                }
-            }
-        }*/
-
-       adapter.notifyDataSetChanged();
-    }
-
-
-    public void findmediafirsthash(String mediafilepath,String mimetype)
-    {
-        keytype = common.checkkey();
-        String firsthash="";
-
-        if(mimetype.startsWith("image/"))
-            firsthash= md5.fileToMD5(mediafilepath);
-
-        Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
-        intent.putExtra("firsthash", firsthash);
-        intent.putExtra("mediapath", mediafilepath);
-        intent.putExtra("keytype", keytype);
-        if(mimetype.startsWith("video"))
-        {
-            intent.putExtra("mediatype","video");
-        }
-        else if(mimetype.startsWith("audio"))
-        {
-            intent.putExtra("mediatype","audio");
-        }
-        else if(mimetype.startsWith("image"))
-        {
-            intent.putExtra("mediatype","image");
-        }
-        applicationviavideocomposer.getactivity().startService(intent);
+        if(adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     public void recallservice(){
-
         myhandler =new Handler();
         myrunnable = new Runnable() {
             @Override
             public void run() {
-
-                Date currentdate=new Date();
-                int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
-                if(arrayvideolist != null && seconddifference > 20)
-                {
-                    for (int i = 0; i < arrayvideolist.size(); i++)
-                        arrayvideolist.get(i).setIscheck(false);
-
-                    resetmedialist();
-                }
-                myhandler.postDelayed(this, 10000);
+                resetmedialist();
+                myhandler.postDelayed(this, 5000);
             }
         };
         myhandler.post(myrunnable);
-
     }
 
     public String[] getlocalkey(String filename)
     {
-        String localkey="";
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
@@ -587,7 +469,6 @@ public class readermedialist extends basefragment {
 
     public void setmediaadapter()
     {
-
         Log.e("arraylistsize",""+arrayvideolist.size());
         adapter = new adapterreadermedialist(getActivity(),arrayvideolist, new adapteritemclick() {
             @Override
@@ -598,7 +479,6 @@ public class readermedialist extends basefragment {
                 video videoobj=(video)object;
                 setAdapter(videoobj,type);
             }
-
         });
         recyrviewvideolist.setAdapter(adapter);
     }
@@ -673,15 +553,9 @@ public class readermedialist extends basefragment {
                 gethelper().replaceFragment(audiotabfrag, false, true);
 
             }else if(videoobj.getmimetype().startsWith("video/")){
-
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
-
-              /*  launchbottombarfragment();*/
-
-
                 videoreaderfragment readervideofragment=new videoreaderfragment();
                 gethelper().replaceFragment(readervideofragment, false, true);
-
             }
 
         }
@@ -705,9 +579,7 @@ public class readermedialist extends basefragment {
                                 type="video";
                             }
 
-                            String firsthash=common.getmediafirstframehash(videoobj.getPath(),type);
-                            if(! firsthash.trim().isEmpty())
-                                deletemediainfo(firsthash);
+                            deletemediainfo(videoobj.getPath(),videoobj.getLocalkey());
 
                             if (file.delete()) {
                                 System.out.println("file Deleted :" + videoobj.getPath());
@@ -728,7 +600,7 @@ public class readermedialist extends basefragment {
                 }).show();
     }
 
-    public String deletemediainfo(String firsthash)
+    public String deletemediainfo(String filepath,String localkey)
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -742,13 +614,11 @@ public class readermedialist extends basefragment {
         {
             e.printStackTrace();
         }
-        String localkey=mdbhelper.getlocalkeybyfirsthash(firsthash);
-        if(! localkey.trim().isEmpty())
-        {
-            mdbhelper.deletefrommetadatabylocalkey(localkey);
-            mdbhelper.deletefromstartvideoinfobylocalkey(localkey);
-        }
 
+        if(! localkey.trim().isEmpty())
+            mdbhelper.deletefrommetadatabylocalkey(localkey);
+
+        mdbhelper.deletefromstartvideoinfobyfilename(common.getfilename(filepath));
         try
         {
             mdbhelper.close();
@@ -869,24 +739,6 @@ public class readermedialist extends basefragment {
             ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
         }
     }
-
-    public void launchbottombarfragment()
-    {
-        bottombarrederfrag fragbottombar=new bottombarrederfrag();
-        fragbottombar.setData(new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-                requestpermissions();
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        });
-        gethelper().replaceFragment(fragbottombar, false, true);
-    }
-
 
     @Override
     public void onHeaderBtnClick(int btnid) {

@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -99,7 +100,7 @@ public class readmediadataservice extends Service {
                         }
 
                         Cursor cursor=mdbhelper.getmediainfobyfilename(common.getfilename(mediapath));
-                        String status="",mediatoken="",remainingframes="50",lastframe="1",completeddate = "";
+                        String status="",mediatoken="",remainingframes="50",lastframe="1",completeddate = "",localkey="";
                         if(cursor != null && cursor.getCount() > 0)
                         {
                             if (cursor.moveToFirst())
@@ -110,6 +111,8 @@ public class readmediadataservice extends Service {
                                     remainingframes = "" + cursor.getString(cursor.getColumnIndex("remainingframes"));
                                     lastframe = "" + cursor.getString(cursor.getColumnIndex("lastframe"));
                                     firsthash = "" + cursor.getString(cursor.getColumnIndex("firsthash"));
+                                    completeddate = "" + cursor.getString(cursor.getColumnIndex("completeddate"));
+                                    localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
                                     completeddate = "" + cursor.getString(cursor.getColumnIndex("completeddate"));
                                 }while(cursor.moveToNext());
                             }
@@ -122,92 +125,146 @@ public class readmediadataservice extends Service {
                         }
 
                         if(status.trim().isEmpty() || status.equalsIgnoreCase(config.sync_pending) ||
-                                status.equalsIgnoreCase(config.sync_inprogress))
+                                mediatoken.trim().isEmpty() || completeddate.equalsIgnoreCase("null"))
                         {
                             int count = 1;
                             try
                             {
                                 if(mediatype.equalsIgnoreCase("video") || mediatype.equalsIgnoreCase("audio"))
                                 {
-                                    final String destinationpath = common.gettempfileforhash().getAbsolutePath();
-                                    String[] complexcommand = {"-i", mediapath,"-f", "framemd5" ,destinationpath};
+                                    if(common.ishashfileexist(mediapath))
+                                    {
+                                        BufferedReader br=null;
+                                        try {
+                                            String destinationpath=common.getexisthashfilepath(mediapath);
+                                            if(destinationpath.trim().isEmpty())
+                                                destinationpath = common.gettempfileforhash().getAbsolutePath();
 
-                                    try {
-                                        ffmpeg.execute(complexcommand, new ExecuteBinaryResponseHandler() {
-                                            @Override
-                                            public void onFailure(String s) {
-                                                Log.e("Failure with output : ","IN onFailure");
-                                            }
-
-                                            @Override
-                                            public void onSuccess(String s) {
-                                                Log.e("SUCCESS with output : ",s);
-
-                                                BufferedReader br=null;
-                                                try {
-                                                    br = new BufferedReader(new FileReader(new File(destinationpath)));
-                                                    String line;
-                                                    while ((line = br.readLine()) != null)
+                                            br = new BufferedReader(new FileReader(new File(destinationpath)));
+                                            String line;
+                                            while ((line = br.readLine()) != null)
+                                            {
+                                                if(line.trim().length() > 0)
+                                                {
+                                                    String[] splitarray=line.split(",");
+                                                    if(splitarray.length > 5)
                                                     {
-                                                      if(line.trim().length() > 0)
-                                                      {
-                                                        String[] splitarray=line.split(",");
-                                                        if(splitarray.length > 5)
+                                                        String hash=splitarray[splitarray.length-1];
+                                                        if(hash.trim().length() > 20 && splitarray[0].equalsIgnoreCase("0")
+                                                                && (! hash.trim().equalsIgnoreCase
+                                                                ("c99a74c555371a433d121f551d6c6398")))
                                                         {
-                                                           String hash=splitarray[splitarray.length-1];
-                                                           if(hash.trim().length() > 20 && splitarray[0].equalsIgnoreCase("0")
-                                                                    && (! hash.trim().equalsIgnoreCase("c99a74c555371a433d121f551d6c6398")))
-                                                           {
-                                                               if(framearraylist.size() == 0)
-                                                                   firsthash=hash.trim().toString();
+                                                            if(framearraylist.size() == 0)
+                                                                firsthash=hash.trim().toString();
 
-                                                              framearraylist.add(new videomodel("Frame ", keytype,framearraylist.size(),hash.trim().toString()));
-                                                              if(framearraylist.size() >= maximumframechecklimit)
-                                                                        break;
-                                                           }
-                                                         }
-                                                       }
+                                                            framearraylist.add(new videomodel("Frame ", keytype,framearraylist.size()
+                                                                    ,hash.trim().toString()));
+                                                            if(framearraylist.size() >= maximumframechecklimit)
+                                                                break;
+                                                        }
                                                     }
-                                                    runxapicounter();
                                                 }
-                                                catch (IOException e) {
-                                                    e.printStackTrace();
+                                            }
+                                            runxapicounter(mediapath);
+                                        }
+                                        catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                        finally{
+                                            try {
+                                                if(br != null)
+                                                    br.close();
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        final String destinationpath = common.createtempfileofmedianameforhash(mediapath).getAbsolutePath();
+                                        String[] complexcommand = {"-i", mediapath,"-f", "framemd5" ,destinationpath};
+
+                                        try {
+                                            ffmpeg.execute(complexcommand, new ExecuteBinaryResponseHandler() {
+                                                @Override
+                                                public void onFailure(String s) {
+                                                    Log.e("Failure with output : ","IN onFailure");
                                                 }
-                                                finally{
+
+                                                @Override
+                                                public void onSuccess(String s) {
+                                                    Log.e("SUCCESS with output : ",s);
+
+                                                    BufferedReader br=null;
                                                     try {
-                                                        if(br != null)
-                                                            br.close();
-                                                    } catch (IOException e) {
+                                                        br = new BufferedReader(new FileReader(new File(destinationpath)));
+                                                        String line;
+                                                        while ((line = br.readLine()) != null)
+                                                        {
+                                                            if(line.trim().length() > 0)
+                                                            {
+                                                                String[] splitarray=line.split(",");
+                                                                if(splitarray.length > 5)
+                                                                {
+                                                                    String hash=splitarray[splitarray.length-1];
+                                                                    if(hash.trim().length() > 20 && splitarray[0].equalsIgnoreCase("0")
+                                                                            && (! hash.trim().equalsIgnoreCase
+                                                                            ("c99a74c555371a433d121f551d6c6398")))
+                                                                    {
+                                                                        if(framearraylist.size() == 0)
+                                                                            firsthash=hash.trim().toString();
+
+                                                                        framearraylist.add(new videomodel("Frame ", keytype,
+                                                                                framearraylist.size(),hash.trim().toString()));
+                                                                        if(framearraylist.size() >= maximumframechecklimit)
+                                                                            break;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        runxapicounter(mediapath);
+                                                    }
+                                                    catch (IOException e) {
                                                         e.printStackTrace();
                                                     }
+                                                    finally{
+                                                        try {
+                                                            if(br != null)
+                                                                br.close();
+                                                        } catch (IOException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onProgress(String s) {
-                                                Log.e( "Progress bar : " , "In Progress");
-                                            }
+                                                @Override
+                                                public void onProgress(String s) {
+                                                    Log.e( "Progress bar : " , "In Progress");
+                                                    Date initialdate=new Date();
+                                                    xdata.getinstance().saveSetting("initialdatereaderapi",""+initialdate.getTime());
+                                                }
 
-                                            @Override
-                                            public void onStart() {
-                                                Log.e("Start with output : ","IN START");
-                                            }
+                                                @Override
+                                                public void onStart() {
+                                                    Log.e("Start with output : ","IN START");
+                                                }
 
-                                            @Override
-                                            public void onFinish() {
-                                                Log.e("Start with output : ","IN Finish");
-                                            }
-                                        });
-                                    }catch (Exception e)
-                                    {
-                                        e.printStackTrace();
+                                                @Override
+                                                public void onFinish() {
+                                                    Log.e("Start with output : ","IN Finish");
+                                                }
+                                            });
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                                 else if(mediatype.equalsIgnoreCase("image"))
                                 {
                                     firsthash= md5.fileToMD5(mediapath);
                                     framearraylist.add(new videomodel("Frame ", keytype,count,firsthash));
-                                    runxapicounter();
+                                    runxapicounter(mediapath);
                                 }
                             }catch (Exception e)
                             {
@@ -216,14 +273,13 @@ public class readmediadataservice extends Service {
                         }
                         else if(status.equalsIgnoreCase(config.sync_inprogress))
                         {
-                            // Currently not using this approach
-                            /*if(lastframe.isEmpty())
-                                lastframe="0";
+                            int framestart=0;
+                            if(! localkey.trim().isEmpty())
+                                framestart=getlastsavedsequence(localkey);
 
-                            int framestart=Integer.parseInt(lastframe);
                             framestart=framestart+1;
                             int maxframes=framestart+50;
-                            getvideoframes(mediatoken,framestart,maxframes);*/
+                            getmediaframes(mediatoken,framestart,maxframes,mediapath);
                         }
                         else if(status.equalsIgnoreCase(config.sync_complete))
                         {
@@ -243,7 +299,7 @@ public class readmediadataservice extends Service {
       return START_NOT_STICKY;
     }
 
-    public void xapigetmediainfo(final String hashvalue)
+    public void xapigetmediainfo(final String hashvalue, final String mediafilepath)
     {
 
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
@@ -372,7 +428,7 @@ public class readmediadataservice extends Service {
                                     firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate);
 
                             int framestart=1;int maxframes=50;
-                            getvideoframes(mediatoken,framestart,maxframes);
+                            getmediaframes(mediatoken,framestart,maxframes,mediafilepath);
                         }
                         else
                         {
@@ -397,13 +453,13 @@ public class readmediadataservice extends Service {
                 }else{
 
                     xapicounter++;
-                    runxapicounter();
+                    runxapicounter(mediafilepath);
                 }
             }
         });
     }
 
-    public void getvideoframes(final String mediatoken, final int framestart, final int maxframes)
+    public void getmediaframes(final String mediatoken, final int framestart, final int maxframes,String mediafilepath)
     {
 
         HashMap<String,Object> mpairslist=new HashMap<String, Object>();
@@ -559,8 +615,7 @@ public class readmediadataservice extends Service {
                             {
                                 int newframestart=maxframes+1;
                                 int newmaxframes=maxframes+50;
-                                //updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_inprogress);
-                                getvideoframes(mediatoken,newframestart,newmaxframes);
+                                updatefindmediainfosyncstatus(mediatoken,""+lastframe,""+remainingframes,config.sync_inprogress);
                             }
                             else
                             {
@@ -575,6 +630,50 @@ public class readmediadataservice extends Service {
                 }
             }
         });
+    }
+
+    public int getlastsavedsequence(String parentobjectid)
+    {
+        int sequenceno=0;
+        databasemanager mdbhelper=null;
+        try {
+            mdbhelper.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(getApplicationContext());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            Cursor cursor=mdbhelper.getallsequencehashfrommetadata(parentobjectid);
+            if(cursor != null && cursor.getCount() > 0)
+            {
+                if (cursor.moveToLast())
+                {
+                    do{
+                        String data = "" + cursor.getString(cursor.getColumnIndex("sequenceno"));
+                        try {
+                            if(! data.trim().isEmpty())
+                                sequenceno=Integer.parseInt(data);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }while(cursor.moveToNext());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            mdbhelper.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  sequenceno;
     }
 
     public void updatefindmediainfosyncstatus(String videotoken,String lastframe,String remainingframes,String syncstatus)
@@ -609,15 +708,15 @@ public class readmediadataservice extends Service {
     //* End of broadcast register
 
 
-    public  void runxapicounter(){
+    public  void runxapicounter(String mediafilepath){
         if(xapicounter < framearraylist.size() && xapicounter <= maximumframechecklimit)
         {
             String hashvalue =  framearraylist.get(xapicounter).getkeyvalue();
-            xapigetmediainfo(hashvalue);
+            xapigetmediainfo(hashvalue,mediafilepath);
         }
         else
         {
-            databasemanager dbmanager=null;
+            /*databasemanager dbmanager=null;
             if (dbmanager == null) {
                 dbmanager = new databasemanager(getApplicationContext());
                 dbmanager.createDatabase();
@@ -646,9 +745,7 @@ public class readmediadataservice extends Service {
             }catch (Exception e)
             {
                 e.printStackTrace();
-            }
-
-
+            }*/
         }
     }
 
