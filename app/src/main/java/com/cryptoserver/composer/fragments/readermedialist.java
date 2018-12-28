@@ -781,7 +781,7 @@ public class readermedialist extends basefragment {
                         }
 
                         in.close();
-                        out.close();
+                         out.close();
 
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
@@ -883,14 +883,21 @@ public class readermedialist extends basefragment {
 
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+
+            }
             if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED  &&  ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.RECORD_AUDIO) ==
                     PackageManager.PERMISSION_GRANTED ) {
+
                 opengallery();
             } else {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
                 }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.RECORD_AUDIO},
                         request_read_external_storage);
             }
         }
@@ -899,8 +906,6 @@ public class readermedialist extends basefragment {
             opengallery();
         }
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

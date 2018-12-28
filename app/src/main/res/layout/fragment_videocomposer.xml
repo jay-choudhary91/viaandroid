@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/black"
     android:id="@+id/rl_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -86,18 +87,40 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:content="@+id/content"
         android:handle="@+id/handle"
         android:orientation="horizontal"
         android:layout_above="@id/layout_bottom"
         android:layout_centerVertical="true">
+
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:openDrawer="start" >
+
+
+            <android.support.design.widget.NavigationView
+                android:id="@+id/navigation_drawer"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="@android:color/holo_red_dark"
+                 >
+
+            <include layout="@layout/layout_drawer_content_composer"></include>
+
+            </android.support.design.widget.NavigationView>
+        </android.support.v4.widget.DrawerLayout>
+
         <ImageView
             android:id="@id/handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:src="@drawable/righthandle"
+            android:visibility="gone"
             />
         <LinearLayout
             android:id="@id/content"
@@ -115,10 +138,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:background="@color/whitetransparent"
+                android:visibility="gone"
                 >
 
 
-                <include layout="@layout/layout_drawer_content_composer"></include>
+              <!-- <include layout="@layout/layout_drawer_content_composer"></include>-->
 
             </LinearLayout>
 

@@ -18,6 +18,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -144,6 +147,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist = new ArrayList<>();
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
+    DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
+
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_video_composer;
@@ -163,6 +169,12 @@ public class composervideoplayerfragment extends basefragment implements Surface
             linearLayout = rootview.findViewById(R.id.content);
             handleimageview = rootview.findViewById(R.id.handle);
             righthandle = rootview.findViewById(R.id.righthandle);
+
+            mDrawer = (DrawerLayout) rootview.findViewById(R.id.drawer_layout);
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    getActivity(), mDrawer, R.string.drawer_open, R.string.drawer_close);
+            // Where do I put this?
+            mDrawerToggle.syncState();
 
             textfetchdata.setVisibility(View.VISIBLE);
 
@@ -440,8 +452,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
             case R.id.videoSurface: {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (player != null && (!isdraweropen)) {
-                            hideshowcontroller();
+                        if (player != null && (!(mDrawer.isDrawerOpen(GravityCompat.START)))) {
+                           // hideshowcontroller();
                         }
                         break;
                 }
@@ -534,7 +546,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     }
 
     public void hideshowcontroller() {
-        if (isdraweropen)
+        if (mDrawer.isDrawerOpen(GravityCompat.START))
             return;
 
         if (controller != null && controller.controllersview != null) {
@@ -686,7 +698,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     adapteritemclick mitemclick = new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-            hideshowcontroller();
+           // hideshowcontroller();
         }
 
         @Override
@@ -951,7 +963,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 if(! isinbackground)
                 {
                     boolean graphicopen=false;
-                    if(isdraweropen)
+                    if(mDrawer.isDrawerOpen(GravityCompat.START))
                     {
                         if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
                         {

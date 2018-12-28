@@ -1130,6 +1130,7 @@ public class common {
         String[] neededpermissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO
         };
         List<String> deniedpermissions = new ArrayList<>();
         for (String permission : neededpermissions) {

@@ -35,7 +35,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -357,6 +361,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
 
+    DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
+
 
 
     @Override
@@ -378,11 +385,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             ButterKnife.bind(this,rootview);
 
             applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
             mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
             mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
+
+           /* mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+            AppCompatActivity activity = (AppCompatActivity) getActivity();
+            activity.setSupportActionBar(mToolbar);*/
+
+            mDrawer = (DrawerLayout) rootview.findViewById(R.id.drawer_layout);
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    getActivity(), mDrawer, R.string.drawer_open, R.string.drawer_close);
+            // Where do I put this?
+            mDrawerToggle.syncState();
+
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
@@ -656,7 +673,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         switch (motionEvent.getAction()){
                             case MotionEvent.ACTION_DOWN:
-                                if(isvideorecording && (!(isdraweropen)))
+                                if(isvideorecording && (!(mDrawer.isDrawerOpen(GravityCompat.START))))
                                 {
                                     if(layout_bottom.getVisibility() == View.VISIBLE)
                                     {
@@ -690,7 +707,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void hideshowcontroller(boolean shouldshow)
     {
-        if(isdraweropen)
+        if(mDrawer.isDrawerOpen(GravityCompat.START))
             return;
 
         if(shouldshow)
@@ -1632,7 +1649,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             public void run() {
 
                 boolean graphicopen=false;
-                if(isdraweropen)
+                if(mDrawer.isDrawerOpen(GravityCompat.START))
                 {
                     if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
                     {
@@ -1651,7 +1668,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         if(mmetricsitems.size() > 0)
                         {
-                            mmetricsitems.set(0,new videomodel(selectedmetrices));
+                           // mmetricsitems.set(0,new videomodel(selectedmetrices));
+                            mmetricsitems.add(new videomodel(selectedmetrices));
                         }
                         else
                         {
