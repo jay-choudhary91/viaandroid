@@ -181,9 +181,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     getActivity(), mDrawer, R.string.drawer_open, R.string.drawer_close);
             // Where do I put this?
             mDrawerToggle.syncState();
+            mDrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
             textfetchdata.setVisibility(View.VISIBLE);
-
             {
                 mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mmetricsitems, new adapteritemclick() {
                     @Override
