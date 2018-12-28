@@ -38,6 +38,7 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -102,6 +103,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
     FrameLayout fragment_graphic_container;
     @BindView(R.id.textfetchdata)
     TextView textfetchdata;
+    @BindView(R.id.relativedrawerlayout)
+    RelativeLayout relativedrawerlayout;
 
     private String mediafilepath = null;
     private SurfaceView videoSurface;
@@ -122,6 +125,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private Handler myHandler;
     private Runnable myRunnable;
+    int controllerheight;
 
     private Handler mymideahandler = new Handler();
     private Runnable mymediarunnable;
@@ -688,11 +692,21 @@ public class composervideoplayerfragment extends basefragment implements Surface
         }
 
         controller.show();
+        controller.post(new Runnable() {
+            @Override
+            public void run() {
+                controllerheight = controller.getHeight();
+                Log.e("getheight",""+controllerheight);
+
+                RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                layoutParams.setMargins(0 ,0,0,controllerheight);
+                relativedrawerlayout.setLayoutParams(layoutParams);
+
+            }
+        });
 
         if (fragmentgraphic != null)
             fragmentgraphic.setmediaplayer(true, null);
-
-
     }
 
     adapteritemclick mitemclick = new adapteritemclick() {
