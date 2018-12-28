@@ -103,6 +103,8 @@ public class composervideoplayerfragment extends basefragment implements Surface
     FrameLayout fragment_graphic_container;
     @BindView(R.id.textfetchdata)
     TextView textfetchdata;
+    @BindView(R.id.relativedrawerlayout)
+    RelativeLayout relativedrawerlayout;
 
     private String mediafilepath = null;
     private SurfaceView videoSurface;
@@ -123,6 +125,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private Handler myHandler;
     private Runnable myRunnable;
+    int controllerheight;
     RelativeLayout rlhandle;
 
     private Handler mymideahandler = new Handler();
@@ -200,7 +203,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 implementscrolllistener();
             }
             flingactionmindstvac = common.getdrawerswipearea();
-
             {
                 mmetricesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
                     @Override
@@ -425,7 +427,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     resetButtonViews(txtSlot3, txtSlot1, txtSlot2);
                 }
                 break;
-
         }
     }
 
@@ -703,11 +704,21 @@ public class composervideoplayerfragment extends basefragment implements Surface
         }
 
         controller.show();
+        controller.post(new Runnable() {
+            @Override
+            public void run() {
+                controllerheight = controller.getHeight();
+                Log.e("getheight",""+controllerheight);
+
+                RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                layoutParams.setMargins(0 ,0,0,controllerheight);
+                relativedrawerlayout.setLayoutParams(layoutParams);
+
+            }
+        });
 
         if (fragmentgraphic != null)
             fragmentgraphic.setmediaplayer(true, null);
-
-
     }
 
     adapteritemclick mitemclick = new adapteritemclick() {
@@ -855,6 +866,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
         return value;
     }
 
+
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
@@ -994,9 +1006,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
                         }
 
                         if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                                graphicopen=true;
+                            graphicopen=true;
 
-                            setmetricesgraphicaldata();
+                        setmetricesgraphicaldata();
                     }
                     if(fragmentgraphic != null)
                         fragmentgraphic.setdrawerproperty(graphicopen);

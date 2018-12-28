@@ -415,6 +415,34 @@ public class readermedialist extends basefragment {
 
                     if (getdata[0].isEmpty() || getdata[0].equalsIgnoreCase("null")) {
                         arrayvideolist.get(i).setMediastatus(config.sync_pending);
+
+                        databasemanager mdbhelper=null;
+                        if (mdbhelper == null) {
+                            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                            mdbhelper.createDatabase();
+                        }
+
+                        try {
+                            mdbhelper.open();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            String syncdate[] = common.getcurrentdatewithtimezone();
+                            mdbhelper.insertstartvideoinfo("",arrayvideolist.get(i).getmimetype(),common.getfilename(arrayvideolist.get(i).getPath()),"",
+                                    "","","",syncdate[0]  , "",
+                                    "","","","","",
+                                    "","",config.sync_pending,"","","","");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            mdbhelper.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     else if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending)
                                 || status.equalsIgnoreCase(config.sync_notfound))
@@ -430,7 +458,7 @@ public class readermedialist extends basefragment {
             }
         }
 
-        if (arrayvideolist != null && arrayvideolist.size() > 0) {
+        /*if (arrayvideolist != null && arrayvideolist.size() > 0) {
             for (int i = 0; i < arrayvideolist.size(); i++) {
                 String status = arrayvideolist.get(i).getMediastatus();
 
@@ -450,7 +478,7 @@ public class readermedialist extends basefragment {
                     }
                 }
             }
-        }
+        }*/
 
        adapter.notifyDataSetChanged();
     }
@@ -880,7 +908,6 @@ public class readermedialist extends basefragment {
         }
     }
 
-
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
@@ -893,7 +920,8 @@ public class readermedialist extends basefragment {
 
                 opengallery();
             } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE))
+                {
                     Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
                 }
 

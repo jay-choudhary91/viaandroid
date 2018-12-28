@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -58,17 +59,18 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
-import com.cryptoserver.composer.fragments.bottombarrederfrag;
-import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.interfaces.apiresponselistener;
 import com.cryptoserver.composer.models.mediametadatainfo;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.startmediainfo;
+import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.services.locationservice;
+import com.cryptoserver.composer.services.readmediadataservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.googleutils;
+import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.noise;
 import com.cryptoserver.composer.utils.taskresult;
 import com.cryptoserver.composer.utils.xdata;
@@ -164,7 +166,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     ArrayList<startmediainfo> unsyncedmediaitems=new ArrayList<>();
     int syncupdationcounter=0;
     boolean isdatasyncing=false;
-
+    int readercallingcounter=0;
+    ArrayList<video> readerarraymedialist = new ArrayList<video>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1729,25 +1732,138 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             {
                 e.printStackTrace();
             }
+
+            syncupdationcounter=0;
+            if(unsyncedmediaitems.size() > 0)
+            {
+                isdatasyncing=true;
+                updateunsyncedcomposeritems();
+            }
+            else
+            {
+                isdatasyncing=false;
+            }
         }
         else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-
-        }
-
-        syncupdationcounter=0;
-        if(unsyncedmediaitems.size() > 0)
-        {
-            isdatasyncing=true;
-            updateunsynceditems();
-        }
-        else
-        {
-            isdatasyncing=false;
+            readercallingcounter++;
+            if(readercallingcounter > 1)
+            {
+                readercallingcounter=0;
+                updatesyncedreaderitems();
+            }
         }
     }
 
-    public void updateunsynceditems()
+    //** start code of media reader sync process
+    public void updatesyncedreaderitems()
+    {
+        File videodir = new File(config.videodir);
+        if(! videodir.exists())
+            return;
+
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            readerarraymedialist.clear();
+            Cursor cursor = mdbhelper.getallmediastartdata();
+            if(cursor != null && cursor.getCount() > 0)
+            {
+                if(cursor.moveToFirst())
+                {
+                    do{
+                        String location = "" + cursor.getString(cursor.getColumnIndex("location"));
+                        String type = "" + cursor.getString(cursor.getColumnIndex("type"));
+                        String status = "" + cursor.getString(cursor.getColumnIndex("status"));
+
+                        video videoobj = new video();
+                        videoobj.setPath(config.videodir+File.separator+location);
+                        videoobj.setmimetype(type);
+                        videoobj.setMediastatus(status);
+                        if(! status.equalsIgnoreCase(config.sync_complete) && (! status.equalsIgnoreCase(config.sync_notfound)))
+                            readerarraymedialist.add(videoobj);
+
+                    }while(cursor.moveToNext());
+                }
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        if (readerarraymedialist != null && readerarraymedialist.size() > 0) {
+            for (int i = 0; i < readerarraymedialist.size(); i++) {
+                String status = readerarraymedialist.get(i).getMediastatus();
+                if (! readerarraymedialist.get(i).isIscheck())
+                {
+                    if (!common.isnetworkconnected(applicationviavideocomposer.getappcontext()))
+                        readerarraymedialist.get(i).setMediastatus(config.sync_offline);
+
+                    if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending))
+                    {
+                        readerarraymedialist.get(i).setMediastatus(config.sync_inprogress);
+                        readerarraymedialist.get(i).setIscheck(true);
+                        //initialdate = new Date();
+                        callreadersyncservice(readerarraymedialist.get(i).getPath(),readerarraymedialist.get(i).getmimetype());
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    public void callreadersyncservice(String mediafilepath,String mimetype)
+    {
+        String keytype = common.checkkey();
+        String firsthash="";
+
+        if(mimetype.startsWith("image/"))
+            firsthash= md5.fileToMD5(mediafilepath);
+
+        Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
+        intent.putExtra("firsthash", firsthash);
+        intent.putExtra("mediapath", mediafilepath);
+        intent.putExtra("keytype", keytype);
+        if(mimetype.startsWith("video"))
+        {
+            intent.putExtra("mediatype","video");
+        }
+        else if(mimetype.startsWith("audio"))
+        {
+            intent.putExtra("mediatype","audio");
+        }
+        else if(mimetype.startsWith("image"))
+        {
+            intent.putExtra("mediatype","image");
+        }
+        applicationviavideocomposer.getactivity().startService(intent);
+    }
+
+
+    //** end code of media reader sync process
+
+
+
+
+    //** start code of media composer sync process
+    public void updateunsyncedcomposeritems()
     {
         String hashmethod="",hashvalue="",mediatitle="",selectedid="", header = "", type = "",localkey = "", token = "", mediakey = "",
                 sync = "",sync_date = "",action_type="",apirequestdevicedate = "",videostartdevicedate= "",devicetimeoffset = "",
@@ -1879,7 +1995,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         syncupdationcounter++;
         if(syncupdationcounter < unsyncedmediaitems.size() && unsyncedmediaitems.size() > 0)
         {
-            updateunsynceditems();
+            updateunsyncedcomposeritems();
         }
         else
         {
@@ -2031,7 +2147,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             }
 
                             String serverdate = object.getString("serverdate");
-                            updatevideoupdateapiresponce(finalselectedid,sequencekey,serverdate,serverdictionaryhash,sequenceid,mediaframetransactionid);
+                            updatevideoupdateapiresponse(finalselectedid,sequencekey,serverdate,serverdictionaryhash,sequenceid,mediaframetransactionid);
 
                         }catch (Exception e)
                         {
@@ -2239,7 +2355,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
 
-    public void updatevideoupdateapiresponce(String selectedid,String sequence,String serverdate,String serverdictionaryhash,String sequenceid,String videoframetransactionid)
+    public void updatevideoupdateapiresponse(String selectedid, String sequence, String serverdate, String serverdictionaryhash, String sequenceid, String videoframetransactionid)
     {
 
         if (mdbhelper == null) {
@@ -2260,5 +2376,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
     }
+    //** end code of media composer sync process
 
 }
