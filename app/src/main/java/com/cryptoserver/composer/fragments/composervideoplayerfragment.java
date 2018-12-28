@@ -38,6 +38,7 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -122,6 +123,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private Handler myHandler;
     private Runnable myRunnable;
+    RelativeLayout rlhandle;
 
     private Handler mymideahandler = new Handler();
     private Runnable mymediarunnable;
@@ -169,6 +171,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
             linearLayout = rootview.findViewById(R.id.content);
             handleimageview = rootview.findViewById(R.id.handle);
             righthandle = rootview.findViewById(R.id.righthandle);
+            rlhandle =(RelativeLayout) rootview.findViewById(R.id.rlhandle);
 
             mDrawer = (DrawerLayout) rootview.findViewById(R.id.drawer_layout);
             mDrawerToggle = new ActionBarDrawerToggle(
@@ -197,6 +200,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                 implementscrolllistener();
             }
             flingactionmindstvac = common.getdrawerswipearea();
+
             {
                 mmetricesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
                     @Override
@@ -223,11 +227,21 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
-            videoSurface.setOnTouchListener(this);
+            //mDrawer.setOnTouchListener(this);
 
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
+
+            rlhandle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (player != null && (!(mDrawer.isDrawerOpen(GravityCompat.START))))
+                              hideshowcontroller();
+
+                }
+            });
 
             resetButtonViews(txtSlot1, txtSlot2, txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
@@ -411,6 +425,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
                     resetButtonViews(txtSlot3, txtSlot1, txtSlot2);
                 }
                 break;
+
         }
     }
 
@@ -442,23 +457,23 @@ public class composervideoplayerfragment extends basefragment implements Surface
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId()) {
-            case R.id.handle:
+            /*case R.id.handle:
                 flingswipe.onTouchEvent(motionEvent);
                 break;
 
             case R.id.righthandle:
                 flingswipe.onTouchEvent(motionEvent);
-                break;
-            case R.id.videoSurface: {
+                break;*/
+            /*case R.id.drawer_layout: {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (player != null && (!(mDrawer.isDrawerOpen(GravityCompat.START)))) {
-                           // hideshowcontroller();
+                            hideshowcontroller();
                         }
                         break;
                 }
             }
-            break;
+            break;*/
         }
         return true;
     }
@@ -698,7 +713,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
     adapteritemclick mitemclick = new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-           // hideshowcontroller();
+           hideshowcontroller();
         }
 
         @Override
@@ -840,7 +855,6 @@ public class composervideoplayerfragment extends basefragment implements Surface
         return value;
     }
 
-
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
@@ -980,9 +994,9 @@ public class composervideoplayerfragment extends basefragment implements Surface
                         }
 
                         if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                            graphicopen=true;
+                                graphicopen=true;
 
-                        setmetricesgraphicaldata();
+                            setmetricesgraphicaldata();
                     }
                     if(fragmentgraphic != null)
                         fragmentgraphic.setdrawerproperty(graphicopen);
@@ -995,6 +1009,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
     public void setmetricesgraphicaldata()
     {
+
         long currentduration=maxincreasevideoduration;
         currentduration=currentduration/1000;
 
@@ -1088,6 +1103,104 @@ public class composervideoplayerfragment extends basefragment implements Surface
             }
         }
     }
+
+    /*public void setmetricesgraphicaldata()
+    {
+        long currentduration=maxincreasevideoduration;
+        currentduration=currentduration/1000;
+
+        if(metricmainarraylist.size() == 0 || currentduration == 0)
+            return;
+
+        currentduration=(currentduration*30);
+        currentduration=currentduration/frameduration;
+
+        int n=(int)currentduration;
+        if(n> metricmainarraylist.size() || isvideocompleted)
+            n=metricmainarraylist.size();
+
+        for(int i=0;i<n;i++)
+        {
+            if(! metricmainarraylist.get(i).isIsupdated())
+            {
+                metricmainarraylist.get(i).setIsupdated(true);
+                double latt=0,longg=0;
+                ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
+
+                fragmentgraphic.getencryptiondata(metricmainarraylist.get(i).getHashmethod(),metricmainarraylist.get(i).getVideostarttransactionid(),
+                        metricmainarraylist.get(i).getValuehash(),metricmainarraylist.get(i).getMetahash());
+
+                for(int j=0;j<metricItemArraylist.size();j++)
+                {
+                    selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
+                            metricItemArraylist.get(j).getMetricTrackValue();
+                    common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                            metricItemArraylist.get(j).getMetricTrackValue(),true);
+
+                    if(fragmentgraphic != null)
+                    {
+                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
+                        {
+                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
+                            {
+                                latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
+                                if(longg != 0)
+                                {
+                                    if(fragmentgraphic != null)
+                                    {
+                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
+                                        latt=0;longg=0;
+                                    }
+                                }
+                            }
+                        }
+                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
+                        {
+                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
+                            {
+                                longg=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
+                                if(latt != 0)
+                                {
+                                    if(fragmentgraphic != null)
+                                    {
+                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
+                                        latt=0;longg=0;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+
+                selectedmetrics=selectedmetrics+"\n";
+
+                if(mmetricsitems.size() == 0 && (! selectedmetrics.toString().trim().isEmpty()))
+                {
+                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                }
+
+                if((player != null) && (! player.isPlaying()) && (! selectedmetrics.toString().trim().isEmpty()))
+                {
+                    mmetricsitems.add(new videomodel(selectedmetrics));
+                    mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                    selectedmetrics="";
+                }
+            }
+        }
+        if(fragment_graphic_container .getVisibility() == View.VISIBLE)
+        {
+            if(fragmentgraphic != null){
+                fragmentgraphic.setmetricesdata();
+                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
+
+            }
+        }
+    }*/
+
+
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {

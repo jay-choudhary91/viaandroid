@@ -18,9 +18,10 @@
             android:layout_height="wrap_content" />
     </FrameLayout>
 
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
         android:content="@+id/content"
         android:handle="@+id/handle"
         android:layout_alignParentTop="true"
@@ -31,15 +32,20 @@
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:openDrawer="start"
             >
+
+            <RelativeLayout
+                android:id="@+id/rlhandle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </RelativeLayout>
 
             <android.support.design.widget.NavigationView
                 android:id="@+id/navigation_drawer"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:background="@android:color/holo_red_dark" >
+                android:background="@color/whitetransparent">
 
                      <include layout="@layout/layout_drawer_content"></include>
 
@@ -72,9 +78,7 @@
                 android:orientation="vertical"
                 android:background="@color/whitetransparent"
                 >
-
                 <!--<include layout="@layout/layout_drawer_content"></include>-->
-
             </LinearLayout>
 
             <ImageView

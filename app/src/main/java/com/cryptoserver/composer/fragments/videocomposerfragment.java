@@ -400,6 +400,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             // Where do I put this?
             mDrawerToggle.syncState();
 
+            mDrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
@@ -424,7 +426,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
                 apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
             flingactionmindstvac=common.getdrawerswipearea();
-            handleimageview.setOnClickListener(new View.OnClickListener() {
+
+            /*handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
@@ -451,9 +454,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     });
 
                 }
-            });
+            });*/
 
-            righthandle.setOnClickListener(new View.OnClickListener() {
+           /* righthandle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
@@ -478,7 +481,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
                     });
                 }
-            });
+            });*/
 
             timerhandler = new Handler() ;
             gethelper().updateheader("00:00:00");
@@ -1681,6 +1684,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
+
                 }
 
                 if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
@@ -1688,8 +1692,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     fragmentgraphic.setdrawerproperty(graphicopen);
                     fragmentgraphic.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
                     fragmentgraphic.setmetricesdata();
-                    hashvalue ="";
-                    metrichashvalue = "";
+                    /*hashvalue ="";
+                    metrichashvalue = "";*/
                 }
 
                 myHandler.postDelayed(this, 1000);

@@ -7,20 +7,7 @@
     android:id="@+id/rl_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        >
 
-        <com.cryptoserver.composer.fragments.AutoFitTextureView
-            android:id="@+id/texture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            />
-
-    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/layout_bottom"
@@ -100,13 +87,28 @@
             android:layout_height="match_parent"
             tools:openDrawer="start" >
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                >
+
+                <com.cryptoserver.composer.fragments.AutoFitTextureView
+                    android:id="@+id/texture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    />
+
+            </FrameLayout>
+
 
             <android.support.design.widget.NavigationView
                 android:id="@+id/navigation_drawer"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:background="@android:color/holo_red_dark"
+                android:background="@color/whitetransparent"
                  >
 
             <include layout="@layout/layout_drawer_content_composer"></include>
@@ -140,8 +142,6 @@
                 android:background="@color/whitetransparent"
                 android:visibility="gone"
                 >
-
-
               <!-- <include layout="@layout/layout_drawer_content_composer"></include>-->
 
             </LinearLayout>
