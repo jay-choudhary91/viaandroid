@@ -800,7 +800,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 break;
             case R.id.img_setting:
                 //destroyvideoplayer();
-                /*fragmentsettings fragmatriclist=new fragmentsettings();
+                /*framemetricssettings fragmatriclist=new framemetricssettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);*/
                 break;
         }

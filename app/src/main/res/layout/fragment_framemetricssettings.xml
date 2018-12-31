@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".fragments.fragmentsettings">
+    tools:context=".fragments.framemetricssettings">
 
     <!-- TODO: Update blank fragment layout -->
 

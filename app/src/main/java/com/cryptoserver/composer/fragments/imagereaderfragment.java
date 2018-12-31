@@ -466,7 +466,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 //  checkwritestoragepermission();
                 break;
             case R.id.img_setting:
-                fragmentsettings fragmatriclist = new fragmentsettings();
+                framemetricssettings fragmatriclist = new framemetricssettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_menu:

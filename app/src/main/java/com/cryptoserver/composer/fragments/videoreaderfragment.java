@@ -63,7 +63,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -1142,7 +1141,7 @@ public class videoreaderfragment extends basefragment
                 break;
             case R.id.img_setting:
               //  destroyvideoplayer();
-                fragmentsettings fragmatriclist=new fragmentsettings();
+                framemetricssettings fragmatriclist=new framemetricssettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
         }

@@ -1,25 +1,8 @@
 package com.cryptoserver.composer.fragments;
 
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.graphics.PorterDuff;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,13 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,17 +26,13 @@ import com.cryptoserver.composer.adapter.Itemmetricadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.metricmodel;
-import com.cryptoserver.composer.services.locationservice;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.minmaxfilter;
 import com.cryptoserver.composer.utils.xdata;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,13 +40,13 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class fragmentsettings extends basefragment implements View.OnClickListener {
+public class framemetricssettings extends basefragment implements View.OnClickListener {
 
     @BindView(R.id.recyview_itemmetric)
     RecyclerView recyviewItem;
     LinearLayoutManager mLayoutManager;
     View rootview = null;
-    public fragmentsettings() {
+    public framemetricssettings() {
         // Required empty public constructor
     }
     private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
@@ -234,7 +211,7 @@ public class fragmentsettings extends basefragment implements View.OnClickListen
     @Override
     public int getlayoutid() {
 
-        return R.layout.fragment_settings;
+        return R.layout.fragment_framemetricssettings;
     }
 
     @Override

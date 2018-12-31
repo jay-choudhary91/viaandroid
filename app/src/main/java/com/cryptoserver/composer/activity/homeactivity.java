@@ -26,7 +26,7 @@ import com.cryptoserver.composer.fragments.bottombarfragment;
 import com.cryptoserver.composer.fragments.bottombarrederfrag;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
 import com.cryptoserver.composer.fragments.fragmentmedialist;
-import com.cryptoserver.composer.fragments.fragmentsettings;
+import com.cryptoserver.composer.fragments.framemetricssettings;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
 import com.cryptoserver.composer.fragments.imagereaderfragment;
 import com.cryptoserver.composer.fragments.readermedialist;
@@ -154,7 +154,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         {
             txt_title.setText(txt);
         }
-        else if( getcurrentfragment() instanceof fragmentsettings ||
+        else if( getcurrentfragment() instanceof framemetricssettings ||
                 getcurrentfragment() instanceof imagecomposerfragment
                 || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof videoreaderfragment
@@ -233,7 +233,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
 
         }
-        else if(fragment instanceof fragmentsettings){
+        else if(fragment instanceof framemetricssettings){
             img_back.setVisibility(View.VISIBLE);
             img_cancel.setVisibility(View.VISIBLE);
             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));

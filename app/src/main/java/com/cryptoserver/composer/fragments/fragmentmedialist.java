@@ -535,7 +535,7 @@ public class fragmentmedialist extends basefragment {
                 checkwritestoragepermission();
                 break;
             case R.id.img_setting:
-                fragmentsettings fragmatriclist=new fragmentsettings();
+                framemetricssettings fragmatriclist=new framemetricssettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
             case R.id.img_add_icon:
