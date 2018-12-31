@@ -3,6 +3,7 @@ package com.cryptoserver.composer.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class settingfragment extends basefragment {
+public class settingfragment extends basefragment implements View.OnClickListener{
 
     View rootview;
     public settingfragment() {
@@ -46,9 +47,7 @@ public class settingfragment extends basefragment {
           txt_privacy.setText(getResources().getString(R.string.privacy));
           txt_help.setText(getResources().getString(R.string.faq));
 
-            common.changeFocusStyle(layout_help,getResources().getColor(R.color.actionbar_solid_normal_transparent),40);
-            common.changeFocusStyle(layout_privacy,getResources().getColor(R.color.actionbar_solid_normal_transparent),40);
-            common.changeFocusStyle(layout_upgrade,getResources().getColor(R.color.actionbar_solid_normal_transparent),40);
+
             gethelper().updateheader("Settings");
         }
         return rootview;
@@ -57,6 +56,21 @@ public class settingfragment extends basefragment {
     @Override
     public int getlayoutid() {
         return R.layout.fragment_settingfragment;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+    @Override
+    public void onHeaderBtnClick(int btnid) {
+        super.onHeaderBtnClick(btnid);
+        switch (btnid){
+
+            case R.id.img_backarrow:
+                gethelper().onBack();
+                break;
+        }
     }
 
 }
