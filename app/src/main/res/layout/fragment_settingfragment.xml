@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/backgroundintro"
+    android:background="@color/white"
     android:layout_height="match_parent">
 
 
@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_weight="3"
-
             android:layout_marginLeft="@dimen/margin_left"
             android:layout_marginRight="@dimen/margin_right"
             android:layout_marginBottom="@dimen/bottom_margin"
@@ -117,13 +116,13 @@
 
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:background="@drawable/deeptruth_img"
-                android:layout_height="wrap_content" />
+                android:layout_width="80dp"
+                android:src="@drawable/deeptruth_img"
+                android:layout_height="60dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:background="@drawable/deeptruth_text"
+                android:src="@drawable/deeptruth_text"
                 android:layout_marginLeft="@dimen/img_margin_left"
                 android:layout_height="wrap_content" />
         </LinearLayout>

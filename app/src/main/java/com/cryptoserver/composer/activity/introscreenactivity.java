@@ -42,7 +42,6 @@ public class introscreenactivity extends AppCompatActivity {
     private Runnable myrunnable;
    // headerpageradapter headerpageradapter;
     footerpageradapter footerpageradapter;
-    TextView btnstartrecord;
     RadioGroup radiogroup;
 
     @Override
@@ -80,25 +79,15 @@ public class introscreenactivity extends AppCompatActivity {
         initialdate =new Date();
        // viewpagerheader = (pagercustomduration) findViewById(R.id.viewpager_header);
         viewpagerfooter = (pagercustomduration) findViewById(R.id.viewpager_footer);
-        btnstartrecord = (TextView) findViewById(R.id.btn_start_record);
         radiogroup = (RadioGroup)findViewById(R.id.radioGroup);
 //        viewpagerheader.setPageTransformer(false, new pageranimation());
         viewpagerfooter.setPageTransformer(false, new pageranimation());
         //headerpageradapter = new introscreenactivity.headerpageradapter(getSupportFragmentManager());
-        footerpageradapter = new introscreenactivity.footerpageradapter(getSupportFragmentManager());
+        footerpageradapter = new footerpageradapter(getSupportFragmentManager());
        // viewpagerheader.setAdapter(headerpageradapter);
         viewpagerfooter.setAdapter(footerpageradapter);
      //   viewpagerheader.setOffscreenPageLimit(4);
         viewpagerfooter.setOffscreenPageLimit(4);
-        btnstartrecord.setVisibility(View.GONE);
-        btnstartrecord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent in=new Intent(introscreenactivity.this,homeactivity.class);
-                startActivity(in);
-                finish();
-            }
-        });
 
        /* viewpagerheader.setOnTouchListener(new View.OnTouchListener() {
             @Override

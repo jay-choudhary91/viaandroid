@@ -113,7 +113,7 @@
         <item name="android:layout_marginRight">@dimen/img_margin_right</item>
         <item name="android:layout_marginLeft">@dimen/img_margin_left</item>
         <item name="android:layout_weight">0.1</item>
-        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_width">20dp</item>
         <item name="android:layout_height">20dp</item>
         <item name="android:layout_gravity">center</item>
 

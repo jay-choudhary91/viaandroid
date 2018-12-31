@@ -36,14 +36,9 @@ public class footerpagerfragment extends Fragment {
             rootview = inflater.inflate(R.layout.fragment_pager_footer, container, false);
             TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
             TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
-
-
             introobject=(intro)getArguments().getParcelable("object");
-
             txt_title.setText(introobject.getTitle());
             txt_description.setText(introobject.getDescription());
-
-
         }
 
         return rootview;
