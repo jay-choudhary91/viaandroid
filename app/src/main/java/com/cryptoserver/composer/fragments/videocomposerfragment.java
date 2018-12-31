@@ -69,6 +69,7 @@ import com.cryptoserver.composer.models.frameinfo;
 import com.cryptoserver.composer.models.mediacompletiondialogmain;
 import com.cryptoserver.composer.models.mediacompletiondialogsub;
 import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.models.permissions;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.services.insertmediadataservice;
@@ -342,6 +343,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
     ArrayList<dbitemcontainer> mdbmiddleitemcontainer =new ArrayList<>();
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
+    ArrayList<permissions> permissionslist =new ArrayList<>();
 
     videoframeadapter mmetricesadapter,mhashesadapter;
 
@@ -1315,6 +1317,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void onResume() {
         super.onResume();
 
+        common.dismisscustompermissiondialog();
         hideshowcontroller(true);
         stopvideotimer();
         resetvideotimer();
@@ -1322,24 +1325,65 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             doafterallpermissionsgranted.run();
             doafterallpermissionsgranted = null;
         } else {
-            String[] neededpermissions = {
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            };
+            if(permissionslist.size() == 0)
+            {
+                permissionslist.add(new permissions(Manifest.permission.CAMERA,false,false));
+                permissionslist.add(new permissions(Manifest.permission.ACCESS_COARSE_LOCATION,false,false));
+                permissionslist.add(new permissions(Manifest.permission.ACCESS_FINE_LOCATION,false,false));
+            }
             List<String> deniedpermissions = new ArrayList<>();
-            for (String permission : neededpermissions) {
-                if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                    deniedpermissions.add(permission);
+            for(int i=0;i<permissionslist.size();i++)
+            {
+                permissionslist.get(i).setIspermissionallowed(true);
+                if (ContextCompat.checkSelfPermission(getActivity(), permissionslist.get(i).getPermissionname()) != PackageManager.PERMISSION_GRANTED)
+                {
+                    if(! permissionslist.get(i).isIspermissionskiped())
+                    {
+                        deniedpermissions.add(permissionslist.get(i).getPermissionname());
+                        permissionslist.get(i).setIspermissionallowed(false);
+                        break;
+                    }
                 }
             }
+
             if (deniedpermissions.isEmpty()) {
                 // All permissions are granted
                 doafterallpermissionsgranted();
             } else {
-                String[] array = new String[deniedpermissions.size()];
+                //String[] array = new String[deniedpermissions.size()];
+
+                String[] array = new String[1];
                 array = deniedpermissions.toArray(array);
-                ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+                final String[] finalArray = array;
+
+                common.showcustompermissiondialog(applicationviavideocomposer.getactivity(), new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+                    }
+
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+                        if(type == 0)
+                        {
+                            if(finalArray.length > 0)
+                            {
+                                for(int i=0;i<permissionslist.size();i++)
+                                {
+                                    if(finalArray[0].equalsIgnoreCase(permissionslist.get(i).getPermissionname()))
+                                    {
+                                        permissionslist.get(i).setIspermissionskiped(true);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else if(type == 1)
+                        {
+                            if(finalArray.length > 0)
+                                ActivityCompat.requestPermissions(getActivity(), finalArray, request_permissions);
+                        }
+                    }
+                },finalArray[0]);
             }
         }
         gethelper().updateheader("00:00:00");

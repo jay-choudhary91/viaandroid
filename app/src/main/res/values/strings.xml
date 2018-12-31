@@ -107,4 +107,11 @@
     <string name="request_permission">This sample needs camera permission.</string>
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
 
+    <string name="deeptruth_current_location">Deeptruth Would Like to Use Your Current Location</string>
+    <string name="your_current_location">Your current location will be used to verify media by using GPS</string>
+    <string name="deeptruth_camera">Deeptruth Would Like to Use Your Camera</string>
+    <string name="camera_take_picture">Allow Deeptruth to take pictures and record videos</string>
+    <string name="allow">ALLOW</string>
+    <string name="skip_for_now">Skip for Now</string>
+
 </resources>

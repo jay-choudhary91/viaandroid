@@ -14,6 +14,8 @@
     <color name="txt_color_icons">#005274</color>
     <color name="red">#FF0000</color>
     <color name="grey_x">#d9d7d1</color>
+    <color name="grey_xx">#b1afaa</color>
+    <color name="grey_xxx">#7c7c7c</color>
     <color name="green">#0EAE3E</color>
     <color name="yellow">#F6A724</color>
     <color name="blue_button">#007BFF</color>
@@ -31,6 +33,7 @@
     <color name="videoPlayer_header">#4D000000</color>
 
     <color name="soundwavecolor">#417CE2</color>
+    <color name="blue">#00ADE5</color>
 
 
 

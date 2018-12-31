@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="2"
+        android:padding="15dp"
+        android:background="@drawable/round_corner_permission_dialog">
+
+
+        <ImageView
+            android:id="@+id/logo_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/app_icon_round"
+            android:layout_marginTop="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+
+            <com.cryptoserver.composer.views.customfonttextview
+                android:id="@+id/txt_permission_title"
+                style="@style/tv_basic"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="@string/deeptruth_current_location"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                app:fontType="OpenSans_Semibold" />
+
+            <com.cryptoserver.composer.views.customfonttextview
+                android:id="@+id/txt_permission_desc"
+                style="@style/tv_basic"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/image_icon"
+                android:gravity="center"
+                android:text="@string/your_current_location"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                app:fontType="OpenSans_Regular" />
+
+
+            <com.cryptoserver.composer.views.customfonttextview
+                android:id="@+id/txt_allow"
+                style="@style/tv_basic"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="@string/allow"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                app:fontType="OpenSans_Regular"
+                android:background="@drawable/round_corner_btn_allow"/>
+
+            <com.cryptoserver.composer.views.customfonttextview
+                android:id="@+id/txt_skip"
+                style="@style/tv_basic"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:text="@string/skip_for_now"
+                android:textColor="@color/grey_xxx"
+                android:textSize="14sp"
+                android:padding="10dp"
+                app:fontType="OpenSans_Regular" />
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
