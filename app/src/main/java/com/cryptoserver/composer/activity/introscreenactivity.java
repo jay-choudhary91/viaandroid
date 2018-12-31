@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.fragments.footerpagerfragment;
+import com.cryptoserver.composer.fragments.fourthheaderfragment;
 import com.cryptoserver.composer.fragments.headerpagerfragment;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.intro;
@@ -90,7 +91,6 @@ public class introscreenactivity extends AppCompatActivity {
      //   viewpagerheader.setOffscreenPageLimit(4);
         viewpagerfooter.setOffscreenPageLimit(4);
         btnstartrecord.setVisibility(View.GONE);
-        common.changeFocusStyle(btnstartrecord,getResources().getColor(R.color.btn_background),40);
         btnstartrecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -218,11 +218,11 @@ public class introscreenactivity extends AppCompatActivity {
         initialdate = new Date();
 //        viewpagerheader.setCurrentItem(position, true);
         viewpagerfooter.setCurrentItem(position, true);
-        if (position % 4 == 3) {
+       /* if (position % 4 == 3) {
             btnstartrecord.setVisibility(View.VISIBLE);
         }else{
             btnstartrecord.setVisibility(View.INVISIBLE);
-        }
+        }*/
         radiogroup.check(radiogroup.getChildAt(position%4).getId());
         Log.e("position",""+position%4);
 
@@ -271,11 +271,11 @@ public class introscreenactivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int pos) {
             int fragmentPos = pos % 4;
-            if(fragmentPos==3){
+          /*  if(fragmentPos==3){
                 btnstartrecord.setVisibility(View.VISIBLE);
             }else{
                 btnstartrecord.setVisibility(View.INVISIBLE);
-            }
+            }*/
             switch(fragmentPos) {
 
                 case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.capture),
@@ -284,7 +284,7 @@ public class introscreenactivity extends AppCompatActivity {
                         getResources().getString(R.string.once_your_media_is_recorded),R.drawable.shield_newgif));
                 case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.Share),
                         getResources().getString(R.string.share_your_media_via_text),R.drawable.globe_newgif));
-                case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.learn),
+                case 3: return fourthheaderfragment.newInstance(new intro(getResources().getString(R.string.learn),
                         getResources().getString(R.string.watch_helpful_videos),R.drawable.key_newgif));
 
                 default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.capture),

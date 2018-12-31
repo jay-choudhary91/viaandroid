@@ -28,6 +28,7 @@
                 android:id="@+id/upgrade_layout"
                 android:orientation="horizontal"
                 android:padding="10dp"
+                android:background="@drawable/round_corner_btn_setting"
                 android:layout_marginBottom="@dimen/bottom_margin"
                 android:layout_height="wrap_content">
                 <ImageView
@@ -38,6 +39,8 @@
                 <com.cryptoserver.composer.views.customfonttextview
                      style="@style/btn_settings_screen"
                       android:id="@+id/txt_upgrade"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
                     app:fontType="OpenSans_Regular"
                     />
             </LinearLayout>
@@ -47,6 +50,7 @@
                 android:id="@+id/privacy_layout"
                 android:orientation="horizontal"
                 android:padding="10dp"
+                android:background="@drawable/round_corner_btn_setting"
                 android:layout_marginBottom="@dimen/bottom_margin"
                 android:layout_height="wrap_content">
                 <ImageView
@@ -67,6 +71,7 @@
                 android:id="@+id/help_layout"
                 android:orientation="horizontal"
                 android:padding="10dp"
+                android:background="@drawable/round_corner_btn_setting"
                 android:layout_marginBottom="@dimen/bottom_margin"
                 android:layout_height="wrap_content">
                 <ImageView
