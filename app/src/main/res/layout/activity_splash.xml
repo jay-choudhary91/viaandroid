@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/black">
+    android:background="@drawable/splash_screen">
 
     <ImageView
         android:id="@+id/img_imagedeep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="invisible"
         android:src="@drawable/deeptruth_img"/>
 
     <ImageView
@@ -19,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="invisible"
         android:layout_marginTop="50dp"
         android:src="@drawable/deeptruth_text"/>
 

@@ -20,6 +20,7 @@ import com.cryptoserver.composer.fragments.footerpagerfragment;
 import com.cryptoserver.composer.fragments.headerpagerfragment;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.intro;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.views.pageranimation;
@@ -38,7 +39,7 @@ public class introscreenactivity extends AppCompatActivity {
     Date initialdate;
     private Handler myhandler;
     private Runnable myrunnable;
-    headerpageradapter headerpageradapter;
+   // headerpageradapter headerpageradapter;
     footerpageradapter footerpageradapter;
     TextView btnstartrecord;
     RadioGroup radiogroup;
@@ -73,21 +74,23 @@ public class introscreenactivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introactivity2);
         xdata.getinstance().saveSetting(xdata.developermode,"");
+
         //getconnectionspeed();
         initialdate =new Date();
-        viewpagerheader = (pagercustomduration) findViewById(R.id.viewpager_header);
+       // viewpagerheader = (pagercustomduration) findViewById(R.id.viewpager_header);
         viewpagerfooter = (pagercustomduration) findViewById(R.id.viewpager_footer);
         btnstartrecord = (TextView) findViewById(R.id.btn_start_record);
         radiogroup = (RadioGroup)findViewById(R.id.radioGroup);
-        viewpagerheader.setPageTransformer(false, new pageranimation());
+//        viewpagerheader.setPageTransformer(false, new pageranimation());
         viewpagerfooter.setPageTransformer(false, new pageranimation());
-        headerpageradapter = new introscreenactivity.headerpageradapter(getSupportFragmentManager());
+        //headerpageradapter = new introscreenactivity.headerpageradapter(getSupportFragmentManager());
         footerpageradapter = new introscreenactivity.footerpageradapter(getSupportFragmentManager());
-        viewpagerheader.setAdapter(headerpageradapter);
+       // viewpagerheader.setAdapter(headerpageradapter);
         viewpagerfooter.setAdapter(footerpageradapter);
-        viewpagerheader.setOffscreenPageLimit(4);
+     //   viewpagerheader.setOffscreenPageLimit(4);
         viewpagerfooter.setOffscreenPageLimit(4);
-
+        btnstartrecord.setVisibility(View.GONE);
+        common.changeFocusStyle(btnstartrecord,getResources().getColor(R.color.btn_background),40);
         btnstartrecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,7 +100,7 @@ public class introscreenactivity extends AppCompatActivity {
             }
         });
 
-        viewpagerheader.setOnTouchListener(new View.OnTouchListener() {
+       /* viewpagerheader.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 initialdate = new Date();
@@ -115,7 +118,7 @@ public class introscreenactivity extends AppCompatActivity {
                 return false;
             }
         });
-
+*/
         viewpagerfooter.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -166,7 +169,7 @@ public class introscreenactivity extends AppCompatActivity {
         myhandler.post(myrunnable);
 
 
-        viewpagerheader.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+       /* viewpagerheader.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -181,11 +184,11 @@ public class introscreenactivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
                 Log.e("scrollChangedheader ","" + state);
                 touchstate=state;
-                /*onPageScrollStateChanged:        1             SCROLL_STATE_DRAGGING
+                *//*onPageScrollStateChanged:        1             SCROLL_STATE_DRAGGING
                 onPageScrollStateChanged:        2             SCROLL_STATE_SETTLING
-                onPageScrollStateChanged:        0             SCROLL_STATE_IDLE*/
+                onPageScrollStateChanged:        0             SCROLL_STATE_IDLE*//*
             }
-        });
+        });*/
 
         viewpagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -197,7 +200,7 @@ public class introscreenactivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 currentselected=position;
-                viewpagerheader.setCurrentItem(position, true);
+             //   viewpagerheader.setCurrentItem(position, true);
                 radiogroup.check(radiogroup.getChildAt(position%4).getId());
             }
 
@@ -213,12 +216,19 @@ public class introscreenactivity extends AppCompatActivity {
     {
         Log.e("Positions ", position+" ") ;
         initialdate = new Date();
-        viewpagerheader.setCurrentItem(position, true);
+//        viewpagerheader.setCurrentItem(position, true);
         viewpagerfooter.setCurrentItem(position, true);
+        if (position % 4 == 3) {
+            btnstartrecord.setVisibility(View.VISIBLE);
+        }else{
+            btnstartrecord.setVisibility(View.INVISIBLE);
+        }
         radiogroup.check(radiogroup.getChildAt(position%4).getId());
+        Log.e("position",""+position%4);
+
     }
 
-    private class headerpageradapter extends FragmentStatePagerAdapter {
+    /*private class headerpageradapter extends FragmentStatePagerAdapter {
 
         public headerpageradapter(FragmentManager fm) {
             super(fm);
@@ -229,17 +239,17 @@ public class introscreenactivity extends AppCompatActivity {
             int fragmentPos = pos % 4;
             switch(fragmentPos) {
 
-                case 0: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.mobile_newgif));
-                case 1: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
-                        getResources().getString(R.string.video_manager),R.drawable.shield_newgif));
-                case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.globe_newgif));
-                case 3: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.key_newgif));
+                case 0: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.capture),
+                        getResources().getString(R.string.start_by_documenting),R.drawable.mobile_newgif));
+                case 1: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.verify),
+                        getResources().getString(R.string.once_your_media_is_recorded),R.drawable.shield_newgif));
+                case 2: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.Share),
+                        getResources().getString(R.string.share_your_media_via_text),R.drawable.globe_newgif));
+                case 3: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.learn),
+                        getResources().getString(R.string.watch_helpful_videos),R.drawable.key_newgif));
 
-                default: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.shield_newgif));
+                default: return headerpagerfragment.newInstance(new intro(getResources().getString(R.string.capture),
+                        getResources().getString(R.string.start_by_documenting),R.drawable.shield_newgif));
             }
         }
 
@@ -248,7 +258,7 @@ public class introscreenactivity extends AppCompatActivity {
             return Integer.MAX_VALUE;
         }
 
-    }
+    }*/
 
 
 
@@ -261,19 +271,24 @@ public class introscreenactivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int pos) {
             int fragmentPos = pos % 4;
+            if(fragmentPos==3){
+                btnstartrecord.setVisibility(View.VISIBLE);
+            }else{
+                btnstartrecord.setVisibility(View.INVISIBLE);
+            }
             switch(fragmentPos) {
 
-                case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.mobile_newgif));
-                case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.point_shoot),
-                        getResources().getString(R.string.video_manager),R.drawable.shield_newgif));
-                case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.globe_newgif));
-                case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.provable_protection),
-                        getResources().getString(R.string.varifiable),R.drawable.key_newgif));
+                case 0: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.capture),
+                        getResources().getString(R.string.start_by_documenting),R.drawable.mobile_newgif));
+                case 1: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.verify),
+                        getResources().getString(R.string.once_your_media_is_recorded),R.drawable.shield_newgif));
+                case 2: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.Share),
+                        getResources().getString(R.string.share_your_media_via_text),R.drawable.globe_newgif));
+                case 3: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.learn),
+                        getResources().getString(R.string.watch_helpful_videos),R.drawable.key_newgif));
 
-                default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.simply_secure),
-                        getResources().getString(R.string.modern_security),R.drawable.shield_newgif));
+                default: return footerpagerfragment.newInstance(new intro(getResources().getString(R.string.capture),
+                        getResources().getString(R.string.start_by_documenting),R.drawable.shield_newgif));
             }
         }
 

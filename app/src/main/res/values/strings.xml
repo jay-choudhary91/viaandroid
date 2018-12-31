@@ -1,12 +1,23 @@
 <resources>
     <string name="app_name">composer</string>
-    <string name="simply_secure">Simply Secure</string>
+    <!--  <string name="simply_secure">Simply Secure</string>
     <string name="modern_security">Modern security methods to keep your data safe and secure.</string>
     <string name="point_shoot">Point and Shoot</string>
     <string name="video_manager">Video manager keeps your data videos in your pocket-available anytime!</string>
     <string name="provable_protection">Provable Protection</string>
     <string name="varifiable">100% varifiable video documentation.</string>
-    <string name="start_secure_record">START SECURE RECORDING</string>
+    <string name="start_secure_record">START SECURE RECORDING</string>-->
+
+    <string name="capture">CAPTURE</string>
+    <string name="start_by_documenting">Start by documenting what you\'re experiencing.Use DeepTruth to create audio,video and photo files.</string>
+    <string name="verify">VERIFY</string>
+    <string name="once_your_media_is_recorded">Once your media is recorded.it \'s logged as the original verified file.it can\'t be altered or edited in any way.</string>
+    <string name="Share">SHARE</string>
+    <string name="share_your_media_via_text">Share your media via text,document sharing sites,or an the public DeepTruth Channel.</string>
+    <string name="learn">LEARN</string>
+    <string name="watch_helpful_videos">Watch helpful videos in the Media Gallery to learn more about DeepTruth.</string>
+
+    <string name="record_now">RECORD NOW</string>
     <string name="save">Save</string>
     <string name="clear">Clear</string>
     <string name="initiating">Initiating…</string>
@@ -110,5 +121,10 @@
 
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
+    
+    
+    <string name="upgrade">Upgrade</string>
+    <string name="privacy">Privacy</string>
+    <string name="faq">FAQ/Help</string>
 
 </resources>

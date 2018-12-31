@@ -30,6 +30,7 @@ import com.cryptoserver.composer.fragments.fragmentsettings;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
 import com.cryptoserver.composer.fragments.imagereaderfragment;
 import com.cryptoserver.composer.fragments.readermedialist;
+import com.cryptoserver.composer.fragments.settingfragment;
 import com.cryptoserver.composer.fragments.videoreaderfragment;
 import com.cryptoserver.composer.fragments.videocomposerfragment;
 import com.cryptoserver.composer.fragments.videoplayfragment;
@@ -65,6 +66,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     RelativeLayout actionbar;
     @BindView(R.id.fragment_container)
     FrameLayout fragment_container;
+    @BindView(R.id.img_backarrow)
+    ImageView img_backbtn;
 
     private bottombarfragment fragbottombar;
     private readermedialist fragreadermedialist;
@@ -96,6 +99,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_cancel.setOnClickListener(this);
         imgshareicon.setOnClickListener(this);
         img_menu.setOnClickListener(this);
+        img_help.setOnClickListener(this);
+        img_backbtn.setOnClickListener(this);
 
         actionbar.post(new Runnable() {
             @Override
@@ -145,7 +150,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void updateheader(String txt) {
-        if((getcurrentfragment() instanceof  videocomposerfragment || getcurrentfragment() instanceof  audiocomposerfragment))
+        if((getcurrentfragment() instanceof  videocomposerfragment || getcurrentfragment() instanceof  audiocomposerfragment  || getcurrentfragment() instanceof settingfragment))
         {
             txt_title.setText(txt);
         }
@@ -210,6 +215,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         imgaddicon.setVisibility(View.GONE);
         imguploadicon.setVisibility(View.GONE);
         imgsettingsicon.setVisibility(View.GONE);
+        img_backbtn.setVisibility(View.GONE);
         updateheader("");
 
         {
@@ -342,6 +348,17 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
+         } else if(fragment instanceof settingfragment){
+             img_menu.setVisibility(View.GONE);
+             imgsettingsicon.setVisibility(View.GONE);
+             imguploadicon.setVisibility(View.GONE);
+             img_backbtn.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
          }else if(fragment instanceof bottombarfragment){
 
          }
@@ -384,6 +401,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 break;
             case R.id.img_menu:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_menu);
+                break;
+            case R.id.img_help:
+                getcurrentfragment().onHeaderBtnClick(R.id.img_help);
+                break;
+            case R.id.img_backarrow:
+                getcurrentfragment().onHeaderBtnClick(R.id.img_backarrow);
                 break;
         }
     }

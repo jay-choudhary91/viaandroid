@@ -28,4 +28,12 @@
 
     <dimen name="image_height">50dp</dimen>
     <dimen name="image_width">50dp</dimen>
+    <dimen name="button_padding">15dp</dimen>
+    <dimen name="bottom_margin">20dp</dimen>
+    <dimen name="margin_top">50dp</dimen>
+    <dimen name="margin_left">20dp</dimen>
+    <dimen name="margin_right">20dp</dimen>
+
+    <dimen name="img_margin_left">20dp</dimen>
+    <dimen name="img_margin_right">20dp</dimen>
 </resources>

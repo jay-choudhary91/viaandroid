@@ -14,6 +14,7 @@
         <pl.droidsonroids.gif.GifImageView
             android:id="@+id/img_gif"
             android:layout_width="250dp"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"

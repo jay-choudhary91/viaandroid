@@ -40,8 +40,8 @@ public class headerpagerfragment extends Fragment {
 
             introobject=(intro)getArguments().getParcelable("object");
 
-            if((introobject.getTitle().contains("Simply Secure")))
-                loadAnimation();
+          /*  if((introobject.getTitle().contains("Simply Secure")))
+                loadAnimation();*/
         }
 
         return rootview;
@@ -79,8 +79,8 @@ public class headerpagerfragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(imggif != null)
-            loadAnimation();
+        /*if(imggif != null)
+           // loadAnimation();*/
     }
 
 

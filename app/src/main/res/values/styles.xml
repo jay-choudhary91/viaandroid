@@ -98,6 +98,28 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="btn_settings_screen">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginRight">25dp</item>
+        <item name="android:textColor">@color/btn_background</item>
+
+    </style>
+
+    <style name="img_settings_screen">
+        <item name="android:layout_marginRight">@dimen/img_margin_right</item>
+        <item name="android:layout_marginLeft">@dimen/img_margin_left</item>
+        <item name="android:layout_weight">0.1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_gravity">center</item>
+
+    </style>
     <style name="customdialogtheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!--buttons color-->
         <item name="colorAccent">@color/black</item>
@@ -115,5 +137,7 @@
     </style>
 
     <style name="MaterialTheme" parent="android:Theme.Material.Light.NoActionBar.Fullscreen" />
+
+
 
 </resources>

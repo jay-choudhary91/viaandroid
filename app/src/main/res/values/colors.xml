@@ -32,6 +32,11 @@
 
     <color name="soundwavecolor">#417CE2</color>
 
+    <color name="btn_background">#00ADE5</color>
+    <color name="green_background">#4CD964</color>
+    <color name="yellow_background">#FDD012</color>
+    <color name="red_background">#FF3B30</color>
+
 
 
     <!-- VIDEO TRIMMER -->

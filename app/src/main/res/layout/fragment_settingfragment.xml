@@ -1,0 +1,130 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/backgroundintro"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="3"
+
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_marginRight="@dimen/margin_right"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_height="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/upgrade_layout"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:layout_marginBottom="@dimen/bottom_margin"
+                android:layout_height="wrap_content">
+                <ImageView
+                   style="@style/img_settings_screen"
+                    android:background="@drawable/share_icon"
+                    />
+
+                <com.cryptoserver.composer.views.customfonttextview
+                     style="@style/btn_settings_screen"
+                      android:id="@+id/txt_upgrade"
+                    app:fontType="OpenSans_Regular"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/privacy_layout"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:layout_marginBottom="@dimen/bottom_margin"
+                android:layout_height="wrap_content">
+                <ImageView
+                     style="@style/img_settings_screen"
+                    android:background="@drawable/share_icon"
+                    />
+
+                <com.cryptoserver.composer.views.customfonttextview
+                    style="@style/btn_settings_screen"
+                    android:id="@+id/txt_privacy"
+                    app:fontType="OpenSans_Regular"
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:id="@+id/help_layout"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:layout_marginBottom="@dimen/bottom_margin"
+                android:layout_height="wrap_content">
+                <ImageView
+                    style="@style/img_settings_screen"
+                    android:background="@drawable/share_icon"
+                    />
+
+                <com.cryptoserver.composer.views.customfonttextview
+                    style="@style/btn_settings_screen"
+                    android:id="@+id/txt_help"
+                    app:fontType="OpenSans_Regular"
+                    />
+            </LinearLayout>
+
+
+        <!--<RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:id="@+id/img_upgrade"
+                android:layout_alignParentLeft="true"
+                android:layout_height="wrap_content"
+                />
+
+            <com.cryptoserver.composer.views.customfonttextview
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/img_upgrade"
+                android:layout_height="wrap_content"
+                />
+
+        </RelativeLayout>-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/bottom_margin"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:background="@drawable/deeptruth_img"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:background="@drawable/deeptruth_text"
+                android:layout_marginLeft="@dimen/img_margin_left"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

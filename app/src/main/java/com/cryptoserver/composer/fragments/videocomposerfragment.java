@@ -1408,7 +1408,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         camerastatusok=true;
         layout_bottom.setVisibility(View.VISIBLE);
         mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
-        gethelper().updateheader("00:00:00");
 
         startBackgroundThread();
         if (mTextureView.isAvailable()) {
@@ -1472,6 +1471,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     gethelper().onBack();
                 }
                 break;
+
+               case R.id.img_help:
+
+                       Log.e("settings","settings");
+                       settingfragment settingfrag=new settingfragment();
+                       gethelper().addFragment(settingfrag, false, true);
+
+                   break;
         }
     }
 
