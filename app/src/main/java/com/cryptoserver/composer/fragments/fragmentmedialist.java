@@ -299,6 +299,7 @@ public class fragmentmedialist extends basefragment {
                                     String[] getdata = getlocalkey(common.getfilename(videoobj.getPath()));
                                     videoobj.setMediastatus(getdata[0]);
                                     videoobj.setVideostarttransactionid(getdata[1]);
+                                    videoobj.setLocalkey(getdata[2]);
                                     ismedia=true;
                                 }
                                 else
@@ -319,6 +320,7 @@ public class fragmentmedialist extends basefragment {
                                                 String[] getdata = getlocalkey(common.getfilename(videoobj.getPath()));
                                                 videoobj.setMediastatus(getdata[0]);
                                                 videoobj.setVideostarttransactionid(getdata[1]);
+                                                videoobj.setLocalkey(getdata[2]);
 
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                                     long seconds = format.getLong(MediaFormat.KEY_DURATION);

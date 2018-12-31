@@ -2085,4 +2085,48 @@ public class common {
         }
         return file;
     }
+
+    public static boolean ishashfileexist(String filepath)
+    {
+        String filename=common.getfilename(filepath);
+        String[] array=filename.split("\\.");
+        if(array.length > 0) {
+            File file = new File(config.hashesdir, array[0] + ".framemd5");
+            if (file.exists())
+                return true;
+        }
+            return false;
+    }
+
+    public static String getexisthashfilepath(String filepath)
+    {
+        String filename=common.getfilename(filepath);
+        String[] array=filename.split("\\.");
+        if(array.length > 0) {
+            File file = new File(config.hashesdir, array[0] + ".framemd5");
+            if (file.exists())
+                return file.getAbsolutePath();
+        }
+        return "";
+    }
+
+    public static File createtempfileofmedianameforhash(String filepath)
+    {
+        String filename=common.getfilename(filepath);
+        String[] array=filename.split("\\.");
+        if(array.length > 0) {
+            File file = new File(config.hashesdir, array[0] + ".framemd5");
+            File destinationDir = new File(config.hashesdir);
+            try {
+
+                if (!destinationDir.exists())
+                    destinationDir.mkdirs();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return file;
+        }
+        return gettempfileforhash();
+    }
 }

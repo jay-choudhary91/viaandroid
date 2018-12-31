@@ -168,6 +168,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     boolean isdatasyncing=false;
     int readercallingcounter=0;
     ArrayList<video> readerarraymedialist = new ArrayList<video>();
+    private BroadcastReceiver coredatabroadcastreceiver;
+    Date initialdate ;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,6 +179,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        initialdate = new Date();
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
             registerallbroadcast();
@@ -1588,11 +1591,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
     public void updatearrayitem(String key, String value) {
         for (int i = 0; i < metricitemarraylist.size(); i++) {
 
@@ -1691,6 +1689,37 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         return infos;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
+            coredatabroadcastreceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    try {
+                        updatesyncedreaderitems();
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            registerReceiver(coredatabroadcastreceiver, intentFilter);
+        }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
+        }
+    }
+
     public void syncmediadatabase()
     {
         Log.e("Method ","syncmediadatabase");
@@ -1746,15 +1775,19 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-            readercallingcounter++;
-            if(readercallingcounter > 1)
-            {
-                readercallingcounter=0;
+            Date currentdate=new Date();
+            String initialdatereaderapi=xdata.getinstance().getSetting("initialdatereaderapi");
+            long olddate=0;
+            if(! initialdatereaderapi.trim().isEmpty())
+                olddate=Long.parseLong(initialdatereaderapi);
+
+            int seconddifference= (int) (Math.abs(olddate-currentdate.getTime())/1000);
+            if(seconddifference > 15 || olddate == 0)
                 updatesyncedreaderitems();
-            }
         }
     }
 
+    //------------------------------------------
     //** start code of media reader sync process
     public void updatesyncedreaderitems()
     {
@@ -1774,27 +1807,36 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
         try {
-            readerarraymedialist.clear();
-            Cursor cursor = mdbhelper.getallmediastartdata();
-            if(cursor != null && cursor.getCount() > 0)
+
+            if(readerarraymedialist.size() > 0)
             {
-                if(cursor.moveToFirst())
+                if(readerarraymedialist.get(readerarraymedialist.size()-1).isIscheck())
+                    readerarraymedialist.clear();
+            }
+            if(readerarraymedialist.size() == 0)
+            {
+                Cursor cursor = mdbhelper.getallmediastartdata();
+                if(cursor != null && cursor.getCount() > 0)
                 {
-                    do{
-                        String location = "" + cursor.getString(cursor.getColumnIndex("location"));
-                        String type = "" + cursor.getString(cursor.getColumnIndex("type"));
-                        String status = "" + cursor.getString(cursor.getColumnIndex("status"));
+                    if(cursor.moveToFirst())
+                    {
+                        do{
+                            String location = "" + cursor.getString(cursor.getColumnIndex("location"));
+                            String type = "" + cursor.getString(cursor.getColumnIndex("type"));
+                            String status = "" + cursor.getString(cursor.getColumnIndex("status"));
 
-                        video videoobj = new video();
-                        videoobj.setPath(config.videodir+File.separator+location);
-                        videoobj.setmimetype(type);
-                        videoobj.setMediastatus(status);
-                        if(! status.equalsIgnoreCase(config.sync_complete) && (! status.equalsIgnoreCase(config.sync_notfound)))
-                            readerarraymedialist.add(videoobj);
+                            video videoobj = new video();
+                            videoobj.setPath(config.videodir+File.separator+location);
+                            videoobj.setmimetype(type);
+                            videoobj.setMediastatus(status);
+                            if(! status.equalsIgnoreCase(config.sync_complete) && (! status.equalsIgnoreCase(config.sync_notfound)))
+                                readerarraymedialist.add(videoobj);
 
-                    }while(cursor.moveToNext());
+                        }while(cursor.moveToNext());
+                    }
                 }
             }
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1813,13 +1855,13 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 String status = readerarraymedialist.get(i).getMediastatus();
                 if (! readerarraymedialist.get(i).isIscheck())
                 {
+                    readerarraymedialist.get(i).setIscheck(true);
                     if (!common.isnetworkconnected(applicationviavideocomposer.getappcontext()))
                         readerarraymedialist.get(i).setMediastatus(config.sync_offline);
 
                     if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending))
                     {
                         readerarraymedialist.get(i).setMediastatus(config.sync_inprogress);
-                        readerarraymedialist.get(i).setIscheck(true);
                         //initialdate = new Date();
                         callreadersyncservice(readerarraymedialist.get(i).getPath(),readerarraymedialist.get(i).getmimetype());
                         break;
@@ -1853,13 +1895,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         {
             intent.putExtra("mediatype","image");
         }
+        initialdate=new Date();
+        xdata.getinstance().saveSetting("initialdatereaderapi",""+initialdate.getTime());
         applicationviavideocomposer.getactivity().startService(intent);
     }
-
-
     //** end code of media reader sync process
-
-
+    //--------------------------------------------------
 
 
     //** start code of media composer sync process
@@ -1984,7 +2025,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     triggersyncstatus();
                 }
             });
-        }else{
+        }
+        else
+        {
             if(sync_date.equalsIgnoreCase("0"))
                 runmediaupdate(header,localkey,mediakey,token,sync,devicetimeoffset,apirequestdevicedate,finalselectedid,videocompletedevicedate,type);
         }

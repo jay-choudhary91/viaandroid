@@ -93,7 +93,8 @@ public class databasemanager {
             values.put("framecount",""+framecount);
             values.put("sync_status",""+sync_status);
             values.put("completeddate","0");
-
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             long l=mDb.insert("tblstartmediainfo", null, values);
             Log.e("Id ",""+l);
 
@@ -122,6 +123,8 @@ public class databasemanager {
                     "completeddate = '"+completeddate +"'," +
                     "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
                     "sync_status = '"+sync_status +"' where location='"+location+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL(query);
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,6 +160,8 @@ public class databasemanager {
             values.put("videostarttransactionid",  videostarttransactionid);
             values.put("metahash",  metahash);
 
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             long l=mDb.insert("tblmetadata", null, values);
             Log.e("Id ",""+l);
 
@@ -172,7 +177,8 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
-
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblstartmediainfo set header='"+ header +"',videocompletedevicedate = '"+
                     completedate +"' where localkey='"+localkey+"'");;
 
@@ -196,6 +202,8 @@ public class databasemanager {
             String sql = "SELECT * FROM tblmetadata where localkey = '"+finallocalkey+"'   AND rsequenceno = 0 " ;
 
             //String sql = "SELECT * FROM tblmetadata";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
                 mCur.moveToNext();
@@ -268,6 +276,8 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblmetadata set videokey='"+videokey+"' where videoid='"+videoid+"'");
             if (mCur != null)
                 mCur.moveToNext();
@@ -285,6 +295,8 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblmetadata set completehashvalue='"+completehashvalue+"' where localkey='"+localkey+"'");
             if (mCur != null)
                 mCur.moveToNext();
@@ -305,7 +317,8 @@ public class databasemanager {
 
             // String sql = "SELECT * FROM tblmetadata;";
             //  mCur = mDb.rawQuery(sql, null);
-
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("delete from tblmetadata where id='"+id+"'");
 
             if (mCur != null) {
@@ -329,6 +342,8 @@ public class databasemanager {
 
             String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey;
             //String sql = "SELECT * FROM tblmetadata";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
                 mCur.moveToNext();
@@ -347,6 +362,8 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblmetadata set rsequenceno = '"+sequence+"',serverdate ='"+serverdate+"', serverdictionaryhash = '"+serverdictionaryhash+"', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where id='"+videoid+"'");
             if (mCur != null)
                 mCur.moveToNext();
@@ -382,6 +399,8 @@ public class databasemanager {
             values.put("videocompletedevicedate",  videocompletedevicedate);
             values.put("videostarttransactionid",  videostarttransactionid);
 
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             long l=mDb.insert("tblstartmediainfo", null, values);
             Log.e("Id ",""+l);
 
@@ -401,6 +420,8 @@ public class databasemanager {
 
             String sql = "SELECT * FROM tblstartmediainfo where sync_date = 0 ";
             //String sql = "SELECT * FROM tblmetadata";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
                 mCur.moveToNext();
@@ -461,6 +482,8 @@ public class databasemanager {
 
             String sql = "SELECT * FROM tblstartmediainfo where sync_date = 0 ";
             //String sql = "SELECT * FROM tblmetadata";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mCur = mDb.rawQuery(sql, null);
             if (mCur != null) {
                 mCur.moveToNext();
@@ -479,6 +502,8 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblstartmediainfo set videokey='"+videokey+"', token='"+ token+"' , videostarttransactionid='"+transactionid+"'where id='"+videoid+"'");
             if (mCur != null)
                 mCur.moveToNext();
@@ -496,6 +521,8 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblstartmediainfo set sync_date ='"+syncdate+"',sync_status ='"+syncstatus+"' where localkey='"+localkey+"'");
             if (mCur != null)
                 mCur.moveToNext();
@@ -512,6 +539,8 @@ public class databasemanager {
         Cursor mCur=null;
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblstartmediainfo set sync='"+sync+"' where id='"+selectedid+"'");
             if (mCur != null)
                 mCur.moveToNext();
@@ -537,6 +566,8 @@ public class databasemanager {
             values.put("remainingframes", ""+remainingframes);
             values.put("frames", ""+frames);
 
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             long l=mDb.insert("tblgetvideoinfo", null, values);
             Log.e("Id ",""+l);
 
@@ -560,6 +591,8 @@ public class databasemanager {
             try {
                 lock.lock();
                 String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey+"'";
+                if(mDb == null)
+                    mDb = mDbHelper.getReadableDatabase();
                 cur = mDb.rawQuery(sql, null);
                 if (cur.moveToFirst())
                 {
@@ -592,6 +625,8 @@ public class databasemanager {
             try {
                 lock.lock();
                 String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey+"'";
+                if(mDb == null)
+                    mDb = mDbHelper.getReadableDatabase();
                 cur = mDb.rawQuery(sql, null);
                 if (cur.moveToFirst())
                 {
@@ -616,17 +651,20 @@ public class databasemanager {
     }
 
     public String[] getlocalkeybylocation(String filename) {
-        String[] localkey ={"",""};
+        String[] localkey ={"","",""};
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT  sync_status, videostarttransactionid FROM tblstartmediainfo where location = '"+filename+"'";
+            String sql = "SELECT  * FROM tblstartmediainfo where location = '"+filename+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
                 do{
                     localkey[0] = "" + cur.getString(cur.getColumnIndex("sync_status"));
                     localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                    localkey[2] = "" + cur.getString(cur.getColumnIndex("localkey"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {
@@ -644,6 +682,8 @@ public class databasemanager {
         try {
             lock.lock();
             String sql = "SELECT * FROM tblstartmediainfo";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -654,18 +694,23 @@ public class databasemanager {
         return cur;
     }
 
+
+
     public String[] getreaderlocalkeybylocation(String filename) {
-        String[] localkey ={"",""};
+        String[] localkey ={"","",""};
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT  status, videostarttransactionid FROM tblstartmediainfo where location = '"+filename+"'";
+            String sql = "SELECT  * FROM tblstartmediainfo where location = '"+filename+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
                 do{
                     localkey[0] = "" + cur.getString(cur.getColumnIndex("status"));
                     localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                    localkey[2] = "" + cur.getString(cur.getColumnIndex("localkey"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {
@@ -683,6 +728,8 @@ public class databasemanager {
         try {
             lock.lock();
             String sql = "SELECT localkey FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
@@ -705,6 +752,8 @@ public class databasemanager {
         try {
             lock.lock();
             String sql = "SELECT * FROM tblstartmediainfo where location = '"+location+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
@@ -727,6 +776,8 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             String sql = "SELECT videocompletedevicedate FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
@@ -749,6 +800,8 @@ public class databasemanager {
         try {
             lock.lock();
             String sql = "SELECT * FROM tblstartmediainfo where location = '"+filename+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
             return cur;
         } catch (Exception e) {
@@ -763,6 +816,8 @@ public class databasemanager {
     public void updatemedialocationname(String starttransactionid,String location) {
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblstartmediainfo set location ='"+location+"' where videostarttransactionid='"+starttransactionid+"'");
 
         } catch (Exception e) {
@@ -776,6 +831,8 @@ public class databasemanager {
     public void deletefrommetadatabylocalkey(String localkey) {
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("delete from tblmetadata where localkey='"+localkey+"'");
         } catch (Exception e) {
             e.printStackTrace();
@@ -788,7 +845,23 @@ public class databasemanager {
     public void deletefromstartvideoinfobylocalkey(String localkey) {
         try {
             lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("delete from tblstartmediainfo where localkey='"+localkey+"'");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
+    public void deletefromstartvideoinfobyfilename(String filename) {
+        try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL("delete from tblstartmediainfo where location='"+filename+"'");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -806,6 +879,8 @@ public class databasemanager {
         try {
             lock.lock();
             String sql = "SELECT * FROM tblstartmediainfo where firsthash = '"+firsthash+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -822,6 +897,27 @@ public class databasemanager {
         try {
             lock.lock();
             String sql = "SELECT * FROM tblstartmediainfo where location = '"+filename+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            cur = mDb.rawQuery(sql, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  cur;
+    }
+
+    public Cursor getallsequencehashfrommetadata(String objectparentid) {
+        String videotoken="";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tblmetadata where localkey = '"+objectparentid+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -839,6 +935,8 @@ public class databasemanager {
         try {
             lock.lock();
             String sql = "SELECT * FROM tblmetadata where localkey = '"+objectparentid+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -857,6 +955,8 @@ public class databasemanager {
             lock.lock();
             String sql="update tblstartmediainfo set lastframe = '"+lastframe+"',status ='"+syncstatus+"',remainingframes = '"+remainingframes+"' where token='"+videotoken+"'";
             Log.e("Sql tblstartmediainfo ",sql);
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL(sql);
         } catch (Exception e) {
             e.printStackTrace();
