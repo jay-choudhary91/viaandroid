@@ -132,4 +132,10 @@ public class config {
     public static final String sync_inprogress="inprogress";
     public static final String sync_notfound="notfound";
 
+    // An Enum class
+    public enum permissions
+    {
+        LOCATION, STORAGE, CAMERA, AUDIO
+    }
+
 }

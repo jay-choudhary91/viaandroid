@@ -6,6 +6,7 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -17,9 +18,11 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
@@ -41,7 +44,6 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -51,17 +53,18 @@ import android.text.format.Formatter;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
-import com.cryptoserver.composer.models.graphicalmodel;
-import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.interfaces.adapteritemclick;
 
 import org.json.JSONArray;
 
@@ -77,8 +80,6 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -129,7 +130,7 @@ public class common {
             "com.android.example.USB_PERMISSION";
 
     static AlertDialog alertdialog = null;
-
+    static Dialog custompermissiondialog =null;
     public static void changefocusstyle(View view, int fullbordercolor, int fullbackcolor, float borderradius) {
         view.setBackgroundResource(R.drawable.style_rounded_view);
         GradientDrawable drawable = (GradientDrawable) view.getBackground();
@@ -1146,8 +1147,7 @@ public class common {
         String[] neededpermissions = {
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
         List<String> deniedpermissions = new ArrayList<>();
         for (String permission : neededpermissions) {
@@ -2128,5 +2128,91 @@ public class common {
             return file;
         }
         return gettempfileforhash();
+    }
+
+    public static void showcustompermissiondialog(Context context, final adapteritemclick mitemclick, final String permission)
+    {
+        if(custompermissiondialog != null && custompermissiondialog.isShowing())
+            custompermissiondialog.dismiss();
+
+        custompermissiondialog = new Dialog(context);
+        custompermissiondialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        custompermissiondialog.setCanceledOnTouchOutside(false);
+        custompermissiondialog.setCancelable(false);
+        custompermissiondialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        custompermissiondialog.setContentView(R.layout.dialog_custom_permission);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(custompermissiondialog.getWindow().getAttributes());
+
+        TextView txt_permission_title = (TextView) custompermissiondialog.findViewById(R.id.txt_permission_title);
+        TextView txt_permission_desc = (TextView) custompermissiondialog.findViewById(R.id.txt_permission_desc);
+        TextView txt_allow = (TextView) custompermissiondialog.findViewById(R.id.txt_allow);
+        TextView txt_skip = (TextView) custompermissiondialog.findViewById(R.id.txt_skip);
+        ImageView logo_icon = (ImageView) custompermissiondialog.findViewById(R.id.logo_icon);
+
+
+        if(permission.equalsIgnoreCase(Manifest.permission.CAMERA))
+        {
+            txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_camera));
+            txt_permission_desc.setText(context.getResources().getString(R.string.camera_take_picture));
+        }
+        else if(permission.equalsIgnoreCase(Manifest.permission.RECORD_AUDIO))
+        {
+            txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
+            txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
+        }
+        else if(permission.equalsIgnoreCase(Manifest.permission.READ_EXTERNAL_STORAGE))
+        {
+            txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
+            txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
+        }
+        else if(permission.equalsIgnoreCase(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        {
+            txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
+            txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
+        }
+        else if(permission.equalsIgnoreCase(Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                permission.equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION))
+        {
+            txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
+            txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
+        }
+
+        txt_allow.setText(context.getResources().getString(R.string.allow));
+        txt_skip.setText(context.getResources().getString(R.string.skip_for_now));
+
+        txt_allow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mitemclick != null)
+                    mitemclick.onItemClicked(permission,1);
+            }
+        });
+
+        txt_skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mitemclick != null)
+                    mitemclick.onItemClicked(permission,0);
+
+                dismisscustompermissiondialog();
+            }
+        });
+
+        custompermissiondialog.getWindow().setAttributes(lp);
+        custompermissiondialog.show();
+    }
+
+    public static boolean iscustompermissiondialogshowing()
+    {
+        if(custompermissiondialog != null && custompermissiondialog.isShowing())
+            return true;
+
+        return false;
+    }
+        public static void dismisscustompermissiondialog()
+    {
+        if(custompermissiondialog != null && custompermissiondialog.isShowing())
+            custompermissiondialog.dismiss();
     }
 }
