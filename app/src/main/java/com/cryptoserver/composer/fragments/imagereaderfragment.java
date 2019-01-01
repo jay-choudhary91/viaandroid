@@ -25,11 +25,15 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
@@ -52,6 +56,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +64,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class imagereaderfragment extends basefragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener {
+public class imagereaderfragment extends basefragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener ,AdapterView.OnItemSelectedListener{
 
     View rootview;
     ImageView handle;
@@ -68,6 +73,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ImageView handleimageview, righthandle;
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
+    TextView txtslotmedia,txtslotmeta,txtslotencyption;
     TextView txtSlot1;
     TextView txtSlot2;
     TextView txtSlot3, txt_metrics, txt_hashes;
@@ -99,6 +105,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
     private  final int flingactionmindspdvac = 10;
+    Spinner photospinner;
 
 
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
@@ -115,10 +122,19 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+            List<String> categories = new ArrayList<String>();
+            categories.add("All Media");
+            categories.add("Photo");
+            categories.add("Video");
+            categories.add("Audio");
+
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
+            txtslotmedia=rootview.findViewById(R.id.txt_slot4);
+            txtslotmeta=rootview.findViewById(R.id.txt_slot5);
+            txtslotencyption=rootview.findViewById(R.id.txt_slot6);
             txtSlot1 = (TextView) rootview.findViewById(R.id.txt_slot1);
             txtSlot2 = (TextView) rootview.findViewById(R.id.txt_slot2);
             txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
@@ -133,6 +149,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
+            photospinner=rootview.findViewById(R.id.spinner);
+
+            photospinner.setOnItemSelectedListener(this);
 
 
             handleimageview.setOnTouchListener(this);
@@ -200,6 +219,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
 
+            txtslotencyption.setOnClickListener(this);
+            txtslotmeta.setOnClickListener(this);
+            txtslotmedia.setOnClickListener(this);
+            resetButtonViews(txtslotmedia,txtslotmeta,txtslotencyption);
+
             resetButtonViews(txtSlot1, txtSlot2, txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
             txtSlot2.setVisibility(View.VISIBLE);
@@ -256,12 +280,21 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
                 transaction.commit();
             }
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // attaching data adapter to spinner
+            photospinner.setAdapter(dataAdapter);
 
             setmetriceshashesdata();
             setupimagedata();
         }
         return rootview;
     }
+
+
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
@@ -339,19 +372,29 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
                 break;
 
+            case R.id.txt_slot4:
+                resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+                break;
+
+            case R.id.txt_slot5:
+                resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
+                break;
+            case R.id.txt_slot6:
+                resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
+                break;
         }
 
     }
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3) {
-        view1.setBackgroundResource(R.color.videolist_background);
+        view1.setBackgroundResource(R.color.blue);
         view1.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(), R.color.white));
 
         view2.setBackgroundResource(R.color.white);
-        view2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
+        view2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
 
         view3.setBackgroundResource(R.color.white);
-        view3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
+        view3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
     }
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener() {
@@ -890,4 +933,16 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         };
         myhandler.post(myrunnable);
     }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+
+        // Showing selected spinner item
+      //  Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+    }
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
+    }
+
 }
