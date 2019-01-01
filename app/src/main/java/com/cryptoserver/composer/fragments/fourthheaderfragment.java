@@ -31,10 +31,11 @@ public class fourthheaderfragment extends Fragment {
         // Inflate the layout for this fragment
         if(rootview == null)
         {
-            rootview = inflater.inflate(R.layout.fragment_fourthheaderfragment, container, false);
+            rootview = inflater.inflate(R.layout.fragment_pager_footer, container, false);
             TextView txt_title = (TextView) rootview.findViewById(R.id.txt_title);
             TextView txt_description = (TextView) rootview.findViewById(R.id.txt_description);
             btnstartrecord = (TextView) rootview.findViewById(R.id.btn_start_record);
+            btnstartrecord.setVisibility(View.VISIBLE);
 
 
             introobject=(intro)getArguments().getParcelable("object");

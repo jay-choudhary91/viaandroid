@@ -36,9 +36,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-          layout_help=rootview.findViewById(R.id.help_layout);
-          layout_privacy=rootview.findViewById(R.id.privacy_layout);
-          layout_upgrade=rootview.findViewById(R.id.upgrade_layout);
+
           txt_help=rootview.findViewById(R.id.txt_help);
           txt_privacy=rootview.findViewById(R.id.txt_privacy);
           txt_upgrade=rootview.findViewById(R.id.txt_upgrade);

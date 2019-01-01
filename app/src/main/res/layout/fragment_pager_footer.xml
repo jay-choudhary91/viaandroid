@@ -35,6 +35,8 @@
             android:id="@+id/txt_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/img_margin_right"
+            android:layout_marginLeft="@dimen/img_margin_left"
             android:gravity="center_horizontal"
             android:padding="10dp"
             android:textSize="16sp"
@@ -42,6 +44,22 @@
             android:text="TextView" />
 
 
+        <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/btn_start_record"
+            style="@style/tv_basic"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/record_now"
+            android:textSize="17sp"
+            android:visibility="invisible"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"
+            android:background="@drawable/round_corner_btn_allow"/>
 
     </LinearLayout>
 

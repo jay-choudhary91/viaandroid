@@ -22,88 +22,82 @@
             android:gravity="center_vertical"
             android:layout_height="0dp">
 
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:id="@+id/upgrade_layout"
-                android:orientation="horizontal"
                 android:padding="10dp"
                 android:background="@drawable/round_corner_btn_setting"
                 android:layout_marginBottom="@dimen/bottom_margin"
                 android:layout_height="wrap_content">
+
+
                 <ImageView
-                   style="@style/img_settings_screen"
-                    android:background="@drawable/share_icon"
+                    style="@style/img_settings_screen"
+                    android:id="@+id/img_upgrade"
+                    android:background="@drawable/img_upgrade"
                     />
 
                 <com.cryptoserver.composer.views.customfonttextview
-                     style="@style/btn_settings_screen"
-                      android:id="@+id/txt_upgrade"
+                    style="@style/btn_settings_screen"
+                    android:id="@+id/txt_upgrade"
+                    android:layout_toRightOf="@+id/img_upgrade"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     app:fontType="OpenSans_Regular"
                     />
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:id="@+id/privacy_layout"
-                android:orientation="horizontal"
                 android:padding="10dp"
                 android:background="@drawable/round_corner_btn_setting"
                 android:layout_marginBottom="@dimen/bottom_margin"
                 android:layout_height="wrap_content">
+
+
                 <ImageView
-                     style="@style/img_settings_screen"
-                    android:background="@drawable/share_icon"
+                    style="@style/img_settings_screen"
+                    android:id="@+id/img_privacy"
+                    android:background="@drawable/img_privacy"
                     />
 
                 <com.cryptoserver.composer.views.customfonttextview
                     style="@style/btn_settings_screen"
                     android:id="@+id/txt_privacy"
+                    android:layout_toRightOf="@+id/img_privacy"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
                     app:fontType="OpenSans_Regular"
                     />
-            </LinearLayout>
+            </RelativeLayout>
 
 
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:id="@+id/help_layout"
-                android:orientation="horizontal"
                 android:padding="10dp"
                 android:background="@drawable/round_corner_btn_setting"
                 android:layout_marginBottom="@dimen/bottom_margin"
                 android:layout_height="wrap_content">
-                <ImageView
-                    style="@style/img_settings_screen"
-                    android:background="@drawable/share_icon"
-                    />
 
-                <com.cryptoserver.composer.views.customfonttextview
-                    style="@style/btn_settings_screen"
-                    android:id="@+id/txt_help"
-                    app:fontType="OpenSans_Regular"
-                    />
-            </LinearLayout>
-
-
-        <!--<RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:id="@+id/img_upgrade"
-                android:layout_alignParentLeft="true"
-                android:layout_height="wrap_content"
+                style="@style/img_settings_screen"
+                android:id="@+id/img_help"
+                android:background="@drawable/img_faqhelp"
                 />
 
             <com.cryptoserver.composer.views.customfonttextview
-                android:layout_width="wrap_content"
-                android:layout_toRightOf="@+id/img_upgrade"
-                android:layout_height="wrap_content"
+                style="@style/btn_settings_screen"
+                android:id="@+id/txt_help"
+                android:layout_toRightOf="@+id/img_help"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                app:fontType="OpenSans_Regular"
                 />
-
-        </RelativeLayout>-->
+            </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -123,7 +117,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:src="@drawable/deeptruth_text"
-                android:layout_marginLeft="@dimen/img_margin_left"
+                android:layout_marginLeft="@dimen/margin_10dp"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 

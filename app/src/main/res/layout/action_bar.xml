@@ -71,7 +71,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:visibility="gone"
-        android:background="@drawable/icon_help"/>
+        android:background="@drawable/menu"/>
 
     <ImageView
         android:id="@+id/img_upload_icon"

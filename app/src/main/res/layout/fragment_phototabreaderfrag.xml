@@ -7,12 +7,22 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="350dp"
         android:scaleType="centerCrop"
+
         android:id="@+id/tab_photoreader"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/tab_photoreader"
+        android:layout_height="wrap_content">
+        <include layout="@layout/layout_mediadetails"></include>
+    </RelativeLayout>
+
 
    <RelativeLayout
        android:layout_width="match_parent"
+       android:visibility="gone"
        android:layout_height="wrap_content">
 
        <RelativeLayout
