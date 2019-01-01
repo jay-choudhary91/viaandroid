@@ -357,7 +357,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              imguploadicon.setVisibility(View.GONE);
              img_backbtn.setVisibility(View.VISIBLE);
              imgsettingsicon.setEnabled(true);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);

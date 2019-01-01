@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:background="@color/black"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/actionbar">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/black"
         android:id="@+id/actionbarnormal"
         android:padding="5dp">
 
