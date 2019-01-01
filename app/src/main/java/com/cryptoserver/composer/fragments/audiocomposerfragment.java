@@ -167,6 +167,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             ButterKnife.bind(this, rootview);
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
+            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
             txtSlot1 = (TextView) rootview.findViewById(R.id.txt_slot1);
