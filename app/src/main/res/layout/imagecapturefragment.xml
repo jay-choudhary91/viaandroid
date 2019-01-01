@@ -6,6 +6,7 @@
     android:id="@+id/rl_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,9 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
-        android:background="@color/actionbar_solid_normal"
+        android:background="@drawable/gradient_fade_dark_blue"
         android:visibility="visible"
-        android:alpha="0.7"
         >
 
         <LinearLayout
@@ -41,12 +41,7 @@
             android:layout_height="wrap_content"
             android:gravity="center">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/img_rotate_camera"
-                android:src="@drawable/rotate_camera"
-                />
+
 
         </LinearLayout>
 
@@ -75,8 +70,8 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:id="@+id/img_flash_on"
-                android:src="@drawable/flash_off"
+                android:id="@+id/img_rotate_camera"
+                android:src="@drawable/rotate_camera"
                 />
 
         </LinearLayout>
@@ -89,6 +84,7 @@
         android:layout_height="match_parent"
         android:content="@+id/content"
         android:handle="@+id/handle"
+        android:layout_below="@id/linear_header"
         android:orientation="horizontal"
         android:layout_above="@id/layout_bottom"
         android:layout_centerVertical="true">
@@ -135,6 +131,18 @@
 
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
+
+
+        <include layout="@layout/action_bar_composer"></include>
+    </LinearLayout>
+
 
 
 </RelativeLayout>

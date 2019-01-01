@@ -321,10 +321,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     TextView txtSlot1;
     TextView txtSlot2;
-    TextView txtSlot3,txt_metrics,txt_hashes;
+    TextView txtSlot3,txt_metrics,txt_hashes,txt_title_actionbarcomposer,txt_media_quality;
     ScrollView scrollview_metrices,scrollview_hashes;
 
-    ImageView mrecordimagebutton,imgflashon,rotatecamera,handle;
+    ImageView mrecordimagebutton,imgflashon,img_dotmenu,rotatecamera,handle;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -389,8 +389,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
             mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
-            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
+            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
+            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
 
            /* mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
             AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -412,6 +413,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
             txt_metrics = (TextView) rootview.findViewById(R.id.txt_metrics);
             txt_hashes = (TextView) rootview.findViewById(R.id.txt_hashes);
+            txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
+            txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
             scrollview_metrices = (ScrollView) rootview.findViewById(R.id.scrollview_metrices);
             scrollview_hashes = (ScrollView) rootview.findViewById(R.id.scrollview_hashes);
             fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_container);
@@ -421,13 +424,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
-            mrecordimagebutton.setOnClickListener(this);
-            imgflashon.setOnClickListener(this);
-            rotatecamera.setOnClickListener(this);
+
 
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
                 apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
             flingactionmindstvac=common.getdrawerswipearea();
+
+            imgflashon.setVisibility(View.VISIBLE);
+            txt_media_quality.setVisibility(View.VISIBLE);
+
+            if(videobitrate == 2000000)
+                txt_media_quality.setText("420P");
 
             /*handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -486,7 +493,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             });*/
 
             timerhandler = new Handler() ;
-            gethelper().updateheader("00:00:00");
+            txt_title_actionbarcomposer.setText("00:00:00");
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                 frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
@@ -515,6 +522,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
+            mrecordimagebutton.setOnClickListener(this);
+            imgflashon.setOnClickListener(this);
+            rotatecamera.setOnClickListener(this);
+            img_dotmenu.setOnClickListener(this);
 
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
@@ -715,7 +726,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(mDrawer.isDrawerOpen(GravityCompat.START))
             return;
 
-        if(shouldshow)
+        /*if(shouldshow)
         {
             gethelper().updateactionbar(1);
             layout_bottom.setVisibility(View.VISIBLE);
@@ -726,7 +737,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             gethelper().updateactionbar(0);
             layout_bottom.setVisibility(View.GONE);
             handleimageview.setVisibility(View.GONE);
-        }
+        }*/
     }
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
@@ -1189,8 +1200,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
             }
 
-            case R.id.img_flash_on:
+            case R.id.img_flash:
                 navigateflash();
+                break;
+
+            case R.id.img_dotmenu:
+                settingfragment settingfrag=new settingfragment();
+                gethelper().addFragment(settingfrag, false, true);
                 break;
 
             case R.id.img_rotate_camera:
@@ -1406,7 +1422,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 },finalArray[0]);
             }
         }
-        gethelper().updateheader("00:00:00");
+        txt_title_actionbarcomposer.setText("00:00:00");
     }
 
     @Override
@@ -1518,9 +1534,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                case R.id.img_help:
 
-                       Log.e("settings","settings");
-                       settingfragment settingfrag=new settingfragment();
-                       gethelper().addFragment(settingfrag, false, true);
+
 
                    break;
         }
@@ -1548,7 +1562,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         Minutes = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        gethelper().updateheader("00:00:00");
+        txt_title_actionbarcomposer.setText("00:00:00");
     }
 
     public Runnable runnable = new Runnable() {
@@ -1569,7 +1583,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         public void run() {
                             if(isvideorecording)
                             {
-                                gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
+                                txt_title_actionbarcomposer.setText("" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + ":"
                                         + String.format("%02d", (MilliSeconds/10)));
                             }

@@ -333,7 +333,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public int selectedsection=1;
 
-    ImageView imgflashon,rotatecamera,handle;
+    ImageView imgflashon,rotatecamera,handle,img_dotmenu;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -527,7 +527,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
-            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash_on);
+            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
+            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
 
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
@@ -554,6 +555,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             righthandle.setOnTouchListener(this);
             rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
+            img_dotmenu.setOnClickListener(this);
 
             flingactionmindstvac=common.getdrawerswipearea();
             handleimageview.setOnClickListener(new View.OnClickListener() {
@@ -1341,8 +1343,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 }
                 break;
             }
+            case R.id.img_dotmenu:
+                settingfragment settingfrag=new settingfragment();
+                gethelper().addFragment(settingfrag, false, true);
+                break;
 
-            case R.id.img_flash_on:
+            case R.id.img_flash:
                 camraflashonoff();
                 break;
 

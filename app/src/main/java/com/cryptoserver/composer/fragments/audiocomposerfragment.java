@@ -90,7 +90,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     LinearLayout layout_bottom,layout_drawer;
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
-    ImageView handleimageview,righthandle,handle;
+    ImageView handleimageview,righthandle,handle,img_dotmenu;;
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
     TextView txtSlot1;
@@ -167,6 +167,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             ButterKnife.bind(this, rootview);
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
+            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
             txtSlot1 = (TextView) rootview.findViewById(R.id.txt_slot1);
@@ -188,6 +189,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             timerhandler = new Handler() ;
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
+            img_dotmenu.setOnClickListener(this);
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -478,6 +480,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 {
                     stoprecording();
                 }
+
+                break;
+            }
+
+            case R.id.img_dotmenu: {
+                settingfragment settingfrag=new settingfragment();
+                gethelper().addFragment(settingfrag, false, true);
 
                 break;
             }

@@ -2,15 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     android:id="@+id/rl_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <LinearLayout
+        android:id="@+id/linear_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <include layout="@layout/action_bar_composer"></include>
+    </LinearLayout>
+
     <com.cryptoserver.composer.utils.visualizeraudiorecorder
         android:id="@+id/myvisualizerview"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/linear_header"
+        android:background="@color/white"/>
 
 
     <LinearLayout
@@ -22,9 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
-        android:background="@color/actionbar_solid_normal"
         android:visibility="visible"
-        android:alpha="0.7"
+        android:background="@drawable/gradient_fade_dark_blue"
         >
 
         <ImageView
