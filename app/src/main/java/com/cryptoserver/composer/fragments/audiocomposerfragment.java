@@ -188,7 +188,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             timerhandler = new Handler() ;
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
-            img_dotmenu.setOnTouchListener(this);
+            img_dotmenu.setOnClickListener(this);
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
