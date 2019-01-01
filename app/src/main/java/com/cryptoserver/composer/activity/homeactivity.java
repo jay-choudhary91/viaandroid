@@ -227,6 +227,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          if (fragment instanceof videocomposerfragment) {
             img_menu.setVisibility(View.VISIBLE);
             img_help.setVisibility(View.VISIBLE);
+            actionbar.setVisibility(View.GONE);
             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -279,6 +280,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          else if(fragment instanceof imagecomposerfragment){
              img_menu.setVisibility(View.VISIBLE);
              img_help.setVisibility(View.VISIBLE);
+             actionbar.setVisibility(View.GONE);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -288,6 +290,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          else if(fragment instanceof audiocomposerfragment){
              img_menu.setVisibility(View.VISIBLE);
              img_help.setVisibility(View.VISIBLE);
+             actionbar.setVisibility(View.GONE);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);

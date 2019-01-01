@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/gradient_fade_header_blue"
+        android:id="@+id/actionbarcomposer"
+        android:padding="10dp">
+
+        <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_title_actionbarcomposer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="@string/deeptruth_small"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"/>
+
+        <ImageView
+            android:id="@+id/img_flash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:src="@drawable/flash_off"/>
+
+        <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_media_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:layout_toRightOf="@id/img_flash"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"/>
+
+        <ImageView
+            android:id="@+id/img_dotmenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/menu_icon"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

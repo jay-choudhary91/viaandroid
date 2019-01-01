@@ -2153,6 +2153,7 @@ public class common {
 
         if(permission.equalsIgnoreCase(Manifest.permission.CAMERA))
         {
+            logo_icon.setImageResource(R.drawable.permission_camera);
             txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_camera));
             txt_permission_desc.setText(context.getResources().getString(R.string.camera_take_picture));
         }
@@ -2174,6 +2175,7 @@ public class common {
         else if(permission.equalsIgnoreCase(Manifest.permission.ACCESS_COARSE_LOCATION) ||
                 permission.equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION))
         {
+            logo_icon.setImageResource(R.drawable.permission_location);
             txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
             txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
         }
