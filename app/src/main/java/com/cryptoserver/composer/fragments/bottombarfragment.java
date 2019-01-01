@@ -5,15 +5,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.wavevisualizer;
+import com.cryptoserver.composer.utils.xdata;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +32,13 @@ public class bottombarfragment extends basefragment  {
 
     @BindView(R.id.tab_container)
     FrameLayout tab_container;
+    @BindView(R.id.layout_no_gps_wifi)
+    LinearLayout layout_no_gps_wifi;
+    @BindView(R.id.img_warning)
+    ImageView img_warning;
 
+    private Handler myHandler;
+    private Runnable myRunnable;
     View rootview = null;
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -155,6 +167,9 @@ public class bottombarfragment extends basefragment  {
             navigation = (BottomNavigationView) rootview.findViewById(R.id.navigation);
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+            DrawableCompat.setTint(img_warning.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.yellow_background));
+
             tab_container.setBackgroundColor(Color.BLACK);
             new Thread(new Runnable() {
                 @Override
@@ -172,6 +187,7 @@ public class bottombarfragment extends basefragment  {
                     });
                 }
             }).start();
+            runhandler();
         }
         return rootview;
     }
@@ -193,5 +209,44 @@ public class bottombarfragment extends basefragment  {
 
     public void setData(adapteritemclick madapterclick) {
         this.madapterclick = madapterclick;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+    }
+
+    public void runhandler()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler =new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
+                            xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+                    {
+                        if(layout_no_gps_wifi != null)
+                            layout_no_gps_wifi.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        if(layout_no_gps_wifi != null)
+                            layout_no_gps_wifi.setVisibility(View.GONE);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                myHandler.postDelayed(this, 2000);
+            }
+        };
+        myHandler.post(myRunnable);
     }
 }

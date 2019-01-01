@@ -627,6 +627,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     @Override
                     public void run() {
 
+                        try {
+                            xdata.getinstance().saveSetting("gpsenabled", "1");
+                            if (! locationawareactivity.checkLocationEnable(locationawareactivity.this))
+                                xdata.getinstance().saveSetting("gpsenabled", "0");
+
+                            if(getcurrentfragment() != null)
+                                getcurrentfragment().updatewifigpsstatus();
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
                         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                         {
                             getconnectionspeed();
@@ -865,7 +877,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         metricItemValue = common.getWifiIPAddress(locationawareactivity.this);
 
                     if (key.equalsIgnoreCase("wifiname"))
+                    {
                         metricItemValue = connectionInfo.getSSID();
+                        xdata.getinstance().saveSetting("wificonnected", "1");
+                    }
 
                     metricItemValue=metricItemValue.replace("\"", "");
                     if (key.equalsIgnoreCase("connectedwifiquality")) {
@@ -883,6 +898,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 }
             } else {
                 metricItemValue = "NO";
+                xdata.getinstance().saveSetting("wificonnected", "0");
             }
             return metricItemValue;
         } else if (key.equalsIgnoreCase("bluetoothonoff")) {

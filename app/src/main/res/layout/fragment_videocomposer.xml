@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/dark_blue_bg"
     android:id="@+id/rl_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -18,9 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
-        android:background="@color/actionbar_solid_normal"
+        android:background="@drawable/gradient_fade_dark_blue"
         android:visibility="visible"
-        android:alpha="0.7"
         >
 
         <LinearLayout

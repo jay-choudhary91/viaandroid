@@ -330,7 +330,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     View rootview = null;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
-    int Seconds, Minutes, MilliSeconds,framepersecond=30 ;
+    int Seconds, Minutes, MilliSeconds,framepersecond=30,videobitrate=2000000 ; // 2000000 is equals to 2 MB. It means quality is exisiting around 420P. It also depands on frame rate.
     String keytype =config.prefs_md5,currenthashvalue="";
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
@@ -1068,7 +1068,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mediarecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediarecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
-        mediarecorder.setVideoEncodingBitRate(1000000);
+        mediarecorder.setVideoEncodingBitRate(videobitrate);
         mediarecorder.setVideoFrameRate(framepersecond);
         mediarecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);

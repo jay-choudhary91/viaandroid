@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
+import static android.location.GpsStatus.GPS_EVENT_STARTED;
+import static android.location.GpsStatus.GPS_EVENT_STOPPED;
 
 public class locationservice extends Service implements LocationListener, GpsStatus.Listener {
     public static final String LOG_TAG = locationservice.class.getSimpleName();
