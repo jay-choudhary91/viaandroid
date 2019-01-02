@@ -111,7 +111,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private static final int request_read_external_storage = 1;
     private  final int flingactionmindspdvac = 10;
     Spinner photospinner;
-    ScrollView scrollView_encyrption;
+    ScrollView scrollView_encyrption,scrollview_meta;
 
 
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
@@ -168,6 +168,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             datahash=rootview.findViewById(R.id.txt_data_hash);
             matrichash=rootview.findViewById(R.id.txt_dictionary_hash);
             scrollView_encyrption=rootview.findViewById(R.id.scrollview_encyption);
+            scrollview_meta=rootview.findViewById(R.id.scrollview_meta);
           //  setspannable();
 
             //  String blockchainId=blockchain.get
@@ -393,10 +394,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             case R.id.txt_slot5:
                 resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
+                scrollview_meta.setVisibility(View.VISIBLE);
+                scrollView_encyrption.setVisibility(View.GONE);
                 break;
             case R.id.txt_slot6:
                 resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
                 scrollView_encyrption.setVisibility(View.VISIBLE);
+                scrollview_meta.setVisibility(View.GONE);
                 break;
         }
 

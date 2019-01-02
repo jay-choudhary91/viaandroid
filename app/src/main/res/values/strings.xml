@@ -120,6 +120,8 @@
     <string name="data_latency">Data Latency</string>
     <string name="encryption_information">Encryption Information</string>
 
+    <string name="address">1500 marilla st , Dallas TX 75201</string>
+
 
     <string name="developermode_description">App entered in developer mode</string>
     <string name="title_activity_bottombaractivity">bottombaractivity</string>
