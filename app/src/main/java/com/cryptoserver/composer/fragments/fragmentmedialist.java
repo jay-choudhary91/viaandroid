@@ -84,6 +84,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     TextView txt_mediatype_a;
     @BindView(R.id.txt_mediatype_c)
     TextView txt_mediatype_c;
+    @BindView(R.id.img_dotmenu)
+    ImageView img_dotmenu;
 
     @BindView(R.id.img_camera)
     ImageView img_camera;
@@ -193,6 +195,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             txt_mediatype_a.setOnClickListener(this);
             txt_mediatype_b.setOnClickListener(this);
             txt_mediatype_c.setOnClickListener(this);
+            img_dotmenu.setOnClickListener(this);
             img_camera.setOnClickListener(this);
 
             onTouchListener = new RecyclerTouchListener(getActivity(), recyclerviewlist);
@@ -271,6 +274,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();
+                break;
+            case R.id.img_dotmenu:
+                settingfragment settingfrag=new settingfragment();
+                gethelper().addFragment(settingfrag, false, true);
                 break;
         }
     }
