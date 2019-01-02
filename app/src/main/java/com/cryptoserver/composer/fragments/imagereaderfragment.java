@@ -44,6 +44,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
+import com.cryptoserver.composer.views.customfonttextview;
 import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -85,7 +87,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     ImageView handleimageview, righthandle;
-    TextView txt_blockchainid, txt_blockid, txt_blocknumber;
+    TextView txt_blockchainid, txt_blockid, txt_blocknumber,txt_metahash;
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
     TextView txtslotmedia, txtslotmeta, txtslotencyption;
@@ -116,14 +118,17 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     String selectedmetrices = "", selectedhashes = "";
     private String keytype = config.prefs_md5, firsthash = "";
     private boolean suspendframequeue = false, suspendbitmapqueue = false, isnewphotofound = false;
-    ;
     private boolean ishashprocessing = false;
     JSONArray metadatametricesjson = new JSONArray();
     public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
     private final int flingactionmindspdvac = 10;
     Spinner photospinner;
-    ScrollView scrollView_encyrption,scrollview_detail;
+    ScrollView scrollView_encyrption,scrollview_detail,scrollview_meta;
+
+    customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
+            tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
+            tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery;
 
 
     private BroadcastReceiver getmetadatabroadcastreceiver, getencryptionmetadatabroadcastreceiver;
@@ -139,7 +144,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         // Inflate the layout for this fragment
         if (rootview == null) {
 
-
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
             List<String> categories = new ArrayList<String>();
@@ -147,7 +151,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             categories.add("Photo");
             categories.add("Video");
             categories.add("Audio");
-
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
@@ -189,7 +192,43 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             txt_blockchainid = rootview.findViewById(R.id.txt_videoupdatetransactionid);
             txt_blockid = rootview.findViewById(R.id.txt_hash_formula);
             txt_blocknumber = rootview.findViewById(R.id.txt_data_hash);
+            txt_metahash = rootview.findViewById(R.id.txt_dictionary_hash);
             scrollView_encyrption = rootview.findViewById(R.id.scrollview_encyption);
+            scrollview_meta = rootview.findViewById(R.id.scrollview_meta);
+
+            tvaddress=rootview.findViewById(R.id.txt_address);
+            tvlatitude=rootview.findViewById(R.id.txt_latitude);
+            tvlongitude=rootview.findViewById(R.id.txt_longitude);
+            tvaltitude=rootview.findViewById(R.id.txt_altitude);
+            tvspeed=rootview.findViewById(R.id.txt_speed);
+            tvheading=rootview.findViewById(R.id.txt_heading);
+            tvtraveled=rootview.findViewById(R.id.txt_traveled);
+            tvxaxis=rootview.findViewById(R.id.txt_xaxis);
+            tvyaxis=rootview.findViewById(R.id.txt_yaxis);
+            tvzaxis=rootview.findViewById(R.id.txt_zaxis);
+            tvphone=rootview.findViewById(R.id.txt_phone);
+            tvnetwork=rootview.findViewById(R.id.txt_network);
+            tvconnection=rootview.findViewById(R.id.txt_connection);
+            tvversion=rootview.findViewById(R.id.txt_version);
+            tvwifi=rootview.findViewById(R.id.txt_wifi);
+            tvgpsaccuracy=rootview.findViewById(R.id.txt_gps_accuracy);
+            tvscreen=rootview.findViewById(R.id.txt_screen);
+            tvcountry=rootview.findViewById(R.id.txt_country);
+            tvcpuusage=rootview.findViewById(R.id.txt_cpu_usage);
+            tvbrightness=rootview.findViewById(R.id.txt_brightness);
+            tvtimezone=rootview.findViewById(R.id.txt_timezone);
+            tvmemoryusage=rootview.findViewById(R.id.txt_memoryusage);
+            tvbluetooth=rootview.findViewById(R.id.txt_bluetooth);
+            tvlocaltime=rootview.findViewById(R.id.txt_localtime);
+            tvstoragefree=rootview.findViewById(R.id.txt_storagefree);
+            tvlanguage=rootview.findViewById(R.id.txt_language);
+            tvuptime=rootview.findViewById(R.id.txt_uptime);
+            tvbattery=rootview.findViewById(R.id.txt_battery);
+
+            photospinner.setOnItemSelectedListener(this);
+            handleimageview.setOnTouchListener(this);
+            righthandle.setOnTouchListener(this);
+
             scrollview_detail=rootview.findViewById(R.id.scrollview_detail);
             String blockchainid = " EOLZ03D0K91734JADFL2";
             String blockid = " ZD38MGUQ4FADLK5A";
@@ -340,6 +379,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             setmetriceshashesdata();
             setupimagedata();
 
+            edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        v.setFocusable(false);
+                    }
+                }
+            });
+
             edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
@@ -460,15 +508,20 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                 scrollview_detail.setVisibility(View.VISIBLE);
                 scrollView_encyrption.setVisibility(View.INVISIBLE);
+                scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
 
             case R.id.txt_slot5:
                 resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
+                scrollview_meta.setVisibility(View.VISIBLE);
+                scrollView_encyrption.setVisibility(View.INVISIBLE);
+                scrollview_detail.setVisibility(View.INVISIBLE);
                 break;
             case R.id.txt_slot6:
                 resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
                 scrollView_encyrption.setVisibility(View.VISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
+                scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
             case R.id.img_edit_name:
               edt_medianame.setClickable(true);
@@ -490,8 +543,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 break;
             case R.id.img_share_media:
-                if (imageurl != null && (!imageurl.isEmpty())) common.shareimage(getActivity(), imageurl);
+                if (imageurl != null && (!imageurl.isEmpty()))
+                    common.shareimage(getActivity(), imageurl);
 
+                scrollview_meta.setVisibility(View.GONE);
                 break;
         }
 
@@ -687,7 +742,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             public void run() {
                 boolean graphicopen = false;
 
-                if (isdraweropen) {
+                if (!isdraweropen) {
                     if ((recyview_hashes.getVisibility() == View.VISIBLE) && (!selectedhashes.trim().isEmpty())) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -725,6 +780,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void setmetricesgraphicaldata() {
         if (metricmainarraylist.size() > 0) {
             if (!metricmainarraylist.get(metricmainarraylist.size() - 1).isIsupdated()) {
+
                 metricmainarraylist.get(metricmainarraylist.size() - 1).setIsupdated(true);
 
                 double latt = 0, longg = 0;
@@ -733,12 +789,19 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 fragmentgraphic.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
                         metricmainarraylist.get(0).getValuehash(), metricmainarraylist.get(0).getMetahash());
 
+                common.setspannable(getResources().getString(R.string.blockchain_id),metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+                common.setspannable(getResources().getString(R.string.block_id),metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                common.setspannable(getResources().getString(R.string.block_number),metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                common.setspannable(getResources().getString(R.string.metrichash),metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
                 for (int j = 0; j < metricItemArraylist.size(); j++) {
                     selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
                             metricItemArraylist.get(j).getMetricTrackValue();
+
                     common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
                             metricItemArraylist.get(j).getMetricTrackValue(), true);
+
+                    setmetadatavalue(metricItemArraylist.get(j));
 
                     if (fragmentgraphic != null) {
                         if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
@@ -776,6 +839,67 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     fragmentgraphic.setmetricesdata();
 
             }
+        }
+    }
+
+    public void setmetadatavalue(metricmodel metricItemArraylist){
+
+        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")){
+            common.setspannable(getResources().getString(R.string.latitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlatitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")){
+            common.setspannable(getResources().getString(R.string.longitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlongitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaltitude")){
+            common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("speed")){
+            common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("heading")){
+            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("distancetravelled")){
+            common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("address")){
+            common.setspannable("",metricItemArraylist.getMetricTrackValue(), tvaddress);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.x")){
+            common.setspannable(getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvxaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.y")){
+            common.setspannable(getResources().getString(R.string.yaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvyaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.z")){
+            common.setspannable(getResources().getString(R.string.zaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvzaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("phonetype")){
+            common.setspannable(getResources().getString(R.string.phone),"\n"+metricItemArraylist.getMetricTrackValue(), tvphone);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("carrier")){
+            common.setspannable(getResources().getString(R.string.network),"\n"+metricItemArraylist.getMetricTrackValue(), tvnetwork);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")){
+            common.setspannable(getResources().getString(R.string.connection),"\n"+metricItemArraylist.getMetricTrackValue(), tvconnection);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("osversion")){
+            common.setspannable(getResources().getString(R.string.version),"\n"+metricItemArraylist.getMetricTrackValue(), tvversion);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
+            common.setspannable(getResources().getString(R.string.wifi),"\n"+metricItemArraylist.getMetricTrackValue(), tvwifi);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
+            common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
+            common.setspannable(getResources().getString(R.string.screen),"\n"+metricItemArraylist.getMetricTrackValue(), tvscreen);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("country")){
+            common.setspannable(getResources().getString(R.string.country),"\n"+metricItemArraylist.getMetricTrackValue(), tvcountry);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("cpuusagesystem")){
+            common.setspannable(getResources().getString(R.string.cpuusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvcpuusage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("brightness")){
+            common.setspannable(getResources().getString(R.string.brightness),"\n"+metricItemArraylist.getMetricTrackValue(), tvbrightness);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("timezone")){
+            common.setspannable(getResources().getString(R.string.timezone),"\n"+metricItemArraylist.getMetricTrackValue(), tvtimezone);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("memoryusage")){
+            common.setspannable(getResources().getString(R.string.memoryusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvmemoryusage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")){
+            common.setspannable(getResources().getString(R.string.bluetooth),"\n"+metricItemArraylist.getMetricTrackValue(), tvbluetooth);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicetime")){
+            common.setspannable(getResources().getString(R.string.localtime),"\n"+metricItemArraylist.getMetricTrackValue(), tvlocaltime);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("freespace")){
+            common.setspannable(getResources().getString(R.string.storagefree),"\n"+metricItemArraylist.getMetricTrackValue(), tvstoragefree);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
+            common.setspannable(getResources().getString(R.string.language),"\n"+metricItemArraylist.getMetricTrackValue(), tvlanguage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("systemuptime")){
+            common.setspannable(getResources().getString(R.string.uptime),"\n"+metricItemArraylist.getMetricTrackValue(), tvuptime);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("battery")){
+            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
         }
     }
 
@@ -1047,5 +1171,4 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setKeyListener(null);
                 }
     }
-
 }

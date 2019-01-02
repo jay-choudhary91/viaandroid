@@ -32,8 +32,9 @@
     <string name="video">Video</string>
     <string name="audio">Audio</string>
     <string name="blockchain_id">Blockchain ID:</string>
-    <string name="block_id">Block ID:</string>
-    <string name="block_number">Block Number:</string>
+    <string name="block_id">Hash Formula:</string>
+    <string name="block_number">Data Hash:</string>
+    <string name="metrichash">Matric Hash:</string>
 
     <string name="record_now">RECORD NOW</string>
     <string name="save">Save</string>
@@ -123,7 +124,6 @@
     <string name="data_latency">Data Latency</string>
     <string name="encryption_information">Encryption Information</string>
 
-
     <string name="developermode_description">App entered in developer mode</string>
     <string name="title_activity_bottombaractivity">bottombaractivity</string>
     <string name="title_audio">Audio</string>
@@ -155,5 +155,34 @@
     <string name="skip_for_now">Skip for Now</string>
     <string name="no_gps_wifi">No GPS/Wifi connection.</string>
     <string name="validating">VALIDATING</string>
+
+    <string name="address">Address</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="altitude">Altitude</string>
+    <string name="speed">Speed</string>
+    <string name="heading">Heading</string>
+    <string name="traveled">Traveled</string>
+    <string name="xaxis">X-Axis</string>
+    <string name="yaxis">Y-Axis</string>
+    <string name="zaxis">Z-Axis</string>
+    <string name="phone">Phone</string>
+    <string name="network">Network</string>
+    <string name="connection">Connection</string>
+    <string name="version">Version</string>
+    <string name="wifi">WiFi</string>
+    <string name="gpsaccuracy">GPS Accuracy</string>
+    <string name="screen">Screen</string>
+    <string name="country">Country</string>
+    <string name="cpuusage">CPU Usage</string>
+    <string name="brightness">Brightness</string>
+    <string name="timezone">Time Zone</string>
+    <string name="memoryusage">Memory Usage</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="localtime">Local Time</string>
+    <string name="storagefree">Storage Free</string>
+    <string name="language">Language</string>
+    <string name="uptime">Up Time</string>
+    <string name="battery">Battery</string>
 
 </resources>

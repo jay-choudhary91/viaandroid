@@ -63,14 +63,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:visibility="gone"
+            android:visibility="visible"
             android:layout_weight="0.3"
             android:layout_height="wrap_content">
 
             <com.cryptoserver.composer.views.customfonttextview
                 style="@style/txt_row_encryption"
                 android:id="@+id/txt_dictionary_hash"
-                android:text="Metric Hash"/>
+                app:fontType="OpenSans_Regular"
+                android:layout_weight="0.3"
+                android:text=""/>
 
         </LinearLayout>
 
