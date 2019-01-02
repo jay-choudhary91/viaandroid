@@ -22,6 +22,8 @@ public class video
     public String mediastatus = "";
     public String videostarttransactionid = "";
     public boolean ischeck = false;
+    public boolean doenable = false;
+    public int griditemheight = 0;
 
 
 
@@ -38,6 +40,14 @@ public class video
     public  video()
     {
 
+    }
+
+    public int getGriditemheight() {
+        return griditemheight;
+    }
+
+    public void setGriditemheight(int griditemheight) {
+        this.griditemheight = griditemheight;
     }
 
     public String getExtension() {
@@ -142,6 +152,14 @@ public class video
 
     public void setVideostarttransactionid(String videostarttransactionid) {
         this.videostarttransactionid = videostarttransactionid;
+    }
+
+    public boolean isDoenable() {
+        return doenable;
+    }
+
+    public void setDoenable(boolean doenable) {
+        this.doenable = doenable;
     }
 
     public boolean isIscheck() {

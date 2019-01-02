@@ -111,7 +111,7 @@ public class readermedialist extends basefragment {
     public void onResume() {
         super.onResume();
         //isinbackground=false;
-       // recyrviewvideolist.addOnItemTouchListener(onTouchListener);
+       // recyclerviewlist.addOnItemTouchListener(onTouchListener);
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
@@ -533,7 +533,7 @@ public class readermedialist extends basefragment {
                     adapter.notifyDataSetChanged();
                 }
             },500);
-            //getVideoList();
+            //fetchmedialistfromdirectory();
 
         }else if(type == 4){
             if(videoobj.getmimetype().startsWith("image/")){

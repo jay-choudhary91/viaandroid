@@ -1,7 +1,6 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,22 +19,24 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.adapter.adaptermediagrid;
 import com.cryptoserver.composer.adapter.adaptermedialist;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.video;
-import com.cryptoserver.composer.utils.appdialog;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
@@ -65,11 +66,25 @@ import static android.app.Activity.RESULT_OK;
  * Created by devesh on 6/8/18.
  */
 
-public class fragmentmedialist extends basefragment {
+public class fragmentmedialist extends basefragment implements View.OnClickListener {
 
-    @BindView(R.id.rv_videolist)
-    RecyclerView recyrviewvideolist;
+    @BindView(R.id.rv_medialist_list)
+    RecyclerView recyclerviewlist;
+    @BindView(R.id.rv_medialist_grid)
+    RecyclerView recyclerviewgrid;
+    @BindView(R.id.lay_gridstyle)
+    RelativeLayout lay_gridstyle;
+    @BindView(R.id.lay_liststyle)
+    RelativeLayout lay_liststyle;
 
+    @BindView(R.id.txt_mediatype_b)
+    TextView txt_mediatype_b;
+    @BindView(R.id.txt_mediatype_a)
+    TextView txt_mediatype_a;
+    @BindView(R.id.txt_mediatype_c)
+    TextView txt_mediatype_c;
+
+    int selectedstyletype=1,selectedmediatype=1;
     RelativeLayout listlayout;
     boolean touched =false;
     private Handler myhandler;
@@ -80,29 +95,25 @@ public class fragmentmedialist extends basefragment {
     View rootview = null;
     private static final int request_permissions = 1;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
-    adaptermedialist adapter;
+    adaptermedialist adaptermedialist;
+    adaptermediagrid adaptergrid;
     private RecyclerTouchListener onTouchListener;
     int request_take_gallery_video = 101;
 
     private static final int request_read_external_storage = 1;
-    private static final int request_write_external_storage = 2;
     private Uri selectedimageuri =null;
     private String selectedvideopath ="";
-    private BroadcastReceiver coredatabroadcastreceiver;
 
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videolist;
     }
 
-
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
         ButterKnife.bind(this,parent);
     }
-
-
 
     @Override
     public void onStop() {
@@ -120,14 +131,14 @@ public class fragmentmedialist extends basefragment {
     public void onResume() {
         super.onResume();
         isinbackground=false;
-        recyrviewvideolist.addOnItemTouchListener(onTouchListener);
+        recyclerviewlist.addOnItemTouchListener(onTouchListener);
     }
 
     public void requestpermissions()
     {
         if (common.getstoragedeniedpermissions().isEmpty()) {
             // All permissions are granted
-            getVideoList();
+            fetchmedialistfromdirectory();
         } else {
             String[] array = new String[common.getstoragedeniedpermissions().size()];
             array = common.getstoragedeniedpermissions().toArray(array);
@@ -148,8 +159,8 @@ public class fragmentmedialist extends basefragment {
             }
             if (permissionsallgranted) {
                 arrayvideolist.clear();
-                adapter.notifyDataSetChanged();
-                getVideoList();
+                showselectedmediatypeitems();
+                fetchmedialistfromdirectory();
             }
         }
     }
@@ -163,32 +174,45 @@ public class fragmentmedialist extends basefragment {
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyrviewvideolist.setLayoutManager(layoutManager);
-            ((DefaultItemAnimator) recyrviewvideolist.getItemAnimator()).setSupportsChangeAnimations(false);
-            recyrviewvideolist.getItemAnimator().setChangeDuration(0);
-            DividerItemDecoration itemDecor = new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
-            itemDecor.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.devidercolor));
-            recyrviewvideolist.addItemDecoration(itemDecor);
+            recyclerviewlist.setLayoutManager(layoutManager);
+            ((DefaultItemAnimator) recyclerviewlist.getItemAnimator()).setSupportsChangeAnimations(false);
+            recyclerviewlist.getItemAnimator().setChangeDuration(0);
+            //DividerItemDecoration itemDecor = new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
+            //itemDecor.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.devidercolor));
+            //recyclerviewlist.addItemDecoration(itemDecor);
 
+            selectedstyletype=1;
+            lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.grey_xxx));
+            lay_gridstyle.setOnClickListener(this);
+            lay_liststyle.setOnClickListener(this);
+            txt_mediatype_a.setOnClickListener(this);
+            txt_mediatype_b.setOnClickListener(this);
+            txt_mediatype_c.setOnClickListener(this);
 
-            onTouchListener = new RecyclerTouchListener(getActivity(), recyrviewvideolist);
+            onTouchListener = new RecyclerTouchListener(getActivity(), recyclerviewlist);
             onTouchListener.setSwipeOptionViews(R.id.btn_edit).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
             new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                 @Override
                 public void onSwipeOptionClicked(int viewID, int position) {
                     arrayvideolist.get(position).setSelected(true);
-                    adapter.notifyDataSetChanged();
+                    adaptermedialist.notifyDataSetChanged();
                     Log.e("selected Position = " ,""+ position);
                 }
             });
 
+
+            recyclerviewgrid.setVisibility(View.VISIBLE);
+            RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            recyclerviewgrid.setLayoutManager(mLayoutManager);
+
             launchbottombarfragment();
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
-                getVideoList();
+                fetchmedialistfromdirectory();
             }
 
-            recyrviewvideolist.setOnTouchListener(new View.OnTouchListener() {
+            recyclerviewlist.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
 
@@ -209,40 +233,93 @@ public class fragmentmedialist extends basefragment {
             });
 
             resetmedialist();
-
-        //    detectdevelopermode();
-
         }
         return rootview;
     }
 
-    public void detectdevelopermode()
-    {
-        if(! common.isdevelopermodeenable())
+    @Override
+    public void onClick(View view) {
+        switch (view.getId())
         {
-            myhandler =new Handler();
-            myrunnable = new Runnable() {
-                @Override
-                public void run() {
+            case R.id.lay_gridstyle:
+                selectedstyletype=1;
+                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.grey_xxx));
+                recyclerviewlist.setVisibility(View.GONE);
+                recyclerviewgrid.setVisibility(View.VISIBLE);
+                break;
+            case R.id.lay_liststyle:
+                selectedstyletype=2;
+                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.grey_xxx));
+                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
+                recyclerviewlist.setVisibility(View.VISIBLE);
+                recyclerviewgrid.setVisibility(View.GONE);
+                break;
+            case R.id.txt_mediatype_a:
+                showselecteditemincenter(txt_mediatype_a,1);
+                break;
+            case R.id.txt_mediatype_b:
 
-                    if(! isinbackground && (! common.isdevelopermodeenable()))
-                    {
-                        if(touched==true){
-                            Date currentDate=new Date();
-                            int secondDifference= (int) (Math.abs(initialdate.getTime()-currentDate.getTime())/1000);
-                            if(secondDifference > 4)
-                            {
-                                initialdate = new Date();
-                                if(! appdialog.isdialogshowing())
-                                    appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
-                            }
-                        }
-                    }
-                    myhandler.postDelayed(this, 100);
-                }
-            };
-            myhandler.post(myrunnable);
+                break;
+            case R.id.txt_mediatype_c:
+                showselecteditemincenter(txt_mediatype_c,3);
+                break;
         }
+    }
+
+    public void showselecteditemincenter(TextView textView,int sectionnumber)
+    {
+        String selectedvalue=textView.getText().toString();
+        if(textView.getText().toString().startsWith("PHOTO"))
+        {
+            selectedmediatype=1;
+        }
+        else if(textView.getText().toString().startsWith("VIDEO"))
+        {
+            selectedmediatype=2;
+        }
+        else if(textView.getText().toString().startsWith("AUDIO"))
+        {
+            selectedmediatype=3;
+        }
+
+        if(sectionnumber == 1)
+        {
+            textView.setText(txt_mediatype_c.getText().toString());
+            txt_mediatype_c.setText(txt_mediatype_b.getText().toString());
+        }
+        else if(sectionnumber == 3)
+        {
+            textView.setText(txt_mediatype_a.getText().toString());
+            txt_mediatype_a.setText(txt_mediatype_b.getText().toString());
+        }
+        txt_mediatype_b.setText(selectedvalue);
+        showselectedmediatypeitems();
+    }
+
+    public void showselectedmediatypeitems()
+    {
+        String checkitem="";
+        if(selectedmediatype == 1)
+        {
+            checkitem="image";
+        }
+        else if(selectedmediatype == 2)
+        {
+            checkitem="video";
+        }
+        else if(selectedmediatype == 3)
+        {
+            checkitem="audio";
+        }
+        for(int i=0;i<arrayvideolist.size();i++)
+        {
+            arrayvideolist.get(i).setDoenable(false);
+            if(arrayvideolist.get(i).getmimetype().contains(checkitem))
+                arrayvideolist.get(i).setDoenable(true);
+        }
+        adaptermedialist.notifyDataSetChanged();
+        adaptergrid.notifyDataSetChanged();
     }
 
     public void removehandler()
@@ -251,15 +328,8 @@ public class fragmentmedialist extends basefragment {
             myhandler.removeCallbacks(myrunnable);
     }
 
-    public void getVideoList()
+    public void fetchmedialistfromdirectory()
     {
-        /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                arrayvideolist.clear();
-                adapter.notifyDataSetChanged();
-            }
-        });*/
 
         new Thread(new Runnable() {
             @Override
@@ -288,6 +358,7 @@ public class fragmentmedialist extends basefragment {
                             videoobj.setName(file.getName());
                             videoobj.setCreatedate(outputdatestr);
                             videoobj.setLastmodifiedtime(file.lastModified());
+                            videoobj.setDoenable(false);
 
                             boolean ismedia=false;
                             MediaExtractor extractor = new MediaExtractor();
@@ -334,10 +405,6 @@ public class fragmentmedialist extends basefragment {
 
                                                     videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
                                                     ismedia=true;
-                                                    /*if(second > 0 || minute > 0 || hours > 0)
-                                                    {
-
-                                                    }*/
                                                 }
                                             }
                                             else if (mime.startsWith("image/"))
@@ -353,10 +420,13 @@ public class fragmentmedialist extends basefragment {
                                 //Release stuff
                                 extractor.release();
                             }
-                            //String md= md5.calculatemd5(file);
-                            //videoobj.setMd5(""+md);
                             if(ismedia)
+                            {
+                                int gridviewwidth=(arrayvideolist.size() % 2) * 100 + 300 + (int) (Math.random() * 300);
+                                videoobj.setGriditemheight(gridviewwidth);
                                 arrayvideolist.add(videoobj);
+                            }
+
                         }
                     }
                     else
@@ -418,8 +488,11 @@ public class fragmentmedialist extends basefragment {
                                }
                            }
                        }
-                       if(adapter != null)
-                            adapter.notifyDataSetChanged();
+                       if(adaptermedialist != null && arrayvideolist.size() > 0)
+                            adaptermedialist.notifyItemChanged(arrayvideolist.size()-1);
+
+                   /*if(adaptergrid != null && arrayvideolist.size() > 0)
+                       adaptergrid.notifyItemChanged(arrayvideolist.size()-1);*/
                }
                 myhandler.postDelayed(this, 3000);
             }
@@ -701,7 +774,7 @@ public class fragmentmedialist extends basefragment {
     @Override
     public void onPause() {
         super.onPause();
-        recyrviewvideolist.removeOnItemTouchListener(onTouchListener);
+        recyclerviewlist.removeOnItemTouchListener(onTouchListener);
     }
 
     public void setAdapter(final video videoobj, int type)
@@ -753,13 +826,13 @@ public class fragmentmedialist extends basefragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    adapter.notifyDataSetChanged();
+                    showselectedmediatypeitems();
                     if(! videoobj.getVideostarttransactionid().isEmpty())
                         updatemedialocation(videoobj.getVideostarttransactionid(),videoobj.getPath());
                 }
             },500);
 
-            //getVideoList();
+            //fetchmedialistfromdirectory();
 
         }else if(type == 4){
             if(videoobj.getmimetype().startsWith("image/")){
@@ -803,7 +876,7 @@ public class fragmentmedialist extends basefragment {
 
     public void setmediaadapter()
     {
-        adapter = new adaptermedialist(getActivity(),arrayvideolist, new adapteritemclick() {
+        adaptermedialist = new adaptermedialist(getActivity(),arrayvideolist, new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
             }
@@ -814,7 +887,21 @@ public class fragmentmedialist extends basefragment {
             }
 
         });
-        recyrviewvideolist.setAdapter(adapter);
+        recyclerviewlist.setAdapter(adaptermedialist);
+
+        adaptergrid = new adaptermediagrid(getActivity(),arrayvideolist, new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+            }
+            @Override
+            public void onItemClicked(Object object, int type) {
+                video videoobj=(video)object;
+                setAdapter(videoobj,type);
+            }
+
+        });
+        recyclerviewgrid.setAdapter(adaptergrid);
+        showselectedmediatypeitems();
     }
 
     public void showalertdialog(final video videoobj, String message){
@@ -838,7 +925,7 @@ public class fragmentmedialist extends basefragment {
                                 System.out.println("file not Deleted :" + videoobj.getPath());
                             }
                         }
-                        adapter.notifyDataSetChanged();
+                        showselectedmediatypeitems();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -848,4 +935,6 @@ public class fragmentmedialist extends basefragment {
                     }
                 }).show();
     }
+
+
 }

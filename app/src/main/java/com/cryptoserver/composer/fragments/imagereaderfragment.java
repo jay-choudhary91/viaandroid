@@ -334,7 +334,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             // Drop down layout style - list view with radio button
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-            // attaching data adapter to spinner
+            // attaching data adaptermedialist to spinner
             photospinner.setAdapter(dataAdapter);
 
             setmetriceshashesdata();
