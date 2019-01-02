@@ -262,6 +262,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              imgaddicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setVisibility(View.VISIBLE);
              imguploadicon.setVisibility(View.GONE);
+             actionbar.setVisibility(View.GONE);
              imgsettingsicon.setEnabled(true);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
 
@@ -363,7 +364,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }else if(fragment instanceof bottombarfragment){
-
+             actionbar.setVisibility(View.GONE);
          }
         else
         {

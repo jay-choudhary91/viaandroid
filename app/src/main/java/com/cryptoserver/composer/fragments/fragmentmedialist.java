@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,6 +85,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @BindView(R.id.txt_mediatype_c)
     TextView txt_mediatype_c;
 
+    @BindView(R.id.img_camera)
+    ImageView img_camera;
+
     int selectedstyletype=1,selectedmediatype=1;
     RelativeLayout listlayout;
     boolean touched =false;
@@ -98,7 +102,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     adaptermedialist adaptermedialist;
     adaptermediagrid adaptergrid;
     private RecyclerTouchListener onTouchListener;
-    int request_take_gallery_video = 101;
+    int request_take_gallery_video = 101,audiocount=0,videocount=0,imagecount=0;
 
     private static final int request_read_external_storage = 1;
     private Uri selectedimageuri =null;
@@ -189,6 +193,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             txt_mediatype_a.setOnClickListener(this);
             txt_mediatype_b.setOnClickListener(this);
             txt_mediatype_c.setOnClickListener(this);
+            img_camera.setOnClickListener(this);
 
             onTouchListener = new RecyclerTouchListener(getActivity(), recyclerviewlist);
             onTouchListener.setSwipeOptionViews(R.id.btn_edit).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
@@ -264,6 +269,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             case R.id.txt_mediatype_c:
                 showselecteditemincenter(txt_mediatype_c,3);
                 break;
+            case R.id.img_camera:
+                launchbottombarfragment();
+                break;
         }
     }
 
@@ -295,6 +303,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
         txt_mediatype_b.setText(selectedvalue);
         showselectedmediatypeitems();
+        /*updatecounter(txt_mediatype_a);
+        updatecounter(txt_mediatype_b);
+        updatecounter(txt_mediatype_c);*/
     }
 
     public void showselectedmediatypeitems()
@@ -320,6 +331,63 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
         adaptermedialist.notifyDataSetChanged();
         adaptergrid.notifyDataSetChanged();
+
+    }
+
+    public void updatecounter(TextView textView)
+    {
+        String checkitem="";
+        if(textView.getText().toString().startsWith("VIDEO"))
+        {
+            checkitem="video";
+            videocount=0;
+            for(int i=0;i<arrayvideolist.size();i++)
+            {
+                arrayvideolist.get(i).setDoenable(false);
+                if(arrayvideolist.get(i).getmimetype().contains(checkitem))
+                {
+                    videocount++;
+                    arrayvideolist.get(i).setDoenable(true);
+                }
+            }
+            textView.setText("VIDEO");
+            if(imagecount > 0)
+                textView.setText("VIDEO ("+videocount+")");
+        }
+        else if(textView.getText().toString().startsWith("AUDIO"))
+        {
+            checkitem="audio";
+            audiocount=0;
+            for(int i=0;i<arrayvideolist.size();i++)
+            {
+                arrayvideolist.get(i).setDoenable(false);
+                if(arrayvideolist.get(i).getmimetype().contains(checkitem))
+                {
+                    audiocount++;
+                    arrayvideolist.get(i).setDoenable(true);
+                }
+            }
+            textView.setText("AUDIO");
+            if(imagecount > 0)
+                textView.setText("AUDIO ("+audiocount+")");
+        }
+        else if(textView.getText().toString().startsWith("IMAGE"))
+        {
+            checkitem="image";
+            imagecount=0;
+            for(int i=0;i<arrayvideolist.size();i++)
+            {
+                arrayvideolist.get(i).setDoenable(false);
+                if(arrayvideolist.get(i).getmimetype().contains(checkitem))
+                {
+                    imagecount++;
+                    arrayvideolist.get(i).setDoenable(true);
+                }
+            }
+            textView.setText("IMAGE");
+            if(imagecount > 0)
+                textView.setText("IMAGE ("+imagecount+")");
+        }
     }
 
     public void removehandler()
