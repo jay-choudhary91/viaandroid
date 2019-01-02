@@ -329,8 +329,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(arrayvideolist.get(i).getmimetype().contains(checkitem))
                 arrayvideolist.get(i).setDoenable(true);
         }
-        adaptermedialist.notifyDataSetChanged();
-        adaptergrid.notifyDataSetChanged();
+
+        if(adaptermedialist != null && adaptergrid != null)
+        {
+            adaptermedialist.notifyDataSetChanged();
+            adaptergrid.notifyDataSetChanged();
+        }
+
 
     }
 
