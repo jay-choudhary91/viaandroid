@@ -44,6 +44,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -116,7 +117,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     String selectedmetrices = "", selectedhashes = "";
     private String keytype = config.prefs_md5, firsthash = "";
     private boolean suspendframequeue = false, suspendbitmapqueue = false, isnewphotofound = false;
-    ;
     private boolean ishashprocessing = false;
     JSONArray metadatametricesjson = new JSONArray();
     public int flingactionmindstvac;
@@ -340,6 +340,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             setmetriceshashesdata();
             setupimagedata();
 
+            edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        v.setFocusable(false);
+                    }
+                }
+            });
+
             edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
@@ -490,7 +499,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 break;
             case R.id.img_share_media:
-                if (imageurl != null && (!imageurl.isEmpty())) common.shareimage(getActivity(), imageurl);
+                if (imageurl != null && (!imageurl.isEmpty()))
+                    common.shareimage(getActivity(), imageurl);
 
                 break;
         }
@@ -1047,5 +1057,4 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setKeyListener(null);
                 }
     }
-
 }
