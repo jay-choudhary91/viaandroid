@@ -124,8 +124,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private static final int request_read_external_storage = 1;
     private final int flingactionmindspdvac = 10;
     Spinner photospinner;
-    ScrollView scrollView_encyrption,scrollview_detail;
-    ScrollView scrollView_encyrption,scrollview_meta;
+    ScrollView scrollView_encyrption,scrollview_detail,scrollview_meta;
 
     customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
             tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
@@ -509,17 +508,20 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                 scrollview_detail.setVisibility(View.VISIBLE);
                 scrollView_encyrption.setVisibility(View.INVISIBLE);
+                scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
 
             case R.id.txt_slot5:
                 resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
                 scrollview_meta.setVisibility(View.VISIBLE);
-                scrollView_encyrption.setVisibility(View.GONE);
+                scrollView_encyrption.setVisibility(View.INVISIBLE);
+                scrollview_detail.setVisibility(View.INVISIBLE);
                 break;
             case R.id.txt_slot6:
                 resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
                 scrollView_encyrption.setVisibility(View.VISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
+                scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
             case R.id.img_edit_name:
               edt_medianame.setClickable(true);
