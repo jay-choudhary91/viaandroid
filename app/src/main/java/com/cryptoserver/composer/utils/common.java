@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.hardware.usb.UsbConstants;
@@ -49,7 +50,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -2216,5 +2220,18 @@ public class common {
     {
         if(custompermissiondialog != null && custompermissiondialog.isShowing())
             custompermissiondialog.dismiss();
+    }
+
+    public static void setspannable(String encryption_key, String encryption_value, TextView txt_encryption){
+
+        String encryptionstr =  encryption_key.concat(encryption_value);
+       // int substring=encryptionblock.lastIndexOf(":");
+        Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
+        Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
+
+        SpannableStringBuilder encryptionstring=new SpannableStringBuilder(encryptionstr);
+        encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length()+1,encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txt_encryption.setText(encryptionstring);
     }
 }

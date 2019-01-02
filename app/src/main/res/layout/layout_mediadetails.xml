@@ -359,6 +359,9 @@
         android:layout_width="match_parent"
         android:id="@+id/scrollview_encyption"
         android:visibility="gone"
+        android:layout_marginLeft="@dimen/normal_margin_left"
+        android:layout_marginRight="@dimen/normal_margin_right"
+        android:layout_marginTop="@dimen/margin_10dp"
         android:layout_below="@+id/tab_layout"
         android:layout_height="match_parent">
 
@@ -453,6 +456,7 @@
             </LinearLayout>
 
         </LinearLayout>
+        <include layout="@layout/layout_encryption_details"></include>
 
     </ScrollView>
 
