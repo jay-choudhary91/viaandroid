@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/layout_encryption_detail"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.cryptoserver.composer.views.customfonttextview
+        android:id="@+id/text_encryption"
+        app:fontType="OpenSans_Regular"
+        style="@style/txt_drawer_graphical_title"
+        android:text="@string/encryption_information" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <com.cryptoserver.composer.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                style="@style/txt_row_encryption"
+                android:layout_weight="0.3"
+                android:id="@+id/txt_videoupdatetransactionid"
+                android:text=""/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content">
+
+            <com.cryptoserver.composer.views.customfonttextview
+                style="@style/txt_row_encryption"
+                android:id="@+id/txt_hash_formula"
+                android:layout_weight="0.3"
+                app:fontType="OpenSans_Regular"
+                android:text=""/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <com.cryptoserver.composer.views.customfonttextview
+                style="@style/txt_row_encryption"
+                android:id="@+id/txt_data_hash"
+                android:layout_weight="0.3"
+                app:fontType="OpenSans_Regular"
+                android:text=""/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content">
+
+            <com.cryptoserver.composer.views.customfonttextview
+                style="@style/txt_row_encryption"
+                android:id="@+id/txt_dictionary_hash"
+                android:text="Metric Hash"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
