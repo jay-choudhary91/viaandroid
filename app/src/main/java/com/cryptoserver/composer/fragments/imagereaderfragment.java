@@ -14,25 +14,33 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -59,6 +67,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -72,7 +81,7 @@ import butterknife.ButterKnife;
 public class imagereaderfragment extends basefragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener ,AdapterView.OnItemSelectedListener {
 
     View rootview;
-    ImageView handle;
+    ImageView handle,img_edit_name,img_edit_notes,img_share_media;
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     ImageView handleimageview, righthandle;
@@ -80,6 +89,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
     TextView txtslotmedia, txtslotmeta, txtslotencyption;
+    EditText edt_medianame,edt_medianotes;
     TextView txtSlot1;
     TextView txtSlot2;
     TextView txtSlot3, txt_metrics, txt_hashes;
@@ -113,7 +123,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private static final int request_read_external_storage = 1;
     private final int flingactionmindspdvac = 10;
     Spinner photospinner;
-    ScrollView scrollView_encyrption;
+    ScrollView scrollView_encyrption,scrollview_detail;
 
 
     private BroadcastReceiver getmetadatabroadcastreceiver, getencryptionmetadatabroadcastreceiver;
@@ -167,16 +177,35 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
 
+            //tabs_detail
+            img_share_media=rootview.findViewById(R.id.img_share_media);
+            img_edit_name=rootview.findViewById(R.id.img_edit_name);
+            img_edit_notes=rootview.findViewById(R.id.img_edit_notes);
+            edt_medianame=rootview.findViewById(R.id.edt_medianame);
+            edt_medianotes=rootview.findViewById(R.id.edt_medianotes);
+            img_share_media.setOnClickListener(this);
+            img_edit_name.setOnClickListener(this);
+            img_edit_notes.setOnClickListener(this);
             txt_blockchainid = rootview.findViewById(R.id.txt_videoupdatetransactionid);
             txt_blockid = rootview.findViewById(R.id.txt_hash_formula);
             txt_blocknumber = rootview.findViewById(R.id.txt_data_hash);
             scrollView_encyrption = rootview.findViewById(R.id.scrollview_encyption);
+            scrollview_detail=rootview.findViewById(R.id.scrollview_detail);
             String blockchainid = " EOLZ03D0K91734JADFL2";
             String blockid = " ZD38MGUQ4FADLK5A";
             String blocknumber = " 4";
             common.setspannable(getResources().getString(R.string.blockchain_id), blockchainid, txt_blockchainid);
             common.setspannable(getResources().getString(R.string.block_id), blockid, txt_blockid);
             common.setspannable(getResources().getString(R.string.block_number), blocknumber, txt_blocknumber);
+            edt_medianame.setEnabled(false);
+            edt_medianame.setClickable(false);
+            edt_medianame.setFocusable(false);
+            edt_medianame.setFocusableInTouchMode(false);
+
+            edt_medianotes.setEnabled(false);
+            edt_medianotes.setClickable(false);
+            edt_medianotes.setFocusable(false);
+            edt_medianotes.setFocusableInTouchMode(false);
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -310,10 +339,44 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             setmetriceshashesdata();
             setupimagedata();
+
+            edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        edt_medianame.setKeyListener(null);
+                        v.setFocusable(false);
+
+
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
+                       // if (arrayvideolist.size() > 0) {
+                            String renamevalue = edt_medianame.getText().toString();
+                            editabletext();
+                     //   edt_medianame.setKeyListener(null);
+                     //   }
+                    }
+                }
+            });
+
+            edt_medianame.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                    if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
+                  /*  Log.i(TAG,"Here you can write the code");*/
+                      //  if (arrayvideolist.size() > 0) {
+                        String renamevalue = edt_medianame.getText().toString();
+                        editabletext();
+                        edt_medianame.setKeyListener(null);
+                        }
+                    // }
+                    return false;
+                }
+            });
         }
         return rootview;
     }
-
 
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
@@ -395,6 +458,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             case R.id.txt_slot4:
                 resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+                scrollview_detail.setVisibility(View.VISIBLE);
+                scrollView_encyrption.setVisibility(View.INVISIBLE);
                 break;
 
             case R.id.txt_slot5:
@@ -403,6 +468,30 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             case R.id.txt_slot6:
                 resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
                 scrollView_encyrption.setVisibility(View.VISIBLE);
+                scrollview_detail.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.img_edit_name:
+              edt_medianame.setClickable(true);
+              edt_medianame.setEnabled(true);
+              edt_medianame.setFocusable(true);
+              edt_medianame.setFocusableInTouchMode(true);
+              edt_medianame.requestFocus();
+              InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+              imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                break;
+            case R.id.img_edit_notes:
+                edt_medianotes.setClickable(true);
+                edt_medianotes.setEnabled(true);
+                edt_medianotes.setFocusable(true);
+                edt_medianotes.setFocusableInTouchMode(true);
+                edt_medianotes.requestFocus();
+                InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                break;
+            case R.id.img_share_media:
+                if (imageurl != null && (!imageurl.isEmpty())) common.shareimage(getActivity(), imageurl);
+
                 break;
         }
 
@@ -941,6 +1030,22 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
+    }
+
+    public void editabletext(){
+        Editable editableText=  edt_medianame.getEditableText();
+                if(editableText!=null) {
+                    edt_medianame.setInputType(InputType.TYPE_CLASS_TEXT);
+                    edt_medianame.setEllipsize(TextUtils.TruncateAt.END);
+                    edt_medianame.setSingleLine();
+
+                }
+                else
+                {
+                    edt_medianame.setEnabled(false);
+                    edt_medianame.setClickable(false);
+                    edt_medianame.setKeyListener(null);
+                }
     }
 
 }

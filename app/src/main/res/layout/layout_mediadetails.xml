@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/layout_footer"
         android:layout_width="match_parent"
-        android:background="@color/white"
+        android:background="@drawable/bottomborder"
         android:layout_gravity="bottom|end"
         android:layout_alignParentBottom="true"
         android:padding="@dimen/margin_10dp"
@@ -18,11 +18,16 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/normal_margin_left"
+            android:layout_marginRight="@dimen/normal_margin_right"
+            android:id="@+id/img_share_media"
             android:background="@drawable/share_icon"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/normal_margin_left"
+            android:layout_marginRight="@dimen/normal_margin_right"
             android:layout_alignParentRight="true"
             android:background="@drawable/delete_icon"/>
     </RelativeLayout>
@@ -87,7 +92,7 @@
         android:layout_below="@+id/tab_layout"
         android:layout_above="@+id/layout_footer"
         android:id="@+id/scrollview_detail"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="match_parent">
 
 
@@ -121,7 +126,7 @@
                     android:layout_height="wrap_content">
 
                     <EditText
-                        android:id="@+id/edt_videoname"
+                        android:id="@+id/edt_medianame"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="left"
@@ -133,17 +138,18 @@
                         android:inputType="none"
                         android:background="@null"
                         android:scrollHorizontally="false"
-                        android:textColor="@color/black"
-                        android:layout_toLeftOf="@+id/img_edit"
+                        android:layout_toLeftOf="@+id/img_edit_name"
                         android:visibility="visible"
                         android:imeOptions="actionDone"
                         />
                     <ImageView
                         android:layout_width="15dp"
                         android:layout_alignParentRight="true"
-                        android:id="@+id/img_edit"
+                        android:id="@+id/img_edit_name"
                         android:layout_centerInParent="true"
                         android:src="@drawable/img_edit"
+                        android:layout_marginLeft="@dimen/margin_5dp"
+                        android:layout_marginRight="@dimen/margin_5dp"
                         android:layout_height="15dp" />
 
 
@@ -316,11 +322,11 @@
                     android:background="@drawable/edittext_bg">
 
                     <EditText
-                        android:id="@+id/edt_notes"
+                        android:id="@+id/edt_medianotes"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
                         android:ellipsize="end"
-                        android:layout_toLeftOf="@+id/img_edit_note"
+                        android:layout_toLeftOf="@+id/img_edit_notes"
                         android:gravity="left"
                         android:background="@null"
                         android:imeOptions="actionDone"
@@ -336,9 +342,11 @@
                      <ImageView
                         android:layout_width="15dp"
                         android:layout_alignParentRight="true"
-                        android:id="@+id/img_edit_note"
+                        android:id="@+id/img_edit_notes"
                         android:layout_alignParentTop="true"
-                        android:layout_centerInParent="true"
+                         android:layout_marginLeft="@dimen/margin_5dp"
+                         android:layout_marginRight="@dimen/margin_5dp"
+                         android:layout_centerInParent="true"
                         android:layout_margin="@dimen/margin_5dp"
                         android:src="@drawable/img_edit"
                         android:layout_height="15dp" />
