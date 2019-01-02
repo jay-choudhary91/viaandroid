@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -33,7 +38,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
@@ -71,6 +75,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     ImageView handleimageview, righthandle;
+    TextView blockchain,hashformula,datahash,matrichash;
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
     TextView txtslotmedia,txtslotmeta,txtslotencyption;
@@ -106,6 +111,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private static final int request_read_external_storage = 1;
     private  final int flingactionmindspdvac = 10;
     Spinner photospinner;
+    ScrollView scrollView_encyrption;
 
 
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
@@ -156,6 +162,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
+
+            blockchain= rootview.findViewById(R.id.txt_videoupdatetransactionid);
+            hashformula=rootview.findViewById(R.id.txt_hash_formula);
+            datahash=rootview.findViewById(R.id.txt_data_hash);
+            matrichash=rootview.findViewById(R.id.txt_dictionary_hash);
+            scrollView_encyrption=rootview.findViewById(R.id.scrollview_encyption);
+          //  setspannable();
+
+            //  String blockchainId=blockchain.get
 
 
             handleimageview.setOnClickListener(new View.OnClickListener() {
@@ -381,6 +396,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
             case R.id.txt_slot6:
                 resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
+                scrollView_encyrption.setVisibility(View.VISIBLE);
                 break;
         }
 
@@ -944,5 +960,23 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void onNothingSelected(AdapterView<?> arg0) {
         // TODO Auto-generated method stub
     }
+
+    /*public SpannableStringBuilder setspannable(){
+
+
+        blockchain.setText("blockchain Id:" + "abcd");
+        String blockchainid= (String) blockchain.getText();
+        int substring=blockchainid.lastIndexOf("Id:");
+
+        SpannableStringBuilder string12=new SpannableStringBuilder(blockchainid);
+        string12.setSpan(new );
+        string12.setSpan(new StyleSpan(Typeface.NORMAL),0,substring, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        string12.setSpan(new StyleSpan(Typeface.BOLD),substring,blockchainid.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+       // SpannableString string1=new SpannableString("Blockchain Id");
+        blockchain.setText(string12);
+        Log.e("string",""+string12);
+        return string12;
+
+    }*/
 
 }

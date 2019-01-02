@@ -87,6 +87,7 @@
         android:layout_below="@+id/tab_layout"
         android:layout_above="@+id/layout_footer"
         android:id="@+id/scrollview_detail"
+        android:visibility="gone"
         android:layout_height="match_parent">
 
 
@@ -133,6 +134,7 @@
                         android:background="@null"
                         android:scrollHorizontally="false"
                         android:textColor="@color/black"
+                        android:layout_toLeftOf="@+id/img_edit"
                         android:visibility="visible"
                         android:imeOptions="actionDone"
                         />
@@ -311,22 +313,22 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.75"
-                    android:background="@drawable/edittext_shap">
+                    android:background="@drawable/edittext_bg">
 
                     <EditText
                         android:id="@+id/edt_notes"
                         android:layout_width="match_parent"
                         android:layout_height="70dp"
-                        android:background="@drawable/edittext_bg"
                         android:ellipsize="end"
+                        android:layout_toLeftOf="@+id/img_edit_note"
                         android:gravity="left"
+                        android:background="@null"
                         android:imeOptions="actionDone"
-                        android:inputType="none"
-                        android:maxLines="1"
-                        android:scrollHorizontally="false"
+                        android:inputType="textMultiLine"
                         android:singleLine="true"
                         android:textColor="@color/black"
                         android:textSize="15sp"
+                        android:isScrollContainer="true"
                         android:padding="@dimen/margin_5dp"
                         android:visibility="visible"
                         />
@@ -335,9 +337,9 @@
                         android:layout_width="15dp"
                         android:layout_alignParentRight="true"
                         android:id="@+id/img_edit_note"
-                         android:layout_alignParentTop="true"
+                        android:layout_alignParentTop="true"
                         android:layout_centerInParent="true"
-                         android:layout_margin="@dimen/margin_5dp"
+                        android:layout_margin="@dimen/margin_5dp"
                         android:src="@drawable/img_edit"
                         android:layout_height="15dp" />
 
@@ -356,6 +358,115 @@
     </ScrollView>
 
 
+     <ScrollView
+         android:layout_width="match_parent"
+         android:id="@+id/scrollview_meta"
+         android:layout_height="match_parent">
+
+
+     </ScrollView>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:id="@+id/scrollview_encyption"
+        android:visibility="gone"
+        android:layout_below="@+id/tab_layout"
+        android:layout_height="match_parent">
+
+ <LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <com.cryptoserver.composer.views.customfonttextview
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_row_encryption"
+            android:id="@+id/txt_videoupdatetransactionid"
+            android:layout_weight="0.3"
+            android:text="Blockchain"/>
+
+
+        <!--<com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_videoupdatetransactionid"
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_row_encryption"
+            android:layout_weight="0.7"
+            android:text=""/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <com.cryptoserver.composer.views.customfonttextview
+            style="@style/txt_row_encryption"
+            app:fontType="OpenSans_Regular"
+            android:layout_weight="0.3"
+            android:id="@+id/txt_hash_formula"
+            android:text="Hash Formula"/>
+
+        <!--<com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_hash_formula"
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_row_encryption"
+            android:layout_weight="0.7"
+            android:text=""/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <com.cryptoserver.composer.views.customfonttextview
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_row_encryption"
+            android:id="@+id/txt_data_hash"
+            android:layout_weight="0.3"
+            android:text="Data Hash"/>
+
+        <!--<com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_data_hash"
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_row_encryption"
+            android:layout_weight="0.7"
+            android:text=""/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <com.cryptoserver.composer.views.customfonttextview
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_row_encryption"
+            android:layout_weight="0.3"
+            android:id="@+id/txt_dictionary_hash"
+            android:text="Metric Hash"/>
+
+       <!-- <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_dictionary_hash"
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_row_encryption"
+            android:layout_weight="0.7"
+            android:text=""/>-->
+
+    </LinearLayout>
+
+</LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
 
