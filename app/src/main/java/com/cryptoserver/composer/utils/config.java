@@ -90,6 +90,7 @@ public class config {
     public static final String gpslongitude = "gpslongitude";
     public static final String gpslatitudedegree = "gpslatitudedegree";
     public static final String gpslongitudedegree = "gpslongitudedegree";
+    public static final String carrier = "carrier";
 
     //graphicaldata
     public static final String Latitude="Latitude";

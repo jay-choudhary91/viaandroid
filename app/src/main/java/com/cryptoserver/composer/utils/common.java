@@ -1728,6 +1728,7 @@ public class common {
             mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Orientation+System.getProperty("line.separator")+
                     common.getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
             txt_longitude.setText(mformatbuilder.toString());
+
             txt_address.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)));
         }
     }
@@ -2231,7 +2232,7 @@ public class common {
 
         SpannableStringBuilder encryptionstring=new SpannableStringBuilder(encryptionstr);
         encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length()+1,encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txt_encryption.setText(encryptionstring);
     }
 }
