@@ -909,7 +909,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 } else {
 
-                    if (audiostatus.equalsIgnoreCase("sync_pending") && metricmainarraylist.size() == 0) {
+                    if (audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0) {
                         setmetricdata(mitemlist);
                     } else {
                         setmetricdata(mitemlist);
