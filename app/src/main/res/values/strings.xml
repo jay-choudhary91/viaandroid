@@ -27,10 +27,13 @@
     <string name="end_time">End Time:</string>
     <string name="duration">Duration</string>
     <string name="meta">Meta</string>
-    <string name="encyrption">Encyription</string>
+    <string name="encyrption">Encryption</string>
     <string name="photo">Photo</string>
     <string name="video">Video</string>
     <string name="audio">Audio</string>
+    <string name="blockchain_id">Blockchain ID:</string>
+    <string name="block_id">Block ID:</string>
+    <string name="block_number">Block Number:</string>
 
     <string name="record_now">RECORD NOW</string>
     <string name="save">Save</string>
