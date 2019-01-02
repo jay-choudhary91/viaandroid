@@ -83,9 +83,6 @@
 
     </LinearLayout>
 
-
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_marginLeft="@dimen/normal_margin_left"
@@ -93,6 +90,8 @@
         android:layout_below="@+id/tab_layout"
         android:layout_above="@+id/layout_footer"
         android:id="@+id/scrollview_detail"
+        android:scrollbars="none"
+        android:visibility="gone"
         android:visibility="visible"
         android:layout_height="match_parent">
 
@@ -152,9 +151,6 @@
                         android:layout_marginLeft="@dimen/margin_5dp"
                         android:layout_marginRight="@dimen/margin_5dp"
                         android:layout_height="15dp" />
-
-
-
                     <!--<EditText
                         android:layout_width="wrap_content"
                         android:layout_toLeftOf="@+id/img_edit"
@@ -162,9 +158,6 @@
                         android:layout_height="wrap_content" />-->
 
                 </RelativeLayout>
-
-
-
 
             </LinearLayout>
 
@@ -304,7 +297,6 @@
                 android:layout_marginTop="@dimen/margin_5dp"
                 android:layout_height="wrap_content">
 
-
                 <com.cryptoserver.composer.views.customfonttextview
                     app:fontType="OpenSans_Regular"
                     android:layout_width="0dp"
@@ -354,27 +346,26 @@
 
                 </RelativeLayout>
 
-
-
-
             </LinearLayout>
 
         </LinearLayout>
-
-
-
-
     </ScrollView>
 
-
      <ScrollView
-         android:layout_width="match_parent"
          android:id="@+id/scrollview_meta"
-         android:layout_height="match_parent">
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_marginLeft="@dimen/normal_margin_left"
+         android:layout_marginRight="@dimen/normal_margin_right"
+         android:layout_below="@+id/tab_layout"
+         android:layout_above="@+id/layout_footer"
+         android:scrollbars="none"
+         android:visibility="gone"
+         >
 
+         <include layout="@layout/mediametainfo"/>
 
      </ScrollView>
-
 
     <ScrollView
         android:layout_width="match_parent"
@@ -384,8 +375,8 @@
         android:layout_marginRight="@dimen/normal_margin_right"
         android:layout_marginTop="@dimen/margin_10dp"
         android:layout_below="@+id/tab_layout"
+        android:scrollbars="none"
         android:layout_height="match_parent">
-
 
 
         <include layout="@layout/layout_encryption_details"></include>
