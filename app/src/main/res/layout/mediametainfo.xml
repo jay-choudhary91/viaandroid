@@ -55,12 +55,12 @@
            <com.cryptoserver.composer.views.customfonttextview
                style="@style/txt_drawer_graphical_title"
                android:text="@string/locationanalytics"
-               app:fontType="OpenSans_Regular"
+               app:fontType="Comfortaa-Regular"
                />
 
            <com.cryptoserver.composer.views.customfonttextview
                android:id="@+id/txt_address"
-               app:fontType="OpenSans_Regular"
+               app:fontType="Comfortaa-Regular"
                style="@style/txt_normalview"
                android:text="X-Axis"/>
 
@@ -177,7 +177,7 @@
                <com.cryptoserver.composer.views.customfonttextview
                    style="@style/txt_drawer_graphical_title"
                    android:text="@string/orientation"
-                   app:fontType="OpenSans_Regular"
+                   app:fontType="Comfortaa-Regular"
                   />
                 <LinearLayout
                android:layout_width="match_parent"
@@ -239,7 +239,7 @@
 
             <com.cryptoserver.composer.views.customfonttextview
                 style="@style/txt_drawer_graphical_title"
-                app:fontType="OpenSans_Regular"
+                app:fontType="Comfortaa-Regular"
                 android:text="@string/Phoneanalytics" />
 
             <LinearLayout
