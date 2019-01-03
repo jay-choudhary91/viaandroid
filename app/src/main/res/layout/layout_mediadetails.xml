@@ -40,12 +40,12 @@
         android:orientation="horizontal"
         android:padding="1dp"
         android:id="@+id/tab_layout"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/normal_margin_left"
         android:layout_marginRight="@dimen/normal_margin_right"
         android:layout_marginTop="@dimen/margin_10dp"
-        android:background="@color/blue">
+        android:background="@color/white">
 
         <com.cryptoserver.composer.views.customfonttextview
             android:id="@+id/txt_slot4"
@@ -316,6 +316,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.75"
+                    android:layout_marginBottom="@dimen/margin_5dp"
                     android:background="@drawable/edittext_bg">
 
                     <EditText
