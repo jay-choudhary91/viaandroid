@@ -458,17 +458,31 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        if (mgoogleapiclient != null && mgoogleapiclient.isConnected()) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mgoogleapiclient, mlocationrequest, this);
+        try
+        {
+            if (mgoogleapiclient != null && mgoogleapiclient.isConnected()) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(
+                        mgoogleapiclient, mlocationrequest, this);
 
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
+
     }
 
     protected void stopLocationUpdates() {
-        if (mgoogleapiclient != null && mgoogleapiclient.isConnected()) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mgoogleapiclient, this);
+        try
+        {
+            if (mgoogleapiclient != null && mgoogleapiclient.isConnected())
+                LocationServices.FusedLocationApi.removeLocationUpdates(mgoogleapiclient, this);
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
+
     }
 
     @SuppressLint("RestrictedApi")
