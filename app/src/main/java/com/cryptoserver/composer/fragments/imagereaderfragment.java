@@ -40,6 +40,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
@@ -84,11 +85,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,8 +105,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ImageView handle,img_edit_name,img_edit_notes,img_share_media,img_arrow_back,img_camera,img_folder,img_dotmenu;
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
-    ImageView img_fullscreen;
-    ImageView handleimageview, righthandle;
+    ImageView handleimageview, righthandle,img_fullscreen;
 
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
@@ -160,9 +162,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout googlemap;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-    mediadate = "",mediatime = "",mediasize;
-
-
+    mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
+    private float currentDegree = 0f;
+    ImageView img_compass;
 
     private BroadcastReceiver getmetadatabroadcastreceiver, getencryptionmetadatabroadcastreceiver;
 
@@ -307,6 +309,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             tvbattery=rootview.findViewById(R.id.txt_battery);
             layout_googlemap= rootview.findViewById(R.id.layout_googlemap);
             googlemap= rootview.findViewById(R.id.googlemap);
+            img_compass= rootview.findViewById(R.id.img_compass);
 
             photospinner.setOnItemSelectedListener(this);
             handleimageview.setOnTouchListener(this);
@@ -1126,6 +1129,18 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                     if (audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0) {
 
+                        if(!mediadate.isEmpty()){
+
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            Date date = format.parse(mediadate);
+                            String newString = new SimpleDateFormat("H:mm").format(date);
+                            String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+                            tvdate.setText(filecreateddate);
+                            tvtime.setText(newString);
+                        }
+
+
                         if(!medianame.isEmpty()){
                             int index =  medianame.lastIndexOf('.');
                             if(index >=0)
@@ -1140,13 +1155,17 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                            setmetricdata(mitemlist);
                     } else {
 
-                        /*if(!mediadate.isEmpty()){
-                            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mediadate);
+                        if(!mediadate.isEmpty()){
+
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            Date date = format.parse(mediadate);
                             String newString = new SimpleDateFormat("H:mm").format(date);
+                            String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
 
+                            tvdate.setText(filecreateddate);
                             tvtime.setText(newString);
+                        }
 
-                        }*/
 
                         if(!medianame.isEmpty()){
                             int index =  medianame.lastIndexOf('.');
@@ -1409,10 +1428,20 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             common.setspannable(getResources().getString(R.string.uptime),"\n"+metricItemArraylist.getMetricTrackValue(), tvuptime);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("battery")){
             common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("deviceorientation")){
+
+            String strdegree=xdata.getinstance().getSetting(config.orientation);
+            if(! strdegree.equals(lastsavedangle))
+            {
+                if(strdegree.equalsIgnoreCase("NA"))
+                    strdegree="0.0";
+
+                int degree = Math.abs((int)Double.parseDouble(strdegree));
+                rotatecompass(degree);
+            }
+            lastsavedangle=strdegree;
+            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
         }
-
-
-
     }
 
     private void loadmap() {
@@ -1561,6 +1590,21 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     polyline.setJointType(JointType.ROUND);
                 }*/
         }
+    }
+    public void rotatecompass(int degree)
+    {
+        RotateAnimation ra = new RotateAnimation(
+                currentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+        ra.setFillAfter(true);
+        img_compass.startAnimation(ra);
+        currentDegree = -degree;
     }
 
     public void updatemediainfo(String transactionid,String medianame,String medianotes,String mediafolder)
