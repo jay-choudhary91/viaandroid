@@ -104,6 +104,14 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                         thumbnail(0.1f).
                         into(holder.img_mediathumbnail);
             }
+
+            holder.img_mediathumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // if(arrayvideolist.get(position).getmimetype().contains("video"))
+                    adapter.onItemClicked(arrayvideolist.get(position),4);
+                }
+            });
             holder.img_mediathumbnail.getLayoutParams().height = arrayvideolist.get(position).getGriditemheight();
         }
         else
@@ -111,6 +119,11 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             holder.rl_row_media.setVisibility(View.GONE);
             holder.img_mediathumbnail.getLayoutParams().height = 0;
         }
+    }
+
+    public void filterlist(ArrayList<video> arrayvideolist) {
+        this.arrayvideolist = arrayvideolist;
+        notifyDataSetChanged();
     }
 
     @Override

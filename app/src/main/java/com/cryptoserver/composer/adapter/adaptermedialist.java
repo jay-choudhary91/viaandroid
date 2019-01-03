@@ -44,14 +44,13 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adapteritemclick adapter;
-    private int row_index = -1,viewheight=0;
+    private int row_index = -1,listviewheight=0;
     HashMap<String, Bitmap> cacheBitmap;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tv_localkey,tv_sync_status,txt_pipesign;
         EditText edtvideoname;
-        public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_full_screen,img_play_pause;
-        public Button btnedit;
+        public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete;
         public RelativeLayout root_view;
 
         public myViewHolder(View view) {
@@ -66,15 +65,18 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
             imgdeleteicon = (ImageView) view.findViewById(R.id.img_deleteicon);
             img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
-            btnedit = (Button) view.findViewById(R.id.btn_edit);
+            img_slide_share = (ImageView) view.findViewById(R.id.img_slide_share);
+            img_slide_create_dir = (ImageView) view.findViewById(R.id.img_slide_create_dir);
+            img_slide_delete = (ImageView) view.findViewById(R.id.img_slide_delete);
             root_view = (RelativeLayout) view.findViewById(R.id.root_view);
         }
     }
 
-    public adaptermedialist(Context context, ArrayList<video> arrayvideolist, adapteritemclick adapter){
+    public adaptermedialist(Context context, ArrayList<video> arrayvideolist, adapteritemclick adapter,int listviewheight){
         this.context = context;
         this.arrayvideolist = arrayvideolist;
         this.adapter = adapter;
+        this.listviewheight = listviewheight;
     }
 
     @NonNull
@@ -183,26 +185,33 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.edtvideoname.setKeyListener(null);
             }
 
-            holder.imgshareicon.setOnClickListener(new View.OnClickListener() {
+            holder.img_slide_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     adapter.onItemClicked(arrayvideolist.get(position),1);
-                    holder.imgshareicon.setClickable(false);
+                    holder.img_slide_share.setClickable(false);
                     new Handler().postDelayed(new Runnable()
                     {
                         public void run()
                         {
-                            holder.imgshareicon.setClickable(true);
+                            holder.img_slide_share.setClickable(true);
                         }
                     }, 150);
 
                 }
             });
 
-            holder.imgdeleteicon.setOnClickListener(new View.OnClickListener() {
+            holder.img_slide_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     adapter.onItemClicked(arrayvideolist.get(position),2);
+                }
+            });
+
+            holder.img_slide_create_dir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //adapter.onItemClicked(arrayvideolist.get(position),2);
                 }
             });
 
@@ -215,95 +224,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 }
             });
 
-            holder.edtvideoname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
-                  /*  Log.i(TAG,"Here you can write the code");*/
-                        if(arrayvideolist.size()>0){
-                            String renamevalue = holder.edtvideoname.getText().toString();
-                            String path = arrayvideolist.get(position).getPath();
-
-                            File sourceFile = new File(path);
-                            File filedirectory = sourceFile.getParentFile();
-                            String filename = sourceFile.getName();
-
-                            if(renamevalue.toString().trim().length() > 0)
-                            {
-                                if(!filename.equalsIgnoreCase(renamevalue)){
-                                    File from = new File(filedirectory,filename);
-                                    File to = new File(filedirectory,renamevalue + arrayvideolist.get(position).getExtension());
-                                    from.renameTo(to);
-                                    arrayvideolist.get(position).setPath(to.getAbsolutePath());
-                                    arrayvideolist.get(position).setName(renamevalue+ arrayvideolist.get(position).getExtension());
-                                    adapter.onItemClicked(arrayvideolist.get(position),3);
-
-                                }
-                            }
-                            else
-                            {
-                                holder.edtvideoname.setText(common.removeextension(filename));
-                            }
-                            return true;
-                        }
-
-                    }
-                    return false;
-                }
-            });
-
-            holder.edtvideoname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        holder.edtvideoname.setKeyListener(null);
-                        v.setFocusable(false);
-                        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(holder.edtvideoname.getWindowToken(), 0);
-                        if(arrayvideolist.size()>0){
-                            String renamevalue = holder.edtvideoname.getText().toString();
-                            String path = arrayvideolist.get(position).getPath();
-
-                            File sourceFile = new File(path);
-                            File filedirectory = sourceFile.getParentFile();
-                            String filename = sourceFile.getName();
-
-                            if(renamevalue.toString().trim().length() > 0)
-                            {
-                                if(!filename.equalsIgnoreCase(renamevalue)){
-                                    File from = new File(filedirectory,filename);
-                                    File to = new File(filedirectory,renamevalue + arrayvideolist.get(position).getExtension());
-                                    from.renameTo(to);
-
-                                    arrayvideolist.get(position).setPath(to.getAbsolutePath());
-                                    arrayvideolist.get(position).setName(renamevalue+ arrayvideolist.get(position).getExtension());
-
-                                    adapter.onItemClicked(arrayvideolist.get(position),3);
-                                }
-                            }
-                            else
-                            {
-                                holder.edtvideoname.setText(common.removeextension(filename));
-                            }
-                        }
-                        Log.e("Focaus change ", "Focus change");
-                    }
-                }
-            });
-
-            if(viewheight == 0)
-            {
-                holder.root_view.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewheight=holder.root_view.getHeight();
-                    }
-                });
-            }
-            else
-            {
-                holder.root_view.getLayoutParams().height = viewheight;
-            }
+            double parentheight=listviewheight;
+            parentheight=parentheight/4.4;
+            holder.root_view.getLayoutParams().height = (int)parentheight;
         }
         else
         {
@@ -311,6 +234,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.root_view.setVisibility(View.GONE);
         }
 
+    }
+
+    public void filterlist(ArrayList<video> arrayvideolist) {
+        this.arrayvideolist = arrayvideolist;
+        notifyDataSetChanged();
     }
 
     @Override

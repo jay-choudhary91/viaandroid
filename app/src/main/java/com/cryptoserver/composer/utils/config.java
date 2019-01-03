@@ -19,6 +19,9 @@ public class config {
     public static final String hashesdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID+File.separator+"hashes";
 
+    public static final String audiowavesdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
+            BuildConfig.APPLICATION_ID+File.separator+"audiowaves";
+
     public static final double STATIC_LAT = 43.65844179931329;
     public static final double STATIC_LNG = -116.69653460383417;
 
@@ -133,6 +136,9 @@ public class config {
     public static final String sync_inprogress="inprogress";
     public static final String sync_notfound="notfound";
 
+    public static final String item_photo="PHOTO";
+    public static final String item_video="VIDEO";
+    public static final String item_audio="AUDIO";
     // An Enum class
     public enum permissions
     {

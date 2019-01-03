@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:animateLayoutChanges="true"
+    android:background="@color/white"
     android:id="@+id/listlayout">
 
     <RelativeLayout
@@ -13,7 +15,17 @@
 
         <include layout="@layout/action_bar_medialist"></include>
 
+        <!--<RelativeLayout
+            android:id="@+id/layout_sectionsearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/view_actionbar"
+            android:orientation="horizontal">
+
+        </RelativeLayout>-->
+
     </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/lay_grid_list_type"
@@ -72,7 +84,6 @@
         android:id="@+id/rv_medialist_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:layout_below="@id/lay_grid_list_type">
 
     </android.support.v7.widget.RecyclerView>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,15 +17,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +45,11 @@ import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -77,6 +85,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     RelativeLayout lay_gridstyle;
     @BindView(R.id.lay_liststyle)
     RelativeLayout lay_liststyle;
+    @BindView(R.id.layout_sectionsearch)
+    RelativeLayout layout_sectionsearch;
 
     @BindView(R.id.txt_mediatype_b)
     TextView txt_mediatype_b;
@@ -86,11 +96,19 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     TextView txt_mediatype_c;
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
+    @BindView(R.id.txt_searchcancel)
+    TextView txt_searchcancel;
 
+    @BindView(R.id.edt_searchitem)
+    EditText edt_searchitem;
     @BindView(R.id.img_camera)
     ImageView img_camera;
+    @BindView(R.id.img_folder)
+    ImageView img_folder;
+    @BindView(R.id.img_header_search)
+    ImageView img_header_search;
 
-    int selectedstyletype=1,selectedmediatype=1;
+    int selectedstyletype=1,selectedmediatype=1,listviewheight=0;
     RelativeLayout listlayout;
     boolean touched =false;
     private Handler myhandler;
@@ -109,6 +127,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private static final int request_read_external_storage = 1;
     private Uri selectedimageuri =null;
     private String selectedvideopath ="";
+    FFmpeg ffmpeg;
 
     @Override
     public int getlayoutid() {
@@ -119,6 +138,31 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
         ButterKnife.bind(this,parent);
+    }
+
+    private void loadffmpegbinary() {
+        try {
+            if (ffmpeg == null) {
+                Log.d("", "ffmpeg : era nulo");
+
+                ffmpeg = FFmpeg.getInstance(getContext());
+            }
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                @Override
+                public void onFailure() {
+                    // showUnsupportedExceptionDialog();
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.d("", "ffmpeg : correct Loaded");
+                }
+            });
+        } catch (FFmpegNotSupportedException e) {
+            //showUnsupportedExceptionDialog();
+        } catch (Exception e) {
+            Log.d("", "EXception no controlada : " + e);
+        }
     }
 
     @Override
@@ -197,18 +241,38 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             txt_mediatype_c.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             img_camera.setOnClickListener(this);
+            img_header_search.setOnClickListener(this);
+            txt_searchcancel.setOnClickListener(this);
+
+            img_camera.setVisibility(View.VISIBLE);
+            img_folder.setVisibility(View.VISIBLE);
+            img_header_search.setVisibility(View.VISIBLE);
 
             onTouchListener = new RecyclerTouchListener(getActivity(), recyclerviewlist);
-            onTouchListener.setSwipeOptionViews(R.id.btn_edit).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
+            onTouchListener.setSwipeOptionViews(R.id.img_slide_delete).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
             new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                 @Override
                 public void onSwipeOptionClicked(int viewID, int position) {
-                    arrayvideolist.get(position).setSelected(true);
-                    adaptermedialist.notifyDataSetChanged();
-                    Log.e("selected Position = " ,""+ position);
+
                 }
             });
 
+            edt_searchitem.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    filter(editable.toString());
+                }
+            });
 
             recyclerviewgrid.setVisibility(View.VISIBLE);
             RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -239,11 +303,43 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     return false;
                 }
             });
-
+            loadffmpegbinary();
             resetmedialist();
         }
         return rootview;
     }
+
+    private void filter(String text) {
+
+        if(arrayvideolist != null && arrayvideolist.size() > 0)
+        {
+            if(text.trim().length() > 0)
+            {
+                //new array list that will hold the filtered data
+                ArrayList<video> filterdnames = new ArrayList<>();
+                //looping through existing elements
+                for (video object : arrayvideolist) {
+                    //if the existing elements contains the search input
+                    if (object.getName().contains(text.toLowerCase()) && object.isDoenable()) {
+                        //adding the element to filtered list
+                        filterdnames.add(object);
+                    }
+                }
+                //calling a method of the adapter class and passing the filtered list
+                if(adaptergrid != null && adaptermedialist != null)
+                {
+                    adaptergrid.filterlist(filterdnames);
+                    adaptermedialist.filterlist(filterdnames);
+                }
+            }
+            else
+            {
+                setmediaadapter();
+            }
+        }
+
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -275,6 +371,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             case R.id.img_camera:
                 launchbottombarfragment();
                 break;
+            case R.id.img_header_search:
+                layout_sectionsearch.setVisibility(View.VISIBLE);
+                break;
+            case R.id.txt_searchcancel:
+                edt_searchitem.setText("");
+                layout_sectionsearch.setVisibility(View.GONE);
+                break;
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
                 gethelper().addFragment(settingfrag, false, true);
@@ -285,15 +388,15 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     public void showselecteditemincenter(TextView textView,int sectionnumber)
     {
         String selectedvalue=textView.getText().toString();
-        if(textView.getText().toString().startsWith("PHOTO"))
+        if(textView.getText().toString().startsWith(config.item_photo))
         {
             selectedmediatype=1;
         }
-        else if(textView.getText().toString().startsWith("VIDEO"))
+        else if(textView.getText().toString().startsWith(config.item_video))
         {
             selectedmediatype=2;
         }
-        else if(textView.getText().toString().startsWith("AUDIO"))
+        else if(textView.getText().toString().startsWith(config.item_audio))
         {
             selectedmediatype=3;
         }
@@ -330,75 +433,59 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             checkitem="audio";
         }
+        audiocount=0;videocount=0;imagecount=0;
         for(int i=0;i<arrayvideolist.size();i++)
         {
             arrayvideolist.get(i).setDoenable(false);
+            if(arrayvideolist.get(i).getmimetype().startsWith("video"))
+            {
+                videocount++;
+            }
+            else if(arrayvideolist.get(i).getmimetype().startsWith("image"))
+            {
+                imagecount++;
+            }
+            else if(arrayvideolist.get(i).getmimetype().startsWith("audio"))
+            {
+                audiocount++;
+            }
             if(arrayvideolist.get(i).getmimetype().contains(checkitem))
                 arrayvideolist.get(i).setDoenable(true);
+
         }
 
         if(adaptermedialist != null && adaptergrid != null)
         {
             adaptermedialist.notifyDataSetChanged();
             adaptergrid.notifyDataSetChanged();
+            recyclerviewlist.smoothScrollToPosition(0);
+            recyclerviewgrid.smoothScrollToPosition(0);
         }
 
-
+        updatecounter(txt_mediatype_a);
+        updatecounter(txt_mediatype_b);
+        updatecounter(txt_mediatype_c);
     }
 
     public void updatecounter(TextView textView)
     {
-        String checkitem="";
-        if(textView.getText().toString().startsWith("VIDEO"))
+        if(textView.getText().toString().startsWith(config.item_video))
         {
-            checkitem="video";
-            videocount=0;
-            for(int i=0;i<arrayvideolist.size();i++)
-            {
-                arrayvideolist.get(i).setDoenable(false);
-                if(arrayvideolist.get(i).getmimetype().contains(checkitem))
-                {
-                    videocount++;
-                    arrayvideolist.get(i).setDoenable(true);
-                }
-            }
-            textView.setText("VIDEO");
-            if(imagecount > 0)
-                textView.setText("VIDEO ("+videocount+")");
+            textView.setText(config.item_video);
+            if(videocount > 0)
+                textView.setText(config.item_video+" ("+videocount+")");
         }
-        else if(textView.getText().toString().startsWith("AUDIO"))
+        else if(textView.getText().toString().startsWith(config.item_audio))
         {
-            checkitem="audio";
-            audiocount=0;
-            for(int i=0;i<arrayvideolist.size();i++)
-            {
-                arrayvideolist.get(i).setDoenable(false);
-                if(arrayvideolist.get(i).getmimetype().contains(checkitem))
-                {
-                    audiocount++;
-                    arrayvideolist.get(i).setDoenable(true);
-                }
-            }
-            textView.setText("AUDIO");
-            if(imagecount > 0)
-                textView.setText("AUDIO ("+audiocount+")");
+            textView.setText(config.item_audio);
+            if(audiocount > 0)
+                textView.setText(config.item_audio+" ("+audiocount+")");
         }
-        else if(textView.getText().toString().startsWith("IMAGE"))
+        else if(textView.getText().toString().startsWith(config.item_photo))
         {
-            checkitem="image";
-            imagecount=0;
-            for(int i=0;i<arrayvideolist.size();i++)
-            {
-                arrayvideolist.get(i).setDoenable(false);
-                if(arrayvideolist.get(i).getmimetype().contains(checkitem))
-                {
-                    imagecount++;
-                    arrayvideolist.get(i).setDoenable(true);
-                }
-            }
-            textView.setText("IMAGE");
+            textView.setText(config.item_photo);
             if(imagecount > 0)
-                textView.setText("IMAGE ("+imagecount+")");
+                textView.setText(config.item_photo+" ("+imagecount+")");
         }
     }
 
@@ -472,6 +559,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                                 videoobj.setMediastatus(getdata[0]);
                                                 videoobj.setVideostarttransactionid(getdata[1]);
                                                 videoobj.setLocalkey(getdata[2]);
+                                                videoobj.setThumbnailpath(getdata[3]);
 
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                                     long seconds = format.getLong(MediaFormat.KEY_DURATION);
@@ -484,6 +572,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                                         second=1;
 
                                                     videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                                    if(mime.startsWith("audio") && videoobj.getThumbnailpath().toString().trim().isEmpty())
+                                                        generateaudiothumbail(videoobj.getPath());
+
                                                     ismedia=true;
                                                 }
                                             }
@@ -536,8 +627,102 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 });
             }
         }).start();
+    }
 
+    public void generateaudiothumbail(String filepath)
+    {
+        try {
+            //ffmpeg -ss 00:50:00 -to 00:60:43 -i input -filter_complex "showwavespic=s=640x120" -frames:v 1 output.png
+            File destinationfilepath = common.gettempfileforaudiowave();
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", new File(filepath));
 
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            mediaMetadataRetriever.setDataSource(getContext(),uri);
+            long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+
+            String starttime = common.converttimeformate(0);
+            String endtime = common.converttimeformate(mediatotalduration);
+
+            String[] complexCommand = { "-ss", starttime,"-i", filepath, "-to",endtime, "-filter_complex",
+                    "showwavespic=s=400x400", "-frames:v","1",destinationfilepath.getAbsolutePath()};
+            //String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + starttime, "-t", "" + endtime, "-c","copy", filePath};
+            execffmpegbinary(complexCommand,filepath,destinationfilepath.getAbsolutePath());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void execffmpegbinary(final String[] command, final String sourcepath, final String dest) {
+        try {
+            ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                @Override
+                public void onFailure(String s) {
+                    Log.e("Failure with output : ","IN onFailure");
+                }
+
+                @Override
+                public void onSuccess(String s) {
+                    Log.e("SUCCESS with output : ","onSuccess");
+
+                }
+
+                @Override
+                public void onProgress(String s) {
+                    Log.e( "Progress bar : " , "In onProgress");
+
+                }
+
+                @Override
+                public void onStart() {
+                    Log.e("Start with output : ","IN onStart");
+                }
+
+                @Override
+                public void onFinish() {
+                    Log.e("Start with output : ","IN onFinish");
+                }
+            });
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            // do nothing for now
+        }
+    }
+
+    public void setmediaadapter()
+    {
+        recyclerviewgrid.post(new Runnable() {
+            @Override
+            public void run() {
+                listviewheight=recyclerviewgrid.getHeight();
+                adaptermedialist = new adaptermedialist(getActivity(),arrayvideolist, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+                    }
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+                        video videoobj=(video)object;
+                        setAdapter(videoobj,type);
+                    }
+
+                },listviewheight);
+                recyclerviewlist.setAdapter(adaptermedialist);
+
+                adaptergrid = new adaptermediagrid(getActivity(),arrayvideolist, new adapteritemclick() {
+                    @Override
+                    public void onItemClicked(Object object) {
+                    }
+                    @Override
+                    public void onItemClicked(Object object, int type) {
+                        video videoobj=(video)object;
+                        setAdapter(videoobj,type);
+                    }
+
+                });
+                recyclerviewgrid.setAdapter(adaptergrid);
+                showselectedmediatypeitems();
+            }
+        });
     }
 
     public void resetmedialist(){
@@ -952,36 +1137,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }
         }
         return false;
-    }
-
-    public void setmediaadapter()
-    {
-        adaptermedialist = new adaptermedialist(getActivity(),arrayvideolist, new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-            }
-            @Override
-            public void onItemClicked(Object object, int type) {
-                video videoobj=(video)object;
-                setAdapter(videoobj,type);
-            }
-
-        });
-        recyclerviewlist.setAdapter(adaptermedialist);
-
-        adaptergrid = new adaptermediagrid(getActivity(),arrayvideolist, new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-            }
-            @Override
-            public void onItemClicked(Object object, int type) {
-                video videoobj=(video)object;
-                setAdapter(videoobj,type);
-            }
-
-        });
-        recyclerviewgrid.setAdapter(adaptergrid);
-        showselectedmediatypeitems();
     }
 
     public void showalertdialog(final video videoobj, String message){
