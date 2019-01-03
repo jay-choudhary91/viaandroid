@@ -188,8 +188,9 @@
                     app:fontType="OpenSans_Regular"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
+                    android:textColor="@color/black"
                     android:gravity="left"
-                    android:text="10/10/2018"
+                    android:text=""
                     />
 
             </LinearLayout>
@@ -216,8 +217,9 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     android:gravity="left"
+                    android:textColor="@color/black"
                     app:fontType="OpenSans_Regular"
-                    android:text="3:47:08pm"
+                    android:text=""
                     />
 
             </LinearLayout>
