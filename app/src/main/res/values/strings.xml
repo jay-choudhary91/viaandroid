@@ -35,6 +35,8 @@
     <string name="block_id">Hash Formula:</string>
     <string name="block_number">Data Hash:</string>
     <string name="metrichash">Matric Hash:</string>
+    <string name="deeptruth">deeptruth</string>
+    <string name="proof_of_the_truth">Proof of the Truth</string>
 
     <string name="record_now">RECORD NOW</string>
     <string name="save">Save</string>

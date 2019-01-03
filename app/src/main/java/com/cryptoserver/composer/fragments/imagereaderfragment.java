@@ -1,6 +1,8 @@
 package com.cryptoserver.composer.fragments;
 
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +37,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -125,9 +130,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private final int flingactionmindspdvac = 10;
     Spinner photospinner;
     ScrollView scrollView_encyrption,scrollview_detail,scrollview_meta;
-    RelativeLayout layout_footer,layout_photodetails;
+    RelativeLayout layout_footer,layout_photodetails,layout_halfscrnimg;
     LinearLayout tab_layout;
     boolean img_fullscrnshow=false;
+    LinearLayout layout_photoreader;
+    int targetheight,previousheight;
 
     customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
             tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
@@ -155,7 +162,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             categories.add("Video");
             categories.add("Audio");
 
+
             handle = (ImageView) rootview.findViewById(R.id.handle);
+            layout_photoreader=rootview.findViewById(R.id.layout_photoreader);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
             txtslotmedia = rootview.findViewById(R.id.txt_slot4);
@@ -184,6 +193,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             righthandle.setOnTouchListener(this);
 
             //tabs_detail
+            layout_halfscrnimg=rootview.findViewById(R.id.layout_halfscrnimg);
             layout_photodetails=rootview.findViewById(R.id.layout_photodetails);
             scrollview_detail=rootview.findViewById(R.id.scrollview_detail);
             img_fullscreen=rootview.findViewById(R.id.img_fullscreen);
@@ -209,6 +219,20 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             layout_footer.setVisibility(View.VISIBLE);
             img_fullscreen.setVisibility(View.VISIBLE);
             layout_photodetails.setVisibility(View.VISIBLE);
+
+            layout_photoreader.post(new Runnable() {
+                @Override
+                public void run() {
+                    targetheight= layout_photoreader.getHeight();
+                }
+            });
+            tab_photoreader.post(new Runnable() {
+                @Override
+                public void run() {
+                    previousheight = tab_photoreader.getHeight();
+                }
+            });
+
 
 
             tvaddress=rootview.findViewById(R.id.txt_address);
@@ -542,6 +566,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
               edt_medianame.setEnabled(true);
               edt_medianame.setFocusable(true);
               edt_medianame.setFocusableInTouchMode(true);
+              edt_medianame.setSelection(edt_medianame.getText().length());
               edt_medianame.requestFocus();
               InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
               imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -551,6 +576,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 edt_medianotes.setEnabled(true);
                 edt_medianotes.setFocusable(true);
                 edt_medianotes.setFocusableInTouchMode(true);
+                edt_medianotes.setSelection(edt_medianotes.getText().length());
                 edt_medianotes.requestFocus();
                 InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -564,20 +590,22 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
             case R.id.img_fullscreen:
                 if(img_fullscrnshow){
+                    collapse(tab_photoreader,100,previousheight);
                     layout_photodetails.setVisibility(View.VISIBLE);
                     tab_layout.setVisibility(View.VISIBLE);
                     scrollview_detail.setVisibility(View.VISIBLE);
                     layout_footer.setVisibility(View.VISIBLE);
-                    img_fullscreen.setImageResource(R.drawable.icon_full_screen);
+                    img_fullscreen.setImageResource(R.drawable.img_fullscreen);
                     img_fullscrnshow=false;
                 }else{
+                    expand(tab_photoreader,100,targetheight);
                     layout_photodetails.setVisibility(View.GONE);
                     scrollview_detail.setVisibility(View.GONE);
                     scrollview_meta.setVisibility(View.GONE);
                     scrollView_encyrption.setVisibility(View.GONE);
                     tab_layout.setVisibility(View.GONE);
                     layout_footer.setVisibility(View.VISIBLE);
-                    img_fullscreen.setImageResource(R.drawable.share_icon);
+                    img_fullscreen.setImageResource(R.drawable.img_halfscreen);
                     img_fullscrnshow=true;
                 }
 
@@ -1205,4 +1233,88 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setKeyListener(null);
                 }
     }
+
+    /*private void expand(RelativeLayout layout, int layoutHeight) {
+        layout.setVisibility(View.VISIBLE);
+        ValueAnimator animator = slideAnimator(layout, 0, layoutHeight);
+        animator.start();
+    }
+
+    private void collapse(final RelativeLayout layout) {
+        int finalHeight = layout.getHeight();
+        ValueAnimator mAnimator = slideAnimator(layout, finalHeight, 0);
+
+        mAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                //Height=0, but it set visibility to GONE
+              //  layout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+        mAnimator.start();
+    }
+    private ValueAnimator slideAnimator(final RelativeLayout layout, int start, int end) {
+        ValueAnimator animator = ValueAnimator.ofInt(start, end);
+
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                //Update Height
+                int value = (Integer) valueAnimator.getAnimatedValue();
+
+                ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
+                layoutParams.height = value;
+                layout.setLayoutParams(layoutParams);
+            }
+        });
+        return animator;
+    }*/
+
+    public void expand(final View v, int duration, int targetHeight) {
+
+        int prevHeight  = v.getHeight();
+
+        v.setVisibility(View.VISIBLE);
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                v.getLayoutParams().height = (int) animation.getAnimatedValue();
+                v.requestLayout();
+            }
+        });
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
+        valueAnimator.setDuration(duration);
+        valueAnimator.start();
+    }
+
+    public void collapse(final View v, int duration, int targetHeight) {
+
+        int prevHeight  = v.getHeight();
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                v.getLayoutParams().height = (int) animation.getAnimatedValue();
+                v.requestLayout();
+            }
+        });
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
+        valueAnimator.setDuration(duration);
+        valueAnimator.start();
+    }
+
 }
