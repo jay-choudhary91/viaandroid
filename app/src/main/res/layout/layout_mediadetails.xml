@@ -40,19 +40,19 @@
         android:orientation="horizontal"
         android:padding="1dp"
         android:id="@+id/tab_layout"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/normal_margin_left"
         android:layout_marginRight="@dimen/normal_margin_right"
         android:layout_marginTop="@dimen/margin_10dp"
-        android:background="@color/white">
+        android:background="@color/blue">
 
         <com.cryptoserver.composer.views.customfonttextview
             android:id="@+id/txt_slot4"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/photo"
-            app:fontType="OpenSans_Regular"
+            app:fontType="Comfortaa-Regular"
             android:layout_marginLeft="1dp"
             android:textSize="15sp"
             android:gravity="center"
@@ -65,7 +65,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/meta"
-            app:fontType="OpenSans_Regular"
+            app:fontType="Comfortaa-Regular"
             android:layout_marginLeft="1dp"
             android:textSize="15sp"
             android:gravity="center"
@@ -80,7 +80,7 @@
             android:text="@string/encyrption"
             android:layout_marginLeft="1dp"
             android:gravity="center"
-            app:fontType="OpenSans_Regular"
+            app:fontType="Comfortaa-Regular"
             android:textSize="15sp"
             android:textColor="@color/white"
             android:background="@color/white"
@@ -183,10 +183,9 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     android:layout_width="0dp"
                     android:layout_weight="0.75"
-                    app:fontType="OpenSans_Semibold"
+                    app:fontType="OpenSans_Regular"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
-
                     android:gravity="left"
                     android:text="10/10/2018"
                     />
@@ -214,7 +213,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     android:gravity="left"
-                    app:fontType="OpenSans_Semibold"
+                    app:fontType="OpenSans_Regular"
                     android:text="3:47:08pm"
                     />
 
@@ -240,7 +239,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     android:gravity="left"
-                    app:fontType="OpenSans_Semibold"
+                    app:fontType="OpenSans_Regular"
                     android:text="100kb"
                     />
 

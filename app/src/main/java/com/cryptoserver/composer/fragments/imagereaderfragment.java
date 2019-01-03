@@ -481,6 +481,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             case R.id.righthandle:
                 flingswipe.onTouchEvent(motionEvent);
                 break;
+            /*case R.id.tab_photoreader:
+                img_fullscreen.setVisibility(View.VISIBLE);
+                img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                layout_footer.setVisibility(View.VISIBLE);
+                break;*/
         }
         return true;
     }
@@ -604,7 +609,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     scrollview_meta.setVisibility(View.GONE);
                     scrollView_encyrption.setVisibility(View.GONE);
                     tab_layout.setVisibility(View.GONE);
-                    layout_footer.setVisibility(View.VISIBLE);
+                    layout_footer.setVisibility(View.GONE);
                     img_fullscreen.setImageResource(R.drawable.img_halfscreen);
                     img_fullscrnshow=true;
                 }
@@ -1233,54 +1238,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setKeyListener(null);
                 }
     }
-
-    /*private void expand(RelativeLayout layout, int layoutHeight) {
-        layout.setVisibility(View.VISIBLE);
-        ValueAnimator animator = slideAnimator(layout, 0, layoutHeight);
-        animator.start();
-    }
-
-    private void collapse(final RelativeLayout layout) {
-        int finalHeight = layout.getHeight();
-        ValueAnimator mAnimator = slideAnimator(layout, finalHeight, 0);
-
-        mAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                //Height=0, but it set visibility to GONE
-              //  layout.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationStart(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-            }
-        });
-        mAnimator.start();
-    }
-    private ValueAnimator slideAnimator(final RelativeLayout layout, int start, int end) {
-        ValueAnimator animator = ValueAnimator.ofInt(start, end);
-
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //Update Height
-                int value = (Integer) valueAnimator.getAnimatedValue();
-
-                ViewGroup.LayoutParams layoutParams = layout.getLayoutParams();
-                layoutParams.height = value;
-                layout.setLayoutParams(layoutParams);
-            }
-        });
-        return animator;
-    }*/
 
     public void expand(final View v, int duration, int targetHeight) {
 
