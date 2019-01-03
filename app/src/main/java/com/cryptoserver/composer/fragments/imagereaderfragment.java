@@ -88,7 +88,7 @@ import butterknife.ButterKnife;
 public class imagereaderfragment extends basefragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener ,AdapterView.OnItemSelectedListener {
 
     View rootview;
-    ImageView handle,img_edit_name,img_edit_notes,img_share_media;
+    ImageView handle,img_edit_name,img_edit_notes,img_share_media,img_arrow_back,img_camera,img_folder,img_dotmenu;
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     ImageView handleimageview, righthandle,img_fullscreen;
@@ -99,7 +99,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     EditText edt_medianame,edt_medianotes;
     TextView txtSlot1;
     TextView txtSlot2;
-    TextView txtSlot3, txt_metrics, txt_hashes;
+    TextView txtSlot3, txt_metrics, txt_hashes,txt_title_actionbarcomposer;
     ScrollView scrollview_metrices, scrollview_hashes;
     LinearLayout layout_bottom, layout_drawer;
     videoframeadapter mmetricesadapter, mhashesadapter;
@@ -163,6 +163,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             categories.add("Audio");
 
 
+            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
+            img_folder = (ImageView) rootview.findViewById(R.id.img_folder);
+            img_camera = (ImageView) rootview.findViewById(R.id.img_camera);
+            img_arrow_back = (ImageView) rootview.findViewById(R.id.img_arrow_back);
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_photoreader=rootview.findViewById(R.id.layout_photoreader);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
@@ -175,6 +179,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
             txt_metrics = (TextView) rootview.findViewById(R.id.txt_metrics);
             txt_hashes = (TextView) rootview.findViewById(R.id.txt_hashes);
+            txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
             scrollview_metrices = (ScrollView) rootview.findViewById(R.id.scrollview_metrices);
             scrollview_hashes = (ScrollView) rootview.findViewById(R.id.scrollview_hashes);
             fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_container);
@@ -187,6 +192,17 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             photospinner = rootview.findViewById(R.id.spinner);
 
             photospinner.setOnItemSelectedListener(this);
+
+
+            img_dotmenu.setOnClickListener(this);
+            img_folder.setOnClickListener(this);
+            img_camera.setOnClickListener(this);
+            img_arrow_back.setOnClickListener(this);
+
+            img_dotmenu.setVisibility(View.VISIBLE);
+            img_folder.setVisibility(View.VISIBLE);
+            img_camera.setVisibility(View.VISIBLE);
+            img_arrow_back.setVisibility(View.VISIBLE);
 
 
             handleimageview.setOnTouchListener(this);
@@ -344,6 +360,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
+
 
             txtslotencyption.setOnClickListener(this);
             txtslotmeta.setOnClickListener(this);
@@ -593,6 +610,21 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 scrollview_meta.setVisibility(View.GONE);
                 break;
+
+            case R.id.img_dotmenu:
+                settingfragment settingfrag=new settingfragment();
+                gethelper().addFragment(settingfrag, false, true);
+                break;
+            case R.id.img_folder:
+
+                break;
+            case R.id.img_camera:
+                launchbottombarfragment();
+                break;
+
+            case R.id.img_arrow_back:
+                gethelper().onBack();
+                break;
             case R.id.img_fullscreen:
                 if(img_fullscrnshow){
                     collapse(tab_photoreader,100,previousheight);
@@ -617,6 +649,23 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
         }
 
+    }
+
+    public void launchbottombarfragment()
+    {
+        bottombarfragment fragbottombar=new bottombarfragment();
+        fragbottombar.setData(new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+
+            }
+
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
+        gethelper().replaceFragment(fragbottombar, false, true);
     }
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3) {

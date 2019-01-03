@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/dark_blue_solid_a">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/actionbarcomposer"
+        android:padding="10dp"
+        >
+
+        <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_title_actionbarcomposer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="@string/mymedia"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"/>
+
+        <ImageView
+            android:id="@+id/img_arrow_back"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:background="@drawable/left_arrow"/>
+
+
+        <ImageView
+            android:id="@+id/img_camera"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_toRightOf="@id/img_arrow_back"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:visibility="gone"
+            android:src="@drawable/photo_camera"/>
+
+        <ImageView
+            android:id="@+id/img_folder"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_toRightOf="@id/img_camera"
+            android:layout_marginLeft="15dp"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:src="@drawable/folder"/>
+
+        <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_media_quality"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:layout_toRightOf="@id/img_flash"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"/>
+
+        <ImageView
+            android:id="@+id/img_dotmenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/menu_icon"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.3dp"
+            android:background="@color/blue"></View>
+
+        <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_createdtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:text=""
+            android:padding="5dp"
+            android:layout_toRightOf="@id/img_flash"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"/>
+
+
+    </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
