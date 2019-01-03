@@ -176,12 +176,24 @@
             android:layout_toLeftOf="@id/txt_searchcancel"
             android:background="@drawable/round_corner_search_editext"
             android:imeOptions="actionDone"
-            android:padding="7dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
             android:textSize="16sp"
             android:gravity="left|center_vertical"
             android:layout_centerVertical="true"
             android:inputType="textCapSentences"
             android:hint="Search here"/>
+
+        <ImageView
+            android:id="@+id/img_search_editicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icon_header_search" />
 
     </RelativeLayout>
 

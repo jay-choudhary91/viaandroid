@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -107,6 +108,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     ImageView img_folder;
     @BindView(R.id.img_header_search)
     ImageView img_header_search;
+    @BindView(R.id.img_search_editicon)
+    ImageView img_search_editicon;
 
     int selectedstyletype=1,selectedmediatype=1,listviewheight=0;
     RelativeLayout listlayout;
@@ -247,6 +250,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             img_camera.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
             img_header_search.setVisibility(View.VISIBLE);
+
+
+            try {
+                DrawableCompat.setTint(img_search_editicon.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.grey_xxx));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
 
             onTouchListener = new RecyclerTouchListener(getActivity(), recyclerviewlist);
             onTouchListener.setSwipeOptionViews(R.id.img_slide_delete).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,

@@ -102,8 +102,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ImageView handle,img_edit_name,img_edit_notes,img_share_media,img_arrow_back,img_camera,img_folder,img_dotmenu;
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
-    ImageView handleimageview, righthandle,img_fullscreen;
-    TextView txt_blockchainid, txt_blockid, txt_blocknumber,txt_metahash;
+    ImageView img_fullscreen;
     ImageView handleimageview, righthandle;
 
     LinearLayout linearLayout;
@@ -1141,13 +1140,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                            setmetricdata(mitemlist);
                     } else {
 
-                        if(!mediadate.isEmpty()){
+                        /*if(!mediadate.isEmpty()){
                             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mediadate);
                             String newString = new SimpleDateFormat("H:mm").format(date);
 
                             tvtime.setText(newString);
 
-                        }
+                        }*/
 
                         if(!medianame.isEmpty()){
                             int index =  medianame.lastIndexOf('.');
