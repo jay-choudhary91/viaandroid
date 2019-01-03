@@ -86,7 +86,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ImageView handle,img_edit_name,img_edit_notes,img_share_media;
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
-    ImageView handleimageview, righthandle;
+    ImageView handleimageview, righthandle,img_fullscreen;
     TextView txt_blockchainid, txt_blockid, txt_blocknumber,txt_metahash;
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
@@ -125,6 +125,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private final int flingactionmindspdvac = 10;
     Spinner photospinner;
     ScrollView scrollView_encyrption,scrollview_detail,scrollview_meta;
+    RelativeLayout layout_footer,layout_photodetails;
+    LinearLayout tab_layout;
+    boolean img_fullscrnshow=false;
 
     customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
             tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
@@ -181,20 +184,32 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             righthandle.setOnTouchListener(this);
 
             //tabs_detail
+            layout_photodetails=rootview.findViewById(R.id.layout_photodetails);
+            scrollview_detail=rootview.findViewById(R.id.scrollview_detail);
+            img_fullscreen=rootview.findViewById(R.id.img_fullscreen);
             img_share_media=rootview.findViewById(R.id.img_share_media);
             img_edit_name=rootview.findViewById(R.id.img_edit_name);
             img_edit_notes=rootview.findViewById(R.id.img_edit_notes);
             edt_medianame=rootview.findViewById(R.id.edt_medianame);
             edt_medianotes=rootview.findViewById(R.id.edt_medianotes);
+            layout_footer=rootview.findViewById(R.id.layout_footer);
+            tab_layout=rootview.findViewById(R.id.tab_layout);
             img_share_media.setOnClickListener(this);
             img_edit_name.setOnClickListener(this);
             img_edit_notes.setOnClickListener(this);
+            img_fullscreen.setOnClickListener(this);
             txt_blockchainid = rootview.findViewById(R.id.txt_videoupdatetransactionid);
             txt_blockid = rootview.findViewById(R.id.txt_hash_formula);
             txt_blocknumber = rootview.findViewById(R.id.txt_data_hash);
             txt_metahash = rootview.findViewById(R.id.txt_dictionary_hash);
             scrollView_encyrption = rootview.findViewById(R.id.scrollview_encyption);
             scrollview_meta = rootview.findViewById(R.id.scrollview_meta);
+            scrollview_detail.setVisibility(View.VISIBLE);
+            tab_layout.setVisibility(View.VISIBLE);
+            layout_footer.setVisibility(View.VISIBLE);
+            img_fullscreen.setVisibility(View.VISIBLE);
+            layout_photodetails.setVisibility(View.VISIBLE);
+
 
             tvaddress=rootview.findViewById(R.id.txt_address);
             tvlatitude=rootview.findViewById(R.id.txt_latitude);
@@ -229,7 +244,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
 
-            scrollview_detail=rootview.findViewById(R.id.scrollview_detail);
             String blockchainid = " EOLZ03D0K91734JADFL2";
             String blockid = " ZD38MGUQ4FADLK5A";
             String blocknumber = " 4";
@@ -547,6 +561,26 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     common.shareimage(getActivity(), imageurl);
 
                 scrollview_meta.setVisibility(View.GONE);
+                break;
+            case R.id.img_fullscreen:
+                if(img_fullscrnshow){
+                    layout_photodetails.setVisibility(View.VISIBLE);
+                    tab_layout.setVisibility(View.VISIBLE);
+                    scrollview_detail.setVisibility(View.VISIBLE);
+                    layout_footer.setVisibility(View.VISIBLE);
+                    img_fullscreen.setImageResource(R.drawable.icon_full_screen);
+                    img_fullscrnshow=false;
+                }else{
+                    layout_photodetails.setVisibility(View.GONE);
+                    scrollview_detail.setVisibility(View.GONE);
+                    scrollview_meta.setVisibility(View.GONE);
+                    scrollView_encyrption.setVisibility(View.GONE);
+                    tab_layout.setVisibility(View.GONE);
+                    layout_footer.setVisibility(View.VISIBLE);
+                    img_fullscreen.setImageResource(R.drawable.share_icon);
+                    img_fullscrnshow=true;
+                }
+
                 break;
         }
 

@@ -78,7 +78,7 @@
                 android:textSize="17sp"
                 android:visibility="gone"
                 android:textColor="@color/white"
-                app:fontType="OpenSans_Regular"
+                app:fontType="OpenSans_BoldItalic"
                 android:background="@drawable/round_corner_btn_allow"/>
 
             <RadioGroup

@@ -20,6 +20,9 @@ public class customfonttextview extends android.support.v7.widget.AppCompatTextV
     public static final String SANS_REGULAR = "fonts/OpenSans-Regular.ttf";
     public static final String SANS_SEMI_BOLD = "fonts/OpenSans-Semibold.ttf";
     public static final String SANS_SEMI_BOLD_ITALIC = "fonts/OpenSans-SemiboldItalic.ttf";
+    public static final String SANS_BOLD_COMFORTAA = "fonts/Comfortaa-Bold.ttf";
+    public static final String SANS_LIGHT_COMFORTAA = "fonts/Comfortaa-Light.ttf";
+    public static final String SANS_REGULAR_COMFORTAA = "fonts/Comfortaa-Regular.ttf";
 
 
     public customfonttextview(Context context, AttributeSet attrs) {
@@ -67,7 +70,18 @@ public class customfonttextview extends android.support.v7.widget.AppCompatTextV
                 this.setTypeface(Typeface.createFromAsset(context.getAssets(),SANS_SEMI_BOLD_ITALIC));
 
                 break;
+            case 10:
+                this.setTypeface(Typeface.createFromAsset(context.getAssets(),SANS_BOLD_COMFORTAA));
 
+                break;
+            case 11:
+                this.setTypeface(Typeface.createFromAsset(context.getAssets(),SANS_LIGHT_COMFORTAA));
+
+                break;
+            case 12:
+                this.setTypeface(Typeface.createFromAsset(context.getAssets(),SANS_REGULAR_COMFORTAA));
+
+                break;
 
         }
         ta.recycle();

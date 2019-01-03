@@ -6,17 +6,37 @@
     android:orientation="vertical"
     tools:context=".fragments.imagereaderfragment">
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        android:layout_weight="1"
-        android:id="@+id/tab_photoreader"/>
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:id="@+id/tab_photoreader"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/icon_full_screen"
+            android:id="@+id/img_fullscreen"
+            android:layout_marginBottom="@dimen/margin_20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_below="@+id/tab_photoreader"
         android:layout_weight="1"
+        android:visibility="gone"
+        android:id="@+id/layout_photodetails"
         android:layout_height="0dp">
         <include layout="@layout/layout_mediadetails"></include>
     </RelativeLayout>

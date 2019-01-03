@@ -14,6 +14,7 @@
         android:layout_gravity="bottom|end"
         android:layout_alignParentBottom="true"
         android:padding="@dimen/margin_10dp"
+        android:visibility="gone"
         android:layout_height="wrap_content">
 
         <ImageView
@@ -39,17 +40,19 @@
         android:orientation="horizontal"
         android:padding="1dp"
         android:id="@+id/tab_layout"
+        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/normal_margin_left"
         android:layout_marginRight="@dimen/normal_margin_right"
         android:layout_marginTop="@dimen/margin_10dp"
         android:background="@color/blue">
 
-        <TextView
+        <com.cryptoserver.composer.views.customfonttextview
             android:id="@+id/txt_slot4"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/photo"
+            app:fontType="OpenSans_Regular"
             android:layout_marginLeft="1dp"
             android:textSize="15sp"
             android:gravity="center"
@@ -57,11 +60,12 @@
             android:background="@color/white"
             android:layout_height="match_parent" />
 
-        <TextView
+        <com.cryptoserver.composer.views.customfonttextview
             android:id="@+id/txt_slot5"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/meta"
+            app:fontType="OpenSans_Regular"
             android:layout_marginLeft="1dp"
             android:textSize="15sp"
             android:gravity="center"
@@ -69,13 +73,14 @@
             android:background="@color/white"
             android:layout_height="match_parent" />
 
-        <TextView
+        <com.cryptoserver.composer.views.customfonttextview
             android:id="@+id/txt_slot6"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:text="@string/encyrption"
             android:layout_marginLeft="1dp"
             android:gravity="center"
+            app:fontType="OpenSans_Regular"
             android:textSize="15sp"
             android:textColor="@color/white"
             android:background="@color/white"
@@ -91,7 +96,7 @@
         android:layout_above="@+id/layout_footer"
         android:id="@+id/scrollview_detail"
         android:scrollbars="none"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_height="match_parent">
 
 

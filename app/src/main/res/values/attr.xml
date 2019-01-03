@@ -13,6 +13,9 @@
             <enum name="OpenSans_Regular" value="7" />
             <enum name="OpenSans_Semibold" value="8" />
             <enum name="OpenSans_SemiboldItalic" value="9" />
+            <enum name="Comfortaa-Bold.ttf" value="10" />
+            <enum name="Comfortaa-Light.ttf" value="11" />
+            <enum name="Comfortaa-Regular.ttf" value="12" />
 
         </attr>
     </declare-styleable>
