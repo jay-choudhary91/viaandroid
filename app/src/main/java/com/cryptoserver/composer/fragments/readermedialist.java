@@ -369,7 +369,7 @@ public class readermedialist extends basefragment {
                             mdbhelper.insertstartvideoinfo("",arrayvideolist.get(i).getmimetype(),common.getfilename(arrayvideolist.get(i).getPath()),"",
                                     "","","",syncdate[0]  , "",
                                     "","","","","",
-                                    "","",config.sync_pending,"","","","");
+                                    "","",config.sync_pending,"","","","","","","");
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

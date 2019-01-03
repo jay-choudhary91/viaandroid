@@ -66,7 +66,8 @@ public class databasemanager {
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
                                      String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
-                                     String status,String remainingframes,String lastframe,String framecount,String sync_status)
+                                     String status,String remainingframes,String lastframe,String framecount,String sync_status,String medianame,
+                                     String medianotes,String mediafolder)
     {
         try {
             lock.lock();
@@ -94,6 +95,10 @@ public class databasemanager {
             values.put("framecount",""+framecount);
             values.put("sync_status",""+sync_status);
             values.put("completeddate","0");
+            values.put("media_name",  medianame);
+            values.put("media_notes",  medianotes);
+            values.put("media_folder",  mediafolder);
+
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
             long l=mDb.insert("tblstartmediainfo", null, values);
@@ -160,6 +165,7 @@ public class databasemanager {
             values.put("sequenceid", ""+sequenceid);
             values.put("videostarttransactionid",  videostarttransactionid);
             values.put("metahash",  metahash);
+
 
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
@@ -379,7 +385,8 @@ public class databasemanager {
 
     public void insertstartvideoinfo(String header,String type,String location,String localkey,
                                       String token,String videokey,String sync,String date , String action_type,
-                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,String videocompletedevicedate,String videostarttransactionid)
+                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,String videocompletedevicedate,String videostarttransactionid,
+                                     String filename,String notes,String folder)
     {
         try {
             lock.lock();
@@ -399,6 +406,9 @@ public class databasemanager {
             values.put("devicetimeoffset",  devicetimeoffset);
             values.put("videocompletedevicedate",  videocompletedevicedate);
             values.put("videostarttransactionid",  videostarttransactionid);
+            values.put("file_name",  filename);
+            values.put("notes",  notes);
+            values.put("folder",  folder);
 
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
@@ -604,7 +614,8 @@ public class databasemanager {
                                 cur.getString(cur.getColumnIndex("metricdata")),cur.getString(cur.getColumnIndex("rsequenceno")),
                                 cur.getString(cur.getColumnIndex("sequencehash")),cur.getString(cur.getColumnIndex("sequenceno")),
                                 cur.getString(cur.getColumnIndex("serverdate")),cur.getString(cur.getColumnIndex("sequencedevicedate")),
-                                cur.getString(cur.getColumnIndex("videostarttransactionid")),cur.getString(cur.getColumnIndex("serverdictionaryhash")), cur.getString(cur.getColumnIndex("metahash"))));
+                                cur.getString(cur.getColumnIndex("videostarttransactionid")),cur.getString(cur.getColumnIndex("serverdictionaryhash")),
+                                cur.getString(cur.getColumnIndex("metahash"))));
                     }while(cur.moveToNext());
                 }
             } catch (Exception e) {
@@ -839,6 +850,22 @@ public class databasemanager {
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("update tblstartmediainfo set location ='"+location+"' where videostarttransactionid='"+starttransactionid+"'");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
+
+    public void updatemediainfofromstarttransactionid(String starttransactionid,String location,String medianotes,String mediafolder) {
+        try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL("update tblstartmediainfo set media_name ='"+location+"', media_notes ='"+medianotes+"' ,media_folder ='"+mediafolder+"' where videostarttransactionid='"+starttransactionid+"'");
 
         } catch (Exception e) {
             e.printStackTrace();

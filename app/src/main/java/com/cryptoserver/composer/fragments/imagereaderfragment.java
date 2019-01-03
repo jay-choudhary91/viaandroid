@@ -1,12 +1,14 @@
 package com.cryptoserver.composer.fragments;
 
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -70,12 +72,21 @@ import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.views.customfonttextview;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -93,10 +104,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     RecyclerView recyview_metrices;
     ImageView handleimageview, righthandle,img_fullscreen;
     TextView txt_blockchainid, txt_blockid, txt_blocknumber,txt_metahash;
+    ImageView handleimageview, righthandle;
+
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
     TextView txtslotmedia, txtslotmeta, txtslotencyption;
-    EditText edt_medianame,edt_medianotes;
+
     TextView txtSlot1;
     TextView txtSlot2;
     TextView txtSlot3, txt_metrics, txt_hashes,txt_title_actionbarcomposer;
@@ -136,9 +149,20 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_photoreader;
     int targetheight,previousheight;
 
+    GoogleMap mgooglemap;
+    EditText edt_medianame,edt_medianotes;
+    TextView txt_blockchainid, txt_blockid, txt_blocknumber,txt_metahash,tvsize,tvdate,tvtime;
     customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
             tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
             tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery;
+    @BindView(R.id.layout_googlemap)
+    LinearLayout layout_googlemap;
+    @BindView(R.id.googlemap)
+    FrameLayout googlemap;
+    boolean ismediaplayer = false;
+    String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
+    mediadate = "",mediatime = "",mediasize;
+
 
 
     private BroadcastReceiver getmetadatabroadcastreceiver, getencryptionmetadatabroadcastreceiver;
@@ -230,6 +254,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             txt_metahash = rootview.findViewById(R.id.txt_dictionary_hash);
             scrollView_encyrption = rootview.findViewById(R.id.scrollview_encyption);
             scrollview_meta = rootview.findViewById(R.id.scrollview_meta);
+            tvsize = rootview.findViewById(R.id.txt_size);
+            tvdate = rootview.findViewById(R.id.txt_date);
+            tvtime = rootview.findViewById(R.id.txt_time);
             scrollview_detail.setVisibility(View.VISIBLE);
             tab_layout.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
@@ -279,6 +306,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             tvlanguage=rootview.findViewById(R.id.txt_language);
             tvuptime=rootview.findViewById(R.id.txt_uptime);
             tvbattery=rootview.findViewById(R.id.txt_battery);
+            layout_googlemap= rootview.findViewById(R.id.layout_googlemap);
+            googlemap= rootview.findViewById(R.id.googlemap);
 
             photospinner.setOnItemSelectedListener(this);
             handleimageview.setOnTouchListener(this);
@@ -431,6 +460,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             // attaching data adaptermedialist to spinner
             photospinner.setAdapter(dataAdapter);
 
+            loadmap();
             setmetriceshashesdata();
             setupimagedata();
 
@@ -439,6 +469,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 public void onFocusChange(View v, boolean hasFocus) {
                     if (!hasFocus) {
                         v.setFocusable(false);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
+                        // if (arrayvideolist.size() > 0) {
+                        String medianotes = edt_medianotes.getText().toString();
+
+                        if(!mediatransectionid.isEmpty())
+                            updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes,"allmedia");
                     }
                 }
             });
@@ -449,12 +486,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     if (!hasFocus) {
                         edt_medianame.setKeyListener(null);
                         v.setFocusable(false);
-
-
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                        // if (arrayvideolist.size() > 0) {
                             String renamevalue = edt_medianame.getText().toString();
+                            if(!mediatransectionid.isEmpty())
+                                updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString(),"allmedia");
+
                             editabletext();
                      //   edt_medianame.setKeyListener(null);
                      //   }
@@ -471,6 +509,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                       //  if (arrayvideolist.size() > 0) {
                         String renamevalue = edt_medianame.getText().toString();
                         editabletext();
+
+
                         edt_medianame.setKeyListener(null);
                         }
                     // }
@@ -919,13 +959,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                     setmetadatavalue(metricItemArraylist.get(j));
 
-                    if (fragmentgraphic != null) {
+                    if (mgooglemap != null) {
                         if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
                             if (!metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA")) {
                                 latt = Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
                                 if (longg != 0) {
-                                    if (fragmentgraphic != null) {
-                                        fragmentgraphic.drawmappoints(new LatLng(latt, longg));
+                                    if (mgooglemap != null) {
+                                        drawmappoints(new LatLng(latt, longg));
                                         latt = 0;
                                         longg = 0;
                                     }
@@ -936,8 +976,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             if (!metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA")) {
                                 longg = Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
                                 if (latt != 0) {
-                                    if (fragmentgraphic != null) {
-                                        fragmentgraphic.drawmappoints(new LatLng(latt, longg));
+                                    if (mgooglemap != null) {
+                                        drawmappoints(new LatLng(latt, longg));
                                         latt = 0;
                                         longg = 0;
                                     }
@@ -950,6 +990,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 selectedmetrices = selectedmetrices + "\n";
             }
 
+            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+
+
             if (fragment_graphic_container.getVisibility() == View.VISIBLE) {
                 if (fragmentgraphic != null)
                     fragmentgraphic.setmetricesdata();
@@ -958,66 +1003,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void setmetadatavalue(metricmodel metricItemArraylist){
 
-        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")){
-            common.setspannable(getResources().getString(R.string.latitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlatitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")){
-            common.setspannable(getResources().getString(R.string.longitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlongitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaltitude")){
-            common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("speed")){
-            common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("heading")){
-            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("distancetravelled")){
-            common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("address")){
-            common.setspannable("",metricItemArraylist.getMetricTrackValue(), tvaddress);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.x")){
-            common.setspannable(getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvxaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.y")){
-            common.setspannable(getResources().getString(R.string.yaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvyaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.z")){
-            common.setspannable(getResources().getString(R.string.zaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvzaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("phonetype")){
-            common.setspannable(getResources().getString(R.string.phone),"\n"+metricItemArraylist.getMetricTrackValue(), tvphone);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("carrier")){
-            common.setspannable(getResources().getString(R.string.network),"\n"+metricItemArraylist.getMetricTrackValue(), tvnetwork);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")){
-            common.setspannable(getResources().getString(R.string.connection),"\n"+metricItemArraylist.getMetricTrackValue(), tvconnection);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("osversion")){
-            common.setspannable(getResources().getString(R.string.version),"\n"+metricItemArraylist.getMetricTrackValue(), tvversion);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
-            common.setspannable(getResources().getString(R.string.wifi),"\n"+metricItemArraylist.getMetricTrackValue(), tvwifi);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
-            common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
-            common.setspannable(getResources().getString(R.string.screen),"\n"+metricItemArraylist.getMetricTrackValue(), tvscreen);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("country")){
-            common.setspannable(getResources().getString(R.string.country),"\n"+metricItemArraylist.getMetricTrackValue(), tvcountry);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("cpuusagesystem")){
-            common.setspannable(getResources().getString(R.string.cpuusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvcpuusage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("brightness")){
-            common.setspannable(getResources().getString(R.string.brightness),"\n"+metricItemArraylist.getMetricTrackValue(), tvbrightness);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("timezone")){
-            common.setspannable(getResources().getString(R.string.timezone),"\n"+metricItemArraylist.getMetricTrackValue(), tvtimezone);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("memoryusage")){
-            common.setspannable(getResources().getString(R.string.memoryusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvmemoryusage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")){
-            common.setspannable(getResources().getString(R.string.bluetooth),"\n"+metricItemArraylist.getMetricTrackValue(), tvbluetooth);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicetime")){
-            common.setspannable(getResources().getString(R.string.localtime),"\n"+metricItemArraylist.getMetricTrackValue(), tvlocaltime);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("freespace")){
-            common.setspannable(getResources().getString(R.string.storagefree),"\n"+metricItemArraylist.getMetricTrackValue(), tvstoragefree);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
-            common.setspannable(getResources().getString(R.string.language),"\n"+metricItemArraylist.getMetricTrackValue(), tvlanguage);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("systemuptime")){
-            common.setspannable(getResources().getString(R.string.uptime),"\n"+metricItemArraylist.getMetricTrackValue(), tvuptime);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("battery")){
-            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
-        }
-    }
 
     @Override
     public void onStart() {
@@ -1100,6 +1086,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     if (mediainfocursor.moveToFirst()) {
                         do {
                             audiostatus = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("status"));
+                            mediadate = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videostartdevicedate"));
+                            medianame = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_name"));
+                            medianotes =  "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_notes"));
+                            mediafolder =  "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_folder"));
+                            mediatransectionid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videostarttransactionid"));
+
                             videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
                         } while (mediainfocursor.moveToNext());
                     }
@@ -1134,8 +1126,40 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 } else {
 
                     if (audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0) {
-                        setmetricdata(mitemlist);
+
+                        if(!medianame.isEmpty()){
+                            int index =  medianame.lastIndexOf('.');
+                            if(index >=0)
+                                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
+
+                            edt_medianame.setText(medianame);
+                        }
+
+                        if(!medianotes.isEmpty())
+                            edt_medianotes.setText(medianotes);
+
+                           setmetricdata(mitemlist);
                     } else {
+
+                        if(!mediadate.isEmpty()){
+                            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(mediadate);
+                            String newString = new SimpleDateFormat("H:mm").format(date);
+
+                            tvtime.setText(newString);
+
+                        }
+
+                        if(!medianame.isEmpty()){
+                            int index =  medianame.lastIndexOf('.');
+                            if(index >=0)
+                                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
+
+                            edt_medianame.setText(medianame);
+                        }
+
+                        if(!medianotes.isEmpty())
+                            edt_medianotes.setText(medianotes);
+
                         setmetricdata(mitemlist);
                     }
                 }
@@ -1278,7 +1302,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setInputType(InputType.TYPE_CLASS_TEXT);
                     edt_medianame.setEllipsize(TextUtils.TruncateAt.END);
                     edt_medianame.setSingleLine();
-
                 }
                 else
                 {
@@ -1323,4 +1346,245 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         valueAnimator.start();
     }
 
+
+    public void setmetadatavalue(metricmodel metricItemArraylist){
+
+        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")){
+            latitude = metricItemArraylist.getMetricTrackValue();
+            common.setspannable(getResources().getString(R.string.latitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlatitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")){
+            longitude = metricItemArraylist.getMetricTrackValue();
+            common.setspannable(getResources().getString(R.string.longitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlongitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaltitude")){
+            common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("speed")){
+            common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("heading")){
+            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("distancetravelled")){
+            common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("address")){
+            common.setspannable("",metricItemArraylist.getMetricTrackValue(), tvaddress);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.x")){
+            common.setspannable(getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvxaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.y")){
+            common.setspannable(getResources().getString(R.string.yaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvyaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.z")){
+            common.setspannable(getResources().getString(R.string.zaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvzaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("phonetype")){
+            common.setspannable(getResources().getString(R.string.phone),"\n"+metricItemArraylist.getMetricTrackValue(), tvphone);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("carrier")){
+            common.setspannable(getResources().getString(R.string.network),"\n"+metricItemArraylist.getMetricTrackValue(), tvnetwork);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")){
+            common.setspannable(getResources().getString(R.string.connection),"\n"+metricItemArraylist.getMetricTrackValue(), tvconnection);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("osversion")){
+            common.setspannable(getResources().getString(R.string.version),"\n"+metricItemArraylist.getMetricTrackValue(), tvversion);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
+            common.setspannable(getResources().getString(R.string.wifi),"\n"+metricItemArraylist.getMetricTrackValue(), tvwifi);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
+            common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
+           screenwidth = metricItemArraylist.getMetricTrackValue();
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenheight")){
+           screenheight = metricItemArraylist.getMetricTrackValue();
+           common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("country")){
+            common.setspannable(getResources().getString(R.string.country),"\n"+metricItemArraylist.getMetricTrackValue(), tvcountry);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("cpuusagesystem")){
+            common.setspannable(getResources().getString(R.string.cpuusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvcpuusage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("brightness")){
+            common.setspannable(getResources().getString(R.string.brightness),"\n"+metricItemArraylist.getMetricTrackValue(), tvbrightness);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("timezone")){
+            common.setspannable(getResources().getString(R.string.timezone),"\n"+metricItemArraylist.getMetricTrackValue(), tvtimezone);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("memoryusage")){
+            common.setspannable(getResources().getString(R.string.memoryusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvmemoryusage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")){
+            common.setspannable(getResources().getString(R.string.bluetooth),"\n"+metricItemArraylist.getMetricTrackValue(), tvbluetooth);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicetime")){
+            common.setspannable(getResources().getString(R.string.localtime),"\n"+metricItemArraylist.getMetricTrackValue(), tvlocaltime);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("freespace")){
+            common.setspannable(getResources().getString(R.string.storagefree),"\n"+metricItemArraylist.getMetricTrackValue(), tvstoragefree);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
+            common.setspannable(getResources().getString(R.string.language),"\n"+metricItemArraylist.getMetricTrackValue(), tvlanguage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("systemuptime")){
+            common.setspannable(getResources().getString(R.string.uptime),"\n"+metricItemArraylist.getMetricTrackValue(), tvuptime);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("battery")){
+            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
+        }
+
+
+
+    }
+
+    private void loadmap() {
+        SupportMapFragment mapFragment = new SupportMapFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.googlemap, mapFragment).commit();
+
+        if (mgooglemap == null) {
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    setMap(googleMap);
+                }
+            });
+        } else {
+            setMap(mgooglemap);
+        }
+    }
+
+    private void setMap(GoogleMap googleMap) {
+        this.mgooglemap = googleMap;
+        this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        /*points.add(new LatLng(26.235896,74.24235896));
+        points.add(new LatLng(26.34235896,74.24235896));
+        points.add(new LatLng(26.232435896,74.424235896));
+        points.add(new LatLng(26.22235896,74.2325896));
+        points.add(new LatLng(26.454235896,74.24235896));
+        points.add(new LatLng(26.534235896,74.24235896));
+        points.add(new LatLng(26.5565235896,74.42235896));
+        points.add(new LatLng(26.67235896,74.23235896));
+        points.add(new LatLng(26.878235896,74.22135896));
+        points.add(new LatLng(26.45235896,74.23335896));
+        points.add(new LatLng(26.33235896,74.22335896));
+        polylineOptions.addAll(points);
+        polylineOptions.color(Color.BLUE);
+        polylineOptions.width(20);
+        Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+        //polyline.setEndCap(new RoundCap());
+        //polyline.setJointType(JointType.ROUND);
+         polyline.setPattern(PATTERN_POLYLINE_DOTTED);*/
+
+    }
+
+    //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
+
+    private void populateUserCurrentLocation(final LatLng location) {
+        // DeviceUser user = DeviceUserManager.getInstance().getUser();
+        if (mgooglemap == null)
+            return;
+
+        googlemap.setVisibility(View.VISIBLE);
+
+
+        //polyline.setPattern(PATTERN_POLYLINE_DOTTED);
+
+        /*Polygon polygon = mgooglemap.addPolygon(new PolygonOptions()
+                .clickable(true)
+                .add(location));
+        polygon.setTag("beta");
+
+
+        String type = "";
+        // Get the data object stored with the polygon.
+        if (polygon.getTag() != null) {
+            type = polygon.getTag().toString();
+        }
+
+        List<PatternItem> pattern = null;
+        int strokeColor = COLOR_BLACK_ARGB;
+        int fillColor = COLOR_WHITE_ARGB;
+
+        switch (type) {
+            // If no type is given, allow the API to use the default.
+            case "alpha":
+                // Apply a stroke pattern to render a dashed line, and define colors.
+                pattern = PATTERN_POLYGON_ALPHA;
+                strokeColor = COLOR_GREEN_ARGB;
+                fillColor = COLOR_PURPLE_ARGB;
+                break;
+            case "beta":
+                // Apply a stroke pattern to render a line of dots and dashes, and define colors.
+                pattern = PATTERN_POLYGON_BETA;
+                strokeColor = COLOR_ORANGE_ARGB;
+                fillColor = COLOR_BLUE_ARGB;
+                break;
+        }
+
+        polygon.setStrokePattern(pattern);
+        polygon.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
+        polygon.setStrokeColor(strokeColor);
+        polygon.setFillColor(fillColor);*/
+
+        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
+        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+        } else {
+            if(!ismediaplayer)
+            {
+                mgooglemap.setMyLocationEnabled(true);
+            }
+            else
+            {
+                mgooglemap.setMyLocationEnabled(false);
+            }
+            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+    }
+
+
+    public void drawmappoints(LatLng latlng)
+    {
+        if(mgooglemap != null)
+        {
+                Log.e("GraphicalLatLng",""+latlng.latitude+" "+latlng.longitude);
+                {
+                    /*points.add(latlng);
+                    polylineOptions.addAll(points);
+                    polylineOptions.color(Color.BLUE);
+                    polylineOptions.width(20);
+                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+                    polyline.setStartCap(new RoundCap());
+                    polyline.setEndCap(new RoundCap());
+                    polyline.setJointType(JointType.DEFAULT);*/
+
+                    mgooglemap.addMarker(new MarkerOptions()
+                            .position(latlng)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
+                }
+                /*{
+                    points.add(latlng);
+                    polylineOptions.addAll(points);
+                    polylineOptions.color(Color.WHITE);
+                    polylineOptions.width(20);
+                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+                    polyline.setStartCap(new RoundCap());
+                    polyline.setEndCap(new RoundCap());
+                    polyline.setJointType(JointType.ROUND);
+                }*/
+        }
+    }
+
+    public void updatemediainfo(String transactionid,String medianame,String medianotes,String mediafolder)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes,mediafolder);
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 }

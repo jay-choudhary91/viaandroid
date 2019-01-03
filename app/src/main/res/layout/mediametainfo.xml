@@ -8,15 +8,13 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:orientation="vertical"
-       android:layout_marginLeft="@dimen/normal_margin_left"
-       android:layout_marginRight="@dimen/normal_margin_right"
        android:layout_marginTop="@dimen/margin_10dp">
 
        <LinearLayout
            android:id="@+id/layout_googlemap"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:visibility="gone"
+           android:visibility="visible"
            android:orientation="vertical">
 
 
