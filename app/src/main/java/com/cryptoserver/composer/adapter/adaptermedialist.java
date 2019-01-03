@@ -150,10 +150,22 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
             else
             {
-                Glide.with(context).
-                        load(R.drawable.audiothum).
-                        thumbnail(0.1f).
-                        into(holder.img_videothumbnail);
+                if(! arrayvideolist.get(position).getThumbnailpath().trim().isEmpty())
+                {
+                    Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getPath()));
+                    Glide.with(context).
+                            load(uri).
+                            thumbnail(0.1f).
+                            into(holder.img_videothumbnail);
+                }
+                else
+                {
+                    Glide.with(context).
+                            load(R.drawable.audiothum).
+                            thumbnail(0.1f).
+                            into(holder.img_videothumbnail);
+                }
+
            /* holder.img_videothumbnail.setBackgroundResource(R.drawable.audiotab);*/
             }
 

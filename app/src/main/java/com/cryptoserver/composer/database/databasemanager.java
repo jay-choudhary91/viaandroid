@@ -11,6 +11,7 @@ import android.util.Log;
 import com.cryptoserver.composer.models.mediametadatainfo;
 import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.startmediainfo;
+import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 
 import java.io.IOException;
@@ -665,7 +666,7 @@ public class databasemanager {
                     localkey[0] = "" + cur.getString(cur.getColumnIndex("sync_status"));
                     localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                     localkey[2] = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    //localkey[3] = "" + cur.getString(cur.getColumnIndex("thumbnailpath"));
+                    localkey[3] = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {
@@ -812,6 +813,24 @@ public class databasemanager {
             lock.unlock();
         }
         return null;
+    }
+
+    public void updateaudiothumbnail(String filename,String thumbnailurl) {
+            try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+
+           // String file= common.getfilename(thumbnailurl);
+            String query="update tblstartmediainfo set thumbnailurl ='"+thumbnailurl+"' where location='"+filename+"'";
+            mDb.execSQL(query);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
     }
 
     public void updatemedialocationname(String starttransactionid,String location) {

@@ -572,8 +572,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                                         second=1;
 
                                                     videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                                    if(mime.startsWith("audio") && videoobj.getThumbnailpath().toString().trim().isEmpty())
-                                                        generateaudiothumbail(videoobj.getPath());
+                                                    //if(mime.startsWith("audio") && videoobj.getThumbnailpath().toString().trim().isEmpty())
+                                                    ///    generateaudiothumbail(videoobj.getPath());
 
                                                     ismedia=true;
                                                 }
@@ -665,7 +665,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 @Override
                 public void onSuccess(String s) {
                     Log.e("SUCCESS with output : ","onSuccess");
-
+                    updateaudiothumbnail(sourcepath,dest);
                 }
 
                 @Override
@@ -686,6 +686,30 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
             // do nothing for now
+        }
+    }
+
+    public void updateaudiothumbnail(String filepath,String thumbnailurl)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            mdbhelper.updateaudiothumbnail(common.getfilename(filepath),thumbnailurl);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -745,11 +769,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                    String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
                                    arrayvideolist.get(i).setMediastatus(getdata[0]);
                                    arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                                   arrayvideolist.get(i).setThumbnailpath(getdata[2]);
 
                                }else if(!status.equalsIgnoreCase(config.sync_complete)){
                                    String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
                                    arrayvideolist.get(i).setMediastatus(getdata[0]);
                                    arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                                   arrayvideolist.get(i).setThumbnailpath(getdata[2]);
                                }
                            }
                        }
