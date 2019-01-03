@@ -21,6 +21,7 @@ public class video
     public boolean isSelected = false;
     public String mediastatus = "";
     public String videostarttransactionid = "";
+    public String thumbnailpath = "";
     public boolean ischeck = false;
     public boolean doenable = false;
     public int griditemheight = 0;
@@ -40,6 +41,14 @@ public class video
     public  video()
     {
 
+    }
+
+    public String getThumbnailpath() {
+        return thumbnailpath;
+    }
+
+    public void setThumbnailpath(String thumbnailpath) {
+        this.thumbnailpath = thumbnailpath;
     }
 
     public int getGriditemheight() {

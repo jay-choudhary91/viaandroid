@@ -651,7 +651,7 @@ public class databasemanager {
     }
 
     public String[] getlocalkeybylocation(String filename) {
-        String[] localkey ={"","",""};
+        String[] localkey ={"","","",""};
         Cursor cur=null;
         try {
             lock.lock();
@@ -665,6 +665,7 @@ public class databasemanager {
                     localkey[0] = "" + cur.getString(cur.getColumnIndex("sync_status"));
                     localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                     localkey[2] = "" + cur.getString(cur.getColumnIndex("localkey"));
+                    //localkey[3] = "" + cur.getString(cur.getColumnIndex("thumbnailpath"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {

@@ -2074,6 +2074,23 @@ public class common {
         return ""+ minutes + ":" +seconds;
     }
 
+    public static File gettempfileforaudiowave() {
+        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File file=new File(config.audiowavesdir, fileName+".jpg");
+
+        File destinationDir=new File(config.audiowavesdir);
+        try {
+
+            if (!destinationDir.exists())
+                destinationDir.mkdirs();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
     public static File gettempfileforhash() {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File file=new File(config.hashesdir, fileName+".framemd5");

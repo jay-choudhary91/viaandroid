@@ -261,7 +261,6 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tv_localkey,tv_sync_status;
         EditText edtvideoname;
         public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_full_screen,img_play_pause;
-        public Button btnedit;
 
         public myViewHolder(View view) {
             super(view);
@@ -274,7 +273,6 @@ public class adapterreadermedialist extends RecyclerView.Adapter<adapterreaderme
             imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
             imgdeleteicon = (ImageView) view.findViewById(R.id.img_deleteicon);
             img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
-            btnedit = (Button) view.findViewById(R.id.btn_edit);
         }
     }
 
