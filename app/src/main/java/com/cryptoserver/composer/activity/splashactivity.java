@@ -52,4 +52,13 @@ public class splashactivity extends AppCompatActivity {
             }
         },1500);
     }
+
+
+     /*int[] color = {getResources().getColor(R.color.dark_blue_solid),getResources().getColor(R.color.blue)};
+        float[] position = {0, 1};
+        Shader.TileMode tile_mode = Shader.TileMode.CLAMP;
+        LinearGradient lin_grad = new LinearGradient(0, 0, 0, 35,color,position, tile_mode);
+        Shader shader_gradient = lin_grad;
+        txt_deeptruth.getPaint().setShader(shader_gradient);*/
+    //ImageView img_image=(ImageView)findViewById(R.id.img_image);
 }

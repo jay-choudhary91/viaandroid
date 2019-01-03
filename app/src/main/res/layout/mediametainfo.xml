@@ -20,9 +20,10 @@
            android:orientation="vertical">
 
 
-           <TextView
+           <com.cryptoserver.composer.views.customfonttextview
                style="@style/txt_drawer_graphical_title"
                android:text="@string/locationtracking"
+               app:fontType="OpenSans_Regular"
                />
 
            <LinearLayout
@@ -51,9 +52,10 @@
            android:layout_marginTop="10dp"
            android:orientation="vertical">
 
-           <TextView
+           <com.cryptoserver.composer.views.customfonttextview
                style="@style/txt_drawer_graphical_title"
                android:text="@string/locationanalytics"
+               app:fontType="OpenSans_Regular"
                />
 
            <com.cryptoserver.composer.views.customfonttextview
@@ -172,9 +174,10 @@
                android:visibility="visible"
                android:orientation="vertical">
 
-               <TextView
+               <com.cryptoserver.composer.views.customfonttextview
                    style="@style/txt_drawer_graphical_title"
                    android:text="@string/orientation"
+                   app:fontType="OpenSans_Regular"
                   />
                 <LinearLayout
                android:layout_width="match_parent"
@@ -234,8 +237,9 @@
             android:visibility="visible"
             android:orientation="vertical">
 
-            <TextView
+            <com.cryptoserver.composer.views.customfonttextview
                 style="@style/txt_drawer_graphical_title"
+                app:fontType="OpenSans_Regular"
                 android:text="@string/Phoneanalytics" />
 
             <LinearLayout

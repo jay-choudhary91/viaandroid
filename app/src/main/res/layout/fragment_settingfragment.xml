@@ -44,7 +44,7 @@
                     android:layout_toRightOf="@+id/img_upgrade"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    app:fontType="OpenSans_Regular"
+                    app:fontType="Comfortaa-Regular"
                     />
             </RelativeLayout>
 
@@ -70,7 +70,7 @@
                     android:layout_toRightOf="@+id/img_privacy"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    app:fontType="OpenSans_Regular"
+                    app:fontType="Comfortaa-Regular"
                     />
             </RelativeLayout>
 
@@ -96,7 +96,7 @@
                 android:layout_toRightOf="@+id/img_help"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
-                app:fontType="OpenSans_Regular"
+                app:fontType="Comfortaa-Regular"
                 />
             </RelativeLayout>
         </LinearLayout>
