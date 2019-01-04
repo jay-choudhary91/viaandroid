@@ -709,15 +709,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 gethelper().onBack();
                 break;
             case R.id.img_fullscreen:
-                if(img_fullscrnshow){
-                    collapse(tab_photoreader,100,previousheight);
-                    layout_photodetails.setVisibility(View.VISIBLE);
-                    tab_layout.setVisibility(View.VISIBLE);
-                    scrollview_detail.setVisibility(View.VISIBLE);
-                    layout_footer.setVisibility(View.VISIBLE);
-                    img_fullscreen.setImageResource(R.drawable.img_fullscreen);
-                    img_fullscrnshow=false;
-                }else{
+                if(layout_photodetails.getVisibility()==View.VISIBLE){
                     expand(tab_photoreader,100,targetheight);
                     layout_photodetails.setVisibility(View.GONE);
                     scrollview_detail.setVisibility(View.GONE);
@@ -727,25 +719,58 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     layout_footer.setVisibility(View.GONE);
                     layout_mediatype.setVisibility(View.GONE);
                     img_fullscreen.setVisibility(View.INVISIBLE);
-                 //   img_fullscreen.setImageResource(R.drawable.img_halfscreen);
-                  //  img_fullscrnshow=true;
-                }
 
+
+                } else{
+                    collapse(tab_photoreader,100,previousheight);
+                    layout_photodetails.setVisibility(View.VISIBLE);
+                    tab_layout.setVisibility(View.VISIBLE);
+                    scrollview_detail.setVisibility(View.VISIBLE);
+                    layout_footer.setVisibility(View.VISIBLE);
+                    img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                }
                 break;
 
             case R.id.tab_photoreader:
                 Log.e("ontouch","ontouch");
+
                 if(layout_photodetails.getVisibility()==View.GONE){
+                    if(layout_footer.getVisibility()==(View.GONE)){
+                        img_fullscreen.setVisibility(View.VISIBLE);
+                        img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                        layout_mediatype.setVisibility(View.VISIBLE);
+                        layout_footer.setVisibility(View.VISIBLE);
+                    } else {
+                        img_fullscreen.setVisibility(View.GONE);
+                        img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                        layout_mediatype.setVisibility(View.GONE);
+                        layout_footer.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    img_fullscreen.setVisibility(View.VISIBLE);
+                    img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                }
+               /* if(layout_photodetails.getVisibility()==View.GONE && layout_footer.getVisibility()==(View.GONE)){
                     img_fullscreen.setVisibility(View.VISIBLE);
                     img_fullscreen.setImageResource(R.drawable.img_halfscreen);
                     layout_mediatype.setVisibility(View.VISIBLE);
-                    img_fullscrnshow=true;
+                    layout_footer.setVisibility(View.VISIBLE);
+                }else{
+                    img_fullscreen.setVisibility(View.GONE);
+                    img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                    layout_mediatype.setVisibility(View.GONE);
+                    layout_footer.setVisibility(View.GONE);
+                }*/
+               /* if(layout_photodetails.getVisibility()==View.GONE ){
+                    img_fullscreen.setVisibility(View.VISIBLE);
+                    img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                    layout_mediatype.setVisibility(View.VISIBLE);
                     layout_footer.setVisibility(View.VISIBLE);
                 }else{
                     img_fullscreen.setVisibility(View.VISIBLE);
                     img_fullscreen.setImageResource(R.drawable.img_fullscreen);
-                    img_fullscrnshow=false;
-                }
+                }*/
 
                 break;
         }
