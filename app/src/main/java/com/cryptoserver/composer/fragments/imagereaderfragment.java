@@ -282,6 +282,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             ButterKnife.bind(this, rootview);
 
             mDrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             mDrawerToggle = new ActionBarDrawerToggle(
                     getActivity(), mDrawer, R.string.drawer_open, R.string.drawer_close){
 
@@ -298,12 +299,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             };
 
-            mDrawer.setDrawerListener(mDrawerToggle);
+            mDrawer.addDrawerListener(mDrawerToggle);
 
             // Where do I put this?
             mDrawerToggle.syncState();
 
             mDrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+            handleimageview.setVisibility(View.GONE);
 
             img_dotmenu.setOnClickListener(this);
             img_folder.setOnClickListener(this);
@@ -749,6 +751,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
             case R.id.img_fullscreen:
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
+                    mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    handleimageview.setVisibility(View.VISIBLE);
                     expand(tab_photoreader,100,targetheight);
                     layout_photodetails.setVisibility(View.GONE);
                     scrollview_detail.setVisibility(View.GONE);
@@ -761,6 +765,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
                 } else{
+                    mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    handleimageview.setVisibility(View.GONE);
                     collapse(tab_photoreader,100,previousheight);
                     layout_photodetails.setVisibility(View.VISIBLE);
                     tab_layout.setVisibility(View.VISIBLE);
