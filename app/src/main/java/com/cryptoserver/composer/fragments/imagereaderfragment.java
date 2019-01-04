@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -102,20 +103,109 @@ import butterknife.ButterKnife;
 public class imagereaderfragment extends basefragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener ,AdapterView.OnItemSelectedListener {
 
     View rootview;
-    ImageView handle,img_edit_name,img_edit_notes,img_share_media,img_arrow_back,img_camera,img_folder,img_dotmenu;
-    RecyclerView recyview_hashes;
-    RecyclerView recyview_metrices;
-    ImageView handleimageview, righthandle,img_fullscreen;
 
-    LinearLayout linearLayout;
-    FrameLayout fragment_graphic_container;
-    TextView txtslotmedia, txtslotmeta, txtslotencyption;
 
+    @BindView(R.id.img_dotmenu)
+    ImageView img_dotmenu;
+    @BindView(R.id.img_folder)
+    ImageView img_folder;
+    @BindView(R.id.img_camera)
+    ImageView img_camera;
+    @BindView(R.id.img_arrow_back)
+    ImageView img_arrow_back;
+    /*@BindView(R.id.layout_bottom)
+    LinearLayout layout_bottom;*/
+    @BindView(R.id.layout_drawer)
+    LinearLayout layout_drawer;
+    @BindView(R.id.txt_slot1)
     TextView txtSlot1;
+    @BindView(R.id.txt_slot2)
     TextView txtSlot2;
-    TextView txtSlot3, txt_metrics, txt_hashes,txt_title_actionbarcomposer;
-    ScrollView scrollview_metrices, scrollview_hashes;
-    LinearLayout layout_bottom, layout_drawer;
+    @BindView(R.id.txt_slot3)
+    TextView txtSlot3;
+    @BindView(R.id.txt_metrics)
+    TextView txt_metrics;
+    @BindView(R.id.txt_hashes)
+    TextView txt_hashes;
+    @BindView(R.id.txt_title_actionbarcomposer)
+    TextView txt_title_actionbarcomposer;
+    @BindView(R.id.scrollview_metrices)
+    ScrollView scrollview_metrices;
+    @BindView(R.id.scrollview_hashes)
+    ScrollView scrollview_hashes;
+    @BindView(R.id.fragment_graphic_container)
+    FrameLayout fragment_graphic_container;
+    @BindView(R.id.content)
+    LinearLayout linearLayout;
+    @BindView(R.id.handle)
+    ImageView handleimageview;
+    @BindView(R.id.righthandle)
+    ImageView righthandle;
+    @BindView(R.id.recyview_item)
+    RecyclerView recyview_hashes;
+    @BindView(R.id.recyview_metrices)
+    RecyclerView recyview_metrices;
+   /* @BindView(R.id.recyview_hashes)
+    RecyclerView recyview_hashes;*/
+
+    //tabdetails
+    @BindView(R.id.spinner)
+    Spinner photospinner;
+    @BindView(R.id.txt_slot4)
+    TextView txtslotmedia;
+    @BindView(R.id.txt_slot5)
+    TextView txtslotmeta;
+    @BindView(R.id.txt_slot6)
+    TextView txtslotencyption;
+    @BindView(R.id.img_share_media)
+    ImageView img_share_media;
+    @BindView(R.id.img_edit_name)
+    ImageView img_edit_name;
+    @BindView(R.id.img_edit_notes)
+    ImageView img_edit_notes;
+    @BindView(R.id.layout_photoreader)
+    RelativeLayout layout_photoreader;
+    @BindView(R.id.txt_createdtime)
+    TextView txt_createdtime;
+    @BindView(R.id.layout_halfscrnimg)
+    RelativeLayout layout_halfscrnimg;
+    @BindView(R.id.layout_mediatype)
+    RelativeLayout layout_mediatype;
+    @BindView(R.id.layout_photodetails)
+    RelativeLayout layout_photodetails;
+    @BindView(R.id.scrollview_detail)
+    ScrollView scrollview_detail;
+    @BindView(R.id.img_fullscreen)
+    ImageView img_fullscreen;
+    @BindView(R.id.edt_medianame)
+    EditText edt_medianame;
+    @BindView(R.id.edt_medianotes)
+    EditText edt_medianotes;
+    @BindView(R.id.layout_footer)
+    RelativeLayout layout_footer;
+    @BindView(R.id.tab_layout)
+    LinearLayout tab_layout;
+    @BindView(R.id.scrollview_encyption)
+    ScrollView scrollView_encyrption;
+    @BindView(R.id.scrollview_meta)
+    ScrollView scrollview_meta;
+    @BindView(R.id.txt_videoupdatetransactionid)
+    TextView txt_blockchainid;
+    @BindView(R.id.txt_hash_formula)
+    TextView txt_blockid;
+    @BindView(R.id.txt_data_hash)
+    TextView txt_blocknumber;
+    @BindView(R.id.txt_dictionary_hash)
+    TextView txt_metahash;
+    @BindView(R.id.txt_size)
+    TextView tvsize;
+    @BindView(R.id.txt_date)
+    TextView tvdate;
+    @BindView(R.id.txt_time)
+    TextView tvtime;
+
+
+ //   LinearLayout layout_bottom, layout_drawer;
     videoframeadapter mmetricesadapter, mhashesadapter;
     private LinearLayoutManager mLayoutManager;
     private boolean isdraweropen = false;
@@ -142,17 +232,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
     private final int flingactionmindspdvac = 10;
-    Spinner photospinner;
-    ScrollView scrollView_encyrption,scrollview_detail,scrollview_meta;
-    RelativeLayout layout_footer,layout_photodetails,layout_halfscrnimg;
-    LinearLayout tab_layout;
     boolean img_fullscrnshow=false;
-    LinearLayout layout_photoreader;
+   // RelativeLayout layout_photoreader,layout_mediatype;
     int targetheight,previousheight;
 
     GoogleMap mgooglemap;
-    EditText edt_medianame,edt_medianotes;
-    TextView txt_blockchainid, txt_blockid, txt_blocknumber,txt_metahash,tvsize,tvdate,tvtime;
+
     customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
             tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
             tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery;
@@ -181,43 +266,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            List<String> categories = new ArrayList<String>();
-            categories.add("All Media");
-            categories.add("Photo");
-            categories.add("Video");
-            categories.add("Audio");
-
-
-            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
-            img_folder = (ImageView) rootview.findViewById(R.id.img_folder);
-            img_camera = (ImageView) rootview.findViewById(R.id.img_camera);
-            img_arrow_back = (ImageView) rootview.findViewById(R.id.img_arrow_back);
-            handle = (ImageView) rootview.findViewById(R.id.handle);
-            layout_photoreader=rootview.findViewById(R.id.layout_photoreader);
-            layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
-            layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
-            txtslotmedia = rootview.findViewById(R.id.txt_slot4);
-            txtslotmeta = rootview.findViewById(R.id.txt_slot5);
-            txtslotencyption = rootview.findViewById(R.id.txt_slot6);
-            txtSlot1 = (TextView) rootview.findViewById(R.id.txt_slot1);
-            txtSlot2 = (TextView) rootview.findViewById(R.id.txt_slot2);
-            txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
-            txt_metrics = (TextView) rootview.findViewById(R.id.txt_metrics);
-            txt_hashes = (TextView) rootview.findViewById(R.id.txt_hashes);
-            txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
-            scrollview_metrices = (ScrollView) rootview.findViewById(R.id.scrollview_metrices);
-            scrollview_hashes = (ScrollView) rootview.findViewById(R.id.scrollview_hashes);
-            fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_container);
-            linearLayout = rootview.findViewById(R.id.content);
-            handleimageview = rootview.findViewById(R.id.handle);
-            righthandle = rootview.findViewById(R.id.righthandle);
-
-            recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
-            recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
-            photospinner = rootview.findViewById(R.id.spinner);
-
-            photospinner.setOnItemSelectedListener(this);
-
 
             img_dotmenu.setOnClickListener(this);
             img_folder.setOnClickListener(this);
@@ -232,48 +280,38 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
+            tab_photoreader.setOnClickListener(this);
 
             //tabs_detail
-            layout_halfscrnimg=rootview.findViewById(R.id.layout_halfscrnimg);
-            layout_photodetails=rootview.findViewById(R.id.layout_photodetails);
-            scrollview_detail=rootview.findViewById(R.id.scrollview_detail);
-            img_fullscreen=rootview.findViewById(R.id.img_fullscreen);
-            img_share_media=rootview.findViewById(R.id.img_share_media);
-            img_edit_name=rootview.findViewById(R.id.img_edit_name);
-            img_edit_notes=rootview.findViewById(R.id.img_edit_notes);
-            edt_medianame=rootview.findViewById(R.id.edt_medianame);
-            edt_medianotes=rootview.findViewById(R.id.edt_medianotes);
-            layout_footer=rootview.findViewById(R.id.layout_footer);
-            tab_layout=rootview.findViewById(R.id.tab_layout);
+            List<String> categories = new ArrayList<String>();
+            categories.add("All Media");
+            categories.add("Photo");
+            categories.add("Video");
+            categories.add("Audio");
+            photospinner.setOnItemSelectedListener(this);
             img_share_media.setOnClickListener(this);
             img_edit_name.setOnClickListener(this);
             img_edit_notes.setOnClickListener(this);
             img_fullscreen.setOnClickListener(this);
-            txt_blockchainid = rootview.findViewById(R.id.txt_videoupdatetransactionid);
-            txt_blockid = rootview.findViewById(R.id.txt_hash_formula);
-            txt_blocknumber = rootview.findViewById(R.id.txt_data_hash);
-            txt_metahash = rootview.findViewById(R.id.txt_dictionary_hash);
-            scrollView_encyrption = rootview.findViewById(R.id.scrollview_encyption);
-            scrollview_meta = rootview.findViewById(R.id.scrollview_meta);
-            tvsize = rootview.findViewById(R.id.txt_size);
-            tvdate = rootview.findViewById(R.id.txt_date);
-            tvtime = rootview.findViewById(R.id.txt_time);
             scrollview_detail.setVisibility(View.VISIBLE);
             tab_layout.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
             img_fullscreen.setVisibility(View.VISIBLE);
             layout_photodetails.setVisibility(View.VISIBLE);
+            layout_mediatype.setVisibility(View.VISIBLE);
 
             layout_photoreader.post(new Runnable() {
                 @Override
                 public void run() {
                     targetheight= layout_photoreader.getHeight();
+                    Log.e("targetheight",""+targetheight);
                 }
             });
             tab_photoreader.post(new Runnable() {
                 @Override
                 public void run() {
                     previousheight = tab_photoreader.getHeight();
+                    Log.e("previousheight",""+previousheight);
                 }
             });
 
@@ -540,11 +578,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             case R.id.righthandle:
                 flingswipe.onTouchEvent(motionEvent);
                 break;
-            /*case R.id.tab_photoreader:
-                img_fullscreen.setVisibility(View.VISIBLE);
-                img_fullscreen.setImageResource(R.drawable.img_halfscreen);
-                layout_footer.setVisibility(View.VISIBLE);
-                break;*/
         }
         return true;
     }
@@ -650,7 +683,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 if (imageurl != null && (!imageurl.isEmpty()))
                     common.shareimage(getActivity(), imageurl);
 
-                scrollview_meta.setVisibility(View.GONE);
                 break;
 
             case R.id.img_dotmenu:
@@ -684,8 +716,26 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     scrollView_encyrption.setVisibility(View.GONE);
                     tab_layout.setVisibility(View.GONE);
                     layout_footer.setVisibility(View.GONE);
+                    layout_mediatype.setVisibility(View.GONE);
+                    img_fullscreen.setVisibility(View.INVISIBLE);
+                 //   img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                  //  img_fullscrnshow=true;
+                }
+
+                break;
+
+            case R.id.tab_photoreader:
+                Log.e("ontouch","ontouch");
+                if(layout_photodetails.getVisibility()==View.GONE){
+                    img_fullscreen.setVisibility(View.VISIBLE);
                     img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                    layout_mediatype.setVisibility(View.VISIBLE);
                     img_fullscrnshow=true;
+                    layout_footer.setVisibility(View.VISIBLE);
+                }else{
+                    img_fullscreen.setVisibility(View.VISIBLE);
+                    img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                    img_fullscrnshow=false;
                 }
 
                 break;
@@ -845,6 +895,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void setupimagedata() {
         imageurl = xdata.getinstance().getSetting("selectedphotourl");
+        File file=new File(imageurl);
+        long photosize= file.length()/1024;
+        Log.e("filesize",""+photosize);
+        tvsize.setText(photosize + "kb");
         if (imageurl != null && (!imageurl.isEmpty())) {
             setupphoto(Uri.parse(imageurl));
             new Thread() {
@@ -1133,11 +1187,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
-                            String newString = new SimpleDateFormat("H:mm").format(date);
+                            String time = new SimpleDateFormat("H:mm").format(date);
                             String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
 
                             tvdate.setText(filecreateddate);
-                            tvtime.setText(newString);
+                            txt_createdtime.setText(time);
+                            tvtime.setText(time);
                         }
 
 
@@ -1159,11 +1214,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
-                            String newString = new SimpleDateFormat("H:mm").format(date);
+                            String time = new SimpleDateFormat("H:mm").format(date);
                             String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
 
                             tvdate.setText(filecreateddate);
-                            tvtime.setText(newString);
+                            txt_createdtime.setText(time);
+                            tvtime.setText(time);
                         }
 
 
