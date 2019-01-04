@@ -663,7 +663,7 @@ public class databasemanager {
     }
 
     public String[] getlocalkeybylocation(String filename) {
-        String[] localkey ={"","","",""};
+        String[] localkey ={"","","","","",""};
         Cursor cur=null;
         try {
             lock.lock();
@@ -678,6 +678,8 @@ public class databasemanager {
                     localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                     localkey[2] = "" + cur.getString(cur.getColumnIndex("localkey"));
                     localkey[3] = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
+                    localkey[4] = "" + cur.getString(cur.getColumnIndex("media_name"));
+                    localkey[5] = "" + cur.getString(cur.getColumnIndex("media_notes"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {
@@ -834,6 +836,7 @@ public class databasemanager {
 
            // String file= common.getfilename(thumbnailurl);
             String query="update tblstartmediainfo set thumbnailurl ='"+thumbnailurl+"' where location='"+filename+"'";
+            Log.e("Query ",query);
             mDb.execSQL(query);
 
         } catch (Exception e) {

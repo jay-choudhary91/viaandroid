@@ -99,10 +99,25 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             }
             else
             {
-                Glide.with(context).
-                        load(R.drawable.audiothum).
-                        thumbnail(0.1f).
-                        into(holder.img_mediathumbnail);
+                if(! arrayvideolist.get(position).getThumbnailpath().trim().isEmpty())
+                {
+                    if(new File(arrayvideolist.get(position).getThumbnailpath()).exists())
+                    {
+                        Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getThumbnailpath()));
+                        Glide.with(context).
+                                load(uri).
+                                thumbnail(0.1f).
+                                into(holder.img_mediathumbnail);
+                    }
+
+                }
+                else
+                {
+                    Glide.with(context).
+                            load(R.drawable.audiothum).
+                            thumbnail(0.1f).
+                            into(holder.img_mediathumbnail);
+                }
             }
 
             holder.img_mediathumbnail.setOnClickListener(new View.OnClickListener() {

@@ -42,6 +42,7 @@ import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.frameinfo;
@@ -827,6 +828,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         isaudiorecording=false;
         if(mrecorder==null){
             myvisualizerview.clear();
+            myvisualizerview.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_blue_solid_a));
             myvisualizerview.setVisibility(View.INVISIBLE);
         }
 
@@ -873,9 +875,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 }
             }
         }).start();
-
         showsharepopupmain();
     }
+
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
     {

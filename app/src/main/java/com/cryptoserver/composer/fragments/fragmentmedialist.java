@@ -130,7 +130,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private static final int request_read_external_storage = 1;
     private Uri selectedimageuri =null;
     private String selectedvideopath ="";
-    FFmpeg ffmpeg;
 
     @Override
     public int getlayoutid() {
@@ -143,30 +142,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         ButterKnife.bind(this,parent);
     }
 
-    private void loadffmpegbinary() {
-        try {
-            if (ffmpeg == null) {
-                Log.d("", "ffmpeg : era nulo");
 
-                ffmpeg = FFmpeg.getInstance(getContext());
-            }
-            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
-                @Override
-                public void onFailure() {
-                    // showUnsupportedExceptionDialog();
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.d("", "ffmpeg : correct Loaded");
-                }
-            });
-        } catch (FFmpegNotSupportedException e) {
-            //showUnsupportedExceptionDialog();
-        } catch (Exception e) {
-            Log.d("", "EXception no controlada : " + e);
-        }
-    }
 
     @Override
     public void onStop() {
@@ -316,14 +292,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     return false;
                 }
             });
-            loadffmpegbinary();
             resetmedialist();
         }
         return rootview;
     }
 
     private void filter(String text) {
-
         if(arrayvideolist != null && arrayvideolist.size() > 0)
         {
             if(text.trim().length() > 0)
@@ -551,6 +525,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     videoobj.setMediastatus(getdata[0]);
                                     videoobj.setVideostarttransactionid(getdata[1]);
                                     videoobj.setLocalkey(getdata[2]);
+                                    videoobj.setMediatitle(getdata[4]);
+                                    videoobj.setMedianotes(getdata[5]);
                                     ismedia=true;
                                 }
                                 else
@@ -573,6 +549,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                                 videoobj.setVideostarttransactionid(getdata[1]);
                                                 videoobj.setLocalkey(getdata[2]);
                                                 videoobj.setThumbnailpath(getdata[3]);
+                                                videoobj.setMediatitle(getdata[4]);
+                                                videoobj.setMedianotes(getdata[5]);
 
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                                     long seconds = format.getLong(MediaFormat.KEY_DURATION);
@@ -585,8 +563,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                                         second=1;
 
                                                     videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
-                                                    //if(mime.startsWith("audio") && videoobj.getThumbnailpath().toString().trim().isEmpty())
-                                                    ///    generateaudiothumbail(videoobj.getPath());
 
                                                     ismedia=true;
                                                 }
@@ -642,90 +618,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }).start();
     }
 
-    public void generateaudiothumbail(String filepath)
-    {
-        try {
-            //ffmpeg -ss 00:50:00 -to 00:60:43 -i input -filter_complex "showwavespic=s=640x120" -frames:v 1 output.png
-            File destinationfilepath = common.gettempfileforaudiowave();
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                    BuildConfig.APPLICATION_ID + ".provider", new File(filepath));
-
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            mediaMetadataRetriever.setDataSource(getContext(),uri);
-            long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-
-            String starttime = common.converttimeformate(0);
-            String endtime = common.converttimeformate(mediatotalduration);
-
-            String[] complexCommand = { "-ss", starttime,"-i", filepath, "-to",endtime, "-filter_complex",
-                    "showwavespic=s=400x400", "-frames:v","1",destinationfilepath.getAbsolutePath()};
-            //String[] complexCommand = { "-y", "-i", yourRealPath,"-ss", "" + starttime, "-t", "" + endtime, "-c","copy", filePath};
-            execffmpegbinary(complexCommand,filepath,destinationfilepath.getAbsolutePath());
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private void execffmpegbinary(final String[] command, final String sourcepath, final String dest) {
-        try {
-            ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
-                @Override
-                public void onFailure(String s) {
-                    Log.e("Failure with output : ","IN onFailure");
-                }
-
-                @Override
-                public void onSuccess(String s) {
-                    Log.e("SUCCESS with output : ","onSuccess");
-                    updateaudiothumbnail(sourcepath,dest);
-                }
-
-                @Override
-                public void onProgress(String s) {
-                    Log.e( "Progress bar : " , "In onProgress");
-
-                }
-
-                @Override
-                public void onStart() {
-                    Log.e("Start with output : ","IN onStart");
-                }
-
-                @Override
-                public void onFinish() {
-                    Log.e("Start with output : ","IN onFinish");
-                }
-            });
-        } catch (FFmpegCommandAlreadyRunningException e) {
-            // do nothing for now
-        }
-    }
-
-    public void updateaudiothumbnail(String filepath,String thumbnailurl)
-    {
-        databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
-
-        try {
-            mdbhelper.open();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        try
-        {
-            mdbhelper.updateaudiothumbnail(common.getfilename(filepath),thumbnailurl);
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     public void setmediaadapter()
     {
         recyclerviewgrid.post(new Runnable() {
@@ -767,38 +659,23 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         myrunnable = new Runnable() {
             @Override
             public void run() {
-               if (arrayvideolist != null && arrayvideolist.size() > 0){
-
-                       for(int i = 0 ;i < arrayvideolist.size();i++){
-                           String status =   arrayvideolist.get(i).getMediastatus();
-                           if(! status.equalsIgnoreCase(config.sync_complete))
-                           {
-                               if(status.equalsIgnoreCase(config.sync_inprogress) && !common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
-
-                                   arrayvideolist.get(i).setMediastatus(config.sync_offline);
-
-                               }else if(status.equalsIgnoreCase(config.sync_offline) && common.isnetworkconnected(applicationviavideocomposer.getappcontext())){
-
-                                   String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
-                                   arrayvideolist.get(i).setMediastatus(getdata[0]);
-                                   arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
-                                   arrayvideolist.get(i).setThumbnailpath(getdata[2]);
-
-                               }else if(!status.equalsIgnoreCase(config.sync_complete)){
-                                   String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
-                                   arrayvideolist.get(i).setMediastatus(getdata[0]);
-                                   arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
-                                   arrayvideolist.get(i).setThumbnailpath(getdata[2]);
-                               }
-                           }
+               if (arrayvideolist != null && arrayvideolist.size() > 0)
+               {
+                       for(int i = 0 ;i < arrayvideolist.size();i++)
+                       {
+                           String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
+                           arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                           arrayvideolist.get(i).setThumbnailpath(getdata[3]);
+                           arrayvideolist.get(i).setMediatitle(getdata[4]);
+                           arrayvideolist.get(i).setMedianotes(getdata[5]);
                        }
                        if(adaptermedialist != null && arrayvideolist.size() > 0)
-                            adaptermedialist.notifyItemChanged(arrayvideolist.size()-1);
+                            adaptermedialist.notifyDataSetChanged();
 
-                   /*if(adaptergrid != null && arrayvideolist.size() > 0)
-                       adaptergrid.notifyItemChanged(arrayvideolist.size()-1);*/
+                   if(adaptergrid != null && arrayvideolist.size() > 0)
+                       adaptergrid.notifyDataSetChanged();
                }
-                myhandler.postDelayed(this, 3000);
+                myhandler.postDelayed(this, 8000);
             }
         };
         myhandler.post(myrunnable);

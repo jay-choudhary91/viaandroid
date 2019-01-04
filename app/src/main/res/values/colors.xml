@@ -34,6 +34,7 @@
     <color name="videoPlayer_header">#4D000000</color>
 
     <color name="soundwavecolor">#417CE2</color>
+    <color name="audiowave">#474747</color>
     <color name="blue">#00ADE5</color>
 
     <color name="btn_background">#00ADE5</color>
@@ -43,6 +44,8 @@
     <color name="radio_btn_bg">#092B3B</color>
     <color name="dark_blue_solid">#003342</color>
     <color name="dark_blue_solid_a">#0a4c60</color>
+    <color name="audio_composer_bg">#01303d</color>
+    <color name="wave_blue">#0076a6</color>
 
 
 

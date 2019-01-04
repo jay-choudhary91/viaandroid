@@ -22,6 +22,8 @@ public class video
     public String mediastatus = "";
     public String videostarttransactionid = "";
     public String thumbnailpath = "";
+    public String mediatitle = "";
+    public String medianotes = "";
     public boolean ischeck = false;
     public boolean doenable = false;
     public int griditemheight = 0;
@@ -41,6 +43,22 @@ public class video
     public  video()
     {
 
+    }
+
+    public String getMediatitle() {
+        return mediatitle;
+    }
+
+    public void setMediatitle(String mediatitle) {
+        this.mediatitle = mediatitle;
+    }
+
+    public String getMedianotes() {
+        return medianotes;
+    }
+
+    public void setMedianotes(String medianotes) {
+        this.medianotes = medianotes;
     }
 
     public String getThumbnailpath() {

@@ -27,7 +27,7 @@ public class visualizeraudiorecorder extends View {
     public visualizeraudiorecorder(Context context, AttributeSet attrs) {
         super(context, attrs); // call superclass constructor
         linePaint = new Paint(); // create Paint for lines
-        linePaint.setColor(getResources().getColor(R.color.red)); // set color to green
+        linePaint.setColor(getResources().getColor(R.color.wave_blue)); // set color to green
         linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
     }
 

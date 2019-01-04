@@ -48,13 +48,14 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     HashMap<String, Bitmap> cacheBitmap;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tv_localkey,tv_sync_status,txt_pipesign;
+        public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
         EditText edtvideoname;
         public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete;
         public RelativeLayout root_view;
 
         public myViewHolder(View view) {
             super(view);
+            tv_medianotes = (TextView) view.findViewById(R.id.tv_medianotes);
             tvvideoname = (TextView) view.findViewById(R.id.tv_videoname);
             txt_pipesign = (TextView) view.findViewById(R.id.txt_pipesign);
             edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
@@ -95,16 +96,22 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         if(arrayvideolist.get(position).isDoenable())
         {
             holder.root_view.setVisibility(View.VISIBLE);
-            if(arrayvideolist.get(position).getName().contains("."))
+            if(arrayvideolist.get(position).getMediatitle() != null && (! arrayvideolist.get(position).getMediatitle().equalsIgnoreCase("null")
+                        && (! arrayvideolist.get(position).getMediatitle().trim().isEmpty())))
             {
-                holder.edtvideoname.setText(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().lastIndexOf(".")));
-            }
-            else
-            {
-                holder.edtvideoname.setText(arrayvideolist.get(position).getName().substring(0, arrayvideolist.get(position).getName().trim().length()));
+                if(arrayvideolist.get(position).getMediatitle().contains("."))
+                {
+                    holder.edtvideoname.setText(arrayvideolist.get(position).getMediatitle().substring(0, arrayvideolist.get(position).getMediatitle().lastIndexOf(".")));
+                }
+                else
+                {
+                    holder.edtvideoname.setText(arrayvideolist.get(position).getMediatitle().substring(0, arrayvideolist.get(position).getMediatitle().trim().length()));
+                }
             }
 
+
             holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
+            holder.tv_medianotes.setText(arrayvideolist.get(position).getMedianotes());
 
 
             if(arrayvideolist.get(position).getVideostarttransactionid().isEmpty() ||  arrayvideolist.get(position).getVideostarttransactionid().equalsIgnoreCase("null")){
@@ -152,11 +159,15 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             {
                 if(! arrayvideolist.get(position).getThumbnailpath().trim().isEmpty())
                 {
-                    Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getPath()));
-                    Glide.with(context).
-                            load(uri).
-                            thumbnail(0.1f).
-                            into(holder.img_videothumbnail);
+                    if(new File(arrayvideolist.get(position).getThumbnailpath()).exists())
+                    {
+                        Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getThumbnailpath()));
+                        Glide.with(context).
+                                load(uri).
+                                thumbnail(0.1f).
+                                into(holder.img_videothumbnail);
+                    }
+
                 }
                 else
                 {

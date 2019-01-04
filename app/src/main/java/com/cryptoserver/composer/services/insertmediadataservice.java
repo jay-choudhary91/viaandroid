@@ -2,9 +2,14 @@ package com.cryptoserver.composer.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.IBinder;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
+import com.cryptoserver.composer.BuildConfig;
+import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.models.dbitemcontainer;
 import com.cryptoserver.composer.models.videomodel;
@@ -234,6 +239,62 @@ public class insertmediadataservice extends Service {
                                                     updateendvideoinfo(firsthash,filename,completeddate,lastframe,"" + count,mediapath,keytype,videokey);
                                                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
                                                 }
+
+                                                // code for generate audio thumbnail
+
+                                                try {
+
+                                                    if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 &&
+                                                            mdbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("audio"))
+                                                    {
+
+                                                        final File destinationfilepath = common.gettempfileforaudiowave();
+                                                        Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                                                                BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
+
+                                                        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+                                                        mediaMetadataRetriever.setDataSource(getApplicationContext(),uri);
+                                                        long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+
+                                                        String starttime = common.converttimeformate(0);
+                                                        String endtime = common.converttimeformate(mediatotalduration);
+
+                                                        String[] command = { "-ss", starttime,"-i", mediapath, "-to",endtime, "-filter_complex",
+                                                                "compand=gain=-20,showwavespic=s=400x400:colors=0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
+
+                                                        ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                                                            @Override
+                                                            public void onFailure(String s) {
+                                                                Log.e("Failure with output : ","IN onFailure");
+                                                            }
+
+                                                            @Override
+                                                            public void onSuccess(String s) {
+                                                                Log.e("SUCCESS with output : ","onSuccess");
+                                                                updateaudiothumbnail(mediapath,destinationfilepath.getAbsolutePath());
+                                                            }
+
+                                                            @Override
+                                                            public void onProgress(String s) {
+                                                                Log.e( "audiothumbnail : " , "audiothumbnail onProgress");
+
+                                                            }
+
+                                                            @Override
+                                                            public void onStart() {
+                                                                Log.e("Start with output : ","IN onStart");
+                                                            }
+
+                                                            @Override
+                                                            public void onFinish() {
+                                                                Log.e("Start with output : ","IN onFinish");
+                                                            }
+                                                        });
+                                                    }
+
+                                                } catch (FFmpegCommandAlreadyRunningException e) {
+                                                    // do nothing for now
+                                                }
                                             }
                                         }catch (Exception e)
                                         {
@@ -396,6 +457,30 @@ public class insertmediadataservice extends Service {
 
         Intent i = new Intent(config.composer_service_savemetadata);
         sendBroadcast(i);
+    }
+
+    public void updateaudiothumbnail(String filepath,String thumbnailurl)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            mdbhelper.updateaudiothumbnail(common.getfilename(filepath),thumbnailurl);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
