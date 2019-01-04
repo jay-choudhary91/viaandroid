@@ -121,6 +121,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private boolean isdraweropen = false;
     public int selectedsection = 1;
     graphicalfragment fragmentgraphic;
+    fragmentgraphicaldrawer  graphicaldrawerfragment;
     ArrayList<videomodel> mmetricsitems = new ArrayList<>();
     ArrayList<videomodel> mhashesitems = new ArrayList<>();
     private int REQUESTCODE_PICK = 301;
@@ -447,9 +448,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 implementscrolllistener();
             }
 
-            if (fragmentgraphic == null) {
-                fragmentgraphic = new graphicalfragment();
-                fragmentgraphic.setphotocapture(true);
+            if (graphicaldrawerfragment == null) {
+               // fragmentgraphic = new graphicalfragment();
+                graphicaldrawerfragment =new fragmentgraphicaldrawer();
+                graphicaldrawerfragment.setphotocapture(true);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
                 transaction.commit();
