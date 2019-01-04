@@ -35,6 +35,7 @@ import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -141,8 +142,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout fragment_graphic_container;
     @BindView(R.id.content)
     LinearLayout linearLayout;
-    @BindView(R.id.handle)
+    @BindView(R.id.img_lefthendle)
     ImageView handleimageview;
+
     @BindView(R.id.righthandle)
     ImageView righthandle;
     @BindView(R.id.recyview_item)
@@ -280,9 +282,24 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             ButterKnife.bind(this, rootview);
 
             mDrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-
             mDrawerToggle = new ActionBarDrawerToggle(
-                    getActivity(), mDrawer, R.string.drawer_open, R.string.drawer_close);
+                    getActivity(), mDrawer, R.string.drawer_open, R.string.drawer_close){
+
+                /** Called when a drawer has settled in a completely closed state. */
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    handleimageview.setVisibility(View.VISIBLE);
+                }
+
+                /** Called when a drawer has settled in a completely open state. */
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    handleimageview.setVisibility(View.GONE);
+                }
+            };
+
+            mDrawer.setDrawerListener(mDrawerToggle);
+
             // Where do I put this?
             mDrawerToggle.syncState();
 
@@ -299,7 +316,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_arrow_back.setVisibility(View.VISIBLE);
 
 
-            handleimageview.setOnTouchListener(this);
+           // handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
             tab_photoreader.setOnClickListener(this);
 
@@ -372,7 +389,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_compass= rootview.findViewById(R.id.img_compass);
 
             photospinner.setOnItemSelectedListener(this);
-            handleimageview.setOnTouchListener(this);
+          //  handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
 
             String blockchainid = " EOLZ03D0K91734JADFL2";
@@ -394,7 +411,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             handleimageview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
+
+                    mDrawer.openDrawer(Gravity.START);
+                    handleimageview.setVisibility(View.GONE);
+
+
+
+                   /* Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
                     linearLayout.startAnimation(rightswipe);
                     handleimageview.setVisibility(View.GONE);
                     linearLayout.setVisibility(View.VISIBLE);
@@ -415,7 +438,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         public void onAnimationRepeat(Animation animation) {
 
                         }
-                    });
+                    });*/
 
                 }
             });

@@ -113,6 +113,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customfonttextview tvblocknumber;
     @BindView(R.id.txt_dictionary_hash)
     customfonttextview tvmetahash;
+    @BindView(R.id.txt_locationanalytics)
+    customfonttextview tvlocationanalytics;
+    @BindView(R.id.txt_locationtracking)
+    customfonttextview tvlocationtracking;
+    @BindView(R.id.txt_orientation)
+    customfonttextview tvorientation;
+    @BindView(R.id.txt_Phoneanalytics)
+    customfonttextview tvPhoneanalytics;
+    @BindView(R.id.text_encryption)
+    customfonttextview tvencryption;
+    @BindView(R.id.text_dataletency)
+    customfonttextview tvdataletency;
+
+
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -179,6 +193,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvblockid.setTextColor(getResources().getColor(R.color.white));
           tvblocknumber.setTextColor(getResources().getColor(R.color.white));
           tvmetahash.setTextColor(getResources().getColor(R.color.white));
+          tvlocationanalytics.setTextColor(getResources().getColor(R.color.white));
+          tvlocationtracking.setTextColor(getResources().getColor(R.color.white));
+          tvorientation.setTextColor(getResources().getColor(R.color.white));
+          tvPhoneanalytics.setTextColor(getResources().getColor(R.color.white));
+          tvencryption.setTextColor(getResources().getColor(R.color.white));
+          tvdataletency.setTextColor(getResources().getColor(R.color.white));
 
 
             loadmap();
@@ -277,7 +297,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setspannable(getResources().getString(R.string.traveled),"\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
             common.setspannable(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
 
-            common.setspannable(getResources().getString(R.string.address),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
+            common.setspannable("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
             common.setspannable(getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
             common.setspannable(getResources().getString(R.string.yaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_y), tvyaxis);
             common.setspannable(getResources().getString(R.string.zaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_z), tvzaxis);

@@ -19,6 +19,7 @@
 
 
            <com.cryptoserver.composer.views.customfonttextview
+               android:id="@+id/txt_locationtracking"
                style="@style/txt_drawer_graphical_title"
                android:text="@string/locationtracking"
                app:fontType="OpenSans_Regular"
@@ -51,6 +52,7 @@
            android:orientation="vertical">
 
            <com.cryptoserver.composer.views.customfonttextview
+               android:id="@+id/txt_locationanalytics"
                style="@style/txt_drawer_graphical_title"
                android:text="@string/locationanalytics"
                app:fontType="Comfortaa-Regular"
@@ -95,7 +97,7 @@
                            android:id="@+id/txt_latitude"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
-                           android:gravity="center"
+                           android:gravity="left"
                            android:layout_weight="0.5"
                            android:text="latitude"/>
 
@@ -103,7 +105,7 @@
                            android:id="@+id/txt_longitude"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
-                           android:gravity="center"
+                           android:gravity="left"
                            android:layout_weight="0.5"
                            android:text="longitude"/>
 
@@ -119,7 +121,7 @@
                            android:id="@+id/txt_altitude"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
-                           android:gravity="center"
+                           android:gravity="left"
                            android:layout_weight="0.5"
                            android:text="altitude"/>
 
@@ -127,7 +129,7 @@
                            android:id="@+id/txt_speed"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
-                           android:gravity="center"
+                           android:gravity="left"
                            android:layout_weight="0.5"
                            android:text="speed"/>
 
@@ -142,7 +144,7 @@
                        <com.cryptoserver.composer.views.customfonttextview
                            android:id="@+id/txt_heading"
                            app:fontType="OpenSans_Regular"
-                           android:gravity="center"
+                           android:gravity="left"
                            style="@style/txt_row_encryption"
                            android:layout_weight="0.5"
                            android:text="heading"/>
@@ -151,7 +153,7 @@
                            android:id="@+id/txt_traveled"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
-                           android:gravity="center"
+                           android:gravity="left"
                            android:layout_weight="0.5"
                            android:text="traveled"/>
 
@@ -174,6 +176,7 @@
 
                <com.cryptoserver.composer.views.customfonttextview
                    style="@style/txt_drawer_graphical_title"
+                   android:id="@+id/txt_orientation"
                    android:text="@string/orientation"
                    app:fontType="Comfortaa-Regular"
                   />
@@ -196,7 +199,7 @@
                        android:id="@+id/txt_xaxis"
                        app:fontType="OpenSans_Regular"
                        style="@style/txt_normalview"
-                       android:gravity="center"
+                       android:gravity="left"
                        android:layout_weight="0.2"
                        android:text="X-Axis"/>
 
@@ -204,7 +207,7 @@
                        android:id="@+id/txt_yaxis"
                        app:fontType="OpenSans_Regular"
                        style="@style/txt_normalview"
-                       android:gravity="center"
+                       android:gravity="left"
                        android:layout_weight="0.2"
                        android:text="Y-Axis"/>
 
@@ -212,7 +215,7 @@
                        android:id="@+id/txt_zaxis"
                        app:fontType="OpenSans_Regular"
                        style="@style/txt_normalview"
-                       android:gravity="center"
+                       android:gravity="left"
                        android:layout_weight="0.2"
                        android:text="Z-Axis"/>
 
@@ -237,6 +240,7 @@
 
             <com.cryptoserver.composer.views.customfonttextview
                 style="@style/txt_drawer_graphical_title"
+                android:id="@+id/txt_Phoneanalytics"
                 app:fontType="Comfortaa-Regular"
                 android:text="@string/Phoneanalytics" />
 
@@ -255,7 +259,7 @@
                     android:id="@+id/txt_phone"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="phone"/>
 
@@ -264,14 +268,14 @@
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:text="network"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_connection"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="connection"/>
 
@@ -286,7 +290,7 @@
                     android:id="@+id/txt_version"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="version"/>
 
@@ -294,7 +298,7 @@
                     android:id="@+id/txt_wifi"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="wifi"/>
 
@@ -302,7 +306,7 @@
                     android:id="@+id/txt_gps_accuracy"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="gps accuracy"/>
 
@@ -317,7 +321,7 @@
                     android:id="@+id/txt_screen"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="screen"/>
 
@@ -325,7 +329,7 @@
                     android:id="@+id/txt_country"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="country"/>
 
@@ -333,7 +337,7 @@
                     android:id="@+id/txt_cpu_usage"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="cpu usage"/>
 
@@ -348,7 +352,7 @@
                     android:id="@+id/txt_brightness"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="brightness"/>
 
@@ -356,7 +360,7 @@
                     android:id="@+id/txt_timezone"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="timezone"/>
 
@@ -364,7 +368,7 @@
                     android:id="@+id/txt_memoryusage"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="memoryusage"/>
 
@@ -379,7 +383,7 @@
                     android:id="@+id/txt_bluetooth"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="bluetooth"/>
 
@@ -387,14 +391,14 @@
                     android:id="@+id/txt_localtime"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="localtime"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_storagefree"
                     app:fontType="OpenSans_Regular"
-                    android:gravity="center"
+                    android:gravity="left"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
                     android:text="storagefree"/>
@@ -410,7 +414,7 @@
                     android:id="@+id/txt_language"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="language"/>
 
@@ -418,7 +422,7 @@
                     android:id="@+id/txt_uptime"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="uptime"/>
 
@@ -426,7 +430,7 @@
                     android:id="@+id/txt_battery"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:layout_weight="0.5"
                     android:text="battery"/>
 
