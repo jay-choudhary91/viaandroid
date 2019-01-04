@@ -89,6 +89,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -203,6 +204,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     TextView tvdate;
     @BindView(R.id.txt_time)
     TextView tvtime;
+    @BindView(R.id.layout_date)
+    LinearLayout layout_date;
+    @BindView(R.id.layout_time)
+    LinearLayout layout_time;
 
 
  //   LinearLayout layout_bottom, layout_drawer;
@@ -283,6 +288,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             tab_photoreader.setOnClickListener(this);
 
             //tabs_detail
+            txtslotmedia.setText(getResources().getString(R.string.photo));
             List<String> categories = new ArrayList<String>();
             categories.add("All Media");
             categories.add("Photo");
@@ -299,6 +305,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_fullscreen.setVisibility(View.VISIBLE);
             layout_photodetails.setVisibility(View.VISIBLE);
             layout_mediatype.setVisibility(View.VISIBLE);
+            layout_date.setVisibility(View.VISIBLE);
+            layout_time.setVisibility(View.VISIBLE);
 
             layout_photoreader.post(new Runnable() {
                 @Override
@@ -500,10 +508,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             // attaching data adaptermedialist to spinner
             photospinner.setAdapter(dataAdapter);
 
-            loadmap();
-            setmetriceshashesdata();
-            setupimagedata();
-
             edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
@@ -528,14 +532,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         v.setFocusable(false);
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                       // if (arrayvideolist.size() > 0) {
-                            String renamevalue = edt_medianame.getText().toString();
-                            if(!mediatransectionid.isEmpty())
-                                updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString(),"allmedia");
+                        // if (arrayvideolist.size() > 0) {
+                        String renamevalue = edt_medianame.getText().toString();
+                        if(!mediatransectionid.isEmpty())
+                            updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString(),"allmedia");
 
-                            editabletext();
-                     //   edt_medianame.setKeyListener(null);
-                     //   }
+                        editabletext();
+                        //   edt_medianame.setKeyListener(null);
+                        //   }
                     }
                 }
             });
@@ -546,17 +550,22 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                     if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
                   /*  Log.i(TAG,"Here you can write the code");*/
-                      //  if (arrayvideolist.size() > 0) {
+                        //  if (arrayvideolist.size() > 0) {
                         String renamevalue = edt_medianame.getText().toString();
                         editabletext();
 
 
                         edt_medianame.setKeyListener(null);
-                        }
+                    }
                     // }
                     return false;
                 }
             });
+
+            loadmap();
+            setmetriceshashesdata();
+            setupimagedata();
+
         }
         return rootview;
     }
@@ -895,10 +904,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void setupimagedata() {
         imageurl = xdata.getinstance().getSetting("selectedphotourl");
-        File file=new File(imageurl);
-        long photosize= file.length()/1024;
-        Log.e("filesize",""+photosize);
-        tvsize.setText(photosize + "kb");
+        tvsize.setText(common.filesize(imageurl));
         if (imageurl != null && (!imageurl.isEmpty())) {
             setupphoto(Uri.parse(imageurl));
             new Thread() {
@@ -1181,13 +1187,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 } else {
 
-                    if (audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0) {
+                    if (audiostatus.equalsIgnoreCase(config.sync_complete) && metricmainarraylist.size() == 0) {
 
                         if(!mediadate.isEmpty()){
 
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
-                            String time = new SimpleDateFormat("H:mm").format(date);
+                            String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
                             String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
 
                             tvdate.setText(filecreateddate);
@@ -1214,7 +1220,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
-                            String time = new SimpleDateFormat("H:mm").format(date);
+                            String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
                             String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
 
                             tvdate.setText(filecreateddate);

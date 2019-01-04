@@ -29,13 +29,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.BuildConfig;
@@ -77,6 +82,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -85,7 +91,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener {
+public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener,AdapterView.OnItemSelectedListener {
 
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
@@ -116,6 +122,59 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.textfetchdata)
     TextView textfetchdata;
 
+    //tabdetails
+    @BindView(R.id.spinner)
+    Spinner photospinner;
+    @BindView(R.id.txt_slot4)
+    TextView txtslotmedia;
+    @BindView(R.id.txt_slot5)
+    TextView txtslotmeta;
+    @BindView(R.id.txt_slot6)
+    TextView txtslotencyption;
+    @BindView(R.id.img_share_media)
+    ImageView img_share_media;
+    @BindView(R.id.img_edit_name)
+    ImageView img_edit_name;
+    @BindView(R.id.img_edit_notes)
+    ImageView img_edit_notes;
+    @BindView(R.id.txt_createdtime)
+    TextView txt_createdtime;
+    @BindView(R.id.layout_mediatype)
+    RelativeLayout layout_mediatype;
+    @BindView(R.id.scrollview_detail)
+    ScrollView scrollview_detail;
+    @BindView(R.id.edt_medianame)
+    EditText edt_medianame;
+    @BindView(R.id.edt_medianotes)
+    EditText edt_medianotes;
+    @BindView(R.id.layout_footer)
+    RelativeLayout layout_footer;
+    @BindView(R.id.tab_layout)
+    LinearLayout tab_layout;
+    @BindView(R.id.scrollview_encyption)
+    ScrollView scrollView_encyrption;
+    @BindView(R.id.scrollview_meta)
+    ScrollView scrollview_meta;
+    @BindView(R.id.txt_videoupdatetransactionid)
+    TextView txt_blockchainid;
+    @BindView(R.id.txt_hash_formula)
+    TextView txt_blockid;
+    @BindView(R.id.txt_data_hash)
+    TextView txt_blocknumber;
+    @BindView(R.id.txt_dictionary_hash)
+    TextView txt_metahash;
+    @BindView(R.id.txt_size)
+    TextView tvsize;
+    @BindView(R.id.txt_date)
+    TextView tvdate;
+    @BindView(R.id.txt_time)
+    TextView tvtime;
+    @BindView(R.id.layout_starttime)
+    LinearLayout layout_starttime;
+    @BindView(R.id.layout_endtime)
+    LinearLayout layout_endtime;
+    @BindView(R.id.layout_duration)
+    LinearLayout layout_duration;
 
     private String audiourl = null;
     private RelativeLayout showcontrollers;
@@ -311,6 +370,40 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
 
+            //tabs_detail
+            tab_layout.setVisibility(View.VISIBLE);
+            txtslotmedia.setText(getResources().getString(R.string.audio));
+            List<String> categories = new ArrayList<String>();
+            categories.add("All Media");
+            categories.add("Photo");
+            categories.add("Video");
+            categories.add("Audio");
+            photospinner.setOnItemSelectedListener(this);
+            img_share_media.setOnClickListener(this);
+            img_edit_name.setOnClickListener(this);
+            img_edit_notes.setOnClickListener(this);
+            scrollview_detail.setVisibility(View.VISIBLE);
+            tab_layout.setVisibility(View.VISIBLE);
+            layout_footer.setVisibility(View.VISIBLE);
+        //    layout_photodetails.setVisibility(View.VISIBLE);
+            layout_mediatype.setVisibility(View.VISIBLE);
+            layout_duration.setVisibility(View.VISIBLE);
+            layout_endtime.setVisibility(View.VISIBLE);
+            layout_starttime.setVisibility(View.VISIBLE);
+
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // attaching data adaptermedialist to spinner
+            photospinner.setAdapter(dataAdapter);
+
+            txtslotencyption.setOnClickListener(this);
+            txtslotmeta.setOnClickListener(this);
+            txtslotmedia.setOnClickListener(this);
+            resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+
             setmetriceshashesdata();
             setupaudiodata();
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
@@ -404,6 +497,49 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
                 }
 
+            case R.id.txt_slot4:
+                resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+                scrollview_detail.setVisibility(View.VISIBLE);
+                scrollView_encyrption.setVisibility(View.INVISIBLE);
+                scrollview_meta.setVisibility(View.INVISIBLE);
+                break;
+
+            case R.id.txt_slot5:
+                resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
+                scrollview_meta.setVisibility(View.VISIBLE);
+                scrollView_encyrption.setVisibility(View.INVISIBLE);
+                scrollview_detail.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.txt_slot6:
+                resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
+                scrollView_encyrption.setVisibility(View.VISIBLE);
+                scrollview_detail.setVisibility(View.INVISIBLE);
+                scrollview_meta.setVisibility(View.INVISIBLE);
+                break;
+            case R.id.img_edit_name:
+                edt_medianame.setClickable(true);
+                edt_medianame.setEnabled(true);
+                edt_medianame.setFocusable(true);
+                edt_medianame.setFocusableInTouchMode(true);
+                edt_medianame.setSelection(edt_medianame.getText().length());
+                edt_medianame.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                break;
+            case R.id.img_edit_notes:
+                edt_medianotes.setClickable(true);
+                edt_medianotes.setEnabled(true);
+                edt_medianotes.setFocusable(true);
+                edt_medianotes.setFocusableInTouchMode(true);
+                edt_medianotes.setSelection(edt_medianotes.getText().length());
+                edt_medianotes.requestFocus();
+                InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                break;
+            case R.id.img_share_media:
+                if (audiourl != null && (!audiourl.isEmpty()))
+                    common.shareimage(getActivity(), audiourl);
                 break;
 
             case R.id.btn_playpause:
@@ -1493,5 +1629,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         };
         myHandler.post(myRunnable);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
