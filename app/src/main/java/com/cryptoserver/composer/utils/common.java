@@ -2252,4 +2252,31 @@ public class common {
         encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txt_encryption.setText(encryptionstring);
     }
+
+    public static String filesize(String imageurl) {
+        String img_size =null ;
+
+        File file=new File(imageurl);
+        long photosize= file.length();
+        int b = (int) photosize;
+        int k = (int) photosize / 1024;
+        int m = (int) ((photosize / 1024) / 10240);
+        int g = (int) (((photosize / 1024) / 1024) / 1024);
+        int t = (int) ((((photosize / 1024) / 1024) / 1024) / 1024);
+
+        DecimalFormat dec = new DecimalFormat("0.00");
+
+        if (t > 1) {
+            img_size = t + "tb";
+        } else if (g > 1) {
+            img_size = g + "gb";
+        } else if (m > 1) {
+            img_size = m + "mb";
+        } else if (k > 1) {
+            img_size = k +"kb";
+        } else {
+            img_size =dec.format(b);
+        }
+        return img_size;
+    }
 }

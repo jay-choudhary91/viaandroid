@@ -24,7 +24,7 @@
             android:id="@+id/txt_slot4"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:text="@string/photo"
+            android:text=""
             app:fontType="Comfortaa-Regular"
             android:layout_marginLeft="1dp"
             android:textSize="15sp"
@@ -69,7 +69,7 @@
         android:layout_above="@+id/layout_footer"
         android:id="@+id/scrollview_detail"
         android:scrollbars="none"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="match_parent">
 
 
@@ -143,6 +143,101 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/margin_5dp"
                 android:orientation="horizontal"
+                android:visibility="gone"
+                android:id="@+id/layout_starttime"
+                android:layout_height="wrap_content">
+
+                <com.cryptoserver.composer.views.customfonttextview
+                    android:layout_width="0dp"
+                    android:layout_weight="0.25"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_10dp"
+                    app:fontType="OpenSans_Regular"
+                    android:gravity="center_vertical"
+                    android:text="@string/start_time"
+                    />
+                <com.cryptoserver.composer.views.customfonttextview
+                    android:id="@+id/txt_starttime"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.75"
+                    app:fontType="OpenSans_Regular"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_10dp"
+                    android:textColor="@color/black"
+                    android:gravity="left"
+                    android:text=""
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:id="@+id/layout_endtime"
+                android:layout_height="wrap_content">
+
+                <com.cryptoserver.composer.views.customfonttextview
+                    android:layout_width="0dp"
+                    android:layout_weight="0.25"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_10dp"
+                    app:fontType="OpenSans_Regular"
+                    android:gravity="center_vertical"
+                    android:text="@string/end_time"
+                    />
+                <com.cryptoserver.composer.views.customfonttextview
+                    android:id="@+id/txt_endtime"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.75"
+                    app:fontType="OpenSans_Regular"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_10dp"
+                    android:textColor="@color/black"
+                    android:gravity="left"
+                    android:text=""
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:id="@+id/layout_duration"
+                android:layout_height="wrap_content">
+
+                <com.cryptoserver.composer.views.customfonttextview
+                    android:layout_width="0dp"
+                    android:layout_weight="0.25"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_10dp"
+                    app:fontType="OpenSans_Regular"
+                    android:gravity="center_vertical"
+                    android:text="@string/duration"
+                    />
+                <com.cryptoserver.composer.views.customfonttextview
+                    android:id="@+id/txt_duration"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.75"
+                    app:fontType="OpenSans_Regular"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_10dp"
+                    android:textColor="@color/black"
+                    android:gravity="left"
+                    android:text=""
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:id="@+id/layout_date"
                 android:layout_height="wrap_content">
 
                 <com.cryptoserver.composer.views.customfonttextview
@@ -172,6 +267,8 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/margin_5dp"
+                android:visibility="gone"
+                android:id="@+id/layout_time"
                 android:layout_height="wrap_content">
 
                 <com.cryptoserver.composer.views.customfonttextview
