@@ -147,6 +147,40 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
 
+          tvaddress.setTextColor(getResources().getColor(R.color.white));
+          tvlatitude.setTextColor(getResources().getColor(R.color.white));
+          tvlongitude.setTextColor(getResources().getColor(R.color.white));
+          tvaltitude.setTextColor(getResources().getColor(R.color.white));
+          tvspeed.setTextColor(getResources().getColor(R.color.white));
+          tvheading.setTextColor(getResources().getColor(R.color.white));
+          tvtraveled.setTextColor(getResources().getColor(R.color.white));
+          tvxaxis.setTextColor(getResources().getColor(R.color.white));
+          tvyaxis.setTextColor(getResources().getColor(R.color.white));
+          tvzaxis.setTextColor(getResources().getColor(R.color.white));
+          tvphone.setTextColor(getResources().getColor(R.color.white));
+          tvnetwork.setTextColor(getResources().getColor(R.color.white));
+          tvconnection.setTextColor(getResources().getColor(R.color.white));
+          tvversion.setTextColor(getResources().getColor(R.color.white));
+          tvwifi.setTextColor(getResources().getColor(R.color.white));
+          tvgpsaccuracy.setTextColor(getResources().getColor(R.color.white));
+          tvscreen.setTextColor(getResources().getColor(R.color.white));
+          tvcountry.setTextColor(getResources().getColor(R.color.white));
+          tvcpuusage.setTextColor(getResources().getColor(R.color.white));
+          tvbrightness.setTextColor(getResources().getColor(R.color.white));
+          tvtimezone.setTextColor(getResources().getColor(R.color.white));
+          tvmemoryusage.setTextColor(getResources().getColor(R.color.white));
+          tvbluetooth.setTextColor(getResources().getColor(R.color.white));
+          tvlocaltime.setTextColor(getResources().getColor(R.color.white));
+          tvstoragefree.setTextColor(getResources().getColor(R.color.white));
+          tvlanguage.setTextColor(getResources().getColor(R.color.white));
+          tvuptime.setTextColor(getResources().getColor(R.color.white));
+          tvbattery.setTextColor(getResources().getColor(R.color.white));
+          tvblockchainid.setTextColor(getResources().getColor(R.color.white));
+          tvblockid.setTextColor(getResources().getColor(R.color.white));
+          tvblocknumber.setTextColor(getResources().getColor(R.color.white));
+          tvmetahash.setTextColor(getResources().getColor(R.color.white));
+
+
             loadmap();
         }
         return rootview;
@@ -192,15 +226,58 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void setmetricesdata()
     {
-        if(isinbackground)
+        /*if(isinbackground)
             return;
 
         if(! isgraphicopen && (! ismediaplayer))
-            return;
+            return;*/
+        String latitudedegree = xdata.getinstance().getSetting(config.gpslatitude);
+        String longitudedegree=xdata.getinstance().getSetting(config.gpslongitude);
+        String altitude=xdata.getinstance().getSetting(config.Altitude);
+        String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
 
-        common.locationAnalyticsdata(tvlatitude,tvlongitude,
-                tvaltitude,tvheading,tvtraveled,tvspeed,tvaddress);
+        if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA")))
+        {
+            common.setspannable(getResources().getString(R.string.latitude),"\n"+latitudedegree, tvlatitude);
+        }
+        else
+        {
+            common.setspannable(getResources().getString(R.string.latitude),"\n"+"NA", tvlatitude);
+        }
 
+        if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA")))
+        {
+            common.setspannable(getResources().getString(R.string.longitude),"\n"+longitudedegree, tvlongitude);
+        }
+        else
+        {
+            common.setspannable(getResources().getString(R.string.longitude),"\n"+"NA", tvlongitude);
+        }
+
+        if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
+        {
+            common.setspannable(getResources().getString(R.string.altitude),"\n"+altitude, tvaltitude);
+        }
+        else
+        {
+            common.setspannable(getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
+        }
+
+        if((! value.equalsIgnoreCase("NA")) && (! value.equalsIgnoreCase("NA")))
+        {
+            double heading=Double.parseDouble(value);
+            int headingg=(int)heading;
+            common.setspannable(getResources().getString(R.string.heading),"\n"+headingg, tvheading);
+        }
+        else
+        {
+            common.setspannable(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
+        }
+
+            common.setspannable(getResources().getString(R.string.traveled),"\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
+            common.setspannable(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
+
+            common.setspannable(getResources().getString(R.string.address),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
             common.setspannable(getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
             common.setspannable(getResources().getString(R.string.yaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_y), tvyaxis);
             common.setspannable(getResources().getString(R.string.zaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_z), tvzaxis);
@@ -252,6 +329,72 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         common.setspannable(getResources().getString(R.string.block_number),metahash, tvblocknumber);
         common.setspannable(getResources().getString(R.string.metrichash),videostarttransactionid, tvmetahash);
 
+    }
+
+    public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
+                                             final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
+
+        {
+            StringBuilder mformatbuilder = new StringBuilder();
+            final String latitude=xdata.getinstance().getSetting(config.LatitudeDegree);
+
+            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA")))
+            {
+                mformatbuilder.append(config.Latitude+System.getProperty("line.separator")+ latitude);
+            }
+            else
+            {
+                mformatbuilder.append(System.getProperty("line.separator")+config.Latitude+System.getProperty("line.separator")+"NA");
+            }
+
+            final String altitude=xdata.getinstance().getSetting(config.Altitude);
+
+            if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
+            {
+                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Altitude+System.getProperty("line.separator")+
+                        common.getxdatavalue(xdata.getinstance().getSetting(config.Altitude)));
+            }
+            else
+            {
+                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Altitude+System.getProperty("line.separator")+"NA");
+            }
+            String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
+            if((! value.equalsIgnoreCase("NA")) && (! value.equalsIgnoreCase("NA")))
+            {
+                double heading=Double.parseDouble(value);
+                int headingg=(int)heading;
+                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Heading+System.getProperty("line.separator")+headingg);
+            }
+            else
+            {
+                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Heading+System.getProperty("line.separator"));
+            }
+
+            txt_latitude.setText(mformatbuilder.toString());
+        }
+
+        {
+            StringBuilder mformatbuilder = new StringBuilder();
+            final String longitude=xdata.getinstance().getSetting(config.LongitudeDegree);
+            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA")))
+            {
+                mformatbuilder.append(config.Longitude+System.getProperty("line.separator")+
+                        longitude);
+            }
+            else
+            {
+                mformatbuilder.append(System.getProperty("line.separator")+config.Longitude+System.getProperty("line.separator")+"NA");
+            }
+
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Speed+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
+            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Orientation+System.getProperty("line.separator")+
+                    common.getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
+
+            txt_longitude.setText(mformatbuilder.toString());
+
+            txt_address.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)));
+        }
     }
 
     public void setphotocapture(boolean photocapture)
@@ -306,6 +449,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         super.onPause();
         msensormanager.unregisterListener(this);
     }
+
+    public void setdrawerproperty(boolean isgraphicopen)
+    {
+        this.isgraphicopen=isgraphicopen;
+    }
+
 
     private void loadmap() {
         SupportMapFragment mapFragment = new SupportMapFragment();

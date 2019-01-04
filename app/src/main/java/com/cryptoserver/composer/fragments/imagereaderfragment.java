@@ -20,6 +20,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -68,6 +70,7 @@ import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
+import com.cryptoserver.composer.utils.FullDrawerLayout;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
@@ -133,7 +136,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ScrollView scrollview_metrices;
     @BindView(R.id.scrollview_hashes)
     ScrollView scrollview_hashes;
-    @BindView(R.id.fragment_graphic_container)
+    @BindView(R.id.fragment_graphic_drawer_container)
     FrameLayout fragment_graphic_container;
     @BindView(R.id.content)
     LinearLayout linearLayout;
@@ -236,12 +239,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     boolean img_fullscrnshow=false;
    // RelativeLayout layout_photoreader,layout_mediatype;
     int targetheight,previousheight;
+    FullDrawerLayout mDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     GoogleMap mgooglemap;
 
     customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
             tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
             tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery;
+
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
     @BindView(R.id.googlemap)
@@ -267,6 +273,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+
+            mDrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
+
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    getActivity(), mDrawer, R.string.drawer_open, R.string.drawer_close);
+            // Where do I put this?
+            mDrawerToggle.syncState();
+
+            mDrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
             img_dotmenu.setOnClickListener(this);
             img_folder.setOnClickListener(this);
@@ -315,8 +330,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     Log.e("previousheight",""+previousheight);
                 }
             });
-
-
 
             tvaddress=rootview.findViewById(R.id.txt_address);
             tvlatitude=rootview.findViewById(R.id.txt_latitude);
@@ -447,7 +460,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             recyview_metrices.setVisibility(View.INVISIBLE);
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
-            fragment_graphic_container.setVisibility(View.INVISIBLE);
+
+            fragment_graphic_container.setVisibility(View.VISIBLE);
 
             {
                 mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
@@ -491,7 +505,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 graphicaldrawerfragment =new fragmentgraphicaldrawer();
                 graphicaldrawerfragment.setphotocapture(true);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
+                transaction.add(R.id.fragment_graphic_drawer_container, graphicaldrawerfragment);
                 transaction.commit();
             }
             ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
@@ -980,9 +994,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         graphicopen = true;
                 }
 
-                if (fragmentgraphic != null)
-                    fragmentgraphic.setdrawerproperty(graphicopen);
-                fragmentgraphic.setmetricesdata();
+                /*if (graphicaldrawerfragment != null)
+                    graphicaldrawerfragment.setdrawerproperty(graphicopen);
+
+                graphicaldrawerfragment.setmetricesdata();*/
 
                 myhandler.postDelayed(this, 1000);
             }
@@ -1000,7 +1015,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 double latt = 0, longg = 0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
 
-                fragmentgraphic.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
+                graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
                         metricmainarraylist.get(0).getValuehash(), metricmainarraylist.get(0).getMetahash());
 
                 common.setspannable(getResources().getString(R.string.blockchain_id),metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
@@ -1054,8 +1069,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
             if (fragment_graphic_container.getVisibility() == View.VISIBLE) {
-                if (fragmentgraphic != null)
-                    fragmentgraphic.setmetricesdata();
+                if (graphicaldrawerfragment != null)
+                    graphicaldrawerfragment.setmetricesdata();
 
             }
         }
@@ -1425,27 +1440,27 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void setmetadatavalue(metricmodel metricItemArraylist){
 
-        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")){
+        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
             latitude = metricItemArraylist.getMetricTrackValue();
             common.setspannable(getResources().getString(R.string.latitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlatitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
             longitude = metricItemArraylist.getMetricTrackValue();
             common.setspannable(getResources().getString(R.string.longitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlongitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaltitude")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
             common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("speed")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
             common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("heading")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
             common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("distancetravelled")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
             common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("address")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.address))){
             common.setspannable("",metricItemArraylist.getMetricTrackValue(), tvaddress);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.x")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)){
             common.setspannable(getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvxaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.y")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_y)){
             common.setspannable(getResources().getString(R.string.yaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvyaxis);
-        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("acceleration.z")){
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_z)){
             common.setspannable(getResources().getString(R.string.zaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvzaxis);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("phonetype")){
             common.setspannable(getResources().getString(R.string.phone),"\n"+metricItemArraylist.getMetricTrackValue(), tvphone);
