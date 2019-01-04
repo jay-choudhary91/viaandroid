@@ -93,6 +93,14 @@ import butterknife.ButterKnife;
  */
 public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener,AdapterView.OnItemSelectedListener {
 
+    @BindView(R.id.img_dotmenu)
+    ImageView img_dotmenu;
+    @BindView(R.id.img_folder)
+    ImageView img_folder;
+    @BindView(R.id.img_camera)
+    ImageView img_camera;
+    @BindView(R.id.img_arrow_back)
+    ImageView img_arrow_back;
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
@@ -323,6 +331,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             txtSlot3.setOnClickListener(this);
             playpausebutton.setOnClickListener(this);
 
+            img_dotmenu.setOnClickListener(this);
+            img_folder.setOnClickListener(this);
+            img_camera.setOnClickListener(this);
+            img_arrow_back.setOnClickListener(this);
+
+            img_dotmenu.setVisibility(View.VISIBLE);
+            img_folder.setVisibility(View.VISIBLE);
+            img_camera.setVisibility(View.VISIBLE);
+            img_arrow_back.setVisibility(View.VISIBLE);
+
+            handleimageview.setVisibility(View.GONE);
+            righthandle.setVisibility(View.GONE);
+
+
 
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
@@ -542,6 +564,21 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     common.shareimage(getActivity(), audiourl);
                 break;
 
+            case R.id.img_dotmenu:
+                settingfragment settingfrag=new settingfragment();
+                gethelper().addFragment(settingfrag, false, true);
+                break;
+            case R.id.img_folder:
+
+                break;
+            case R.id.img_camera:
+                launchbottombarfragment();
+                break;
+
+            case R.id.img_arrow_back:
+                gethelper().onBack();
+                break;
+
             case R.id.btn_playpause:
 
                 if(player.isPlaying()){
@@ -550,6 +587,23 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     start();
                 }
         }
+    }
+
+    public void launchbottombarfragment()
+    {
+        bottombarfragment fragbottombar=new bottombarfragment();
+        fragbottombar.setData(new adapteritemclick() {
+            @Override
+            public void onItemClicked(Object object) {
+
+            }
+
+            @Override
+            public void onItemClicked(Object object, int type) {
+
+            }
+        });
+        gethelper().replaceFragment(fragbottombar, false, true);
     }
 
     @Override

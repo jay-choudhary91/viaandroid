@@ -308,6 +308,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                          RelativeLayout.LayoutParams.MATCH_PARENT);
                  fragment_container.setLayoutParams(params);
              }else{
+                 actionbar.setVisibility(View.GONE);
                  imgshareicon.setVisibility(View.VISIBLE);
                  img_menu.setVisibility(View.VISIBLE);
                  RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
