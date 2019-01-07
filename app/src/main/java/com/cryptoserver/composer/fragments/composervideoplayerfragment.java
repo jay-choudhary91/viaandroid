@@ -229,7 +229,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
 
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
-            //mDrawer.setOnTouchListener(this);
+            //navigationdrawer.setOnTouchListener(this);
 
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
@@ -468,7 +468,7 @@ public class composervideoplayerfragment extends basefragment implements Surface
             /*case R.id.drawer_layout: {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (player != null && (!(mDrawer.isDrawerOpen(GravityCompat.START)))) {
+                        if (player != null && (!(navigationdrawer.isDrawerOpen(GravityCompat.START)))) {
                             hideshowcontroller();
                         }
                         break;

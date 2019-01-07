@@ -819,9 +819,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
         }
 
-        if(madapterclick != null)
-            madapterclick.onItemClicked(null,1);
-
         mrecorder = null;
         stoptimer();
         resettimer();

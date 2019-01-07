@@ -1,6 +1,12 @@
 package com.cryptoserver.composer.fragments;
 
+import android.Manifest;
+import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,14 +19,18 @@ import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -29,12 +39,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.cryptoserver.composer.BuildConfig;
@@ -46,9 +62,11 @@ import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
+import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
+import com.cryptoserver.composer.utils.FullDrawerLayout;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -57,14 +75,28 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
+import com.cryptoserver.composer.views.customfonttextview;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,7 +105,7 @@ import butterknife.ButterKnife;
  * Created by devesh on 21/8/18.
  */
 
-public class videoreaderfragment extends basefragment
+public class videoreaderfragment extends basefragment implements AdapterView.OnItemSelectedListener,View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener
 {
 
     @BindView(R.id.recyview_frames)
@@ -82,8 +114,6 @@ public class videoreaderfragment extends basefragment
     LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
     RelativeLayout layout_scrubberview;
-    @BindView(R.id.frontview)
-    RelativeLayout frontview;
     @BindView(R.id.txt_slot1)
     TextView txtSlot1;
     @BindView(R.id.txt_slot2)
@@ -102,8 +132,167 @@ public class videoreaderfragment extends basefragment
     RecyclerView recyview_metrices;
     @BindView(R.id.recyview_item)
     RecyclerView recyview_hashes;
-    @BindView(R.id.fragment_graphic_container)
+    @BindView(R.id.fragment_graphic_drawer_container)
     FrameLayout fragment_graphic_container;
+    @BindView(R.id.img_dotmenu)
+    ImageView img_dotmenu;
+    @BindView(R.id.img_folder)
+    ImageView img_folder;
+    @BindView(R.id.img_camera)
+    ImageView img_camera;
+    @BindView(R.id.img_arrow_back)
+    ImageView img_arrow_back;
+
+    //tabdetails
+    @BindView(R.id.spinner)
+    Spinner photospinner;
+    @BindView(R.id.txt_slot4)
+    TextView txtslotmedia;
+    @BindView(R.id.txt_slot5)
+    TextView txtslotmeta;
+    @BindView(R.id.txt_slot6)
+    TextView txtslotencyption;
+    @BindView(R.id.img_share_media)
+    ImageView img_share_media;
+    @BindView(R.id.img_edit_name)
+    ImageView img_edit_name;
+    @BindView(R.id.img_edit_notes)
+    ImageView img_edit_notes;
+    @BindView(R.id.layout_photoreader)
+    RelativeLayout layout_photoreader;
+    @BindView(R.id.txt_createdtime)
+    TextView txt_createdtime;
+    @BindView(R.id.layout_halfscrnimg)
+    RelativeLayout layout_halfscrnimg;
+    @BindView(R.id.layout_mediatype)
+    RelativeLayout layout_mediatype;
+    @BindView(R.id.layout_photodetails)
+    RelativeLayout layout_photodetails;
+    @BindView(R.id.scrollview_detail)
+    ScrollView scrollview_detail;
+    @BindView(R.id.img_fullscreen)
+    ImageView img_fullscreen;
+    @BindView(R.id.edt_medianame)
+    EditText edt_medianame;
+    @BindView(R.id.edt_medianotes)
+    EditText edt_medianotes;
+    @BindView(R.id.layout_footer)
+    RelativeLayout layout_footer;
+    @BindView(R.id.tab_layout)
+    LinearLayout tab_layout;
+    @BindView(R.id.scrollview_encyption)
+    ScrollView scrollView_encyrption;
+    @BindView(R.id.scrollview_meta)
+    ScrollView scrollview_meta;
+    @BindView(R.id.txt_videoupdatetransactionid)
+    TextView txt_blockchainid;
+    @BindView(R.id.txt_hash_formula)
+    TextView txt_blockid;
+    @BindView(R.id.txt_data_hash)
+    TextView txt_blocknumber;
+    @BindView(R.id.txt_dictionary_hash)
+    TextView txt_metahash;
+    @BindView(R.id.txt_size)
+    TextView tvsize;
+    @BindView(R.id.txt_date)
+    TextView tvdate;
+    @BindView(R.id.txt_time)
+    TextView tvtime;
+    @BindView(R.id.layout_date)
+    LinearLayout layout_date;
+    @BindView(R.id.layout_time)
+    LinearLayout layout_time;
+    @BindView(R.id.layout_duration)
+    LinearLayout layout_duration;
+    @BindView(R.id.layout_endtime)
+    LinearLayout layout_endtime;
+    @BindView(R.id.layout_starttime)
+    LinearLayout layout_starttime;
+    @BindView(R.id.txt_duration)
+    TextView txt_duration;
+    @BindView(R.id.txt_endtime)
+    TextView txt_endtime;
+    @BindView(R.id.txt_starttime)
+    TextView txt_starttime;
+
+
+
+
+    @BindView(R.id.txt_address)
+    customfonttextview tvaddress;
+    @BindView(R.id.txt_latitude)
+    customfonttextview tvlatitude;
+    @BindView(R.id.txt_longitude)
+    customfonttextview tvlongitude;
+    @BindView(R.id.txt_altitude)
+    customfonttextview tvaltitude;
+    @BindView(R.id.txt_speed)
+    customfonttextview tvspeed;
+    @BindView(R.id.txt_heading)
+    customfonttextview tvheading;
+    @BindView(R.id.txt_traveled)
+    customfonttextview tvtraveled;
+    @BindView(R.id.txt_xaxis)
+    customfonttextview tvxaxis;
+    @BindView(R.id.txt_yaxis)
+    customfonttextview tvyaxis;
+    @BindView(R.id.txt_zaxis)
+    customfonttextview tvzaxis;
+    @BindView(R.id.txt_phone)
+    customfonttextview tvphone;
+    @BindView(R.id.txt_network)
+    customfonttextview tvnetwork;
+    @BindView(R.id.txt_connection)
+    customfonttextview tvconnection;
+    @BindView(R.id.txt_version)
+    customfonttextview tvversion;
+    @BindView(R.id.txt_wifi)
+    customfonttextview tvwifi;
+    @BindView(R.id.txt_gps_accuracy)
+    customfonttextview tvgpsaccuracy;
+    @BindView(R.id.txt_screen)
+    customfonttextview tvscreen;
+    @BindView(R.id.txt_country)
+    customfonttextview tvcountry;
+    @BindView(R.id.txt_cpu_usage)
+    customfonttextview tvcpuusage;
+    @BindView(R.id.txt_brightness)
+    customfonttextview tvbrightness;
+    @BindView(R.id.txt_timezone)
+    customfonttextview tvtimezone;
+    @BindView(R.id.txt_memoryusage)
+    customfonttextview tvmemoryusage;
+    @BindView(R.id.txt_bluetooth)
+    customfonttextview tvbluetooth;
+    @BindView(R.id.txt_localtime)
+    customfonttextview tvlocaltime;
+    @BindView(R.id.txt_storagefree)
+    customfonttextview tvstoragefree;
+    @BindView(R.id.txt_language)
+    customfonttextview tvlanguage;
+    @BindView(R.id.txt_uptime)
+    customfonttextview tvuptime;
+    @BindView(R.id.txt_battery)
+    customfonttextview tvbattery;
+    @BindView(R.id.img_lefthandle)
+    ImageView handleimageview;
+
+    @BindView(R.id.layout_googlemap)
+    LinearLayout layout_googlemap;
+    @BindView(R.id.googlemap)
+    FrameLayout googlemap;
+    @BindView(R.id.img_compass)
+    ImageView img_compass;
+
+    GoogleMap mgooglemap;
+
+    boolean ismediaplayer = false;
+    String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
+            mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
+    private float currentDegree = 0f;
+    private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
+    int targetheight,previousheight;
+
 
     private RelativeLayout scurraberverticalbar;
     private String mediafilepath = null;
@@ -113,7 +302,6 @@ public class videoreaderfragment extends basefragment
     private videocontrollerview controller;
     private View rootview = null;
     private String selectedmetrics="";
-    private ImageView handleimageview,righthandle;
     private LinearLayout linearLayout;
     private String keytype =config.prefs_md5;
     private long currentframenumber =0,playerposition=0;
@@ -143,7 +331,6 @@ public class videoreaderfragment extends basefragment
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private videoframeadapter mmetricesadapter,mhashesadapter;
     private framebitmapadapter adapter;
-    private graphicalfragment fragmentgraphic;
     private Handler waveHandler;
     private Runnable waveRunnable;
     boolean runmethod = false;
@@ -161,6 +348,10 @@ public class videoreaderfragment extends basefragment
     int count = 0;
     @BindView(R.id.textfetchdata)
     TextView textfetchdata;
+    fragmentgraphicaldrawer  graphicaldrawerfragment;
+    FullDrawerLayout navigationdrawer;
+    private ActionBarDrawerToggle drawertoggle;
+
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -174,15 +365,37 @@ public class videoreaderfragment extends basefragment
             ButterKnife.bind(this, rootview);
 
             gethelper().setrecordingrunning(false);
-            frontview.setVisibility(View.VISIBLE);
             videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
             linearLayout=rootview.findViewById(R.id.content);
-            handleimageview=rootview.findViewById(R.id.handle);
-            righthandle=rootview.findViewById(R.id.righthandle);
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
 
-            textfetchdata.setVisibility(View.VISIBLE);
+            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
+            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            drawertoggle = new ActionBarDrawerToggle(
+                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
+
+                /** Called when a drawer has settled in a completely closed state. */
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    handleimageview.setVisibility(View.VISIBLE);
+                }
+                /** Called when a drawer has settled in a completely open state. */
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    handleimageview.setVisibility(View.GONE);
+                }
+            };
+
+            navigationdrawer.addDrawerListener(drawertoggle);
+
+            // Where do I put this?
+            drawertoggle.syncState();
+
+            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+            handleimageview.setVisibility(View.GONE);
+
+            textfetchdata.setVisibility(View.GONE);
 
             {
 
@@ -340,22 +553,67 @@ public class videoreaderfragment extends basefragment
 
             SurfaceHolder videoHolder = videoSurface.getHolder();
             videoHolder.addCallback(new setonSurface());
-            frontview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gethelper().updateactionbar(1);
-
-                }
-            });
             flingactionmindstvac = common.getdrawerswipearea();
 
-            handleimageview.setOnTouchListener(new setonTouch());
+           /* handleimageview.setOnTouchListener(new setonTouch());
             righthandle.setOnTouchListener(new setonTouch());
-            videoSurface.setOnTouchListener(new setonTouch());
+            videoSurface.setOnTouchListener(new setonTouch());*/
 
             txtSlot1.setOnClickListener(new setonClick());
             txtSlot2.setOnClickListener(new setonClick());
             txtSlot3.setOnClickListener(new setonClick());
+
+            img_dotmenu.setOnClickListener(new setonClick());
+            img_folder.setOnClickListener(new setonClick());
+            img_camera.setOnClickListener(new setonClick());
+            img_arrow_back.setOnClickListener(new setonClick());
+            handleimageview.setOnClickListener(new setonClick());
+            videoSurface.setOnClickListener(new setonClick());
+
+            //tabs_detail
+            txtslotmedia.setText(getResources().getString(R.string.video));
+            List<String> categories = new ArrayList<String>();
+            categories.add("All Media");
+            categories.add("Photo");
+            categories.add("Video");
+            categories.add("Audio");
+            photospinner.setOnItemSelectedListener(this);
+            img_share_media.setOnClickListener(new setonClick());
+            img_edit_name.setOnClickListener(new setonClick());
+            img_edit_notes.setOnClickListener(new setonClick());
+            img_fullscreen.setOnClickListener(new setonClick());
+            scrollview_detail.setVisibility(View.VISIBLE);
+            tab_layout.setVisibility(View.VISIBLE);
+            layout_footer.setVisibility(View.VISIBLE);
+            img_fullscreen.setVisibility(View.VISIBLE);
+            layout_photodetails.setVisibility(View.VISIBLE);
+            layout_mediatype.setVisibility(View.VISIBLE);
+            layout_date.setVisibility(View.GONE);
+            layout_time.setVisibility(View.GONE);
+            layout_duration.setVisibility(View.VISIBLE);
+            layout_starttime.setVisibility(View.VISIBLE);
+            layout_endtime.setVisibility(View.VISIBLE);
+
+
+            txt_duration.setText("00:00:02:17.3");
+            txt_starttime.setText("07/01/2019");
+            txt_endtime.setText("07/01/2019");
+
+            layout_photoreader.post(new Runnable() {
+                @Override
+                public void run() {
+                    targetheight= layout_photoreader.getHeight();
+                    Log.e("targetheight",""+targetheight);
+                }
+            });
+
+            videoSurface.post(new Runnable() {
+                @Override
+                public void run() {
+                    previousheight = videoSurface.getHeight();
+                    Log.e("previousheight",""+previousheight);
+                }
+            });
 
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
@@ -367,18 +625,21 @@ public class videoreaderfragment extends basefragment
             recyview_metrices.setVisibility(View.INVISIBLE);
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
-            fragment_graphic_container.setVisibility(View.INVISIBLE);
+            fragment_graphic_container.setVisibility(View.VISIBLE);
 
-            if(fragmentgraphic == null) {
-                fragmentgraphic = new graphicalfragment();
+            txtslotencyption.setOnClickListener(new setonClick());
+            txtslotmeta.setOnClickListener(new setonClick());
+            txtslotmedia.setOnClickListener(new setonClick());
+            resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
 
+            if (graphicaldrawerfragment == null) {
+                // fragmentgraphic = new graphicalfragment();
+                graphicaldrawerfragment =new fragmentgraphicaldrawer();
+                graphicaldrawerfragment.setphotocapture(true);
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
+                transaction.add(R.id.fragment_graphic_drawer_container, graphicaldrawerfragment);
                 transaction.commit();
             }
-
-            setmetriceshashesdata();
-            setupvideodata();
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
@@ -391,7 +652,25 @@ public class videoreaderfragment extends basefragment
                 }).start();
                 getmetadetareader();
             }
+            else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+            {
+
+                Thread thread = new Thread() {
+                    public void run() {
+                        getmediadata();
+                    }
+                };
+                thread.start();
+
+                //registerbroadcastreciver();
+                //registerbroadcastreciverforencryptionmetadata();
+            }
+
             Log.e("oncreate","oncreate");
+
+            loadmap();
+            setmetriceshashesdata();
+            setupvideodata();
         }
         return rootview;
     }
@@ -438,6 +717,26 @@ public class videoreaderfragment extends basefragment
             }
         };
         handlerrecycler.postDelayed(runnablerecycler,1000);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
     }
 
 
@@ -498,6 +797,123 @@ public class videoreaderfragment extends basefragment
                     }
 
                     break;
+
+                case R.id.txt_slot4:
+                    resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+                    scrollview_detail.setVisibility(View.VISIBLE);
+                    scrollView_encyrption.setVisibility(View.INVISIBLE);
+                    scrollview_meta.setVisibility(View.INVISIBLE);
+                    break;
+
+                case R.id.txt_slot5:
+                    resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
+                    scrollview_meta.setVisibility(View.VISIBLE);
+                    scrollView_encyrption.setVisibility(View.INVISIBLE);
+                    scrollview_detail.setVisibility(View.INVISIBLE);
+                    break;
+                case R.id.txt_slot6:
+                    resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
+                    scrollView_encyrption.setVisibility(View.VISIBLE);
+                    scrollview_detail.setVisibility(View.INVISIBLE);
+                    scrollview_meta.setVisibility(View.INVISIBLE);
+                    break;
+                case R.id.img_edit_name:
+                    edt_medianame.setClickable(true);
+                    edt_medianame.setEnabled(true);
+                    edt_medianame.setFocusable(true);
+                    edt_medianame.setFocusableInTouchMode(true);
+                    edt_medianame.setSelection(edt_medianame.getText().length());
+                    edt_medianame.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    break;
+                case R.id.img_edit_notes:
+                    edt_medianotes.setClickable(true);
+                    edt_medianotes.setEnabled(true);
+                    edt_medianotes.setFocusable(true);
+                    edt_medianotes.setFocusableInTouchMode(true);
+                    edt_medianotes.setSelection(edt_medianotes.getText().length());
+                    edt_medianotes.requestFocus();
+                    InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                    break;
+                case R.id.img_share_media:
+                    if (mediafilepath != null && (!mediafilepath.isEmpty()))
+                        common.shareimage(getActivity(), mediafilepath);
+
+                    break;
+
+                case R.id.img_dotmenu:
+                    settingfragment settingfrag=new settingfragment();
+                    gethelper().addFragment(settingfrag, false, true);
+                    break;
+                case R.id.img_folder:
+
+                    break;
+                case R.id.img_camera:
+                    //launchbottombarfragment();
+                    break;
+
+                case R.id.img_lefthandle:
+                    navigationdrawer.openDrawer(Gravity.START);
+                    handleimageview.setVisibility(View.GONE);
+                    break;
+
+                case R.id.img_arrow_back:
+                    gethelper().onBack();
+                    break;
+                case R.id.img_fullscreen:
+                    if(layout_photodetails.getVisibility()==View.VISIBLE){
+                      //  navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                        navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                        handleimageview.setVisibility(View.VISIBLE);
+                        expand(videoSurface,100,targetheight);
+                        layout_photodetails.setVisibility(View.GONE);
+                        scrollview_detail.setVisibility(View.GONE);
+                        scrollview_meta.setVisibility(View.GONE);
+                        scrollView_encyrption.setVisibility(View.GONE);
+                        tab_layout.setVisibility(View.GONE);
+                        layout_footer.setVisibility(View.GONE);
+                        layout_mediatype.setVisibility(View.GONE);
+                        img_fullscreen.setVisibility(View.INVISIBLE);
+
+
+                    } else{
+                        navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                        //navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                        handleimageview.setVisibility(View.GONE);
+                        collapse(videoSurface,100,previousheight);
+                        layout_photodetails.setVisibility(View.VISIBLE);
+                        tab_layout.setVisibility(View.VISIBLE);
+                        scrollview_detail.setVisibility(View.VISIBLE);
+                        layout_footer.setVisibility(View.VISIBLE);
+                        img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                    }
+                    break;
+
+                case R.id.videoSurface:
+                    Log.e("ontouch","ontouch");
+
+                    if(layout_photodetails.getVisibility()==View.GONE){
+                        if(layout_footer.getVisibility()==(View.GONE)){
+                            img_fullscreen.setVisibility(View.VISIBLE);
+                            img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                            layout_mediatype.setVisibility(View.VISIBLE);
+                            layout_footer.setVisibility(View.VISIBLE);
+                        } else {
+                            img_fullscreen.setVisibility(View.GONE);
+                            img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                            layout_mediatype.setVisibility(View.GONE);
+                            layout_footer.setVisibility(View.GONE);
+                        }
+
+                    } else {
+                        img_fullscreen.setVisibility(View.VISIBLE);
+                        img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                    }
+
+                    break;
             }
         }
     }
@@ -535,19 +951,19 @@ public class videoreaderfragment extends basefragment
         public boolean onTouch(View view, MotionEvent motionEvent) {
             switch (view.getId())
             {
-                case  R.id.handle:
+                /*case  R.id.handle:
                     flingswipe.onTouchEvent(motionEvent);
                     break;
 
                 case  R.id.righthandle:
                     flingswipe.onTouchEvent(motionEvent);
-                    break;
+                    break;*/
                 case  R.id.videoSurface:
                 {
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
                             if(player != null && (! isdraweropen)) {
-                                hideshowcontroller();
+                                //hideshowcontroller();
                             }
                             break;
                     }
@@ -605,16 +1021,17 @@ public class videoreaderfragment extends basefragment
         handleimageview.setVisibility(View.GONE);
         linearLayout.setVisibility(View.VISIBLE);
         rightswipe.start();
-        righthandle.setVisibility(View.VISIBLE);
+
+        // righthandle.setVisibility(View.VISIBLE);
         rightswipe.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                righthandle.setImageResource(R.drawable.righthandle);
+               // righthandle.setImageResource(R.drawable.righthandle);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                righthandle.setImageResource(R.drawable.lefthandle);
+               // righthandle.setImageResource(R.drawable.lefthandle);
             }
 
             @Override
@@ -630,7 +1047,6 @@ public class videoreaderfragment extends basefragment
         Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
-        righthandle.setVisibility(View.VISIBLE);
         handleimageview.setVisibility(View.GONE);
         leftswipe.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -667,8 +1083,8 @@ public class videoreaderfragment extends basefragment
             }
             else
             {
-                layout_scrubberview.setVisibility(View.VISIBLE);
-                handleimageview.setVisibility(View.VISIBLE);
+                layout_scrubberview.setVisibility(View.GONE);
+                handleimageview.setVisibility(View.GONE);
                 gethelper().updateactionbar(1);
                 controller.controllersview.setVisibility(View.VISIBLE);
             }
@@ -731,9 +1147,9 @@ public class videoreaderfragment extends basefragment
                 player.setOnCompletionListener(new setonmediacompletion());
 
                 if(player!=null){
-                    changeactionbarcolor();
-                    initAudio();
-                    fragmentgraphic.setvisualizerwave();
+                    //changeactionbarcolor();
+                   // initAudio();
+                    //fragmentgraphic.setvisualizerwave();
                     wavevisualizerslist.clear();
                 }
 
@@ -774,6 +1190,139 @@ public class videoreaderfragment extends basefragment
             }
         };
         getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);*/
+    }
+
+    public void getmediadata() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    databasemanager mdbhelper = null;
+                    if (mdbhelper == null) {
+                        mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                        mdbhelper.createDatabase();
+                    }
+
+                    try {
+                        mdbhelper.open();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
+                    String completedate="";
+                    if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
+                    {
+                        do{
+                            completedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                            mediadate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
+                            medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
+                            medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
+                            mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
+                            mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+
+
+                        }while(cur.moveToNext());
+                    }
+
+                    if (!completedate.isEmpty()){
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                textfetchdata.setVisibility(View.GONE);
+                            }
+                        });
+
+                        String framelabel="";
+                        ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
+                        if(metricmainarraylist.size()>0){
+
+                            for(int i=0;i<mitemlist.size();i++)
+                            {
+                                String sequencehash = mitemlist.get(i).getSequencehash();
+                                String hashmethod = mitemlist.get(i).getHashmethod();
+                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
+                            }
+
+                        }else{
+
+                            for(int i=0;i<mitemlist.size();i++)
+                            {
+                                String metricdata=mitemlist.get(i).getMetricdata();
+                                String sequencehash = mitemlist.get(i).getSequencehash();
+                                String hashmethod = mitemlist.get(i).getHashmethod();
+                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
+
+                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
+                                // selectedhaeshes = selectedhaeshes+"\n";
+                                framelabel="Frame ";
+                                if(i == mitemlist.size()-1)
+                                {
+                                    framelabel="Last Frame ";
+                                }
+                                /*selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                                        ": "+mitemlist.get(i).getSequencehash();*/
+                            }
+
+                            /*if(!mediadate.isEmpty()){
+
+                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                Date date = format.parse(mediadate);
+                                final String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
+                                final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+
+
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tvdate.setText(filecreateddate);
+                                        txt_createdtime.setText(time);
+                                        tvtime.setText(time);
+                                    }
+                                });
+                            }
+*/
+                            if(!medianame.isEmpty()){
+                                int index =  medianame.lastIndexOf('.');
+                                if(index >=0)
+                                    medianame = medianame.substring(0, medianame.lastIndexOf('.'));
+
+
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        edt_medianame.setText(medianame);
+                                    }
+                                });
+                            }
+
+                            if(!medianotes.isEmpty()){
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        edt_medianotes.setText(medianotes);
+                                    }
+                                });
+                            }
+                        }
+                        try
+                        {
+                            mdbhelper.close();
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     public void getmediametadata()
@@ -880,12 +1429,66 @@ public class videoreaderfragment extends basefragment
         }
     }
 
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
+        try {
+
+            JSONArray array = new JSONArray(metadata);
+            for (int j = 0; j < array.length(); j++) {
+                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                JSONObject object = array.getJSONObject(j);
+                Iterator<String> myIter = object.keys();
+                while (myIter.hasNext()) {
+                    String key = myIter.next();
+                    String value = object.optString(key);
+                    metricmodel model = new metricmodel();
+                    model.setMetricTrackKeyName(key);
+                    model.setMetricTrackValue(value);
+                    metricItemArraylist.add(model);
+                }
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void registerbroadcastreciver()
+    {
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
+        getmetadatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Thread thread = new Thread() {
+                    public void run() {
+                        if(mhashesitems.size() == 0)
+                            getmediadata();
+                    }
+                };
+                thread.start();
+            }
+        };
+        getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
+    }
+
+    public void registerbroadcastreciverforencryptionmetadata()
+    {
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
+        getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                getmediadata();
+            }
+        };
+        getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
+    }
 
     @Override
     public void onStop() {
         super.onStop();
         try {
             applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
+            applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
+            applicationviavideocomposer.getactivity().unregisterReceiver(getencryptionmetadatabroadcastreceiver);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -893,11 +1496,8 @@ public class videoreaderfragment extends basefragment
         Log.e("onstop","onstop");
     }
 
-
-
     public class setonSurface implements SurfaceHolder.Callback
     {
-
         // Implement SurfaceHolder.Callback
         @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -949,10 +1549,9 @@ public class videoreaderfragment extends basefragment
             }
 
             controller.show();
-            frontview.setVisibility(View.GONE);
 
-            if(fragmentgraphic != null)
-                fragmentgraphic.setmediaplayer(true,null);
+            /*if(fragmentgraphic != null)
+                fragmentgraphic.setmediaplayer(true,null);*/
 
             Log.e("onprepared","onprepared");
         }
@@ -961,7 +1560,7 @@ public class videoreaderfragment extends basefragment
     adapteritemclick mitemclick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-            hideshowcontroller();
+           // hideshowcontroller();
         }
 
         @Override
@@ -1259,9 +1858,9 @@ public class videoreaderfragment extends basefragment
                 player.setOnCompletionListener(new setonmediacompletion());
                 if(player!=null)
                 {
-                    changeactionbarcolor();
-                    initAudio();
-                    fragmentgraphic.setvisualizerwave();
+                   // changeactionbarcolor();
+                   // initAudio();
+                   // fragmentgraphic.setvisualizerwave();
                     wavevisualizerslist.clear();
                 }
             }
@@ -1281,6 +1880,7 @@ public class videoreaderfragment extends basefragment
                 (R.color.videoPlayer_header));
     }
 
+
     public void setmetriceshashesdata()
     {
         if(myHandler != null && myRunnable != null)
@@ -1291,9 +1891,9 @@ public class videoreaderfragment extends basefragment
             @Override
             public void run() {
                 boolean graphicopen=false;
-                if(isdraweropen)
+                if(!isdraweropen)
                 {
-                    if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
+                    /*if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
                     {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -1305,17 +1905,17 @@ public class videoreaderfragment extends basefragment
                         });
 
                     }
-
+*/
                     setmetricesgraphicaldata();
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
 
-                if(fragmentgraphic != null)
-                    fragmentgraphic.setdrawerproperty(graphicopen);
-
-                myHandler.postDelayed(this, 1000);
+               /* if(graphicaldrawerfragment != null)
+                    graphicaldrawerfragment.setdrawerproperty(graphicopen);
+*/
+                myHandler.postDelayed(this, 3000);
             }
         };
         myHandler.post(myRunnable);
@@ -1346,9 +1946,13 @@ public class videoreaderfragment extends basefragment
                 double latt=0,longg=0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
 
-                fragmentgraphic.getencryptiondata(metricmainarraylist.get(i).getHashmethod(),metricmainarraylist.get(i).getVideostarttransactionid(),
+                graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(i).getHashmethod(),metricmainarraylist.get(i).getVideostarttransactionid(),
                             metricmainarraylist.get(i).getValuehash(),metricmainarraylist.get(i).getMetahash());
 
+                common.setspannable(getResources().getString(R.string.blockchain_id),metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+                common.setspannable(getResources().getString(R.string.block_id),metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                common.setspannable(getResources().getString(R.string.block_number),metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                common.setspannable(getResources().getString(R.string.metrichash),metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
                 for(int j=0;j<metricItemArraylist.size();j++)
                 {
@@ -1357,7 +1961,9 @@ public class videoreaderfragment extends basefragment
                     common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
                             metricItemArraylist.get(j).getMetricTrackValue(),true);
 
-                    if(fragmentgraphic != null)
+                    setmetadatavalue(metricItemArraylist.get(j));
+
+                    if(graphicaldrawerfragment != null)
                     {
                         if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
                         {
@@ -1367,9 +1973,9 @@ public class videoreaderfragment extends basefragment
                                 latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
                                 if(longg != 0)
                                 {
-                                    if(fragmentgraphic != null)
+                                    if(graphicaldrawerfragment != null)
                                     {
-                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
+                                        graphicaldrawerfragment.drawmappoints(new LatLng(latt,longg));
                                         latt=0;longg=0;
                                     }
                                 }
@@ -1382,9 +1988,9 @@ public class videoreaderfragment extends basefragment
                                 longg=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
                                 if(latt != 0)
                                 {
-                                    if(fragmentgraphic != null)
+                                    if(graphicaldrawerfragment != null)
                                     {
-                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
+                                        graphicaldrawerfragment.drawmappoints(new LatLng(latt,longg));
                                         latt=0;longg=0;
                                     }
                                 }
@@ -1394,24 +2000,27 @@ public class videoreaderfragment extends basefragment
                     }
                 }
 
-                if((! selectedmetrics.toString().trim().isEmpty()))
+                /*if((! selectedmetrics.toString().trim().isEmpty()))
                 {
                     mmetricsitems.add(new videomodel(selectedmetrics));
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                     selectedmetrics="";
-                }
+                }*/
             }
         }
+
+        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+
 
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)
         {
-
-            if(fragmentgraphic != null){
-                fragmentgraphic.setmetricesdata();
-                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
+            if(graphicaldrawerfragment != null){
+                graphicaldrawerfragment.setmetricesdata();
+                //graphicaldrawerfragment.getvisualizerwavecomposer(wavevisualizerslist);
             }
         }
-
     }
 
     public class setonmediacompletion implements MediaPlayer.OnCompletionListener
@@ -1527,7 +2136,7 @@ public class videoreaderfragment extends basefragment
                                 if(player != null && player.isPlaying()){
 
                                     if(player.getCurrentPosition()==0){
-                                        fragmentgraphic.setvisualizerwave();
+                                        //fragmentgraphic.setvisualizerwave();
                                         wavevisualizerslist.clear();
                                     }
 
@@ -1566,9 +2175,9 @@ public class videoreaderfragment extends basefragment
 
     public void setupvideodata() {
         mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
-
+        tvsize.setText(common.filesize(mediafilepath));
         if (mediafilepath.equalsIgnoreCase("blank")) {
-            frontview.setVisibility(View.VISIBLE);
+            //frontview.setVisibility(View.VISIBLE);
         } else {
             if (mediafilepath != null && (!mediafilepath.isEmpty())) {
 
@@ -1603,9 +2212,9 @@ public class videoreaderfragment extends basefragment
                         BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
                 setupVideoPlayer(uri);
                 videoduration = 0;
-                layout_scrubberview.setVisibility(View.VISIBLE);
+                layout_scrubberview.setVisibility(View.GONE);
                 playerposition = 0;
-                righthandle.setVisibility(View.VISIBLE);
+               // righthandle.setVisibility(View.GONE);
                 framecount = 0;
                 if (mediafilepath != null && (!mediafilepath.isEmpty())) {
                     mvideoframes.clear();
@@ -1613,7 +2222,6 @@ public class videoreaderfragment extends basefragment
                     mallframes.clear();
                     txt_metrics.setText("");
                     txt_hashes.setText("");
-                    frontview.setVisibility(View.GONE);
                 }
             }
         }
@@ -1631,4 +2239,307 @@ public class videoreaderfragment extends basefragment
         };
         myHandler.post(myRunnable);
     }
+
+    public void expand(final View v, int duration, int targetHeight) {
+
+        int prevHeight  = v.getHeight();
+
+        v.setVisibility(View.VISIBLE);
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                v.getLayoutParams().height = (int) animation.getAnimatedValue();
+                v.requestLayout();
+            }
+        });
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
+        valueAnimator.setDuration(duration);
+        valueAnimator.start();
+    }
+
+    public void collapse(final View v, int duration, int targetHeight) {
+
+        int prevHeight  = v.getHeight();
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(prevHeight, targetHeight);
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                v.getLayoutParams().height = (int) animation.getAnimatedValue();
+                v.requestLayout();
+            }
+        });
+        valueAnimator.setInterpolator(new DecelerateInterpolator());
+        valueAnimator.setDuration(duration);
+        valueAnimator.start();
+    }
+
+    public void setmetadatavalue(metricmodel metricItemArraylist){
+
+        if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
+            latitude = metricItemArraylist.getMetricTrackValue();
+            common.setspannable(getResources().getString(R.string.latitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlatitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
+            longitude = metricItemArraylist.getMetricTrackValue();
+            common.setspannable(getResources().getString(R.string.longitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlongitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
+            common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
+            common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
+            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
+            common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.address))){
+            common.setspannable("",metricItemArraylist.getMetricTrackValue(), tvaddress);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_x)){
+            common.setspannable(getResources().getString(R.string.xaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvxaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_y)){
+            common.setspannable(getResources().getString(R.string.yaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvyaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.acceleration_z)){
+            common.setspannable(getResources().getString(R.string.zaxis),"\n"+metricItemArraylist.getMetricTrackValue(), tvzaxis);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("phonetype")){
+            common.setspannable(getResources().getString(R.string.phone),"\n"+metricItemArraylist.getMetricTrackValue(), tvphone);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("carrier")){
+            common.setspannable(getResources().getString(R.string.network),"\n"+metricItemArraylist.getMetricTrackValue(), tvnetwork);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("connectionspeed")){
+            common.setspannable(getResources().getString(R.string.connection),"\n"+metricItemArraylist.getMetricTrackValue(), tvconnection);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("osversion")){
+            common.setspannable(getResources().getString(R.string.version),"\n"+metricItemArraylist.getMetricTrackValue(), tvversion);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
+            common.setspannable(getResources().getString(R.string.wifi),"\n"+metricItemArraylist.getMetricTrackValue(), tvwifi);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
+            common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
+            screenwidth = metricItemArraylist.getMetricTrackValue();
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenheight")){
+            screenheight = metricItemArraylist.getMetricTrackValue();
+            common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("country")){
+            common.setspannable(getResources().getString(R.string.country),"\n"+metricItemArraylist.getMetricTrackValue(), tvcountry);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("cpuusagesystem")){
+            common.setspannable(getResources().getString(R.string.cpuusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvcpuusage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("brightness")){
+            common.setspannable(getResources().getString(R.string.brightness),"\n"+metricItemArraylist.getMetricTrackValue(), tvbrightness);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("timezone")){
+            common.setspannable(getResources().getString(R.string.timezone),"\n"+metricItemArraylist.getMetricTrackValue(), tvtimezone);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("memoryusage")){
+            common.setspannable(getResources().getString(R.string.memoryusage),"\n"+metricItemArraylist.getMetricTrackValue(), tvmemoryusage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("bluetoothonoff")){
+            common.setspannable(getResources().getString(R.string.bluetooth),"\n"+metricItemArraylist.getMetricTrackValue(), tvbluetooth);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicetime")){
+            common.setspannable(getResources().getString(R.string.localtime),"\n"+metricItemArraylist.getMetricTrackValue(), tvlocaltime);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("freespace")){
+            common.setspannable(getResources().getString(R.string.storagefree),"\n"+metricItemArraylist.getMetricTrackValue(), tvstoragefree);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("devicelanguage")){
+            common.setspannable(getResources().getString(R.string.language),"\n"+metricItemArraylist.getMetricTrackValue(), tvlanguage);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("systemuptime")){
+            common.setspannable(getResources().getString(R.string.uptime),"\n"+metricItemArraylist.getMetricTrackValue(), tvuptime);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("battery")){
+            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
+        }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("deviceorientation")){
+
+            String strdegree=xdata.getinstance().getSetting(config.orientation);
+            if(! strdegree.equals(lastsavedangle))
+            {
+                if(strdegree.equalsIgnoreCase("NA"))
+                    strdegree="0.0";
+
+                int degree = Math.abs((int)Double.parseDouble(strdegree));
+                rotatecompass(degree);
+            }
+            lastsavedangle=strdegree;
+            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
+        }
+    }
+
+    private void loadmap() {
+        SupportMapFragment mapFragment = new SupportMapFragment();
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.googlemap, mapFragment).commit();
+
+        if (mgooglemap == null) {
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    setMap(googleMap);
+                }
+            });
+        } else {
+            setMap(mgooglemap);
+        }
+    }
+
+    private void setMap(GoogleMap googleMap) {
+        this.mgooglemap = googleMap;
+        this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+
+        /*points.add(new LatLng(26.235896,74.24235896));
+        points.add(new LatLng(26.34235896,74.24235896));
+        points.add(new LatLng(26.232435896,74.424235896));
+        points.add(new LatLng(26.22235896,74.2325896));
+        points.add(new LatLng(26.454235896,74.24235896));
+        points.add(new LatLng(26.534235896,74.24235896));
+        points.add(new LatLng(26.5565235896,74.42235896));
+        points.add(new LatLng(26.67235896,74.23235896));
+        points.add(new LatLng(26.878235896,74.22135896));
+        points.add(new LatLng(26.45235896,74.23335896));
+        points.add(new LatLng(26.33235896,74.22335896));
+        polylineOptions.addAll(points);
+        polylineOptions.color(Color.BLUE);
+        polylineOptions.width(20);
+        Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+        //polyline.setEndCap(new RoundCap());
+        //polyline.setJointType(JointType.ROUND);
+         polyline.setPattern(PATTERN_POLYLINE_DOTTED);*/
+
+    }
+
+    //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
+
+    private void populateUserCurrentLocation(final LatLng location) {
+        // DeviceUser user = DeviceUserManager.getInstance().getUser();
+        if (mgooglemap == null)
+            return;
+
+        googlemap.setVisibility(View.VISIBLE);
+
+
+        //polyline.setPattern(PATTERN_POLYLINE_DOTTED);
+
+        /*Polygon polygon = mgooglemap.addPolygon(new PolygonOptions()
+                .clickable(true)
+                .add(location));
+        polygon.setTag("beta");
+
+
+        String type = "";
+        // Get the data object stored with the polygon.
+        if (polygon.getTag() != null) {
+            type = polygon.getTag().toString();
+        }
+
+        List<PatternItem> pattern = null;
+        int strokeColor = COLOR_BLACK_ARGB;
+        int fillColor = COLOR_WHITE_ARGB;
+
+        switch (type) {
+            // If no type is given, allow the API to use the default.
+            case "alpha":
+                // Apply a stroke pattern to render a dashed line, and define colors.
+                pattern = PATTERN_POLYGON_ALPHA;
+                strokeColor = COLOR_GREEN_ARGB;
+                fillColor = COLOR_PURPLE_ARGB;
+                break;
+            case "beta":
+                // Apply a stroke pattern to render a line of dots and dashes, and define colors.
+                pattern = PATTERN_POLYGON_BETA;
+                strokeColor = COLOR_ORANGE_ARGB;
+                fillColor = COLOR_BLUE_ARGB;
+                break;
+        }
+
+        polygon.setStrokePattern(pattern);
+        polygon.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
+        polygon.setStrokeColor(strokeColor);
+        polygon.setFillColor(fillColor);*/
+
+        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
+        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+        } else {
+            if(!ismediaplayer)
+            {
+                mgooglemap.setMyLocationEnabled(true);
+            }
+            else
+            {
+                mgooglemap.setMyLocationEnabled(false);
+            }
+            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
+    }
+
+
+    public void drawmappoints(LatLng latlng)
+    {
+        if(mgooglemap != null)
+        {
+            Log.e("GraphicalLatLng",""+latlng.latitude+" "+latlng.longitude);
+            {
+                    /*points.add(latlng);
+                    polylineOptions.addAll(points);
+                    polylineOptions.color(Color.BLUE);
+                    polylineOptions.width(20);
+                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+                    polyline.setStartCap(new RoundCap());
+                    polyline.setEndCap(new RoundCap());
+                    polyline.setJointType(JointType.DEFAULT);*/
+
+                mgooglemap.addMarker(new MarkerOptions()
+                        .position(latlng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
+            }
+                /*{
+                    points.add(latlng);
+                    polylineOptions.addAll(points);
+                    polylineOptions.color(Color.WHITE);
+                    polylineOptions.width(20);
+                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
+                    polyline.setStartCap(new RoundCap());
+                    polyline.setEndCap(new RoundCap());
+                    polyline.setJointType(JointType.ROUND);
+                }*/
+        }
+    }
+    public void rotatecompass(int degree)
+    {
+        RotateAnimation ra = new RotateAnimation(
+                currentDegree,
+                -degree,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f);
+
+        // how long the animation will take place
+        ra.setDuration(210);
+        ra.setFillAfter(true);
+        img_compass.startAnimation(ra);
+        currentDegree = -degree;
+    }
+
+    public void updatemediainfo(String transactionid,String medianame,String medianotes,String mediafolder)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes,mediafolder);
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
 }
