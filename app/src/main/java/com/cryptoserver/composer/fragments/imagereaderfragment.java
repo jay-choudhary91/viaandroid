@@ -129,7 +129,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout fragment_graphic_container;
     @BindView(R.id.content)
     LinearLayout linearLayout;
-    @BindView(R.id.img_lefthendle)
+    @BindView(R.id.img_lefthandle)
     ImageView handleimageview;
 
     @BindView(R.id.righthandle)
@@ -699,7 +699,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 launchbottombarfragment();
                 break;
 
-            case R.id.img_lefthendle:
+            case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
                 handleimageview.setVisibility(View.GONE);
                 break;

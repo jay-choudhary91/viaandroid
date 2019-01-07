@@ -1376,8 +1376,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
     }
 
-
-
     public void getmediametadata()
     {
         if(audiourl != null && (! audiourl.isEmpty())) {
