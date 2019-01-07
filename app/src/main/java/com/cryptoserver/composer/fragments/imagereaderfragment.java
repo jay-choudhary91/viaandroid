@@ -2,7 +2,6 @@ package com.cryptoserver.composer.fragments;
 
 
 import android.Manifest;
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,16 +9,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,12 +23,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -45,8 +36,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -89,11 +78,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -246,8 +233,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     boolean img_fullscrnshow=false;
    // RelativeLayout layout_photoreader,layout_mediatype;
     int targetheight,previousheight;
-    FullDrawerLayout mDrawer;
-    private ActionBarDrawerToggle mDrawerToggle;
+    FullDrawerLayout navigationdrawer;
+    private ActionBarDrawerToggle drawertoggle;
 
     GoogleMap mgooglemap;
 
@@ -281,10 +268,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            mDrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            mDrawerToggle = new ActionBarDrawerToggle(
-                    getActivity(), mDrawer, R.string.drawer_open, R.string.drawer_close){
+            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
+            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            drawertoggle = new ActionBarDrawerToggle(
+                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
 
                 /** Called when a drawer has settled in a completely closed state. */
                 public void onDrawerClosed(View view) {
@@ -299,12 +286,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             };
 
-            mDrawer.addDrawerListener(mDrawerToggle);
+            navigationdrawer.addDrawerListener(drawertoggle);
 
             // Where do I put this?
-            mDrawerToggle.syncState();
+            drawertoggle.syncState();
 
-            mDrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
             handleimageview.setVisibility(View.GONE);
 
             img_dotmenu.setOnClickListener(this);
@@ -414,7 +401,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 @Override
                 public void onClick(View v) {
 
-                    mDrawer.openDrawer(Gravity.START);
+                    navigationdrawer.openDrawer(Gravity.START);
                     handleimageview.setVisibility(View.GONE);
 
 
@@ -751,7 +738,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
             case R.id.img_fullscreen:
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
-                    mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     handleimageview.setVisibility(View.VISIBLE);
                     expand(tab_photoreader,100,targetheight);
                     layout_photodetails.setVisibility(View.GONE);
@@ -765,7 +752,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
                 } else{
-                    mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     handleimageview.setVisibility(View.GONE);
                     collapse(tab_photoreader,100,previousheight);
                     layout_photodetails.setVisibility(View.VISIBLE);
