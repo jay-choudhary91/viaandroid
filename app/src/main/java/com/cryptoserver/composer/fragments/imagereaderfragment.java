@@ -397,41 +397,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             edt_medianotes.setFocusable(false);
             edt_medianotes.setFocusableInTouchMode(false);
 
-            handleimageview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    navigationdrawer.openDrawer(Gravity.START);
-                    handleimageview.setVisibility(View.GONE);
-
-
-
-                   /* Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
-                    linearLayout.startAnimation(rightswipe);
-                    handleimageview.setVisibility(View.GONE);
-                    linearLayout.setVisibility(View.VISIBLE);
-                    rightswipe.start();
-                    righthandle.setVisibility(View.VISIBLE);
-                    rightswipe.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            righthandle.setImageResource(R.drawable.righthandle);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            righthandle.setImageResource(R.drawable.lefthandle);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });*/
-
-                }
-            });
-
             righthandle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -463,6 +428,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
+            handleimageview.setOnClickListener(this);
 
 
             txtslotencyption.setOnClickListener(this);
@@ -733,6 +699,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 launchbottombarfragment();
                 break;
 
+            case R.id.img_lefthendle:
+                navigationdrawer.openDrawer(Gravity.START);
+                handleimageview.setVisibility(View.GONE);
+                break;
+
             case R.id.img_arrow_back:
                 gethelper().onBack();
                 break;
@@ -783,26 +754,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     img_fullscreen.setVisibility(View.VISIBLE);
                     img_fullscreen.setImageResource(R.drawable.img_fullscreen);
                 }
-               /* if(layout_photodetails.getVisibility()==View.GONE && layout_footer.getVisibility()==(View.GONE)){
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                    img_fullscreen.setImageResource(R.drawable.img_halfscreen);
-                    layout_mediatype.setVisibility(View.VISIBLE);
-                    layout_footer.setVisibility(View.VISIBLE);
-                }else{
-                    img_fullscreen.setVisibility(View.GONE);
-                    img_fullscreen.setImageResource(R.drawable.img_halfscreen);
-                    layout_mediatype.setVisibility(View.GONE);
-                    layout_footer.setVisibility(View.GONE);
-                }*/
-               /* if(layout_photodetails.getVisibility()==View.GONE ){
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                    img_fullscreen.setImageResource(R.drawable.img_halfscreen);
-                    layout_mediatype.setVisibility(View.VISIBLE);
-                    layout_footer.setVisibility(View.VISIBLE);
-                }else{
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                    img_fullscreen.setImageResource(R.drawable.img_fullscreen);
-                }*/
 
                 break;
         }
