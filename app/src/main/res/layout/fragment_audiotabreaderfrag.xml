@@ -57,13 +57,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/black"
+            android:background="@color/audio_composer_bg"
             android:visibility="visible"
             >
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:visibility="visible"
                 android:layout_above="@+id/layout_scrubberview"
 
@@ -77,6 +77,15 @@
                     android:layout_marginBottom="50dp"
                     android:visibility="visible"
                     />
+                <com.cryptoserver.composer.utils.circularImageview
+                    android:id="@+id/btn_playpause"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/description"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="10dp"
+                    />
 
             </RelativeLayout>
 
@@ -84,28 +93,15 @@
                 android:id="@+id/layout_scrubberview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:background="@color/whitetransparent"
                 >
-
-                <com.cryptoserver.composer.utils.circularImageview
-
-                    android:id="@+id/btn_playpause"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:contentDescription="@string/description"
-                    android:layout_above="@+id/mediacontroller_progress"
-                    android:layout_centerHorizontal="true"
-                    android:layout_margin="10dp"
-                    />
-
-
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="30dp">
+                    android:layout_height="80dp"
+                    >
 
                     <ImageButton android:id="@+id/img_volume"
                         android:layout_marginTop="-7dp"
@@ -113,6 +109,7 @@
                         android:paddingBottom="4dip"
                         android:paddingLeft="10dip"
                         android:paddingRight="4dip"
+                        android:visibility="gone"
                         android:layout_gravity="top"
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
@@ -122,42 +119,45 @@
                         android:background="@drawable/volumeadjustment"
                         android:contentDescription="@string/description" />
 
-                    <TextView android:id="@+id/time_current"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:paddingTop="4dip"
-                        android:paddingLeft="4dip"
-                        android:layout_toRightOf="@+id/img_volume"
-                        android:layout_above="@+id/mediacontroller_progress"
-                        android:layout_width="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        />
 
                     <SeekBar
                         android:id="@+id/mediacontroller_progress"
                         android:layout_width="match_parent"
-                        android:layout_toLeftOf="@+id/fullscreen"
-                        android:layout_toRightOf="@+id/img_volume"
-                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true"
                         android:progressDrawable="@drawable/custom_seekbar"
                         android:layout_height="30dip"
                         android:thumb="@drawable/custom_thumb"/>
 
-                    <TextView android:id="@+id/time"
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/time_current"
+                        android:textSize="14sp"
+                        app:fontType="OpenSans_Regular"
+                        android:textStyle="bold"
+                        android:layout_below="@id/mediacontroller_progress"
+                        android:paddingLeft="4dip"
+                        android:layout_toRightOf="@+id/img_volume"
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        />
+
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/time"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:paddingTop="4dip"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_below="@+id/mediacontroller_progress"
                         android:paddingRight="4dip"
+                        android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_width="wrap_content"
-                        android:layout_above="@+id/mediacontroller_progress"
-                        android:layout_toLeftOf="@+id/fullscreen"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black"
                         android:paddingLeft="4dip" />
-
 
                     <ImageButton android:id="@+id/fullscreen"
                         android:layout_marginTop="-7dp"
@@ -165,6 +165,7 @@
                         android:paddingBottom="4dip"
                         android:paddingLeft="10dip"
                         android:paddingRight="4dip"
+                        android:visibility="visible"
                         android:layout_gravity="top"
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
@@ -175,10 +176,9 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/description" />
 
+
                 </RelativeLayout>
-
             </LinearLayout>
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -228,7 +228,10 @@
                         />
                 </LinearLayout>
 
+
+
             </RelativeLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

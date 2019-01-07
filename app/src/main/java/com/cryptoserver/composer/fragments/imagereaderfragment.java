@@ -1067,6 +1067,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
     public void setmetricesgraphicaldata() {
+
         if (metricmainarraylist.size() > 0) {
             if (!metricmainarraylist.get(metricmainarraylist.size() - 1).isIsupdated()) {
 
@@ -1262,7 +1263,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                         if(!mediadate.isEmpty()){
 
-                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("dd- MM- yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
                             String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
                             String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
@@ -1270,6 +1271,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
                             tvtime.setText(time);
+                            txt_title_actionbarcomposer.setText(filecreateddate);
                         }
 
 
@@ -1297,6 +1299,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
                             tvtime.setText(time);
+                            txt_title_actionbarcomposer.setText(filecreateddate);
                         }
 
 
