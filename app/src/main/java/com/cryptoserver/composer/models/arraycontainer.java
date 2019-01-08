@@ -26,6 +26,11 @@ public class arraycontainer implements Serializable {
         setVideostarttransactionid(videostarttransactionid);
         setValuehash(valuehash);
         setMetahash(metahash);
+
+    }
+
+    public arraycontainer()
+    {
     }
 
     public arraycontainer( String hashmethod,String videostarttransactionid,

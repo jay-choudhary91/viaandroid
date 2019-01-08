@@ -1055,9 +1055,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }else if(videoobj.getmimetype().startsWith("video/")){
 
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
+                videoreaderfragment readervideofragment=new videoreaderfragment();
+                gethelper().replaceFragment(readervideofragment, false, true);
+
+               /* xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
                 composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
                 //videoplayercomposerfragment.setdata(videoobj.getPath());
-                gethelper().replaceFragment(videoplayercomposerfragment, false, true);
+                gethelper().replaceFragment(videoplayercomposerfragment, false, true);*/
             }
 
         }

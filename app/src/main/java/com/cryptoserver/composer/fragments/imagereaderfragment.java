@@ -129,7 +129,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout fragment_graphic_container;
     @BindView(R.id.content)
     LinearLayout linearLayout;
-    @BindView(R.id.img_lefthendle)
+    @BindView(R.id.img_lefthandle)
     ImageView handleimageview;
 
     @BindView(R.id.righthandle)
@@ -699,7 +699,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 launchbottombarfragment();
                 break;
 
-            case R.id.img_lefthendle:
+            case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
                 handleimageview.setVisibility(View.GONE);
                 break;
@@ -709,7 +709,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
             case R.id.img_fullscreen:
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
-                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     handleimageview.setVisibility(View.VISIBLE);
                     expand(tab_photoreader,100,targetheight);
                     layout_photodetails.setVisibility(View.GONE);
@@ -723,7 +723,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
                 } else{
-                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     handleimageview.setVisibility(View.GONE);
                     collapse(tab_photoreader,100,previousheight);
                     layout_photodetails.setVisibility(View.VISIBLE);
@@ -1005,6 +1005,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
     public void setmetricesgraphicaldata() {
+
         if (metricmainarraylist.size() > 0) {
             if (!metricmainarraylist.get(metricmainarraylist.size() - 1).isIsupdated()) {
 
@@ -1200,7 +1201,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                         if(!mediadate.isEmpty()){
 
-                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("dd- MM- yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
                             String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
                             String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
@@ -1208,6 +1209,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
                             tvtime.setText(time);
+                            txt_title_actionbarcomposer.setText(filecreateddate);
                         }
 
 
@@ -1235,6 +1237,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
                             tvtime.setText(time);
+                            txt_title_actionbarcomposer.setText(filecreateddate);
                         }
 
 

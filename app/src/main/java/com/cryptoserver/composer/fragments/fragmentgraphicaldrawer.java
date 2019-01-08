@@ -126,8 +126,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     @BindView(R.id.text_dataletency)
     customfonttextview tvdataletency;
 
-
-
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
     @BindView(R.id.googlemap)
