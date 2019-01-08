@@ -17,8 +17,10 @@ import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -28,9 +30,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -41,15 +47,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -68,6 +77,7 @@ import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.FullDrawerLayout;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
+import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
@@ -94,6 +104,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -144,6 +155,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView img_arrow_back;
 
     //tabdetails
+
     @BindView(R.id.spinner)
     Spinner photospinner;
     @BindView(R.id.txt_slot4)
@@ -158,15 +170,15 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView img_edit_name;
     @BindView(R.id.img_edit_notes)
     ImageView img_edit_notes;
-    @BindView(R.id.layout_photoreader)
-    RelativeLayout layout_photoreader;
+    @BindView(R.id.layout_videoreader)
+    RelativeLayout layout_videoreader;
     @BindView(R.id.txt_createdtime)
     TextView txt_createdtime;
     @BindView(R.id.layout_halfscrnimg)
     RelativeLayout layout_halfscrnimg;
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
-    @BindView(R.id.layout_photodetails)
+    @BindView(R.id.layout_videodetails)
     RelativeLayout layout_photodetails;
     @BindView(R.id.scrollview_detail)
     ScrollView scrollview_detail;
@@ -214,9 +226,14 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     TextView txt_endtime;
     @BindView(R.id.txt_starttime)
     TextView txt_starttime;
-
-
-
+    @BindView(R.id.mediacontroller_progress)
+    SeekBar mediaseekbar;
+    @BindView(R.id.time_current)
+    TextView time_current;
+    @BindView(R.id.time)
+    TextView totalduration;
+    @BindView(R.id.layout_customcontroller)
+    LinearLayout layoutcustomcontroller;
 
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
@@ -276,6 +293,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     customfonttextview tvbattery;
     @BindView(R.id.img_lefthandle)
     ImageView handleimageview;
+    @BindView(R.id.btn_playpause)
+    circularImageview playpausebutton;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -292,6 +311,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
     int targetheight,previousheight;
+    private Handler hdlr = new Handler();
+    StringBuilder mFormatBuilder;
+    Formatter mFormatter;
 
 
     private RelativeLayout scurraberverticalbar;
@@ -351,6 +373,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     fragmentgraphicaldrawer  graphicaldrawerfragment;
     FullDrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
+    private long audioduration =0, currentaudioduration =0, currentaudiodurationseconds =0;
+    private int ontime =0, videostarttime =0, endtime =0, fTime = 5000, bTime = 5000;
+
 
     @Override
     public int getlayoutid() {
@@ -369,32 +394,30 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             linearLayout=rootview.findViewById(R.id.content);
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
+            mFormatBuilder = new StringBuilder();
+            mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
 
+            //drawer implementation
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
             navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             drawertoggle = new ActionBarDrawerToggle(
                     getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
 
-                /** Called when a drawer has settled in a completely closed state. */
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     handleimageview.setVisibility(View.VISIBLE);
                 }
-                /** Called when a drawer has settled in a completely open state. */
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     handleimageview.setVisibility(View.GONE);
                 }
             };
-
             navigationdrawer.addDrawerListener(drawertoggle);
-
-            // Where do I put this?
             drawertoggle.syncState();
-
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
-            handleimageview.setVisibility(View.GONE);
 
+            handleimageview.setVisibility(View.GONE);
+            playpausebutton.setImageResource(R.drawable.play);
             textfetchdata.setVisibility(View.GONE);
 
             {
@@ -437,6 +460,31 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
+
+            mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                long seeked_progess;
+
+                @Override
+                public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
+
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                    if(player!=null)
+                    {
+                        player.pause();
+                        playpausebutton.setImageResource(R.drawable.play);
+                    }
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    player.seekTo(seekBar.getProgress());
+                }
+            });
+
 
             recyview_frames.post(new Runnable() {
                 @Override
@@ -534,7 +582,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                             player.seekTo((int) currentduration);
                                             Log.e("playerseekto",""+currentduration);
 
-                                            controller.setProgress((int) currentduration,true);
+                                            mediaseekbar.setProgress((int) currentduration);
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
@@ -582,6 +630,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             img_edit_name.setOnClickListener(new setonClick());
             img_edit_notes.setOnClickListener(new setonClick());
             img_fullscreen.setOnClickListener(new setonClick());
+            playpausebutton.setOnClickListener(new setonClick());
             scrollview_detail.setVisibility(View.VISIBLE);
             tab_layout.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
@@ -595,14 +644,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             layout_endtime.setVisibility(View.VISIBLE);
 
 
-            txt_duration.setText("00:00:02:17.3");
-            txt_starttime.setText("07/01/2019");
-            txt_endtime.setText("07/01/2019");
-
-            layout_photoreader.post(new Runnable() {
+            layout_videoreader.post(new Runnable() {
                 @Override
                 public void run() {
-                    targetheight= layout_photoreader.getHeight();
+                    targetheight= layout_videoreader.getHeight();
                     Log.e("targetheight",""+targetheight);
                 }
             });
@@ -640,6 +685,66 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 transaction.add(R.id.fragment_graphic_drawer_container, graphicaldrawerfragment);
                 transaction.commit();
             }
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
+
+            // Drop down layout style - list view with radio button
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            // attaching data adaptermedialist to spinner
+            photospinner.setAdapter(dataAdapter);
+
+
+            edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        v.setFocusable(false);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
+                        // if (arrayvideolist.size() > 0) {
+                        String medianotes = edt_medianotes.getText().toString();
+
+                        if(!mediatransectionid.isEmpty())
+                            updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes,"allmedia");
+                    }
+                }
+            });
+
+            edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (!hasFocus) {
+                        edt_medianame.setKeyListener(null);
+                        v.setFocusable(false);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
+                        // if (arrayvideolist.size() > 0) {
+                        String renamevalue = edt_medianame.getText().toString();
+                        if(!mediatransectionid.isEmpty())
+                            updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString(),"allmedia");
+
+                        editabletext();
+                        //   edt_medianame.setKeyListener(null);
+                        //   }
+                    }
+                }
+            });
+
+            edt_medianame.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                    if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
+                        /*  Log.i(TAG,"Here you can write the code");*/
+                        //  if (arrayvideolist.size() > 0) {
+                        String renamevalue = edt_medianame.getText().toString();
+                        editabletext();
+                        edt_medianame.setKeyListener(null);
+                    }
+                    // }
+                    return false;
+                }
+            });
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
@@ -658,6 +763,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 Thread thread = new Thread() {
                     public void run() {
                         getmediadata();
+                        getframesbitmap();
                     }
                 };
                 thread.start();
@@ -895,6 +1001,13 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 case R.id.videoSurface:
                     Log.e("ontouch","ontouch");
 
+                    if(playpausebutton.getVisibility() == View.VISIBLE ){
+                        playpausebutton.setVisibility(View.GONE);
+
+                    }else{
+                        playpausebutton.setVisibility(View.VISIBLE);
+                    }
+
                     if(layout_photodetails.getVisibility()==View.GONE){
                         if(layout_footer.getVisibility()==(View.GONE)){
                             img_fullscreen.setVisibility(View.VISIBLE);
@@ -913,6 +1026,15 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         img_fullscreen.setImageResource(R.drawable.img_fullscreen);
                     }
 
+                    break;
+
+                case R.id.btn_playpause:
+
+                    if(player.isPlaying()){
+                        pause();
+                    }else{
+                        start();
+                    }
                     break;
             }
         }
@@ -1134,7 +1256,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(getActivity(),mitemclick,isscrubbing);
+            controller = new videocontrollerview(getActivity(),mitemclick,true);
             Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                     BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
             selectedvideouri=uri;
@@ -1151,6 +1273,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                    // initAudio();
                     //fragmentgraphic.setvisualizerwave();
                     wavevisualizerslist.clear();
+                    setaudiodata();
                 }
 
                 if(! keytype.equalsIgnoreCase(common.checkkey()) || (frameduration != common.checkframeduration()))
@@ -1268,24 +1391,27 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                         ": "+mitemlist.get(i).getSequencehash();*/
                             }
 
-                            /*if(!mediadate.isEmpty()){
+
+                            txt_duration.setText("00:00:02:17.3");
+
+
+                            if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
 
                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                Date date = format.parse(mediadate);
-                                final String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                                final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
-
+                                Date startdate = format.parse(mediadate);
+                                Date enddate = format.parse(completedate);
+                                final String starttime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+                                final String endtime = new SimpleDateFormat("hh:mm:ss aa").format(enddate);
 
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        tvdate.setText(filecreateddate);
-                                        txt_createdtime.setText(time);
-                                        tvtime.setText(time);
+                                        txt_starttime.setText(starttime);
+                                        txt_endtime.setText(endtime);
+                                        tvtime.setText(starttime);
                                     }
                                 });
                             }
-*/
                             if(!medianame.isEmpty()){
                                 int index =  medianame.lastIndexOf('.');
                                 if(index >=0)
@@ -1531,6 +1657,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             controller.setMediaPlayer(new setonmediacontroller());
             controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
             videoduration=mediaPlayer.getDuration();
+            txt_duration.setText( common.gettimestring(mediaPlayer.getDuration()) );
 
             try {
                 if(playerposition > 0)
@@ -1548,7 +1675,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 e.printStackTrace();
             }
 
-            controller.show();
+            //controller.show();
 
             /*if(fragmentgraphic != null)
                 fragmentgraphic.setmediaplayer(true,null);*/
@@ -1848,7 +1975,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             if(controller != null)
                 controller.removeAllViews();
 
-            controller = new videocontrollerview(applicationviavideocomposer.getactivity(),mitemclick,isscrubbing);
+            controller = new videocontrollerview(applicationviavideocomposer.getactivity(),mitemclick,true);
 
             if(selecteduri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -1858,10 +1985,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 player.setOnCompletionListener(new setonmediacompletion());
                 if(player!=null)
                 {
+                    setaudiodata();
                    // changeactionbarcolor();
                    // initAudio();
                    // fragmentgraphic.setvisualizerwave();
                     wavevisualizerslist.clear();
+
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -2042,12 +2171,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         player.seekTo(0);
                         wavevisualizerslist.clear();
                         controller.setProgress(0,true);
+                        playpausebutton.setImageResource(R.drawable.play);
 
                         RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         relativeParams.setMargins(0, 0,0, 0);
                         recyview_frames.setLayoutParams(relativeParams);
-
-
                     }
                 }
             },200);
@@ -2176,6 +2304,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     public void setupvideodata() {
         mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
         tvsize.setText(common.filesize(mediafilepath));
+        playpausebutton.setImageResource(R.drawable.play);
         if (mediafilepath.equalsIgnoreCase("blank")) {
             //frontview.setVisibility(View.VISIBLE);
         } else {
@@ -2212,7 +2341,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
                 setupVideoPlayer(uri);
                 videoduration = 0;
-                layout_scrubberview.setVisibility(View.GONE);
+                layout_scrubberview.setVisibility(View.VISIBLE);
                 playerposition = 0;
                // righthandle.setVisibility(View.GONE);
                 framecount = 0;
@@ -2541,5 +2670,110 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }
     }
 
+    public void editabletext(){
+        Editable editableText=  edt_medianame.getEditableText();
+        if(editableText!=null) {
+            edt_medianame.setInputType(InputType.TYPE_CLASS_TEXT);
+            edt_medianame.setEllipsize(TextUtils.TruncateAt.END);
+            edt_medianame.setSingleLine();
+        }
+        else
+        {
+            edt_medianame.setEnabled(false);
+            edt_medianame.setClickable(false);
+            edt_medianame.setKeyListener(null);
+        }
+    }
 
+    public void start() {
+        if(player != null)
+        {
+            if(selectedvideouri!= null){
+                playpausebutton.setImageResource(R.drawable.pause);
+                player.start();
+                playpausebutton.setVisibility(View.GONE);
+                hdlr.postDelayed(UpdateSongTime, 100);
+                //player.setOnCompletionListener(this);
+            }
+            else{
+                if(mediafilepath!=null){
+                    playpausebutton.setImageResource(R.drawable.pause);
+                    player.start();
+                    playpausebutton.setVisibility(View.GONE);
+                    hdlr.postDelayed(UpdateSongTime, 100);
+                    //player.setOnCompletionListener(this);
+                }
+            }
+        }
+    }
+    public void pause() {
+        if(player != null){
+            playpausebutton.setImageResource(R.drawable.play_btn);
+            player.pause();
+            playpausebutton.setVisibility(View.GONE);
+        }
+    }
+
+    private Runnable UpdateSongTime = new Runnable() {
+        @Override
+        public void run() {
+            if(player != null ){
+
+                if(player.getCurrentPosition() > maxincreasevideoduration)
+                    maxincreasevideoduration=player.getCurrentPosition();
+
+                if(currentaudioduration == 0 || (player.getCurrentPosition() > currentaudioduration))
+                {
+                    currentaudioduration =player.getCurrentPosition();  // suppose its on 4th pos means 4000
+                    currentaudiodurationseconds = currentaudioduration /1000;  // Its 4
+                }
+
+
+                videostarttime = player.getCurrentPosition();
+                mediaseekbar.setProgress(player.getCurrentPosition());
+
+                if (time_current != null)
+                    time_current.setText(stringForTime(videostarttime));
+                hdlr.postDelayed(this, 100);
+            }
+        }
+    };
+
+    private String stringForTime(int timeMs) {
+
+        int totalSeconds = timeMs / 1000;
+
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours   = totalSeconds / 3600;
+
+        mFormatBuilder.setLength(0);
+        if (hours > 0) {
+            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
+        }
+    }
+
+    public void setaudiodata(){
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                endtime = player.getDuration();
+                videostarttime = player.getCurrentPosition();
+
+                audioduration  = endtime;
+
+                if (totalduration != null)
+                    totalduration.setText(stringForTime(endtime));
+                if  (time_current != null)
+                    time_current.setText(stringForTime(videostarttime));
+
+                mediaseekbar.setMax(endtime);
+                mediaseekbar.setProgress(videostarttime);
+            }
+        },100);
+    }
 }

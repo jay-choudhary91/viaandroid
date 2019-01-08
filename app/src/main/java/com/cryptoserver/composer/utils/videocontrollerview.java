@@ -591,7 +591,7 @@ public class videocontrollerview extends FrameLayout {
         mDragging = false;
         setProgress(0,false);
         updatePausePlay();
-        show(sDefaultTimeout);
+        //show(sDefaultTimeout);
 
         // Ensure that progress is properly updated in the future,
         // the call to show() does not guarantee this because it is a

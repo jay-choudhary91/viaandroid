@@ -25,7 +25,8 @@
 
             <ImageButton android:id="@+id/pause"
                 style="@android:style/MediaButton.Play"
-                android:contentDescription="@string/description" />
+                android:contentDescription="@string/description"
+                android:visibility="gone"/>
 
             <ImageButton android:id="@+id/ffwd"
                 style="@android:style/MediaButton.Ffwd"

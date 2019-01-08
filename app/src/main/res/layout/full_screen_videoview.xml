@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/video_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,7 +24,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:orientation="vertical"
-                android:id="@+id/layout_photoreader"
+                android:id="@+id/layout_videoreader"
                 android:layout_height="match_parent"
                 >
                 <RelativeLayout
@@ -90,6 +91,16 @@
                                 android:layout_height="wrap_content"/>
                         </FrameLayout>
 
+                        <com.cryptoserver.composer.utils.circularImageview
+                            android:id="@+id/btn_playpause"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerInParent="true"
+                            android:contentDescription="@string/description"
+                            android:layout_centerHorizontal="true"
+                            android:layout_margin="10dp"
+                            />
+
                         <ImageView
                             android:id="@+id/img_fullscreen"
                             android:layout_width="45dp"
@@ -103,6 +114,135 @@
 
                     </RelativeLayout>
 
+                    <LinearLayout
+                        android:id="@+id/layout_customcontroller"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        >
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="140dp"
+                            >
+
+                            <ImageButton android:id="@+id/img_volume"
+                                android:layout_marginTop="-7dp"
+                                android:paddingTop="4dip"
+                                android:paddingBottom="4dip"
+                                android:paddingLeft="10dip"
+                                android:paddingRight="4dip"
+                                android:visibility="gone"
+                                android:layout_gravity="top"
+                                android:layout_centerVertical="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/volumeadjustment"
+                                android:contentDescription="@string/description" />
+
+                            <RelativeLayout
+                                android:id="@+id/layout_scrubberview"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginBottom="10dp"
+                                android:visibility="visible"
+                                android:layout_centerHorizontal="true"
+                                android:layout_alignParentBottom="false">
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/recyview_frames"
+                                    android:layout_width="match_parent"
+                                    android:visibility="visible"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_height="wrap_content"/>
+
+                                <RelativeLayout
+                                    android:layout_width="20dp"
+                                    android:id="@+id/scrubberverticalbar"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="@color/whitetransparent"
+                                    android:visibility="gone"
+                                    android:layout_height="50dp">
+
+                                    <View
+                                        android:layout_width="2dp"
+                                        android:background="@color/blue_button"
+                                        android:visibility="gone"
+                                        android:layout_centerHorizontal="true"
+                                        android:layout_height="50dp">
+
+                                    </View>
+
+
+                                </RelativeLayout>
+
+                            </RelativeLayout>
+
+                            <SeekBar
+                                android:id="@+id/mediacontroller_progress"
+                                android:layout_width="match_parent"
+                                android:layout_centerInParent="true"
+                                android:progressDrawable="@drawable/custom_seekbar"
+                                android:layout_below="@+id/layout_scrubberview"
+                                android:layout_height="30dip"
+                                android:thumb="@drawable/custom_thumb"/>
+
+
+                            <com.cryptoserver.composer.views.customfonttextview
+                                android:id="@+id/time_current"
+                                android:textSize="14sp"
+                                app:fontType="OpenSans_Regular"
+                                android:textStyle="bold"
+                                android:layout_below="@id/mediacontroller_progress"
+                                android:paddingLeft="4dip"
+                                android:layout_toRightOf="@+id/img_volume"
+                                android:layout_width="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                />
+
+
+                            <com.cryptoserver.composer.views.customfonttextview
+                                android:id="@+id/time"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:fontType="OpenSans_Regular"
+                                android:layout_below="@+id/mediacontroller_progress"
+                                android:paddingRight="4dip"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginRight="10dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:paddingLeft="4dip" />
+
+                            <ImageButton android:id="@+id/fullscreen"
+                                android:layout_marginTop="-7dp"
+                                android:paddingTop="4dip"
+                                android:paddingBottom="4dip"
+                                android:paddingLeft="10dip"
+                                android:paddingRight="4dip"
+                                android:visibility="visible"
+                                android:layout_gravity="top"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_width="wrap_content"
+                                android:layout_marginRight="5dp"
+                                android:background="@android:color/transparent"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@string/description" />
+
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
 
 
                     <RelativeLayout
@@ -110,48 +250,12 @@
                         android:layout_below="@+id/tab_photoreader"
                         android:layout_weight="1"
                         android:visibility="visible"
-                        android:id="@+id/layout_photodetails"
+                        android:id="@+id/layout_videodetails"
                         android:layout_height="0dp">
                         <include layout="@layout/layout_mediadetails"></include>
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/layout_scrubberview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:visibility="gone"
-                        android:layout_centerHorizontal="true"
-                        android:layout_alignParentBottom="true">
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recyview_frames"
-                            android:layout_width="match_parent"
-                            android:visibility="gone"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_height="wrap_content"/>
-
-                        <RelativeLayout
-                            android:layout_width="20dp"
-                            android:id="@+id/scrubberverticalbar"
-                            android:layout_centerHorizontal="true"
-                            android:background="@color/whitetransparent"
-                            android:visibility="gone"
-                            android:layout_height="50dp">
-
-                            <View
-                                android:layout_width="2dp"
-                                android:background="@color/blue_button"
-                                android:visibility="gone"
-                                android:layout_centerHorizontal="true"
-                                android:layout_height="50dp">
-
-                            </View>
-
-
-                        </RelativeLayout>
-
-                    </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
