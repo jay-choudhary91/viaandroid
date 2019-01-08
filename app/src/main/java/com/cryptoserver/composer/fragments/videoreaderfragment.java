@@ -966,7 +966,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                     break;
                 case R.id.img_camera:
-                    //launchbottombarfragment();
+                    launchbottombarfragment();
                     break;
 
                 case R.id.img_lefthandle:
@@ -1046,6 +1046,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     break;
             }
         }
+    }
+
+    public void launchbottombarfragment()
+    {
+        composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
+        gethelper().replaceFragment(fragbottombar, false, true);
     }
 
     @Override
