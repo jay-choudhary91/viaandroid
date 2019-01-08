@@ -709,7 +709,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
             case R.id.img_fullscreen:
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
-                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     handleimageview.setVisibility(View.VISIBLE);
                     expand(tab_photoreader,100,targetheight);
                     layout_photodetails.setVisibility(View.GONE);
@@ -723,7 +723,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
                 } else{
-                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     handleimageview.setVisibility(View.GONE);
                     collapse(tab_photoreader,100,previousheight);
                     layout_photodetails.setVisibility(View.VISIBLE);

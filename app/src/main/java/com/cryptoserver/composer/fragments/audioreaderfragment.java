@@ -360,7 +360,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
-
+    metricmodel metricmodeldata;
     public audioreaderfragment() {
     }
 
@@ -1303,10 +1303,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         graphicopen=true;
                 }
 
+                metricmodeldata=new metricmodel();
+                 String modalkeyname=metricmodeldata.getMetricTrackKeyName();
+                common.setspannable(getResources().getString(R.string.blockchain_id), metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+
                /* if(fragmentgraphic != null)
                     fragmentgraphic.setdrawerproperty(graphicopen);*/
 
-                myHandler.postDelayed(this, 3000);
+                myHandler.postDelayed(this, 5000);
             }
         };
         myHandler.post(myRunnable);
@@ -1780,7 +1784,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(startdate);
                         final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
                         SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
-                       final String starttime = spf.format(startdate);
+                        final String starttime = spf.format(startdate);
                         Log.e("starttime",starttime);
                         final String endtime = spf.format(enddate);
 
