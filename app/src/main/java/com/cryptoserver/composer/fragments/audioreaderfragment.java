@@ -20,6 +20,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +30,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -64,6 +67,7 @@ import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
+import com.cryptoserver.composer.utils.FullDrawerLayout;
 import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -150,7 +154,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.textfetchdata)
     TextView textfetchdata;
 
-    //tabdetails
     @BindView(R.id.spinner)
     Spinner photospinner;
     @BindView(R.id.txt_slot4)
@@ -169,6 +172,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     TextView txt_createdtime;
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
+    @BindView(R.id.layout_photodetails)
+    RelativeLayout layout_photodetails;
     @BindView(R.id.scrollview_detail)
     ScrollView scrollview_detail;
     @BindView(R.id.edt_medianame)
@@ -183,18 +188,42 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ScrollView scrollView_encyrption;
     @BindView(R.id.scrollview_meta)
     ScrollView scrollview_meta;
+    @BindView(R.id.txt_videoupdatetransactionid)
+    TextView txt_blockchainid;
+    @BindView(R.id.txt_hash_formula)
+    TextView txt_blockid;
+    @BindView(R.id.txt_data_hash)
+    TextView txt_blocknumber;
+    @BindView(R.id.txt_dictionary_hash)
+    TextView txt_metahash;
     @BindView(R.id.txt_size)
     TextView tvsize;
     @BindView(R.id.txt_date)
     TextView tvdate;
     @BindView(R.id.txt_time)
     TextView tvtime;
-    @BindView(R.id.layout_starttime)
-    LinearLayout layout_starttime;
-    @BindView(R.id.layout_endtime)
-    LinearLayout layout_endtime;
+    @BindView(R.id.layout_date)
+    LinearLayout layout_date;
+    @BindView(R.id.layout_time)
+    LinearLayout layout_time;
     @BindView(R.id.layout_duration)
     LinearLayout layout_duration;
+    @BindView(R.id.layout_endtime)
+    LinearLayout layout_endtime;
+    @BindView(R.id.layout_starttime)
+    LinearLayout layout_starttime;
+    @BindView(R.id.txt_duration)
+    TextView txt_duration;
+    @BindView(R.id.txt_endtime)
+    TextView txt_endtime;
+    @BindView(R.id.txt_starttime)
+    TextView txt_starttime;
+    @BindView(R.id.layout_photoreader)
+    RelativeLayout layout_photoreader;
+
+
+
+
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
     @BindView(R.id.txt_latitude)
@@ -251,41 +280,28 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     customfonttextview tvuptime;
     @BindView(R.id.txt_battery)
     customfonttextview tvbattery;
-    @BindView(R.id.txt_videoupdatetransactionid)
-    customfonttextview tvblockchainid;
-    @BindView(R.id.txt_hash_formula)
-    customfonttextview tvblockid;
-    @BindView(R.id.txt_data_hash)
-    customfonttextview tvblocknumber;
-    @BindView(R.id.txt_dictionary_hash)
-    customfonttextview tvmetahash;
-    @BindView(R.id.txt_locationanalytics)
-    customfonttextview tvlocationanalytics;
-    @BindView(R.id.txt_locationtracking)
-    customfonttextview tvlocationtracking;
-    @BindView(R.id.txt_orientation)
-    customfonttextview tvorientation;
-   /* @BindView(R.id.txt_Phoneanalytics)
-    customfonttextview tvPhoneanalytics;
-    @BindView(R.id.text_encryption)
-    customfonttextview tvencryption;
-    @BindView(R.id.text_dataletency)
-    customfonttextview tvdataletency;*/
+    @BindView(R.id.img_lefthandle)
+    ImageView handleimageview;
+
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
-
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
-
     @BindView(R.id.img_compass)
     ImageView img_compass;
 
+    GoogleMap mgooglemap;
+    FullDrawerLayout navigationdrawer;
+    private ActionBarDrawerToggle drawertoggle;
+    fragmentgraphicaldrawer  graphicaldrawerfragment;
+
     private String audiourl = null;
+
     private RelativeLayout showcontrollers;
     private MediaPlayer player;
     private View rootview = null;
     private String selectedmetrics="";
-    private ImageView handleimageview,righthandle;
+    private ImageView righthandle;
     private LinearLayout linearLayout;
     private String keytype = config.prefs_md5;
     private long currentframenumber =0,playerposition=0;
@@ -337,7 +353,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     String[] soundamplitudealuearray ;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-    GoogleMap mgooglemap;
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
@@ -348,6 +363,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     @Override
     public int getlayoutid() {
+
         return R.layout.fragment_audiotabreaderfrag;
     }
 
@@ -359,14 +375,38 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             gethelper().setrecordingrunning(false);
             linearLayout=rootview.findViewById(R.id.content);
-            handleimageview=rootview.findViewById(R.id.handle);
-            righthandle=rootview.findViewById(R.id.righthandle);
+         //   righthandle=rootview.findViewById(R.id.righthandle);
             playpausebutton = (circularImageview)rootview.findViewById(R.id.btn_playpause);
             mediaseekbar = (SeekBar) rootview.findViewById(R.id.mediacontroller_progress);
             time_current = (TextView) rootview.findViewById(R.id.time_current);
             time = (TextView) rootview.findViewById(R.id.time);
             rlcontrollerview = (RelativeLayout) rootview.findViewById(R.id.rl_controllerview);
-            rlcontrollerview.setOnClickListener(this);
+
+            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
+            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            drawertoggle = new ActionBarDrawerToggle(
+                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
+
+                /** Called when a drawer has settled in a completely closed state. */
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    handleimageview.setVisibility(View.VISIBLE);
+                }
+                /** Called when a drawer has settled in a completely open state. */
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    handleimageview.setVisibility(View.GONE);
+                }
+            };
+
+            navigationdrawer.addDrawerListener(drawertoggle);
+
+            // Where do I put this?
+            drawertoggle.syncState();
+
+            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+            handleimageview.setVisibility(View.VISIBLE);
+            textfetchdata.setVisibility(View.GONE);
 
             mFormatBuilder = new StringBuilder();
             mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
@@ -374,7 +414,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             myvisualizerviewmedia = (visualizeraudiorecorder) rootview.findViewById(R.id.myvisualizerviewmedia);
 
             myvisualizerviewmedia.setVisibility(View.VISIBLE);
-            textfetchdata.setVisibility(View.VISIBLE);
+        //    textfetchdata.setVisibility(View.VISIBLE);
             playpausebutton.setImageResource(R.drawable.play);
 
             showcontrollers=rootview.findViewById(R.id.video_container);
@@ -425,8 +465,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 }
             });
-            handleimageview.setOnTouchListener(this);
-            righthandle.setOnTouchListener(this);
+           /* handleimageview.setOnTouchListener(this);
+            righthandle.setOnTouchListener(this);*/
 
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
@@ -437,16 +477,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             img_folder.setOnClickListener(this);
             img_camera.setOnClickListener(this);
             img_arrow_back.setOnClickListener(this);
+            handleimageview.setOnClickListener(this);
 
             img_dotmenu.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
             img_camera.setVisibility(View.VISIBLE);
             img_arrow_back.setVisibility(View.VISIBLE);
-
-            handleimageview.setVisibility(View.GONE);
-            righthandle.setVisibility(View.GONE);
-
-
 
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
@@ -458,7 +494,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             recyview_metrices.setVisibility(View.INVISIBLE);
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
-            fragment_graphic_container.setVisibility(View.INVISIBLE);
+            fragment_graphic_container.setVisibility(View.VISIBLE);
 
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
@@ -484,17 +520,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             });
 
-            flingactionmindstvac=common.getdrawerswipearea();
-            if(fragmentgraphic == null) {
-
-                fragmentgraphic = new graphicalfragment();
-
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container, fragmentgraphic);
-                transaction.commit();
-            }
-
-
             //tabs_detail
             tab_layout.setVisibility(View.VISIBLE);
             txtslotmedia.setText(getResources().getString(R.string.audio));
@@ -510,7 +535,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             scrollview_detail.setVisibility(View.VISIBLE);
             tab_layout.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
-        //    layout_photodetails.setVisibility(View.VISIBLE);
+            layout_photodetails.setVisibility(View.VISIBLE);
             layout_mediatype.setVisibility(View.VISIBLE);
             layout_duration.setVisibility(View.VISIBLE);
             layout_endtime.setVisibility(View.VISIBLE);
@@ -582,6 +607,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             txtslotmeta.setOnClickListener(this);
             txtslotmedia.setOnClickListener(this);
             resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+            if (graphicaldrawerfragment == null) {
+                 fragmentgraphic = new graphicalfragment();
+                graphicaldrawerfragment =new fragmentgraphicaldrawer();
+                graphicaldrawerfragment.setphotocapture(true);
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_graphic_drawer_container, graphicaldrawerfragment);
+                transaction.commit();
+            }
+
 
             loadmap();
             setmetriceshashesdata();
@@ -738,6 +772,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 gethelper().onBack();
                 break;
 
+            case R.id.img_lefthandle:
+                navigationdrawer.openDrawer(Gravity.START);
+                handleimageview.setVisibility(View.GONE);
+                break;
+
             case R.id.btn_playpause:
 
                 if(player.isPlaying()){
@@ -795,13 +834,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId())
         {
-            case  R.id.handle:
+           /*  case  R.id.handle:
                 flingswipe.onTouchEvent(motionEvent);
                 break;
 
             case  R.id.righthandle:
                 flingswipe.onTouchEvent(motionEvent);
-                break;
+                break;*/
         }
         return true;
     }
@@ -853,16 +892,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         handleimageview.setVisibility(View.GONE);
         linearLayout.setVisibility(View.VISIBLE);
         rightswipe.start();
-        righthandle.setVisibility(View.VISIBLE);
+     //   righthandle.setVisibility(View.VISIBLE);
         rightswipe.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                righthandle.setImageResource(R.drawable.righthandle);
+               // righthandle.setImageResource(R.drawable.righthandle);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                righthandle.setImageResource(R.drawable.lefthandle);
+             //   righthandle.setImageResource(R.drawable.lefthandle);
             }
 
             @Override
@@ -878,7 +917,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
-        righthandle.setVisibility(View.VISIBLE);
         handleimageview.setVisibility(View.GONE);
         leftswipe.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -1280,14 +1318,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
 
-                fragmentgraphic.getencryptiondata(metricmainarraylist.get(i).getHashmethod(), metricmainarraylist.get(i).getVideostarttransactionid(),
+                graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(i).getHashmethod(), metricmainarraylist.get(i).getVideostarttransactionid(),
                         metricmainarraylist.get(i).getValuehash(), metricmainarraylist.get(i).getMetahash());
 
                 //tvblockchainid.setText("hiii hello");
-                //common.setspannable(getResources().getString(R.string.blockchain_id), metricmainarraylist.get(0).getVideostarttransactionid(), tvblockchainid);
-                common.setspannable(getResources().getString(R.string.block_id), metricmainarraylist.get(0).getHashmethod(), tvblockid);
-                common.setspannable(getResources().getString(R.string.block_number), metricmainarraylist.get(0).getValuehash(), tvblocknumber);
-                common.setspannable(getResources().getString(R.string.metrichash), metricmainarraylist.get(0).getMetahash(), tvmetahash );
+                common.setspannable(getResources().getString(R.string.blockchain_id), metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+                common.setspannable(getResources().getString(R.string.block_id), metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                common.setspannable(getResources().getString(R.string.block_number), metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                common.setspannable(getResources().getString(R.string.metrichash), metricmainarraylist.get(0).getMetahash(), txt_blocknumber);
 
                 selectedmetrics = selectedmetrics + "\n";
                 for (int j = 0; j < metricItemArraylist.size(); j++) {
@@ -1299,12 +1337,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                     setmetadatavalue(metricItemArraylist.get(j));
 
-                    if (mgooglemap != null) {
+                    if (graphicaldrawerfragment != null) {
                         if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
                             if (!metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA")) {
                                 latt = Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
                                 if (longg != 0) {
-                                    if (mgooglemap != null) {
+                                    if (graphicaldrawerfragment != null) {
                                         drawmappoints(new LatLng(latt, longg));
                                         latt = 0;
                                         longg = 0;
@@ -1316,7 +1354,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             if (!metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA")) {
                                 longg = Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
                                 if (latt != 0) {
-                                    if (mgooglemap != null) {
+                                    if (graphicaldrawerfragment != null) {
                                         drawmappoints(new LatLng(latt, longg));
                                         latt = 0;
                                         longg = 0;
@@ -1327,60 +1365,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                     }
                 }
-                selectedmetrics=selectedmetrics+"\n";
+                selectedmetrics = selectedmetrics + "\n";
             }
 
-
         }
-                    /*if(fragmentgraphic != null)
-                    {
-                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
-                        {
-                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
-                            {
-                                latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                if(longg != 0)
-                                {
-                                    if(fragmentgraphic != null)
-                                    {
-                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
-                                        latt=0;longg=0;
-
-                                    }
-                                }
-                            }
-                        }
-                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
-                        {
-                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
-                            {
-                                longg=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                if(latt != 0)
-                                {
-                                    if(fragmentgraphic != null)
-                                    {
-                                        fragmentgraphic.drawmappoints(new LatLng(latt,longg));
-                                        latt=0;longg=0;
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        selectedmetrics=selectedmetrics+"\n";
-
-        if((! selectedmetrics.toString().trim().isEmpty()))
-        {
-            mmetricsitems.add(new videomodel(selectedmetrics));
-            mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-            selectedmetrics="";
-        }
-
-*/
         if (((!latitude.trim().isEmpty()) && (!latitude.equalsIgnoreCase("NA"))) &&
                 (!longitude.trim().isEmpty()) && (!longitude.equalsIgnoreCase("NA")))
             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
@@ -1388,9 +1376,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         if(fragment_graphic_container .getVisibility() == View.VISIBLE)
         {
-            if(fragmentgraphic != null){
-                fragmentgraphic.setmetricesdata();
-                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
+            if(graphicaldrawerfragment != null){
+                graphicaldrawerfragment.setmetricesdata();
+           //     graphicaldrawerfragment.getvisualizerwavecomposer(wavevisualizerslist);
             }
         }
 
@@ -1507,7 +1495,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
            playpausebutton.setImageResource(R.drawable.play);
            rlcontrollerview.setVisibility(View.VISIBLE);
            playerposition = 0;
-           righthandle.setVisibility(View.VISIBLE);
+        //   righthandle.setVisibility(View.VISIBLE);
 
            setupaudioplayer(Uri.parse(audiourl));
            Thread thread = new Thread() {
@@ -1733,12 +1721,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             if (!completedate.isEmpty()){
 
-               /* getActivity().runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         textfetchdata.setVisibility(View.GONE);
                     }
-                });*/
+                });
 
                 ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                // metricmainarraylist.clear();
