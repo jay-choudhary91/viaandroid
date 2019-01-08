@@ -1392,7 +1392,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                             }
 
 
-                            txt_duration.setText("00:00:02:17.3");
+                           // txt_duration.setText("00:00:02:17.3");
 
 
                             if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
