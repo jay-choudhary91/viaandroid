@@ -24,7 +24,6 @@ import com.cryptoserver.composer.fragments.audioreaderfragment;
 import com.cryptoserver.composer.fragments.basefragment;
 import com.cryptoserver.composer.fragments.bottombarfragment;
 import com.cryptoserver.composer.fragments.bottombarrederfrag;
-import com.cryptoserver.composer.fragments.composeoptionspagerfragment;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
 import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.framemetricssettings;
@@ -368,9 +367,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }else if(fragment instanceof bottombarfragment){
-             actionbar.setVisibility(View.GONE);
-         }
-         else if(fragment instanceof composeoptionspagerfragment){
              actionbar.setVisibility(View.GONE);
          }
         else
