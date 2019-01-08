@@ -806,18 +806,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void launchbottombarfragment()
     {
-        bottombarfragment fragbottombar=new bottombarfragment();
-        fragbottombar.setData(new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        });
+        composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
         gethelper().replaceFragment(fragbottombar, false, true);
     }
 
