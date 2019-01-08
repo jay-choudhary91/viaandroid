@@ -131,6 +131,11 @@ public class locationservice extends Service implements LocationListener, GpsSta
     @Override
     public void onDestroy() {
         Log.d(LOG_TAG, "onDestroy ");
+        try {
+            unregisterReceiver(batteryInfoReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

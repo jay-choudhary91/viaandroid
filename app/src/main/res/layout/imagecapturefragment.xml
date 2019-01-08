@@ -32,7 +32,7 @@
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         android:background="@drawable/gradient_fade_dark_blue"
-        android:visibility="visible"
+        android:visibility="gone"
         >
 
         <LinearLayout
@@ -84,17 +84,25 @@
         android:layout_height="match_parent"
         android:content="@+id/content"
         android:handle="@+id/handle"
-        android:layout_below="@id/linear_header"
         android:orientation="horizontal"
         android:layout_above="@id/layout_bottom"
         android:layout_centerVertical="true">
-        <ImageView
-            android:id="@id/handle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/righthandle"
-            />
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@id/handle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/righthandle"
+                />
+
+        </LinearLayout>
         <LinearLayout
             android:id="@id/content"
             android:layout_width="match_parent"

@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -93,6 +94,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     @BindView(R.id.txt_timer)
     TextView txt_timer;
+    @BindView(R.id.txt_title_actionbarcomposer)
+    TextView txt_title_actionbarcomposer;
     @BindView(R.id.img_capture)
     ImageView img_capture;
     @BindView(R.id.myvisualizerview)
@@ -121,7 +124,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
     View rootview;
-    boolean isaudiorecording=false;
+    boolean isaudiorecording=false,isvisibletouser=false;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
     int Seconds, Minutes, MilliSeconds ;
@@ -474,24 +477,31 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         super.onPause();
     }
 
+    public void startstopaudiorecording()
+    {
+        if(! isaudiorecording)
+        {
+            try {
+                startrecording();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(madapterclick != null)
+                madapterclick.onItemClicked(null,1);
+        }
+        else
+        {
+            if(madapterclick != null)
+                madapterclick.onItemClicked(null,2);
+            stoprecording();
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_capture: {
-                if(! isaudiorecording)
-                {
-                    myvisualizerview.setVisibility(View.VISIBLE);
-                    try {
-                        startrecording();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    stoprecording();
-                }
-
+                startstopaudiorecording();
                 break;
             }
 
@@ -579,7 +589,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         Minutes = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        gethelper().updateheader("00:00:00");
+        txt_title_actionbarcomposer.setText("00:00:00");
     }
 
     public Runnable runnable = new Runnable() {
@@ -600,7 +610,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         public void run() {
                             if(isaudiorecording)
                             {
-                                gethelper().updateheader("" + String.format("%02d", Minutes) + ":"
+                                txt_title_actionbarcomposer.setText("" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + ":"
                                         + String.format("%02d", (MilliSeconds / 10)));
                             }
@@ -613,7 +623,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     };
 
-    private void startrecording() throws IOException {
+    public void startrecording() throws IOException {
 
         mediakey ="";
         mdbstartitemcontainer.clear();
@@ -630,7 +640,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         currentframenumber =0;
         mframetorecordcount =0;
         currentframenumber = currentframenumber + frameduration;
-
+        myvisualizerview.setVisibility(View.VISIBLE);
 
         mrecorder = new MediaRecorder();
         mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -853,18 +863,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 try {
                     setaudiohashes();
-
-                   // metadatainsert.writemetadata(recordedmediafile,""+common.getjson(metadatametricesjson));
-
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(madapterclick != null)
-                                madapterclick.onItemClicked(null,1);
-
-                        }
-                    });
-
                 }catch (Exception e)
                 {
                     Log.e("Meta data Error","Error");
@@ -874,7 +872,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }).start();
         showsharepopupmain();
     }
-
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
     {
@@ -1368,4 +1365,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         this.madapterclick = madapterclick;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isvisibletouser) {
+        super.setUserVisibleHint(isvisibletouser);
+        this.isvisibletouser=isvisibletouser;
+        if(isvisibletouser)
+        {
+
+        }
+    }
+
+    public static Fragment newInstance() {
+        return new audiocomposerfragment();
+    }
 }

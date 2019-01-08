@@ -1,8 +1,11 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -130,7 +133,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private static final int request_read_external_storage = 1;
     private Uri selectedimageuri =null;
     private String selectedvideopath ="";
-
+    private BroadcastReceiver medialistitemaddreceiver;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videolist;
@@ -143,6 +146,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
 
     @Override
     public void onStop() {
@@ -154,6 +161,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     public void onDestroy() {
         super.onDestroy();
         removehandler();
+        try {
+            applicationviavideocomposer.getactivity().unregisterReceiver(medialistitemaddreceiver);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -293,6 +306,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             });
             resetmedialist();
+            IntentFilter intentFilter = new IntentFilter(config.broadcast_medialistnewitem);
+            medialistitemaddreceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    requestpermissions();
+                }
+            };
+            applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
         }
         return rootview;
     }
@@ -669,11 +690,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                            arrayvideolist.get(i).setMediatitle(getdata[4]);
                            arrayvideolist.get(i).setMedianotes(getdata[5]);
                        }
-                       if(adaptermedialist != null && arrayvideolist.size() > 0)
+                       /*if(adaptermedialist != null && arrayvideolist.size() > 0)
                             adaptermedialist.notifyDataSetChanged();
 
                    if(adaptergrid != null && arrayvideolist.size() > 0)
-                       adaptergrid.notifyDataSetChanged();
+                       adaptergrid.notifyDataSetChanged();*/
                }
                 myhandler.postDelayed(this, 8000);
             }
@@ -803,7 +824,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void launchbottombarfragment()
     {
-        bottombarfragment fragbottombar=new bottombarfragment();
+        /*bottombarfragment fragbottombar=new bottombarfragment();
         fragbottombar.setData(new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
@@ -815,6 +836,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             }
         });
+        gethelper().replaceFragment(fragbottombar, false, true);*/
+
+        composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
         gethelper().replaceFragment(fragbottombar, false, true);
     }
 
