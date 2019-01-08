@@ -99,6 +99,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
+import java.security.acl.LastOwnerException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -282,6 +283,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     customfonttextview tvbattery;
     @BindView(R.id.img_lefthandle)
     ImageView handleimageview;
+    @BindView(R.id.txt_title_actionbarcomposer)
+    TextView txt_title_actionbarcomposer;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -357,7 +360,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
-
+    metricmodel metricmodeldata;
     public audioreaderfragment() {
     }
 
@@ -381,6 +384,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             time_current = (TextView) rootview.findViewById(R.id.time_current);
             time = (TextView) rootview.findViewById(R.id.time);
             rlcontrollerview = (RelativeLayout) rootview.findViewById(R.id.rl_controllerview);
+
 
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
             navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -532,6 +536,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             img_share_media.setOnClickListener(this);
             img_edit_name.setOnClickListener(this);
             img_edit_notes.setOnClickListener(this);
+            rlcontrollerview.setOnClickListener(this);
             scrollview_detail.setVisibility(View.VISIBLE);
             tab_layout.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
@@ -774,7 +779,19 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
-                handleimageview.setVisibility(View.GONE);
+               // handleimageview.setVisibility(View.GONE);
+                break;
+
+            case R.id.rl_controllerview:
+                Log.e("ontouch","ontouch");
+
+                if(playpausebutton.getVisibility() == View.VISIBLE ){
+                    playpausebutton.setVisibility(View.GONE);
+
+                }else{
+                    playpausebutton.setVisibility(View.VISIBLE);
+                }
+
                 break;
 
             case R.id.btn_playpause:
@@ -1041,6 +1058,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         maxincreasevideoduration=0;
 
         audioduration =mp.getDuration();
+        txt_duration.setText( common.gettimestring(mp.getDuration()));
 
         try {
             if(playerposition > 0)
@@ -1285,10 +1303,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         graphicopen=true;
                 }
 
+                metricmodeldata=new metricmodel();
+                 String modalkeyname=metricmodeldata.getMetricTrackKeyName();
+                common.setspannable(getResources().getString(R.string.blockchain_id), metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+
                /* if(fragmentgraphic != null)
                     fragmentgraphic.setdrawerproperty(graphicopen);*/
 
-                myHandler.postDelayed(this, 3000);
+                myHandler.postDelayed(this, 5000);
             }
         };
         myHandler.post(myRunnable);
@@ -1324,8 +1346,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 //tvblockchainid.setText("hiii hello");
                 common.setspannable(getResources().getString(R.string.blockchain_id), metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
                 common.setspannable(getResources().getString(R.string.block_id), metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                common.setspannable(getResources().getString(R.string.block_number), metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                common.setspannable(getResources().getString(R.string.metrichash), metricmainarraylist.get(0).getMetahash(), txt_blocknumber);
+                common.setspannable(getResources().getString(R.string.block_number),metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                common.setspannable(getResources().getString(R.string.metrichash),metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
                 selectedmetrics = selectedmetrics + "\n";
                 for (int j = 0; j < metricItemArraylist.size(); j++) {
@@ -1498,6 +1520,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         //   righthandle.setVisibility(View.VISIBLE);
 
            setupaudioplayer(Uri.parse(audiourl));
+           tvsize.setText(common.filesize(audiourl));
            Thread thread = new Thread() {
                public void run() {
                    if(! BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
@@ -1690,32 +1713,19 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            if (!audiourl.trim().isEmpty()) {
-                Cursor mediainfocursor = mdbhelper.getmediainfobyfilename(common.getfilename(audiourl));
-
-                if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
-                    if (mediainfocursor.moveToFirst()) {
-                        do {
-                            audiostatus = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("status"));
-                            mediadate = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videostartdevicedate"));
-                            medianame = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_name"));
-                            medianotes =  "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_notes"));
-                            mediafolder =  "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_folder"));
-                            mediatransectionid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videostarttransactionid"));
-
-                           // videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
-                        } while (mediainfocursor.moveToNext());
-                    }
-                }
-            }
-
             Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(audiourl));
             String completedate="";
             if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
             {
                 do{
                     completedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                    mediadate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
+                    medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
+                    medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
+                    mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
+                    mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+
+
                 }while(cur.moveToNext());
             }
 
@@ -1728,123 +1738,21 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 });
 
-                ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
-               // metricmainarraylist.clear();
                 String framelabel="";
+                ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
 
-                    for(int i=0;i<mitemlist.size();i++) {
+                    for(int i=0;i<mitemlist.size();i++)
+                    {
                         String sequencehash = mitemlist.get(i).getSequencehash();
                         String hashmethod = mitemlist.get(i).getHashmethod();
                         String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                         String serverdictionaryhash = mitemlist.get(i).getValuehash();
-
                         metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
                     }
 
                 }else{
-                    if (audiostatus.equalsIgnoreCase(config.sync_complete) && metricmainarraylist.size() == 0) {
 
-                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                        Date date = null;
-                        try {
-                            date = format.parse(mediadate);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        final String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                        final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
-
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable()
-                        {
-                            @Override
-                            public void run() {
-                                tvdate.setText(filecreateddate);
-                                txt_createdtime.setText(time);
-                                tvtime.setText(time);
-                            }
-                        });
-
-
-                        if(!medianame.isEmpty()){
-                            int index =  medianame.lastIndexOf('.');
-                            if(index >=0)
-                                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable()
-                            {
-                                @Override
-                                public void run() {
-                                    edt_medianame.setText(medianame);
-                                }
-                            });
-                        }
-
-                        if(!medianotes.isEmpty()){
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable()
-                            {
-                                @Override
-                                public void run() {
-                                    edt_medianotes.setText(medianotes);
-                                }
-                            });
-                        }
-                       // setmetricdata(mitemlist);
-                    } else {
-
-                        if(!mediadate.isEmpty()){
-
-                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                            Date date = null;
-                            try {
-                                date = format.parse(mediadate);
-                            } catch (ParseException e) {
-                                e.printStackTrace();
-                            }
-                            final String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                            final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
-
-
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable()
-                            {
-                                @Override
-                                public void run() {
-                                    tvdate.setText(filecreateddate);
-                                    txt_createdtime.setText(time);
-                                    tvtime.setText(time);
-                                }
-                            });
-
-
-                            if(!medianame.isEmpty()){
-                                int index =  medianame.lastIndexOf('.');
-                                if(index >=0)
-                                    medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable()
-                                {
-                                    @Override
-                                    public void run() {
-                                        edt_medianame.setText(medianame);
-                                    }
-                                });
-                            }
-
-                            if(!medianotes.isEmpty()){
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable()
-                                {
-                                    @Override
-                                    public void run() {
-                                        edt_medianotes.setText(medianotes);
-                                    }
-                                });
-                            }
-                            //   txt_title_actionbarcomposer.setText(filecreateddate);
-                        }
-                       // setmetricdata(mitemlist);
-                    }
-
-                     //setmetricdata
                     for(int i=0;i<mitemlist.size();i++)
                     {
                         String metricdata=mitemlist.get(i).getMetricdata();
@@ -1854,14 +1762,65 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         String serverdictionaryhash = mitemlist.get(i).getValuehash();
 
                         parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
-                        selectedhaeshes = selectedhaeshes+"\n";
+                        // selectedhaeshes = selectedhaeshes+"\n";
                         framelabel="Frame ";
                         if(i == mitemlist.size()-1)
                         {
                             framelabel="Last Frame ";
                         }
-                        selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                                ": "+mitemlist.get(i).getSequencehash();
+                                /*selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
+                                        ": "+mitemlist.get(i).getSequencehash();*/
+                    }
+
+
+                  //  txt_duration.setText("00:00:02:17.3");
+
+
+                    if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
+
+                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                        final Date startdate = format.parse(mediadate);
+                        Date enddate = format.parse(completedate);
+                        final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(startdate);
+                        final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+                        SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+                        final String starttime = spf.format(startdate);
+                        Log.e("starttime",starttime);
+                        final String endtime = spf.format(enddate);
+
+
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                txt_starttime.setText(starttime);
+                                txt_endtime.setText(endtime);
+                                tvtime.setText(starttime);
+                                txt_createdtime.setText(createdtime);
+                                txt_title_actionbarcomposer.setText(filecreateddate);
+                            }
+                        });
+                    }
+                    if(!medianame.isEmpty()){
+                        int index =  medianame.lastIndexOf('.');
+                        if(index >=0)
+                            medianame = medianame.substring(0, medianame.lastIndexOf('.'));
+
+
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                edt_medianame.setText(medianame);
+                            }
+                        });
+                    }
+
+                    if(!medianotes.isEmpty()){
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                edt_medianotes.setText(medianotes);
+                            }
+                        });
                     }
                 }
                 try

@@ -295,6 +295,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView handleimageview;
     @BindView(R.id.btn_playpause)
     circularImageview playpausebutton;
+    @BindView(R.id.txt_title_actionbarcomposer)
+    TextView txt_title_actionbarcomposer;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -1398,16 +1400,20 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                             }
 
 
-                            txt_duration.setText("00:00:02:17.3");
+                           // txt_duration.setText("00:00:02:17.3");
 
 
                             if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
 
                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                Date startdate = format.parse(mediadate);
+                                final Date startdate = format.parse(mediadate);
                                 Date enddate = format.parse(completedate);
-                                final String starttime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                final String endtime = new SimpleDateFormat("hh:mm:ss aa").format(enddate);
+                                final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(startdate);
+                                final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+                                SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+                                final String starttime = spf.format(startdate);
+                                Log.e("starttime",starttime);
+                                final String endtime = spf.format(enddate);
 
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
@@ -1415,6 +1421,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                         txt_starttime.setText(starttime);
                                         txt_endtime.setText(endtime);
                                         tvtime.setText(starttime);
+                                        txt_createdtime.setText(createdtime);
+                                        txt_title_actionbarcomposer.setText(filecreateddate);
                                     }
                                 });
                             }
