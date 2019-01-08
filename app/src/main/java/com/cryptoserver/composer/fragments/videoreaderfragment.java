@@ -1901,7 +1901,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     public void getframesbitmap()
     {
-        runmethod = true;
+
         mbitmaplist.add(new frame(0,null,true));
 
         MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -1946,6 +1946,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
         }
 
+        runmethod = true;
         if(mbitmaplist.size()!=0)
             mbitmaplist.add(new frame(0,null,true));
 
