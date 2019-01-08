@@ -119,6 +119,15 @@ import butterknife.ButterKnife;
 public class videoreaderfragment extends basefragment implements AdapterView.OnItemSelectedListener,View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener
 {
 
+    @BindView(R.id.img_dotmenu)
+    ImageView img_dotmenu;
+    @BindView(R.id.img_folder)
+    ImageView img_folder;
+    @BindView(R.id.img_camera)
+    ImageView img_camera;
+    @BindView(R.id.img_arrow_back)
+    ImageView img_arrow_back;
+
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
     @BindView(R.id.layout_drawer)
@@ -145,14 +154,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     RecyclerView recyview_hashes;
     @BindView(R.id.fragment_graphic_drawer_container)
     FrameLayout fragment_graphic_container;
-    @BindView(R.id.img_dotmenu)
-    ImageView img_dotmenu;
-    @BindView(R.id.img_folder)
-    ImageView img_folder;
-    @BindView(R.id.img_camera)
-    ImageView img_camera;
-    @BindView(R.id.img_arrow_back)
-    ImageView img_arrow_back;
 
     //tabdetails
 
@@ -625,6 +626,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             img_arrow_back.setOnClickListener(new setonClick());
             handleimageview.setOnClickListener(new setonClick());
             videoSurface.setOnClickListener(new setonClick());
+
+            img_dotmenu.setVisibility(View.VISIBLE);
+            img_folder.setVisibility(View.VISIBLE);
+            img_camera.setVisibility(View.VISIBLE);
+            img_arrow_back.setVisibility(View.VISIBLE);
 
             //tabs_detail
             txtslotmedia.setText(getResources().getString(R.string.video));
