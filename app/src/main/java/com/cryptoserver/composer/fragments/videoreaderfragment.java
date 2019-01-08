@@ -1342,6 +1342,8 @@ public class videoreaderfragment extends basefragment
         {
             if(! metricmainarraylist.get(i).isIsupdated())
             {
+
+
                 metricmainarraylist.get(i).setIsupdated(true);
                 double latt=0,longg=0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();

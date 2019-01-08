@@ -32,6 +32,7 @@ import android.os.HandlerThread;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -132,7 +133,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
 
-    boolean upsideDown = false;
+    boolean upsideDown = false,isvisibletouser=false;;
 
     String firsthash = "";
 
@@ -904,6 +905,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isvisibletouser) {
+        super.setUserVisibleHint(isvisibletouser);
+        this.isvisibletouser=isvisibletouser;
+        if(isvisibletouser && mTextureView!= null && mTextureView.isAvailable())
+        {
+            camerastatusok=true;
+            startBackgroundThread();
+            if (mTextureView.isAvailable())
+                openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+        }
+        else
+        {
+            closemediawithtimer();
+        }
+    }
+
     /**
      * Tries to open a {@link CameraDevice}. The result is listened by `mStateCallback`.
      */
@@ -1157,7 +1177,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 startPreview();
                 stopvideotimer();
                 mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
-                layout_bottom.setVisibility(View.GONE);
+             //   layout_bottom.setVisibility(View.GONE);
 
                 resetvideotimer();
                 clearvideolist();
@@ -1185,13 +1205,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 //syncmediadatabase();
                 firsthashvalue = true;
 
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(null,1);
+                medialistitemaddbroadcast();
 
             }
         },100);
     }
 
+    public void medialistitemaddbroadcast()
+    {
+        Intent intent = new Intent(config.broadcast_medialistnewitem);
+        applicationviavideocomposer.getactivity().sendBroadcast(intent);
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -1278,8 +1302,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if (isvideorecording) {
             mrecordimagebutton.setEnabled(false);
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
-            layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+          //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             stopRecordingVideo();
+            if(madapterclick != null)
+                madapterclick.onItemClicked(null,2);
         } else {
             txt_hashes.setText("");
             txt_metrics.setText("");
@@ -1304,8 +1330,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             mvideoframes.clear();
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
-            layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
+          //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
             startRecordingVideo();
+
+            if(madapterclick != null)
+                madapterclick.onItemClicked(null,1);
         }
     }
 
@@ -1320,6 +1349,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void setData(boolean autostartvideo,adapteritemclick madapterclick) {
         this.autostartvideo = autostartvideo;
         this.madapterclick = madapterclick;
+    }
+
+    public static Fragment newInstance()
+    {
+        return new videocomposerfragment();
     }
 
     /**
@@ -1465,40 +1499,34 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             transaction.commit();
         }
 
-        camerastatusok=true;
-        layout_bottom.setVisibility(View.VISIBLE);
-        mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
-
-        startBackgroundThread();
-        if (mTextureView.isAvailable()) {
-            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+        if(! camerastatusok)
+        {
+            camerastatusok=true;
+           // layout_bottom.setVisibility(View.VISIBLE);
+            mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
+            startBackgroundThread();
+            if (mTextureView.isAvailable())
+                openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
-
-
-        mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(autostartvideo)
-                {
-                    autostartvideo=false;
-                    startstopvideo();
-                }
-            }
-        },1000);
-
-
     }
 
     @Override
     public void onPause() {
         Log.e("onpause","onpause");
-        if(camerastatusok)
+        closemediawithtimer();
+        super.onPause();
+    }
+
+    public void closemediawithtimer()
+    {
+        if(camerastatusok && (mrecordimagebutton != null))
         {
+            camerastatusok=false;
             closeCamera();
             stopBackgroundThread();
             stopvideotimer();
+            resetvideotimer();
             isvideorecording =false;
             mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             try {
@@ -1509,9 +1537,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             {
                 e.printStackTrace();
             }
-
         }
-        super.onPause();
     }
 
     /// camera2video code end
@@ -1603,9 +1629,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                layout_bottom.setVisibility(View.VISIBLE);
-                imgflashon.setVisibility(View.VISIBLE);
-                rotatecamera.setVisibility(View.VISIBLE);
+             //   layout_bottom.setVisibility(View.VISIBLE);
+             //   imgflashon.setVisibility(View.VISIBLE);
+              //  rotatecamera.setVisibility(View.VISIBLE);
             }
         });
     }

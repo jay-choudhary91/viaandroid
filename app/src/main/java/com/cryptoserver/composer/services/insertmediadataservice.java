@@ -260,7 +260,7 @@ public class insertmediadataservice extends Service {
                                                         String endtime = common.converttimeformate(mediatotalduration);
 
                                                         String[] command = { "-ss", starttime,"-i", mediapath, "-to",endtime, "-filter_complex",
-                                                                "compand=gain=-20,showwavespic=s=400x400:colors=0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
+                                                                "compand=gain=-20,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
 
                                                         ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                                                             @Override
@@ -272,6 +272,7 @@ public class insertmediadataservice extends Service {
                                                             public void onSuccess(String s) {
                                                                 Log.e("SUCCESS with output : ","onSuccess");
                                                                 updateaudiothumbnail(mediapath,destinationfilepath.getAbsolutePath());
+                                                                medialistitemaddbroadcast();
                                                             }
 
                                                             @Override
@@ -487,5 +488,11 @@ public class insertmediadataservice extends Service {
     public void onDestroy() {
         super.onDestroy();
         xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
+    }
+
+    public void medialistitemaddbroadcast()
+    {
+        Intent intent = new Intent(config.broadcast_medialistnewitem);
+        applicationviavideocomposer.getactivity().sendBroadcast(intent);
     }
 }

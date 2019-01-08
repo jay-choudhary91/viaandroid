@@ -102,7 +102,7 @@
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         android:background="@drawable/gradient_fade_dark_blue"
-        android:visibility="visible"
+        android:visibility="gone"
         >
 
         <LinearLayout

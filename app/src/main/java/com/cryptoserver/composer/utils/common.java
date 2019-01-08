@@ -2074,6 +2074,11 @@ public class common {
         return ""+ minutes + ":" +seconds;
     }
 
+    public static int dpToPx(int dp, Context context) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return Math.round((float) dp * density);
+    }
+
     public static File gettempfileforaudiowave() {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File file=new File(config.audiowavesdir, fileName+".jpg");

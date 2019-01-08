@@ -1296,9 +1296,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     protected void onResume() {
         super.onResume();
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-        {
             getallpermissions();
-        }
     }
 
     @Override

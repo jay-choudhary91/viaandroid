@@ -198,7 +198,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public static final String CAMERA_BACK = "0";
 
     private String cameraid = CAMERA_BACK;
-    private boolean isflashsupported=false;
+    private boolean isflashsupported=false,isvisibletouser=false;;
     private boolean isflashon = false;
     /**
      * An {@link AutoFitTextureView} for camera preview.
@@ -499,6 +499,25 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isvisibletouser) {
+        super.setUserVisibleHint(isvisibletouser);
+        this.isvisibletouser=isvisibletouser;
+        if(isvisibletouser)
+        {
+            startBackgroundThread();
+            if (mTextureView.isAvailable()) {
+                openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+            }
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+        }
+        else
+        {
+            closeCamera();
+            stopBackgroundThread();
+        }
+    }
+
     public static imagecomposerfragment newInstance() {
         return new imagecomposerfragment();
     }
@@ -556,6 +575,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
+
+            img_dotmenu.setVisibility(View.VISIBLE);
+            imgflashon.setVisibility(View.VISIBLE);
 
             flingactionmindstvac=common.getdrawerswipearea();
             handleimageview.setOnClickListener(new View.OnClickListener() {
@@ -887,7 +909,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
         }
 
-        startBackgroundThread();
         if(deniedpermissions.isEmpty()){
             doafterallpermissions();
         }else {
@@ -908,14 +929,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
                 transaction.commit();
             }
-            startBackgroundThread();
-
+            /*startBackgroundThread();
             if (mTextureView.isAvailable()) {
                 openCamera(mTextureView.getWidth(), mTextureView.getHeight());
             }
-
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);*/
         }
 
     @Override
@@ -1035,19 +1053,23 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      */
     private void closeCamera() {
         try {
-            mCameraOpenCloseLock.acquire();
-            if (null != mCaptureSession) {
-                mCaptureSession.close();
-                mCaptureSession = null;
+            if(mCameraOpenCloseLock != null)
+            {
+                mCameraOpenCloseLock.acquire();
+                if (null != mCaptureSession) {
+                    mCaptureSession.close();
+                    mCaptureSession = null;
+                }
+                if (null != mCameraDevice) {
+                    mCameraDevice.close();
+                    mCameraDevice = null;
+                }
+                if (null != mImageReader) {
+                    mImageReader.close();
+                    mImageReader = null;
+                }
             }
-            if (null != mCameraDevice) {
-                mCameraDevice.close();
-                mCameraDevice = null;
-            }
-            if (null != mImageReader) {
-                mImageReader.close();
-                mImageReader = null;
-            }
+
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera closing.", e);
         } finally {
@@ -1068,13 +1090,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * Stops the background thread and its {@link Handler}.
      */
     private void stopBackgroundThread() {
-        mBackgroundThread.quitSafely();
-        try {
-            mBackgroundThread.join();
-            mBackgroundThread = null;
-            mBackgroundHandler = null;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(mBackgroundThread != null)
+        {
+            mBackgroundThread.quitSafely();
+            try {
+                mBackgroundThread.join();
+                mBackgroundThread = null;
+                mBackgroundHandler = null;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -1176,9 +1201,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     /**
      * Initiate a still image capture.
      */
-    private void takePicture() {
+    public void takePicture() {
         //lockFocus();
-
+        getImageFile(getActivity());
         capturestillpicture();
     }
 
@@ -1267,8 +1292,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         }
                     }).start();
 
-                    if(madapterclick != null)
-                        madapterclick.onItemClicked(null,1);
+                    medialistitemaddbroadcast();
 
                     setmetriceshashesdata();
                     showsharepopupmain();
@@ -1285,6 +1309,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void medialistitemaddbroadcast()
+    {
+        Intent intent = new Intent(config.broadcast_medialistnewitem);
+        applicationviavideocomposer.getactivity().sendBroadcast(intent);
     }
 
     /**
@@ -1328,7 +1358,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_image_capture: {
-                getImageFile(getActivity());
+
                 takePicture();
 
                 break;
