@@ -376,6 +376,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     private long audioduration =0, currentaudioduration =0, currentaudiodurationseconds =0;
     private int ontime =0, videostarttime =0, endtime =0, fTime = 5000, bTime = 5000;
 
+    int position=0;
+    metricmodel setmetricmodel;
+
+    arraycontainer arraycontainerformetric =null;
+
 
     @Override
     public int getlayoutid() {
@@ -482,6 +487,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 public void onStopTrackingTouch(SeekBar seekBar) {
 
                     player.seekTo(seekBar.getProgress());
+                    maxincreasevideoduration=player.getCurrentPosition();
                 }
             });
 
@@ -2035,7 +2041,68 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                     }
 */
-                    setmetricesgraphicaldata();
+                  if(arraycontainerformetric != null){
+                      graphicaldrawerfragment.getencryptiondata(arraycontainerformetric.getHashmethod(),arraycontainerformetric.getVideostarttransactionid(),
+                              arraycontainerformetric.getValuehash(),arraycontainerformetric.getMetahash());
+
+                      common.setspannable(getResources().getString(R.string.blockchain_id),arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
+                      common.setspannable(getResources().getString(R.string.block_id),arraycontainerformetric.getHashmethod(), txt_blockid);
+                      common.setspannable(getResources().getString(R.string.block_number),arraycontainerformetric.getValuehash(), txt_blocknumber);
+                      common.setspannable(getResources().getString(R.string.metrichash),arraycontainerformetric.getMetahash(), txt_metahash);
+
+                      double latt=0,longg=0;
+
+                      ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+
+                      for(int j=0;j<metricItemArraylist.size();j++)
+                      {
+                          /*selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
+                                  metricItemArraylist.get(j).getMetricTrackValue();*/
+
+                          /*common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                  metricItemArraylist.get(j).getMetricTrackValue(),true);*/
+
+                          setmetadatavalue(metricItemArraylist.get(j));
+
+                          if(graphicaldrawerfragment != null)
+                          {
+                              if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
+                              {
+
+                                  if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
+                                  {
+                                      latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
+                                      if(longg != 0)
+                                      {
+                                          if(graphicaldrawerfragment != null)
+                                          {
+                                              graphicaldrawerfragment.drawmappoints(new LatLng(latt,longg));
+                                              latt=0;longg=0;
+                                          }
+                                      }
+                                  }
+                              }
+                              if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
+                              {
+                                  if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
+                                  {
+                                      longg=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
+                                      if(latt != 0)
+                                      {
+                                          if(graphicaldrawerfragment != null)
+                                          {
+                                              graphicaldrawerfragment.drawmappoints(new LatLng(latt,longg));
+                                              latt=0;longg=0;
+                                          }
+                                      }
+                                  }
+                              }
+
+                          }
+                      }
+                  }
+
+                  setmetricesgraphicaldata();
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
@@ -2053,7 +2120,16 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     public void setmetricesgraphicaldata()
     {
         long currentduration=maxincreasevideoduration;
-        currentduration=currentduration/1000;
+        //currentduration=currentduration/1000;
+        long percentage = 0;
+        int totalframes = metricmainarraylist.size();
+        int count = 0;
+
+        if(videoduration>0 && currentduration>0)
+               percentage = (currentduration*100)/videoduration ;
+
+        if(percentage>0)
+            count =(int) (totalframes*percentage)/100;
 
         if(metricmainarraylist.size() == 0 || currentduration == 0)
             return;
@@ -2062,72 +2138,20 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         currentduration=currentduration/frameduration;
 
         int n=(int)currentduration;
-        if(n> metricmainarraylist.size() || isvideocompleted)
-            n=metricmainarraylist.size();
 
-        Log.e("Current duration ",""+n+" "+currentduration+" "+metricmainarraylist.size());
+        if(position > metricmainarraylist.size() || isvideocompleted)
+             position =metricmainarraylist.size();
 
-        for(int i=0;i<n;i++)
+        Log.e("Current duration ",""+n+" "+currentduration+" "+position);
+
+        for(;position < count ;position++)
         {
-            if(! metricmainarraylist.get(i).isIsupdated())
+            if(! metricmainarraylist.get(position).isIsupdated())
             {
-                metricmainarraylist.get(i).setIsupdated(true);
-                double latt=0,longg=0;
-                ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
 
-                graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(i).getHashmethod(),metricmainarraylist.get(i).getVideostarttransactionid(),
-                            metricmainarraylist.get(i).getValuehash(),metricmainarraylist.get(i).getMetahash());
-
-                common.setspannable(getResources().getString(R.string.blockchain_id),metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                common.setspannable(getResources().getString(R.string.block_id),metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                common.setspannable(getResources().getString(R.string.block_number),metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                common.setspannable(getResources().getString(R.string.metrichash),metricmainarraylist.get(0).getMetahash(), txt_metahash);
-
-                for(int j=0;j<metricItemArraylist.size();j++)
-                {
-                    selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
-                            metricItemArraylist.get(j).getMetricTrackValue();
-                    common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                            metricItemArraylist.get(j).getMetricTrackValue(),true);
-
-                    setmetadatavalue(metricItemArraylist.get(j));
-
-                    if(graphicaldrawerfragment != null)
-                    {
-                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
-                        {
-
-                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
-                            {
-                                latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                if(longg != 0)
-                                {
-                                    if(graphicaldrawerfragment != null)
-                                    {
-                                        graphicaldrawerfragment.drawmappoints(new LatLng(latt,longg));
-                                        latt=0;longg=0;
-                                    }
-                                }
-                            }
-                        }
-                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
-                        {
-                            if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
-                            {
-                                longg=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                if(latt != 0)
-                                {
-                                    if(graphicaldrawerfragment != null)
-                                    {
-                                        graphicaldrawerfragment.drawmappoints(new LatLng(latt,longg));
-                                        latt=0;longg=0;
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
+                arraycontainerformetric = new arraycontainer();
+                arraycontainerformetric = metricmainarraylist.get(position);
+                metricmainarraylist.get(position).setIsupdated(true);
 
                 /*if((! selectedmetrics.toString().trim().isEmpty()))
                 {
@@ -2135,6 +2159,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                     selectedmetrics="";
                 }*/
+            }else{
+                arraycontainerformetric = null;
             }
         }
 
@@ -2305,6 +2331,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
         tvsize.setText(common.filesize(mediafilepath));
         playpausebutton.setImageResource(R.drawable.play);
+        position = 0;
         if (mediafilepath.equalsIgnoreCase("blank")) {
             //frontview.setVisibility(View.VISIBLE);
         } else {
