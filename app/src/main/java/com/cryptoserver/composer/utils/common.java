@@ -2081,7 +2081,7 @@ public class common {
 
     public static File gettempfileforaudiowave() {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.audiowavesdir, fileName+".jpg");
+        File file=new File(config.audiowavesdir, fileName+".png");
 
         File destinationDir=new File(config.audiowavesdir);
         try {

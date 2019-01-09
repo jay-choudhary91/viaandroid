@@ -32,34 +32,34 @@
 
         <ImageView
             android:id="@+id/img_arrow_back"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:padding="10dp"
+            android:padding="8dp"
             android:visibility="gone"
             android:background="@drawable/left_arrow"/>
 
 
         <ImageView
             android:id="@+id/img_camera"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/img_arrow_back"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:visibility="gone"
-            android:src="@drawable/photo_camera"/>
+            android:src="@drawable/ic_camera_icon"/>
 
         <ImageView
             android:id="@+id/img_folder"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/img_camera"
             android:layout_marginLeft="15dp"
             android:visibility="gone"
             android:layout_centerVertical="true"
-            android:src="@drawable/folder"/>
+            android:src="@drawable/ic_folder_icon"/>
 
         <com.cryptoserver.composer.views.customfonttextview
             android:id="@+id/txt_media_quality"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/menu_icon"/>
+            android:src="@drawable/ic_settings"/>
 
     </RelativeLayout>
 

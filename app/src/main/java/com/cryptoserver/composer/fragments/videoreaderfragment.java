@@ -1008,7 +1008,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         tab_layout.setVisibility(View.VISIBLE);
                         scrollview_detail.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
-                        img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                        img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                     }
                     break;
 
@@ -1025,19 +1025,19 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     if(layout_photodetails.getVisibility()==View.GONE){
                         if(layout_footer.getVisibility()==(View.GONE)){
                             img_fullscreen.setVisibility(View.VISIBLE);
-                            img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_mediatype.setVisibility(View.VISIBLE);
                             layout_footer.setVisibility(View.VISIBLE);
                         } else {
                             img_fullscreen.setVisibility(View.GONE);
-                            img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_mediatype.setVisibility(View.GONE);
                             layout_footer.setVisibility(View.GONE);
                         }
 
                     } else {
                         img_fullscreen.setVisibility(View.VISIBLE);
-                        img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                        img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                     }
 
                     break;
@@ -1067,14 +1067,14 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
     {
-        view1.setBackgroundResource(R.color.videolist_background);
+        view1.setBackgroundResource(R.color.blue);
         view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
 
         view2.setBackgroundResource(R.color.white);
-        view2.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+        view2.setTextColor(getActivity().getResources().getColor(R.color.blue));
 
         view3.setBackgroundResource(R.color.white);
-        view3.setTextColor(getActivity().getResources().getColor(R.color.videolist_background));
+        view3.setTextColor(getActivity().getResources().getColor(R.color.blue));
     }
 
     @Override

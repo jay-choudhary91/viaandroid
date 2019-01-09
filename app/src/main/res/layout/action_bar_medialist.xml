@@ -37,7 +37,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:visibility="gone"
-            android:src="@drawable/photo_camera"/>
+            android:src="@drawable/ic_camera_icon"/>
 
         <ImageView
             android:id="@+id/img_folder"
@@ -47,7 +47,7 @@
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:visibility="gone"
-            android:src="@drawable/folder"/>
+            android:src="@drawable/ic_folder_icon"/>
 
         <com.cryptoserver.composer.views.customfonttextview
             android:id="@+id/txt_media_quality"
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/menu_icon"/>
+            android:src="@drawable/ic_settings"/>
 
     </RelativeLayout>
 

@@ -708,6 +708,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 gethelper().onBack();
                 break;
             case R.id.img_fullscreen:
+                img_fullscreen.setClickable(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        img_fullscreen.setClickable(true);
+                    }
+                }, 150);
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
                     navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     handleimageview.setVisibility(View.VISIBLE);
@@ -730,7 +738,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     tab_layout.setVisibility(View.VISIBLE);
                     scrollview_detail.setVisibility(View.VISIBLE);
                     layout_footer.setVisibility(View.VISIBLE);
-                    img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                    img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+                    resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                 }
                 break;
 
@@ -740,19 +749,19 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 if(layout_photodetails.getVisibility()==View.GONE){
                     if(layout_footer.getVisibility()==(View.GONE)){
                         img_fullscreen.setVisibility(View.VISIBLE);
-                        img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                        img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_mediatype.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
                     } else {
                         img_fullscreen.setVisibility(View.GONE);
-                        img_fullscreen.setImageResource(R.drawable.img_halfscreen);
+                        img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_mediatype.setVisibility(View.GONE);
                         layout_footer.setVisibility(View.GONE);
                     }
 
                 } else {
                     img_fullscreen.setVisibility(View.VISIBLE);
-                    img_fullscreen.setImageResource(R.drawable.img_fullscreen);
+                    img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                 }
 
                 break;

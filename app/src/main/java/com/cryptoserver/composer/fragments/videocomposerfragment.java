@@ -2035,7 +2035,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void navigateflash() {
         try {
             if(isflashon) {
-                imgflashon.setImageResource(R.drawable.flash_off);
+                imgflashon.setImageResource(R.drawable.ic_no_flash_icon);
                 mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
                 mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
                 isflashon = false;

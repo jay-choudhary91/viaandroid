@@ -35,7 +35,8 @@
                 <ImageView
                     style="@style/img_settings_screen"
                     android:id="@+id/img_upgrade"
-                    android:background="@drawable/img_upgrade"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_upgrade"
                     />
 
                 <com.cryptoserver.composer.views.customfonttextview
@@ -44,6 +45,7 @@
                     android:layout_toRightOf="@+id/img_upgrade"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     app:fontType="Comfortaa-Regular"
                     />
             </RelativeLayout>
@@ -61,7 +63,8 @@
                 <ImageView
                     style="@style/img_settings_screen"
                     android:id="@+id/img_privacy"
-                    android:background="@drawable/img_privacy"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_privacy"
                     />
 
                 <com.cryptoserver.composer.views.customfonttextview
@@ -70,6 +73,7 @@
                     android:layout_toRightOf="@+id/img_privacy"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     app:fontType="Comfortaa-Regular"
                     />
             </RelativeLayout>
@@ -87,7 +91,9 @@
             <ImageView
                 style="@style/img_settings_screen"
                 android:id="@+id/img_help"
-                android:background="@drawable/img_faqhelp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_faq_help"
                 />
 
             <com.cryptoserver.composer.views.customfonttextview
@@ -96,6 +102,7 @@
                 android:layout_toRightOf="@+id/img_help"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
+                android:layout_centerVertical="true"
                 app:fontType="Comfortaa-Regular"
                 />
             </RelativeLayout>

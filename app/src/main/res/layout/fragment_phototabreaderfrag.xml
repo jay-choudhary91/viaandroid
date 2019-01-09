@@ -90,7 +90,7 @@
                        android:layout_height="45dp"
                        android:layout_alignParentBottom="true"
                        android:layout_alignParentRight="true"
-                       android:src="@drawable/img_fullscreen"
+                       android:src="@drawable/ic_full_screen_mode"
                        android:padding="10dp"
                        android:layout_marginRight="10dp"
                        android:layout_marginBottom="10dp"/>
@@ -128,7 +128,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/lefthandle"
+                            android:src="@drawable/ic_arrow_left"
                             />
 
                         <LinearLayout
@@ -172,9 +172,10 @@
                 <ImageView
                     android:id="@+id/img_lefthandle"
                     android:layout_width="wrap_content"
+                    android:layout_marginLeft="15dp"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/lefthandle"
+                    android:src="@drawable/ic_arrow_left"
                     />
 
 

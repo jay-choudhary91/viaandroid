@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/galleryicon" />
+                android:src="@drawable/ic_grid_view" />
 
         </RelativeLayout>
 
@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/listicon" />
+                android:src="@drawable/ic_list_view" />
 
         </RelativeLayout>
 
