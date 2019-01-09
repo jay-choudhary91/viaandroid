@@ -296,6 +296,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
                 else if(currentselectedcomposer == 1)
                 {
+                    if(fragimgcapture != null)
+                        fragimgcapture.takePicture();
+
+                }
+                else if(currentselectedcomposer == 2)
+                {
                     try {
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();
@@ -304,11 +310,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         e.printStackTrace();
                     }
                 }
-                else if(currentselectedcomposer == 2)
-                {
-                    if(fragimgcapture != null)
-                        fragimgcapture.takePicture();
-                }
                 break;
             case R.id.img_rotate_camera:
                 if(currentselectedcomposer == 0)
@@ -316,7 +317,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     if(fragvideocomposer != null)
                         fragvideocomposer.switchCamera();
                 }
-                else if(currentselectedcomposer == 2)
+                else if(currentselectedcomposer == 1)
                 {
                     if(fragimgcapture != null)
                         fragimgcapture.switchCamera();
@@ -397,21 +398,22 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             break;
 
             case 1:
-                imgrotatecamera.setVisibility(View.GONE);
-                if(fragaudiocomposer == null)
-                    fragaudiocomposer=new audiocomposerfragment();
-
-                fragaudiocomposer.setData(mitemclick);
-                gethelper().replacetabfragment(fragaudiocomposer,false,true);
-            break;
-
-            case 2:
                 imgrotatecamera.setVisibility(View.VISIBLE);
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
                 fragimgcapture.setData(mitemclick);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
+
+            break;
+
+            case 2:
+                imgrotatecamera.setVisibility(View.GONE);
+                if(fragaudiocomposer == null)
+                    fragaudiocomposer=new audiocomposerfragment();
+
+                fragaudiocomposer.setData(mitemclick);
+                gethelper().replacetabfragment(fragaudiocomposer,false,true);
             break;
         }
 
@@ -443,27 +445,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             {
                 setimagerecordstop();
                 getlatestmediafromdirectory();
-                /*if(object != null)
-                {
-                    try
-                    {
-                        String mediapath=(String)object;
-                        if(mediapath != null && (! mediapath.trim().isEmpty()))
-                        {
-                            if(currentselectedcomposer == 0 || currentselectedcomposer == 2)
-                            {
-                                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                                        BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
-                                Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f).
-                                        into(img_mediathumbnail);
-                            }
-
-                        }
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }*/
             }
         }
     };
@@ -543,15 +524,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(currentselectedcomposer == 1 && audioarraylist.size() > 0)
         {
+            mediapath=imagearraylist.get(imagearraylist.size()-1);
+        }
+        else if(currentselectedcomposer == 2 && imagearraylist.size() > 0)
+        {
             Glide.with(applicationviavideocomposer.getactivity()).
                     load(R.drawable.audiothum).
                     thumbnail(0.1f).
                     transition(GenericTransitionOptions.with(R.anim.fadein)).
                     into(img_mediathumbnail);
-        }
-        else if(currentselectedcomposer == 2 && imagearraylist.size() > 0)
-        {
-            mediapath=imagearraylist.get(imagearraylist.size()-1);
         }
 
         if(mediapath != null && (! mediapath.trim().isEmpty()))
@@ -599,8 +580,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             switch(pos) {
 
                 case 0: return composefooterpagerfragment.newInstance("VIDEO");
-                case 1: return composefooterpagerfragment.newInstance("AUDIO");
-                case 2: return composefooterpagerfragment.newInstance("PHOTO");
+                case 1: return composefooterpagerfragment.newInstance("PHOTO");
+                case 2: return composefooterpagerfragment.newInstance("AUDIO");
                 default: return composefooterpagerfragment.newInstance("VIDEO");
             }
         }
