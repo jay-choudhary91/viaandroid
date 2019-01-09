@@ -522,11 +522,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             mediapath=videoarraylist.get(videoarraylist.size()-1);
         }
-        else if(currentselectedcomposer == 1 && audioarraylist.size() > 0)
+        else if(currentselectedcomposer == 1 && imagearraylist.size() > 0)
         {
             mediapath=imagearraylist.get(imagearraylist.size()-1);
         }
-        else if(currentselectedcomposer == 2 && imagearraylist.size() > 0)
+        else if(currentselectedcomposer == 2 && audioarraylist.size() > 0)
         {
             Glide.with(applicationviavideocomposer.getactivity()).
                     load(R.drawable.audiothum).
