@@ -491,8 +491,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
         else
         {
-            if(madapterclick != null)
-                madapterclick.onItemClicked(null,2);
             stoprecording();
         }
     }
@@ -856,6 +854,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             e.printStackTrace();
         }
 
+        if(madapterclick != null)
+            madapterclick.onItemClicked(recordedmediafile,2);
 
         new Thread(new Runnable() {
             @Override
