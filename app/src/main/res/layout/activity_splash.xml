@@ -7,52 +7,68 @@
     android:gravity="center"
     android:background="@drawable/splashscrn">
 
-    <ImageView
-        android:id="@+id/img_imagedeep"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        android:src="@drawable/deeptruth_img"/>
-    <ImageView
-        android:id="@+id/img_imagetext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/deeptruth_text"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:layout_weight="1.2">
+
+        <ImageView
+            android:id="@+id/img_imagedeep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:src="@drawable/deeptruth_img"/>
+        <ImageView
+            android:id="@+id/img_imagetext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/deeptruth_text"/>
 
 
-    <!--<com.cryptoserver.composer.views.customfonttextview
-        android:layout_width="wrap_content"
-        android:gravity="center_horizontal"
-        android:visibility="visible"
-        android:textSize="55dp"
-        android:id="@+id/text_deeptruth"
-        android:layout_height="wrap_content"
-        android:textColor="@drawable/gradient_fade_dark_blue"
-        android:text="@string/deeptruth"/>-->
+        <!--<com.cryptoserver.composer.views.customfonttextview
+            android:layout_width="wrap_content"
+            android:gravity="center_horizontal"
+            android:visibility="visible"
+            android:textSize="55dp"
+            android:id="@+id/text_deeptruth"
+            android:layout_height="wrap_content"
+            android:textColor="@drawable/gradient_fade_dark_blue"
+            android:text="@string/deeptruth"/>-->
 
 
-    <com.cryptoserver.composer.views.customfonttextview
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="visible"
-        android:text="@string/proof_of_the_truth"
-        android:textSize="15dp"
-        app:fontType="Comfortaa-Regular"
-        android:textColor="@color/blue"
-        android:layout_marginTop="5dp"
-        android:layout_height="wrap_content" />
+        <com.cryptoserver.composer.views.customfonttextview
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:text="@string/proof_of_the_truth"
+            android:textSize="15dp"
+            app:fontType="Comfortaa-Regular"
+            android:textColor="@color/blue"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content" />
 
-   <!-- <ImageView
-        android:id="@+id/img_imagetext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="invisible"
-        android:layout_marginTop="50dp"
-        android:src="@drawable/deeptruth_text"/>-->
+        <!-- <ImageView
+             android:id="@+id/img_imagetext"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center"
+             android:visibility="invisible"
+             android:layout_marginTop="50dp"
+             android:src="@drawable/deeptruth_text"/>-->
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="0.8"
+        android:layout_height="0dp">
+
+    </LinearLayout>
 </LinearLayout>

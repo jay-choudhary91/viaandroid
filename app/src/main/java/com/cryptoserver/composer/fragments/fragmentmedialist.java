@@ -278,6 +278,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             recyclerviewgrid.setVisibility(View.VISIBLE);
             RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
             launchbottombarfragment();

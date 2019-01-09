@@ -25,8 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:padding="10dp"
             android:textSize="25sp"
+            android:padding="5dp"
             android:textColor="@color/black"
             android:text="TextView" />
 
@@ -38,7 +38,7 @@
             android:layout_marginRight="@dimen/img_margin_right"
             android:layout_marginLeft="@dimen/img_margin_left"
             android:gravity="center_horizontal"
-            android:padding="10dp"
+            android:padding="5dp"
             android:textSize="16sp"
             android:textColor="@color/black"
             android:text="TextView" />
@@ -50,8 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:text="@string/record_now"

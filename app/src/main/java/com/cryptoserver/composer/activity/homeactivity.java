@@ -358,6 +358,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              fragment_container.setLayoutParams(params);
          } else if(fragment instanceof settingfragment){
              img_menu.setVisibility(View.GONE);
+             actionbar.setVisibility(View.GONE);
              imgsettingsicon.setVisibility(View.GONE);
              imguploadicon.setVisibility(View.GONE);
              img_backbtn.setVisibility(View.VISIBLE);

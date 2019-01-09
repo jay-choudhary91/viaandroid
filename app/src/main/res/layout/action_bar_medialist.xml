@@ -27,22 +27,22 @@
             android:text="@string/mymedia"
             android:layout_centerVertical="true"
             android:textColor="@color/white"
-            app:fontType="OpenSans_Regular"/>
+            app:fontType="Comfortaa-Regular"/>
 
         <ImageView
             android:id="@+id/img_camera"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:src="@drawable/ic_camera_icon"/>
 
         <ImageView
             android:id="@+id/img_folder"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_toRightOf="@id/img_camera"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
@@ -68,9 +68,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
             android:src="@drawable/ic_settings"/>
 
     </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.3dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/videolist_background"></View>
 
     <RelativeLayout
         android:id="@+id/layout_mediatype"
