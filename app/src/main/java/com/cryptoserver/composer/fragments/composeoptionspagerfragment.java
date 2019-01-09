@@ -121,6 +121,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             mrecordimagebutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
+            img_mediathumbnail.setOnClickListener(this);
         }
         return rootview;
     }
@@ -277,6 +278,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         showselectedfragment();
         getlatestmediafromdirectory();
+        getlatestaudiofromdirectory();
     }
 
     public float dipToPixels(Context context, float dipValue) {
@@ -322,6 +324,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     if(fragimgcapture != null)
                         fragimgcapture.switchCamera();
                 }
+                break;
+
+            case R.id.img_mediathumbnail:
+                gethelper().onBack();
                 break;
         }
     }
@@ -444,10 +450,46 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 2) // for video record stop,audio record stop and image captured button click
             {
                 setimagerecordstop();
-                getlatestmediafromdirectory();
+                if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
+                {
+                    getlatestmediafromdirectory();
+                }
+                else if(currentselectedcomposer == 2)
+                {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getlatestaudiofromdirectory();
+                        }
+                    },3000);
+                }
             }
         }
     };
+
+    public void getlatestaudiofromdirectory()
+    {
+        File videodir = new File(config.audiowavesdir);
+        if(! videodir.exists())
+            return;
+
+        audioarraylist.clear();
+
+        File[] files = videodir.listFiles();
+        for (File file : files)
+        {
+            long file_size = file.length();
+            if(file_size >= 0)
+            {
+                video videoobj=new video();
+                videoobj.setPath(file.getAbsolutePath());
+
+                if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png") || videoobj.getPath().contains(".jpeg"))
+                    audioarraylist.add(videoobj.getPath());
+            }
+        }
+        setimagethumbnail();
+    }
 
     public void getlatestmediafromdirectory()
     {
@@ -461,7 +503,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 imagearraylist.clear();
                 videoarraylist.clear();
-                audioarraylist.clear();
 
                 File[] files = videodir.listFiles();
                 for (File file : files)
@@ -485,14 +526,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                                 int numTracks = extractor.getTrackCount();
                                 if(numTracks > 0)
                                 {
-                                    if(videoobj.getPath().contains(".m4a"))
-                                    {
-                                        audioarraylist.add(videoobj.getPath());
-                                    }
-                                    else if(videoobj.getPath().contains(".mp4"))
-                                    {
+                                    if(videoobj.getPath().contains(".mp4"))
                                         videoarraylist.add(videoobj.getPath());
-                                    }
                                 }
                             }
                         } catch (IOException e) {
@@ -518,6 +553,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     {
         String mediapath="";
         img_mediathumbnail.setImageResource(0);
+        img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
+
         if(currentselectedcomposer == 0 && videoarraylist.size() > 0)
         {
             mediapath=videoarraylist.get(videoarraylist.size()-1);
@@ -528,11 +565,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(currentselectedcomposer == 2 && audioarraylist.size() > 0)
         {
-            Glide.with(applicationviavideocomposer.getactivity()).
+            mediapath=audioarraylist.get(audioarraylist.size()-1);
+            img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+            /*Glide.with(applicationviavideocomposer.getactivity()).
                     load(R.drawable.audiothum).
                     thumbnail(0.1f).
                     transition(GenericTransitionOptions.with(R.anim.fadein)).
-                    into(img_mediathumbnail);
+                    into(img_mediathumbnail);*/
         }
 
         if(mediapath != null && (! mediapath.trim().isEmpty()))
