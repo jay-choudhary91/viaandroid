@@ -188,6 +188,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         }
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
         transaction.replace(layoutId, f);
         if (addToBackstack) {
             transaction.addToBackStack(null);

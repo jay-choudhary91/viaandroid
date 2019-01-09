@@ -1199,6 +1199,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     e.printStackTrace();
                 }
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
 
                 mrecordimagebutton.setEnabled(true);
                 //setmetricesadapter();
@@ -1304,8 +1306,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             stopRecordingVideo();
-            if(madapterclick != null)
-                madapterclick.onItemClicked(null,2);
+
         } else {
             txt_hashes.setText("");
             txt_metrics.setText("");

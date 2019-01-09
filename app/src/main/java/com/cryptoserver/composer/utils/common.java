@@ -1074,6 +1074,14 @@ public class common {
         return width;
     }
 
+    public static int getcomposerswipearea()
+    {
+        int[] screenWidthHeight=getScreenWidthHeight(applicationviavideocomposer.getactivity());
+        int screenwidth=screenWidthHeight[0];
+        int width=((screenwidth)/3);
+        return width;
+    }
+
     public static String getInternalMemory(long value) {
         String internalmermory = null;
 

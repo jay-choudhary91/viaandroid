@@ -6,80 +6,58 @@
     android:background="@color/black"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/tab_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        >
+        android:layout_above="@id/navigation"
+        android:orientation="vertical">
 
-        <com.cryptoserver.composer.views.pagercustomduration
-            android:id="@+id/pager_header"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-        </com.cryptoserver.composer.views.pagercustomduration>
+    </FrameLayout>
 
-    </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:weightSum="1"
-        android:gravity="center_vertical"
         android:padding="5dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         android:background="@drawable/gradient_fade_dark_blue"
-        android:visibility="visible"
+        android:animateLayoutChanges="true"
         >
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="wrap_content"
-            android:gravity="center">
+        <ImageView
+            android:id="@+id/img_mediathumbnail"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"/>
 
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:padding="5dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/img_video_capture"
+            android:background="@drawable/shape_recorder_off"
+            />
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/img_rotate_camera"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/rotate_camera"
+            />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.4"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:padding="5dp"
-                android:id="@+id/img_video_capture"
-                android:background="@drawable/shape_recorder_off"
-                />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/img_rotate_camera"
-                android:src="@drawable/rotate_camera"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/layout_footerpager"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_above="@id/layout_bottom"
@@ -94,6 +72,16 @@
             android:layout_height="40dp"
             >
         </com.cryptoserver.composer.views.pagercustomduration>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_touchableview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_above="@id/layout_footerpager"
+        android:orientation="vertical">
 
     </LinearLayout>
 

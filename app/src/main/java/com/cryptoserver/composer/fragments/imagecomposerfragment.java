@@ -499,25 +499,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isvisibletouser) {
-        super.setUserVisibleHint(isvisibletouser);
-        this.isvisibletouser=isvisibletouser;
-        if(isvisibletouser)
-        {
-            startBackgroundThread();
-            if (mTextureView.isAvailable()) {
-                openCamera(mTextureView.getWidth(), mTextureView.getHeight());
-            }
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        }
-        else
-        {
-            closeCamera();
-            stopBackgroundThread();
-        }
-    }
-
     public static imagecomposerfragment newInstance() {
         return new imagecomposerfragment();
     }
@@ -794,6 +775,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 mhashesitems.add(new videomodel(selectedhashes));
                 mhashesadapter.notifyDataSetChanged();
                 recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(capturedimagefile.getAbsolutePath(),2);
             }
         });
     }
@@ -929,11 +913,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
                 transaction.commit();
             }
-            /*startBackgroundThread();
+            startBackgroundThread();
             if (mTextureView.isAvailable()) {
                 openCamera(mTextureView.getWidth(), mTextureView.getHeight());
             }
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);*/
+            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
 
     @Override
@@ -1203,6 +1187,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      */
     public void takePicture() {
         //lockFocus();
+
+        if(madapterclick != null)
+            madapterclick.onItemClicked(null,1);
+
         getImageFile(getActivity());
         capturestillpicture();
     }

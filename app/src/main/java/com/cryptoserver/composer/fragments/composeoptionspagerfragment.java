@@ -3,6 +3,9 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -12,27 +15,47 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.GenericTransitionOptions;
+import com.bumptech.glide.Glide;
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.permissions;
+import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
+import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.views.pageranimation;
 import com.cryptoserver.composer.views.pagercustomduration;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,10 +64,8 @@ import butterknife.ButterKnife;
  * Created by root on 6/11/18.
  */
 
-public class composeoptionspagerfragment extends basefragment implements View.OnClickListener {
+public class composeoptionspagerfragment extends basefragment implements View.OnClickListener, View.OnTouchListener {
 
-    @BindView(R.id.pager_header)
-    pagercustomduration pagerheader;
     @BindView(R.id.pager_footer)
     pagercustomduration pagerfooter;
 
@@ -53,18 +74,32 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @BindView(R.id.img_rotate_camera)
     ImageView imgrotatecamera;
     @BindView(R.id.layout_bottom)
-    LinearLayout layoutbottom;
+    RelativeLayout layoutbottom;
+
+    @BindView(R.id.tab_container)
+    FrameLayout tab_container;
+    @BindView(R.id.layout_touchableview)
+    LinearLayout layout_touchableview;
+    @BindView(R.id.img_mediathumbnail)
+    ImageView img_mediathumbnail;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
     imagecomposerfragment fragimgcapture=null;
 
     View rootview=null;
-    int pageritems = 3;
+    int pageritems = 3,currentselectedcomposer=0;
+
+    private int flingactionmindstvac;
+    private  final int flingactionmindspdvac = 100;
 
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
     ArrayList<permissions> permissionslist =new ArrayList<>();
+
+    ArrayList<String> imagearraylist =new ArrayList<>();
+    ArrayList<String> videoarraylist =new ArrayList<>();
+    ArrayList<String> audioarraylist =new ArrayList<>();
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -204,14 +239,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void initviewpager()
     {
-        pagerheader.setPageTransformer(false, new pageranimation());
+        flingactionmindstvac=common.getcomposerswipearea();
+        layout_touchableview.setOnTouchListener(this);
         //pagerfooter.setPageTransformer(false, new pageranimation());
 
         //pagerheader.setAdapter(headeradapter);
-        pagerheader.setAdapter(new headerpageradapter(getChildFragmentManager()));
         pagerfooter.setAdapter(new footerpageradapter(getChildFragmentManager()));
 
-        pagerheader.setOffscreenPageLimit(3);
         pagerfooter.setOffscreenPageLimit(3);
         int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),180);
         pagerfooter.setPageMargin(0-margin);
@@ -219,25 +253,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         mrecordimagebutton.setImageResource(0);
         mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
 
-        pagerheader.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.e("position1 ",""+position);
-                if(pagerfooter.getCurrentItem() != position)
-                    pagerfooter.setCurrentItem(position,true);
-
-                setimagerecordstop();
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
 
         pagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -248,8 +263,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             @Override
             public void onPageSelected(int position) {
                 Log.e("position2 ",""+position);
-                if(pagerheader.getCurrentItem() != position)
-                    pagerheader.setCurrentItem(position,true);
+                if(position != currentselectedcomposer)
+                {
+                    currentselectedcomposer=position;
+                    showselectedfragment();
+                }
             }
 
             @Override
@@ -257,18 +275,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    pagerheader.setchildid(R.id.layout_drawertouchable);
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        },4000);
+        showselectedfragment();
+        getlatestmediafromdirectory();
     }
 
     public float dipToPixels(Context context, float dipValue) {
@@ -281,12 +289,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (view.getId())
         {
             case R.id.img_video_capture:
-                if(pagerheader.getCurrentItem() == 0)
+                if(currentselectedcomposer == 0)
                 {
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
                 }
-                else if(pagerheader.getCurrentItem() == 1)
+                else if(currentselectedcomposer == 1)
                 {
                     try {
                         if(fragaudiocomposer != null)
@@ -296,19 +304,19 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         e.printStackTrace();
                     }
                 }
-                else if(pagerheader.getCurrentItem() == 2)
+                else if(currentselectedcomposer == 2)
                 {
                     if(fragimgcapture != null)
                         fragimgcapture.takePicture();
                 }
                 break;
             case R.id.img_rotate_camera:
-                if(pagerheader.getCurrentItem() == 0)
+                if(currentselectedcomposer == 0)
                 {
                     if(fragvideocomposer != null)
                         fragvideocomposer.switchCamera();
                 }
-                else if(pagerheader.getCurrentItem() == 2)
+                else if(currentselectedcomposer == 2)
                 {
                     if(fragimgcapture != null)
                         fragimgcapture.switchCamera();
@@ -317,52 +325,106 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    private class headerpageradapter extends FragmentStatePagerAdapter {
-
-        public headerpageradapter(FragmentManager fm) {
-            super(fm);
-        }
-
+    GestureDetector flingswipegesture = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
+    {
         @Override
-        public Fragment getItem(int pos) {
-            switch(pos) {
-
-                case 0:
-                    fragvideocomposer= (videocomposerfragment) videocomposerfragment.newInstance();
-                    fragvideocomposer.setData(false,mitemclick);
-                    return fragvideocomposer;
-
-                case 1:
-                    fragaudiocomposer=(audiocomposerfragment) audiocomposerfragment.newInstance();
-                    fragaudiocomposer.setData(mitemclick);
-                    return fragaudiocomposer;
-
-                case 2:
-                    fragimgcapture=(imagecomposerfragment) imagecomposerfragment.newInstance();
-                    fragimgcapture.setData(mitemclick);
-                    return fragimgcapture;
-
-                default:
-                    fragvideocomposer=(videocomposerfragment) videocomposerfragment.newInstance();
-                    fragvideocomposer.setData(false,mitemclick);
-                    return fragvideocomposer;
+        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
+                               float flingActionYcoSpdPsgVal)
+        {
+            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Right to Left fling
+                swiperighttoleft();
+                return false;
             }
+            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Left to Right fling
+                swipelefttoright();
+                return false;
+            }
+
+            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Bottom to Top fling
+
+                return false;
+            }
+            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
+                    flingactionmindspdvac)
+            {
+                // TskTdo :=> On Top to Bottom fling
+
+                return false;
+            }
+            return false;
+        }
+    });
+
+    public void swipelefttoright()
+    {
+        if(currentselectedcomposer == 0)
+            return;
+
+        currentselectedcomposer--;
+        showselectedfragment();
+    }
+
+    public void swiperighttoleft()
+    {
+        if(currentselectedcomposer == 2)
+            return;
+
+        currentselectedcomposer++;
+        showselectedfragment();
+    }
+
+    public void showselectedfragment()
+    {
+
+        switch (currentselectedcomposer)
+        {
+            case 0:
+                imgrotatecamera.setVisibility(View.VISIBLE);
+                if(fragvideocomposer == null)
+                    fragvideocomposer=new videocomposerfragment();
+
+                fragvideocomposer.setData(false, mitemclick);
+                gethelper().replacetabfragment(fragvideocomposer,false,true);
+            break;
+
+            case 1:
+                imgrotatecamera.setVisibility(View.GONE);
+                if(fragaudiocomposer == null)
+                    fragaudiocomposer=new audiocomposerfragment();
+
+                fragaudiocomposer.setData(mitemclick);
+                gethelper().replacetabfragment(fragaudiocomposer,false,true);
+            break;
+
+            case 2:
+                imgrotatecamera.setVisibility(View.VISIBLE);
+                if(fragimgcapture == null)
+                    fragimgcapture=new imagecomposerfragment();
+
+                fragimgcapture.setData(mitemclick);
+                gethelper().replacetabfragment(fragimgcapture,false,true);
+            break;
         }
 
-        @Override
-        public int getItemPosition(@NonNull Object object) {
-            return POSITION_NONE;
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setimagerecordstop();
+                setimagethumbnail();
+                pagerfooter.setCurrentItem(currentselectedcomposer,true);
+            }
+        },50);
 
-        @Override
-        public int getCount() {
-            return pageritems;
-        }
 
-        @Override
-        public float getPageWidth(int position) {
-            return super.getPageWidth(position);
-        }
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
@@ -373,16 +435,134 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         @Override
         public void onItemClicked(Object object, int type) {
-            if(type == 1)
+            if(type == 1) // for video record start,audio record start and image capture button click
             {
                 setimagerecordstart();
             }
-            else if(type == 2)
+            else if(type == 2) // for video record stop,audio record stop and image captured button click
             {
                 setimagerecordstop();
+                getlatestmediafromdirectory();
+                /*if(object != null)
+                {
+                    try
+                    {
+                        String mediapath=(String)object;
+                        if(mediapath != null && (! mediapath.trim().isEmpty()))
+                        {
+                            if(currentselectedcomposer == 0 || currentselectedcomposer == 2)
+                            {
+                                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                                        BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
+                                Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f).
+                                        into(img_mediathumbnail);
+                            }
+
+                        }
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }*/
             }
         }
     };
+
+    public void getlatestmediafromdirectory()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                File videodir = new File(config.videodir);
+                if(! videodir.exists())
+                    return;
+
+                imagearraylist.clear();
+                videoarraylist.clear();
+                audioarraylist.clear();
+
+                File[] files = videodir.listFiles();
+                for (File file : files)
+                {
+                    long file_size = file.length();
+                    if(file_size >= 0)
+                    {
+                        video videoobj=new video();
+                        videoobj.setPath(file.getAbsolutePath());
+
+                        MediaExtractor extractor = new MediaExtractor();
+                        try {
+                            if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png") || videoobj.getPath().contains(".jpeg"))
+                            {
+                                imagearraylist.add(videoobj.getPath());
+                            }
+                            else
+                            {
+                                //Adjust data source as per the requirement if file, URI, etc.
+                                extractor.setDataSource(file.getAbsolutePath());
+                                int numTracks = extractor.getTrackCount();
+                                if(numTracks > 0)
+                                {
+                                    if(videoobj.getPath().contains(".m4a"))
+                                    {
+                                        audioarraylist.add(videoobj.getPath());
+                                    }
+                                    else if(videoobj.getPath().contains(".mp4"))
+                                    {
+                                        videoarraylist.add(videoobj.getPath());
+                                    }
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }finally {
+                            //Release stuff
+                            extractor.release();
+                        }
+                    }
+                }
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        setimagethumbnail();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    public void setimagethumbnail()
+    {
+        String mediapath="";
+        img_mediathumbnail.setImageResource(0);
+        if(currentselectedcomposer == 0 && videoarraylist.size() > 0)
+        {
+            mediapath=videoarraylist.get(videoarraylist.size()-1);
+        }
+        else if(currentselectedcomposer == 1 && audioarraylist.size() > 0)
+        {
+            Glide.with(applicationviavideocomposer.getactivity()).
+                    load(R.drawable.audiothum).
+                    thumbnail(0.1f).
+                    transition(GenericTransitionOptions.with(R.anim.fadein)).
+                    into(img_mediathumbnail);
+        }
+        else if(currentselectedcomposer == 2 && imagearraylist.size() > 0)
+        {
+            mediapath=imagearraylist.get(imagearraylist.size()-1);
+        }
+
+        if(mediapath != null && (! mediapath.trim().isEmpty()))
+        {
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
+            Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
+                    .transition(GenericTransitionOptions.with(R.anim.fadein)).
+                    into(img_mediathumbnail);
+        }
+    }
 
     public void setimagerecordstart()
     {
@@ -397,9 +577,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        switch (view.getId()) {
+            case R.id.layout_touchableview:
+                flingswipegesture.onTouchEvent(motionEvent);
+                break;
+        }
+        return true;
     }
+
 
     private class footerpageradapter extends FragmentPagerAdapter {
 
