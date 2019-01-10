@@ -305,6 +305,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     FrameLayout googlemap;
     @BindView(R.id.img_compass)
     ImageView img_compass;
+    @BindView(R.id.img_pause)
+    ImageView imgpause;
 
     GoogleMap mgooglemap;
 
@@ -481,8 +483,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 public void onStartTrackingTouch(SeekBar seekBar) {
                     if(player!=null)
                     {
-                        player.pause();
-                        playpausebutton.setImageResource(R.drawable.play);
+                        /*player.pause();
+                        playpausebutton.setImageResource(R.drawable.play);*/
                     }
                 }
 
@@ -626,6 +628,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             img_arrow_back.setOnClickListener(new setonClick());
             handleimageview.setOnClickListener(new setonClick());
             videoSurface.setOnClickListener(new setonClick());
+            imgpause.setOnClickListener(new setonClick());
+            imgpause.setVisibility(View.GONE);
 
             img_dotmenu.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
@@ -760,6 +764,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 }
             });
 
+            setupvideodata();
+
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 new Thread(new Runnable() {
@@ -790,7 +796,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
             loadmap();
             setmetriceshashesdata();
-            setupvideodata();
         }
         return rootview;
     }
@@ -977,7 +982,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                 case R.id.img_lefthandle:
                     navigationdrawer.openDrawer(Gravity.START);
-                    handleimageview.setVisibility(View.GONE);
+                    //handleimageview.setVisibility(View.GONE);
                     break;
 
                 case R.id.img_arrow_back:
@@ -996,8 +1001,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         tab_layout.setVisibility(View.GONE);
                         layout_footer.setVisibility(View.GONE);
                         layout_mediatype.setVisibility(View.GONE);
+                        layoutcustomcontroller.setVisibility(View.GONE);
+                        playpausebutton.setVisibility(View.GONE);
+                        imgpause.setVisibility(View.GONE);
                         img_fullscreen.setVisibility(View.INVISIBLE);
-
 
                     } else{
                         navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -1008,6 +1015,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         tab_layout.setVisibility(View.VISIBLE);
                         scrollview_detail.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
+                        layoutcustomcontroller.setVisibility(View.VISIBLE);
+                        playpausebutton.setVisibility(View.VISIBLE);
+                        imgpause.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                     }
                     break;
@@ -1015,39 +1025,58 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 case R.id.videoSurface:
                     Log.e("ontouch","ontouch");
 
-                    if(playpausebutton.getVisibility() == View.VISIBLE ){
-                        playpausebutton.setVisibility(View.GONE);
-
-                    }else{
-                        playpausebutton.setVisibility(View.VISIBLE);
-                    }
-
                     if(layout_photodetails.getVisibility()==View.GONE){
                         if(layout_footer.getVisibility()==(View.GONE)){
                             img_fullscreen.setVisibility(View.VISIBLE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_mediatype.setVisibility(View.VISIBLE);
                             layout_footer.setVisibility(View.VISIBLE);
+                            playpausebutton.setVisibility(View.VISIBLE);
                         } else {
                             img_fullscreen.setVisibility(View.GONE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_mediatype.setVisibility(View.GONE);
                             layout_footer.setVisibility(View.GONE);
+
                         }
 
                     } else {
                         img_fullscreen.setVisibility(View.VISIBLE);
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+                        playpausebutton.setVisibility(View.VISIBLE);
+                        imgpause.setVisibility(View.GONE);
                     }
 
                     break;
 
                 case R.id.btn_playpause:
-
                     if(player.isPlaying()){
                         pause();
                     }else{
+                        if(layout_footer.getVisibility()==View.VISIBLE && layout_photodetails.getVisibility()==View.GONE){
+                            videoSurface.setClickable(false);
+                            layout_footer.setVisibility(View.GONE);
+                            playpausebutton.setVisibility(View.GONE);
+                            img_fullscreen.setVisibility(View.GONE);
+                            layoutcustomcontroller.setVisibility(View.VISIBLE);
+                            imgpause.setVisibility(View.VISIBLE);
+                        }
                         start();
+                    }
+                    break;
+
+                case R.id.img_pause:
+                    if(player.isPlaying()){
+                        pause();
+                        if(layout_footer.getVisibility()==View.GONE && layout_photodetails.getVisibility()==View.GONE){
+                            videoSurface.setClickable(true);
+                            playpausebutton.setImageResource(R.drawable.play_btn);
+                            playpausebutton.setVisibility(View.VISIBLE);
+                            img_fullscreen.setVisibility(View.VISIBLE);
+                            layout_footer.setVisibility(View.VISIBLE);
+                            layoutcustomcontroller.setVisibility(View.GONE);
+                            imgpause.setVisibility(View.GONE);
+                        }
                     }
                     break;
             }
@@ -2079,9 +2108,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                       {
                           /*selectedmetrics=selectedmetrics+"\n"+metricItemArraylist.get(j).getMetricTrackKeyName()+" - "+
                                   metricItemArraylist.get(j).getMetricTrackValue();*/
-
-                          /*common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                  metricItemArraylist.get(j).getMetricTrackValue(),true);*/
+                          common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                  metricItemArraylist.get(j).getMetricTrackValue(),true);
 
                           setmetadatavalue(metricItemArraylist.get(j));
 
@@ -2209,6 +2237,17 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             currentvideoduration = videoduration;
             currentvideodurationseconds = currentvideoduration / 1000;
             maxincreasevideoduration=videoduration;
+
+            if(layout_footer.getVisibility()==View.GONE){
+                videoSurface.setClickable(true);
+                layout_mediatype.setVisibility(View.VISIBLE);
+                playpausebutton.setImageResource(R.drawable.play_btn);
+                playpausebutton.setVisibility(View.VISIBLE);
+                img_fullscreen.setVisibility(View.VISIBLE);
+                layout_footer.setVisibility(View.VISIBLE);
+                layoutcustomcontroller.setVisibility(View.GONE);
+                imgpause.setVisibility(View.GONE);
+            }
 
             new Handler().postDelayed(new Runnable() {
                 @Override

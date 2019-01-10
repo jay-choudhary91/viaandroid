@@ -194,18 +194,17 @@
 
                             <com.cryptoserver.composer.views.customfonttextview
                                 android:id="@+id/time_current"
-                                android:textSize="14sp"
-                                app:fontType="OpenSans_Regular"
-                                android:textStyle="bold"
-                                android:layout_below="@id/mediacontroller_progress"
-                                android:paddingLeft="4dip"
-                                android:layout_toRightOf="@+id/img_volume"
                                 android:layout_width="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_alignParentLeft="true"
                                 android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_below="@id/mediacontroller_progress"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toRightOf="@+id/img_volume"
+                                android:paddingLeft="4dip"
                                 android:textColor="@color/black"
-                                />
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                app:fontType="OpenSans_Regular" />
 
 
                             <com.cryptoserver.composer.views.customfonttextview
@@ -224,19 +223,19 @@
 
                             <ImageButton
                                 android:id="@+id/img_pause"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
                                 android:layout_below="@+id/mediacontroller_progress"
                                 android:layout_centerHorizontal="true"
                                 android:layout_gravity="top"
                                 android:layout_marginRight="5dp"
                                 android:layout_marginTop="7dp"
-                                android:background="@android:color/transparent"
+                                android:background="@drawable/pause_btn_icon"
                                 android:paddingBottom="4dip"
                                 android:paddingLeft="10dip"
                                 android:paddingRight="4dip"
                                 android:paddingTop="4dip"
-                                android:visibility="gone" />
+                                android:visibility="visible" />
 
                         </RelativeLayout>
                     </LinearLayout>
