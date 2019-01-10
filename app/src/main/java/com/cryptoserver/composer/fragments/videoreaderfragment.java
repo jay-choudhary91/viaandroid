@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -27,6 +28,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,6 +75,7 @@ import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
+import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.FullDrawerLayout;
@@ -127,6 +130,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView img_camera;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
+    @BindView(R.id.img_delete_media)
+    ImageView img_delete_media;
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
@@ -626,6 +631,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             img_arrow_back.setOnClickListener(new setonClick());
             handleimageview.setOnClickListener(new setonClick());
             videoSurface.setOnClickListener(new setonClick());
+            img_delete_media.setOnClickListener(new setonClick());
 
             img_dotmenu.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
@@ -980,6 +986,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     launchbottombarfragment();
                     break;
 
+                case R.id.img_delete_media:
+                    showalertdialog(getActivity().getResources().getString(R.string.delete_confirm_video));
+                    break;
+
                 case R.id.img_lefthandle:
                     navigationdrawer.openDrawer(Gravity.START);
                     handleimageview.setVisibility(View.GONE);
@@ -1057,6 +1067,27 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     break;
             }
         }
+    }
+
+    public void showalertdialog(String message){
+        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+                .setTitle("Alert!!")
+                .setMessage(message)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(mcontrollernavigator != null)
+                            mcontrollernavigator.onItemClicked(mediafilepath,2);
+
+                        gethelper().onBack();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     public void launchbottombarfragment()

@@ -1143,10 +1143,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     System.out.println("file not Deleted :" + videoobj.getPath());
                                 }
                             }
-                            showselectedmediatypeitems();
                             break;
                         }
                     }
+                    showselectedmediatypeitems();
                 }
             }
         }

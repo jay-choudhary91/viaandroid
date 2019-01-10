@@ -4,6 +4,7 @@ package com.cryptoserver.composer.fragments;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -22,6 +23,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -118,6 +120,8 @@ import butterknife.ButterKnife;
  */
 public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener,AdapterView.OnItemSelectedListener {
 
+    @BindView(R.id.img_delete_media)
+    ImageView img_delete_media;
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
     @BindView(R.id.img_folder)
@@ -484,6 +488,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             img_camera.setOnClickListener(this);
             img_arrow_back.setOnClickListener(this);
             handleimageview.setOnClickListener(this);
+            img_delete_media.setOnClickListener(this);
 
             img_dotmenu.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
@@ -780,6 +785,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 gethelper().onBack();
                 break;
 
+            case R.id.img_delete_media:
+                showalertdialog(getActivity().getResources().getString(R.string.dlt_cnfm_audio));
+                break;
+
             case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
                // handleimageview.setVisibility(View.GONE);
@@ -806,6 +815,28 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
         }
     }
+
+    public void showalertdialog(String message){
+        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+                .setTitle("Alert!!")
+                .setMessage(message)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(mcontrollernavigator != null)
+                            mcontrollernavigator.onItemClicked(audiourl,2);
+
+                        gethelper().onBack();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
+
 
     public void launchbottombarfragment()
     {

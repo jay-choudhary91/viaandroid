@@ -46,6 +46,7 @@
                         android:background="@drawable/share"/>
 
                     <ImageView
+                        android:id="@+id/img_delete_media"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/normal_margin_left"

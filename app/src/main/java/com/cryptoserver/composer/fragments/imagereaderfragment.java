@@ -5,6 +5,7 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -96,7 +98,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     View rootview;
 
-
+    @BindView(R.id.img_delete_media)
+    ImageView img_delete_media;
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
     @BindView(R.id.img_folder)
@@ -299,6 +302,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_folder.setOnClickListener(this);
             img_camera.setOnClickListener(this);
             img_arrow_back.setOnClickListener(this);
+            img_delete_media.setOnClickListener(this);
 
             img_dotmenu.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
@@ -706,6 +710,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 handleimageview.setVisibility(View.GONE);
                 break;
 
+            case R.id.img_delete_media:
+                showalertdialog(getActivity().getResources().getString(R.string.dlt_cnfm_photo));
+                break;
+
             case R.id.img_arrow_back:
                 gethelper().onBack();
                 break;
@@ -769,6 +777,27 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
         }
 
+    }
+
+    public void showalertdialog(String message){
+        new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
+                .setTitle("Alert!!")
+                .setMessage(message)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(mcontrollernavigator != null)
+                            mcontrollernavigator.onItemClicked(imageurl,2);
+
+                        gethelper().onBack();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
     }
 
     public void launchbottombarfragment()
