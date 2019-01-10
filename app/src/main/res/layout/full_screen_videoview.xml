@@ -43,7 +43,7 @@
                         android:layout_marginLeft="@dimen/normal_margin_left"
                         android:layout_marginRight="@dimen/normal_margin_right"
                         android:id="@+id/img_share_media"
-                        android:background="@drawable/share_icon"/>
+                        android:background="@drawable/share"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
                         android:layout_marginLeft="@dimen/normal_margin_left"
                         android:layout_marginRight="@dimen/normal_margin_right"
                         android:layout_alignParentRight="true"
-                        android:background="@drawable/delete_icon"/>
+                        android:background="@drawable/garbage"/>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -222,28 +222,24 @@
                                 android:textColor="@color/black"
                                 android:paddingLeft="4dip" />
 
-                            <ImageButton android:id="@+id/fullscreen"
-                                android:layout_marginTop="-7dp"
-                                android:paddingTop="4dip"
+                            <ImageButton
+                                android:id="@+id/img_pause"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/mediacontroller_progress"
+                                android:layout_centerHorizontal="true"
+                                android:layout_gravity="top"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="7dp"
+                                android:background="@android:color/transparent"
                                 android:paddingBottom="4dip"
                                 android:paddingLeft="10dip"
                                 android:paddingRight="4dip"
-                                android:visibility="visible"
-                                android:layout_gravity="top"
-                                android:layout_centerVertical="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_alignParentBottom="true"
-                                android:layout_width="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:background="@android:color/transparent"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/description" />
-
+                                android:paddingTop="4dip"
+                                android:visibility="gone" />
 
                         </RelativeLayout>
                     </LinearLayout>
-
-
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -254,8 +250,6 @@
                         android:layout_height="0dp">
                         <include layout="@layout/layout_mediadetails"></include>
                     </RelativeLayout>
-
-
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -291,7 +285,6 @@
                                 android:visibility="gone"
                                 android:background="@color/whitetransparent"
                                 >
-
 
                                 <include layout="@layout/layout_drawer_content"></include>
 

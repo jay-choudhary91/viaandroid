@@ -42,7 +42,7 @@
                         android:layout_marginLeft="@dimen/normal_margin_left"
                         android:layout_marginRight="@dimen/normal_margin_right"
                         android:id="@+id/img_share_media"
-                        android:background="@drawable/share_icon"/>
+                        android:background="@drawable/share"/>
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
                         android:layout_marginLeft="@dimen/normal_margin_left"
                         android:layout_marginRight="@dimen/normal_margin_right"
                         android:layout_alignParentRight="true"
-                        android:background="@drawable/delete_icon"/>
+                        android:background="@drawable/garbage"/>
                 </RelativeLayout>
 
                 <LinearLayout
