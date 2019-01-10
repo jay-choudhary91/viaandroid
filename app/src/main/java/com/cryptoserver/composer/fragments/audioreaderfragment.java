@@ -1294,11 +1294,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
-
-                metricmodeldata=new metricmodel();
-                 String modalkeyname=metricmodeldata.getMetricTrackKeyName();
-                common.setspannable(getResources().getString(R.string.blockchain_id), metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-
                /* if(fragmentgraphic != null)
                     fragmentgraphic.setdrawerproperty(graphicopen);*/
 
@@ -1392,7 +1387,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             if(graphicaldrawerfragment != null){
                 graphicaldrawerfragment.setmetricesdata();
-           //     graphicaldrawerfragment.getvisualizerwavecomposer(wavevisualizerslist);
+                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
             }
         }
 
