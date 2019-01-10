@@ -30,6 +30,7 @@ import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.framemetricssettings;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
 import com.cryptoserver.composer.fragments.imagereaderfragment;
+import com.cryptoserver.composer.fragments.myfolderfragment;
 import com.cryptoserver.composer.fragments.readermedialist;
 import com.cryptoserver.composer.fragments.settingfragment;
 import com.cryptoserver.composer.fragments.videoreaderfragment;
@@ -372,6 +373,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              actionbar.setVisibility(View.GONE);
          }
          else if(fragment instanceof composeoptionspagerfragment){
+             actionbar.setVisibility(View.GONE);
+         }
+         else if(fragment instanceof myfolderfragment){
              actionbar.setVisibility(View.GONE);
          }
         else

@@ -114,7 +114,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @BindView(R.id.img_search_editicon)
     ImageView img_search_editicon;
 
-    int selectedstyletype=1,selectedmediatype=1,listviewheight=0;
+    int selectedstyletype=1,selectedmediatype=-1,listviewheight=0;
     RelativeLayout listlayout;
     boolean touched =false;
     private Handler myhandler;
@@ -233,6 +233,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             txt_mediatype_c.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             img_camera.setOnClickListener(this);
+            img_folder.setOnClickListener(this);
             img_header_search.setOnClickListener(this);
             txt_searchcancel.setOnClickListener(this);
 
@@ -391,25 +392,33 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 settingfragment settingfrag=new settingfragment();
                 gethelper().addFragment(settingfrag, false, true);
                 break;
+
+            case R.id.img_folder:
+                myfolderfragment folderfragment=new myfolderfragment();
+                gethelper().addFragment(folderfragment, false, true);
+                break;
+
+
         }
     }
 
     public void showselecteditemincenter(TextView textView,int sectionnumber)
     {
         String selectedvalue=textView.getText().toString();
-        if(textView.getText().toString().startsWith(config.item_photo))
+        if(textView.getText().toString().startsWith(config.item_video))
+        {
+            selectedmediatype=0;
+        }
+        else if(textView.getText().toString().startsWith(config.item_photo))
         {
             selectedmediatype=1;
         }
-        else if(textView.getText().toString().startsWith(config.item_video))
+        else if(textView.getText().toString().startsWith(config.item_audio))
         {
             selectedmediatype=2;
         }
-        else if(textView.getText().toString().startsWith(config.item_audio))
-        {
-            selectedmediatype=3;
-        }
 
+        config.selectedmediatype=selectedmediatype;
         if(sectionnumber == 1)
         {
             textView.setText(txt_mediatype_c.getText().toString());
@@ -430,15 +439,15 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     public void showselectedmediatypeitems()
     {
         String checkitem="";
-        if(selectedmediatype == 1)
+        if(selectedmediatype == 0)
+        {
+            checkitem="video";
+        }
+        else if(selectedmediatype == 1)
         {
             checkitem="image";
         }
         else if(selectedmediatype == 2)
-        {
-            checkitem="video";
-        }
-        else if(selectedmediatype == 3)
         {
             checkitem="audio";
         }
@@ -671,7 +680,41 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 });
                 recyclerviewgrid.setAdapter(adaptergrid);
-                showselectedmediatypeitems();
+                if(selectedmediatype != config.selectedmediatype)
+                {
+                    selectedmediatype=config.selectedmediatype;
+                    String mediatype="";
+                    switch (selectedmediatype)
+                    {
+                        case 0:
+                            mediatype=config.item_video;
+                        break;
+
+                        case 1:
+                            mediatype=config.item_photo;
+                        break;
+
+                        case 2:
+                            mediatype=config.item_audio;
+                        break;
+                    }
+                    if(txt_mediatype_a.getText().toString().startsWith(mediatype))
+                    {
+                        showselecteditemincenter(txt_mediatype_a,1);
+                    }
+                    else if(txt_mediatype_c.getText().toString().startsWith(mediatype))
+                    {
+                        showselecteditemincenter(txt_mediatype_c,3);
+                    }
+                    else
+                    {
+                        showselectedmediatypeitems();
+                    }
+                }
+                else
+                {
+                    showselectedmediatypeitems();
+                }
             }
         });
     }

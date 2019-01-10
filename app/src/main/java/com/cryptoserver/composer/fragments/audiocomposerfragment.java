@@ -35,6 +35,7 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,6 +101,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ImageView img_capture;
     @BindView(R.id.myvisualizerview)
     visualizeraudiorecorder myvisualizerview;
+    @BindView(R.id.layout_drawertouchable)
+    RelativeLayout layout_drawertouchable;
 
     LinearLayout layout_bottom,layout_drawer;
     RecyclerView recyview_hashes;
@@ -202,6 +205,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             img_capture.setOnClickListener(this);
             timerhandler = new Handler() ;
             handleimageview.setOnTouchListener(this);
+            layout_drawertouchable.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
             img_dotmenu.setOnClickListener(this);
 
@@ -857,20 +861,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         if(madapterclick != null)
             madapterclick.onItemClicked(recordedmediafile,2);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    setaudiohashes();
-                }catch (Exception e)
-                {
-                    Log.e("Meta data Error","Error");
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        showsharepopupmain();
+        if(madapterclick != null)
+            madapterclick.onItemClicked(null,4);
     }
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
@@ -1264,6 +1256,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             case  R.id.righthandle:
                 flingswipe.onTouchEvent(motionEvent);
+                break;
+
+            case  R.id.layout_drawertouchable:
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(motionEvent,3);
                 break;
         }
         return true;

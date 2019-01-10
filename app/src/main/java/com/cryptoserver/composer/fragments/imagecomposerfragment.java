@@ -553,6 +553,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             timerhandler = new Handler() ;
             handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
+            mTextureView.setOnTouchListener(this);
             rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
@@ -761,25 +762,21 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
             applicationviavideocomposer.getactivity().startService(intent);
+
+            mhashesitems.clear();
+            mhashesadapter.notifyDataSetChanged();
+
+            mhashesitems.add(new videomodel(selectedhashes));
+            mhashesadapter.notifyDataSetChanged();
+            recyview_hashes.scrollToPosition(mhashesitems.size()-1);
+
+            if(madapterclick != null)
+                madapterclick.onItemClicked(capturedimagefile.getAbsolutePath(),2);
+
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-
-        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mhashesitems.clear();
-                mhashesadapter.notifyDataSetChanged();
-
-                mhashesitems.add(new videomodel(selectedhashes));
-                mhashesadapter.notifyDataSetChanged();
-                recyview_hashes.scrollToPosition(mhashesitems.size()-1);
-
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(capturedimagefile.getAbsolutePath(),2);
-            }
-        });
     }
 
     public String getkeyvalue(byte[] data)
@@ -1269,23 +1266,20 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                setimagehash();
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
+                    try {
+                        setimagehash();
+                        medialistitemaddbroadcast();
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(null,4);
 
-                    medialistitemaddbroadcast();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
-                    setmetriceshashesdata();
+                    /*setmetriceshashesdata();
                     showsharepopupmain();
                     Log.d(TAG, capturedimagefile.toString());
-                    unlockfocus();
+                    unlockfocus();*/
                 }
             };
 
@@ -1623,6 +1617,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             case  R.id.righthandle:
                 flingswipe.onTouchEvent(motionEvent);
                 break;
+
+            case  R.id.texture:
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(motionEvent,3);
+                break;
         }
         return true;
     }
@@ -1928,26 +1927,4 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         this.madapterclick = madapterclick;
     }
 
-
-    public void saveimagemetadata(File filepath, String data) throws IOException{
-
-        ExifInterface exif = null;
-
-        try{
-            String path=filepath.getCanonicalPath();
-            exif = new ExifInterface(path);
-            if (exif != null) {
-                String imagemetadata = common.getnamefrompath(capturedimagefile.getAbsolutePath())+"|"+ data;
-                exif.setAttribute(ExifInterface. TAG_USER_COMMENT, imagemetadata);
-                exif.setAttribute(ExifInterface. TAG_ARTIST, imagemetadata);
-                Log.e("imagemetadata",imagemetadata);
-                exif.saveAttributes();
-                String usercomment = exif.getAttribute (ExifInterface.TAG_USER_COMMENT);
-                Log.v("usercomment", ""+ usercomment);
-            }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
 }

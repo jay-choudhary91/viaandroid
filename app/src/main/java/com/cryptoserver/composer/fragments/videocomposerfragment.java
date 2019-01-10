@@ -671,47 +671,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
                         }
                         fingerSpacing = currentFingerSpacing;
-                    } else if(!isvideorecording){
-                        switch (motionEvent.getAction()){
-                            case MotionEvent.ACTION_DOWN:
-                                    if(layout_bottom.getVisibility() == View.VISIBLE) {
-                                        hideshowcontroller(false);
-                                        Log.e("layout visibale","layout visibale");
-                                    }
-                                    else {
-                                        hideshowcontroller(true);
-
-                                        Log.e("layout hide","layout hide");
-                                    }
+                        try {
+                            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
                         }
                     }
-
-                    else {
-
-                        switch (motionEvent.getAction()){
-                            case MotionEvent.ACTION_DOWN:
-                                if(isvideorecording && (!(mDrawer.isDrawerOpen(GravityCompat.START))))
-                                {
-                                    if(layout_bottom.getVisibility() == View.VISIBLE)
-                                    {
-                                        hideshowcontroller(false);
-                                        Log.e("layout visibale","layout visibale");
-                                    }
-                                    else
-                                    {
-                                        hideshowcontroller(true);
-
-                                        Log.e("layout hide","layout hide");
-
-                                    }
-                                }
-                        }
-                    }
-                    try {
-                        mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-                    }catch (Exception e)
+                    else
                     {
-                        e.printStackTrace();
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(motionEvent,3);
                     }
                     return true;
                 } catch (Exception e) {
@@ -1181,7 +1151,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 resetvideotimer();
                 clearvideolist();
-                showsharepopupmain();
 
                 try {
 
@@ -1208,6 +1177,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 firsthashvalue = true;
 
                 medialistitemaddbroadcast();
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,4);
 
             }
         },100);

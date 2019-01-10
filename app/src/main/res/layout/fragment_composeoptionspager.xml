@@ -75,14 +75,5 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_touchableview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
-        android:layout_above="@id/layout_footerpager"
-        android:orientation="vertical">
-
-    </LinearLayout>
 
 </RelativeLayout>

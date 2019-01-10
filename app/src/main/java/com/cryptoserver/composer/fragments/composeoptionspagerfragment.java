@@ -2,6 +2,7 @@ package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -31,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
@@ -64,7 +66,7 @@ import butterknife.ButterKnife;
  * Created by root on 6/11/18.
  */
 
-public class composeoptionspagerfragment extends basefragment implements View.OnClickListener, View.OnTouchListener {
+public class composeoptionspagerfragment extends basefragment implements View.OnClickListener {
 
     @BindView(R.id.pager_footer)
     pagercustomduration pagerfooter;
@@ -78,8 +80,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     @BindView(R.id.tab_container)
     FrameLayout tab_container;
-    @BindView(R.id.layout_touchableview)
-    LinearLayout layout_touchableview;
     @BindView(R.id.img_mediathumbnail)
     ImageView img_mediathumbnail;
 
@@ -241,7 +241,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     public void initviewpager()
     {
         flingactionmindstvac=common.getcomposerswipearea();
-        layout_touchableview.setOnTouchListener(this);
         //pagerfooter.setPageTransformer(false, new pageranimation());
 
         //pagerheader.setAdapter(headeradapter);
@@ -253,7 +252,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         mrecordimagebutton.setImageResource(0);
         mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
-
 
         pagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -276,6 +274,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
         });
 
+        pagerfooter.setOnItemClickListener(new pagercustomduration.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                pagerfooter.setCurrentItem(position,true);
+            }
+        });
+
+        currentselectedcomposer=config.selectedmediatype;
         showselectedfragment();
         getlatestmediafromdirectory();
         getlatestaudiofromdirectory();
@@ -327,10 +333,19 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 break;
 
             case R.id.img_mediathumbnail:
+                config.selectedmediatype=pagerfooter.getCurrentItem();
+                medialistitemaddbroadcast();
                 gethelper().onBack();
                 break;
         }
     }
+
+    public void medialistitemaddbroadcast()
+    {
+        Intent intent = new Intent(config.broadcast_medialistnewitem);
+        applicationviavideocomposer.getactivity().sendBroadcast(intent);
+    }
+
 
     GestureDetector flingswipegesture = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
@@ -450,7 +465,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 2) // for video record stop,audio record stop and image captured button click
             {
                 setimagerecordstop();
-                if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
+                /*if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
                 {
                     getlatestmediafromdirectory();
                 }
@@ -462,7 +477,22 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                             getlatestaudiofromdirectory();
                         }
                     },3000);
+                }*/
+            }
+            else if(type == 3) // For swipe gesture to change fragment
+            {
+                MotionEvent motionevent=(MotionEvent)object;
+                flingswipegesture.onTouchEvent(motionevent);
+            }
+            else if(type == 4) // Back the fragment and navigate to media list
+            {
+                try {
+                    config.selectedmediatype=pagerfooter.getCurrentItem();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
+                gethelper().onBack();
             }
         }
     };
@@ -567,11 +597,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             mediapath=audioarraylist.get(audioarraylist.size()-1);
             img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
-            /*Glide.with(applicationviavideocomposer.getactivity()).
-                    load(R.drawable.audiothum).
-                    thumbnail(0.1f).
-                    transition(GenericTransitionOptions.with(R.anim.fadein)).
-                    into(img_mediathumbnail);*/
         }
 
         if(mediapath != null && (! mediapath.trim().isEmpty()))
@@ -596,16 +621,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
     }
 
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-
-        switch (view.getId()) {
-            case R.id.layout_touchableview:
-                flingswipegesture.onTouchEvent(motionEvent);
-                break;
-        }
-        return true;
-    }
 
 
     private class footerpageradapter extends FragmentPagerAdapter {

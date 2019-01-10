@@ -87,22 +87,14 @@
         android:orientation="horizontal"
         android:layout_above="@id/layout_bottom"
         android:layout_centerVertical="true">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+
+        <ImageView
+            android:id="@id/handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@id/handle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/righthandle"
-                />
-
-        </LinearLayout>
+            android:src="@drawable/righthandle"
+            />
         <LinearLayout
             android:id="@id/content"
             android:layout_width="match_parent"

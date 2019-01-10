@@ -693,7 +693,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 gethelper().addFragment(settingfrag, false, true);
                 break;
             case R.id.img_folder:
-
+                myfolderfragment folderfragment=new myfolderfragment();
+                gethelper().addFragment(folderfragment, false, true);
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();
