@@ -86,7 +86,7 @@
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     app:fontType="OpenSans_Regular"
@@ -96,7 +96,7 @@
 
                 <RelativeLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     android:padding="@dimen/margin_5dp"
                     android:layout_gravity="center_vertical"
                     android:background="@color/actionbar_solid_normal_transparent"
@@ -149,7 +149,7 @@
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     app:fontType="OpenSans_Regular"
@@ -159,7 +159,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_starttime"
                     android:layout_width="0dp"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     app:fontType="OpenSans_Regular"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
@@ -180,7 +180,7 @@
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     app:fontType="OpenSans_Regular"
@@ -190,7 +190,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_endtime"
                     android:layout_width="0dp"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     app:fontType="OpenSans_Regular"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
@@ -211,7 +211,7 @@
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     app:fontType="OpenSans_Regular"
@@ -221,7 +221,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_duration"
                     android:layout_width="0dp"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     app:fontType="OpenSans_Regular"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
@@ -242,7 +242,7 @@
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     app:fontType="OpenSans_Regular"
@@ -252,7 +252,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_date"
                     android:layout_width="0dp"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     app:fontType="OpenSans_Regular"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
@@ -273,7 +273,7 @@
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     app:fontType="OpenSans_Regular"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
@@ -283,7 +283,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_time"
                     android:layout_width="0dp"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     android:gravity="left"
@@ -302,7 +302,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     app:fontType="OpenSans_Regular"
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     android:gravity="center_vertical"
@@ -311,7 +311,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_size"
                     android:layout_width="0dp"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     android:textColor="@color/black"
@@ -331,7 +331,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     app:fontType="OpenSans_Regular"
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     android:gravity="center_vertical"
@@ -340,7 +340,7 @@
 
                 <RelativeLayout
                     android:layout_width="0dp"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_5dp"
                     android:layout_gravity="center_vertical"
@@ -380,7 +380,7 @@
                 <com.cryptoserver.composer.views.customfonttextview
                     app:fontType="OpenSans_Regular"
                     android:layout_width="0dp"
-                    android:layout_weight="0.25"
+                    android:layout_weight="0.30"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/margin_10dp"
                     android:gravity="center_vertical"
@@ -391,7 +391,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="0.75"
+                    android:layout_weight="0.70"
                     android:layout_marginBottom="@dimen/margin_5dp"
                     android:background="@drawable/edittext_bg">
 
@@ -414,7 +414,7 @@
                         />
 
                      <ImageView
-                        android:layout_width="20dp"
+                        android:layout_width="wrap_content"
                         android:layout_alignParentRight="true"
                         android:id="@+id/img_edit_notes"
                         android:layout_alignParentTop="true"
@@ -423,7 +423,7 @@
                          android:layout_centerInParent="true"
                         android:layout_margin="@dimen/margin_5dp"
                         android:src="@drawable/ic_edit"
-                        android:layout_height="20dp" />
+                        android:layout_height="wrap_content" />
 
                 </RelativeLayout>
 
