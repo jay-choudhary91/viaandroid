@@ -383,7 +383,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     metricmodel setmetricmodel;
 
     arraycontainer arraycontainerformetric =null;
-
+    adapteritemclick mcontrollernavigator;
 
     @Override
     public int getlayoutid() {
@@ -857,6 +857,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return false;
+    }
+
+    public void setdata(adapteritemclick mcontrollernavigator) {
+        this.mcontrollernavigator = mcontrollernavigator;
     }
 
 

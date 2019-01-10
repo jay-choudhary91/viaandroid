@@ -251,6 +251,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     ImageView img_compass;
+    adapteritemclick mcontrollernavigator;
 
     private BroadcastReceiver getmetadatabroadcastreceiver, getencryptionmetadatabroadcastreceiver;
 
@@ -1702,5 +1703,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
+    }
+
+    public void setdata(adapteritemclick mcontrollernavigator) {
+        this.mcontrollernavigator = mcontrollernavigator;
     }
 }

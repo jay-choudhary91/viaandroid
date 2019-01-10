@@ -361,6 +361,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     metricmodel metricmodeldata;
+    adapteritemclick mcontrollernavigator;
+
     public audioreaderfragment() {
     }
 
@@ -2194,5 +2196,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
+    }
+
+    public void setdata(adapteritemclick mcontrollernavigator) {
+        this.mcontrollernavigator = mcontrollernavigator;
     }
 }

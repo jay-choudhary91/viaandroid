@@ -1087,19 +1087,20 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(videoobj.getmimetype().startsWith("image/")){
                 xdata.getinstance().saveSetting("selectedphotourl",""+videoobj.getPath());
                 imagereaderfragment phototabfrag = new imagereaderfragment();
-               // phototabfrag.setdata(videoobj.getPath());
+                phototabfrag.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(phototabfrag, false, true);
 
             }else if(videoobj.getmimetype().startsWith("audio/")){
                 xdata.getinstance().saveSetting("selectedaudiourl",""+videoobj.getPath());
                 audioreaderfragment audiotabfrag = new audioreaderfragment();
-              //  audiotabfrag.setdata(videoobj.getPath());
+                audiotabfrag.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(audiotabfrag, false, true);
 
             }else if(videoobj.getmimetype().startsWith("video/")){
 
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
                 videoreaderfragment readervideofragment=new videoreaderfragment();
+                readervideofragment.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(readervideofragment, false, true);
 
                /* xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
@@ -1110,6 +1111,46 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         }
     }
+
+    adapteritemclick mcontrollernavigator=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+
+        }
+
+        @Override
+        public void onItemClicked(Object object, int type) {
+            if(type == 2)
+            {
+                String filepath=(String)object;
+                if(arrayvideolist.size() > 0)
+                {
+                    for(int i=0;i<arrayvideolist.size();i++)
+                    {
+                        if(filepath.equalsIgnoreCase(arrayvideolist.get(i).getPath()))
+                        {
+                            video videoobj=arrayvideolist.get(i);
+                            File fdelete = new File(videoobj.getPath());
+                            if (fdelete.exists()) {
+                                if (fdelete.delete()) {
+                                    String localkey=videoobj.getLocalkey();
+                                    System.out.println("file Deleted :" + videoobj.getPath());
+                                    arrayvideolist.remove(videoobj);
+                                    if(! localkey.trim().isEmpty())
+                                        deletemediainfo(localkey);
+
+                                } else {
+                                    System.out.println("file not Deleted :" + videoobj.getPath());
+                                }
+                            }
+                            showselectedmediatypeitems();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     public boolean isexistinarraay(String name,String modifieddatetime)
     {
