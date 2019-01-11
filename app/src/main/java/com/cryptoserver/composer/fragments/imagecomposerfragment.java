@@ -568,6 +568,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
+            imglefthandle.setOnClickListener(this);
 
             img_dotmenu.setVisibility(View.VISIBLE);
             imgflashon.setVisibility(View.VISIBLE);
