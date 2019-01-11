@@ -240,6 +240,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void initviewpager()
     {
+        mrecordimagebutton.setImageResource(R.drawable.img_startrecord);
+        mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
+
         flingactionmindstvac=common.getcomposerswipearea();
         //pagerfooter.setPageTransformer(false, new pageranimation());
 
@@ -249,9 +252,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         pagerfooter.setOffscreenPageLimit(3);
         int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),180);
         pagerfooter.setPageMargin(0-margin);
-
-        mrecordimagebutton.setImageResource(0);
-        mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
 
         pagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -441,7 +441,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                setimagerecordstop();
+               // setimagerecordstop();
                 setimagethumbnail();
                 pagerfooter.setCurrentItem(currentselectedcomposer,true);
             }
@@ -460,11 +460,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         public void onItemClicked(Object object, int type) {
             if(type == 1) // for video record start,audio record start and image capture button click
             {
-                setimagerecordstart();
+               // setimagerecordstart();
             }
             else if(type == 2) // for video record stop,audio record stop and image captured button click
             {
-                setimagerecordstop();
+               // setimagerecordstop();
                 /*if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
                 {
                     getlatestmediafromdirectory();
@@ -608,20 +608,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     into(img_mediathumbnail);
         }
     }
-
-    public void setimagerecordstart()
-    {
-        mrecordimagebutton.setImageResource(R.drawable.img_startrecord);
-        mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
-    }
-
-    public void setimagerecordstop()
-    {
-        mrecordimagebutton.setImageResource(0);
-        mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
-    }
-
-
 
     private class footerpageradapter extends FragmentPagerAdapter {
 
