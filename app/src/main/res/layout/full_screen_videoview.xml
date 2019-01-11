@@ -126,7 +126,7 @@
                         >
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="140dp"
+                            android:layout_height="100dp"
                             >
 
                             <ImageButton android:id="@+id/img_volume"
@@ -149,7 +149,6 @@
                                 android:id="@+id/layout_scrubberview"
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
-                                android:layout_marginBottom="10dp"
                                 android:visibility="visible"
                                 android:layout_centerHorizontal="true"
                                 android:layout_alignParentBottom="false">
@@ -158,6 +157,7 @@
                                     android:id="@+id/recyview_frames"
                                     android:layout_width="match_parent"
                                     android:visibility="visible"
+                                    android:layout_marginTop="5dp"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_height="wrap_content"/>
 
@@ -236,7 +236,7 @@
                                 android:paddingLeft="10dip"
                                 android:paddingRight="4dip"
                                 android:paddingTop="4dip"
-                                android:visibility="visible" />
+                                android:visibility="gone" />
 
                         </RelativeLayout>
                     </LinearLayout>

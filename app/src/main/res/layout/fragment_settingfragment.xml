@@ -114,15 +114,16 @@
             android:layout_width="match_parent"
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/bottom_margin"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:layout_weight="1"
             android:layout_height="0dp">
 
 
             <ImageView
                 android:layout_width="80dp"
-                android:src="@drawable/deeptruth_img"
-                android:layout_height="55dp" />
+                android:layout_height="55dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/deeptruth_img" />
 
             <ImageView
                 android:layout_width="wrap_content"

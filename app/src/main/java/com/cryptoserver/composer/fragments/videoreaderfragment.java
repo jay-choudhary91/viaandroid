@@ -1031,6 +1031,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         scrollview_detail.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
                         layoutcustomcontroller.setVisibility(View.VISIBLE);
+                        layoutcustomcontroller.getResources().getColor(R.color.whitetransparent);
                         playpausebutton.setVisibility(View.VISIBLE);
                         imgpause.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
