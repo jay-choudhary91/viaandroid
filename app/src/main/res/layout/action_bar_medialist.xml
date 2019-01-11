@@ -157,15 +157,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
         android:orientation="horizontal"
         >
 
         <com.cryptoserver.composer.views.customfonttextview
-            app:fontType="OpenSans_Regular"
+            app:fontType="OpenSans_Semibold"
             android:id="@+id/txt_searchcancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -190,11 +190,13 @@
             android:paddingRight="7dp"
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
+            android:textCursorDrawable="@null"
             android:textSize="16sp"
+            android:textColor="@color/blue"
             android:gravity="left|center_vertical"
             android:layout_centerVertical="true"
             android:inputType="textCapSentences"
-            android:hint="Search here"/>
+            android:hint="Search "/>
 
         <ImageView
             android:id="@+id/img_search_editicon"

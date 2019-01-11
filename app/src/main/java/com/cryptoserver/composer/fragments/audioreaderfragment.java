@@ -1362,10 +1362,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         metricmainarraylist.get(i).getValuehash(), metricmainarraylist.get(i).getMetahash());
 
                 //tvblockchainid.setText("hiii hello");
-                common.setspannable(getResources().getString(R.string.blockchain_id), metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                common.setspannable(getResources().getString(R.string.block_id), metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                common.setspannable(getResources().getString(R.string.block_number),metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                common.setspannable(getResources().getString(R.string.metrichash),metricmainarraylist.get(0).getMetahash(), txt_metahash);
+                common.setspannable(getResources().getString(R.string.blockchain_id), " "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+                common.setspannable(getResources().getString(R.string.block_id)," "+ metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
                 selectedmetrics = selectedmetrics + "\n";
                 for (int j = 0; j < metricItemArraylist.size(); j++) {
