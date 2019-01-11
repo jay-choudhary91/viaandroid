@@ -342,12 +342,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
         }
 
-        common.setspannable(getResources().getString(R.string.blockchain_id),valuehash, tvblockchainid);
+        common.setspannable(getResources().getString(R.string.blockchain_id),videostarttransactionid, tvblockchainid);
         common.setspannable(getResources().getString(R.string.block_id),hashmethod, tvblockid);
-        common.setspannable(getResources().getString(R.string.block_number),metahash, tvblocknumber);
-        common.setspannable(getResources().getString(R.string.metrichash),videostarttransactionid, tvmetahash);
+        common.setspannable(getResources().getString(R.string.block_number), valuehash, tvblocknumber);
+        common.setspannable(getResources().getString(R.string.metrichash),metahash, tvmetahash);
 
     }
+
+
+
 
     public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
                                              final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {

@@ -6,6 +6,11 @@
     android:id="@+id/rl_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,10 +20,11 @@
         android:orientation="horizontal"
         android:layout_centerVertical="true">
 
-        <android.support.v4.widget.DrawerLayout
+        <com.cryptoserver.composer.utils.FullDrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
             tools:openDrawer="start" >
 
             <FrameLayout
@@ -34,63 +40,45 @@
                     android:layout_alignParentTop="true"
                     />
 
-            </FrameLayout>
+                <ImageView
+                    android:id="@+id/img_lefthandle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:layout_marginLeft="15dp"
+                    android:src="@drawable/ic_arrow_left"
+                    />
 
+            </FrameLayout>
 
             <android.support.design.widget.NavigationView
                 android:id="@+id/navigation_drawer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/blacktransparent"
+                android:visibility="gone"
+                android:fitsSystemWindows="true"
                 android:layout_gravity="start"
                  >
 
-            <include layout="@layout/layout_drawer_content_composer"></include>
+                <include
+                    layout="@layout/layout_graphical_drawer_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </include>
+
+            <!--<include layout="@layout/layout_drawer_content_composer"></include>-->
 
             </android.support.design.widget.NavigationView>
-        </android.support.v4.widget.DrawerLayout>
-
-        <ImageView
-            android:id="@id/handle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/righthandle"
-            android:visibility="gone"
-            />
-        <LinearLayout
-            android:id="@id/content"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:weightSum="1"
-            >
-
-            <LinearLayout
-                android:id="@+id/layout_drawer"
-                android:layout_width="0dp"
-                android:layout_weight="0.9"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone"
-                >
-              <!-- <include layout="@layout/layout_drawer_content_composer"></include>-->
-
-            </LinearLayout>
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight=".1"
-                android:layout_height="wrap_content"
-                android:src="@drawable/righthandle"
-                android:visibility="gone"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/righthandle"
-                />
-        </LinearLayout>
+        </com.cryptoserver.composer.utils.FullDrawerLayout>
 
 
     </RelativeLayout>
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/layout_bottom"
@@ -110,9 +98,6 @@
             android:layout_weight="0.3"
             android:layout_height="wrap_content"
             android:gravity="center">
-
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -127,8 +112,6 @@
                 android:id="@+id/img_video_capture"
                 android:src="@drawable/shape_recorder_off"
                 />
-
-
         </LinearLayout>
 
         <LinearLayout
@@ -153,7 +136,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
 
         <include layout="@layout/action_bar_composer"></include>
     </LinearLayout>

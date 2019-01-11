@@ -36,6 +36,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,6 +46,7 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -57,6 +60,7 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,6 +75,7 @@ import com.cryptoserver.composer.models.mediacompletiondialogsub;
 import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.services.insertmediadataservice;
+import com.cryptoserver.composer.utils.FullDrawerLayout;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
@@ -322,16 +327,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
-    ImageView handleimageview,righthandle;
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
 
-    TextView txtSlot1;
-    TextView txtSlot2;
-    TextView txtSlot3,txt_metrics,txt_hashes;
-    ScrollView scrollview_metrices,scrollview_hashes;
-
-    public int selectedsection=1;
 
     ImageView imgflashon,rotatecamera,handle,img_dotmenu;
 
@@ -344,14 +342,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     String selectedvideofile ="",selectedmetrices="", selectedhashes ="",mediakey="";
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
-    videoframeadapter mmetricesadapter,mhashesadapter;
 
     private boolean isdraweropen=false;
     private Handler myhandler;
     private Runnable myrunnable;
     JSONObject metadatametricesjson=new JSONObject();
     private LinearLayoutManager mLayoutManager;
-    graphicalfragment fragmentgraphic;
+    private fragmentgraphicaldrawer graphicaldrawerfragment;
     ImageView captureimage;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
@@ -364,6 +361,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
     String hashvalue = "",metrichashvalue = "";
+
+    DrawerLayout navigationdrawer;
+    private ActionBarDrawerToggle drawertoggle;
+    ImageView imglefthandle;
+    RelativeLayout rl_containerview;
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
@@ -534,25 +536,34 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
-            txtSlot1 = (TextView) rootview.findViewById(R.id.txt_slot1);
-            txtSlot2 = (TextView) rootview.findViewById(R.id.txt_slot2);
-            txtSlot3 = (TextView) rootview.findViewById(R.id.txt_slot3);
-            txt_metrics = (TextView) rootview.findViewById(R.id.txt_metrics);
-            txt_hashes = (TextView) rootview.findViewById(R.id.txt_hashes);
-            scrollview_metrices = (ScrollView) rootview.findViewById(R.id.scrollview_metrices);
-            scrollview_hashes = (ScrollView) rootview.findViewById(R.id.scrollview_hashes);
-            fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_container);
+            fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_drawer_container);
+            rl_containerview = (RelativeLayout) rootview.findViewById(R.id.rl_containerview);
             linearLayout=rootview.findViewById(R.id.content);
-            handleimageview=rootview.findViewById(R.id.handle);
-            righthandle=rootview.findViewById(R.id.righthandle);
 
             recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
             recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
 
+            imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
+            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
+            drawertoggle = new ActionBarDrawerToggle(
+                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
+
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    imglefthandle.setVisibility(View.VISIBLE);
+                }
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    imglefthandle.setVisibility(View.GONE);
+                }
+            };
+            navigationdrawer.addDrawerListener(drawertoggle);
+            drawertoggle.syncState();
+            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+
+
             captureimage.setOnClickListener(this);
             timerhandler = new Handler() ;
-            handleimageview.setOnTouchListener(this);
-            righthandle.setOnTouchListener(this);
             mTextureView.setOnTouchListener(this);
             rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
@@ -560,116 +571,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             img_dotmenu.setVisibility(View.VISIBLE);
             imgflashon.setVisibility(View.VISIBLE);
+            rl_containerview.setVisibility(View.GONE);
 
             flingactionmindstvac=common.getdrawerswipearea();
-            handleimageview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
-                    linearLayout.startAnimation(rightswipe);
-                    handleimageview.setVisibility(View.GONE);
-                    linearLayout.setVisibility(View.VISIBLE);
-                    rightswipe.start();
-                    righthandle.setVisibility(View.VISIBLE);
-                    rightswipe.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            righthandle.setImageResource(R.drawable.righthandle);
-                        }
 
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            righthandle.setImageResource(R.drawable.lefthandle);
-                        }
+            fragment_graphic_container.setVisibility(View.VISIBLE);
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-
-                }
-            });
-
-            righthandle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
-                    linearLayout.startAnimation(leftswipe);
-                    linearLayout.setVisibility(View.INVISIBLE);
-                    righthandle.setVisibility(View.VISIBLE);
-                    handleimageview.setVisibility(View.GONE);
-                    leftswipe.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            handleimageview.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                }
-            });
-
-            txtSlot1.setOnClickListener(this);
-            txtSlot2.setOnClickListener(this);
-            txtSlot3.setOnClickListener(this);
-
-            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-            txtSlot1.setVisibility(View.VISIBLE);
-            txtSlot2.setVisibility(View.VISIBLE);
-            txtSlot3.setVisibility(View.VISIBLE);
-            txt_metrics.setVisibility(View.INVISIBLE);
-            txt_hashes.setVisibility(View.INVISIBLE);
-            recyview_hashes.setVisibility(View.VISIBLE);
-            recyview_metrices.setVisibility(View.INVISIBLE);
-            scrollview_metrices.setVisibility(View.INVISIBLE);
-            scrollview_hashes.setVisibility(View.INVISIBLE);
-            fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-            {
-                mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                recyview_hashes.setLayoutManager(mLayoutManager);
-                recyview_hashes.setItemAnimator(new DefaultItemAnimator());
-                recyview_hashes.setAdapter(mhashesadapter);
-            }
-
-            {
-                mmetricesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mmetricsitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
-                recyview_metrices.setLayoutManager(mLayoutManager);
-                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-                recyview_metrices.setAdapter(mmetricesadapter);
-                implementscrolllistener();
-            }
 
             keytype=common.checkkey();
 
@@ -764,10 +671,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             applicationviavideocomposer.getactivity().startService(intent);
 
             mhashesitems.clear();
-            mhashesadapter.notifyDataSetChanged();
 
             mhashesitems.add(new videomodel(selectedhashes));
-            mhashesadapter.notifyDataSetChanged();
             recyview_hashes.scrollToPosition(mhashesitems.size()-1);
 
             if(madapterclick != null)
@@ -902,12 +807,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         public void doafterallpermissions()
         {
-            if(fragmentgraphic == null)
+            if(graphicaldrawerfragment == null)
             {
-                fragmentgraphic  = new graphicalfragment();
-                fragmentgraphic.setphotocapture(true);
+                graphicaldrawerfragment =new fragmentgraphicaldrawer();
+
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_container,fragmentgraphic);
+                transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
                 transaction.commit();
             }
             startBackgroundThread();
@@ -922,6 +827,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         closeCamera();
         stopBackgroundThread();
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
     }
 
     private void setUpCameraOutputs(int width, int height) {
@@ -1242,7 +1155,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mdbstartitemcontainer.clear();
             mdbmiddleitemcontainer.clear();
             mmetricsitems.clear();
-            mmetricesadapter.notifyDataSetChanged();
 
             // This is the CaptureRequest.Builder that we use to take a picture.
             final CaptureRequest.Builder captureBuilder =
@@ -1276,8 +1188,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         e.printStackTrace();
                     }
 
-                    /*setmetriceshashesdata();
-                    showsharepopupmain();
+                    setmetriceshashesdata();
+                   /* showsharepopupmain();
                     Log.d(TAG, capturedimagefile.toString());
                     unlockfocus();*/
                 }
@@ -1355,6 +1267,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 }
                 break;
             }
+            case R.id.img_lefthandle:
+                navigationdrawer.openDrawer(Gravity.START);
+                break;
+
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
                 gethelper().addFragment(settingfrag, false, true);
@@ -1366,61 +1282,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             case R.id.img_rotate_camera:
                 switchCamera();
-                break;
-            case R.id.txt_slot1:
-                if(selectedsection != 1)
-                {
-                    selectedsection=1;
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-
-                    recyview_hashes.setVisibility(View.VISIBLE);
-                    recyview_metrices.setVisibility(View.INVISIBLE);
-                    fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-                }
-
-                break;
-
-            case R.id.txt_slot2:
-                if(selectedsection != 2)
-                {
-                    selectedsection=2;
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-                    fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-
-                    recyview_metrices.setVisibility(View.VISIBLE);
-                    recyview_hashes.setVisibility(View.INVISIBLE);
-
-                    resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
-                }
-
-                break;
-
-            case R.id.txt_slot3:
-                if(selectedsection != 3)
-                {
-                    selectedsection=3;
-                    fragment_graphic_container.setVisibility(View.VISIBLE);
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-                    recyview_metrices.setVisibility(View.INVISIBLE);
-                    recyview_hashes.setVisibility(View.INVISIBLE);
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
-
-                   /* if(fragmentgraphic != null)
-                        fragmentgraphic.setvisualizer();*/
-                }
                 break;
         }
     }
@@ -1471,42 +1332,24 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             public void run() {
 
                 boolean graphicopen=false;
-                if(isdraweropen)
+                if(!isdraweropen)
                 {
-                    /*if(selectedsection == 1 && (! selectedhashes.trim().isEmpty()))
-                    {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mhashesitems.add(new videomodel(selectedhashes));
-                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                                selectedhashes="";
-                            }
-                        });
-                    }*/
-
                     if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
                     {
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mmetricsitems.add(new videomodel(selectedmetrices));
-                                mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                                selectedmetrices="";
-                            }
-                        });
+                        rl_containerview.setVisibility(View.VISIBLE);
+                        mmetricsitems.add(new videomodel(selectedmetrices));
+                        selectedmetrices="";
                     }
-
 
                     if((fragment_graphic_container.getVisibility() == View.VISIBLE))
                         graphicopen=true;
                 }
 
-                if((fragmentgraphic!= null && mmetricsitems.size() > 0 && selectedsection == 3))
+                if((graphicaldrawerfragment!= null && mmetricsitems.size() > 0))
                 {
-                    fragmentgraphic.setdrawerproperty(graphicopen);
-                    fragmentgraphic.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
-                    fragmentgraphic.setmetricesdata();
+                    graphicaldrawerfragment.setdrawerproperty(graphicopen);
+                    graphicaldrawerfragment.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
+                    graphicaldrawerfragment.setmetricesdata();
 
                 //    fragmentgraphic.setphotocapture(true);
                 }
@@ -1515,7 +1358,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         };
         myhandler.post(myrunnable);
     }
-
 
     public void showsharepopupmain()
     {
@@ -1555,7 +1397,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         mediacompletionpopupmain.show(fm, "fragment_name");
 
     }
-
 
     public void showsharepopupsub()
     {
@@ -1638,14 +1479,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     flingactionmindspdvac)
             {
                 // TskTdo :=> On Right to Left fling
-                swiperighttoleft();
                 return false;
             }
             else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
                     flingactionmindspdvac)
             {
                 // TskTdo :=> On Left to Right fling
-                swipelefttoright();
                 return false;
             }
 
@@ -1667,58 +1506,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     });
 
-    public void swipelefttoright()
-    {
-        isdraweropen=true;
-        Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
-        linearLayout.startAnimation(rightswipe);
-        handleimageview.setVisibility(View.GONE);
-        linearLayout.setVisibility(View.VISIBLE);
-        rightswipe.start();
-        righthandle.setVisibility(View.VISIBLE);
-        rightswipe.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                righthandle.setImageResource(R.drawable.righthandle);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                righthandle.setImageResource(R.drawable.lefthandle);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
-
-    public void swiperighttoleft()
-    {
-        isdraweropen=false;
-        Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
-        linearLayout.startAnimation(leftswipe);
-        linearLayout.setVisibility(View.INVISIBLE);
-        righthandle.setVisibility(View.VISIBLE);
-        handleimageview.setVisibility(View.GONE);
-        leftswipe.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                handleimageview.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
 
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
         if (mFlashSupported) {
