@@ -31,8 +31,9 @@
                     android:layout_width="match_parent"
                     android:background="@drawable/bottomborder"
                     android:layout_gravity="bottom|end"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
                     android:layout_alignParentBottom="true"
-                    android:padding="@dimen/margin_10dp"
                     android:visibility="visible"
                     android:layout_height="wrap_content">
 
@@ -93,8 +94,8 @@
                        android:layout_alignParentRight="true"
                        android:src="@drawable/ic_full_screen_mode"
                        android:padding="10dp"
-                       android:layout_marginRight="8dp"
-                       android:layout_marginBottom="8dp"/>
+                       android:layout_marginRight="5dp"
+                       android:layout_marginBottom="5dp"/>
 
                 </RelativeLayout>
 

@@ -90,7 +90,7 @@
                         android:id="@+id/rl_controllerview"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="0.65"
                         android:background="@color/audio_composer_bg"
                         android:visibility="visible"
                         >
@@ -130,31 +130,14 @@
                             android:background="@color/white"
                             android:layout_alignParentBottom="true"
                             android:orientation="vertical"
-                            android:gravity="center"
                             >
                             <RelativeLayout
                                 android:layout_marginLeft="@dimen/margin_5dp"
                                 android:layout_marginRight="@dimen/margin_5dp"
                                 android:layout_width="match_parent"
-                                android:layout_height="80dp"
+                                android:layout_height="60dp"
+                                android:layout_marginBottom="10dp"
                                 >
-
-                                <ImageButton android:id="@+id/img_volume"
-                                    android:layout_marginTop="-7dp"
-                                    android:paddingTop="4dip"
-                                    android:paddingBottom="4dip"
-                                    android:paddingLeft="10dip"
-                                    android:paddingRight="4dip"
-                                    android:visibility="gone"
-                                    android:layout_gravity="top"
-                                    android:layout_centerVertical="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:layout_alignParentBottom="true"
-                                    android:background="@drawable/volumeadjustment"
-                                    android:contentDescription="@string/description" />
-
 
                                 <SeekBar
                                     android:id="@+id/mediacontroller_progress"
@@ -195,24 +178,6 @@
                                     android:textColor="@color/black"
                                     android:paddingLeft="4dip" />
 
-                                <ImageButton android:id="@+id/fullscreen"
-                                    android:layout_marginTop="-7dp"
-                                    android:paddingTop="4dip"
-                                    android:paddingBottom="4dip"
-                                    android:paddingLeft="10dip"
-                                    android:paddingRight="4dip"
-                                    android:visibility="visible"
-                                    android:layout_gravity="top"
-                                    android:layout_centerVertical="true"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_alignParentBottom="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_marginRight="5dp"
-                                    android:background="@android:color/transparent"
-                                    android:layout_height="wrap_content"
-                                    android:contentDescription="@string/description" />
-
-
                             </RelativeLayout>
                         </LinearLayout>
 
@@ -221,7 +186,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_below="@+id/tab_photoreader"
-                        android:layout_weight="1"
+                        android:layout_weight="0.35"
                         android:visibility="visible"
                         android:id="@+id/layout_photodetails"
                         android:layout_height="0dp">

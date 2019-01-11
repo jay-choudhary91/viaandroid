@@ -241,6 +241,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             img_folder.setVisibility(View.VISIBLE);
             img_header_search.setVisibility(View.VISIBLE);
 
+            try {
+                DrawableCompat.setTint(img_header_search.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.blue));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
             try {
                 DrawableCompat.setTint(img_search_editicon.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
@@ -734,13 +741,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                            arrayvideolist.get(i).setMediatitle(getdata[4]);
                            arrayvideolist.get(i).setMedianotes(getdata[5]);
                        }
-                       /*if(adaptermedialist != null && arrayvideolist.size() > 0)
+                       if(adaptermedialist != null && arrayvideolist.size() > 0)
                             adaptermedialist.notifyDataSetChanged();
 
-                   if(adaptergrid != null && arrayvideolist.size() > 0)
+                 /* if(adaptergrid != null && arrayvideolist.size() > 0)
                        adaptergrid.notifyDataSetChanged();*/
                }
-                myhandler.postDelayed(this, 8000);
+                myhandler.postDelayed(this, 5000);
             }
         };
         myhandler.post(myrunnable);

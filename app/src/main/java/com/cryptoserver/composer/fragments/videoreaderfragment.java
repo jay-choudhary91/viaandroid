@@ -1035,6 +1035,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         playpausebutton.setVisibility(View.VISIBLE);
                         imgpause.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+                        resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                     }
                     break;
 
@@ -2132,10 +2133,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                       graphicaldrawerfragment.getencryptiondata(arraycontainerformetric.getHashmethod(),arraycontainerformetric.getVideostarttransactionid(),
                               arraycontainerformetric.getValuehash(),arraycontainerformetric.getMetahash());
 
-                      common.setspannable(getResources().getString(R.string.blockchain_id),arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
-                      common.setspannable(getResources().getString(R.string.block_id),arraycontainerformetric.getHashmethod(), txt_blockid);
-                      common.setspannable(getResources().getString(R.string.block_number),arraycontainerformetric.getValuehash(), txt_blocknumber);
-                      common.setspannable(getResources().getString(R.string.metrichash),arraycontainerformetric.getMetahash(), txt_metahash);
+                      common.setspannable(getResources().getString(R.string.blockchain_id)," "+ arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
+                      common.setspannable(getResources().getString(R.string.block_id)," "+ arraycontainerformetric.getHashmethod(), txt_blockid);
+                      common.setspannable(getResources().getString(R.string.block_number)," "+ arraycontainerformetric.getValuehash(), txt_blocknumber);
+                      common.setspannable(getResources().getString(R.string.metrichash)," "+arraycontainerformetric.getMetahash(), txt_metahash);
 
                       double latt=0,longg=0;
 

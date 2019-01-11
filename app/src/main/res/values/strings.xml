@@ -184,7 +184,7 @@
     <string name="localtime">Local Time</string>
     <string name="storagefree">Storage Free</string>
     <string name="language">Language</string>
-    <string name="uptime">Up Time</string>
+    <string name="uptime">Phone UpTime</string>
     <string name="battery">Battery</string>
 
 </resources>

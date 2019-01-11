@@ -23,7 +23,7 @@
                style="@style/txt_drawer_graphical_title"
 
                android:text="@string/locationtracking"
-               app:fontType="OpenSans_Regular"
+               app:fontType="Comfortaa-Regular"
                />
 
            <LinearLayout
@@ -100,7 +100,7 @@
                            style="@style/txt_row_encryption"
                            android:gravity="left"
                            android:layout_weight="0.5"
-                           android:text="latitude"/>
+                           android:text="Latitude"/>
 
                        <com.cryptoserver.composer.views.customfonttextview
                            android:id="@+id/txt_longitude"
@@ -108,7 +108,7 @@
                            style="@style/txt_row_encryption"
                            android:gravity="left"
                            android:layout_weight="0.5"
-                           android:text="longitude"/>
+                           android:text="Longitude"/>
 
                    </LinearLayout>
 
@@ -124,7 +124,7 @@
                            style="@style/txt_row_encryption"
                            android:gravity="left"
                            android:layout_weight="0.5"
-                           android:text="altitude"/>
+                           android:text="Altitude"/>
 
                        <com.cryptoserver.composer.views.customfonttextview
                            android:id="@+id/txt_speed"
@@ -132,7 +132,7 @@
                            style="@style/txt_row_encryption"
                            android:gravity="left"
                            android:layout_weight="0.5"
-                           android:text="speed"/>
+                           android:text="Speed"/>
 
                    </LinearLayout>
 
@@ -148,7 +148,7 @@
                            android:gravity="left"
                            style="@style/txt_row_encryption"
                            android:layout_weight="0.5"
-                           android:text="heading"/>
+                           android:text="Heading"/>
 
                        <com.cryptoserver.composer.views.customfonttextview
                            android:id="@+id/txt_traveled"
@@ -156,7 +156,7 @@
                            style="@style/txt_row_encryption"
                            android:gravity="left"
                            android:layout_weight="0.5"
-                           android:text="traveled"/>
+                           android:text="Traveled"/>
 
                    </LinearLayout>
 
@@ -262,7 +262,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="phone"/>
+                    android:text="Phone"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_network"
@@ -270,7 +270,7 @@
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
                     android:gravity="left"
-                    android:text="network"/>
+                    android:text="Network"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_connection"
@@ -278,7 +278,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="connection"/>
+                    android:text="Connection"/>
 
             </LinearLayout>
 
@@ -293,7 +293,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="version"/>
+                    android:text="Version"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_wifi"
@@ -301,7 +301,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="wifi"/>
+                    android:text="WiFi"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_gps_accuracy"
@@ -309,7 +309,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="gps accuracy"/>
+                    android:text="GPS Accuracy"/>
 
             </LinearLayout>
 
@@ -324,7 +324,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="screen"/>
+                    android:text="Screen"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_country"
@@ -332,7 +332,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="country"/>
+                    android:text="Country"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_cpu_usage"
@@ -340,7 +340,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="cpu usage"/>
+                    android:text="CPU Usage"/>
 
             </LinearLayout>
 
@@ -355,7 +355,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="brightness"/>
+                    android:text="Brightness"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_timezone"
@@ -363,7 +363,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="timezone"/>
+                    android:text="Time Zone"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_memoryusage"
@@ -371,7 +371,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="memoryusage"/>
+                    android:text="Memory Usage"/>
 
             </LinearLayout>
 
@@ -386,7 +386,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="bluetooth"/>
+                    android:text="Bluetooth"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_localtime"
@@ -402,7 +402,7 @@
                     android:gravity="left"
                     style="@style/txt_row_encryption"
                     android:layout_weight="0.5"
-                    android:text="storagefree"/>
+                    android:text="Storage Free"/>
 
             </LinearLayout>
 
@@ -425,7 +425,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="uptime"/>
+                    android:text="Phone UpTime"/>
 
                 <com.cryptoserver.composer.views.customfonttextview
                     android:id="@+id/txt_battery"
@@ -433,7 +433,7 @@
                     style="@style/txt_row_encryption"
                     android:gravity="left"
                     android:layout_weight="0.5"
-                    android:text="battery"/>
+                    android:text="Battery"/>
 
             </LinearLayout>
 
