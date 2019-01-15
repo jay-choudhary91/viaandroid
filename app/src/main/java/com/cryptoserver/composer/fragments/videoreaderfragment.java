@@ -11,6 +11,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
@@ -89,6 +91,7 @@ import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.views.customfonttextview;
+import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -1133,14 +1136,22 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
     {
-        view1.setBackgroundResource(R.color.blue);
-        view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
+        if (Utils.getSDKInt() >= 18) {
+            // fill drawable only supported on api level 18 and above
 
-        view2.setBackgroundResource(R.color.white);
-        view2.setTextColor(getActivity().getResources().getColor(R.color.blue));
+            Drawable drawable1 = (Drawable) view1.getBackground();
+            drawable1.setColorFilter(getResources().getColor(R.color.blue), PorterDuff.Mode.MULTIPLY);
+            view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
 
-        view3.setBackgroundResource(R.color.white);
-        view3.setTextColor(getActivity().getResources().getColor(R.color.blue));
+            Drawable drawable2 = (Drawable) view2.getBackground();
+            drawable2.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
+            view2.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+
+            Drawable drawable3 = (Drawable) view3.getBackground();
+            drawable3.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
+            view3.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
+
+        }
     }
 
     @Override
@@ -2820,7 +2831,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             if(selectedvideouri!= null){
                 playpausebutton.setImageResource(R.drawable.pause);
                 player.start();
-                playpausebutton.setVisibility(View.GONE);
                 hdlr.postDelayed(UpdateSongTime, 100);
                 //player.setOnCompletionListener(this);
             }
@@ -2828,7 +2838,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 if(mediafilepath!=null){
                     playpausebutton.setImageResource(R.drawable.pause);
                     player.start();
-                    playpausebutton.setVisibility(View.GONE);
                     hdlr.postDelayed(UpdateSongTime, 100);
                     //player.setOnCompletionListener(this);
                 }
@@ -2839,7 +2848,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         if(player != null){
             playpausebutton.setImageResource(R.drawable.play_btn);
             player.pause();
-            playpausebutton.setVisibility(View.GONE);
         }
     }
 

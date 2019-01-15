@@ -858,11 +858,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void resetButtonViews(TextView view1, TextView view2, TextView view3)
     {
-
-
         if (Utils.getSDKInt() >= 18) {
             // fill drawable only supported on api level 18 and above
-
 
             Drawable drawable1 = (Drawable) view1.getBackground();
             drawable1.setColorFilter(getResources().getColor(R.color.blue), PorterDuff.Mode.MULTIPLY);
@@ -876,24 +873,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             drawable3.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
             view3.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
 
-
-
-           /* Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.leftround_btn);
-            drawable.setColorFilter(new
-                    PorterDuffColorFilter(getResources().getColor(R.color.blue), PorterDuff.Mode.MULTIPLY));*/
-
-
-
         }
-       /* view1.setBackgroundResource(R.color.blue);
-        view1.setTextColor(ContextCompat.getColor(getActivity(),R.color.white));
-
-        view2.setBackgroundResource(R.color.white);
-        view2.setTextColor(getActivity().getResources().getColor(R.color.blue));
-
-        view3.setBackgroundResource(R.color.white);
-        view3.setTextColor(getActivity().getResources().getColor(R.color.blue));*/
-
     }
 
     @Override
