@@ -51,8 +51,19 @@
             android:paddingRight="10dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:visibility="gone"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_settings"/>
+
+        <ImageView
+            android:id="@+id/img_warning_close"
+            android:layout_width="wrap_content"
+            android:padding="8dp"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/img_dotmenu"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:src="@drawable/ic_close"/>
 
     </RelativeLayout>
 

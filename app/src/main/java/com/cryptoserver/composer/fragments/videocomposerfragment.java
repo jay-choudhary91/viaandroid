@@ -325,7 +325,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txtSlot3,txt_metrics,txt_hashes,txt_title_actionbarcomposer,txt_media_quality;
     ScrollView scrollview_metrices,scrollview_hashes;
 
-    ImageView mrecordimagebutton,imgflashon,img_dotmenu,rotatecamera,handle;
+    ImageView mrecordimagebutton,imgflashon,img_dotmenu,rotatecamera,handle,img_warning_close;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -393,6 +393,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
+            img_warning_close = (ImageView) rootview.findViewById(R.id.img_warning_close);
 
            /* mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
             AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -527,6 +528,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             imgflashon.setOnClickListener(this);
             rotatecamera.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
+            img_warning_close.setOnClickListener(this);
 
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
@@ -1190,6 +1192,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         Intent intent = new Intent(config.broadcast_medialistnewitem);
         applicationviavideocomposer.getactivity().sendBroadcast(intent);
     }
+
+    public void updatewarningclosestatus()
+    {
+
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -1205,6 +1212,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
                 gethelper().addFragment(settingfrag, false, true);
+                break;
+
+            case R.id.img_warning_close:
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,5);
                 break;
 
             case R.id.img_rotate_camera:

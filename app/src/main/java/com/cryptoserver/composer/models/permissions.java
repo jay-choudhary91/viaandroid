@@ -8,12 +8,29 @@ public class permissions {
     public String permissionname="";
     public boolean ispermissionallowed=false;
     public boolean ispermissionskiped=false;
+    public boolean ispermissionviewed=false;
 
     public permissions(String permissionname,boolean ispermissionallowed,boolean ispermissionskiped)
     {
         this.permissionname=permissionname;
         this.ispermissionallowed=ispermissionallowed;
         this.ispermissionskiped=ispermissionskiped;
+    }
+
+    public permissions(String permissionname,boolean ispermissionallowed,boolean ispermissionskiped,boolean ispermissionviewed)
+    {
+        this.permissionname=permissionname;
+        this.ispermissionallowed=ispermissionallowed;
+        this.ispermissionskiped=ispermissionskiped;
+        this.ispermissionviewed=ispermissionviewed;
+    }
+
+    public boolean isIspermissionviewed() {
+        return ispermissionviewed;
+    }
+
+    public void setIspermissionviewed(boolean ispermissionviewed) {
+        this.ispermissionviewed = ispermissionviewed;
     }
 
     public String getPermissionname() {
