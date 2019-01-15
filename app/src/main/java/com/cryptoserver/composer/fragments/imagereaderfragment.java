@@ -1544,7 +1544,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 rotatecompass(degree);
             }
             lastsavedangle=strdegree;
-            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
         }
     }
 

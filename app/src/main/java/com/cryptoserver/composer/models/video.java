@@ -11,6 +11,7 @@ public class video
     public String path="";
     public String name="";
     public String createdate="";
+    public String createtime="";
     public String duration="";
     public String md5="";
     public String mimetype="";
@@ -197,6 +198,12 @@ public class video
         this.ischeck = ischeck;
     }
 
+    public String getCreatetime() {
+        return createtime;
+    }
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
 
 
 }

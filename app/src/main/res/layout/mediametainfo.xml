@@ -17,11 +17,9 @@
            android:visibility="visible"
            android:orientation="vertical">
 
-
            <com.cryptoserver.composer.views.customfonttextview
                android:id="@+id/txt_locationtracking"
                style="@style/txt_drawer_graphical_title"
-
                android:text="@string/locationtracking"
                app:fontType="Comfortaa-Regular"
                />

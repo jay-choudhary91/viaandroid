@@ -325,7 +325,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
 
-
     private RelativeLayout scurraberverticalbar;
     private String mediafilepath = null;
     private RelativeLayout showcontrollers;
@@ -430,6 +429,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             navigationdrawer.addDrawerListener(drawertoggle);
             drawertoggle.syncState();
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+
+            mediaseekbar.setPadding(0,0,0,0);
 
             handleimageview.setVisibility(View.GONE);
             playpausebutton.setImageResource(R.drawable.play);
@@ -906,13 +907,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         scrollview_metrices.setVisibility(View.INVISIBLE);
                         scrollview_hashes.setVisibility(View.INVISIBLE);
                         fragment_graphic_container.setVisibility(View.INVISIBLE);
-
                         txt_hashes.setVisibility(View.INVISIBLE);
                         txt_metrics.setVisibility(View.INVISIBLE);
-
                         recyview_metrices.setVisibility(View.VISIBLE);
                         recyview_hashes.setVisibility(View.INVISIBLE);
-
                         resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
                     }
 
@@ -2275,6 +2273,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             currentvideoduration = videoduration;
             currentvideodurationseconds = currentvideoduration / 1000;
             maxincreasevideoduration=videoduration;
+            playpausebutton.setImageResource(R.drawable.play_btn);
+            playpausebutton.setVisibility(View.VISIBLE);
+            mediaseekbar.setProgress(player.getCurrentPosition());
 
             if(layout_footer.getVisibility()==View.GONE){
                 videoSurface.setClickable(true);
@@ -2604,7 +2605,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 rotatecompass(degree);
             }
             lastsavedangle=strdegree;
-            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
         }
     }
 

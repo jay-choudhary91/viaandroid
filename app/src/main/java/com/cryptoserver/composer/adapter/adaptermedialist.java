@@ -32,8 +32,13 @@ import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 /**
  * Created by devesh on 6/8/18.
@@ -109,8 +114,24 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 }
             }
 
+            holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatetime());
+            holder.tvvideoduration.setText(arrayvideolist.get(position).getCreatedate());
 
-            holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatedate());
+           /* String datetime = arrayvideolist.get(position).getCreatedate();
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+            final Date startdate;
+            try {
+                startdate = format.parse(datetime);
+                String time = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+                String filecreateddate = new SimpleDateFormat("MM/dd/yyyy").format(startdate);
+
+                holder.tvvideocreatedate.setText(time);
+                holder.tvvideoduration.setText(filecreateddate);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }*/
+
             holder.tv_medianotes.setText(arrayvideolist.get(position).getMedianotes());
 
 
@@ -130,7 +151,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.tv_sync_status.setText("Status : " + arrayvideolist.get(position).getMediastatus());
             }
 
-            if (arrayvideolist.get(position).getmimetype().contains("image/"))
+           /* if (arrayvideolist.get(position).getmimetype().contains("image/"))
             {
                 holder.tvvideoduration.setText("");
                 holder.txt_pipesign.setVisibility(View.GONE);
@@ -139,7 +160,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             {
                 holder.txt_pipesign.setVisibility(View.VISIBLE);
                 holder.tvvideoduration.setText(arrayvideolist.get(position).getDuration());
-            }
+            }*/
 
             holder.edtvideoname.setEnabled(false);
             holder.edtvideoname.setClickable(false);
