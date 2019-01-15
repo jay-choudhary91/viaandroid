@@ -15,10 +15,10 @@
 
         <ImageView
             android:id="@+id/img_warning"
-            android:layout_width="40dp"
+            android:layout_width="45dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_warning"/>
+            android:src="@drawable/warning_icon"/>
 
         <com.cryptoserver.composer.views.customfonttextview
             app:fontType="OpenSans_Regular"
@@ -30,15 +30,25 @@
 
     </RelativeLayout>
 
-    <com.cryptoserver.composer.views.customfonttextview
-        android:id="@+id/txt_section_validating"
-        app:fontType="OpenSans_Regular"
-        style="@style/txt_no_gps_wifi"
-        android:gravity="right|center_vertical"
-        android:text="@string/validating"
-        android:paddingRight="10dp"
-        android:layout_marginLeft="40dp"
-        android:background="@drawable/gradient_validate_wifi_gps_yellow"/>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shimmer_duration="2000"
+        >
+
+        <com.cryptoserver.composer.views.customfonttextview
+            android:id="@+id/txt_section_validating"
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_no_gps_wifi"
+            android:gravity="right|center_vertical"
+            android:text="@string/validating"
+            android:paddingRight="10dp"
+            android:background="@color/yellow_background"/>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
 
 
 </LinearLayout>

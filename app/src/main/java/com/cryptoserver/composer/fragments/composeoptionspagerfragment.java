@@ -44,6 +44,7 @@ import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.views.pagercustomduration;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +79,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     RelativeLayout layout_section_heading;
     @BindView(R.id.txt_section_validating)
     TextView txt_section_validating;
+    @BindView(R.id.shimmer_view_container)
+    ShimmerFrameLayout shimmer_view_container;
+
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -121,6 +125,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             mrecordimagebutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
+            shimmer_view_container.startShimmer();
+
         }
         return rootview;
     }
@@ -242,6 +248,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        if(shimmer_view_container != null)
+            shimmer_view_container.stopShimmer();
+
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
     }

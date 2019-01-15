@@ -2793,6 +2793,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         {
             e.printStackTrace();
         }
+
+        if(mcontrollernavigator != null)
+            mcontrollernavigator.onItemClicked(null,1);
     }
 
     public void editabletext(){

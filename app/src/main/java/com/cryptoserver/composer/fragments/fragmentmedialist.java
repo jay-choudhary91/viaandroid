@@ -168,7 +168,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             e.printStackTrace();
         }
+
+        if(myhandler != null && myhandler != null)
+            myhandler.removeCallbacks(myrunnable);
     }
+
 
     @Override
     public void onResume() {
@@ -650,7 +654,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             }
                         });
                         setmediaadapter();
-                        resetmedialist();
+                        if (arrayvideolist != null && arrayvideolist.size() > 0)
+                        {
+                            getallmedialistfromdb();
+
+                           if(adaptermedialist != null && arrayvideolist.size() > 0)
+                                adaptermedialist.notifyDataSetChanged();
+
+                           if(adaptergrid != null && arrayvideolist.size() > 0)
+                               adaptergrid.notifyDataSetChanged();
+                        }
                     }
                 });
             }
@@ -728,6 +741,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     }
 
     public void resetmedialist(){
+
+        if(myhandler != null && myhandler != null)
+            myhandler.removeCallbacks(myrunnable);
+
         myhandler =new Handler();
         myrunnable = new Runnable() {
             @Override
@@ -735,8 +752,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                if (arrayvideolist != null && arrayvideolist.size() > 0)
                {
                        getallmedialistfromdb();
-                       if(adaptermedialist != null && arrayvideolist.size() > 0)
-                            adaptermedialist.notifyDataSetChanged();
+
+                       /*if(adaptermedialist != null && arrayvideolist.size() > 0)
+                            adaptermedialist.notifyDataSetChanged();*/
 
                  /* if(adaptergrid != null && arrayvideolist.size() > 0)
                        adaptergrid.notifyDataSetChanged();*/
@@ -1171,7 +1189,17 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         @Override
         public void onItemClicked(Object object, int type) {
-            if(type == 2)
+
+            if(type == 1)
+            {
+                if (arrayvideolist != null && arrayvideolist.size() > 0)
+                {
+                    getallmedialistfromdb();
+                    if(adaptermedialist != null && arrayvideolist.size() > 0)
+                        adaptermedialist.notifyDataSetChanged();
+                }
+            }
+            else if(type == 2)
             {
                 String filepath=(String)object;
                 if(arrayvideolist.size() > 0)

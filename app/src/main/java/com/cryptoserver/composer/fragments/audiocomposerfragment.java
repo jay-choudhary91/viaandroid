@@ -570,7 +570,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private void writeAudioDataToFile() {
         // Write the output audio in byte
         String filePath = gettempfile().getAbsolutePath();
-
         short sData[] = new short[BufferElements2Rec];
 
         FileOutputStream os = null;
@@ -584,7 +583,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         while (isaudiorecording) {
             // gets the voice output from microphone to byte format
             audiorecorder.read(sData, 0, BufferElements2Rec);
-            System.out.println("Short wirting to file" + sData.toString());
+            System.out.println("Short writing to file" + sData.toString());
             try {
                 // writes the data to file from buffer stores the voice buffer
                 byte data[] = short2byte(sData);
@@ -593,7 +592,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(isaudiorecording)
                 {
                     Log.e("Frame count ",""+mframetorecordcount);
-                    if(framegap == frameduration)
+                    if(framegap == frameduration || (mediakey.trim().isEmpty()))
                     {
                         if(mediakey.trim().isEmpty())
                         {
