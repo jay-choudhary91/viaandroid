@@ -391,6 +391,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             time = (TextView) rootview.findViewById(R.id.time);
             rlcontrollerview = (RelativeLayout) rootview.findViewById(R.id.rl_controllerview);
 
+            mediaseekbar.setPadding(0,0,0,0);
+
 
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
             navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -2073,7 +2075,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 rotatecompass(degree);
             }
             lastsavedangle=strdegree;
-            common.setspannable(getResources().getString(R.string.battery),"\n"+metricItemArraylist.getMetricTrackValue(), tvbattery);
         }
     }
 

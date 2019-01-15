@@ -2283,7 +2283,7 @@ public class common {
             custompermissiondialog.dismiss();
     }
 
-    /*public static void setspannable(String encryption_key, String encryption_value, TextView txt_encryption){
+    public static void setspannable(String encryption_key, String encryption_value, TextView txt_encryption){
 
         String encryptionstr =  encryption_key.concat(encryption_value);
        // int substring=encryptionblock.lastIndexOf(":");
@@ -2294,9 +2294,9 @@ public class common {
         encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txt_encryption.setText(encryptionstring);
-    }*/
+    }
 
-    public static void setspannable(String encryption_key, String encryption_value, TextView txt_encryption){
+    public static void setdrawabledata(String encryption_key, String encryption_value, TextView txt_encryption){
 
        // String encryptionstr =  encryption_key.concat(encryption_value);
        // int substring=encryptionblock.lastIndexOf(":");
@@ -2308,7 +2308,7 @@ public class common {
         encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 */
 
-       txt_encryption.setText(encryption_key + encryption_value);
+       txt_encryption.setText(encryption_key +" "+encryption_value);
     }
 
 

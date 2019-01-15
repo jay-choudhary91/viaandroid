@@ -545,6 +545,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     {
                         Date lastModDate = new Date(file.lastModified());
                         DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
+                        String time = new SimpleDateFormat("hh:mm:ss aa").format(lastModDate);
                         String outputdatestr = outputFormat.format(lastModDate);
 
                         if(! isexistinarraay(file.getName(),outputdatestr))
@@ -554,6 +555,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             videoobj.setExtension(common.getvideoextension(file.getAbsolutePath()));
                             videoobj.setName(file.getName());
                             videoobj.setCreatedate(outputdatestr);
+                            videoobj.setCreatetime(time);
                             videoobj.setLastmodifiedtime(file.lastModified());
                             videoobj.setDoenable(false);
 
@@ -570,6 +572,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     videoobj.setLocalkey(getdata[2]);
                                     videoobj.setMediatitle(getdata[4]);
                                     videoobj.setMedianotes(getdata[5]);
+                                    //videoobj.setCreatedatetime(getdata[6]);
+
                                     ismedia=true;
                                 }
                                 else
@@ -594,6 +598,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                                 videoobj.setThumbnailpath(getdata[3]);
                                                 videoobj.setMediatitle(getdata[4]);
                                                 videoobj.setMedianotes(getdata[5]);
+                                                //videoobj.setCreatedatetime(getdata[6]);
 
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                                     long seconds = format.getLong(MediaFormat.KEY_DURATION);
@@ -629,7 +634,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 videoobj.setGriditemheight(gridviewwidth);
                                 arrayvideolist.add(videoobj);
                             }
-
                         }
                     }
                     else
