@@ -1168,14 +1168,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     }else if(key.equalsIgnoreCase("celltowerid")){
                         if(info != null) {
 
-                            if(TelephonyManager.NETWORK_TYPE_LTE == networkType){
-                                CellIdentityLte identity = ((CellInfoLte) info).getCellIdentity();
-                                int celltowerid = identity.getCi();
-                                metricItemValue = "" + celltowerid;
-                            }else{
-                                CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
-                                int celltowerid = identityGsm.getCid();
-                                metricItemValue = "" + celltowerid;
+                            try{
+                                if(TelephonyManager.NETWORK_TYPE_LTE == networkType){
+                                    CellIdentityLte identity = ((CellInfoLte) info).getCellIdentity();
+                                    int celltowerid = identity.getCi();
+                                    metricItemValue = "" + celltowerid;
+                                }else{
+                                    CellIdentityGsm identityGsm = ((CellInfoGsm) info).getCellIdentity();
+                                    int celltowerid = identityGsm.getCid();
+                                    metricItemValue = "" + celltowerid;
+                                }
+                            }catch(Exception e){
+                                e.printStackTrace();
                             }
                         }
                     }

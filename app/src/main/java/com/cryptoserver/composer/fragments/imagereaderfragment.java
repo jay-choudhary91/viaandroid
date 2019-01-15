@@ -1046,10 +1046,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
                         metricmainarraylist.get(0).getValuehash(), metricmainarraylist.get(0).getMetahash());
 
-                common.setspannable(getResources().getString(R.string.blockchain_id),metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                common.setspannable(getResources().getString(R.string.block_id),metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                common.setspannable(getResources().getString(R.string.block_number),metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                common.setspannable(getResources().getString(R.string.metrichash),metricmainarraylist.get(0).getMetahash(), txt_metahash);
+                common.setspannable(getResources().getString(R.string.blockchain_id)," "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+                common.setspannable(getResources().getString(R.string.block_id)," "+metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
                 for (int j = 0; j < metricItemArraylist.size(); j++) {
                     selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
@@ -1233,12 +1233,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             DateFormat format = new SimpleDateFormat("dd- MM- yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
                             String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                            String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                            String filecreateddate = new SimpleDateFormat("MM/dd/yyyy").format(date);
+                            String filecreated = new SimpleDateFormat("yyyy-MM-dd").format(date);
 
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
                             tvtime.setText(time);
-                            txt_title_actionbarcomposer.setText(filecreateddate);
+                            txt_title_actionbarcomposer.setText(filecreated);
                         }
 
 
@@ -1261,12 +1262,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
                             String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                            String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(date);
-
+                            String filecreateddate = new SimpleDateFormat("MM/dd/yyyy").format(date);
+                            String filecreated = new SimpleDateFormat("yyyy-MM-dd").format(date);
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
                             tvtime.setText(time);
-                            txt_title_actionbarcomposer.setText(filecreateddate);
+                            txt_title_actionbarcomposer.setText(filecreated);
                         }
 
 
