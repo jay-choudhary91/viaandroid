@@ -22,27 +22,43 @@
             android:textColor="@color/white"
             app:fontType="OpenSans_Regular"/>
 
-        <ImageView
-            android:id="@+id/img_flash"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:visibility="gone"
-            android:src="@drawable/ic_no_flash_icon"/>
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <com.cryptoserver.composer.views.customfonttextview
-            android:id="@+id/txt_media_quality"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:layout_toRightOf="@id/img_flash"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:visibility="gone"
-            android:textColor="@color/white"
-            app:fontType="OpenSans_Regular"/>
+            <ImageView
+                android:id="@+id/img_flash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:src="@drawable/ic_no_flash_icon"/>
+
+            <com.cryptoserver.composer.views.customfonttextview
+                android:id="@+id/txt_media_quality"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:layout_marginLeft="10dp"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                app:fontType="OpenSans_Regular"/>
+
+            <ImageView
+                android:id="@+id/img_stop_watch"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:visibility="gone"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/stopwatch"/>
+
+        </LinearLayout>
+
+
 
         <ImageView
             android:id="@+id/img_dotmenu"

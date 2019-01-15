@@ -316,7 +316,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     /**
      * Whether the current camera device supports Flash or not.
      */
-    private boolean mFlashSupported;
+    private boolean mFlashSupported,brustmodeenabled=false;
 
     /**
      * Orientation of the camera sensor
@@ -331,7 +331,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     FrameLayout fragment_graphic_container;
 
 
-    ImageView imgflashon,rotatecamera,handle,img_dotmenu,img_warning,img_close;
+    ImageView imgflashon,rotatecamera,handle,img_dotmenu,img_warning,img_close,img_stop_watch;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -531,6 +531,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
+            img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
             img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
             img_close = (ImageView) rootview.findViewById(R.id.img_close);
             handle = (ImageView) rootview.findViewById(R.id.handle);
@@ -568,12 +569,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
+            img_stop_watch.setOnClickListener(this);
             img_warning.setOnClickListener(this);
             img_close.setOnClickListener(this);
             imglefthandle.setOnClickListener(this);
 
             img_dotmenu.setVisibility(View.GONE);
             imgflashon.setVisibility(View.VISIBLE);
+            img_stop_watch.setVisibility(View.VISIBLE);
             rl_containerview.setVisibility(View.GONE);
 
             flingactionmindstvac=common.getdrawerswipearea();
@@ -1251,15 +1254,27 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
+    public boolean isbrustmodeenabled()
+    {
+        if(brustmodeenabled)
+        {
+            brustmodeenabled=false;
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_image_capture: {
-
+            case R.id.img_image_capture:
                 takePicture();
-
                 break;
-            }
+
+            case R.id.img_stop_watch:
+                //brustmodeenabled=true;
+                break;
+
             case R.id.info: {
                 Activity activity = getActivity();
                 if (null != activity) {

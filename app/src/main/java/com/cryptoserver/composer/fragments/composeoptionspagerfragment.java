@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -103,6 +104,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private Handler myHandler;
     private Runnable myRunnable;
     private boolean showwarningsection=true;
+    private CountDownTimer countertimer;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -254,6 +256,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
+
+        if(countertimer != null)
+            countertimer.cancel();
     }
 
     public void showwarningsection(boolean showwarning)
@@ -408,8 +413,17 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 else if(currentselectedcomposer == 1)
                 {
                     if(fragimgcapture != null)
-                        fragimgcapture.takePicture();
-
+                    {
+                        if(fragimgcapture.isbrustmodeenabled())
+                        {
+                            startbrustcameratimer();
+                        }
+                        else
+                        {
+                            if(fragimgcapture != null)
+                                fragimgcapture.takePicture();
+                        }
+                    }
                 }
                 else if(currentselectedcomposer == 2)
                 {
@@ -441,6 +455,28 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 gethelper().onBack();
                 break;
         }
+    }
+
+    public void startbrustcameratimer()
+    {
+        if(countertimer != null)
+            countertimer.cancel();
+
+        countertimer=new CountDownTimer(10000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Log.e("Timer running", " Tick");
+
+            }
+
+            public void onFinish() {
+                if(countertimer != null)
+                    countertimer.cancel();
+
+                if(fragimgcapture != null)
+                    fragimgcapture.takePicture();
+            }
+        }.start();
     }
 
     public void medialistitemaddbroadcast()
