@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
@@ -733,27 +734,70 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             public void run() {
                if (arrayvideolist != null && arrayvideolist.size() > 0)
                {
-                       for(int i = 0 ;i < arrayvideolist.size();i++)
-                       {
-                           String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
-                           arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
-                           arrayvideolist.get(i).setThumbnailpath(getdata[3]);
-                           arrayvideolist.get(i).setMediatitle(getdata[4]);
-                           arrayvideolist.get(i).setMedianotes(getdata[5]);
-                       }
+                       getallmedialistfromdb();
                        if(adaptermedialist != null && arrayvideolist.size() > 0)
                             adaptermedialist.notifyDataSetChanged();
 
                  /* if(adaptergrid != null && arrayvideolist.size() > 0)
                        adaptergrid.notifyDataSetChanged();*/
                }
-                myhandler.postDelayed(this, 5000);
+                myhandler.postDelayed(this, 3000);
             }
         };
         myhandler.post(myrunnable);
     }
 
 
+    public void getallmedialistfromdb()
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        Cursor cursor = mdbhelper.getallmediastartdata();
+        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
+        {
+            do{
+
+                String location = "" + cursor.getString(cursor.getColumnIndex("location"));
+                String sync_status = "" + cursor.getString(cursor.getColumnIndex("sync_status"));
+                String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
+                String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
+                String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
+                String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
+                String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
+                for(int i=0;i<arrayvideolist.size();i++)
+                {
+                    if(common.getfilename(arrayvideolist.get(i).getPath()).equalsIgnoreCase(location))
+                    {
+                        arrayvideolist.get(i).setVideostarttransactionid(videostarttransactionid);
+                        arrayvideolist.get(i).setThumbnailpath(thumbnailurl);
+                        arrayvideolist.get(i).setMediatitle(media_name);
+                        arrayvideolist.get(i).setMedianotes(media_notes);
+                        break;
+                    }
+                }
+
+            }while(cursor.moveToNext());
+        }
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public String[] getlocalkey(String filename)
     {

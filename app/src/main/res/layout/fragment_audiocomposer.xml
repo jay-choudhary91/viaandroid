@@ -18,21 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/linear_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
 
-
-                <include layout="@layout/action_bar_composer"></include>
-            </LinearLayout>
 
             <com.cryptoserver.composer.utils.visualizeraudiorecorder
                 android:id="@+id/myvisualizerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/linear_header"
                 android:background="@color/audio_composer_bg"/>
 
 
@@ -107,17 +98,15 @@
 
     </com.cryptoserver.composer.utils.FullDrawerLayout>
 
-    <com.cryptoserver.composer.views.customfonttextview
-        android:id="@+id/txt_timer"
+    <LinearLayout
+        android:id="@+id/linear_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:text=""
-        android:layout_marginTop="10dp"
-        android:layout_centerInParent="true"
-        android:textColor="@color/white"
-        app:fontType="OpenSans_Regular"/>
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
+
+        <include layout="@layout/action_bar_composer"></include>
+    </LinearLayout>
 
 </RelativeLayout>

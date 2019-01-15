@@ -692,7 +692,6 @@ public class databasemanager {
     }
 
     public Cursor getallmediastartdata() {
-        String[] localkey ={"",""};
         Cursor cur=null;
         try {
             lock.lock();

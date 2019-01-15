@@ -6,9 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
+        android:id="@+id/layout_section_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+
         android:orientation="horizontal">
 
         <ImageView
@@ -16,7 +18,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/warning_icon"/>
+            android:background="@drawable/ic_warning"/>
 
         <com.cryptoserver.composer.views.customfonttextview
             app:fontType="OpenSans_Regular"
@@ -29,6 +31,7 @@
     </RelativeLayout>
 
     <com.cryptoserver.composer.views.customfonttextview
+        android:id="@+id/txt_section_validating"
         app:fontType="OpenSans_Regular"
         style="@style/txt_no_gps_wifi"
         android:gravity="right|center_vertical"

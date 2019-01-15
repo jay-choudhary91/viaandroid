@@ -331,7 +331,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     FrameLayout fragment_graphic_container;
 
 
-    ImageView imgflashon,rotatecamera,handle,img_dotmenu;
+    ImageView imgflashon,rotatecamera,handle,img_dotmenu,img_warning,img_close;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -531,8 +531,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
-
-
+            img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
+            img_close = (ImageView) rootview.findViewById(R.id.img_close);
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
@@ -568,9 +568,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
+            img_warning.setOnClickListener(this);
+            img_close.setOnClickListener(this);
             imglefthandle.setOnClickListener(this);
 
-            img_dotmenu.setVisibility(View.VISIBLE);
+            img_dotmenu.setVisibility(View.GONE);
             imgflashon.setVisibility(View.VISIBLE);
             rl_containerview.setVisibility(View.GONE);
 
@@ -1284,6 +1286,64 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             case R.id.img_rotate_camera:
                 switchCamera();
                 break;
+
+            case R.id.img_warning:
+
+                img_warning.setVisibility(View.GONE);
+                img_close.setVisibility(View.VISIBLE);
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,5);
+                break;
+
+            case R.id.img_close:
+                img_warning.setVisibility(View.VISIBLE);
+                img_close.setVisibility(View.GONE);
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,6);
+                break;
+        }
+    }
+
+    public void showwarningorclosebutton()
+    {
+        if(img_warning == null || img_close == null)
+            return;
+
+        if(img_warning.getVisibility() == View.VISIBLE || img_close.getVisibility() == View.VISIBLE)
+        {
+
+        }
+        else
+        {
+            img_warning.setVisibility(View.GONE);
+            img_close.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void hideallsection() {
+        if (img_warning == null || img_close == null)
+            return;
+
+        img_warning.setVisibility(View.GONE);
+        img_close.setVisibility(View.GONE);
+    }
+
+    public void showwarningsection(boolean showwarningsection)
+    {
+        if(img_warning == null || img_close == null)
+            return;
+
+        if(showwarningsection)
+        {
+            img_warning.setVisibility(View.GONE);
+            img_close.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            img_warning.setVisibility(View.VISIBLE);
+            img_close.setVisibility(View.GONE);
         }
     }
 
