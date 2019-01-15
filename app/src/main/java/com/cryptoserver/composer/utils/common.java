@@ -1165,7 +1165,8 @@ public class common {
         String[] neededpermissions = {
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA
         };
         List<String> deniedpermissions = new ArrayList<>();
         for (String permission : neededpermissions) {
@@ -2239,7 +2240,7 @@ public class common {
         else if(permission.equalsIgnoreCase(Manifest.permission.ACCESS_COARSE_LOCATION) ||
                 permission.equalsIgnoreCase(Manifest.permission.ACCESS_FINE_LOCATION))
         {
-            logo_icon.setImageResource(R.drawable.permission_location);
+            logo_icon.setImageResource(R.drawable.location_icon);
             txt_permission_title.setText(context.getResources().getString(R.string.deeptruth_current_location));
             txt_permission_desc.setText(context.getResources().getString(R.string.your_current_location));
         }

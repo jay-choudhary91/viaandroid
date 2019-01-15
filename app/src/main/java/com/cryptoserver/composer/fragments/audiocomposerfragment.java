@@ -97,12 +97,14 @@ import butterknife.ButterKnife;
 
 public class audiocomposerfragment extends basefragment  implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback, View.OnTouchListener {
 
-    @BindView(R.id.txt_timer)
-    TextView txt_timer;
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
     @BindView(R.id.img_capture)
     ImageView img_capture;
+    @BindView(R.id.img_warning)
+    ImageView img_warning;
+    @BindView(R.id.img_close)
+    ImageView img_close;
     @BindView(R.id.myvisualizerview)
     visualizeraudiorecorder myvisualizerview;
     @BindView(R.id.layout_drawertouchable)
@@ -221,6 +223,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             layout_drawertouchable.setOnTouchListener(this);
             rl_containerview.setVisibility(View.GONE);
 
+            img_warning.setOnClickListener(this);
+            img_close.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             imglefthandle.setOnClickListener(this);
 
@@ -386,6 +390,64 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 break;
             }
 
+            case R.id.img_warning:
+
+                img_warning.setVisibility(View.GONE);
+                img_close.setVisibility(View.VISIBLE);
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,5);
+                break;
+
+            case R.id.img_close:
+                img_warning.setVisibility(View.VISIBLE);
+                img_close.setVisibility(View.GONE);
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,6);
+                break;
+
+        }
+    }
+
+    public void showwarningorclosebutton()
+    {
+        if(img_warning == null || img_close == null)
+            return;
+
+        if(img_warning.getVisibility() == View.VISIBLE || img_close.getVisibility() == View.VISIBLE)
+        {
+
+        }
+        else
+        {
+            img_warning.setVisibility(View.GONE);
+            img_close.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void hideallsection() {
+        if (img_warning == null || img_close == null)
+            return;
+
+        img_warning.setVisibility(View.GONE);
+        img_close.setVisibility(View.GONE);
+    }
+
+    public void showwarningsection(boolean showwarningsection)
+    {
+        if(img_warning == null || img_close == null)
+            return;
+
+        if(showwarningsection)
+        {
+            img_warning.setVisibility(View.GONE);
+            img_close.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            img_warning.setVisibility(View.VISIBLE);
+            img_close.setVisibility(View.GONE);
         }
     }
 
@@ -508,7 +570,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private void writeAudioDataToFile() {
         // Write the output audio in byte
         String filePath = gettempfile().getAbsolutePath();
-
         short sData[] = new short[BufferElements2Rec];
 
         FileOutputStream os = null;
@@ -522,7 +583,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         while (isaudiorecording) {
             // gets the voice output from microphone to byte format
             audiorecorder.read(sData, 0, BufferElements2Rec);
-            System.out.println("Short wirting to file" + sData.toString());
+            System.out.println("Short writing to file" + sData.toString());
             try {
                 // writes the data to file from buffer stores the voice buffer
                 byte data[] = short2byte(sData);
@@ -531,7 +592,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(isaudiorecording)
                 {
                     Log.e("Frame count ",""+mframetorecordcount);
-                    if(framegap == frameduration)
+                    if(framegap == frameduration || (mediakey.trim().isEmpty()))
                     {
                         if(mediakey.trim().isEmpty())
                         {

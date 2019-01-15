@@ -101,6 +101,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         if(arrayvideolist.get(position).isDoenable())
         {
             holder.root_view.setVisibility(View.VISIBLE);
+            if(arrayvideolist.get(position).getMediatitle().trim().isEmpty())
+                arrayvideolist.get(position).setMediatitle(common.getfilename(arrayvideolist.get(position).getPath()));
+
             if(arrayvideolist.get(position).getMediatitle() != null && (! arrayvideolist.get(position).getMediatitle().equalsIgnoreCase("null")
                         && (! arrayvideolist.get(position).getMediatitle().trim().isEmpty())))
             {

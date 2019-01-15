@@ -5,16 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaExtractor;
-import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
@@ -26,8 +25,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,25 +36,21 @@ import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
+import com.cryptoserver.composer.activity.locationawareactivity;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.permissions;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.views.pageranimation;
+import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.views.pagercustomduration;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,11 +70,19 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ImageView imgrotatecamera;
     @BindView(R.id.layout_bottom)
     RelativeLayout layoutbottom;
-
     @BindView(R.id.tab_container)
     FrameLayout tab_container;
     @BindView(R.id.img_mediathumbnail)
     ImageView img_mediathumbnail;
+    @BindView(R.id.layout_no_gps_wifi)
+    LinearLayout layout_no_gps_wifi;
+    @BindView(R.id.layout_section_heading)
+    RelativeLayout layout_section_heading;
+    @BindView(R.id.txt_section_validating)
+    TextView txt_section_validating;
+    @BindView(R.id.shimmer_view_container)
+    ShimmerFrameLayout shimmer_view_container;
+
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -100,6 +101,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ArrayList<String> imagearraylist =new ArrayList<>();
     ArrayList<String> videoarraylist =new ArrayList<>();
     ArrayList<String> audioarraylist =new ArrayList<>();
+    private Handler myHandler;
+    private Runnable myRunnable;
+    private boolean showwarningsection=true;
+    private CountDownTimer countertimer;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -122,6 +127,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             mrecordimagebutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
+            shimmer_view_container.startShimmer();
+
         }
         return rootview;
     }
@@ -135,7 +142,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         } else {
             if(permissionslist.size() == 0)
             {
-                permissionslist.add(new permissions(Manifest.permission.CAMERA,false,false));
                 permissionslist.add(new permissions(Manifest.permission.ACCESS_COARSE_LOCATION,false,false));
                 permissionslist.add(new permissions(Manifest.permission.ACCESS_FINE_LOCATION,false,false));
             }
@@ -156,7 +162,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             if (deniedpermissions.isEmpty()) {
                 // All permissions are granted
-                doafterallpermissionsgranted();
+                doafterpermissionsgranteddenied();
             } else {
                 //String[] array = new String[deniedpermissions.size()];
 
@@ -184,6 +190,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                                     }
                                 }
                             }
+                            doafterpermissionsgranteddenied();
                         }
                         else if(type == 1)
                         {
@@ -211,7 +218,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 doafterallpermissionsgranted = new Runnable() {
                     @Override
                     public void run() {
-                        doafterallpermissionsgranted();
+                        doafterpermissionsgranteddenied();
                     }
                 };
             } else {
@@ -226,16 +233,117 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    private void doafterallpermissionsgranted() {
-        if(fragvideocomposer == null)
-        {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
+    private void doafterpermissionsgranteddenied() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if(fragaudiocomposer == null && locationawareactivity.checkCameraPermission(applicationviavideocomposer.getactivity()))
+                {
+                    runhandler();
                     initviewpager();
                 }
-            },10);
+            }
+        },10);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if(shimmer_view_container != null)
+            shimmer_view_container.stopShimmer();
+
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        if(countertimer != null)
+            countertimer.cancel();
+    }
+
+    public void showwarningsection(boolean showwarning)
+    {
+        if(showwarning)
+        {
+            layout_section_heading.setVisibility(View.VISIBLE);
+            showwarningsection=true;
         }
+        else
+        {
+            layout_section_heading.setVisibility(View.GONE);
+            showwarningsection=false;
+        }
+    }
+
+    public void runhandler()
+    {
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
+        myHandler =new Handler();
+        myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    /*if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
+                            xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+                    {
+                        if(layout_no_gps_wifi != null)
+                            layout_no_gps_wifi.setVisibility(View.VISIBLE);
+                    }*/
+                    if(! locationawareactivity.checkPermission(applicationviavideocomposer.getactivity()))
+                    {
+                        if(permissionslist.size() >= 2)
+                        {
+                            if(permissionslist.get(0).isIspermissionskiped() || permissionslist.get(1).isIspermissionskiped())
+                            {
+                                if(layout_no_gps_wifi != null)
+                                    layout_no_gps_wifi.setVisibility(View.VISIBLE);
+
+                                if(fragvideocomposer != null)
+                                {
+                                    fragvideocomposer.showwarningorclosebutton();
+                                    fragvideocomposer.showwarningsection(showwarningsection);
+                                }
+
+                                if(fragaudiocomposer != null)
+                                {
+                                    fragaudiocomposer.showwarningorclosebutton();
+                                    fragaudiocomposer.showwarningsection(showwarningsection);
+                                }
+
+                                if(fragimgcapture != null)
+                                {
+                                    fragimgcapture.showwarningorclosebutton();
+                                    fragimgcapture.showwarningsection(showwarningsection);
+                                }
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(layout_no_gps_wifi != null)
+                            layout_no_gps_wifi.setVisibility(View.GONE);
+
+                        if(fragvideocomposer != null)
+                            fragvideocomposer.hideallsection();
+
+                        if(fragaudiocomposer != null)
+                            fragaudiocomposer.hideallsection();
+
+                        if(fragimgcapture != null)
+                            fragimgcapture.hideallsection();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                myHandler.postDelayed(this, 1000);
+            }
+        };
+        myHandler.post(myRunnable);
     }
 
     public void initviewpager()
@@ -305,8 +413,17 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 else if(currentselectedcomposer == 1)
                 {
                     if(fragimgcapture != null)
-                        fragimgcapture.takePicture();
-
+                    {
+                        if(fragimgcapture.isbrustmodeenabled())
+                        {
+                            startbrustcameratimer();
+                        }
+                        else
+                        {
+                            if(fragimgcapture != null)
+                                fragimgcapture.takePicture();
+                        }
+                    }
                 }
                 else if(currentselectedcomposer == 2)
                 {
@@ -338,6 +455,28 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 gethelper().onBack();
                 break;
         }
+    }
+
+    public void startbrustcameratimer()
+    {
+        if(countertimer != null)
+            countertimer.cancel();
+
+        countertimer=new CountDownTimer(10000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                Log.e("Timer running", " Tick");
+
+            }
+
+            public void onFinish() {
+                if(countertimer != null)
+                    countertimer.cancel();
+
+                if(fragimgcapture != null)
+                    fragimgcapture.takePicture();
+            }
+        }.start();
     }
 
     public void medialistitemaddbroadcast()
@@ -493,6 +632,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     e.printStackTrace();
                 }
                 gethelper().onBack();
+            }
+            else if(type == 5) // For swipe gesture to change fragment
+            {
+                showwarningsection(true);
+            }
+            else if(type == 6) // For swipe gesture to change fragment
+            {
+                showwarningsection(false);
             }
         }
     };

@@ -324,7 +324,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     TextView txt_title_actionbarcomposer,txt_media_quality;
 
-    ImageView mrecordimagebutton,imgflashon,img_dotmenu,rotatecamera,handle;
+    ImageView mrecordimagebutton,imgflashon,img_dotmenu,img_warning,img_close,rotatecamera,handle;
 
     ImageView imglefthandle;
 
@@ -391,6 +391,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
             rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
+            img_warning = (ImageView) rootview.findViewById(R.id.img_warning);
+            img_close = (ImageView) rootview.findViewById(R.id.img_close);
             imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
 
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
@@ -461,6 +463,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             imgflashon.setOnClickListener(this);
             rotatecamera.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
+            img_warning.setOnClickListener(this);
+            img_close.setOnClickListener(this);
             fragment_graphic_container.setVisibility(View.VISIBLE);
 
 
@@ -960,10 +964,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_video_capture: {
+            case R.id.img_video_capture:
                 startstopvideo();
                 break;
-            }
 
             case R.id.img_flash:
                 navigateflash();
@@ -981,6 +984,64 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             case R.id.img_rotate_camera:
                 switchCamera();
                 break;
+
+            case R.id.img_warning:
+
+                img_warning.setVisibility(View.GONE);
+                img_close.setVisibility(View.VISIBLE);
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,5);
+                break;
+
+            case R.id.img_close:
+                img_warning.setVisibility(View.VISIBLE);
+                img_close.setVisibility(View.GONE);
+
+                if(madapterclick != null)
+                    madapterclick.onItemClicked(null,6);
+                break;
+        }
+    }
+
+    public void showwarningorclosebutton()
+    {
+        if(img_warning == null || img_close == null)
+            return;
+
+        if(img_warning.getVisibility() == View.VISIBLE || img_close.getVisibility() == View.VISIBLE)
+        {
+
+        }
+        else
+        {
+            img_warning.setVisibility(View.GONE);
+            img_close.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void hideallsection() {
+        if (img_warning == null || img_close == null)
+            return;
+
+        img_warning.setVisibility(View.GONE);
+        img_close.setVisibility(View.GONE);
+    }
+
+    public void showwarningsection(boolean showwarningsection)
+    {
+        if(img_warning == null || img_close == null)
+            return;
+
+        if(showwarningsection)
+        {
+            img_warning.setVisibility(View.GONE);
+            img_close.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            img_warning.setVisibility(View.VISIBLE);
+            img_close.setVisibility(View.GONE);
         }
     }
 
@@ -1082,8 +1143,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(permissionslist.size() == 0)
             {
                 permissionslist.add(new permissions(Manifest.permission.CAMERA,false,false));
-                permissionslist.add(new permissions(Manifest.permission.ACCESS_COARSE_LOCATION,false,false));
-                permissionslist.add(new permissions(Manifest.permission.ACCESS_FINE_LOCATION,false,false));
             }
             List<String> deniedpermissions = new ArrayList<>();
             for(int i=0;i<permissionslist.size();i++)

@@ -1732,6 +1732,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
+
+        if(mcontrollernavigator != null)
+            mcontrollernavigator.onItemClicked(null,1);
     }
 
     public void setdata(adapteritemclick mcontrollernavigator) {

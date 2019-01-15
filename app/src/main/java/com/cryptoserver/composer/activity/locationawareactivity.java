@@ -408,6 +408,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
+    public static boolean checkCameraPermission(final Context context) {
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+    }
+
 
     @Override
     protected void onDestroy() {

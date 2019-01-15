@@ -48,7 +48,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
 
         if(! myfolder.isIsplus())
         {
-            holder.img_mediathumbnail.setImageResource(R.drawable.javed_akhtar);
+            holder.img_mediathumbnail.setImageResource(R.mipmap.app_icon);
             holder.img_mediathumbnail.setVisibility(View.VISIBLE);
             holder.img_plus_icon.setVisibility(View.GONE);
         }

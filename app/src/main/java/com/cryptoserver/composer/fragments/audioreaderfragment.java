@@ -2256,6 +2256,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
+
+        if(mcontrollernavigator != null)
+            mcontrollernavigator.onItemClicked(null,1);
     }
 
     public void setdata(adapteritemclick mcontrollernavigator) {
