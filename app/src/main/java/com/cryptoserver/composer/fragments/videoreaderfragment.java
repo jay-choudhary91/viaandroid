@@ -718,6 +718,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             // attaching data adaptermedialist to spinner
             photospinner.setAdapter(dataAdapter);
 
+            mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
 
             edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
@@ -2427,7 +2428,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     }
 
     public void setupvideodata() {
-        mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
+
         tvsize.setText(common.filesize(mediafilepath));
         playpausebutton.setImageResource(R.drawable.play);
         position = 0;
