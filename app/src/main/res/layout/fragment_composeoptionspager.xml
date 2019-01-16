@@ -15,6 +15,17 @@
 
     </FrameLayout>
 
+    <com.cryptoserver.composer.views.customfonttextview
+        android:id="@+id/txt_timer"
+        app:fontType="OpenSans_Regular"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        android:textSize="70sp"
+        android:text=""/>
 
     <RelativeLayout
         android:id="@+id/layout_bottom"
@@ -74,6 +85,7 @@
         </com.cryptoserver.composer.views.pagercustomduration>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/layout_no_gps_wifi"

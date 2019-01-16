@@ -1272,7 +1272,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 break;
 
             case R.id.img_stop_watch:
-                //brustmodeenabled=true;
+                brustmodeenabled=true;
                 break;
 
             case R.id.info: {

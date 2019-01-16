@@ -1,9 +1,14 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaExtractor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,6 +69,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     @BindView(R.id.pager_footer)
     pagercustomduration pagerfooter;
+    @BindView(R.id.txt_timer)
+    TextView txt_timer;
 
     @BindView(R.id.img_video_capture)
     ImageView mrecordimagebutton;
@@ -464,21 +472,57 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(countertimer != null)
             countertimer.cancel();
 
-        countertimer=new CountDownTimer(10000, 1000) {
+        txt_timer.setVisibility(View.VISIBLE);
+
+        countertimer=new CountDownTimer(21000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 Log.e("Timer running", " Tick");
+                millisUntilFinished=millisUntilFinished-10000;
+                int lefttime=(int)(millisUntilFinished/1000);
+                txt_timer.setText(""+lefttime);
+                if(lefttime == 0)
+                {
+                    if(countertimer != null)
+                        countertimer.cancel();
 
+                    cameracaptureeffect();
+                }
             }
 
             public void onFinish() {
                 if(countertimer != null)
                     countertimer.cancel();
+            }
+        }.start();
+    }
+
+    private void cameracaptureeffect() {
+        ObjectAnimator animation = ObjectAnimator.ofInt(txt_timer, "backgroundColor", Color.WHITE);
+        animation.setDuration(50);
+        animation.setEvaluator(new ArgbEvaluator());
+        animation.setRepeatCount(Animation.RELATIVE_TO_SELF);
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                txt_timer.setVisibility(View.GONE);
 
                 if(fragimgcapture != null)
                     fragimgcapture.takePicture();
             }
-        }.start();
+
+            @Override
+            public void onAnimationEnd(Animator animation, boolean isReverse) {
+
+            }
+        });
+        animation.start();
     }
 
     public void medialistitemaddbroadcast()
