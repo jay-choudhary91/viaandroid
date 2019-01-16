@@ -2,15 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.cryptoserver.composer.views.customfonttextview
         android:id="@+id/txt_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|top"
         android:textSize="14sp"
+        android:background="@color/red"
         android:text=""
         android:layout_centerVertical="true"
         android:textColor="@color/white"

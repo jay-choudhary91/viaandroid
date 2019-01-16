@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -106,6 +107,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private static final int request_permissions = 1;
     ArrayList<permissions> permissionslist =new ArrayList<>();
 
+    String[] pagerelements={"VIDEO","PHOTO","AUDIO"};
     ArrayList<String> imagearraylist =new ArrayList<>();
     ArrayList<String> videoarraylist =new ArrayList<>();
     ArrayList<String> audioarraylist =new ArrayList<>();
@@ -362,15 +364,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
 
         flingactionmindstvac=common.getcomposerswipearea();
-        //pagerfooter.setPageTransformer(false, new pageranimation());
 
-        //pagerheader.setAdapter(headeradapter);
-        pagerfooter.setAdapter(new footerpageradapter(getChildFragmentManager()));
+        pagerfooter.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
+        pagerfooter.setOffscreenPageLimit(3);
+        int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),150);
+        pagerfooter.setPageMargin(0-margin);
 
+        /*pagerfooter.setAdapter(new footerpageradapter(getChildFragmentManager()));
         pagerfooter.setOffscreenPageLimit(3);
         int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),180);
         pagerfooter.setPageMargin(0-margin);
-
         pagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -395,9 +398,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         pagerfooter.setOnItemClickListener(new pagercustomduration.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                pagerfooter.setCurrentItem(position,true);
+                Toast.makeText(getActivity(),"clicked "+position,Toast.LENGTH_SHORT).show();
+                //pagerfooter.setCurrentItem(position,true);
             }
-        });
+        });*/
 
         currentselectedcomposer=config.selectedmediatype;
         showselectedfragment();
@@ -828,5 +832,55 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         public int getCount() {
             return pageritems;
         }
+    }
+
+    //==========================================================================================================================
+
+    public class CustomPagerAdapter extends PagerAdapter {
+
+        private Context mContext;
+
+        public CustomPagerAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup collection, final int position) {
+
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.adapter_composefooter, collection, false);
+            TextView txt_content=(TextView)layout.findViewById(R.id.txt_content);
+            txt_content.setText(pagerelements[position]);
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pagerfooter.setCurrentItem(position,true);
+                    Toast.makeText(getActivity(),""+position,Toast.LENGTH_SHORT).show();
+                }
+            });
+            collection.addView(layout);
+            return layout;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup collection, int position, Object view) {
+            collection.removeView((View) view);
+        }
+
+        @Override
+        public int getCount() {
+            return pagerelements.length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return pagerelements[position];
+        }
+
     }
 }
