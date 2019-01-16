@@ -192,7 +192,11 @@
                                 android:layout_below="@+id/layout_scrubberview"
                                 android:layout_marginLeft="@dimen/margin_15dp"
                                 android:layout_marginRight="@dimen/margin_15dp"
-                                android:thumbOffset="0dp" />
+                                android:thumbOffset="0dp"
+                                android:indeterminate="false"
+                                android:minHeight="20dp"
+                                android:thumb="@drawable/custom_thumb"
+                                android:maxHeight="30dp"/>
 
                             <com.cryptoserver.composer.views.customfonttextview
                                 android:id="@+id/time_current"

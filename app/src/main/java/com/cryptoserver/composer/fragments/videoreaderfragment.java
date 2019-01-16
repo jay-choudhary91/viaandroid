@@ -484,13 +484,13 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
-          thumbview  = LayoutInflater.from(getActivity()).inflate(R.layout.seekbar_thumb_layout, null, false);
+       //   thumbview  = LayoutInflater.from(getActivity()).inflate(R.layout.seekbar_thumb_layout, null, false);
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
 
                 @Override
                 public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
-                    seekBar.setThumb(getThumb(progress));
+                 //   seekBar.setThumb(getThumb(progress));
                 }
 
                 @Override
