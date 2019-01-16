@@ -575,7 +575,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             img_close.setOnClickListener(this);
             imglefthandle.setOnClickListener(this);
 
-            img_dotmenu.setVisibility(View.GONE);
+            img_dotmenu.setVisibility(View.VISIBLE);
             imgflashon.setVisibility(View.VISIBLE);
             img_stop_watch.setVisibility(View.VISIBLE);
             rl_containerview.setVisibility(View.GONE);

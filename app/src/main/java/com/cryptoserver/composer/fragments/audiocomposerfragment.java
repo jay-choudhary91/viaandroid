@@ -222,6 +222,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             timerhandler = new Handler() ;
             layout_drawertouchable.setOnTouchListener(this);
             rl_containerview.setVisibility(View.GONE);
+            img_dotmenu.setVisibility(View.VISIBLE);
 
             img_warning.setOnClickListener(this);
             img_close.setOnClickListener(this);

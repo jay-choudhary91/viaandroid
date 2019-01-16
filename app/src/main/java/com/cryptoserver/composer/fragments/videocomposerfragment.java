@@ -455,6 +455,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 keytype=config.prefs_sha_salt;
             }
 
+            img_dotmenu.setVisibility(View.VISIBLE);
             mTextureView.setOnTouchListener(this);
 
             imglefthandle.setOnClickListener(this);
