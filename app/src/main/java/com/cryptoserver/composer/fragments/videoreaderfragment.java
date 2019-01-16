@@ -11,7 +11,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.AudioManager;
@@ -318,6 +322,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     GoogleMap mgooglemap;
 
+    View  thumbview;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
@@ -479,13 +484,13 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
-
+          thumbview  = LayoutInflater.from(getActivity()).inflate(R.layout.seekbar_thumb_layout, null, false);
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
 
                 @Override
                 public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
-
+                    seekBar.setThumb(getThumb(progress));
                 }
 
                 @Override
@@ -2913,4 +2918,16 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             }
         },100);
     }
+    public Drawable getThumb(int progress) {
+        ((TextView) thumbview.findViewById(R.id.tvProgress)).setText(progress + "");
+
+        thumbview.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        Bitmap bitmap = Bitmap.createBitmap(thumbview.getMeasuredWidth(), thumbview.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        thumbview.layout(0, 0, thumbview.getMeasuredWidth(), thumbview.getMeasuredHeight());
+        thumbview.draw(canvas);
+
+        return new BitmapDrawable(getResources(), bitmap);
+    }
+
 }

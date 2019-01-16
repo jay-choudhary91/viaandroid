@@ -18,7 +18,7 @@
                     android:drawable="@android:color/transparent" />
                 <item>
                     <shape android:shape="rectangle"
-                        android:tint="@color/black">
+                        android:tint="@color/white">
                         <corners android:radius="8dp"/>
                         <size android:height="2dp" />
                         <solid android:color="@color/black" />
