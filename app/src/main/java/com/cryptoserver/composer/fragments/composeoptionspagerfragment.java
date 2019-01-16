@@ -275,6 +275,29 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
+    public void visibleview(){
+        if(layout_no_gps_wifi != null)
+            layout_no_gps_wifi.setVisibility(View.VISIBLE);
+
+        if(fragvideocomposer != null)
+        {
+            fragvideocomposer.showwarningorclosebutton();
+            fragvideocomposer.showwarningsection(showwarningsection);
+        }
+
+        if(fragaudiocomposer != null)
+        {
+            fragaudiocomposer.showwarningorclosebutton();
+            fragaudiocomposer.showwarningsection(showwarningsection);
+        }
+
+        if(fragimgcapture != null)
+        {
+            fragimgcapture.showwarningorclosebutton();
+            fragimgcapture.showwarningsection(showwarningsection);
+        }
+    }
+
     public void runhandler()
     {
         if(myHandler != null && myRunnable != null)
@@ -286,39 +309,18 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             public void run() {
 
                 try {
-                    /*if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
+                    if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
-                        if(layout_no_gps_wifi != null)
-                            layout_no_gps_wifi.setVisibility(View.VISIBLE);
-                    }*/
-                    if(! locationawareactivity.checkPermission(applicationviavideocomposer.getactivity()))
+                        visibleview();
+                    }
+                    else if(! locationawareactivity.checkPermission(applicationviavideocomposer.getactivity()))
                     {
                         if(permissionslist.size() >= 2)
                         {
                             if(permissionslist.get(0).isIspermissionskiped() || permissionslist.get(1).isIspermissionskiped())
                             {
-                                if(layout_no_gps_wifi != null)
-                                    layout_no_gps_wifi.setVisibility(View.VISIBLE);
-
-                                if(fragvideocomposer != null)
-                                {
-                                    fragvideocomposer.showwarningorclosebutton();
-                                    fragvideocomposer.showwarningsection(showwarningsection);
-                                }
-
-                                if(fragaudiocomposer != null)
-                                {
-                                    fragaudiocomposer.showwarningorclosebutton();
-                                    fragaudiocomposer.showwarningsection(showwarningsection);
-                                }
-
-                                if(fragimgcapture != null)
-                                {
-                                    fragimgcapture.showwarningorclosebutton();
-                                    fragimgcapture.showwarningsection(showwarningsection);
-                                }
-
+                                visibleview();
                             }
                         }
                     }
