@@ -2836,14 +2836,14 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             if(selectedvideouri!= null){
                 playpausebutton.setImageResource(R.drawable.pause);
                 player.start();
-                hdlr.postDelayed(UpdateSongTime, 100);
+                hdlr.postDelayed(UpdateSongTime, 10);
                 //player.setOnCompletionListener(this);
             }
             else{
                 if(mediafilepath!=null){
                     playpausebutton.setImageResource(R.drawable.pause);
                     player.start();
-                    hdlr.postDelayed(UpdateSongTime, 100);
+                    hdlr.postDelayed(UpdateSongTime, 10);
                     //player.setOnCompletionListener(this);
                 }
             }
@@ -2876,7 +2876,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                 if (time_current != null)
                     time_current.setText(stringForTime(videostarttime));
-                hdlr.postDelayed(this, 100);
+                hdlr.postDelayed(this, 10);
             }
         }
     };
@@ -2916,7 +2916,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 mediaseekbar.setMax(endtime);
                 mediaseekbar.setProgress(videostarttime);
             }
-        },100);
+        },10);
     }
     public Drawable getThumb(int progress) {
         ((TextView) thumbview.findViewById(R.id.tvProgress)).setText(progress + "");

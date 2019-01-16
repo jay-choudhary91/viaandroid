@@ -10,14 +10,10 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.audiofx.Equalizer;
-import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -61,6 +58,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
@@ -80,7 +78,6 @@ import com.cryptoserver.composer.utils.config;
 import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
-import com.cryptoserver.composer.utils.visualizeraudiorecorder;
 import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.views.customfonttextview;
 import com.github.mikephil.charting.utils.Utils;
@@ -98,17 +95,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.LongBuffer;
-import java.nio.ShortBuffer;
-import java.security.acl.LastOwnerException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -123,7 +110,8 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener,AdapterView.OnItemSelectedListener {
+public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener,AdapterView.OnItemSelectedListener {
 
     @BindView(R.id.img_delete_media)
     ImageView img_delete_media;
@@ -301,6 +289,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     FrameLayout googlemap;
     @BindView(R.id.img_compass)
     ImageView img_compass;
+    @BindView(R.id.img_audiowave)
+    ImageView img_audiowave;
 
     GoogleMap mgooglemap;
     FullDrawerLayout navigationdrawer;
@@ -349,8 +339,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     public int selectedsection=1;
     public boolean imediacompleted =false;
-    private Visualizer mVisualizer;
-    visualizeraudiorecorder myvisualizerviewmedia;
     circularImageview playpausebutton;
     private TextView songName, time_current, time;
     StringBuilder mFormatBuilder;
@@ -368,7 +356,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
+            mediadate = "",mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
     metricmodel metricmodeldata;
     adapteritemclick mcontrollernavigator;
 
@@ -427,11 +415,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             mFormatBuilder = new StringBuilder();
             mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
-
-            myvisualizerviewmedia = (visualizeraudiorecorder) rootview.findViewById(R.id.myvisualizerviewmedia);
-
-            myvisualizerviewmedia.setVisibility(View.VISIBLE);
-        //    textfetchdata.setVisibility(View.VISIBLE);
             playpausebutton.setImageResource(R.drawable.play);
 
             showcontrollers=rootview.findViewById(R.id.video_container);
@@ -645,6 +628,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 getmediametadata();
                 getmetadetareader();
             }
+            else
+            {
+                Thread thread = new Thread() {
+                    public void run() {
+                        getmediadata();
+                    }
+                };
+                thread.start();
+            }
+
 
         }
         return rootview;
@@ -1038,8 +1031,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    initAudio();
-                    setaudiodata();
                 }
 
                 if(! keytype.equalsIgnoreCase(common.checkkey()) || (frameduration != common.checkframeduration()))
@@ -1099,6 +1090,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         txt_duration.setText( common.gettimestring(mp.getDuration()));
 
         try {
+
+            setaudiodata();
+
             if(playerposition > 0)
             {
                 mp.seekTo((int)playerposition);
@@ -1140,21 +1134,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void start() {
         if(player != null)
         {
-            if(selectedvideouri!= null){
-                fragmentgraphic.setvisualizerwave();
-                wavevisualizerslist.clear();
+            if(audiourl!=null)
+            {
                 playpausebutton.setImageResource(R.drawable.pause);
                 player.start();
-                hdlr.postDelayed(UpdateSongTime, 100);
+                hdlr.postDelayed(seekbarupdatorhandler, 10);
                 player.setOnCompletionListener(this);
-            }
-            else{
-                if(audiourl!=null){
-                    playpausebutton.setImageResource(R.drawable.pause);
-                    player.start();
-                    hdlr.postDelayed(UpdateSongTime, 100);
-                    player.setOnCompletionListener(this);
-                }
             }
         }
     }
@@ -1287,10 +1272,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    initAudio();
                     fragmentgraphic.setvisualizerwave();
                     wavevisualizerslist.clear();
-                    setaudiodata();
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -1450,7 +1433,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player != null )
                 {
                     player.seekTo(0);
-                        myvisualizerviewmedia.clear();
                         wavevisualizerslist.clear();
 
                     playpausebutton.setImageResource(R.drawable.play);
@@ -1459,27 +1441,28 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         },200);
 
     }
-    private Runnable UpdateSongTime = new Runnable() {
+
+    private Runnable seekbarupdatorhandler = new Runnable() {
         @Override
         public void run() {
-            if(player != null ){
+            if(player != null )
+            {
+                if(player.getCurrentPosition() > maxincreasevideoduration)
+                    maxincreasevideoduration=player.getCurrentPosition();
 
-                    if(player.getCurrentPosition() > maxincreasevideoduration)
-                        maxincreasevideoduration=player.getCurrentPosition();
-
-                    if(currentaudioduration == 0 || (player.getCurrentPosition() > currentaudioduration))
-                    {
-                        currentaudioduration =player.getCurrentPosition();  // suppose its on 4th pos means 4000
-                        currentaudiodurationseconds = currentaudioduration /1000;  // Its 4
-                    }
-
+                if(currentaudioduration == 0 || (player.getCurrentPosition() > currentaudioduration))
+                {
+                    currentaudioduration =player.getCurrentPosition();  // suppose its on 4th pos means 4000
+                    currentaudiodurationseconds = currentaudioduration /1000;  // Its 4
+                }
 
                 starttime = player.getCurrentPosition();
                 mediaseekbar.setProgress(player.getCurrentPosition());
 
                 if (time_current != null)
                     time_current.setText(stringForTime(starttime));
-                hdlr.postDelayed(this, 100);
+
+                hdlr.postDelayed(this, 10);
             }
         }
     };
@@ -1501,25 +1484,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     }
 
    public void setaudiodata(){
+       endtime = player.getDuration();
+       starttime = player.getCurrentPosition();
 
-     Handler handler = new Handler();
-     handler.postDelayed(new Runnable() {
-         @Override
-         public void run() {
-             endtime = player.getDuration();
-             starttime = player.getCurrentPosition();
+       audioduration  = endtime;
 
-             audioduration  = endtime;
+       if (time != null)
+           time.setText(stringForTime(endtime));
+       if (time_current != null)
+           time_current.setText(stringForTime(starttime));
 
-             if (time != null)
-                 time.setText(stringForTime(endtime));
-             if (time_current != null)
-                 time_current.setText(stringForTime(starttime));
-
-             mediaseekbar.setMax(endtime);
-             mediaseekbar.setProgress(starttime);
-         }
-     },100);
+       mediaseekbar.setMax(endtime);
+       mediaseekbar.setProgress(starttime);
    }
 
    public void selectionmetadata(){
@@ -1554,13 +1530,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
            setupaudioplayer(Uri.parse(audiourl));
            tvsize.setText(common.filesize(audiourl));
-           Thread thread = new Thread() {
-               public void run() {
-                   if(! BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-                           getmediadata();
-               }
-           };
-           thread.start();
        }
    }
 
@@ -1757,6 +1726,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                     mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
                     mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                    thumbnailurl = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
 
 
                 }while(cur.moveToNext());
@@ -1830,6 +1800,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 tvtime.setText(starttime);
                                 txt_createdtime.setText(createdtime);
                                 txt_title_actionbarcomposer.setText(filecreateddate);
+
+                                if(! thumbnailurl.trim().isEmpty() && new File(thumbnailurl).exists())
+                                {
+                                    Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                                            BuildConfig.APPLICATION_ID + ".provider", new File(thumbnailurl));
+                                    Glide.with(applicationviavideocomposer.getactivity()).
+                                            load(uri).
+                                            thumbnail(0.1f).
+                                            into(img_audiowave);
+                                }
                             }
                         });
                     }
@@ -1870,99 +1850,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    private void initAudio() {
-
-        if(player != null){
-
-            applicationviavideocomposer.getactivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
-            myvisualizerviewmedia.setVisibility(View.VISIBLE);
-
-            setupVisualizerFxAndUI();
-            // Make sure the visualizer is enabled only when you actually want to
-            // receive data, and
-            // when it makes sense to receive data.
-            mVisualizer.setEnabled(true);
-            // When the stream ends, we don't need to collect any more data. We
-            // don't do this in
-            // setupVisualizerFxAndUI because we likely want to have more,
-            // non-Visualizer related code
-            // in this callback.
-            player
-                    .setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        public void onCompletion(MediaPlayer mediaPlayer) {
-                            //mVisualizer.setEnabled(false);
-                        }
-                    });
-            //mMediaPlayer.start();
-        }
-    }
-
-    private void setupVisualizerFxAndUI() {
-
-        // Create the Visualizer object and attach it to our media player.
-        int sessionid =  player.getAudioSessionId();
-
-        Equalizer mEqualizer = new Equalizer(0, sessionid);
-        mEqualizer.setEnabled(true); // need to enable equalizer
-
-        mVisualizer = new Visualizer(sessionid);
-
-        if(mVisualizer != null && Visualizer.getCaptureSizeRange() != null && Visualizer.getCaptureSizeRange().length > 0)
-        {
-            try {
-                mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-                mVisualizer.setDataCaptureListener(
-                        new Visualizer.OnDataCaptureListener() {
-                            public void onWaveFormDataCapture(Visualizer visualizer,
-                                                              byte[] bytes, int samplingRate) {
-                                double rms = 0;
-                                int[] formattedVizData = getFormattedData(bytes);
-                                if (formattedVizData.length > 0) {
-                                    for (int i = 0; i < formattedVizData.length; i++) {
-                                        int val = formattedVizData[i];
-                                        rms += val * val;
-                                    }
-                                    rms = Math.sqrt(rms / formattedVizData.length);
-                                }
-
-                                int amplitude = (int)rms;
-                                if(player != null && player.isPlaying()){
-
-                                    if(player.getCurrentPosition()==0){
-                                        fragmentgraphic.setvisualizerwave();
-                                         myvisualizerviewmedia.clear();
-                                         wavevisualizerslist.clear();
-                                    }
-
-                                    if(amplitude >=  35)
-                                        amplitude = amplitude*2;
-
-                                     int x= amplitude * 100;
-
-                                    myvisualizerviewmedia.addAmplitude(x); // update the VisualizeView
-                                    myvisualizerviewmedia.addAmplitude(50); // update the VisualizeView
-                                    myvisualizerviewmedia.addAmplitude(50); // update the VisualizeView
-                                    myvisualizerviewmedia.addAmplitude(50); // update the VisualizeView
-                                    myvisualizerviewmedia.invalidate();
-                                    wavevisualizerslist.add(new wavevisualizer(x,true));
-
-                                }
-
-
-                            }
-                            public void onFftDataCapture(Visualizer visualizer,
-                                                         byte[] bytes, int samplingRate) {
-                            }
-
-                        }, Visualizer.getMaxCaptureRate() / 2, true, false);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
     public int[] getFormattedData(byte[] rawVizData) {
         int[] arraydata=new int[rawVizData.length];
         for (int i = 0; i < arraydata.length; i++) {
@@ -1980,9 +1867,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void run() {
 
-                getmediametadata();
+                if(metricmainarraylist.size() == 0)
+                    getmediametadata();
 
-                myHandler.postDelayed(this, 5000);
+                myHandler.postDelayed(this, 3000);
             }
         };
         myHandler.post(myRunnable);

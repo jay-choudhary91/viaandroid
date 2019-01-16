@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 public class visualizeraudiorecorder extends View {
-    private static final int LINE_WIDTH = 1; // width of visualizer lines
+    private static final int LINE_WIDTH = 5; // width of visualizer lines
     private static final int LINE_SCALE = 75; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
     private int width; // width of this View
@@ -27,7 +27,7 @@ public class visualizeraudiorecorder extends View {
     public visualizeraudiorecorder(Context context, AttributeSet attrs) {
         super(context, attrs); // call superclass constructor
         linePaint = new Paint(); // create Paint for lines
-        linePaint.setColor(getResources().getColor(R.color.wave_blue)); // set color to green
+        linePaint.setColor(getResources().getColor(R.color.wave_color)); // set color to green
         linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
     }
 

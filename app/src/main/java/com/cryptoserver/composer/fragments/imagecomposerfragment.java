@@ -36,6 +36,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -574,7 +575,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             img_close.setOnClickListener(this);
             imglefthandle.setOnClickListener(this);
 
-            img_dotmenu.setVisibility(View.GONE);
+            img_dotmenu.setVisibility(View.VISIBLE);
             imgflashon.setVisibility(View.VISIBLE);
             img_stop_watch.setVisibility(View.VISIBLE);
             rl_containerview.setVisibility(View.GONE);
@@ -586,6 +587,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             keytype=common.checkkey();
 
+            brustmodeenabled=false;
+            try {
+                DrawableCompat.setTint(img_stop_watch.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.white));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         return rootview;
     }
@@ -1272,7 +1281,30 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 break;
 
             case R.id.img_stop_watch:
-                //brustmodeenabled=true;
+                if(brustmodeenabled)
+                {
+                    brustmodeenabled=false;
+                    try {
+                        DrawableCompat.setTint(img_stop_watch.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                , R.color.white));
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    brustmodeenabled=true;
+                    try {
+                        DrawableCompat.setTint(img_stop_watch.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                , R.color.yellow_background));
+                        Toast.makeText(applicationviavideocomposer.getactivity(),"Timer has set for 10 seconds. Click capture to start timer!",Toast.LENGTH_SHORT).show();
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
                 break;
 
             case R.id.info: {

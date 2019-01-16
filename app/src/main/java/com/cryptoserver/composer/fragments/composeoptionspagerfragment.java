@@ -1,9 +1,14 @@
 package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.MediaExtractor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -25,6 +31,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,6 +70,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     @BindView(R.id.pager_footer)
     pagercustomduration pagerfooter;
+    @BindView(R.id.txt_timer)
+    TextView txt_timer;
 
     @BindView(R.id.img_video_capture)
     ImageView mrecordimagebutton;
@@ -98,6 +107,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private static final int request_permissions = 1;
     ArrayList<permissions> permissionslist =new ArrayList<>();
 
+    String[] pagerelements={"VIDEO","PHOTO","AUDIO"};
+    int[] viewelements={R.layout.adapter_composefooter,R.layout.adapter_composefooter,R.layout.adapter_composefooter,};
     ArrayList<String> imagearraylist =new ArrayList<>();
     ArrayList<String> videoarraylist =new ArrayList<>();
     ArrayList<String> audioarraylist =new ArrayList<>();
@@ -275,7 +286,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public void visibleview(){
+    public void visiblewarningcontrollers(){
         if(layout_no_gps_wifi != null)
             layout_no_gps_wifi.setVisibility(View.VISIBLE);
 
@@ -312,7 +323,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
-                        visibleview();
+                        visiblewarningcontrollers();
                     }
                     else if(! locationawareactivity.checkPermission(applicationviavideocomposer.getactivity()))
                     {
@@ -320,7 +331,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         {
                             if(permissionslist.get(0).isIspermissionskiped() || permissionslist.get(1).isIspermissionskiped())
                             {
-                                visibleview();
+                                visiblewarningcontrollers();
                             }
                         }
                     }
@@ -354,14 +365,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
 
         flingactionmindstvac=common.getcomposerswipearea();
-        //pagerfooter.setPageTransformer(false, new pageranimation());
 
-        //pagerheader.setAdapter(headeradapter);
-        pagerfooter.setAdapter(new footerpageradapter(getChildFragmentManager()));
-
+        pagerfooter.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
         pagerfooter.setOffscreenPageLimit(3);
-        int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),180);
-        pagerfooter.setPageMargin(0-margin);
+        pagerfooter.setClipToPadding(false);
+        pagerfooter.setPadding(300,0,300,0);
+        //int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),150);
+        //pagerfooter.setPageMargin(margin);
 
         pagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -381,13 +391,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             @Override
             public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-        pagerfooter.setOnItemClickListener(new pagercustomduration.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                pagerfooter.setCurrentItem(position,true);
             }
         });
 
@@ -464,21 +467,60 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(countertimer != null)
             countertimer.cancel();
 
-        countertimer=new CountDownTimer(10000, 1000) {
+        txt_timer.setVisibility(View.VISIBLE);
+
+        countertimer=new CountDownTimer(21000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 Log.e("Timer running", " Tick");
+                millisUntilFinished=millisUntilFinished-10000;
+                int lefttime=(int)(millisUntilFinished/1000);
+                if(lefttime == 0)
+                {
+                    if(countertimer != null)
+                        countertimer.cancel();
 
+                    cameracaptureeffect();
+                }
+                else
+                {
+                    txt_timer.setText(""+lefttime);
+                }
             }
 
             public void onFinish() {
                 if(countertimer != null)
                     countertimer.cancel();
+            }
+        }.start();
+    }
+
+    private void cameracaptureeffect() {
+        ObjectAnimator animation = ObjectAnimator.ofInt(txt_timer, "backgroundColor", Color.WHITE);
+        animation.setDuration(50);
+        animation.setEvaluator(new ArgbEvaluator());
+        animation.setRepeatCount(Animation.RELATIVE_TO_SELF);
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                super.onAnimationCancel(animation);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                txt_timer.setVisibility(View.GONE);
 
                 if(fragimgcapture != null)
                     fragimgcapture.takePicture();
             }
-        }.start();
+
+            @Override
+            public void onAnimationEnd(Animator animation, boolean isReverse) {
+
+            }
+        });
+        animation.start();
     }
 
     public void medialistitemaddbroadcast()
@@ -585,6 +627,29 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                // setimagerecordstop();
                 setimagethumbnail();
                 pagerfooter.setCurrentItem(currentselectedcomposer,true);
+                /*try {
+                    for(int i=0;i<viewelements.length;i++)
+                    {
+                        LayoutInflater inflater = LayoutInflater.from(applicationviavideocomposer.getactivity());
+                        View view=inflater.inflate(viewelements[i],null);
+                        TextView textView=(TextView)view.findViewById(R.id.txt_content);
+                        if(i == currentselectedcomposer)
+                        {
+                            textView.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.red));
+                        }
+                        else
+                        {
+                            textView.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                        }
+                    }
+                    synchronized(pagerfooter){
+                        pagerfooter.getAdapter().notifyDataSetChanged();
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }*/
+
             }
         },50);
 
@@ -784,5 +849,62 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         public int getCount() {
             return pageritems;
         }
+    }
+
+    //==========================================================================================================================
+
+    public class CustomPagerAdapter extends PagerAdapter {
+
+        private Context mContext;
+
+        public CustomPagerAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup collection, final int position) {
+
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            ViewGroup layout = (ViewGroup) inflater.inflate(viewelements[position], collection, false);
+            TextView txt_content=(TextView)layout.findViewById(R.id.txt_content);
+            txt_content.setText(pagerelements[position]);
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //pagerfooter.setCurrentItem(position,true);
+                    currentselectedcomposer=position;
+                    showselectedfragment();
+                    //Toast.makeText(getActivity(),""+position,Toast.LENGTH_SHORT).show();
+                }
+            });
+            collection.addView(layout);
+            return layout;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup collection, int position, Object view) {
+            collection.removeView((View) view);
+        }
+
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return POSITION_NONE;
+        }
+
+        @Override
+        public int getCount() {
+            return pagerelements.length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return pagerelements[position];
+        }
+
     }
 }
