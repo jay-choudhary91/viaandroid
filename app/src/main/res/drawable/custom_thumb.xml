@@ -8,6 +8,6 @@
         android:startColor="@color/line_color" />
 
     <size
-        android:height="28dp"
+        android:height="30dp"
         android:width="10dp" />
 </shape>

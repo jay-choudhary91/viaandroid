@@ -194,7 +194,7 @@
                                 android:layout_marginRight="@dimen/margin_15dp"
                                 android:thumbOffset="0dp"
                                 android:indeterminate="false"
-                                android:minHeight="20dp"
+                                android:minHeight="30dp"
                                 android:thumb="@drawable/custom_thumb"
                                 android:maxHeight="30dp"/>
 
