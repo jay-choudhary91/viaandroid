@@ -108,6 +108,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ArrayList<permissions> permissionslist =new ArrayList<>();
 
     String[] pagerelements={"VIDEO","PHOTO","AUDIO"};
+    int[] viewelements={R.layout.adapter_composefooter,R.layout.adapter_composefooter,R.layout.adapter_composefooter,};
     ArrayList<String> imagearraylist =new ArrayList<>();
     ArrayList<String> videoarraylist =new ArrayList<>();
     ArrayList<String> audioarraylist =new ArrayList<>();
@@ -285,7 +286,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public void visibleview(){
+    public void visiblewarningcontrollers(){
         if(layout_no_gps_wifi != null)
             layout_no_gps_wifi.setVisibility(View.VISIBLE);
 
@@ -322,7 +323,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
-                        visibleview();
+                        visiblewarningcontrollers();
                     }
                     else if(! locationawareactivity.checkPermission(applicationviavideocomposer.getactivity()))
                     {
@@ -330,7 +331,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         {
                             if(permissionslist.get(0).isIspermissionskiped() || permissionslist.get(1).isIspermissionskiped())
                             {
-                                visibleview();
+                                visiblewarningcontrollers();
                             }
                         }
                     }
@@ -367,13 +368,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         pagerfooter.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
         pagerfooter.setOffscreenPageLimit(3);
-        int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),150);
-        pagerfooter.setPageMargin(0-margin);
+        pagerfooter.setClipToPadding(false);
+        pagerfooter.setPadding(300,0,300,0);
+        //int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),150);
+        //pagerfooter.setPageMargin(margin);
 
-        /*pagerfooter.setAdapter(new footerpageradapter(getChildFragmentManager()));
-        pagerfooter.setOffscreenPageLimit(3);
-        int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),180);
-        pagerfooter.setPageMargin(0-margin);
         pagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -394,14 +393,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             public void onPageScrollStateChanged(int state) {
             }
         });
-
-        pagerfooter.setOnItemClickListener(new pagercustomduration.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Toast.makeText(getActivity(),"clicked "+position,Toast.LENGTH_SHORT).show();
-                //pagerfooter.setCurrentItem(position,true);
-            }
-        });*/
 
         currentselectedcomposer=config.selectedmediatype;
         showselectedfragment();
@@ -484,13 +475,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 Log.e("Timer running", " Tick");
                 millisUntilFinished=millisUntilFinished-10000;
                 int lefttime=(int)(millisUntilFinished/1000);
-                txt_timer.setText(""+lefttime);
                 if(lefttime == 0)
                 {
                     if(countertimer != null)
                         countertimer.cancel();
 
                     cameracaptureeffect();
+                }
+                else
+                {
+                    txt_timer.setText(""+lefttime);
                 }
             }
 
@@ -633,6 +627,29 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                // setimagerecordstop();
                 setimagethumbnail();
                 pagerfooter.setCurrentItem(currentselectedcomposer,true);
+                /*try {
+                    for(int i=0;i<viewelements.length;i++)
+                    {
+                        LayoutInflater inflater = LayoutInflater.from(applicationviavideocomposer.getactivity());
+                        View view=inflater.inflate(viewelements[i],null);
+                        TextView textView=(TextView)view.findViewById(R.id.txt_content);
+                        if(i == currentselectedcomposer)
+                        {
+                            textView.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.red));
+                        }
+                        else
+                        {
+                            textView.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                        }
+                    }
+                    synchronized(pagerfooter){
+                        pagerfooter.getAdapter().notifyDataSetChanged();
+                    }
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }*/
+
             }
         },50);
 
@@ -848,14 +865,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         public Object instantiateItem(ViewGroup collection, final int position) {
 
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.adapter_composefooter, collection, false);
+            ViewGroup layout = (ViewGroup) inflater.inflate(viewelements[position], collection, false);
             TextView txt_content=(TextView)layout.findViewById(R.id.txt_content);
             txt_content.setText(pagerelements[position]);
             layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    pagerfooter.setCurrentItem(position,true);
-                    Toast.makeText(getActivity(),""+position,Toast.LENGTH_SHORT).show();
+                    //pagerfooter.setCurrentItem(position,true);
+                    currentselectedcomposer=position;
+                    showselectedfragment();
+                    //Toast.makeText(getActivity(),""+position,Toast.LENGTH_SHORT).show();
                 }
             });
             collection.addView(layout);
@@ -865,6 +884,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         @Override
         public void destroyItem(ViewGroup collection, int position, Object view) {
             collection.removeView((View) view);
+        }
+
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return POSITION_NONE;
         }
 
         @Override
