@@ -11,7 +11,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.graphics.SurfaceTexture;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.AudioManager;
@@ -20,10 +22,8 @@ import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -43,8 +43,9 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -77,7 +78,6 @@ import com.cryptoserver.composer.models.arraycontainer;
 import com.cryptoserver.composer.models.frame;
 import com.cryptoserver.composer.models.metadatahash;
 import com.cryptoserver.composer.models.metricmodel;
-import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.FullDrawerLayout;
@@ -122,7 +122,8 @@ import butterknife.ButterKnife;
  * Created by devesh on 21/8/18.
  */
 
-public class videoreaderfragment extends basefragment implements AdapterView.OnItemSelectedListener,View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener
+public class videoreaderfragment extends basefragment implements AdapterView.OnItemSelectedListener,View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener,TextureView.SurfaceTextureListener,
+     MediaPlayer.OnVideoSizeChangedListener,MediaPlayer.OnBufferingUpdateListener
 {
 
     @BindView(R.id.img_dotmenu)
@@ -317,13 +318,14 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView imgpause;
 
     GoogleMap mgooglemap;
+    Surface surfacetexture = null;
 
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-    int targetheight,previousheight;
+    int targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
@@ -331,7 +333,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     private RelativeLayout scurraberverticalbar;
     private String mediafilepath = null;
     private RelativeLayout showcontrollers;
-    private SurfaceView videoSurface;
+    private TextureView videotextureview;
     private MediaPlayer player;
     private videocontrollerview controller;
     private View rootview = null;
@@ -391,6 +393,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     int position=0;
     metricmodel setmetricmodel;
 
+    private float videoheight, videowidth;
+
     arraycontainer arraycontainerformetric =null;
     adapteritemclick mcontrollernavigator;
 
@@ -405,14 +409,15 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
             gethelper().setrecordingrunning(false);
-            videoSurface = (SurfaceView) findViewById(R.id.videoSurface);
+
+            videotextureview = (TextureView) findViewById(R.id.videotextureview);
             linearLayout=rootview.findViewById(R.id.content);
             showcontrollers=rootview.findViewById(R.id.video_container);
             scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
             mFormatBuilder = new StringBuilder();
             mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+            videotextureview.setSurfaceTextureListener(this);
 
             //drawer implementation
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
@@ -440,7 +445,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             textfetchdata.setVisibility(View.GONE);
 
             {
-
                 mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
@@ -504,7 +508,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     maxincreasevideoduration=player.getCurrentPosition();
                 }
             });
-
 
             recyview_frames.post(new Runnable() {
                 @Override
@@ -619,13 +622,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 }
             });
 
-            SurfaceHolder videoHolder = videoSurface.getHolder();
-            videoHolder.addCallback(new setonSurface());
             flingactionmindstvac = common.getdrawerswipearea();
 
            /* handleimageview.setOnTouchListener(new setonTouch());
             righthandle.setOnTouchListener(new setonTouch());
-            videoSurface.setOnTouchListener(new setonTouch());*/
+            videotextureview.setOnTouchListener(new setonTouch());*/
 
             txtSlot1.setOnClickListener(new setonClick());
             txtSlot2.setOnClickListener(new setonClick());
@@ -636,7 +637,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             img_camera.setOnClickListener(new setonClick());
             img_arrow_back.setOnClickListener(new setonClick());
             handleimageview.setOnClickListener(new setonClick());
-            videoSurface.setOnClickListener(new setonClick());
+            videotextureview.setOnClickListener(new setonClick());
             img_delete_media.setOnClickListener(new setonClick());
             imgpause.setOnClickListener(new setonClick());
             imgpause.setVisibility(View.GONE);
@@ -671,23 +672,26 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             layout_starttime.setVisibility(View.VISIBLE);
             layout_endtime.setVisibility(View.VISIBLE);
 
-
             layout_videoreader.post(new Runnable() {
                 @Override
                 public void run() {
                     targetheight= layout_videoreader.getHeight();
+                    targetwidth = layout_videoreader.getWidth();
+
                     Log.e("targetheight",""+targetheight);
                 }
             });
 
-            videoSurface.post(new Runnable() {
+            videotextureview.post(new Runnable() {
                 @Override
                 public void run() {
-                    previousheight = videoSurface.getHeight();
+
+                    previousheight = videotextureview.getHeight();
+                    previouswidth = videotextureview.getWidth();
+                    previouswidthpercentage = (previouswidth*20)/100;
                     Log.e("previousheight",""+previousheight);
                 }
             });
-
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
             txtSlot2.setVisibility(View.VISIBLE);
@@ -775,7 +779,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 }
             });
 
-            setupvideodata();
+
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
@@ -783,7 +787,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     @Override
                     public void run() {
                         getmediametadata();
-                        getframesbitmap();
+                       // getframesbitmap();
                     }
                 }).start();
                 getmetadetareader();
@@ -794,7 +798,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 Thread thread = new Thread() {
                     public void run() {
                         getmediadata();
-                        getframesbitmap();
+                        //getframesbitmap();
                     }
                 };
                 thread.start();
@@ -879,6 +883,45 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         this.mcontrollernavigator = mcontrollernavigator;
     }
 
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        surfacetexture = new Surface(surface);
+        setupvideodata();
+
+        Thread thread = new Thread() {
+            public void run() {
+                getframesbitmap();
+            }
+        };
+        thread.start();
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
+    }
+
+    @Override
+    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+        videowidth = width;
+        videoheight = height;
+        updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
+    }
 
     public class setonClick implements View.OnClickListener
     {
@@ -1010,12 +1053,13 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                       //  navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                         navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                         handleimageview.setVisibility(View.VISIBLE);
-                        expand(videoSurface,100,targetheight);
+                        expand(videotextureview,100,targetheight);
                         layout_photodetails.setVisibility(View.GONE);
                         scrollview_detail.setVisibility(View.GONE);
                         scrollview_meta.setVisibility(View.GONE);
                         scrollView_encyrption.setVisibility(View.GONE);
                         tab_layout.setVisibility(View.GONE);
+                        updatetextureviewsize(targetwidth,targetheight);
                         layout_footer.setVisibility(View.GONE);
                         layout_mediatype.setVisibility(View.GONE);
                         layoutcustomcontroller.setVisibility(View.GONE);
@@ -1027,11 +1071,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                         //navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                         handleimageview.setVisibility(View.GONE);
-                        collapse(videoSurface,100,previousheight);
+                        collapse(videotextureview,100,previousheight);
                         layout_photodetails.setVisibility(View.VISIBLE);
                         tab_layout.setVisibility(View.VISIBLE);
                         scrollview_detail.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
+                        updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
                         layoutcustomcontroller.setVisibility(View.VISIBLE);
                         layoutcustomcontroller.getResources().getColor(R.color.whitetransparent);
                         playpausebutton.setVisibility(View.VISIBLE);
@@ -1041,7 +1086,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     }
                     break;
 
-                case R.id.videoSurface:
+                case R.id.videotextureview:
                     Log.e("ontouch","ontouch");
 
                     if(layout_photodetails.getVisibility()==View.GONE){
@@ -1056,7 +1101,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_mediatype.setVisibility(View.GONE);
                             layout_footer.setVisibility(View.GONE);
-
                         }
 
                     } else {
@@ -1073,7 +1117,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         pause();
                     }else{
                         if(layout_footer.getVisibility()==View.VISIBLE && layout_photodetails.getVisibility()==View.GONE){
-                            videoSurface.setClickable(false);
+                            videotextureview.setClickable(false);
                             layout_footer.setVisibility(View.GONE);
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
@@ -1088,7 +1132,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     if(player.isPlaying()){
                         pause();
                         if(layout_footer.getVisibility()==View.GONE && layout_photodetails.getVisibility()==View.GONE){
-                            videoSurface.setClickable(true);
+                            videotextureview.setClickable(true);
                             playpausebutton.setImageResource(R.drawable.play_btn);
                             playpausebutton.setVisibility(View.VISIBLE);
                             img_fullscreen.setVisibility(View.VISIBLE);
@@ -1177,7 +1221,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 case  R.id.righthandle:
                     flingswipe.onTouchEvent(motionEvent);
                     break;*/
-                case  R.id.videoSurface:
+                case  R.id.videotextureview:
                 {
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
@@ -1361,6 +1405,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             {
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selectedvideouri);
+                player.setSurface(surfacetexture);
                 player.prepareAsync();
                 player.setOnPreparedListener(new setonmediaprepared());
                 player.setOnCompletionListener(new setonmediacompletion());
@@ -2084,9 +2129,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             if(selecteduri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
+                player.setSurface(surfacetexture);
                 player.prepareAsync();
                 player.setOnPreparedListener(new setonmediaprepared());
                 player.setOnCompletionListener(new setonmediacompletion());
+                player.setOnVideoSizeChangedListener(this);
+                player.setOnBufferingUpdateListener(this);
                 if(player!=null)
                 {
                     setaudiodata();
@@ -2290,7 +2338,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mediaseekbar.setProgress(player.getCurrentPosition());
 
             if(layout_footer.getVisibility()==View.GONE){
-                videoSurface.setClickable(true);
+                videotextureview.setClickable(true);
                 layout_mediatype.setVisibility(View.VISIBLE);
                 playpausebutton.setImageResource(R.drawable.play_btn);
                 playpausebutton.setVisibility(View.VISIBLE);
@@ -2912,5 +2960,33 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 mediaseekbar.setProgress(videostarttime);
             }
         },100);
+    }
+
+    private void updatetextureviewsize(int viewWidth, int viewHeight) {
+
+        float scaleX = 1.0f;
+        float scaleY = 1.0f;
+
+        if (videowidth > viewWidth && videoheight > viewHeight) {
+            scaleX = videowidth / viewWidth;
+            scaleY = videoheight / viewHeight;
+        } else if (videowidth < viewWidth && videoheight < viewHeight) {
+            scaleY = viewWidth / videowidth;
+            scaleX = viewHeight / videoheight;
+        } else if (viewWidth > videowidth) {
+            scaleY = (viewWidth / videowidth) / (viewHeight / videoheight);
+        } else if (viewHeight > videoheight) {
+            scaleX = (viewHeight / videoheight) / (viewWidth / videowidth);
+        }
+
+     // Calculate pivot points, in our case crop from center
+        int pivotPointX = viewWidth / 2;
+        int pivotPointY = viewHeight / 2;
+
+        Matrix matrix = new Matrix();
+        matrix.setScale(scaleX, scaleY, pivotPointX, pivotPointY);
+
+        videotextureview.setTransform(matrix);
+        //videotextureview.setLayoutParams(new FrameLayout.LayoutParams(viewWidth, viewHeight));
     }
 }

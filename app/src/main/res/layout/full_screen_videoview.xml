@@ -86,11 +86,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" >
 
-                            <SurfaceView
-                                android:id="@+id/videoSurface"
+                            <TextureView
+                                android:id="@+id/videotextureview"
                                 android:layout_centerVertical="true"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"/>
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"/>
                         </FrameLayout>
 
                         <com.cryptoserver.composer.utils.circularImageview
