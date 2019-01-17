@@ -258,7 +258,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.img_slide_create_dir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //adapter.onItemClicked(arrayvideolist.get(position),2);
+                    adapter.onItemClicked(arrayvideolist.get(position),6);
                 }
             });
 

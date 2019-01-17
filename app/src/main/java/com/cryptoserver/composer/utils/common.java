@@ -1342,6 +1342,48 @@ public class common {
         }
     }
 
+    public static void copyfile(File sourcefile,File destinationfolder)
+    {
+        String sourcePath = sourcefile.getAbsolutePath();
+        File sourceFile = new File(sourcePath);
+
+        File destinationDir=destinationfolder;
+
+        if (!destinationDir.exists())
+            destinationDir.mkdirs();
+
+        final File mediaFile = new File(destinationDir.getPath() + File.separator +
+                sourceFile.getName());
+        try
+        {
+            if (!mediaFile.getParentFile().exists())
+                mediaFile.getParentFile().mkdirs();
+
+            if (!mediaFile.exists()) {
+                mediaFile.createNewFile();
+            }
+
+            InputStream in = new FileInputStream(sourceFile);
+            OutputStream out = new FileOutputStream(mediaFile);
+
+            // Copy the bits from instream to outstream
+            byte[] buf = new byte[1024];
+            int len;
+
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+
+            in.close();
+            out.close();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
     public static void exportvideo(File lastrecordedvideo,boolean savetohome)
     {
         String sourcePath = lastrecordedvideo.getAbsolutePath();

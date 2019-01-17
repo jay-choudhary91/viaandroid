@@ -45,6 +45,7 @@ import com.cryptoserver.composer.adapter.adaptermedialist;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
+import com.cryptoserver.composer.models.folder;
 import com.cryptoserver.composer.models.video;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
@@ -517,6 +518,70 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(imagecount > 0)
                 textView.setText(config.item_photo+" ("+imagecount+")");
         }
+    }
+
+    public void showfolderdialog(final String sourcefilepath)
+    {
+        File rootdir = new File(config.rootdir);
+        if(! rootdir.exists())
+            return;
+
+        ArrayList<String> itemname=new ArrayList<>();
+        final ArrayList<String> itempath=new ArrayList<>();
+        File[] files = rootdir.listFiles();
+        for (File file : files)
+        {
+            if((! file.getName().equalsIgnoreCase("cache")) && (! file.getName().equalsIgnoreCase(config.allmedia)))
+            {
+                itemname.add(file.getName());
+                itempath.add(file.getAbsolutePath());
+            }
+        }
+
+        if(itemname.size() == 0)
+        {
+            Toast.makeText(applicationviavideocomposer.getactivity(),"No folder created!",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String[] items = itemname.toArray(new String[itemname.size()]);
+        new AlertDialog.Builder(applicationviavideocomposer.getactivity())
+                .setTitle("Select folder")
+                .setSingleChoiceItems(items, 0, null)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, int whichButton) {
+
+                        progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                        final int selectedPosition = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                String folderpath=itempath.get(selectedPosition);
+                                common.copyfile(new File(sourcefilepath),new File(folderpath));
+                                // Do something useful withe the position of the selected radio button
+
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        progressdialog.dismisswaitdialog();
+
+                                        if(adaptermedialist != null && arrayvideolist.size() > 0)
+                                            adaptermedialist.notifyDataSetChanged();
+
+                                        if(adaptergrid != null && arrayvideolist.size() > 0)
+                                            adaptergrid.notifyDataSetChanged();
+
+                                        if(dialog != null)
+                                            dialog.dismiss();
+                                    }
+                                });
+                            }
+                        }).start();
+                    }
+                })
+                .show();
     }
 
     public void removehandler()
@@ -1182,6 +1247,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 gethelper().replaceFragment(videoplayercomposerfragment, false, true);*/
             }
 
+        }
+        else if(type == 6){
+            showfolderdialog(videoobj.getPath());
         }
     }
 

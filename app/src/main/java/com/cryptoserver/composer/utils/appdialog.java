@@ -137,6 +137,44 @@ public class appdialog
 
     }
 
+    public static void showrootdirectoryfolders(final Context activity, final adapteritemclick mitemclick){
+
+        final Dialog dialog =new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.root_dir_folder_dialog);
+
+        final EditText edtInputData1 = (EditText) dialog.findViewById(R.id.edt_inputdata_1);
+
+        TextView TxtPositiveButton = (TextView) dialog.findViewById(R.id.tv_positive);
+        TxtPositiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(edtInputData1.getText().toString().trim().length() > 0)
+                {
+                    if(new File(config.rootdir+File.separator+edtInputData1.getText().toString().trim()).exists())
+                    {
+                        Toast.makeText(activity,"Folder already exist!",Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        if(mitemclick != null)
+                            mitemclick.onItemClicked(edtInputData1.getText().toString());
+
+                        if(dialog != null && dialog.isShowing())
+                            dialog.dismiss();
+                    }
+
+                }
+            }
+        });
+
+        dialog.show();
+
+    }
+
     public static void showcreatedirectorydialog(final Context activity, final adapteritemclick mitemclick){
 
         final Dialog dialog =new Dialog(activity);

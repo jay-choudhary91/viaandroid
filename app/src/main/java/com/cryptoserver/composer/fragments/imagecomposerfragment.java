@@ -588,13 +588,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             keytype=common.checkkey();
 
             brustmodeenabled=false;
-            try {
-                DrawableCompat.setTint(img_stop_watch.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                        , R.color.white));
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            img_stop_watch.setImageResource(R.drawable.stopwatch);
         }
         return rootview;
     }
@@ -1284,25 +1278,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 if(brustmodeenabled)
                 {
                     brustmodeenabled=false;
-                    try {
-                        DrawableCompat.setTint(img_stop_watch.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                , R.color.white));
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    img_stop_watch.setImageResource(R.drawable.stopwatch);
                 }
                 else
                 {
                     brustmodeenabled=true;
-                    try {
-                        DrawableCompat.setTint(img_stop_watch.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                , R.color.yellow_background));
-                        Toast.makeText(applicationviavideocomposer.getactivity(),"Timer has set for 10 seconds. Click capture to start timer!",Toast.LENGTH_SHORT).show();
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+                    img_stop_watch.setImageResource(R.drawable.stopwatchselected);
                 }
 
                 break;
