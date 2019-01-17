@@ -44,7 +44,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
     public void onBindViewHolder(@NonNull folderdataadapter.ViewHolder holder, final int position) {
         final folder myfolder = dataarrayList.get(position);
         holder.tv_foldername.setText(myfolder.getFoldername());
-        holder.tv_mediacount.setText("404");
+        holder.tv_mediacount.setText(""+myfolder.getFilecount());
 
         if(! myfolder.isIsplus())
         {
@@ -67,7 +67,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
                 if(myfolder.isIsplus())
                 {
                     if(mItemClick != null)
-                        mItemClick.onItemClicked(position,1);   // Add item
+                        mItemClick.onItemClicked(myfolder,1);   // Add item
                 }
             }
         });
@@ -78,7 +78,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
                 if(! myfolder.isIsplus() && (! myfolder.isIsallfolder()))
                 {
                     if(mItemClick != null)
-                        mItemClick.onItemClicked(position,3);
+                        mItemClick.onItemClicked(myfolder,3);  // Simple click
                 }
             }
         });
@@ -90,7 +90,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
                 {
                     dataarrayList.remove(position);
                     if(mItemClick != null)
-                        mItemClick.onItemClicked(position,4);
+                        mItemClick.onItemClicked(myfolder,4);   // Long press delete action
                 }
                 return false;
             }

@@ -10,17 +10,18 @@ import java.io.File;
 
 public class config {
 
+    public static String allmedia="allmedia";
+    public static final String rootdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
+            BuildConfig.APPLICATION_ID;
 
-    public static final String tempvideodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
-            BuildConfig.APPLICATION_ID+File.separator+"files";
     public static final String videodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
-            BuildConfig.APPLICATION_ID+File.separator+"media";
+            BuildConfig.APPLICATION_ID+File.separator+allmedia;
 
     public static final String hashesdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
-            BuildConfig.APPLICATION_ID+File.separator+"hashes";
+            BuildConfig.APPLICATION_ID+File.separator+allmedia+File.separator+"hashes";
 
     public static final String audiowavesdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
-            BuildConfig.APPLICATION_ID+File.separator+"audiowaves";
+            BuildConfig.APPLICATION_ID+File.separator+allmedia+File.separator+"audiowaves";
 
     public static final double STATIC_LAT = 43.65844179931329;
     public static final double STATIC_LNG = -116.69653460383417;

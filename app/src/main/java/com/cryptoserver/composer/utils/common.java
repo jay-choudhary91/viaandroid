@@ -82,6 +82,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1195,6 +1196,23 @@ public class common {
         }catch (Exception e)
         {
             e.printStackTrace();
+        }
+    }
+
+    public static void delete(File f) throws IOException {
+        if (f.isDirectory()) {
+            int count=f.listFiles().length;
+            if(count > 0)
+            {
+                for (File c : f.listFiles()) {
+                    delete(c);
+                }
+            }
+            f.delete();
+        } else {
+            if (!f.delete()) {
+                new FileNotFoundException("Failed to delete file: " + f);
+            }
         }
     }
 

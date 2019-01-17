@@ -1277,7 +1277,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             try {
                 if(! issavedtofolder && common.getstoragedeniedpermissions().isEmpty() && (selectedvideofile != null )
                         && new File(selectedvideofile).exists())
-                    common.deletefile(selectedvideofile);
+                    common.delete(new File(selectedvideofile));
             }catch (Exception e)
             {
                 e.printStackTrace();
