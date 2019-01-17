@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.AudioManager;
@@ -91,6 +92,7 @@ import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.views.customfonttextview;
+import com.cryptoserver.composer.views.customseekbar;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -236,7 +238,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     @BindView(R.id.txt_starttime)
     TextView txt_starttime;
     @BindView(R.id.mediacontroller_progress)
-    SeekBar mediaseekbar;
+    customseekbar mediaseekbar;
     @BindView(R.id.time_current)
     TextView time_current;
     @BindView(R.id.time)
@@ -306,6 +308,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     circularImageview playpausebutton;
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
+    @BindView(R.id.txt_mediatimethumb)
+    TextView txt_mediatimethumb;
+    @BindView(R.id.layout_progressline)
+    RelativeLayout layout_progressline;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -480,11 +486,55 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
 
+            mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
+                    R.drawable.custom_thumb));
+
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
 
                 @Override
-                public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
+                public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser)
+                {
+                    if(progress > 0)
+                    {
+                        layout_progressline.setVisibility(View.VISIBLE);
+                        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        p.addRule(RelativeLayout.ABOVE, seekBar.getId());
+                        Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
+                        p.setMargins(thumbRect.left,0, 0, 0);
+                        layout_progressline.setLayoutParams(p);
+                        txt_mediatimethumb.setVisibility(View.VISIBLE);
+                        /*if(fromUser)
+                        {
+                            txt_mediatimethumb.setVisibility(View.VISIBLE);
+                            final Animation animationFadeIn = AnimationUtils.loadAnimation(getActivity(), R.anim.seekbarfadein);
+                            animationFadeIn.setAnimationListener(new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                    txt_mediatimethumb.setVisibility(View.INVISIBLE);
+                                    final Animation animationFadeOut = AnimationUtils.loadAnimation(getActivity(), R.anim.seekbarfadeout);
+                                    txt_mediatimethumb.startAnimation(animationFadeOut);
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+
+                                }
+                            });
+                            txt_mediatimethumb.startAnimation(animationFadeIn);
+                        }*/
+                    }
+                    else
+                    {
+                        layout_progressline.setVisibility(View.GONE);
+                    }
 
                 }
 
@@ -2870,7 +2920,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 mediaseekbar.setProgress(player.getCurrentPosition());
 
                 if (time_current != null)
+                {
                     time_current.setText(stringForTime(videostarttime));
+                    txt_mediatimethumb.setText(time_current.getText().toString());
+                }
                 hdlr.postDelayed(this, 10);
             }
         }
