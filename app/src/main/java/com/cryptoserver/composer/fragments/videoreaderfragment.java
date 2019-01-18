@@ -23,8 +23,10 @@ import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -39,6 +41,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.LongSparseArray;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -82,6 +85,7 @@ import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.FullDrawerLayout;
+import com.cryptoserver.composer.utils.NoScrollRecycler;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
@@ -91,6 +95,7 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
+import com.cryptoserver.composer.videotrimmer.utils.backgroundexecutor;
 import com.cryptoserver.composer.views.customfonttextview;
 import com.cryptoserver.composer.views.customseekbar;
 import com.github.mikephil.charting.utils.Utils;
@@ -140,7 +145,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView img_delete_media;
 
     @BindView(R.id.recyview_frames)
-    RecyclerView recyview_frames;
+    NoScrollRecycler recyview_frames;
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
@@ -331,7 +336,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-    int targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage;
+    int targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage,scrubberviewwidth;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
@@ -398,6 +403,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     int position=0;
     metricmodel setmetricmodel;
+    int mheightview = 0;
 
     private float videoheight, videowidth;
 
@@ -445,6 +451,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
             mediaseekbar.setPadding(0,0,0,0);
+
+            mheightview = getContext().getResources().getDimensionPixelOffset(R.dimen.frames_video_height);;
 
             handleimageview.setVisibility(View.GONE);
             playpausebutton.setImageResource(R.drawable.play);
@@ -598,9 +606,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                                     islisttouched = true;
                                     islistdragging = true;
-                                    RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                                   /* RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                                     relativeParams.setMargins(0, 0,0, 0);
-                                    recyview_frames.setLayoutParams(relativeParams);
+                                    recyview_frames.setLayoutParams(relativeParams);*/
                                     break;
                                 case RecyclerView.SCROLL_STATE_SETTLING:
                                     System.out.println("Scroll Settling");
@@ -739,6 +747,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     Log.e("previousheight",""+previousheight);
                 }
             });
+
+
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
             txtSlot2.setVisibility(View.VISIBLE);
@@ -931,16 +941,27 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     }
 
     @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, final int width, int height) {
         surfacetexture = new Surface(surface);
         setupvideodata();
 
-        Thread thread = new Thread() {
+        layout_scrubberview.post(new Runnable() {
+            @Override
             public void run() {
-                getframesbitmap();
+
+                scrubberviewwidth = layout_scrubberview.getWidth();
+                Thread thread = new Thread() {
+                    public void run() {
+                        getbitmap(scrubberviewwidth);
+                        //getframesbitmap();
+                    }
+                };
+                thread.start();
             }
-        };
-        thread.start();
+        });
+
+
+
     }
 
     @Override
@@ -1922,7 +1943,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 {
                     if(mbitmaplist.size() > 0 && (! islisttouched))
                     {
-                        setmargin();
+                        //setmargin();
                     }
                     if(player.getCurrentPosition() > maxincreasevideoduration)
                         maxincreasevideoduration=player.getCurrentPosition();
@@ -1967,7 +1988,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             if(player != null)
             {
                 player.seekTo(i);
-                setmargin();
+                //setmargin();
             }
         }
 
@@ -2144,7 +2165,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         public void run() {
                             if(adapter != null){
                                 adapter.notifyDataSetChanged();
-                                scurraberverticalbar.setVisibility(View.VISIBLE);
+                                scurraberverticalbar.setVisibility(View.GONE);
                                 //runmethod = true;
                             }
 
@@ -2405,9 +2426,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         controller.setProgress(0,true);
                         playpausebutton.setImageResource(R.drawable.play);
 
-                        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       /* RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         relativeParams.setMargins(0, 0,0, 0);
-                        recyview_frames.setLayoutParams(relativeParams);
+                        recyview_frames.setLayoutParams(relativeParams);*/
                     }
                 }
             },200);
@@ -2422,11 +2443,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 double leftmargin= 100/c;
                 double currentpostion=(player.getCurrentPosition()/1000);
                 double leftsidemargin=-((leftmargin)*(currentpostion));
-                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                /*RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 relativeParams.setMargins((int)(leftsidemargin) , 0,0, 0);
                 recyview_frames.requestLayout();
                 recyview_frames.setLayoutParams(relativeParams);
-                recyview_frames.scrollToPosition(0);
+                recyview_frames.scrollToPosition(0);*/
 
         }
     }
@@ -2569,12 +2590,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 if (mbitmaplist.size() != 0)
                     runmethod = false;
 
-                scurraberverticalbar.setVisibility(View.INVISIBLE);
+                scurraberverticalbar.setVisibility(View.GONE);
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
                 setupVideoPlayer(uri);
                 videoduration = 0;
-                layout_scrubberview.setVisibility(View.VISIBLE);
                 playerposition = 0;
                // righthandle.setVisibility(View.GONE);
                 framecount = 0;
@@ -3036,5 +3056,79 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
         videotextureview.setTransform(matrix);
         //videotextureview.setLayoutParams(new FrameLayout.LayoutParams(viewWidth, viewHeight));
+    }
+
+
+    private void getbitmap(final int viewwidth) {
+        backgroundexecutor.execute(new backgroundexecutor.task("", 0L, "") {
+                                       @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                                       @Override
+                                       public void execute() {
+
+                                           Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                                                   BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
+
+                                           if(uri !=null){
+                                               try {
+                                                   LongSparseArray<Bitmap> thumbnailList = new LongSparseArray<>();
+
+                                                   MediaMetadataRetriever mediametadataretriever = new MediaMetadataRetriever();
+                                                   mediametadataretriever.setDataSource(getContext(), uri);
+
+                                                   // Retrieve media data
+                                                   long videoLengthInMs = Integer.parseInt(mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
+
+                                                   // Set thumbnail properties (Thumbs are squares)
+
+                                                   if(mheightview == 50)
+                                                       mheightview = mheightview*2;
+
+                                                   final int thumbWidth = mheightview;
+                                                   final int thumbHeight = mheightview;
+
+                                                   int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
+
+                                                   final long interval = videoLengthInMs / numThumbs;
+
+                                                   for (int i = 0; i < numThumbs; ++i) {
+                                                       Bitmap bitmap = mediametadataretriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                                                       // TODO: bitmap might be null here, hence throwing NullPointerException. You were right
+                                                       try {
+                                                           bitmap = Bitmap.createScaledBitmap(bitmap, thumbWidth, thumbHeight, false);
+
+                                                           mbitmaplist.add(i,new frame(i,bitmap,false));
+
+                                                           applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                                               @Override
+                                                               public void run() {
+                                                                   if(adapter != null){
+                                                                       adapter.notifyDataSetChanged();
+                                                                       scurraberverticalbar.setVisibility(View.GONE);
+                                                                       //runmethod = true;
+                                                                   }
+
+                                                               }
+                                                           });
+
+
+                                                       } catch (Exception e) {
+                                                           e.printStackTrace();
+                                                       }
+
+
+
+                                                   }
+
+                                                       if (mediametadataretriever != null)
+                                                           mediametadataretriever.release();
+
+                                               } catch (final Throwable e) {
+                                                   Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                                               }
+                                           }
+
+                                       }
+                                   }
+        );
     }
 }
