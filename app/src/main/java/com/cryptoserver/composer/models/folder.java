@@ -10,6 +10,7 @@ public class folder
 {
     public String foldername="";
     public String folderdir="";
+    public String thumbnailurl="";
     public int filecount=0;
     public boolean isallfolder = false;
     public boolean isplus = false;
@@ -21,13 +22,22 @@ public class folder
         setIsplus(isplus);
     }
 
-    public folder(String foldername,String folderdir,int filecount,boolean isallfolder,boolean isplus)
+    public folder(String foldername,String folderdir,String thumbnailurl,int filecount,boolean isallfolder,boolean isplus)
     {
         setFoldername(foldername);
         setIsallfolder(isallfolder);
         setIsplus(isplus);
         setFolderdir(folderdir);
         setFilecount(filecount);
+        setThumbnailurl(thumbnailurl);
+    }
+
+    public String getThumbnailurl() {
+        return thumbnailurl;
+    }
+
+    public void setThumbnailurl(String thumbnailurl) {
+        this.thumbnailurl = thumbnailurl;
     }
 
     public int getFilecount() {
