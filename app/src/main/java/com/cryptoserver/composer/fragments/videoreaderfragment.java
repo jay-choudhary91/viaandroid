@@ -510,6 +510,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         p.setMargins(thumbRect.left,0, 0, 0);
                         Log.e("thumbleft ",""+thumbRect.left);
                         layout_progressline.setLayoutParams(p);
+                        txt_mediatimethumb.setText(stringForTime(player.getCurrentPosition()));
                         txt_mediatimethumb.setVisibility(View.VISIBLE);
                         /*if(fromUser)
                         {
@@ -2969,10 +2970,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 mediaseekbar.setProgress(player.getCurrentPosition());
 
                 if (time_current != null)
-                {
                     time_current.setText(stringForTime(videostarttime));
-                    txt_mediatimethumb.setText(time_current.getText().toString());
-                }
+
                 hdlr.postDelayed(this, 10);
             }
         }
