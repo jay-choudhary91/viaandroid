@@ -524,11 +524,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             //tabs_detail
             tab_layout.setVisibility(View.VISIBLE);
             txtslotmedia.setText(getResources().getString(R.string.audio));
-            List<String> categories = new ArrayList<String>();
-            categories.add("All Media");
-            categories.add("Photo");
-            categories.add("Video");
-            categories.add("Audio");
             photospinner.setOnItemSelectedListener(this);
             img_share_media.setOnClickListener(this);
             img_edit_name.setOnClickListener(this);
@@ -597,13 +592,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             });
 
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, categories);
-
-            // Drop down layout style - list view with radio button
-            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-            // attaching data adaptermedialist to spinner
-            photospinner.setAdapter(dataAdapter);
+            String[] items=common.getallfolders();
+            if(items != null && items.length > 0)
+            {
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, common.getallfolders());
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                photospinner.setAdapter(dataAdapter);
+            }
 
             txtslotencyption.setOnClickListener(this);
             txtslotmeta.setOnClickListener(this);
