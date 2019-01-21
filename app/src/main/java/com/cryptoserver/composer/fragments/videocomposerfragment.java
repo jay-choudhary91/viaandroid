@@ -106,6 +106,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
@@ -366,6 +367,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     DrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
     RelativeLayout rl_containerview;
+    @BindView(R.id.linear_header)
+    LinearLayout linearheader;
 
     @Override
     public int getlayoutid() {
@@ -394,24 +397,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             img_warning = (ImageView) rootview.findViewById(R.id.img_warning);
             img_close = (ImageView) rootview.findViewById(R.id.img_close);
             imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
-
-            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            drawertoggle = new ActionBarDrawerToggle(
-                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
-
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    imglefthandle.setVisibility(View.VISIBLE);
-                }
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    imglefthandle.setVisibility(View.GONE);
-                }
-            };
-            navigationdrawer.addDrawerListener(drawertoggle);
-            drawertoggle.syncState();
-            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
-
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
@@ -420,6 +405,34 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_drawer_container);
             rl_containerview = (RelativeLayout) rootview.findViewById(R.id.rl_containerview);
             linearLayout=rootview.findViewById(R.id.content);
+
+            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
+            drawertoggle = new ActionBarDrawerToggle(
+                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
+
+                public void onDrawerClosed(View view) {
+                    super.onDrawerClosed(view);
+                    imglefthandle.setVisibility(View.VISIBLE);
+                    linearheader.setVisibility(View.VISIBLE);
+                   // layout_bottom.setVisibility(View.VISIBLE);
+
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,10);
+                }
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    imglefthandle.setVisibility(View.GONE);
+                    linearheader.setVisibility(View.GONE);
+                //    layout_bottom.setVisibility(View.GONE);
+
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,9);
+                }
+            };
+            navigationdrawer.addDrawerListener(drawertoggle);
+            drawertoggle.syncState();
+            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+
 
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
                 apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));

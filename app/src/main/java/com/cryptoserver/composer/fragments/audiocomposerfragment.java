@@ -109,6 +109,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     visualizeraudiorecorder myvisualizerview;
     @BindView(R.id.layout_drawertouchable)
     RelativeLayout layout_drawertouchable;
+    @BindView(R.id.linear_header)
+    LinearLayout linearheader;
 
     LinearLayout layout_bottom,layout_drawer;
     RecyclerView recyview_hashes;
@@ -207,10 +209,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     imglefthandle.setVisibility(View.VISIBLE);
+                    linearheader.setVisibility(View.VISIBLE);
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,10);
                 }
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     imglefthandle.setVisibility(View.GONE);
+                    linearheader.setVisibility(View.GONE);
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,9);
                 }
             };
             navigationdrawer.addDrawerListener(drawertoggle);

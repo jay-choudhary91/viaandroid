@@ -94,6 +94,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_section_validating;
     @BindView(R.id.shimmer_view_container)
     ShimmerFrameLayout shimmer_view_container;
+    @BindView(R.id.layout_recorder)
+    RelativeLayout layoutrecorder;
 
 
     videocomposerfragment fragvideocomposer=null;
@@ -149,7 +151,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             shimmer_view_container.startShimmer();
 
             gradientDrawable = new GradientDrawable();
-            gradientDrawable.setCornerRadius(240.0f);
+            gradientDrawable.setCornerRadius(360.0f);
             gradientDrawable.setShape(GradientDrawable.RECTANGLE);
             mParent.setBackground(gradientDrawable);
         }
@@ -344,6 +346,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             fragimgcapture.showwarningorclosebutton();
             fragimgcapture.showwarningsection(showwarningsection);
+           // fragimgcapture.layoutrecorder(layoutrecorder.getVisibility());
         }
     }
 
@@ -448,16 +451,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (view.getId())
         {
             case R.id.img_video_capture:
-                if (isCircle) {
-                    makeSquare();
-                }
-                else {
-                    makeCircle();
-                }
-                isCircle = !isCircle;
 
                 if(currentselectedcomposer == 0)
                 {
+                    if (isCircle) {
+                        makeSquare();
+                    }
+                    else {
+                        makeCircle();
+                    }
+                    isCircle = !isCircle;
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
                 }
@@ -478,6 +481,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
                 else if(currentselectedcomposer == 2)
                 {
+                    if (isCircle) {
+                        makeSquare();
+                    }
+                    else {
+                        makeCircle();
+                    }
+                    isCircle = !isCircle;
                     try {
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();
@@ -619,7 +629,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     {
         if(currentselectedcomposer == 0)
             return;
-
+        Log.e("currentselectedcomposer",""+currentselectedcomposer);
         currentselectedcomposer--;
         showselectedfragment();
     }
@@ -630,6 +640,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             return;
 
         currentselectedcomposer++;
+        Log.e("currentselectedcomposer",""+currentselectedcomposer);
         showselectedfragment();
     }
 
@@ -759,6 +770,26 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 6) // For swipe gesture to change fragment
             {
                 showwarningsection(false);
+            }
+            else if(type == 9)
+            {
+                pagerfooter.setVisibility(View.INVISIBLE);
+                layoutbottom.setVisibility(View.INVISIBLE);
+               /* img_mediathumbnail.setVisibility(View.INVISIBLE);
+                mrecordimagebutton.setVisibility(View.INVISIBLE);
+                imgrotatecamera.setVisibility(View.INVISIBLE);
+                layoutrecorder.setVisibility(View.INVISIBLE);*/
+               // layout_footerpager.setVi
+            }
+            else if(type == 10)
+            {
+                pagerfooter.setVisibility(View.VISIBLE);
+                layoutbottom.setVisibility(View.VISIBLE);
+                /*img_mediathumbnail.setVisibility(View.VISIBLE);
+                mrecordimagebutton.setVisibility(View.VISIBLE);
+                imgrotatecamera.setVisibility(View.VISIBLE);
+                layoutrecorder.setVisibility(View.VISIBLE);*/
+                // layout_footerpager.setVi
             }
         }
     };
