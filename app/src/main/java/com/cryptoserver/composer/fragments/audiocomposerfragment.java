@@ -742,6 +742,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         if(madapterclick != null)
             madapterclick.onItemClicked(null,4);
+
+        resetaudioreder();
     }
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
@@ -1178,6 +1180,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
 
         }
+    }
+
+    public void resetaudioreder(){
+
+        myvisualizerview.setVisibility(View.VISIBLE);
+
     }
 
     public static Fragment newInstance() {

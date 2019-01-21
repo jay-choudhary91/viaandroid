@@ -1193,6 +1193,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         if(madapterclick != null)
                             madapterclick.onItemClicked(null,4);
 
+                        unlockfocus();
+
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -1207,7 +1209,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mCaptureSession.stopRepeating();
             mCaptureSession.abortCaptures();
             mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
-
 
         } catch (Exception e) {
             e.printStackTrace();

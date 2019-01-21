@@ -744,7 +744,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 {
                     e.printStackTrace();
                 }
-                gethelper().onBack();
+
+                currentselectedcomposer=config.selectedmediatype;
+                showselectedfragment();
+                getlatestmediafromdirectory();
+                getlatestaudiofromdirectory();
+
+                //gethelper().onBack();
             }
             else if(type == 5) // For swipe gesture to change fragment
             {
