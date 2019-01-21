@@ -2,6 +2,7 @@ package com.cryptoserver.composer.adapter;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,12 +12,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.folder;
 import com.cryptoserver.composer.models.graphicalmodel;
 import com.cryptoserver.composer.utils.common;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.ViewHolder> {
@@ -46,15 +49,45 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
         holder.tv_foldername.setText(myfolder.getFoldername());
         holder.tv_mediacount.setText(""+myfolder.getFilecount());
 
+        holder.layout_image_container.setBackgroundColor(mContext.getResources().getColor(R.color.grey_x));
+
         if(! myfolder.isIsplus())
         {
             holder.img_mediathumbnail.setImageResource(R.drawable.icon_folder);
             holder.img_mediathumbnail.setVisibility(View.VISIBLE);
             holder.img_plus_icon.setVisibility(View.GONE);
+
+            if(! myfolder.getThumbnailurl().trim().isEmpty())
+            {
+                if(new File(myfolder.getThumbnailurl()).exists())
+                {
+                    Uri uri = Uri.fromFile(new File(myfolder.getThumbnailurl().trim()));
+                    Glide.with(mContext).
+                            load(uri).
+                            thumbnail(0.1f).
+                            into(holder.img_mediathumbnail);
+
+                    holder.layout_image_container.setBackgroundColor(mContext.getResources().getColor(R.color.dark_blue_solid));
+                }
+
+            }
+            else
+            {
+                Glide.with(mContext).
+                        load(R.drawable.icon_folder).
+                        thumbnail(0.1f).
+                        into(holder.img_mediathumbnail);
+            }
+
         }
         else
         {
-            holder.img_mediathumbnail.setImageResource(R.drawable.plusimage);
+            Glide.with(mContext).
+                    load(R.drawable.plusimage).
+                    thumbnail(0.1f).
+                    into(holder.img_plus_icon);
+
+            //holder.img_mediathumbnail.setImageResource(R.drawable.plusimage);
             holder.tv_foldername.setText("");
             holder.tv_mediacount.setText("");
             holder.img_mediathumbnail.setVisibility(View.GONE);
@@ -105,7 +138,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView tv_foldername,tv_mediacount;
         ImageView img_mediathumbnail,img_plus_icon;
-        LinearLayout layout_root;
+        LinearLayout layout_root,layout_image_container;
         public ViewHolder(View itemView) {
             super(itemView);
             img_mediathumbnail = (ImageView) itemView.findViewById(R.id.img_mediathumbnail);
@@ -113,6 +146,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
             tv_foldername = (TextView) itemView.findViewById(R.id.tv_foldername);
             tv_mediacount = (TextView) itemView.findViewById(R.id.tv_mediacount);
             layout_root = (LinearLayout) itemView.findViewById(R.id.layout_root);
+            layout_image_container = (LinearLayout) itemView.findViewById(R.id.layout_image_container);
         }
     }
 }

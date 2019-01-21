@@ -151,14 +151,17 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
                                 android:visibility="visible"
+                                android:layout_marginLeft="@dimen/margin_15dp"
+                                android:layout_marginRight="@dimen/margin_15dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_alignParentBottom="false">
 
-                                <android.support.v7.widget.RecyclerView
+                                <com.cryptoserver.composer.utils.NoScrollRecycler
                                     android:id="@+id/recyview_frames"
                                     android:layout_width="match_parent"
                                     android:visibility="visible"
                                     android:layout_marginTop="5dp"
+                                    android:overScrollMode="never"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_height="wrap_content"/>
 
@@ -167,6 +170,8 @@
                                     android:id="@+id/scrubberverticalbar"
                                     android:layout_centerHorizontal="true"
                                     android:background="@color/whitetransparent"
+                                    android:layout_marginLeft="@dimen/margin_15dp"
+                                    android:layout_marginRight="@dimen/margin_15dp"
                                     android:visibility="gone"
                                     android:layout_height="50dp">
 
@@ -193,7 +198,7 @@
                                 android:layout_below="@+id/layout_scrubberview"
                                 android:layout_marginLeft="@dimen/margin_15dp"
                                 android:layout_marginRight="@dimen/margin_15dp"
-                                android:thumbOffset="0dp"/>
+                                android:thumbOffset="-3dp"/>
 
                             <RelativeLayout
                                 android:id="@+id/layout_progressline"

@@ -2,6 +2,7 @@ package com.cryptoserver.composer.fragments;
 
 
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adaptermediagrid;
 import com.cryptoserver.composer.adapter.folderdataadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
+import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.folder;
 import com.cryptoserver.composer.models.video;
@@ -164,7 +166,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                 if(file.exists())
                 {
                     arraylist.remove(arraylist.size()-1);
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),0,false,false));
+                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),"",0,false,false));
                     arraylist.add(new folder("",false,true));
                     adapter.notifyDataSetChanged();
                 }
@@ -227,14 +229,75 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
                 if(file.getName().equalsIgnoreCase(config.allmedia))
                 {
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),filecount,true,false));
+                    String thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
+                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath,filecount,true,false));
                 }
                 else
                 {
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),filecount,false,false));
+                    String thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
+                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath,filecount,false,false));
                 }
             }
         }
         arraylist.add(new folder("",false,true));
+    }
+
+    public String getfolderthumbnailpath(String directorypath)
+    {
+        String thumbnailurl="";
+        File folderdir = new File(directorypath);
+        File[] files = folderdir.listFiles();
+        if(files.length > 0)
+        {
+            for (File file : files)
+            {
+                if(file.getAbsolutePath().contains(".mp4") || file.getAbsolutePath().contains(".jpg") || file.getAbsolutePath().contains(".png") ||
+                        file.getAbsolutePath().contains(".jpeg"))
+                {
+                    thumbnailurl=file.getAbsolutePath();
+                    break;
+                }
+                else if(file.getAbsolutePath().contains(".m4a"))
+                {
+                    thumbnailurl=getaudiothumbnail(file.getAbsolutePath());
+                    break;
+                }
+            }
+        }
+        return thumbnailurl;
+    }
+
+    public String getaudiothumbnail(String filepath)
+    {
+        String thumbnailurl="";
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        Cursor cursor = mdbhelper.getstartmediainfo(common.getfilename(filepath));
+        if(cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
+        {
+            do {
+                thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
+            }while (cursor.moveToNext());
+        }
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return thumbnailurl;
     }
 }

@@ -15,7 +15,7 @@
 
     <!-- VIDEO TRIMMER-->
     <dimen name="progress_video_line_height">4dp</dimen>
-    <dimen name="frames_video_height">40dip</dimen>
+    <dimen name="frames_video_height">50dip</dimen>
 
     <dimen name="margin_tiny">4dp</dimen>
     <dimen name="margin_small">8dp</dimen>

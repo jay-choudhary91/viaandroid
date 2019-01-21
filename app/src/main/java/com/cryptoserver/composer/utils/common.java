@@ -1342,6 +1342,33 @@ public class common {
         }
     }
 
+    public static String[] getallfolders()
+    {
+        File rootdir = new File(config.rootdir);
+        if(! rootdir.exists())
+            return null;
+
+        ArrayList<String> itemname=new ArrayList<>();
+        final ArrayList<String> itempath=new ArrayList<>();
+        File[] files = rootdir.listFiles();
+        for (File file : files)
+        {
+            if((! file.getName().equalsIgnoreCase("cache")))
+            {
+                itemname.add(file.getName());
+                itempath.add(file.getAbsolutePath());
+            }
+        }
+
+        if(itemname.size() == 0)
+        {
+            return null;
+        }
+
+        String[] items = itemname.toArray(new String[itemname.size()]);
+        return items;
+    }
+
     public static void copyfile(File sourcefile,File destinationfolder)
     {
         String sourcePath = sourcefile.getAbsolutePath();
