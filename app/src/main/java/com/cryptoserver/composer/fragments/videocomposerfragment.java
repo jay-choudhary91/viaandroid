@@ -918,7 +918,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 startPreview();
                 stopvideotimer();
-                mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
+             //   mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
              //   layout_bottom.setVisibility(View.GONE);
 
                 resetvideotimer();

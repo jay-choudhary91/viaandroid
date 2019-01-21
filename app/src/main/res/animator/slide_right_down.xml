@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="together">
+    <!--<objectAnimator
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:propertyName="xFraction"
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:valueFrom="0.0"
+        android:valueTo="0.5"
+        android:valueType="floatType"/>-->
+
+    <!--<objectAnimator
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        android:propertyName="yFraction"
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:valueFrom="0.0"
+        android:valueTo="0.1"
+        android:valueType="floatType"/>-->
+
+    <objectAnimator
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:propertyName="scaleY"
+        android:valueFrom="0.5"
+        android:valueTo="1.0"/>
+
+    <objectAnimator
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:propertyName="scaleX"
+        android:valueFrom="0.5"
+        android:valueTo="1.0"/>
+</set>

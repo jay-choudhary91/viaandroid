@@ -2,13 +2,16 @@ package com.cryptoserver.composer.fragments;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaExtractor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -116,6 +119,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private Runnable myRunnable;
     private boolean showwarningsection=true;
     private CountDownTimer countertimer;
+    @BindView(R.id.base_view)
+    ViewGroup mParent;
+
+    GradientDrawable gradientDrawable;
+    private volatile boolean isCircle = false;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -140,6 +148,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             img_mediathumbnail.setOnClickListener(this);
             shimmer_view_container.startShimmer();
 
+            gradientDrawable = new GradientDrawable();
+            gradientDrawable.setCornerRadius(240.0f);
+            gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+            mParent.setBackground(gradientDrawable);
         }
         return rootview;
     }
@@ -272,6 +284,32 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             countertimer.cancel();
     }
 
+    private void makeCircle() {
+        ObjectAnimator cornerAnimation =
+                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius",0f,0.0f);
+
+        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
+        shiftAnimation.setTarget(mParent);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(800);
+        animatorSet.playTogether(cornerAnimation, shiftAnimation);
+        animatorSet.start();
+
+    }
+
+    private void makeSquare() {
+        ObjectAnimator cornerAnimation =
+                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", 52.0f, 240.0f);
+
+        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
+        shiftAnimation.setTarget(mParent);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(500);
+        animatorSet.playTogether(cornerAnimation, shiftAnimation);
+        animatorSet.start();
+    }
     public void showwarningsection(boolean showwarning)
     {
         if(showwarning)
@@ -361,8 +399,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void initviewpager()
     {
-        mrecordimagebutton.setImageResource(R.drawable.img_startrecord);
-        mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
+      //  mrecordimagebutton.setImageResource(R.drawable.img_startrecord);
+     //   mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
 
         flingactionmindstvac=common.getcomposerswipearea();
 
@@ -410,6 +448,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (view.getId())
         {
             case R.id.img_video_capture:
+                if (isCircle) {
+                    makeSquare();
+                }
+                else {
+                    makeCircle();
+                }
+                isCircle = !isCircle;
+
                 if(currentselectedcomposer == 0)
                 {
                     if(fragvideocomposer != null)
