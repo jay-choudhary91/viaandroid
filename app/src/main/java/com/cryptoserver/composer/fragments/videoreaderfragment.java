@@ -498,8 +498,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
 
-            mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
-                    R.drawable.custom_thumb));
+            /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
+                    R.drawable.custom_thumb));*/
 
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
@@ -748,7 +748,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 }
             });
 
-
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
             txtSlot2.setVisibility(View.VISIBLE);
@@ -959,9 +958,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 thread.start();
             }
         });
-
-
-
     }
 
     @Override
