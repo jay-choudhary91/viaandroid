@@ -101,7 +101,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:id="@+id/img_image_capture"
-                        android:src="@drawable/shape_recorder_off"
+                        android:src="@drawable/shape_image_selector"
                         />
 
                 </LinearLayout>

@@ -151,7 +151,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             shimmer_view_container.startShimmer();
 
             gradientDrawable = new GradientDrawable();
-            gradientDrawable.setCornerRadius(240.0f);
+            gradientDrawable.setCornerRadius(360.0f);
             gradientDrawable.setShape(GradientDrawable.RECTANGLE);
             mParent.setBackground(gradientDrawable);
         }
@@ -346,6 +346,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             fragimgcapture.showwarningorclosebutton();
             fragimgcapture.showwarningsection(showwarningsection);
+           // fragimgcapture.layoutrecorder(layoutrecorder.getVisibility());
         }
     }
 
@@ -450,16 +451,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (view.getId())
         {
             case R.id.img_video_capture:
-                if (isCircle) {
-                    makeSquare();
-                }
-                else {
-                    makeCircle();
-                }
-                isCircle = !isCircle;
 
                 if(currentselectedcomposer == 0)
                 {
+                    if (isCircle) {
+                        makeSquare();
+                    }
+                    else {
+                        makeCircle();
+                    }
+                    isCircle = !isCircle;
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
                 }
@@ -480,6 +481,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
                 else if(currentselectedcomposer == 2)
                 {
+                    if (isCircle) {
+                        makeSquare();
+                    }
+                    else {
+                        makeCircle();
+                    }
+                    isCircle = !isCircle;
                     try {
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();

@@ -576,7 +576,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             drawertoggle.syncState();
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
-
+            captureimage.setVisibility(View.VISIBLE);
             captureimage.setOnClickListener(this);
             timerhandler = new Handler() ;
             mTextureView.setOnTouchListener(this);
