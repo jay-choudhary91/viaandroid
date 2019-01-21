@@ -49,27 +49,6 @@
 
             </FrameLayout>
 
-            <android.support.design.widget.NavigationView
-                android:id="@+id/navigation_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/blacktransparent"
-                android:visibility="gone"
-                android:fitsSystemWindows="true"
-                android:layout_gravity="start"
-                >
-
-                <include
-                    layout="@layout/layout_graphical_drawer_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </include>
-
-                <!--<include layout="@layout/layout_drawer_content_composer"></include>-->
-
-            </android.support.design.widget.NavigationView>
-
             <LinearLayout
                 android:id="@+id/layout_bottom"
                 android:layout_width="match_parent"
@@ -174,6 +153,29 @@
 
                 <include layout="@layout/action_bar_composer"></include>
             </LinearLayout>
+
+            <android.support.design.widget.NavigationView
+                android:id="@+id/navigation_drawer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/blacktransparent"
+                android:visibility="visible"
+                android:fitsSystemWindows="true"
+                android:layout_gravity="start"
+                >
+
+                <include
+                    layout="@layout/layout_graphical_drawer_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </include>
+
+                <!--<include layout="@layout/layout_drawer_content_composer"></include>-->
+
+            </android.support.design.widget.NavigationView>
+
+
 
         </com.cryptoserver.composer.utils.FullDrawerLayout>
 

@@ -1010,8 +1010,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     graphicaldrawerfragment.setdrawerproperty(graphicopen);
                     graphicaldrawerfragment.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
                     graphicaldrawerfragment.setmetricesdata();
-                    hashvalue ="";
-                    metrichashvalue = "";
                 }
 
                 myHandler.postDelayed(this, 1000);
