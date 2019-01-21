@@ -107,6 +107,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -502,6 +503,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
+    @BindView(R.id.linear_header)
+    LinearLayout linearheader;
+
     public static imagecomposerfragment newInstance() {
         return new imagecomposerfragment();
     }
@@ -553,10 +557,19 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     imglefthandle.setVisibility(View.VISIBLE);
+                    linearheader.setVisibility(View.VISIBLE);
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,10);
+                  //  layout_bottom.setVisibility(View.VISIBLE);
                 }
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     imglefthandle.setVisibility(View.GONE);
+                    linearheader.setVisibility(View.GONE);
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,9);
+                 //   layout_bottom.setVisibility(View.GONE);
+
                 }
             };
             navigationdrawer.addDrawerListener(drawertoggle);

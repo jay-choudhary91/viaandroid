@@ -94,6 +94,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_section_validating;
     @BindView(R.id.shimmer_view_container)
     ShimmerFrameLayout shimmer_view_container;
+    @BindView(R.id.layout_recorder)
+    RelativeLayout layoutrecorder;
 
 
     videocomposerfragment fragvideocomposer=null;
@@ -619,7 +621,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     {
         if(currentselectedcomposer == 0)
             return;
-
+        Log.e("currentselectedcomposer",""+currentselectedcomposer);
         currentselectedcomposer--;
         showselectedfragment();
     }
@@ -630,6 +632,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             return;
 
         currentselectedcomposer++;
+        Log.e("currentselectedcomposer",""+currentselectedcomposer);
         showselectedfragment();
     }
 
@@ -753,6 +756,26 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 6) // For swipe gesture to change fragment
             {
                 showwarningsection(false);
+            }
+            else if(type == 9)
+            {
+                pagerfooter.setVisibility(View.INVISIBLE);
+                layoutbottom.setVisibility(View.INVISIBLE);
+               /* img_mediathumbnail.setVisibility(View.INVISIBLE);
+                mrecordimagebutton.setVisibility(View.INVISIBLE);
+                imgrotatecamera.setVisibility(View.INVISIBLE);
+                layoutrecorder.setVisibility(View.INVISIBLE);*/
+               // layout_footerpager.setVi
+            }
+            else if(type == 10)
+            {
+                pagerfooter.setVisibility(View.VISIBLE);
+                layoutbottom.setVisibility(View.VISIBLE);
+                /*img_mediathumbnail.setVisibility(View.VISIBLE);
+                mrecordimagebutton.setVisibility(View.VISIBLE);
+                imgrotatecamera.setVisibility(View.VISIBLE);
+                layoutrecorder.setVisibility(View.VISIBLE);*/
+                // layout_footerpager.setVi
             }
         }
     };

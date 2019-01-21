@@ -73,6 +73,88 @@
             <!--<include layout="@layout/layout_drawer_content_composer"></include>-->
 
             </android.support.design.widget.NavigationView>
+
+            <LinearLayout
+                android:id="@+id/layout_bottom"
+                android:layout_width="match_parent"
+                android:weightSum="1"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/gradient_fade_dark_blue"
+                android:visibility="gone"
+                >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.4"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <RelativeLayout
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:id="@+id/layout_recorder"
+                        android:background="@drawable/shape_recorder_off"
+                        android:layout_centerInParent="true"
+                        >
+                        <com.cryptoserver.composer.utils.AnimatableCardView
+                            android:id="@+id/base_view"
+                            android:layout_marginLeft="@dimen/margin_medium"
+                            android:layout_centerVertical="true"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_centerInParent="true"
+                            app:cardElevation="0dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_centerInParent="true"
+                                android:layout_gravity="center"
+                                android:id="@+id/img_video_capture"
+                                android:src="@drawable/audiothum"
+                                />
+
+                        </com.cryptoserver.composer.utils.AnimatableCardView>
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/img_rotate_camera"
+                        android:src="@drawable/rotate_camera"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/action_bar_composer"></include>
+            </LinearLayout>
         </com.cryptoserver.composer.utils.FullDrawerLayout>
 
 
@@ -80,86 +162,7 @@
 
     </FrameLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_bottom"
-        android:layout_width="match_parent"
-        android:weightSum="1"
-        android:gravity="center_vertical"
-        android:padding="5dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/gradient_fade_dark_blue"
-        android:visibility="gone"
-        >
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.4"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <RelativeLayout
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/shape_recorder_off"
-                android:layout_centerInParent="true"
-                >
-                <com.cryptoserver.composer.utils.AnimatableCardView
-                    android:id="@+id/base_view"
-                    android:layout_marginLeft="@dimen/margin_medium"
-                    android:layout_centerVertical="true"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_centerInParent="true"
-                    app:cardElevation="0dp">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_centerInParent="true"
-                        android:layout_gravity="center"
-                        android:id="@+id/img_video_capture"
-                        android:src="@drawable/audiothum"
-                        />
-
-                </com.cryptoserver.composer.utils.AnimatableCardView>
-
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/img_rotate_camera"
-                android:src="@drawable/rotate_camera"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include layout="@layout/action_bar_composer"></include>
-    </LinearLayout>
 
 
 </RelativeLayout>

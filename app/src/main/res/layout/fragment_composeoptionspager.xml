@@ -49,6 +49,7 @@
         <RelativeLayout
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:id="@+id/layout_recorder"
             android:background="@drawable/shape_recorder_off"
             android:layout_centerInParent="true"
             >

@@ -69,115 +69,117 @@
                 <!--<include layout="@layout/layout_drawer_content_composer"></include>-->
 
             </android.support.design.widget.NavigationView>
+
+            <LinearLayout
+                android:id="@+id/layout_bottom"
+                android:layout_width="match_parent"
+                android:weightSum="1"
+                android:gravity="center_vertical"
+                android:padding="5dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/gradient_fade_dark_blue"
+                android:visibility="gone"
+                >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.4"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:id="@+id/img_image_capture"
+                        android:src="@drawable/shape_recorder_off"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/img_rotate_camera"
+                        android:src="@drawable/rotate_camera"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:content="@+id/content"
+                android:handle="@+id/handle"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_above="@id/layout_bottom"
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    android:id="@id/handle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/righthandle"
+                    />
+                <LinearLayout
+                    android:id="@id/content"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:weightSum="1"
+                    >
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_weight=".1"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/righthandle"
+                        android:visibility="gone"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/righthandle"
+                        />
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical">
+
+
+                <include layout="@layout/action_bar_composer"></include>
+            </LinearLayout>
+
         </com.cryptoserver.composer.utils.FullDrawerLayout>
 
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_bottom"
-        android:layout_width="match_parent"
-        android:weightSum="1"
-        android:gravity="center_vertical"
-        android:padding="5dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/gradient_fade_dark_blue"
-        android:visibility="gone"
-        >
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.4"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/img_image_capture"
-                android:src="@drawable/shape_recorder_off"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.3"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/img_rotate_camera"
-                android:src="@drawable/rotate_camera"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:content="@+id/content"
-        android:handle="@+id/handle"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:layout_above="@id/layout_bottom"
-        android:layout_centerVertical="true">
-
-        <ImageView
-            android:id="@id/handle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:src="@drawable/righthandle"
-            />
-        <LinearLayout
-            android:id="@id/content"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            android:weightSum="1"
-            >
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_weight=".1"
-                android:layout_height="wrap_content"
-                android:src="@drawable/righthandle"
-                android:visibility="gone"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/righthandle"
-                />
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/linear_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
-
-
-        <include layout="@layout/action_bar_composer"></include>
-    </LinearLayout>
 
 
 
