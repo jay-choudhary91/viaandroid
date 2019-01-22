@@ -2462,7 +2462,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             playpausebutton.setVisibility(View.VISIBLE);
             mediaseekbar.setProgress(player.getCurrentPosition());
 
-            if(layout_footer.getVisibility()==View.VISIBLE && handleimageview.getVisibility()== View.VISIBLE){
+            if(layout_footer.getVisibility()==View.VISIBLE && layout_photodetails.getVisibility()==View.GONE){
                 showcontrollers();
                 layoutcustomcontroller.setVisibility(View.GONE);
             }else{
