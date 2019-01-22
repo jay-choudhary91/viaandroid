@@ -172,7 +172,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     DrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
-    ImageView imglefthandle;
+    ImageView imglefthandle,imgrighthandle;
     RelativeLayout rl_containerview;
 
     @Override
@@ -202,6 +202,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             linearLayout=rootview.findViewById(R.id.content);
 
             imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
+            imgrighthandle = (ImageView)rootview.findViewById(R.id.img_righthandle);
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
             drawertoggle = new ActionBarDrawerToggle(
                     getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
@@ -210,6 +211,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     super.onDrawerClosed(view);
                     imglefthandle.setVisibility(View.VISIBLE);
                     linearheader.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.GONE);
                     if(madapterclick != null)
                         madapterclick.onItemClicked(null,10);
                 }
@@ -217,6 +219,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     super.onDrawerOpened(drawerView);
                     imglefthandle.setVisibility(View.GONE);
                     linearheader.setVisibility(View.GONE);
+                    imgrighthandle.setVisibility(View.VISIBLE);
                     if(madapterclick != null)
                         madapterclick.onItemClicked(null,9);
                 }
@@ -236,6 +239,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             img_close.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             imglefthandle.setOnClickListener(this);
+            imgrighthandle.setOnClickListener(this);
 
             fragment_graphic_container.setVisibility(View.VISIBLE);
 
@@ -390,6 +394,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
+                break;
+
+            case R.id.img_righthandle:
+                navigationdrawer.closeDrawers();
                 break;
 
             case R.id.img_dotmenu: {

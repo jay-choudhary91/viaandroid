@@ -327,7 +327,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     ImageView mrecordimagebutton,imgflashon,img_dotmenu,img_warning,img_close,rotatecamera,handle;
 
-    ImageView imglefthandle;
+    ImageView imglefthandle,imgrighthandle;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -397,6 +397,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             img_warning = (ImageView) rootview.findViewById(R.id.img_warning);
             img_close = (ImageView) rootview.findViewById(R.id.img_close);
             imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
+            imgrighthandle = (ImageView)rootview.findViewById(R.id.img_righthandle);
             handle = (ImageView) rootview.findViewById(R.id.handle);
             layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
@@ -414,6 +415,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     super.onDrawerClosed(view);
                     imglefthandle.setVisibility(View.VISIBLE);
                     linearheader.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.GONE);
                    // layout_bottom.setVisibility(View.VISIBLE);
 
                     if(madapterclick != null)
@@ -423,6 +425,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     super.onDrawerOpened(drawerView);
                     imglefthandle.setVisibility(View.GONE);
                     linearheader.setVisibility(View.GONE);
+                    imgrighthandle.setVisibility(View.VISIBLE);
                 //    layout_bottom.setVisibility(View.GONE);
 
                     if(madapterclick != null)
@@ -472,6 +475,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mTextureView.setOnTouchListener(this);
 
             imglefthandle.setOnClickListener(this);
+            imgrighthandle.setOnClickListener(this);
 
             mrecordimagebutton.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
@@ -988,6 +992,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
+                break;
+
+            case R.id.img_righthandle:
+                navigationdrawer.closeDrawers();
                 break;
 
             case R.id.img_dotmenu:

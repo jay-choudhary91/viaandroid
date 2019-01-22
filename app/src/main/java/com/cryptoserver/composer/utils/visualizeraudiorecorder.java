@@ -16,8 +16,9 @@ import java.util.List;
  */
 
 public class visualizeraudiorecorder extends View {
-    private static final int LINE_WIDTH = 5; // width of visualizer lines
-    private static final int LINE_SCALE = 75; // scales visualizer lines
+
+    private static final int LINE_WIDTH = 10; // width of visualizer lines
+    private static final int LINE_SCALE = 100; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
     private int width; // width of this View
     private int height; // height of this View
@@ -41,10 +42,8 @@ public class visualizeraudiorecorder extends View {
 
     // clear all amplitudes to prepare for a new visualization
     public void clear() {
-
         if(amplitudes != null)
-              amplitudes.clear();
-
+            amplitudes.clear();
     }
 
     // add the given amplitude to the amplitudes ArrayList
@@ -66,14 +65,11 @@ public class visualizeraudiorecorder extends View {
         // for each item in the amplitudes ArrayList
         for (float power : amplitudes) {
             float scaledHeight = power / LINE_SCALE; // scale the power
-
-          //  Log.e("wave scale",""+scaledHeight);
-            curX += LINE_WIDTH; // increase X by LINE_WIDTH
+            curX += LINE_WIDTH+2; // increase X by LINE_WIDTH
 
             // draw a line representing this item in the amplitudes ArrayList
             canvas.drawLine(curX, middle + scaledHeight / 1, curX, middle
                     - scaledHeight / 1, linePaint);
         }
     }
-
 }
