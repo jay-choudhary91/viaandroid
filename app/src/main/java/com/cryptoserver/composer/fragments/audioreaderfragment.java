@@ -540,6 +540,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             layout_endtime.setVisibility(View.VISIBLE);
             layout_starttime.setVisibility(View.VISIBLE);
 
+            edt_medianame.setEnabled(false);
+            edt_medianame.setClickable(false);
+            edt_medianame.setFocusable(false);
+            edt_medianame.setFocusableInTouchMode(false);
+
+            edt_medianotes.setEnabled(false);
+            edt_medianotes.setClickable(false);
+            edt_medianotes.setFocusable(false);
+            edt_medianotes.setFocusableInTouchMode(false);
+
             edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {

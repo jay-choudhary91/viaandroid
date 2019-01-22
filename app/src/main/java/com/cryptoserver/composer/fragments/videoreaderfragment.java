@@ -508,6 +508,16 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
 
+            edt_medianame.setEnabled(false);
+            edt_medianame.setClickable(false);
+            edt_medianame.setFocusable(false);
+            edt_medianame.setFocusableInTouchMode(false);
+
+            edt_medianotes.setEnabled(false);
+            edt_medianotes.setClickable(false);
+            edt_medianotes.setFocusable(false);
+            edt_medianotes.setFocusableInTouchMode(false);
+
             /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
                     R.drawable.custom_thumb));*/
 
