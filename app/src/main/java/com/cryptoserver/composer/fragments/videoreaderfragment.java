@@ -508,9 +508,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
 
-            mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
-                    R.drawable.custom_thumb));
+            /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
+                    R.drawable.custom_thumb));*/
 
+                 mediaseekbar.setThumbOffset(-0);
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
 
@@ -525,7 +526,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
                         p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                         Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                        p.setMargins(thumbRect.left,0, 0, 0);
+                        p.setMargins(thumbRect.centerX()+2,0, 0, 0);
                         Log.e("thumbleft ",""+thumbRect.left);
                         layout_progressline.setLayoutParams(p);
                         txt_mediatimethumb.setText(stringForTime(player.getCurrentPosition()));
