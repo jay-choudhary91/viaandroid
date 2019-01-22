@@ -97,7 +97,7 @@
                         android:paddingLeft="10dip"
                         android:layout_centerInParent="true"
                         android:paddingRight="4dip"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -240,10 +240,11 @@
                                 android:layout_centerInParent="true"
                                 android:progressDrawable="@drawable/custom_seekbar"
                                 android:layout_height="30dip"
+                                android:thumb="@drawable/custom_thumb"
                                 android:layout_below="@+id/layout_scrubberview"
                                 android:layout_marginLeft="@dimen/margin_15dp"
                                 android:layout_marginRight="@dimen/margin_15dp"
-                                android:thumbOffset="-3dp"/>
+                                />
 
                             <RelativeLayout
                                 android:id="@+id/layout_progressline"
