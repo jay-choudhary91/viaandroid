@@ -1668,7 +1668,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 Date enddate = format.parse(completedate);
                                 final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(startdate);
                                 final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+                                SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
                                 final String starttime = spf.format(startdate);
                                 Log.e("starttime",starttime);
                                 final String endtime = spf.format(enddate);
@@ -2461,22 +2461,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             playpausebutton.setVisibility(View.VISIBLE);
             mediaseekbar.setProgress(player.getCurrentPosition());
 
-            if(layout_footer.getVisibility()==View.VISIBLE){
-                LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                linearParams.setMargins(0, 0,0, 0);
-                layoutcustomcontroller.setLayoutParams(linearParams);
-                videotextureview.setClickable(true);
-                layout_mediatype.setVisibility(View.VISIBLE);
-                playpausebutton.setImageResource(R.drawable.play_btn);
-                playpausebutton.setVisibility(View.VISIBLE);
-                img_fullscreen.setVisibility(View.VISIBLE);
-                layout_footer.setVisibility(View.VISIBLE);
-                img_share_media.setVisibility(View.VISIBLE);
-                img_delete_media.setVisibility(View.VISIBLE);
-                footercurrenttime.setVisibility(View.GONE);
-                footertotaltime.setVisibility(View.GONE);
+            if(layout_footer.getVisibility()==View.VISIBLE && handleimageview.getVisibility()== View.VISIBLE){
+                showcontrollers();
                 layoutcustomcontroller.setVisibility(View.GONE);
-                imgpause.setVisibility(View.GONE);
+            }else{
+                showcontrollers();
+                layoutcustomcontroller.setVisibility(View.VISIBLE);
             }
 
             new Handler().postDelayed(new Runnable() {
@@ -3196,5 +3186,22 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                        }
                                    }
         );
+    }
+
+    public void showcontrollers(){
+        LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        linearParams.setMargins(0, 0,0, 0);
+        layoutcustomcontroller.setLayoutParams(linearParams);
+        videotextureview.setClickable(true);
+        layout_mediatype.setVisibility(View.VISIBLE);
+        playpausebutton.setImageResource(R.drawable.play_btn);
+        playpausebutton.setVisibility(View.VISIBLE);
+        img_fullscreen.setVisibility(View.VISIBLE);
+        layout_footer.setVisibility(View.VISIBLE);
+        img_share_media.setVisibility(View.VISIBLE);
+        img_delete_media.setVisibility(View.VISIBLE);
+        footercurrenttime.setVisibility(View.GONE);
+        footertotaltime.setVisibility(View.GONE);
+        imgpause.setVisibility(View.GONE);
     }
 }

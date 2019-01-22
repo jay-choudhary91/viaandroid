@@ -59,6 +59,7 @@ import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Display;
@@ -2380,6 +2381,7 @@ public class common {
         SpannableStringBuilder encryptionstring=new SpannableStringBuilder(encryptionstr);
         encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new RelativeSizeSpan(1.1f),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         txt_encryption.setText(encryptionstring);
     }
 
