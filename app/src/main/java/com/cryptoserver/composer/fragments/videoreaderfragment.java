@@ -1668,7 +1668,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 Date enddate = format.parse(completedate);
                                 final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(startdate);
                                 final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+                                SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
                                 final String starttime = spf.format(startdate);
                                 Log.e("starttime",starttime);
                                 final String endtime = spf.format(enddate);

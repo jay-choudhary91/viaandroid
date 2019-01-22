@@ -17,8 +17,8 @@ import java.util.List;
 
 public class visualizeraudiorecorder extends View {
 
-    private static final int LINE_WIDTH = 10; // width of visualizer lines
-    private static final int LINE_SCALE = 100; // scales visualizer lines
+    private static final int LINE_WIDTH = 7; // width of visualizer lines
+    private static final int LINE_SCALE = 75; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
     private int width; // width of this View
     private int height; // height of this View
