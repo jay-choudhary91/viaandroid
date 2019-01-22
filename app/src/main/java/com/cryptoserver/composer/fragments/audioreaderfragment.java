@@ -219,9 +219,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.layout_photoreader)
     RelativeLayout layout_photoreader;
 
-
-
-
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
     @BindView(R.id.txt_latitude)
@@ -280,6 +277,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     customfonttextview tvbattery;
     @BindView(R.id.img_lefthandle)
     ImageView handleimageview;
+    @BindView(R.id.img_righthandle)
+    ImageView imgrighthandle;
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
 
@@ -396,11 +395,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     handleimageview.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.GONE);
                 }
                 /** Called when a drawer has settled in a completely open state. */
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     handleimageview.setVisibility(View.GONE);
+                    imgrighthandle.setVisibility(View.VISIBLE);
                 }
             };
 
@@ -478,6 +479,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             img_camera.setOnClickListener(this);
             img_arrow_back.setOnClickListener(this);
             handleimageview.setOnClickListener(this);
+            imgrighthandle.setOnClickListener(this);
             img_delete_media.setOnClickListener(this);
 
             img_dotmenu.setVisibility(View.VISIBLE);
@@ -787,6 +789,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
                // handleimageview.setVisibility(View.GONE);
+                break;
+
+            case R.id.img_righthandle:
+                navigationdrawer.closeDrawers();
                 break;
 
             case R.id.rl_controllerview:

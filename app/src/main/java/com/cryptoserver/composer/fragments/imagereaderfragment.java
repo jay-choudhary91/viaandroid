@@ -137,6 +137,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout linearLayout;
     @BindView(R.id.img_lefthandle)
     ImageView handleimageview;
+    @BindView(R.id.img_righthandle)
+    ImageView imgrighthandle;
 
     @BindView(R.id.righthandle)
     ImageView righthandle;
@@ -284,12 +286,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     handleimageview.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.GONE);
                 }
 
                 /** Called when a drawer has settled in a completely open state. */
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     handleimageview.setVisibility(View.GONE);
+                    imgrighthandle.setVisibility(View.VISIBLE);
+
                 }
             };
 
@@ -432,6 +437,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
             handleimageview.setOnClickListener(this);
+            imgrighthandle.setOnClickListener(this);
 
 
             txtslotencyption.setOnClickListener(this);
@@ -706,6 +712,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
                 handleimageview.setVisibility(View.GONE);
+                break;
+
+            case R.id.img_righthandle:
+                navigationdrawer.closeDrawers();
                 break;
 
             case R.id.img_delete_media:

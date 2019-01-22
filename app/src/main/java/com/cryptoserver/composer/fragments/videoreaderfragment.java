@@ -310,6 +310,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     customfonttextview tvbattery;
     @BindView(R.id.img_lefthandle)
     ImageView handleimageview;
+    @BindView(R.id.img_righthandle)
+    ImageView imgrighthandle;
     @BindView(R.id.btn_playpause)
     circularImageview playpausebutton;
     @BindView(R.id.txt_title_actionbarcomposer)
@@ -440,10 +442,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     handleimageview.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.GONE);
                 }
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     handleimageview.setVisibility(View.GONE);
+                    imgrighthandle.setVisibility(View.VISIBLE);
                 }
             };
             navigationdrawer.addDrawerListener(drawertoggle);
@@ -697,6 +701,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             img_camera.setOnClickListener(new setonClick());
             img_arrow_back.setOnClickListener(new setonClick());
             handleimageview.setOnClickListener(new setonClick());
+            imgrighthandle.setOnClickListener(new setonClick());
             videotextureview.setOnClickListener(new setonClick());
             img_delete_media.setOnClickListener(new setonClick());
             imgpause.setOnClickListener(new setonClick());
@@ -1107,6 +1112,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 case R.id.img_lefthandle:
                     navigationdrawer.openDrawer(Gravity.START);
                     //handleimageview.setVisibility(View.GONE);
+                    break;
+
+                case R.id.img_righthandle:
+                    navigationdrawer.closeDrawers();
                     break;
 
                 case R.id.img_arrow_back:
