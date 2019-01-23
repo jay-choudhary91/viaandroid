@@ -923,24 +923,28 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             e.printStackTrace();
         }
 
-        new Handler().postDelayed(new Runnable() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            mediarecorder.stop();
+        }catch(RuntimeException stopException){
+            Log.e("exception", String.valueOf(stopException));
+        }
+        mediarecorder.reset();
+
+        startPreview();
+        stopvideotimer();
+
+        resetvideotimer();
+        clearvideolist();
+
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                try{
-                    mediarecorder.stop();
-                }catch(RuntimeException stopException){
-                    Log.e("exception", String.valueOf(stopException));
-                }
-                mediarecorder.reset();
-
-                startPreview();
-                stopvideotimer();
-             //   mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
-             //   layout_bottom.setVisibility(View.GONE);
-
-                resetvideotimer();
-                clearvideolist();
-
                 try {
 
                     Gson gson = new Gson();
@@ -957,21 +961,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     e.printStackTrace();
                 }
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
 
-                mrecordimagebutton.setEnabled(true);
-                //setmetricesadapter();
-                //syncmediadatabase();
-                firsthashvalue = true;
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
 
-                medialistitemaddbroadcast();
+                        mrecordimagebutton.setEnabled(true);
+                        firsthashvalue = true;
 
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(null,4);
+                        medialistitemaddbroadcast();
+
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(null,4);
+                    }
+                });
 
             }
-        },100);
+        }).start();
     }
 
     public void medialistitemaddbroadcast()
