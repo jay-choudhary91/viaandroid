@@ -721,6 +721,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     previousheight = videotextureview.getHeight();
                     previouswidth = videotextureview.getWidth();
                     previouswidthpercentage = (previouswidth*20)/100;
+                    playpausebutton.setVisibility(View.VISIBLE);
+                    recenterplaypause(previousheight);
                     Log.e("previousheight",""+previousheight);
                 }
             });
@@ -932,6 +934,15 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
     }
 
+    public void recenterplaypause(int margintop)
+    {
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        params.setMargins(0,margintop/2,0,0);
+        playpausebutton.setLayoutParams(params);
+    }
+
     public class setonClick implements View.OnClickListener
     {
 
@@ -1032,7 +1043,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         playpausebutton.setVisibility(View.GONE);
                         imgpause.setVisibility(View.GONE);
                         img_fullscreen.setVisibility(View.INVISIBLE);
-
+                        recenterplaypause(targetheight);
                     } else{
                         navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                         //navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -1054,6 +1065,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         collapseimg_view();
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+                        recenterplaypause(previousheight);
                     }
                     break;
 
