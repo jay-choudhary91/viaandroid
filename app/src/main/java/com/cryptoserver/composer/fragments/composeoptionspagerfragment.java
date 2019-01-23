@@ -45,6 +45,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.activity.locationawareactivity;
@@ -72,8 +73,6 @@ import butterknife.ButterKnife;
 
 public class composeoptionspagerfragment extends basefragment implements View.OnClickListener {
 
-    @BindView(R.id.pager_footer)
-    pagercustomduration pagerfooter;
     @BindView(R.id.txt_timer)
     TextView txt_timer;
 
@@ -97,7 +96,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ShimmerFrameLayout shimmer_view_container;
     @BindView(R.id.layout_recorder)
     RelativeLayout layoutrecorder;
-
+    @BindView(R.id.txt_mediatype_a)
+    TextView txt_mediatype_a;
+    @BindView(R.id.txt_mediatype_b)
+    TextView txt_mediatype_b;
+    @BindView(R.id.txt_mediatype_c)
+    TextView txt_mediatype_c;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -125,8 +129,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @BindView(R.id.base_view)
     ViewGroup mParent;
 
-    GradientDrawable gradientDrawable;
-    private volatile boolean isCircle = false;
+    GradientDrawable gradientdrawable;
+    private volatile boolean iscircle = true;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -149,12 +153,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             mrecordimagebutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
+            txt_mediatype_a.setOnClickListener(this);
+            txt_mediatype_b.setOnClickListener(this);
+            txt_mediatype_c.setOnClickListener(this);
             shimmer_view_container.startShimmer();
-
-            gradientDrawable = new GradientDrawable();
-            gradientDrawable.setCornerRadius(360.0f);
-            gradientDrawable.setShape(GradientDrawable.RECTANGLE);
-            mParent.setBackground(gradientDrawable);
+            gradientdrawable = new GradientDrawable();
+            gradientdrawable.setCornerRadius(360.0f);
+            gradientdrawable.setShape(GradientDrawable.RECTANGLE);
+            mParent.setBackground(gradientdrawable);
         }
         return rootview;
     }
@@ -287,9 +293,25 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             countertimer.cancel();
     }
 
-    private void makeCircle() {
+    private void makecircle() {
+
         ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius",0f,0.0f);
+                ObjectAnimator.ofFloat(gradientdrawable, "cornerRadius", 30.0f, 200.0f);
+
+        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
+        shiftAnimation.setTarget(mParent);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(800);
+        animatorSet.playTogether(cornerAnimation, shiftAnimation);
+        animatorSet.start();
+        iscircle = !iscircle;
+    }
+
+    private void makesquare() {
+
+        ObjectAnimator cornerAnimation =
+                ObjectAnimator.ofFloat(gradientdrawable, "cornerRadius",100f,10.0f);
 
         Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
         shiftAnimation.setTarget(mParent);
@@ -298,20 +320,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         animatorSet.setDuration(800);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
+        iscircle = !iscircle;
 
-    }
-
-    private void makeSquare() {
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", 52.0f, 240.0f);
-
-        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
-        shiftAnimation.setTarget(mParent);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(500);
-        animatorSet.playTogether(cornerAnimation, shiftAnimation);
-        animatorSet.start();
     }
     public void showwarningsection(boolean showwarning)
     {
@@ -408,35 +418,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         flingactionmindstvac=common.getcomposerswipearea();
 
-        pagerfooter.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
-        pagerfooter.setOffscreenPageLimit(3);
-        pagerfooter.setClipToPadding(false);
-        pagerfooter.setPadding(300,0,300,0);
-        //int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),150);
-        //pagerfooter.setPageMargin(margin);
-
-        pagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.e("position2 ",""+position);
-                if(position != currentselectedcomposer)
-                {
-                    currentselectedcomposer=position;
-                    showselectedfragment();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
         currentselectedcomposer=config.selectedmediatype;
+        if(currentselectedcomposer == 0)
+        {
+            showselecteditemincenter(txt_mediatype_a,1);
+        }
+        else if(currentselectedcomposer == 2)
+        {
+            showselecteditemincenter(txt_mediatype_c,3);
+        }
+
         showselectedfragment();
         getlatestmediafromdirectory();
         getlatestaudiofromdirectory();
@@ -447,21 +438,61 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 
+    public void showselecteditemincenter(TextView textView,int sectionnumber)
+    {
+        String selectedvalue=textView.getText().toString();
+        if(textView.getText().toString().startsWith(config.item_video))
+        {
+            currentselectedcomposer=0;
+        }
+        else if(textView.getText().toString().startsWith(config.item_photo))
+        {
+            currentselectedcomposer=1;
+        }
+        else if(textView.getText().toString().startsWith(config.item_audio))
+        {
+            currentselectedcomposer=2;
+        }
+
+        if(sectionnumber == 1)
+        {
+            textView.setText(txt_mediatype_c.getText().toString());
+            txt_mediatype_c.setText(txt_mediatype_b.getText().toString());
+        }
+        else if(sectionnumber == 3)
+        {
+            textView.setText(txt_mediatype_a.getText().toString());
+            txt_mediatype_a.setText(txt_mediatype_b.getText().toString());
+        }
+        txt_mediatype_b.setText(selectedvalue);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId())
         {
+            case R.id.txt_mediatype_a:
+                showselecteditemincenter(txt_mediatype_a,1);
+                showselectedfragment();
+                break;
+            case R.id.txt_mediatype_b:
+
+                break;
+            case R.id.txt_mediatype_c:
+                showselecteditemincenter(txt_mediatype_c,3);
+                showselectedfragment();
+                break;
+
             case R.id.img_video_capture:
 
                 if(currentselectedcomposer == 0)
                 {
-                    if (isCircle) {
-                        makeSquare();
+                    if (iscircle) {
+                        makesquare();
                     }
                     else {
-                        makeCircle();
+                        makecircle();
                     }
-                    isCircle = !isCircle;
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
                 }
@@ -485,13 +516,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
                 else if(currentselectedcomposer == 2)
                 {
-                    if (isCircle) {
-                        makeSquare();
+                    if (iscircle) {
+                        makesquare();
                     }
                     else {
-                        makeCircle();
+                        makecircle();
                     }
-                    isCircle = !isCircle;
                     try {
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();
@@ -515,7 +545,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 break;
 
             case R.id.img_mediathumbnail:
-                config.selectedmediatype=pagerfooter.getCurrentItem();
+                config.selectedmediatype=currentselectedcomposer;
                 medialistitemaddbroadcast();
                 gethelper().onBack();
                 break;
@@ -687,29 +717,32 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             public void run() {
                // setimagerecordstop();
                 setimagethumbnail();
-                pagerfooter.setCurrentItem(currentselectedcomposer,true);
-                /*try {
-                    for(int i=0;i<viewelements.length;i++)
-                    {
-                        LayoutInflater inflater = LayoutInflater.from(applicationviavideocomposer.getactivity());
-                        View view=inflater.inflate(viewelements[i],null);
-                        TextView textView=(TextView)view.findViewById(R.id.txt_content);
-                        if(i == currentselectedcomposer)
-                        {
-                            textView.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.red));
-                        }
-                        else
-                        {
-                            textView.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-                        }
-                    }
-                    synchronized(pagerfooter){
-                        pagerfooter.getAdapter().notifyDataSetChanged();
-                    }
-                }catch (Exception e)
+                if(! iscircle)
+                    makecircle();
+
+                String mediatype="";
+                switch (currentselectedcomposer)
                 {
-                    e.printStackTrace();
-                }*/
+                    case 0:
+                        mediatype=config.item_video;
+                        break;
+
+                    case 1:
+                        mediatype=config.item_photo;
+                        break;
+
+                    case 2:
+                        mediatype=config.item_audio;
+                        break;
+                }
+                if(txt_mediatype_a.getText().toString().startsWith(mediatype))
+                {
+                    showselecteditemincenter(txt_mediatype_a,1);
+                }
+                else if(txt_mediatype_c.getText().toString().startsWith(mediatype))
+                {
+                    showselecteditemincenter(txt_mediatype_c,3);
+                }
 
             }
         },50);
@@ -754,7 +787,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 4) // Back the fragment and navigate to media list
             {
                 try {
-                    config.selectedmediatype=pagerfooter.getCurrentItem();
+                    config.selectedmediatype=currentselectedcomposer;
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -762,8 +795,19 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 currentselectedcomposer=config.selectedmediatype;
                 showselectedfragment();
-                getlatestmediafromdirectory();
-                getlatestaudiofromdirectory();
+                if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
+                {
+                    getlatestmediafromdirectory();
+                }
+                else if(currentselectedcomposer == 2)
+                {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getlatestaudiofromdirectory();
+                        }
+                    },3000);
+                }
 
                 //gethelper().onBack();
             }
@@ -777,7 +821,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             else if(type == 9)
             {
-                pagerfooter.setVisibility(View.INVISIBLE);
                 layoutbottom.setVisibility(View.INVISIBLE);
                /* img_mediathumbnail.setVisibility(View.INVISIBLE);
                 mrecordimagebutton.setVisibility(View.INVISIBLE);
@@ -787,7 +830,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             else if(type == 10)
             {
-                pagerfooter.setVisibility(View.VISIBLE);
                 layoutbottom.setVisibility(View.VISIBLE);
                 /*img_mediathumbnail.setVisibility(View.VISIBLE);
                 mrecordimagebutton.setVisibility(View.VISIBLE);
@@ -838,8 +880,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 File[] files = videodir.listFiles();
                 for (File file : files)
                 {
-                    long file_size = file.length();
-                    if(file_size >= 0)
+                    long filelength = file.length();
+                    int file_size = Integer.parseInt(String.valueOf(filelength/1024));
+                    if(file_size > 0)
                     {
                         video videoobj=new video();
                         videoobj.setPath(file.getAbsolutePath());
@@ -853,6 +896,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                             else
                             {
                                 //Adjust data source as per the requirement if file, URI, etc.
+                                File fileforsize = new File(videoobj.getPath());
+                                int file_sizekb = Integer.parseInt(String.valueOf(file.length()/1024));
+
                                 extractor.setDataSource(file.getAbsolutePath());
                                 int numTracks = extractor.getTrackCount();
                                 if(numTracks > 0)
@@ -866,6 +912,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         }finally {
                             //Release stuff
                             extractor.release();
+                        }
+                    }
+                    else
+                    {
+                        try {
+                            common.delete(file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -898,9 +952,20 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             mediapath=audioarraylist.get(audioarraylist.size()-1);
             img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+
+            RequestOptions options = new RequestOptions();
+            options.centerCrop();
+          //  options.override(150,100);
+
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
+            Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
+                    .transition(GenericTransitionOptions.with(R.anim.fadein)).
+                    apply(options).
+                    into(img_mediathumbnail);
         }
 
-        if(mediapath != null && (! mediapath.trim().isEmpty()))
+        if((currentselectedcomposer == 0 || currentselectedcomposer == 1) && mediapath != null && (! mediapath.trim().isEmpty()))
         {
             Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                     BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));

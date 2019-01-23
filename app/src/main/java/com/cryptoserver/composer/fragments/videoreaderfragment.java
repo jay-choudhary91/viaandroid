@@ -992,6 +992,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             public void run() {
 
                 scrubberviewwidth = layout_scrubberview.getWidth();
+                scrollview_meta.setVisibility(View.INVISIBLE);
+
+                scrollView_encyrption.setVisibility(View.INVISIBLE);
                 Thread thread = new Thread() {
                     public void run() {
                         getbitmap(scrubberviewwidth);
@@ -999,11 +1002,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     }
                 };
                 thread.start();
+
             }
         });
-
-
-
     }
 
     @Override
@@ -1574,6 +1575,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     @Override
     public void onStart() {
         super.onStart();
+
         /*IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
         coredatabroadcastreceiver = new BroadcastReceiver() {
             @Override
@@ -1715,6 +1717,21 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                     }
                                 });
                             }
+
+
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        final Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                // Do something after 5s = 5000ms
+                                                setmetadatavalue();
+                                            }
+                                        }, 2000);
+                                    }
+                                });
                         }
                         try
                         {
@@ -2797,6 +2814,40 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }
     }
 
+
+    public void setmetadatavalue(){
+
+        common.setspannable(getResources().getString(R.string.latitude),"\n"+"N/A", tvlatitude);
+        common.setspannable(getResources().getString(R.string.longitude),"\n"+"N/A", tvlongitude);
+        common.setspannable(getResources().getString(R.string.altitude),"\n"+"N/A", tvaltitude);
+        common.setspannable(getResources().getString(R.string.speed),"\n"+"N/A", tvspeed);
+        common.setspannable(getResources().getString(R.string.heading),"\n"+"N/A", tvheading);
+        common.setspannable(getResources().getString(R.string.traveled),"\n"+"N/A", tvtraveled);
+        common.setspannable("","N/A", tvaddress);
+        common.setspannable(getResources().getString(R.string.xaxis),"\n"+"N/A", tvxaxis);
+        common.setspannable(getResources().getString(R.string.yaxis),"\n"+"N/A", tvyaxis);
+        common.setspannable(getResources().getString(R.string.zaxis),"\n"+"N/A", tvzaxis);
+        common.setspannable(getResources().getString(R.string.phone),"\n"+"N/A", tvphone);
+        common.setspannable(getResources().getString(R.string.network),"\n"+"N/A", tvnetwork);
+        common.setspannable(getResources().getString(R.string.connection),"\n"+"N/A", tvconnection);
+        common.setspannable(getResources().getString(R.string.version),"\n"+"N/A", tvversion);
+        common.setspannable(getResources().getString(R.string.wifi),"\n"+"N/A", tvwifi);
+        common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+"N/A", tvgpsaccuracy);
+        common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
+        common.setspannable(getResources().getString(R.string.country),"\n"+"N/A", tvcountry);
+        common.setspannable(getResources().getString(R.string.cpuusage),"\n"+"N/A", tvcpuusage);
+        common.setspannable(getResources().getString(R.string.brightness),"\n"+"N/A", tvbrightness);
+        common.setspannable(getResources().getString(R.string.timezone),"\n"+"N/A", tvtimezone);
+        common.setspannable(getResources().getString(R.string.memoryusage),"\n"+"N/A", tvmemoryusage);
+        common.setspannable(getResources().getString(R.string.bluetooth),"\n"+"N/A", tvbluetooth);
+        common.setspannable(getResources().getString(R.string.localtime),"\n"+"N/A", tvlocaltime);
+        common.setspannable(getResources().getString(R.string.storagefree),"\n"+"N/A", tvstoragefree);
+        common.setspannable(getResources().getString(R.string.language),"\n"+"N/A", tvlanguage);
+        common.setspannable(getResources().getString(R.string.uptime),"\n"+"N/A", tvuptime);
+        common.setspannable(getResources().getString(R.string.battery),"\n"+"N/A", tvbattery);
+
+    }
+
     private void loadmap() {
         SupportMapFragment mapFragment = new SupportMapFragment();
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -3168,17 +3219,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                                                        scurraberverticalbar.setVisibility(View.GONE);
                                                                        //runmethod = true;
                                                                    }
-
                                                                }
                                                            });
-
 
                                                        } catch (Exception e) {
                                                            e.printStackTrace();
                                                        }
-
-
-
                                                    }
 
                                                        if (mediametadataretriever != null)

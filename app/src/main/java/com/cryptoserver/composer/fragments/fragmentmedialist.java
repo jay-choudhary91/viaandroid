@@ -608,9 +608,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 File[] files = videodir.listFiles();
                 for (File file : files)
                 {
-                    long file_size = file.length();
+                    long filelength = file.length();
+                    int file_size = Integer.parseInt(String.valueOf(filelength/1024));
                     Log.e("Filesize ",""+file.getAbsolutePath()+" "+file_size);
-                    if(file_size >= 0)
+                    if(file_size > 0)
                     {
                         Date lastModDate = new Date(file.lastModified());
                         DateFormat outputFormat = new SimpleDateFormat("MM-dd-yy");
@@ -707,7 +708,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     }
                     else
                     {
-                        common.deletefile(file.getAbsolutePath());
+                        try {
+                            common.delete(file);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                 }
