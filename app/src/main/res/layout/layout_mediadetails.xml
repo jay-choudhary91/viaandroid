@@ -101,7 +101,7 @@
                     android:layout_marginRight="10dp"
                     android:padding="@dimen/margin_5dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@color/actionbar_solid_normal_transparent"
+                    android:background="@drawable/edittext_bg"
                     android:layout_height="wrap_content">
 
                     <EditText
@@ -340,7 +340,7 @@
                     android:padding="3dp"
                     android:layout_marginRight="10dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@color/actionbar_solid_normal_transparent"
+                    android:background="@drawable/edittext_bg"
                     android:orientation="horizontal">
 
                     <Spinner
