@@ -312,7 +312,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-    int targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage,scrubberviewwidth,scrubheight,bottommargin;
+    int targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage,scrubberviewwidth=0,scrubheight,bottommargin;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
@@ -872,18 +872,20 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         layout_scrubberview.post(new Runnable() {
             @Override
             public void run() {
+                if(scrubberviewwidth == 0)
+                {
+                    scrubberviewwidth = layout_scrubberview.getWidth();
+                    scrollview_meta.setVisibility(View.INVISIBLE);
 
-                scrubberviewwidth = layout_scrubberview.getWidth();
-                scrollview_meta.setVisibility(View.INVISIBLE);
-                scrollView_encyrption.setVisibility(View.INVISIBLE);
-                Thread thread = new Thread() {
-                    public void run() {
-                        getbitmap(scrubberviewwidth);
-                        //getframesbitmap();
-                    }
-                };
-                thread.start();
-
+                    scrollView_encyrption.setVisibility(View.INVISIBLE);
+                    Thread thread = new Thread() {
+                        public void run() {
+                            getbitmap(scrubberviewwidth);
+                            //getframesbitmap();
+                        }
+                    };
+                    thread.start();
+                }
             }
         });
     }
@@ -895,6 +897,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (player != null) {
+            playerposition=player.getCurrentPosition();
+            player.pause();
+        }
+        issurafcedestroyed=true;
         return false;
     }
 
@@ -913,14 +920,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         videowidth = width;
         videoheight = height;
         updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // Do something after 5s = 5000ms
-                setmetadatavalue();
-            }
-        }, 200);
     }
 
     public void recenterplaypause(int margintop)
@@ -1228,57 +1227,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     public void onResume() {
         super.onResume();
         Log.e("onresume","onresume");
-
-
-
-        try {
-            if(! issurafcedestroyed)
-                return;
-
-            player = new MediaPlayer();
-            if(controller != null)
-                controller.removeAllViews();
-
-            controller = new videocontrollerview(getActivity(),mitemclick,true);
-
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                    BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
-            selectedvideouri=uri;
-            if(mediafilepath != null && (! mediafilepath.isEmpty()) && selectedvideouri !=null)
-            {
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.setDataSource(applicationviavideocomposer.getactivity(),selectedvideouri);
-                player.setSurface(surfacetexture);
-                player.prepareAsync();
-                player.setOnPreparedListener(new setonmediaprepared());
-                player.setOnCompletionListener(new setonmediacompletion());
-
-                if(player!=null){
-                    //changeactionbarcolor();
-                   // initAudio();
-                    //fragmentgraphic.setvisualizerwave();
-                    wavevisualizerslist.clear();
-                    setaudiodata();
-                }
-
-                if(! keytype.equalsIgnoreCase(common.checkkey()) || (frameduration != common.checkframeduration()))
-                {
-                    frameduration=common.checkframeduration();
-                    keytype=common.checkkey();
-                    mvideoframes.clear();
-                    mainvideoframes.clear();
-                    mallframes.clear();
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -1410,6 +1358,21 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                     }
                                 });
                             }
+
+
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        final Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                // Do something after 5s = 5000ms
+                                                setmetadatavalue();
+                                            }
+                                        }, 2000);
+                                    }
+                                });
                         }
                         try
                         {
@@ -1653,6 +1616,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             {
                 e.printStackTrace();
             }
+
 
             /*if(fragmentgraphic != null)
                 fragmentgraphic.setmediaplayer(true,null);*/
@@ -2679,72 +2643,71 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     }
 
 
-    private void getbitmap(final int viewwidth) {
+    private void getbitmap(final int viewwidth)
+    {
         backgroundexecutor.execute(new backgroundexecutor.task("", 0L, "") {
-                                       @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-                                       @Override
-                                       public void execute() {
+        @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+        @Override
+        public void execute() {
 
-                                           Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                                                   BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
+           Uri uri = FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                   BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
 
-                                           if(uri !=null){
-                                               try {
-                                                   LongSparseArray<Bitmap> thumbnailList = new LongSparseArray<>();
+           if (uri != null) {
+               try {
+                   LongSparseArray<Bitmap> thumbnailList = new LongSparseArray<>();
 
-                                                   MediaMetadataRetriever mediametadataretriever = new MediaMetadataRetriever();
-                                                   mediametadataretriever.setDataSource(getContext(), uri);
+                   MediaMetadataRetriever mediametadataretriever = new MediaMetadataRetriever();
+                   mediametadataretriever.setDataSource(getContext(), uri);
 
-                                                   // Retrieve media data
-                                                   long videoLengthInMs = Integer.parseInt(mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
+                   // Retrieve media data
+                   long videoLengthInMs = Integer.parseInt(mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
 
-                                                   // Set thumbnail properties (Thumbs are squares)
+                   // Set thumbnail properties (Thumbs are squares)
 
-                                                   if(mheightview == 50)
-                                                       mheightview = mheightview*2;
+                   if (mheightview == 50)
+                       mheightview = mheightview * 2;
 
-                                                   final int thumbWidth = mheightview;
-                                                   final int thumbHeight = mheightview;
+                   final int thumbWidth = mheightview;
+                   final int thumbHeight = mheightview;
 
-                                                   int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
+                   int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
 
-                                                   final long interval = videoLengthInMs / numThumbs;
+                   final long interval = videoLengthInMs / numThumbs;
 
-                                                   for (int i = 0; i < numThumbs; ++i) {
-                                                       Bitmap bitmap = mediametadataretriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
-                                                       // TODO: bitmap might be null here, hence throwing NullPointerException. You were right
-                                                       try {
-                                                           bitmap = Bitmap.createScaledBitmap(bitmap, thumbWidth, thumbHeight, false);
+                   for (int i = 0; i < numThumbs; ++i) {
+                       Bitmap bitmap = mediametadataretriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                       // TODO: bitmap might be null here, hence throwing NullPointerException. You were right
+                       try {
+                           bitmap = Bitmap.createScaledBitmap(bitmap, thumbWidth, thumbHeight, false);
 
-                                                           mbitmaplist.add(i,new frame(i,bitmap,false));
+                           mbitmaplist.add(i, new frame(i, bitmap, false));
 
-                                                           applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                                               @Override
-                                                               public void run() {
-                                                                   if(adapter != null){
-                                                                       adapter.notifyDataSetChanged();
-                                                                       scurraberverticalbar.setVisibility(View.GONE);
-                                                                       //runmethod = true;
-                                                                   }
-                                                               }
-                                                           });
-
-                                                       } catch (Exception e) {
-                                                           e.printStackTrace();
-                                                       }
-                                                   }
-
-                                                       if (mediametadataretriever != null)
-                                                           mediametadataretriever.release();
-
-                                               } catch (final Throwable e) {
-                                                   Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
-                                               }
-                                           }
-
-                                       }
+                           applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                               @Override
+                               public void run() {
+                                   if (adapter != null) {
+                                       adapter.notifyDataSetChanged();
+                                       scurraberverticalbar.setVisibility(View.GONE);
+                                       //runmethod = true;
                                    }
-        );
+                               }
+                           });
+
+                       } catch (Exception e) {
+                           e.printStackTrace();
+                       }
+                   }
+
+                   if (mediametadataretriever != null)
+                       mediametadataretriever.release();
+
+               } catch (final Throwable e) {
+                   Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+               }
+           }
+            }
+          });
     }
 
     public void showcontrollers(){
