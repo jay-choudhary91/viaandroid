@@ -73,8 +73,6 @@ import butterknife.ButterKnife;
 
 public class composeoptionspagerfragment extends basefragment implements View.OnClickListener {
 
-    @BindView(R.id.pager_footer)
-    pagercustomduration pagerfooter;
     @BindView(R.id.txt_timer)
     TextView txt_timer;
 
@@ -98,7 +96,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ShimmerFrameLayout shimmer_view_container;
     @BindView(R.id.layout_recorder)
     RelativeLayout layoutrecorder;
-
+    @BindView(R.id.txt_mediatype_a)
+    TextView txt_mediatype_a;
+    @BindView(R.id.txt_mediatype_b)
+    TextView txt_mediatype_b;
+    @BindView(R.id.txt_mediatype_c)
+    TextView txt_mediatype_c;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -150,6 +153,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             mrecordimagebutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
+            txt_mediatype_a.setOnClickListener(this);
+            txt_mediatype_b.setOnClickListener(this);
+            txt_mediatype_c.setOnClickListener(this);
             shimmer_view_container.startShimmer();
             gradientdrawable = new GradientDrawable();
             gradientdrawable.setCornerRadius(360.0f);
@@ -412,35 +418,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         flingactionmindstvac=common.getcomposerswipearea();
 
-        pagerfooter.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
-        pagerfooter.setOffscreenPageLimit(3);
-        pagerfooter.setClipToPadding(false);
-        pagerfooter.setPadding(300,0,300,0);
-        //int margin=(int)dipToPixels(applicationviavideocomposer.getactivity(),150);
-        //pagerfooter.setPageMargin(margin);
-
-        pagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.e("position2 ",""+position);
-                if(position != currentselectedcomposer)
-                {
-                    currentselectedcomposer=position;
-                    showselectedfragment();
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
         currentselectedcomposer=config.selectedmediatype;
+        if(currentselectedcomposer == 0)
+        {
+            showselecteditemincenter(txt_mediatype_a,1);
+        }
+        else if(currentselectedcomposer == 2)
+        {
+            showselecteditemincenter(txt_mediatype_c,3);
+        }
+
         showselectedfragment();
         getlatestmediafromdirectory();
         getlatestaudiofromdirectory();
@@ -451,10 +438,51 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 
+    public void showselecteditemincenter(TextView textView,int sectionnumber)
+    {
+        String selectedvalue=textView.getText().toString();
+        if(textView.getText().toString().startsWith(config.item_video))
+        {
+            currentselectedcomposer=0;
+        }
+        else if(textView.getText().toString().startsWith(config.item_photo))
+        {
+            currentselectedcomposer=1;
+        }
+        else if(textView.getText().toString().startsWith(config.item_audio))
+        {
+            currentselectedcomposer=2;
+        }
+
+        if(sectionnumber == 1)
+        {
+            textView.setText(txt_mediatype_c.getText().toString());
+            txt_mediatype_c.setText(txt_mediatype_b.getText().toString());
+        }
+        else if(sectionnumber == 3)
+        {
+            textView.setText(txt_mediatype_a.getText().toString());
+            txt_mediatype_a.setText(txt_mediatype_b.getText().toString());
+        }
+        txt_mediatype_b.setText(selectedvalue);
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId())
         {
+            case R.id.txt_mediatype_a:
+                showselecteditemincenter(txt_mediatype_a,1);
+                showselectedfragment();
+                break;
+            case R.id.txt_mediatype_b:
+
+                break;
+            case R.id.txt_mediatype_c:
+                showselecteditemincenter(txt_mediatype_c,3);
+                showselectedfragment();
+                break;
+
             case R.id.img_video_capture:
 
                 if(currentselectedcomposer == 0)
@@ -517,7 +545,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 break;
 
             case R.id.img_mediathumbnail:
-                config.selectedmediatype=pagerfooter.getCurrentItem();
+                config.selectedmediatype=currentselectedcomposer;
                 medialistitemaddbroadcast();
                 gethelper().onBack();
                 break;
@@ -689,31 +717,32 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             public void run() {
                // setimagerecordstop();
                 setimagethumbnail();
-                pagerfooter.setCurrentItem(currentselectedcomposer,true);
                 if(! iscircle)
                     makecircle();
-                /*try {
-                    for(int i=0;i<viewelements.length;i++)
-                    {
-                        LayoutInflater inflater = LayoutInflater.from(applicationviavideocomposer.getactivity());
-                        View view=inflater.inflate(viewelements[i],null);
-                        TextView textView=(TextView)view.findViewById(R.id.txt_content);
-                        if(i == currentselectedcomposer)
-                        {
-                            textView.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.red));
-                        }
-                        else
-                        {
-                            textView.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-                        }
-                    }
-                    synchronized(pagerfooter){
-                        pagerfooter.getAdapter().notifyDataSetChanged();
-                    }
-                }catch (Exception e)
+
+                String mediatype="";
+                switch (currentselectedcomposer)
                 {
-                    e.printStackTrace();
-                }*/
+                    case 0:
+                        mediatype=config.item_video;
+                        break;
+
+                    case 1:
+                        mediatype=config.item_photo;
+                        break;
+
+                    case 2:
+                        mediatype=config.item_audio;
+                        break;
+                }
+                if(txt_mediatype_a.getText().toString().startsWith(mediatype))
+                {
+                    showselecteditemincenter(txt_mediatype_a,1);
+                }
+                else if(txt_mediatype_c.getText().toString().startsWith(mediatype))
+                {
+                    showselecteditemincenter(txt_mediatype_c,3);
+                }
 
             }
         },50);
@@ -758,7 +787,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 4) // Back the fragment and navigate to media list
             {
                 try {
-                    config.selectedmediatype=pagerfooter.getCurrentItem();
+                    config.selectedmediatype=currentselectedcomposer;
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -792,7 +821,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             else if(type == 9)
             {
-                pagerfooter.setVisibility(View.INVISIBLE);
                 layoutbottom.setVisibility(View.INVISIBLE);
                /* img_mediathumbnail.setVisibility(View.INVISIBLE);
                 mrecordimagebutton.setVisibility(View.INVISIBLE);
@@ -802,7 +830,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             else if(type == 10)
             {
-                pagerfooter.setVisibility(View.VISIBLE);
                 layoutbottom.setVisibility(View.VISIBLE);
                 /*img_mediathumbnail.setVisibility(View.VISIBLE);
                 mrecordimagebutton.setVisibility(View.VISIBLE);
