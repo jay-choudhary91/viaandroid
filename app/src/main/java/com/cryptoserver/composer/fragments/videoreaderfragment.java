@@ -875,7 +875,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                 scrubberviewwidth = layout_scrubberview.getWidth();
                 scrollview_meta.setVisibility(View.INVISIBLE);
-
                 scrollView_encyrption.setVisibility(View.INVISIBLE);
                 Thread thread = new Thread() {
                     public void run() {
@@ -914,6 +913,14 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         videowidth = width;
         videoheight = height;
         updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
+                setmetadatavalue();
+            }
+        }, 200);
     }
 
     public void recenterplaypause(int margintop)
@@ -1403,21 +1410,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                     }
                                 });
                             }
-
-
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        final Handler handler = new Handler();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                // Do something after 5s = 5000ms
-                                                setmetadatavalue();
-                                            }
-                                        }, 2000);
-                                    }
-                                });
                         }
                         try
                         {
@@ -1661,7 +1653,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             {
                 e.printStackTrace();
             }
-
 
             /*if(fragmentgraphic != null)
                 fragmentgraphic.setmediaplayer(true,null);*/
