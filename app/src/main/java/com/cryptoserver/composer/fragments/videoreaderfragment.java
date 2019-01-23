@@ -146,28 +146,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     @BindView(R.id.recyview_frames)
     NoScrollRecycler recyview_frames;
-    @BindView(R.id.layout_drawer)
-    LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
     RelativeLayout layout_scrubberview;
-    @BindView(R.id.txt_slot1)
-    TextView txtSlot1;
-    @BindView(R.id.txt_slot2)
-    TextView txtSlot2;
-    @BindView(R.id.txt_slot3)
-    TextView txtSlot3;
-    @BindView(R.id.txt_hashes)
-    TextView txt_hashes;
-    @BindView(R.id.txt_metrics)
-    TextView txt_metrics;
-    @BindView(R.id.scrollview_metrices)
-    ScrollView scrollview_metrices;
-    @BindView(R.id.scrollview_hashes)
-    ScrollView scrollview_hashes;
-    @BindView(R.id.recyview_metrices)
-    RecyclerView recyview_metrices;
-    @BindView(R.id.recyview_item)
-    RecyclerView recyview_hashes;
     @BindView(R.id.fragment_graphic_drawer_container)
     FrameLayout fragment_graphic_container;
 
@@ -384,7 +364,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     private ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private videoframeadapter mmetricesadapter,mhashesadapter;
     private framebitmapadapter adapter;
     private Handler waveHandler;
     private Runnable waveRunnable;
@@ -401,8 +380,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ArrayList<String> addhashvaluelist = new ArrayList<>();
     private BroadcastReceiver coredatabroadcastreceiver;
     int count = 0;
-    @BindView(R.id.textfetchdata)
-    TextView textfetchdata;
     fragmentgraphicaldrawer  graphicaldrawerfragment;
     FullDrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
@@ -466,44 +443,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
             handleimageview.setVisibility(View.GONE);
             playpausebutton.setImageResource(R.drawable.play);
-            textfetchdata.setVisibility(View.GONE);
 
-            {
-                mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                recyview_metrices.setLayoutManager(mLayoutManager);
-                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-                recyview_metrices.setAdapter(mhashesadapter);
-                implementscrolllistener();
-            }
-
-            {
-                mmetricesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                recyview_hashes.setLayoutManager(mLayoutManager);
-                recyview_hashes.setItemAnimator(new DefaultItemAnimator());
-                recyview_hashes.setAdapter(mmetricesadapter);
-            }
 
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
@@ -648,7 +588,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 if(player != null && player.isPlaying())
                                 {
                                     // player.pause();
-                                    controller.setplaypauuse();
                                     Log.e("isplaying","is playing");
                                 }
                                 double  c=0;
@@ -676,7 +615,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                     Log.e("currentduration" ,"" + currentduration);
 
 
-                                    if(player !=null && controller != null)
+                                    if(player !=null)
                                     {
                                         try {
 
@@ -708,10 +647,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
            /* handleimageview.setOnTouchListener(new setonTouch());
             righthandle.setOnTouchListener(new setonTouch());
             videotextureview.setOnTouchListener(new setonTouch());*/
-
-            txtSlot1.setOnClickListener(new setonClick());
-            txtSlot2.setOnClickListener(new setonClick());
-            txtSlot3.setOnClickListener(new setonClick());
 
             img_dotmenu.setOnClickListener(new setonClick());
             img_folder.setOnClickListener(new setonClick());
@@ -789,16 +724,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             });
 
 
-            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-            txtSlot1.setVisibility(View.VISIBLE);
-            txtSlot2.setVisibility(View.VISIBLE);
-            txtSlot3.setVisibility(View.VISIBLE);
-            txt_metrics.setVisibility(View.INVISIBLE);
-            txt_hashes.setVisibility(View.INVISIBLE);
-            recyview_hashes.setVisibility(View.VISIBLE);
-            recyview_metrices.setVisibility(View.INVISIBLE);
-            scrollview_metrices.setVisibility(View.INVISIBLE);
-            scrollview_hashes.setVisibility(View.INVISIBLE);
             fragment_graphic_container.setVisibility(View.VISIBLE);
 
             txtslotencyption.setOnClickListener(new setonClick());
@@ -900,8 +825,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 };
                 thread.start();
 
-                //registerbroadcastreciver();
-                //registerbroadcastreciverforencryptionmetadata();
+                registerbroadcastreciver();
+                registerbroadcastreciverforencryptionmetadata();
             }
 
             Log.e("oncreate","oncreate");
@@ -912,33 +837,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         return rootview;
     }
 
-    // Implement scroll listener
-    private void implementscrolllistener() {
-        recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                /*visibleItemCount = mLayoutManager.getChildCount();
-                totalItemCount = mLayoutManager.getItemCount();
-                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
-                if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
-                    if(selectedmetrics.toString().trim().length() > 0)
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrics));
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                        selectedmetrics="";
-                    }
-                }*/
-            }
-        });
-    }
 
     public void disabletouchedevents()
     {
@@ -1039,53 +937,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         public void onClick(View view) {
             switch (view.getId())
             {
-                case R.id.txt_slot1:
-                    if(selectedsection != 1) {
-                        selectedsection = 1;
-                        scrollview_metrices.setVisibility(View.INVISIBLE);
-                        scrollview_hashes.setVisibility(View.INVISIBLE);
-                        fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-                        recyview_hashes.setVisibility(View.VISIBLE);
-                        recyview_metrices.setVisibility(View.INVISIBLE);
-
-                        txt_metrics.setVisibility(View.INVISIBLE);
-                        txt_hashes.setVisibility(View.INVISIBLE);
-                        txt_metrics.setVisibility(View.INVISIBLE);
-                        resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-                    }
-
-                    break;
-
-                case R.id.txt_slot2:
-                    if(selectedsection != 2) {
-                        selectedsection = 2;
-                        scrollview_metrices.setVisibility(View.INVISIBLE);
-                        scrollview_hashes.setVisibility(View.INVISIBLE);
-                        fragment_graphic_container.setVisibility(View.INVISIBLE);
-                        txt_hashes.setVisibility(View.INVISIBLE);
-                        txt_metrics.setVisibility(View.INVISIBLE);
-                        recyview_metrices.setVisibility(View.VISIBLE);
-                        recyview_hashes.setVisibility(View.INVISIBLE);
-                        resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
-                    }
-
-                    break;
-
-                case R.id.txt_slot3:
-                    if(selectedsection != 3) {
-                        selectedsection = 3;
-                        fragment_graphic_container.setVisibility(View.VISIBLE);
-                        scrollview_metrices.setVisibility(View.INVISIBLE);
-                        scrollview_hashes.setVisibility(View.INVISIBLE);
-                        recyview_metrices.setVisibility(View.INVISIBLE);
-                        recyview_hashes.setVisibility(View.INVISIBLE);
-                        txt_hashes.setVisibility(View.INVISIBLE);
-                        txt_metrics.setVisibility(View.INVISIBLE);
-                        resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
-                    }
-
-                    break;
 
                 case R.id.txt_slot4:
                     resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
@@ -1343,153 +1194,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     }
 
-    public class setonTouch implements View.OnTouchListener
-    {
-
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (view.getId())
-            {
-                /*case  R.id.handle:
-                    flingswipe.onTouchEvent(motionEvent);
-                    break;
-
-                case  R.id.righthandle:
-                    flingswipe.onTouchEvent(motionEvent);
-                    break;*/
-                case  R.id.videotextureview:
-                {
-                    switch (motionEvent.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            if(player != null && (! isdraweropen)) {
-                                //hideshowcontroller();
-                            }
-                            break;
-                    }
-                }
-                break;
-            }
-            return true;
-        }
-    }
-
-    GestureDetector flingswipe = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener()
-    {
-        @Override
-        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
-                               float flingActionYcoSpdPsgVal)
-        {
-            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Right to Left fling
-                swiperighttoleft();
-                return false;
-            }
-            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Left to Right fling
-                swipelefttoright();
-                return false;
-            }
-
-            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Bottom to Top fling
-
-                return false;
-            }
-            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Top to Bottom fling
-
-                return false;
-            }
-            return false;
-        }
-    });
-
-    public void swipelefttoright()
-    {
-        isdraweropen=true;
-        Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
-        linearLayout.startAnimation(rightswipe);
-        handleimageview.setVisibility(View.GONE);
-        linearLayout.setVisibility(View.VISIBLE);
-        rightswipe.start();
-
-        // righthandle.setVisibility(View.VISIBLE);
-        rightswipe.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-               // righthandle.setImageResource(R.drawable.righthandle);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-               // righthandle.setImageResource(R.drawable.lefthandle);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
-
-    public void swiperighttoleft()
-    {
-        isdraweropen=false;
-        Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
-        linearLayout.startAnimation(leftswipe);
-        linearLayout.setVisibility(View.INVISIBLE);
-        handleimageview.setVisibility(View.GONE);
-        leftswipe.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                handleimageview.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
-
-    public void hideshowcontroller()
-    {
-        if(isdraweropen)
-            return;
-
-        if(controller != null && controller.controllersview!= null)
-        {
-            if(controller.controllersview.getVisibility() == View.VISIBLE)
-            {
-                layout_scrubberview.setVisibility(View.GONE);
-                handleimageview.setVisibility(View.GONE);
-                gethelper().updateactionbar(0);
-                controller.controllersview.setVisibility(View.GONE);
-
-            }
-            else
-            {
-                layout_scrubberview.setVisibility(View.GONE);
-                handleimageview.setVisibility(View.GONE);
-                gethelper().updateactionbar(1);
-                controller.controllersview.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
     public void onRestart() {
     }
 
@@ -1525,6 +1229,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     public void onResume() {
         super.onResume();
         Log.e("onresume","onresume");
+
+
+
         try {
             if(! issurafcedestroyed)
                 return;
@@ -1534,6 +1241,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 controller.removeAllViews();
 
             controller = new videocontrollerview(getActivity(),mitemclick,true);
+
             Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                     BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
             selectedvideouri=uri;
@@ -1632,7 +1340,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                textfetchdata.setVisibility(View.GONE);
                             }
                         });
 
@@ -1844,8 +1551,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     public void run() {
 
                         if(mhashesitems.size() !=0){
-                            textfetchdata.setVisibility(View.GONE);
-                            mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
                             selectedhashes ="";
                         }
 
@@ -1954,7 +1659,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         public void onPrepared(MediaPlayer mediaPlayer) {
             isvideocompleted=false;
             maxincreasevideoduration=0;
-            controller.setMediaPlayer(new setonmediacontroller());
+            //controller.setMediaPlayer(new setonmediacontroller());
             controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
             videoduration=mediaPlayer.getDuration();
             txt_duration.setText( common.gettimestring(mediaPlayer.getDuration()) );
@@ -1975,7 +1680,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 e.printStackTrace();
             }
 
-            //controller.show();
 
             /*if(fragmentgraphic != null)
                 fragmentgraphic.setmediaplayer(true,null);*/
@@ -1987,7 +1691,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     adapteritemclick mitemclick=new adapteritemclick() {
         @Override
         public void onItemClicked(Object object) {
-           // hideshowcontroller();
         }
 
         @Override
@@ -1996,163 +1699,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }
     };
 
-    public class setonmediacontroller implements videocontrollerview.MediaPlayerControl
-    {
-
-        // Implement VideoMediaController.MediaPlayerControl
-        @Override
-        public boolean canPause() {
-            return true;
-        }
-
-        @Override
-        public boolean canSeekBackward() {
-            return true;
-        }
-
-        @Override
-        public boolean canSeekForward() {
-            return true;
-        }
-
-        @Override
-        public int getBufferPercentage() {
-            return 0;
-        }
-
-        @Override
-        public int getCurrentPosition() {
-            try {
-                if(player != null)
-                {
-                    if(mbitmaplist.size() > 0 && (! islisttouched))
-                    {
-                        //setmargin();
-                    }
-                    if(player.getCurrentPosition() > maxincreasevideoduration)
-                        maxincreasevideoduration=player.getCurrentPosition();
-
-                    if(currentvideoduration == 0 || (player.getCurrentPosition() > currentvideoduration))
-                    {
-                        currentvideoduration=player.getCurrentPosition();  // suppose its on 4th pos means 4000
-                        currentvideodurationseconds=currentvideoduration/1000;  // Its 4
-                    }
-                    return player.getCurrentPosition();
-                }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            return 0;
-        }
-
-        @Override
-        public int getDuration() {
-            if(player != null)
-                return player.getDuration();
-            return 0;
-        }
-
-        @Override
-        public boolean isPlaying() {
-            if(player != null)
-                return player.isPlaying();
-
-            return false;
-        }
-
-        @Override
-        public void pause() {
-            if(player != null)
-                player.pause();
-        }
-
-        @Override
-        public void seekTo(int i) {
-            if(player != null)
-            {
-                player.seekTo(i);
-                //setmargin();
-            }
-        }
-
-        @Override
-        public void start() {
-            if(player != null)
-            {
-                player.start();
-                player.setOnCompletionListener(new setonmediacompletion());
-            }
-        }
-
-        @Override
-        public boolean isFullScreen() {
-            return false;
-        }
-
-        @Override
-        public void toggleFullScreen() {}
-        public String getkeyvalue(byte[] data)
-        {
-            String value="";
-            String salt="";
-
-            switch (keytype)
-            {
-                case config.prefs_md5:
-                    value= md5.calculatebytemd5(data);
-                    break;
-
-                case config.prefs_md5_salt:
-                    salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
-                    if(! salt.trim().isEmpty())
-                    {
-                        byte[] saltbytes=salt.getBytes();
-                        try {
-                            ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                            outputstream.write(saltbytes);
-                            outputstream.write(data);
-                            byte updatedarray[] = outputstream.toByteArray();
-                            value= md5.calculatebytemd5(updatedarray);
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                    else
-                    {
-                        value= md5.calculatebytemd5(data);
-                    }
-
-                    break;
-                case config.prefs_sha:
-                    value= sha.sha1(data);
-                    break;
-                case config.prefs_sha_salt:
-                    salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
-                    if(! salt.trim().isEmpty())
-                    {
-                        byte[] saltbytes=salt.getBytes();
-                        try {
-                            ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                            outputstream.write(saltbytes);
-                            outputstream.write(data);
-                            byte updatedarray[] = outputstream.toByteArray();
-                            value= sha.sha1(updatedarray);
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-                    else
-                    {
-                        value= sha.sha1(data);
-                    }
-                    break;
-            }
-            return value;
-        }
-    }
 
     @Override
     public void onHeaderBtnClick(int btnid) {
@@ -2277,7 +1823,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 controller.removeAllViews();
 
             controller = new videocontrollerview(applicationviavideocomposer.getactivity(),mitemclick,true);
-
             if(selecteduri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
@@ -2326,19 +1871,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 boolean graphicopen=false;
                 if(!isdraweropen)
                 {
-                    /*if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhashes.trim().isEmpty()))
-                    {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mhashesitems.add(new videomodel(selectedhashes));
-                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                                selectedhashes ="";
-                            }
-                        });
-
-                    }
-*/
                   if(arraycontainerformetric != null){
                       graphicaldrawerfragment.getencryptiondata(arraycontainerformetric.getHashmethod(),arraycontainerformetric.getVideostarttransactionid(),
                               arraycontainerformetric.getValuehash(),arraycontainerformetric.getMetahash());
@@ -2516,6 +2048,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }
     }
 
+
+
     public void setmargin(){
         if(mbitmaplist.size()>0 && player.getCurrentPosition()>0){
                 double totalduration=player.getDuration()/1000;
@@ -2683,8 +2217,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     mvideoframes.clear();
                     mainvideoframes.clear();
                     mallframes.clear();
-                    txt_metrics.setText("");
-                    txt_hashes.setText("");
                 }
             }
         }

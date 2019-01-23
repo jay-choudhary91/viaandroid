@@ -331,58 +331,6 @@
                         <include layout="@layout/layout_mediadetails"></include>
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:content="@+id/content"
-                        android:handle="@+id/handle"
-                        android:visibility="gone"
-                        android:orientation="horizontal"
-                        android:layout_centerVertical="true">
-                        <ImageView
-                            android:id="@id/handle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/righthandle"
-                            android:visibility="gone"
-                            />
-                        <LinearLayout
-                            android:id="@id/content"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal"
-                            android:visibility="gone"
-                            android:weightSum="1"
-                            >
-
-                            <LinearLayout
-                                android:id="@+id/layout_drawer"
-                                android:layout_width="0dp"
-                                android:layout_weight="0.9"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:visibility="gone"
-                                android:background="@color/whitetransparent"
-                                >
-
-                                <include layout="@layout/layout_drawer_content"></include>
-
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_weight=".1"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/righthandle"
-                                android:visibility="gone"
-                                android:layout_gravity="center_vertical"
-                                android:id="@+id/righthandle"
-                                />
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
                 </LinearLayout>
 
                 <ImageView
