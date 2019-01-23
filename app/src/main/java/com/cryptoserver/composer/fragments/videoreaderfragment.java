@@ -42,7 +42,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.LongSparseArray;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -53,12 +52,10 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -74,7 +71,6 @@ import android.widget.TextView;
 import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.framebitmapadapter;
-import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.database.databasemanager;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
@@ -90,9 +86,7 @@ import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
 import com.cryptoserver.composer.utils.config;
-import com.cryptoserver.composer.utils.md5;
 import com.cryptoserver.composer.utils.progressdialog;
-import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
 import com.cryptoserver.composer.videotrimmer.utils.backgroundexecutor;
@@ -110,7 +104,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -119,7 +112,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -803,26 +795,16 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 }
             });
 
-
-
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getmediametadata();
-                       // getframesbitmap();
-                    }
-                }).start();
-                getmetadetareader();
+                coredataupdator();
             }
             else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             {
 
                 Thread thread = new Thread() {
                     public void run() {
-                        getmediadata();
-                        //getframesbitmap();
+                        fetchdataforcomposer();
                     }
                 };
                 thread.start();
@@ -1283,24 +1265,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     @Override
     public void onStart() {
         super.onStart();
-
-        /*IntentFilter intentFilter = new IntentFilter(config.reader_service_getmetadata);
-        coredatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Thread thread = new Thread() {
-                    public void run() {
-                        if(mhashesitems.size() == 0)
-                            getmediametadata();
-                    }
-                };
-                thread.start();
-            }
-        };
-        getActivity().registerReceiver(coredatabroadcastreceiver, intentFilter);*/
     }
 
-    public void getmediadata() {
+    public void fetchdataforcomposer() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -1456,7 +1423,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }).start();
     }
 
-    public void getmediametadata()
+    public void fetchmediastartinfo()
+    {
+
+    }
+
+    public void fetchdataforreader()
     {
         if(mediafilepath != null && (! mediafilepath.isEmpty())) {
             File file = new File(mediafilepath);
@@ -1485,7 +1457,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         }
                     }
 
-                    if(audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0){
+                    if(audiostatus.equalsIgnoreCase(config.sync_complete) && metricmainarraylist.size() == 0){
                         if(! videoid.trim().isEmpty())
                         {
                             Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
@@ -1590,7 +1562,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 Thread thread = new Thread() {
                     public void run() {
                         if(mhashesitems.size() == 0)
-                            getmediadata();
+                            fetchdataforcomposer();
                     }
                 };
                 thread.start();
@@ -1605,7 +1577,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                getmediadata();
+                fetchdataforcomposer();
             }
         };
         getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
@@ -2219,13 +2191,13 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             }
         }
     }
-    public void getmetadetareader(){
+    public void coredataupdator(){
         myHandler=new Handler();
         myRunnable = new Runnable() {
             @Override
             public void run() {
 
-                getmediametadata();
+                fetchdataforreader();
 
                 myHandler.postDelayed(this, 5000);
             }
