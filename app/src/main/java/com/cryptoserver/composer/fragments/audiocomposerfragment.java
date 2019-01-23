@@ -732,7 +732,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         isaudiorecording=false;
         if(mrecorder==null){
             myvisualizerview.clear();
-            myvisualizerview.setBackgroundColor(getActivity().getResources().getColor(R.color.dark_blue_solid_a));
             myvisualizerview.setVisibility(View.INVISIBLE);
         }
 
