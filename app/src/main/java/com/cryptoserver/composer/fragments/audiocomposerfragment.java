@@ -99,8 +99,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
-    @BindView(R.id.img_capture)
-    ImageView img_capture;
     @BindView(R.id.img_warning)
     ImageView img_warning;
     @BindView(R.id.img_close)
@@ -112,7 +110,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     @BindView(R.id.linear_header)
     LinearLayout linearheader;
 
-    LinearLayout layout_bottom,layout_drawer;
+    LinearLayout layout_drawer;
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     ImageView handle,img_dotmenu;;
@@ -195,7 +193,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
-            layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
             fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_drawer_container);
             rl_containerview = (RelativeLayout) rootview.findViewById(R.id.rl_containerview);
@@ -228,8 +225,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             drawertoggle.syncState();
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
-
-            img_capture.setOnClickListener(this);
             timerhandler = new Handler() ;
             layout_drawertouchable.setOnTouchListener(this);
             rl_containerview.setVisibility(View.GONE);
@@ -387,10 +382,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_capture: {
-                startstopaudiorecording();
-                break;
-            }
 
             case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);

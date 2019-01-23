@@ -325,7 +325,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      */
     private int mSensorOrientation;
 
-    LinearLayout layout_bottom,layout_drawer;
+    LinearLayout layout_drawer;
 
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
@@ -333,7 +333,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     FrameLayout fragment_graphic_container;
 
 
-    ImageView imgflashon,rotatecamera,handle,img_dotmenu,img_warning,img_close,img_stop_watch;
+    ImageView imgflashon,handle,img_dotmenu,img_warning,img_close,img_stop_watch;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -351,7 +351,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     JSONObject metadatametricesjson=new JSONObject();
     private LinearLayoutManager mLayoutManager;
     private fragmentgraphicaldrawer graphicaldrawerfragment;
-    ImageView captureimage;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
     ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
@@ -530,17 +529,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            captureimage = rootview.findViewById(R.id.img_image_capture);
 
             mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
-            rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
             img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
             img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
             img_close = (ImageView) rootview.findViewById(R.id.img_close);
             handle = (ImageView) rootview.findViewById(R.id.handle);
-            layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
             fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_drawer_container);
             rl_containerview = (RelativeLayout) rootview.findViewById(R.id.rl_containerview);
@@ -562,7 +558,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     imgrighthandle.setVisibility(View.GONE);
                     if(madapterclick != null)
                         madapterclick.onItemClicked(null,10);
-                  //  layout_bottom.setVisibility(View.VISIBLE);
                 }
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
@@ -571,7 +566,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     imgrighthandle.setVisibility(View.VISIBLE);
                     if(madapterclick != null)
                         madapterclick.onItemClicked(null,9);
-                 //   layout_bottom.setVisibility(View.GONE);
 
                 }
             };
@@ -579,11 +573,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             drawertoggle.syncState();
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
-            captureimage.setVisibility(View.VISIBLE);
-            captureimage.setOnClickListener(this);
             timerhandler = new Handler() ;
             mTextureView.setOnTouchListener(this);
-            rotatecamera.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             img_stop_watch.setOnClickListener(this);
@@ -1288,9 +1279,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_image_capture:
-                takePicture();
-                break;
 
             case R.id.img_stop_watch:
                 if(brustmodeenabled)
@@ -1331,10 +1319,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             case R.id.img_flash:
                 camraflashonoff();
-                break;
-
-            case R.id.img_rotate_camera:
-                switchCamera();
                 break;
 
             case R.id.img_warning:

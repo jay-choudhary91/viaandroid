@@ -102,6 +102,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_mediatype_b;
     @BindView(R.id.txt_mediatype_c)
     TextView txt_mediatype_c;
+    @BindView(R.id.layout_mediatype)
+    RelativeLayout layout_mediatype;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -822,20 +824,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 9)
             {
                 layoutbottom.setVisibility(View.INVISIBLE);
-               /* img_mediathumbnail.setVisibility(View.INVISIBLE);
-                mrecordimagebutton.setVisibility(View.INVISIBLE);
-                imgrotatecamera.setVisibility(View.INVISIBLE);
-                layoutrecorder.setVisibility(View.INVISIBLE);*/
-               // layout_footerpager.setVi
+                layout_mediatype.setVisibility(View.INVISIBLE);
             }
             else if(type == 10)
             {
                 layoutbottom.setVisibility(View.VISIBLE);
-                /*img_mediathumbnail.setVisibility(View.VISIBLE);
-                mrecordimagebutton.setVisibility(View.VISIBLE);
-                imgrotatecamera.setVisibility(View.VISIBLE);
-                layoutrecorder.setVisibility(View.VISIBLE);*/
-                // layout_footerpager.setVi
+                layout_mediatype.setVisibility(View.VISIBLE);
             }
         }
     };

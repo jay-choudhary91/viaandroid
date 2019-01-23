@@ -26,30 +26,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/audio_composer_bg"/>
 
-
-            <LinearLayout
-                android:id="@+id/layout_bottom"
-                android:layout_width="match_parent"
-                android:weightSum="1"
-                android:gravity="center"
-                android:padding="5dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_alignParentBottom="true"
-                android:visibility="gone"
-                android:background="@drawable/gradient_fade_dark_blue"
-                >
-
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:id="@+id/img_capture"
-                    android:src="@drawable/shape_recorder_off"
-                    />
-            </LinearLayout>
-
-
             <RelativeLayout
                 android:id="@+id/layout_drawertouchable"
                 android:layout_width="match_parent"
