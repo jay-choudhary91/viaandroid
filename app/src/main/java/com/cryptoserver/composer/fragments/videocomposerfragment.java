@@ -313,8 +313,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     // Output video size
     private Runnable doafterallpermissionsgranted;
 
-    LinearLayout layout_bottom,layout_drawer;
-
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     LinearLayout linearLayout;
@@ -325,7 +323,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     TextView txt_title_actionbarcomposer,txt_media_quality;
 
-    ImageView mrecordimagebutton,imgflashon,img_dotmenu,img_warning,img_close,rotatecamera,handle;
+    ImageView imgflashon,img_dotmenu,img_warning,img_close,handle;
 
     ImageView imglefthandle,imgrighthandle;
 
@@ -390,17 +388,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
-            mrecordimagebutton = (ImageView) rootview.findViewById(R.id.img_video_capture);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
-            rotatecamera = (ImageView) rootview.findViewById(R.id.img_rotate_camera);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
             img_warning = (ImageView) rootview.findViewById(R.id.img_warning);
             img_close = (ImageView) rootview.findViewById(R.id.img_close);
             imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
             imgrighthandle = (ImageView)rootview.findViewById(R.id.img_righthandle);
             handle = (ImageView) rootview.findViewById(R.id.handle);
-            layout_bottom = (LinearLayout) rootview.findViewById(R.id.layout_bottom);
-            layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
             txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
             txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
             fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_drawer_container);
@@ -477,9 +471,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             imglefthandle.setOnClickListener(this);
             imgrighthandle.setOnClickListener(this);
 
-            mrecordimagebutton.setOnClickListener(this);
             imgflashon.setOnClickListener(this);
-            rotatecamera.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             img_warning.setOnClickListener(this);
             img_close.setOnClickListener(this);
@@ -903,7 +895,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 //fragmentgraphic.setvisualizerwave();
                 wavevisualizerslist.clear();
                 //startnoise();
-                mrecordimagebutton.setEnabled(true);
             }
 
         } catch (Exception e) {
@@ -968,7 +959,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         if(madapterclick != null)
                             madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
 
-                        mrecordimagebutton.setEnabled(true);
                         firsthashvalue = true;
 
                         medialistitemaddbroadcast();
@@ -990,9 +980,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_video_capture:
-                startstopvideo();
-                break;
 
             case R.id.img_flash:
                 navigateflash();
@@ -1009,10 +996,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
                 gethelper().addFragment(settingfrag, false, true);
-                break;
-
-            case R.id.img_rotate_camera:
-                switchCamera();
                 break;
 
             case R.id.img_warning:
@@ -1083,7 +1066,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void startstopvideo()
     {
         if (isvideorecording) {
-            mrecordimagebutton.setEnabled(false);
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             stopRecordingVideo();
@@ -1096,11 +1078,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mdbstartitemcontainer.clear();
             mdbmiddleitemcontainer.clear();
 
-            mrecordimagebutton.setEnabled(false);
-            mrecordimagebutton.setImageResource(R.drawable.shape_recorder_on);
             imgflashon.setVisibility(View.VISIBLE);
-            rotatecamera.setVisibility(View.INVISIBLE);
-
             apicurrentduration =0;
             currentframenumber =0;
             mframetorecordcount =0;
@@ -1277,7 +1255,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         {
             camerastatusok=true;
            // layout_bottom.setVisibility(View.VISIBLE);
-            mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             startBackgroundThread();
             if (mTextureView.isAvailable())
                 openCamera(mTextureView.getWidth(), mTextureView.getHeight());
@@ -1294,7 +1271,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void closemediawithtimer()
     {
-        if(camerastatusok && (mrecordimagebutton != null))
+        if(camerastatusok)
         {
             camerastatusok=false;
             closeCamera();
@@ -1302,7 +1279,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             stopvideotimer();
             resetvideotimer();
             isvideorecording =false;
-            mrecordimagebutton.setImageResource(R.drawable.shape_recorder_off);
             try {
                 if(! issavedtofolder && common.getstoragedeniedpermissions().isEmpty() && (selectedvideofile != null )
                         && new File(selectedvideofile).exists())
@@ -1315,30 +1291,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     /// camera2video code end
-
-
-    @Override
-    public void onHeaderBtnClick(int btnid) {
-        super.onHeaderBtnClick(btnid);
-        switch (btnid){
-            case R.id.img_menu:
-                if(isvideorecording)
-                {
-                    startstopvideo();
-                }
-                else
-                {
-                    gethelper().onBack();
-                }
-                break;
-
-               case R.id.img_help:
-
-
-
-                   break;
-        }
-    }
 
     public void startvideotimer()
     {
