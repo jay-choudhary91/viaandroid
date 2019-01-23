@@ -508,6 +508,16 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
 
+            edt_medianame.setEnabled(false);
+            edt_medianame.setClickable(false);
+            edt_medianame.setFocusable(false);
+            edt_medianame.setFocusableInTouchMode(false);
+
+            edt_medianotes.setEnabled(false);
+            edt_medianotes.setClickable(false);
+            edt_medianotes.setFocusable(false);
+            edt_medianotes.setFocusableInTouchMode(false);
+
             /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
                     R.drawable.custom_thumb));*/
 
@@ -2462,7 +2472,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             playpausebutton.setVisibility(View.VISIBLE);
             mediaseekbar.setProgress(player.getCurrentPosition());
 
-            if(layout_footer.getVisibility()==View.VISIBLE && handleimageview.getVisibility()== View.VISIBLE){
+            if(layout_footer.getVisibility()==View.VISIBLE && layout_photodetails.getVisibility()==View.GONE){
                 showcontrollers();
                 layoutcustomcontroller.setVisibility(View.GONE);
             }else{

@@ -613,7 +613,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     if(file_size >= 0)
                     {
                         Date lastModDate = new Date(file.lastModified());
-                        DateFormat outputFormat = new SimpleDateFormat("MM/dd/yyyy");
+                        DateFormat outputFormat = new SimpleDateFormat("MM-dd-yy");
                         String time = new SimpleDateFormat("hh:mm:ss aa").format(lastModDate);
                         String outputdatestr = outputFormat.format(lastModDate);
 
