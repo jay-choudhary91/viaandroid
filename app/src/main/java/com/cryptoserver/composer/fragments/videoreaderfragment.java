@@ -23,8 +23,10 @@ import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -39,6 +41,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.LongSparseArray;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -82,6 +85,7 @@ import com.cryptoserver.composer.models.metricmodel;
 import com.cryptoserver.composer.models.videomodel;
 import com.cryptoserver.composer.models.wavevisualizer;
 import com.cryptoserver.composer.utils.FullDrawerLayout;
+import com.cryptoserver.composer.utils.NoScrollRecycler;
 import com.cryptoserver.composer.utils.centerlayoutmanager;
 import com.cryptoserver.composer.utils.circularImageview;
 import com.cryptoserver.composer.utils.common;
@@ -91,6 +95,7 @@ import com.cryptoserver.composer.utils.progressdialog;
 import com.cryptoserver.composer.utils.sha;
 import com.cryptoserver.composer.utils.videocontrollerview;
 import com.cryptoserver.composer.utils.xdata;
+import com.cryptoserver.composer.videotrimmer.utils.backgroundexecutor;
 import com.cryptoserver.composer.views.customfonttextview;
 import com.cryptoserver.composer.views.customseekbar;
 import com.github.mikephil.charting.utils.Utils;
@@ -140,7 +145,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView img_delete_media;
 
     @BindView(R.id.recyview_frames)
-    RecyclerView recyview_frames;
+    NoScrollRecycler recyview_frames;
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
@@ -242,6 +247,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     customseekbar mediaseekbar;
     @BindView(R.id.time_current)
     TextView time_current;
+    @BindView(R.id.footer_time)
+    TextView footertotaltime;
+    @BindView(R.id.footer_time_current)
+    TextView footercurrenttime;
     @BindView(R.id.time)
     TextView totalduration;
     @BindView(R.id.layout_customcontroller)
@@ -305,6 +314,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     customfonttextview tvbattery;
     @BindView(R.id.img_lefthandle)
     ImageView handleimageview;
+    @BindView(R.id.img_righthandle)
+    ImageView imgrighthandle;
     @BindView(R.id.btn_playpause)
     circularImageview playpausebutton;
     @BindView(R.id.txt_title_actionbarcomposer)
@@ -322,6 +333,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView img_compass;
     @BindView(R.id.img_pause)
     ImageView imgpause;
+    @BindView(R.id.scrub_layout)
+    RelativeLayout scrublayout;
 
     GoogleMap mgooglemap;
     Surface surfacetexture = null;
@@ -331,7 +344,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-    int targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage;
+    int targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage,scrubberviewwidth,scrubheight,bottommargin;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
@@ -398,6 +411,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     int position=0;
     metricmodel setmetricmodel;
+    int mheightview = 0;
 
     private float videoheight, videowidth;
 
@@ -434,10 +448,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     handleimageview.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.GONE);
                 }
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     handleimageview.setVisibility(View.GONE);
+                    imgrighthandle.setVisibility(View.VISIBLE);
                 }
             };
             navigationdrawer.addDrawerListener(drawertoggle);
@@ -445,6 +461,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
             mediaseekbar.setPadding(0,0,0,0);
+
+            mheightview = getContext().getResources().getDimensionPixelOffset(R.dimen.frames_video_height);;
 
             handleimageview.setVisibility(View.GONE);
             playpausebutton.setImageResource(R.drawable.play);
@@ -490,9 +508,20 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
 
-            mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
-                    R.drawable.custom_thumb));
+            edt_medianame.setEnabled(false);
+            edt_medianame.setClickable(false);
+            edt_medianame.setFocusable(false);
+            edt_medianame.setFocusableInTouchMode(false);
 
+            edt_medianotes.setEnabled(false);
+            edt_medianotes.setClickable(false);
+            edt_medianotes.setFocusable(false);
+            edt_medianotes.setFocusableInTouchMode(false);
+
+            /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
+                    R.drawable.custom_thumb));*/
+
+                 mediaseekbar.setThumbOffset(-0);
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
 
@@ -507,7 +536,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
                         p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                         Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                        p.setMargins(thumbRect.left,0, 0, 0);
+                        p.setMargins(thumbRect.centerX()+2,0, 0, 0);
                         Log.e("thumbleft ",""+thumbRect.left);
                         layout_progressline.setLayoutParams(p);
                         txt_mediatimethumb.setText(stringForTime(player.getCurrentPosition()));
@@ -598,9 +627,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                                     islisttouched = true;
                                     islistdragging = true;
-                                    RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                                   /* RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                                     relativeParams.setMargins(0, 0,0, 0);
-                                    recyview_frames.setLayoutParams(relativeParams);
+                                    recyview_frames.setLayoutParams(relativeParams);*/
                                     break;
                                 case RecyclerView.SCROLL_STATE_SETTLING:
                                     System.out.println("Scroll Settling");
@@ -689,6 +718,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             img_camera.setOnClickListener(new setonClick());
             img_arrow_back.setOnClickListener(new setonClick());
             handleimageview.setOnClickListener(new setonClick());
+            imgrighthandle.setOnClickListener(new setonClick());
             videotextureview.setOnClickListener(new setonClick());
             img_delete_media.setOnClickListener(new setonClick());
             imgpause.setOnClickListener(new setonClick());
@@ -719,6 +749,24 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             layout_starttime.setVisibility(View.VISIBLE);
             layout_endtime.setVisibility(View.VISIBLE);
 
+            layoutcustomcontroller.post(new Runnable() {
+                @Override
+                public void run() {
+                   int controllererheight= scrublayout.getHeight();
+                    Log.e("controllererheight",""+controllererheight);
+                }
+            });
+
+            scrublayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrubheight =  scrublayout.getHeight();
+                    Log.e("bottommargin",""+scrubheight);
+                    bottommargin = -(scrubheight-160);
+                    Log.e("bottommargin",""+bottommargin);
+                }
+            });
+
             layout_videoreader.post(new Runnable() {
                 @Override
                 public void run() {
@@ -739,6 +787,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     Log.e("previousheight",""+previousheight);
                 }
             });
+
+
             resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
             txtSlot1.setVisibility(View.VISIBLE);
             txtSlot2.setVisibility(View.VISIBLE);
@@ -931,16 +981,27 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     }
 
     @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, final int width, int height) {
         surfacetexture = new Surface(surface);
         setupvideodata();
 
-        Thread thread = new Thread() {
+        layout_scrubberview.post(new Runnable() {
+            @Override
             public void run() {
-                getframesbitmap();
+
+                scrubberviewwidth = layout_scrubberview.getWidth();
+                Thread thread = new Thread() {
+                    public void run() {
+                        getbitmap(scrubberviewwidth);
+                        //getframesbitmap();
+                    }
+                };
+                thread.start();
             }
-        };
-        thread.start();
+        });
+
+
+
     }
 
     @Override
@@ -1092,6 +1153,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     //handleimageview.setVisibility(View.GONE);
                     break;
 
+                case R.id.img_righthandle:
+                    navigationdrawer.closeDrawers();
+                    break;
+
                 case R.id.img_arrow_back:
                     gethelper().onBack();
                     break;
@@ -1122,7 +1187,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         layout_photodetails.setVisibility(View.VISIBLE);
                         tab_layout.setVisibility(View.VISIBLE);
                         scrollview_detail.setVisibility(View.VISIBLE);
+                        totalduration.setVisibility(View.VISIBLE);
+                        time_current.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
+                        layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
                         updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
                         layoutcustomcontroller.setVisibility(View.VISIBLE);
                         layoutcustomcontroller.getResources().getColor(R.color.whitetransparent);
@@ -1163,9 +1231,20 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     if(player.isPlaying()){
                         pause();
                     }else{
-                        if(layout_footer.getVisibility()==View.VISIBLE && layout_photodetails.getVisibility()==View.GONE){
+                        if(layout_photodetails.getVisibility()==View.GONE){
+                            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            linearParams.setMargins(0, 0,0, bottommargin);
+                            layoutcustomcontroller.setLayoutParams(linearParams);
+                            layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.blacktransparent));
+                            layoutcustomcontroller.requestLayout();
+                            layout_footer.setVisibility(View.VISIBLE);
+                            img_share_media.setVisibility(View.GONE);
+                            img_delete_media.setVisibility(View.GONE);
+                            totalduration.setVisibility(View.GONE);
+                            time_current.setVisibility(View.GONE);
+                            footercurrenttime.setVisibility(View.VISIBLE);
+                            footertotaltime.setVisibility(View.VISIBLE);
                             videotextureview.setClickable(false);
-                            layout_footer.setVisibility(View.GONE);
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
                             layoutcustomcontroller.setVisibility(View.VISIBLE);
@@ -1178,13 +1257,22 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 case R.id.img_pause:
                     if(player.isPlaying()){
                         pause();
-                        if(layout_footer.getVisibility()==View.GONE && layout_photodetails.getVisibility()==View.GONE){
+                        if(layout_photodetails.getVisibility()==View.GONE){
+                            LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            linearParams.setMargins(0, 0,0, 0);
+                            layoutcustomcontroller.setLayoutParams(linearParams);
                             videotextureview.setClickable(true);
                             playpausebutton.setImageResource(R.drawable.play_btn);
+                            img_share_media.setVisibility(View.VISIBLE);
+                            img_delete_media.setVisibility(View.VISIBLE);
                             playpausebutton.setVisibility(View.VISIBLE);
                             img_fullscreen.setVisibility(View.VISIBLE);
                             layout_footer.setVisibility(View.VISIBLE);
                             layoutcustomcontroller.setVisibility(View.GONE);
+                            footercurrenttime.setVisibility(View.GONE);
+                            footertotaltime.setVisibility(View.GONE);
+                            totalduration.setVisibility(View.VISIBLE);
+                            time_current.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.GONE);
                         }
                     }
@@ -1591,7 +1679,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 Date enddate = format.parse(completedate);
                                 final String filecreateddate = new SimpleDateFormat("yyyy-MM-dd").format(startdate);
                                 final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                SimpleDateFormat spf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a");
+                                SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
                                 final String starttime = spf.format(startdate);
                                 Log.e("starttime",starttime);
                                 final String endtime = spf.format(enddate);
@@ -1922,7 +2010,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 {
                     if(mbitmaplist.size() > 0 && (! islisttouched))
                     {
-                        setmargin();
+                        //setmargin();
                     }
                     if(player.getCurrentPosition() > maxincreasevideoduration)
                         maxincreasevideoduration=player.getCurrentPosition();
@@ -1967,7 +2055,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             if(player != null)
             {
                 player.seekTo(i);
-                setmargin();
+                //setmargin();
             }
         }
 
@@ -2144,7 +2232,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         public void run() {
                             if(adapter != null){
                                 adapter.notifyDataSetChanged();
-                                scurraberverticalbar.setVisibility(View.VISIBLE);
+                                scurraberverticalbar.setVisibility(View.GONE);
                                 //runmethod = true;
                             }
 
@@ -2384,15 +2472,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             playpausebutton.setVisibility(View.VISIBLE);
             mediaseekbar.setProgress(player.getCurrentPosition());
 
-            if(layout_footer.getVisibility()==View.GONE){
-                videotextureview.setClickable(true);
-                layout_mediatype.setVisibility(View.VISIBLE);
-                playpausebutton.setImageResource(R.drawable.play_btn);
-                playpausebutton.setVisibility(View.VISIBLE);
-                img_fullscreen.setVisibility(View.VISIBLE);
-                layout_footer.setVisibility(View.VISIBLE);
+            if(layout_footer.getVisibility()==View.VISIBLE && layout_photodetails.getVisibility()==View.GONE){
+                showcontrollers();
                 layoutcustomcontroller.setVisibility(View.GONE);
-                imgpause.setVisibility(View.GONE);
+            }else{
+                showcontrollers();
+                layoutcustomcontroller.setVisibility(View.VISIBLE);
             }
 
             new Handler().postDelayed(new Runnable() {
@@ -2405,9 +2490,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         controller.setProgress(0,true);
                         playpausebutton.setImageResource(R.drawable.play);
 
-                        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       /* RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         relativeParams.setMargins(0, 0,0, 0);
-                        recyview_frames.setLayoutParams(relativeParams);
+                        recyview_frames.setLayoutParams(relativeParams);*/
                     }
                 }
             },200);
@@ -2422,11 +2507,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 double leftmargin= 100/c;
                 double currentpostion=(player.getCurrentPosition()/1000);
                 double leftsidemargin=-((leftmargin)*(currentpostion));
-                RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                /*RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                 relativeParams.setMargins((int)(leftsidemargin) , 0,0, 0);
                 recyview_frames.requestLayout();
                 recyview_frames.setLayoutParams(relativeParams);
-                recyview_frames.scrollToPosition(0);
+                recyview_frames.scrollToPosition(0);*/
 
         }
     }
@@ -2569,12 +2654,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 if (mbitmaplist.size() != 0)
                     runmethod = false;
 
-                scurraberverticalbar.setVisibility(View.INVISIBLE);
+                scurraberverticalbar.setVisibility(View.GONE);
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
                 setupVideoPlayer(uri);
                 videoduration = 0;
-                layout_scrubberview.setVisibility(View.VISIBLE);
                 playerposition = 0;
                // righthandle.setVisibility(View.GONE);
                 framecount = 0;
@@ -2966,6 +3050,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                 if (time_current != null)
                     time_current.setText(stringForTime(videostarttime));
+                    footercurrenttime.setText(stringForTime(videostarttime));
 
                 hdlr.postDelayed(this, 10);
             }
@@ -3001,8 +3086,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                 if (totalduration != null)
                     totalduration.setText(stringForTime(endtime));
+                    footertotaltime.setText(stringForTime(endtime));
                 if  (time_current != null)
                     time_current.setText(stringForTime(videostarttime));
+                    footercurrenttime.setText(stringForTime(videostarttime));
 
                 mediaseekbar.setMax(endtime);
                 mediaseekbar.setProgress(videostarttime);
@@ -3036,5 +3123,96 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
         videotextureview.setTransform(matrix);
         //videotextureview.setLayoutParams(new FrameLayout.LayoutParams(viewWidth, viewHeight));
+    }
+
+
+    private void getbitmap(final int viewwidth) {
+        backgroundexecutor.execute(new backgroundexecutor.task("", 0L, "") {
+                                       @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+                                       @Override
+                                       public void execute() {
+
+                                           Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                                                   BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
+
+                                           if(uri !=null){
+                                               try {
+                                                   LongSparseArray<Bitmap> thumbnailList = new LongSparseArray<>();
+
+                                                   MediaMetadataRetriever mediametadataretriever = new MediaMetadataRetriever();
+                                                   mediametadataretriever.setDataSource(getContext(), uri);
+
+                                                   // Retrieve media data
+                                                   long videoLengthInMs = Integer.parseInt(mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
+
+                                                   // Set thumbnail properties (Thumbs are squares)
+
+                                                   if(mheightview == 50)
+                                                       mheightview = mheightview*2;
+
+                                                   final int thumbWidth = mheightview;
+                                                   final int thumbHeight = mheightview;
+
+                                                   int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
+
+                                                   final long interval = videoLengthInMs / numThumbs;
+
+                                                   for (int i = 0; i < numThumbs; ++i) {
+                                                       Bitmap bitmap = mediametadataretriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                                                       // TODO: bitmap might be null here, hence throwing NullPointerException. You were right
+                                                       try {
+                                                           bitmap = Bitmap.createScaledBitmap(bitmap, thumbWidth, thumbHeight, false);
+
+                                                           mbitmaplist.add(i,new frame(i,bitmap,false));
+
+                                                           applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                                               @Override
+                                                               public void run() {
+                                                                   if(adapter != null){
+                                                                       adapter.notifyDataSetChanged();
+                                                                       scurraberverticalbar.setVisibility(View.GONE);
+                                                                       //runmethod = true;
+                                                                   }
+
+                                                               }
+                                                           });
+
+
+                                                       } catch (Exception e) {
+                                                           e.printStackTrace();
+                                                       }
+
+
+
+                                                   }
+
+                                                       if (mediametadataretriever != null)
+                                                           mediametadataretriever.release();
+
+                                               } catch (final Throwable e) {
+                                                   Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                                               }
+                                           }
+
+                                       }
+                                   }
+        );
+    }
+
+    public void showcontrollers(){
+        LinearLayout.LayoutParams linearParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        linearParams.setMargins(0, 0,0, 0);
+        layoutcustomcontroller.setLayoutParams(linearParams);
+        videotextureview.setClickable(true);
+        layout_mediatype.setVisibility(View.VISIBLE);
+        playpausebutton.setImageResource(R.drawable.play_btn);
+        playpausebutton.setVisibility(View.VISIBLE);
+        img_fullscreen.setVisibility(View.VISIBLE);
+        layout_footer.setVisibility(View.VISIBLE);
+        img_share_media.setVisibility(View.VISIBLE);
+        img_delete_media.setVisibility(View.VISIBLE);
+        footercurrenttime.setVisibility(View.GONE);
+        footertotaltime.setVisibility(View.GONE);
+        imgpause.setVisibility(View.GONE);
     }
 }

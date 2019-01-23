@@ -17,12 +17,12 @@
     <objectAnimator
         android:duration="@android:integer/config_mediumAnimTime"
         android:propertyName="scaleX"
-        android:valueFrom="0.8"
-        android:valueTo="1.0"/>
+        android:valueFrom="1.0"
+        android:valueTo="0.5"/>
 
     <objectAnimator
         android:duration="@android:integer/config_mediumAnimTime"
         android:propertyName="scaleY"
-        android:valueFrom="0.8"
-        android:valueTo="1.0"/>
+        android:valueFrom="1.0"
+        android:valueTo="0.5"/>
 </set>

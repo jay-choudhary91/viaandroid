@@ -109,6 +109,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     visualizeraudiorecorder myvisualizerview;
     @BindView(R.id.layout_drawertouchable)
     RelativeLayout layout_drawertouchable;
+    @BindView(R.id.linear_header)
+    LinearLayout linearheader;
 
     LinearLayout layout_bottom,layout_drawer;
     RecyclerView recyview_hashes;
@@ -170,7 +172,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     DrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
-    ImageView imglefthandle;
+    ImageView imglefthandle,imgrighthandle;
     RelativeLayout rl_containerview;
 
     @Override
@@ -200,6 +202,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             linearLayout=rootview.findViewById(R.id.content);
 
             imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
+            imgrighthandle = (ImageView)rootview.findViewById(R.id.img_righthandle);
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
             drawertoggle = new ActionBarDrawerToggle(
                     getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
@@ -207,10 +210,18 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     imglefthandle.setVisibility(View.VISIBLE);
+                    linearheader.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.GONE);
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,10);
                 }
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     imglefthandle.setVisibility(View.GONE);
+                    linearheader.setVisibility(View.GONE);
+                    imgrighthandle.setVisibility(View.VISIBLE);
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(null,9);
                 }
             };
             navigationdrawer.addDrawerListener(drawertoggle);
@@ -228,6 +239,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             img_close.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             imglefthandle.setOnClickListener(this);
+            imgrighthandle.setOnClickListener(this);
 
             fragment_graphic_container.setVisibility(View.VISIBLE);
 
@@ -382,6 +394,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             case R.id.img_lefthandle:
                 navigationdrawer.openDrawer(Gravity.START);
+                break;
+
+            case R.id.img_righthandle:
+                navigationdrawer.closeDrawers();
                 break;
 
             case R.id.img_dotmenu: {
@@ -742,6 +758,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         if(madapterclick != null)
             madapterclick.onItemClicked(null,4);
+
+        resetaudioreder();
     }
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
@@ -1000,8 +1018,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     graphicaldrawerfragment.setdrawerproperty(graphicopen);
                     graphicaldrawerfragment.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
                     graphicaldrawerfragment.setmetricesdata();
-                    hashvalue ="";
-                    metrichashvalue = "";
                 }
 
                 myHandler.postDelayed(this, 1000);
@@ -1178,6 +1194,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
 
         }
+    }
+
+    public void resetaudioreder(){
+
+        myvisualizerview.setVisibility(View.VISIBLE);
+
     }
 
     public static Fragment newInstance() {

@@ -18,6 +18,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
+            android:isScrollContainer="false"
             android:scrollbars="none"
             android:visibility="visible">
 

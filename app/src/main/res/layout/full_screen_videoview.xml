@@ -33,9 +33,9 @@
                     android:background="@drawable/bottomborder"
                     android:layout_gravity="bottom|end"
                     android:layout_alignParentBottom="true"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:visibility="visible"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
                     android:layout_height="wrap_content">
 
                     <ImageView
@@ -44,6 +44,7 @@
                         android:layout_marginLeft="@dimen/normal_margin_left"
                         android:layout_marginRight="@dimen/normal_margin_right"
                         android:id="@+id/img_share_media"
+                        android:visibility="visible"
                         android:background="@drawable/share"/>
 
                     <ImageView
@@ -53,7 +54,50 @@
                         android:layout_marginLeft="@dimen/normal_margin_left"
                         android:layout_marginRight="@dimen/normal_margin_right"
                         android:layout_alignParentRight="true"
+                        android:visibility="visible"
                         android:background="@drawable/garbage"/>
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/footer_time_current"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="@dimen/margin_15dp"
+                        android:paddingLeft="0dip"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        android:textStyle="bold"
+                        app:fontType="OpenSans_Regular" />
+
+
+                    <com.cryptoserver.composer.views.customfonttextview
+                        android:id="@+id/footer_time"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:fontType="OpenSans_Regular"
+                        android:paddingRight="0dip"
+                        android:visibility="gone"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/margin_15dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:paddingLeft="4dip" />
+
+                    <ImageButton
+                        android:id="@+id/img_pause"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="top"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="7dp"
+                        android:background="@drawable/pause_btn_icon"
+                        android:paddingLeft="10dip"
+                        android:layout_centerInParent="true"
+                        android:paddingRight="4dip"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -128,6 +172,7 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
+                            android:id="@+id/scrub_layout"
                             >
 
                             <ImageButton android:id="@+id/img_volume"
@@ -151,14 +196,17 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
                                 android:visibility="visible"
+                                android:layout_marginLeft="@dimen/margin_15dp"
+                                android:layout_marginRight="@dimen/margin_15dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_alignParentBottom="false">
 
-                                <android.support.v7.widget.RecyclerView
+                                <com.cryptoserver.composer.utils.NoScrollRecycler
                                     android:id="@+id/recyview_frames"
                                     android:layout_width="match_parent"
                                     android:visibility="visible"
                                     android:layout_marginTop="5dp"
+                                    android:overScrollMode="never"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_height="wrap_content"/>
 
@@ -167,6 +215,8 @@
                                     android:id="@+id/scrubberverticalbar"
                                     android:layout_centerHorizontal="true"
                                     android:background="@color/whitetransparent"
+                                    android:layout_marginLeft="@dimen/margin_15dp"
+                                    android:layout_marginRight="@dimen/margin_15dp"
                                     android:visibility="gone"
                                     android:layout_height="50dp">
 
@@ -190,10 +240,11 @@
                                 android:layout_centerInParent="true"
                                 android:progressDrawable="@drawable/custom_seekbar"
                                 android:layout_height="30dip"
+                                android:thumb="@drawable/custom_thumb"
                                 android:layout_below="@+id/layout_scrubberview"
                                 android:layout_marginLeft="@dimen/margin_15dp"
                                 android:layout_marginRight="@dimen/margin_15dp"
-                                android:thumbOffset="0dp"/>
+                                />
 
                             <RelativeLayout
                                 android:id="@+id/layout_progressline"
@@ -227,12 +278,12 @@
                                     android:layout_below="@id/txt_mediatimethumb"
                                     android:orientation="vertical">
 
-                                <View
-                                    android:id="@+id/view_progressline"
-                                    android:layout_width="2dp"
-                                    android:layout_height="45dp"
-                                    android:layout_centerHorizontal="true"
-                                    android:background="@color/black"></View>
+                                    <View
+                                        android:id="@+id/view_progressline"
+                                        android:layout_width="2dp"
+                                        android:layout_height="45dp"
+                                        android:layout_centerHorizontal="true"
+                                        android:background="@color/black"></View>
 
                                 </RelativeLayout>
 
@@ -266,22 +317,6 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
                                 android:paddingLeft="4dip" />
-
-                            <ImageButton
-                                android:id="@+id/img_pause"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_below="@+id/mediacontroller_progress"
-                                android:layout_centerHorizontal="true"
-                                android:layout_gravity="top"
-                                android:layout_marginRight="5dp"
-                                android:layout_marginTop="7dp"
-                                android:background="@drawable/pause_btn_icon"
-                                android:paddingBottom="4dip"
-                                android:paddingLeft="10dip"
-                                android:paddingRight="4dip"
-                                android:paddingTop="4dip"
-                                android:visibility="gone" />
 
                         </RelativeLayout>
                     </LinearLayout>
