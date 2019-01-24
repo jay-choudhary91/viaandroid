@@ -1033,11 +1033,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                         if(!mediadate.isEmpty()){
 
-                            DateFormat format = new SimpleDateFormat("MM-dd-yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
                             String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                            String filecreateddate = new SimpleDateFormat("MM/dd/yyyy").format(date);
-                            String filecreated = new SimpleDateFormat("MM-dd-yyyy").format(date);
+                            String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(date);
+                            String filecreated = new SimpleDateFormat("yyyy-mm-dd").format(date);
 
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
@@ -1062,11 +1062,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                         if(!mediadate.isEmpty()){
 
-                            DateFormat format = new SimpleDateFormat("MM-dd-yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
                             String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                            String filecreateddate = new SimpleDateFormat("MM/dd/yyyy").format(date);
-                            String filecreated = new SimpleDateFormat("MM-dd-yyyy").format(date);
+                            String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(date);
+                            String filecreated = new SimpleDateFormat("yyyy-mm-dd").format(date);
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
                             tvtime.setText(time);
