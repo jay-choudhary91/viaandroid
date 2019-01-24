@@ -98,8 +98,8 @@
 
                         <com.cryptoserver.composer.utils.circularImageview
                             android:id="@+id/btn_playpause"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:contentDescription="@string/description"
                             android:layout_centerHorizontal="true"
                             android:visibility="gone"
