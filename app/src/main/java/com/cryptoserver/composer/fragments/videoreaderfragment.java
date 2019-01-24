@@ -312,7 +312,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-    int targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage,scrubberviewwidth=0,scrubheight,bottommargin;
+    int layoutfooterheight,controllererheight,actionbarheight,targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage,scrubberviewwidth=0,scrubheight,bottommargin;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
@@ -436,7 +436,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mheightview = getContext().getResources().getDimensionPixelOffset(R.dimen.frames_video_height);
 
             handleimageview.setVisibility(View.GONE);
-            playpausebutton.setImageResource(R.drawable.play);
+            playpausebutton.setImageResource(R.drawable.play_btn);
 
 
             frameduration=common.checkframeduration();
@@ -678,10 +678,25 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             layout_starttime.setVisibility(View.VISIBLE);
             layout_endtime.setVisibility(View.VISIBLE);
 
+            layout_mediatype.post(new Runnable() {
+                @Override
+                public void run() {
+                    actionbarheight = layout_mediatype.getHeight();
+                }
+            });
+
+            layout_footer.post(new Runnable() {
+                @Override
+                public void run() {
+                    layoutfooterheight= layout_footer.getHeight();
+                }
+            });
+
+
             layoutcustomcontroller.post(new Runnable() {
                 @Override
                 public void run() {
-                   int controllererheight= scrublayout.getHeight();
+                     controllererheight= scrublayout.getHeight();
                     Log.e("controllererheight",""+controllererheight);
                 }
             });
@@ -714,7 +729,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     previouswidth = videotextureview.getWidth();
                     previouswidthpercentage = (previouswidth*20)/100;
                     playpausebutton.setVisibility(View.VISIBLE);
-                    recenterplaypause(previousheight);
+                    recenterplaypause(previousheight-(actionbarheight +controllererheight));
                     Log.e("previousheight",""+previousheight);
                 }
             });
@@ -1031,7 +1046,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         playpausebutton.setVisibility(View.GONE);
                         imgpause.setVisibility(View.GONE);
                         img_fullscreen.setVisibility(View.INVISIBLE);
-                        recenterplaypause(targetheight);
+                        recenterplaypause(targetheight-(actionbarheight));
                     } else{
                         navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                         //navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -1053,7 +1068,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         collapseimg_view();
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-                        recenterplaypause(previousheight);
+                        recenterplaypause(previousheight-(actionbarheight + controllererheight));
                     }
                     break;
 
@@ -1063,14 +1078,17 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     if(layout_photodetails.getVisibility()==View.GONE){
                         if(layout_footer.getVisibility()==(View.GONE)){
                             setbottomimgview();
+                            recenterplaypause(targetheight-(actionbarheight + layoutfooterheight));
                             img_fullscreen.setVisibility(View.VISIBLE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_mediatype.setVisibility(View.VISIBLE);
                             layout_footer.setVisibility(View.VISIBLE);
                             playpausebutton.setVisibility(View.VISIBLE);
                         } else {
-                            setbottomimgview();
-                            img_fullscreen.setVisibility(View.VISIBLE);
+                           /*
+                            setbottomimgview();*/
+                            playpausebutton.setVisibility(View.GONE);
+                            img_fullscreen.setVisibility(View.GONE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_mediatype.setVisibility(View.GONE);
                             layout_footer.setVisibility(View.GONE);
@@ -1867,7 +1885,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         player.seekTo(0);
                         wavevisualizerslist.clear();
                         controller.setProgress(0,true);
-                        playpausebutton.setImageResource(R.drawable.play);
+                        playpausebutton.setImageResource(R.drawable.play_btn);
 
                        /* RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         relativeParams.setMargins(0, 0,0, 0);
@@ -1953,7 +1971,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     public void setupvideodata() {
 
         tvsize.setText(common.filesize(mediafilepath));
-        playpausebutton.setImageResource(R.drawable.play);
+        playpausebutton.setImageResource(R.drawable.play_btn);
         position = 0;
         if (mediafilepath.equalsIgnoreCase("blank")) {
             //frontview.setVisibility(View.VISIBLE);
