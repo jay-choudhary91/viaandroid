@@ -115,7 +115,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     RecyclerView recyview_metrices;
     ImageView handle,img_dotmenu;;
     LinearLayout linearLayout;
-    FrameLayout fragment_graphic_container;
 
     ScrollView scrollview_metrices,scrollview_hashes;
     adapteritemclick madapterclick;
@@ -136,7 +135,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     int Seconds, Minutes, MilliSeconds ;
     public Dialog maindialogshare,subdialogshare;
     private LinearLayoutManager mLayoutManager;
-    private fragmentgraphicaldrawer graphicaldrawerfragment;
     private Handler wavehandler;
     private Runnable waverunnable;
     private String keytype =config.prefs_md5,mediakey="";
@@ -168,10 +166,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
 
-    DrawerLayout navigationdrawer;
-    private ActionBarDrawerToggle drawertoggle;
-    ImageView imglefthandle,imgrighthandle;
-    RelativeLayout rl_containerview;
 
     @Override
     public int getlayoutid() {
@@ -190,53 +184,20 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+            gethelper().drawerenabledisable(true);
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
-            fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_drawer_container);
-            rl_containerview = (RelativeLayout) rootview.findViewById(R.id.rl_containerview);
             linearLayout=rootview.findViewById(R.id.content);
-
-            imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
-            imgrighthandle = (ImageView)rootview.findViewById(R.id.img_righthandle);
-            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            drawertoggle = new ActionBarDrawerToggle(
-                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
-
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    imglefthandle.setVisibility(View.VISIBLE);
-                    linearheader.setVisibility(View.VISIBLE);
-                    imgrighthandle.setVisibility(View.GONE);
-                    if(madapterclick != null)
-                        madapterclick.onItemClicked(null,10);
-                }
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    imglefthandle.setVisibility(View.GONE);
-                    linearheader.setVisibility(View.GONE);
-                    imgrighthandle.setVisibility(View.VISIBLE);
-                    if(madapterclick != null)
-                        madapterclick.onItemClicked(null,9);
-                }
-            };
-            navigationdrawer.addDrawerListener(drawertoggle);
-            drawertoggle.syncState();
-            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
             timerhandler = new Handler() ;
             layout_drawertouchable.setOnTouchListener(this);
-            rl_containerview.setVisibility(View.GONE);
             img_dotmenu.setVisibility(View.VISIBLE);
 
             img_warning.setOnClickListener(this);
             img_close.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
-            imglefthandle.setOnClickListener(this);
-            imgrighthandle.setOnClickListener(this);
-
-            fragment_graphic_container.setVisibility(View.VISIBLE);
 
             keytype=common.checkkey();
             frameduration=common.checkframeduration();
@@ -320,16 +281,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-
     private void doafterallpermissionsgranted()
     {
-        if(graphicaldrawerfragment == null)
-        {
-            graphicaldrawerfragment =new fragmentgraphicaldrawer();
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-            transaction.commit();
-        }
     }
 
     @Override
@@ -360,7 +313,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         super.onPause();
     }
 
-
     public void startstopaudiorecording()
     {
         if(! isaudiorecording)
@@ -382,14 +334,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-
-            case R.id.img_lefthandle:
-                navigationdrawer.openDrawer(Gravity.START);
-                break;
-
-            case R.id.img_righthandle:
-                navigationdrawer.closeDrawers();
-                break;
 
             case R.id.img_dotmenu: {
                 settingfragment settingfrag=new settingfragment();
@@ -901,7 +845,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 try {
 
-                    if((isaudiorecording)  && graphicaldrawerfragment != null)
+                    if((isaudiorecording))
                     {
                         int x = mrecorder.getMaxAmplitude();
 
@@ -910,11 +854,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                         wavevisualizerslist.add(new wavevisualizer(x,true));
 
-                       /* if ((fragment_graphic_container.getVisibility() == View.VISIBLE)) {
-
-                            fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
-
-                        }*/
                     }
 
                 } catch (Exception e) {
@@ -981,7 +920,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                     if((! selectedmetrices.toString().trim().isEmpty()))
                     {
-                        rl_containerview.setVisibility(View.VISIBLE);
                         if(mmetricsitems.size() > 0)
                         {
                             mmetricsitems.set(0,new videomodel(selectedmetrices));
@@ -999,15 +937,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         selectedmetrices="";
                     }*/
 
-                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen=true;
-                }
-
-                if((graphicaldrawerfragment!= null && mmetricsitems.size() > 0 && isaudiorecording))
-                {
-                    graphicaldrawerfragment.setdrawerproperty(graphicopen);
-                    graphicaldrawerfragment.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
-                    graphicaldrawerfragment.setmetricesdata();
                 }
 
                 myHandler.postDelayed(this, 1000);

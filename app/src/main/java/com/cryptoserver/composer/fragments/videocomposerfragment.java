@@ -110,7 +110,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     protected float maximumZoomLevel;
     protected Rect zoom;
     boolean firsthashvalue = true;
-    fragmentgraphicaldrawer graphicaldrawerfragment;
     mediacompletiondialogmain mediacompletionpopupmain;
     mediacompletiondialogsub mediacompletionpopupsub;
     FragmentManager fm ;
@@ -306,7 +305,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     LinearLayout linearLayout;
-    FrameLayout fragment_graphic_container;
     boolean isflashon = false,inPreview = true;
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
@@ -315,7 +313,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     ImageView imgflashon,img_dotmenu,img_warning,img_close,handle;
 
-    ImageView imglefthandle,imgrighthandle;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -352,9 +349,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
 
-    DrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
-    RelativeLayout rl_containerview;
     @BindView(R.id.linear_header)
     LinearLayout linearheader;
 
@@ -382,47 +377,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
             img_warning = (ImageView) rootview.findViewById(R.id.img_warning);
             img_close = (ImageView) rootview.findViewById(R.id.img_close);
-            imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
-            imgrighthandle = (ImageView)rootview.findViewById(R.id.img_righthandle);
             handle = (ImageView) rootview.findViewById(R.id.handle);
             txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
             txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
-            fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_drawer_container);
-            rl_containerview = (RelativeLayout) rootview.findViewById(R.id.rl_containerview);
             linearLayout=rootview.findViewById(R.id.content);
 
-            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-
-           /* drawertoggle = new ActionBarDrawerToggle(
-                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
-
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    imglefthandle.setVisibility(View.VISIBLE);
-                    linearheader.setVisibility(View.VISIBLE);
-                    imgrighthandle.setVisibility(View.GONE);
-                   // layout_bottom.setVisibility(View.VISIBLE);
-
-                    if(madapterclick != null)
-                        madapterclick.onItemClicked(null,10);
-                }
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    imglefthandle.setVisibility(View.GONE);
-                    linearheader.setVisibility(View.GONE);
-                    imgrighthandle.setVisibility(View.VISIBLE);
-                //    layout_bottom.setVisibility(View.GONE);
-
-                    if(madapterclick != null)
-                        madapterclick.onItemClicked(null,9);
-                }
-            };
-            navigationdrawer.addDrawerListener(drawertoggle);
-            drawertoggle.syncState();
-            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
-*/
             gethelper().drawerenabledisable(true);
 
 
@@ -432,7 +392,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             imgflashon.setVisibility(View.VISIBLE);
             txt_media_quality.setVisibility(View.VISIBLE);
-            rl_containerview.setVisibility(View.GONE);
 
             if(videobitrate == 2000000)
                 txt_media_quality.setText("420P");
@@ -463,14 +422,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             img_dotmenu.setVisibility(View.VISIBLE);
             mTextureView.setOnTouchListener(this);
 
-            imglefthandle.setOnClickListener(this);
-            imgrighthandle.setOnClickListener(this);
-
             imgflashon.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             img_warning.setOnClickListener(this);
             img_close.setOnClickListener(this);
-            fragment_graphic_container.setVisibility(View.VISIBLE);
 
 
             setmetriceshashesdata();
@@ -980,13 +935,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 navigateflash();
                 break;
 
-            case R.id.img_lefthandle:
-                navigationdrawer.openDrawer(Gravity.START);
-                break;
-
-            case R.id.img_righthandle:
-                navigationdrawer.closeDrawers();
-                break;
 
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
@@ -1237,15 +1185,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     private void doafterallpermissionsgranted() {
 
-        if(graphicaldrawerfragment == null)
-        {
-            //fragmentgraphic  = new graphicalfragment();
-            graphicaldrawerfragment =new fragmentgraphicaldrawer();
-           /* FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-            transaction.commit();*/
-        }
-
         if(! camerastatusok)
         {
             camerastatusok=true;
@@ -1435,16 +1374,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }
 
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(graphicaldrawerfragment != null)
-                        {
-                            //graphicaldrawerfragment.setmetricesdata();
-                        }
-                    }
-                });
-
                 Log.e("current call, calldur ",apicurrentduration+" "+apicallduration);
                 if(apicurrentduration == apicallduration)
                     apicurrentduration=0;
@@ -1468,7 +1397,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     if((! selectedmetrices.toString().trim().isEmpty()))
                     {
 
-                        rl_containerview.setVisibility(View.VISIBLE);
                         if(mmetricsitems.size() > 0)
                         {
                            // mmetricsitems.set(0,new videomodel(selectedmetrices));
@@ -1481,21 +1409,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         //mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
                         selectedmetrices="";
                     }
-
-                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen=true;
-
                 }
-
-                /*if((graphicaldrawerfragment!= null && mmetricsitems.size() > 0 && isvideorecording))
-                {
-                    graphicaldrawerfragment.setdrawerproperty(graphicopen);
-                    graphicaldrawerfragment.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
-                    graphicaldrawerfragment.setmetricesdata();
-                    *//*hashvalue ="";
-                    metrichashvalue = "";*//*
-                }*/
-
                 myHandler.postDelayed(this, 1000);
             }
         };

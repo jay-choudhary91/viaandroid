@@ -6,14 +6,6 @@
     android:id="@+id/rl_rootview"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <com.cryptoserver.composer.utils.FullDrawerLayout
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:openDrawer="start" >
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -38,41 +30,7 @@
 
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/img_lefthandle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:padding="5dp"
-                android:layout_marginLeft="15dp"
-                android:src="@drawable/ic_arrow_left"
-                />
-
          </RelativeLayout>
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/navigation_drawer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/blacktransparent"
-            android:visibility="visible"
-            android:fitsSystemWindows="true"
-            android:layout_gravity="start"
-            >
-
-            <include
-                layout="@layout/layout_graphical_drawer_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </include>
-
-        </android.support.design.widget.NavigationView>
-
-
-
-    </com.cryptoserver.composer.utils.FullDrawerLayout>
 
     <LinearLayout
         android:id="@+id/linear_header"
@@ -80,7 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="vertical">
-
 
         <include layout="@layout/action_bar_composer"></include>
     </LinearLayout>
