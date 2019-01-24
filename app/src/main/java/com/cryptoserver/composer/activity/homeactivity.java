@@ -360,6 +360,7 @@ public void updateactionbar(int showHide, int color) {
              imgsettingsicon.setEnabled(true);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
+             drawerenabledisable(false);
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
@@ -391,45 +392,21 @@ public void updateactionbar(int showHide, int color) {
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }else if(fragment instanceof audioreaderfragment){
-             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-             {
-                 imgsettingsicon.setVisibility(View.GONE);
-                 img_menu.setVisibility(View.VISIBLE);
-                 imgshareicon.setVisibility(View.VISIBLE);
-                 imgsettingsicon.setEnabled(true);
-                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                         RelativeLayout.LayoutParams.MATCH_PARENT);
-                 fragment_container.setLayoutParams(params);
-             }else{
-                 actionbar.setVisibility(View.GONE);
-                 imgshareicon.setVisibility(View.VISIBLE);
-                 img_menu.setVisibility(View.VISIBLE);
-                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                         RelativeLayout.LayoutParams.MATCH_PARENT);
-                 fragment_container.setLayoutParams(params);
-             }
+             actionbar.setVisibility(View.GONE);
+             imgshareicon.setVisibility(View.VISIBLE);
+             img_menu.setVisibility(View.VISIBLE);
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
          } else if(fragment instanceof imagereaderfragment){
-             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-             {
-                 imgsettingsicon.setVisibility(View.GONE);
-                 img_menu.setVisibility(View.VISIBLE);
-                 imgshareicon.setVisibility(View.VISIBLE);
-                 imgsettingsicon.setEnabled(true);
-                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                         RelativeLayout.LayoutParams.MATCH_PARENT);
-                 fragment_container.setLayoutParams(params);
-             }else{
-                 actionbar.setVisibility(View.GONE);
-                 img_menu.setVisibility(View.VISIBLE);
-                 imgshareicon.setVisibility(View.VISIBLE);
-                 imgsettingsicon.setEnabled(true);
-                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                         RelativeLayout.LayoutParams.MATCH_PARENT);
-                 fragment_container.setLayoutParams(params);
-             }
+             actionbar.setVisibility(View.GONE);
+             img_menu.setVisibility(View.VISIBLE);
+             imgshareicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setEnabled(true);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
 
          }
          else if(fragment instanceof bottombarrederfrag){

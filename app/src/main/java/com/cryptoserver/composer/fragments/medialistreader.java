@@ -1091,11 +1091,11 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                 type="video/*";
             }else if(selectedmediatype == 1){
-                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-                type="audio/*";
-            }else if(selectedmediatype == 2){
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 type="image/*";
+            }else if(selectedmediatype == 2){
+                intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                type="audio/*";
             }
         }
         else
@@ -1104,14 +1104,12 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.INTERNAL_CONTENT_URI);
                 type="video/*";
             }else if(selectedmediatype == 1){
-                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
-                type="audio/*";
-            }else if(selectedmediatype == 2){
                 intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                 type="image/*";
+            }else if(selectedmediatype == 2){
+                intent = new Intent(Intent.ACTION_PICK,  android.provider.MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
+                type="audio/*";
             }
-
-
         }
         Activity activity=getActivity();
         if(type!=null || activity!=null){
