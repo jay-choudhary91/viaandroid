@@ -884,15 +884,11 @@ public class medialistreader extends basefragment implements View.OnClickListene
         {
             for (int i = 0; i < arrayvideolist.size(); i++) {
                 //String status = arrayvideolist.get(i).getMediastatus();
+                String status ="",videostarttransactionid="";
                 if(! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_complete))
                 {
-                    String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
-                    String status = getdata[0];
-                    String localkey = getdata[2];
 
-                    if (getdata[0].isEmpty() || getdata[0].equalsIgnoreCase("null")) {
-                        arrayvideolist.get(i).setMediastatus(config.sync_pending);
-
+                    {
                         databasemanager mdbhelper=null;
                         if (mdbhelper == null) {
                             mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
@@ -901,37 +897,46 @@ public class medialistreader extends basefragment implements View.OnClickListene
 
                         try {
                             mdbhelper.open();
-                        } catch (Exception e) {
+                        }catch (Exception e)
+                        {
                             e.printStackTrace();
                         }
 
-                        try {
-                            String syncdate[] = common.getcurrentdatewithtimezone();
-                            mdbhelper.insertstartvideoinfo("",arrayvideolist.get(i).getmimetype(),common.getfilename(arrayvideolist.get(i).getPath()),"",
-                                    "","","",syncdate[0]  , "",
-                                    "","","","","",
-                                    "","",config.sync_pending,"","","","","","","");
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        Cursor cursor = mdbhelper.getsinglemediastartdata(common.getfilename(arrayvideolist.get(i).getPath()));
+                        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
+                        {
+                            do{
+
+                                String location = "" + cursor.getString(cursor.getColumnIndex("location"));
+                                status = "" + cursor.getString(cursor.getColumnIndex("sync_status"));
+                                videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
+                                String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
+                                String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
+                                String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
+                                String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
+
+                            }while(cursor.moveToNext());
+                        }
+                        else
+                        {
+                            try {
+                                String syncdate[] = common.getcurrentdatewithtimezone();
+                                mdbhelper.insertstartvideoinfo("",arrayvideolist.get(i).getmimetype(),common.getfilename(arrayvideolist.get(i).getPath()),"",
+                                        "","","",syncdate[0]  , "",
+                                        "","","","","",
+                                        "","",config.sync_pending,"","","","","","","");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
 
-                        try {
+                        try
+                        {
                             mdbhelper.close();
-                        } catch (Exception e) {
+                        }catch (Exception e)
+                        {
                             e.printStackTrace();
                         }
-                    }
-                    else if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending)
-                            || status.equalsIgnoreCase(config.sync_notfound))
-                    {
-                        arrayvideolist.get(i).setMediastatus(status);
-                        arrayvideolist.get(i).setLocalkey(status);
-                    }
-                    else if (status.equalsIgnoreCase(config.sync_complete))
-                    {
-                        arrayvideolist.get(i).setMediastatus(status);
-                        arrayvideolist.get(i).setLocalkey(status);
-                        arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
                     }
                 }
             }
@@ -1085,6 +1090,12 @@ public class medialistreader extends basefragment implements View.OnClickListene
     {
         Intent intent = null;
         String type = null;
+        if(selectedmediatype == -1)
+        {
+            config.selectedmediatype=1;
+            selectedmediatype=config.selectedmediatype;
+        }
+
         if(android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
         {
             if(selectedmediatype == 0){

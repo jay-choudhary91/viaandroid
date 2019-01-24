@@ -694,6 +694,24 @@ public class databasemanager {
         return  localkey;
     }
 
+    public Cursor getsinglemediastartdata(String filename) {
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT * FROM tblstartmediainfo where location = '"+filename+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            cur = mDb.rawQuery(sql, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return cur;
+    }
+
+
     public Cursor getallmediastartdata() {
         Cursor cur=null;
         try {
