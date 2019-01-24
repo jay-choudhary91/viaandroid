@@ -818,7 +818,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             Log.e("oncreate","oncreate");
 
             loadmap();
-            //setmetriceshashesdata();
+            setmetriceshashesdata();
         }
         return rootview;
     }
