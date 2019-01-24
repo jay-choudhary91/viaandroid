@@ -2387,21 +2387,18 @@ public class common {
 
     public static void setdrawabledata(String encryption_key, String encryption_value, TextView txt_encryption){
 
-       // String encryptionstr =  encryption_key.concat(encryption_value);
-       // int substring=encryptionblock.lastIndexOf(":");
-       /* Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
+
+        String encryptionstr =  encryption_key.concat(encryption_value);
+        // int substring=encryptionblock.lastIndexOf(":");
+        Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
         Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
 
         SpannableStringBuilder encryptionstring=new SpannableStringBuilder(encryptionstr);
         encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,encryption_key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-*/
-
-       txt_encryption.setText(encryption_key +" "+encryption_value);
+        encryptionstring.setSpan(new RelativeSizeSpan(1.1f),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txt_encryption.setText(encryptionstring);
     }
-
-
-
 
     public static String filesize(String imageurl) {
         String img_size =null ;

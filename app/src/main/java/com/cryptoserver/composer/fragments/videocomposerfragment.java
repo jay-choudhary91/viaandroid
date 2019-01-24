@@ -34,14 +34,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -56,19 +52,14 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cryptoserver.composer.R;
-import com.cryptoserver.composer.adapter.videoframeadapter;
 import com.cryptoserver.composer.applicationviavideocomposer;
 import com.cryptoserver.composer.interfaces.adapteritemclick;
 import com.cryptoserver.composer.models.dbitemcontainer;
@@ -95,7 +86,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -402,7 +392,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             linearLayout=rootview.findViewById(R.id.content);
 
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            drawertoggle = new ActionBarDrawerToggle(
+            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+
+           /* drawertoggle = new ActionBarDrawerToggle(
                     getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
 
                 public void onDrawerClosed(View view) {
@@ -429,6 +422,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             navigationdrawer.addDrawerListener(drawertoggle);
             drawertoggle.syncState();
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+*/
+            gethelper().drawerenabledisable(true);
 
 
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
@@ -1246,9 +1241,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         {
             //fragmentgraphic  = new graphicalfragment();
             graphicaldrawerfragment =new fragmentgraphicaldrawer();
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+           /* FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-            transaction.commit();
+            transaction.commit();*/
         }
 
         if(! camerastatusok)
@@ -1492,14 +1487,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                 }
 
-                if((graphicaldrawerfragment!= null && mmetricsitems.size() > 0 && isvideorecording))
+                /*if((graphicaldrawerfragment!= null && mmetricsitems.size() > 0 && isvideorecording))
                 {
                     graphicaldrawerfragment.setdrawerproperty(graphicopen);
                     graphicaldrawerfragment.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
                     graphicaldrawerfragment.setmetricesdata();
-                    /*hashvalue ="";
-                    metrichashvalue = "";*/
-                }
+                    *//*hashvalue ="";
+                    metrichashvalue = "";*//*
+                }*/
 
                 myHandler.postDelayed(this, 1000);
             }

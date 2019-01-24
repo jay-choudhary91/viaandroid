@@ -198,7 +198,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvencryption.setTextColor(getResources().getColor(R.color.white));
           tvdataletency.setTextColor(getResources().getColor(R.color.white));
 
-
+            //setmetadatavalue();
             loadmap();
         }
         return rootview;
@@ -346,6 +346,40 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         common.setdrawabledata(getResources().getString(R.string.block_id),hashmethod, tvblockid);
         common.setdrawabledata(getResources().getString(R.string.block_number), valuehash, tvblocknumber);
         common.setdrawabledata(getResources().getString(R.string.metrichash),metahash, tvmetahash);
+
+    }
+
+
+    public void setmetadatavalue(){
+
+        common.setspannable(getResources().getString(R.string.latitude),"\n"+"N/A", tvlatitude);
+        common.setspannable(getResources().getString(R.string.longitude),"\n"+"N/A", tvlongitude);
+        common.setspannable(getResources().getString(R.string.altitude),"\n"+"N/A", tvaltitude);
+        common.setspannable(getResources().getString(R.string.speed),"\n"+"N/A", tvspeed);
+        common.setspannable(getResources().getString(R.string.heading),"\n"+"N/A", tvheading);
+        common.setspannable(getResources().getString(R.string.traveled),"\n"+"N/A", tvtraveled);
+        common.setspannable("","N/A", tvaddress);
+        common.setspannable(getResources().getString(R.string.xaxis),"\n"+"N/A", tvxaxis);
+        common.setspannable(getResources().getString(R.string.yaxis),"\n"+"N/A", tvyaxis);
+        common.setspannable(getResources().getString(R.string.zaxis),"\n"+"N/A", tvzaxis);
+        common.setspannable(getResources().getString(R.string.phone),"\n"+"N/A", tvphone);
+        common.setspannable(getResources().getString(R.string.network),"\n"+"N/A", tvnetwork);
+        common.setspannable(getResources().getString(R.string.connection),"\n"+"N/A", tvconnection);
+        common.setspannable(getResources().getString(R.string.version),"\n"+"N/A", tvversion);
+        common.setspannable(getResources().getString(R.string.wifi),"\n"+"N/A", tvwifi);
+        common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+"N/A", tvgpsaccuracy);
+        common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
+        common.setspannable(getResources().getString(R.string.country),"\n"+"N/A", tvcountry);
+        common.setspannable(getResources().getString(R.string.cpuusage),"\n"+"N/A", tvcpuusage);
+        common.setspannable(getResources().getString(R.string.brightness),"\n"+"N/A", tvbrightness);
+        common.setspannable(getResources().getString(R.string.timezone),"\n"+"N/A", tvtimezone);
+        common.setspannable(getResources().getString(R.string.memoryusage),"\n"+"N/A", tvmemoryusage);
+        common.setspannable(getResources().getString(R.string.bluetooth),"\n"+"N/A", tvbluetooth);
+        common.setspannable(getResources().getString(R.string.localtime),"\n"+"N/A", tvlocaltime);
+        common.setspannable(getResources().getString(R.string.storagefree),"\n"+"N/A", tvstoragefree);
+        common.setspannable(getResources().getString(R.string.language),"\n"+"N/A", tvlanguage);
+        common.setspannable(getResources().getString(R.string.uptime),"\n"+"N/A", tvuptime);
+        common.setspannable(getResources().getString(R.string.battery),"\n"+"N/A", tvbattery);
 
     }
 
