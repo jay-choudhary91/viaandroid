@@ -312,7 +312,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
-    int layoutfooterheight,controllererheight,actionbarheight,targetheight,previousheight,targetwidth,previouswidth, previouswidthpercentage,scrubberviewwidth=0,scrubheight,bottommargin;
+    int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
@@ -678,39 +678,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             layout_starttime.setVisibility(View.VISIBLE);
             layout_endtime.setVisibility(View.VISIBLE);
 
-            layout_mediatype.post(new Runnable() {
-                @Override
-                public void run() {
-                    actionbarheight = layout_mediatype.getHeight();
-                }
-            });
-
-            layout_footer.post(new Runnable() {
-                @Override
-                public void run() {
-                    layoutfooterheight= layout_footer.getHeight();
-                }
-            });
-
-
-            layoutcustomcontroller.post(new Runnable() {
-                @Override
-                public void run() {
-                     controllererheight= scrublayout.getHeight();
-                    Log.e("controllererheight",""+controllererheight);
-                }
-            });
-
-            scrublayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    scrubheight =  scrublayout.getHeight();
-                    Log.e("bottommargin",""+scrubheight);
-                    bottommargin = -(scrubheight-160);
-                    Log.e("bottommargin",""+bottommargin);
-                }
-            });
-
             layout_videoreader.post(new Runnable() {
                 @Override
                 public void run() {
@@ -729,7 +696,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     previouswidth = videotextureview.getWidth();
                     previouswidthpercentage = (previouswidth*20)/100;
                     playpausebutton.setVisibility(View.VISIBLE);
-                    recenterplaypause(previousheight-(actionbarheight +controllererheight));
+                    recenterplaypause();
                     Log.e("previousheight",""+previousheight);
                 }
             });
@@ -937,13 +904,17 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
     }
 
-    public void recenterplaypause(int margintop)
+    public void recenterplaypause()
     {
-        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        params.setMargins(0,margintop/2,0,0);
-        playpausebutton.setLayoutParams(params);
+        videotextureview.post(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.CENTER_IN_PARENT);
+                playpausebutton.setLayoutParams(params);
+            }
+        });
     }
 
     public class setonClick implements View.OnClickListener
@@ -1046,7 +1017,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         playpausebutton.setVisibility(View.GONE);
                         imgpause.setVisibility(View.GONE);
                         img_fullscreen.setVisibility(View.INVISIBLE);
-                        recenterplaypause(targetheight-(actionbarheight));
+                        recenterplaypause();
                     } else{
                         navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                         //navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -1055,6 +1026,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         layout_photodetails.setVisibility(View.VISIBLE);
                         tab_layout.setVisibility(View.VISIBLE);
                         scrollview_detail.setVisibility(View.VISIBLE);
+                        layout_mediatype.setVisibility(View.VISIBLE);
                         totalduration.setVisibility(View.VISIBLE);
                         time_current.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
@@ -1068,7 +1040,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         collapseimg_view();
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-                        recenterplaypause(previousheight-(actionbarheight + controllererheight));
+                        recenterplaypause();
                     }
                     break;
 
@@ -1078,7 +1050,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     if(layout_photodetails.getVisibility()==View.GONE){
                         if(layout_footer.getVisibility()==(View.GONE)){
                             setbottomimgview();
-                            recenterplaypause(targetheight-(actionbarheight + layoutfooterheight));
+                            recenterplaypause();
                             img_fullscreen.setVisibility(View.VISIBLE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_mediatype.setVisibility(View.VISIBLE);
