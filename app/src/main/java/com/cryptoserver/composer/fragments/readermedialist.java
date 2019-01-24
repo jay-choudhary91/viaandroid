@@ -157,7 +157,7 @@ public class readermedialist extends basefragment {
 
     @Override
     public int getlayoutid() {
-        return R.layout.fragment_readermedialist;
+        return R.layout.fragment_readermedialist_old;
     }
     @Override
     public void onPause() {
