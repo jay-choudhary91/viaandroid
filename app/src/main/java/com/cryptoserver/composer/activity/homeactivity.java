@@ -35,6 +35,7 @@ import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.framemetricssettings;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
 import com.cryptoserver.composer.fragments.imagereaderfragment;
+import com.cryptoserver.composer.fragments.medialistreader;
 import com.cryptoserver.composer.fragments.myfolderfragment;
 import com.cryptoserver.composer.fragments.readermedialist;
 import com.cryptoserver.composer.fragments.settingfragment;
@@ -90,6 +91,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     private bottombarfragment fragbottombar;
     private readermedialist fragreadermedialist;
     private fragmentmedialist fragvideolist;
+    private medialistreader fragmedialistreader;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,11 +101,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         updateactionbar(0,getResources().getColor(R.color.dark_blue_solid));
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-            /*fragreadermedialist=new readermedialist();
-            replaceFragment(fragreadermedialist,false,true);*/
-
-            bottombarrederfrag bottombarrederfrag = new bottombarrederfrag();
-            replaceFragment(bottombarrederfrag, false, true);
+            fragmedialistreader=new medialistreader();
+            replaceFragment(fragmedialistreader, false, true);
         }
         else
         {
@@ -342,6 +341,18 @@ public void updateactionbar(int showHide, int color) {
             fragment_container.setLayoutParams(params);
         }
          else if(fragment instanceof fragmentmedialist){
+             imgaddicon.setVisibility(View.VISIBLE);
+             imgsettingsicon.setVisibility(View.VISIBLE);
+             imguploadicon.setVisibility(View.GONE);
+             actionbar.setVisibility(View.GONE);
+             imgsettingsicon.setEnabled(true);
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+
+             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                     RelativeLayout.LayoutParams.MATCH_PARENT);
+             fragment_container.setLayoutParams(params);
+         }
+         else if(fragment instanceof medialistreader){
              imgaddicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setVisibility(View.VISIBLE);
              imguploadicon.setVisibility(View.GONE);

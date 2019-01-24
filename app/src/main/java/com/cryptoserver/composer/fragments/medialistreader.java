@@ -196,7 +196,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == request_permissions) {
+        if (requestCode == request_read_external_storage) {
             boolean permissionsallgranted = true;
             for (int grantResult : grantResults) {
                 if (grantResult != PackageManager.PERMISSION_GRANTED) {
@@ -205,9 +205,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 }
             }
             if (permissionsallgranted) {
-                arrayvideolist.clear();
-                showselectedmediatypeitems();
-                fetchmedialistfromdirectory();
+                opengallery();
             }
         }
     }
@@ -243,7 +241,8 @@ public class medialistreader extends basefragment implements View.OnClickListene
             txt_searchcancel.setOnClickListener(this);
             img_uploadmedia.setOnClickListener(this);
 
-            img_camera.setVisibility(View.VISIBLE);
+            img_uploadmedia.setVisibility(View.VISIBLE);
+            img_camera.setVisibility(View.GONE);
             img_folder.setVisibility(View.VISIBLE);
             img_header_search.setVisibility(View.VISIBLE);
 
@@ -294,8 +293,6 @@ public class medialistreader extends basefragment implements View.OnClickListene
             RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
 
             recyclerviewgrid.setLayoutManager(mLayoutManager);
-
-            launchbottombarfragment();
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 fetchmedialistfromdirectory();
@@ -320,7 +317,6 @@ public class medialistreader extends basefragment implements View.OnClickListene
                     return false;
                 }
             });
-            resetmedialist();
             IntentFilter intentFilter = new IntentFilter(config.broadcast_medialistnewitem);
             medialistitemaddreceiver = new BroadcastReceiver() {
                 @Override
@@ -329,8 +325,22 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 }
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
+
+            recallservice();
         }
         return rootview;
+    }
+
+    public void recallservice(){
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
+            @Override
+            public void run() {
+                resetmedialist();
+                myhandler.postDelayed(this, 5000);
+            }
+        };
+        myhandler.post(myrunnable);
     }
 
     private void filter(String text) {
@@ -390,9 +400,6 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 break;
             case R.id.txt_mediatype_c:
                 showselecteditemincenter(txt_mediatype_c,3);
-                break;
-            case R.id.img_camera:
-                launchbottombarfragment();
                 break;
             case R.id.img_uploadmedia:
                 checkwritestoragepermission();
@@ -873,27 +880,62 @@ public class medialistreader extends basefragment implements View.OnClickListene
 
     public void resetmedialist(){
 
-        if(myhandler != null && myhandler != null)
-            myhandler.removeCallbacks(myrunnable);
+        if (arrayvideolist != null && arrayvideolist.size() > 0)
+        {
+            for (int i = 0; i < arrayvideolist.size(); i++) {
+                //String status = arrayvideolist.get(i).getMediastatus();
+                if(! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_complete))
+                {
+                    String[] getdata = getlocalkey(common.getfilename(arrayvideolist.get(i).getPath()));
+                    String status = getdata[0];
+                    String localkey = getdata[2];
 
-        myhandler =new Handler();
-        myrunnable = new Runnable() {
-            @Override
-            public void run() {
-               if (arrayvideolist != null && arrayvideolist.size() > 0)
-               {
-                       getallmedialistfromdb();
+                    if (getdata[0].isEmpty() || getdata[0].equalsIgnoreCase("null")) {
+                        arrayvideolist.get(i).setMediastatus(config.sync_pending);
 
-                       /*if(adaptermedialist != null && arrayvideolist.size() > 0)
-                            adaptermedialist.notifyDataSetChanged();*/
+                        databasemanager mdbhelper=null;
+                        if (mdbhelper == null) {
+                            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                            mdbhelper.createDatabase();
+                        }
 
-                 /* if(adaptergrid != null && arrayvideolist.size() > 0)
-                       adaptergrid.notifyDataSetChanged();*/
-               }
-                myhandler.postDelayed(this, 3000);
+                        try {
+                            mdbhelper.open();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            String syncdate[] = common.getcurrentdatewithtimezone();
+                            mdbhelper.insertstartvideoinfo("",arrayvideolist.get(i).getmimetype(),common.getfilename(arrayvideolist.get(i).getPath()),"",
+                                    "","","",syncdate[0]  , "",
+                                    "","","","","",
+                                    "","",config.sync_pending,"","","","","","","");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
+                            mdbhelper.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (status.equalsIgnoreCase(config.sync_inprogress) || status.equalsIgnoreCase(config.sync_pending)
+                            || status.equalsIgnoreCase(config.sync_notfound))
+                    {
+                        arrayvideolist.get(i).setMediastatus(status);
+                        arrayvideolist.get(i).setLocalkey(status);
+                    }
+                    else if (status.equalsIgnoreCase(config.sync_complete))
+                    {
+                        arrayvideolist.get(i).setMediastatus(status);
+                        arrayvideolist.get(i).setLocalkey(status);
+                        arrayvideolist.get(i).setVideostarttransactionid(getdata[1]);
+                    }
+                }
             }
-        };
-        myhandler.post(myrunnable);
+        }
     }
 
 
@@ -1036,30 +1078,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 framemetricssettings fragmatriclist=new framemetricssettings();
                 gethelper().replaceFragment(fragmatriclist, false, true);
                 break;
-            case R.id.img_add_icon:
-                launchbottombarfragment();
-                break;
         }
-    }
-
-    public void launchbottombarfragment()
-    {
-        /*bottombarfragment fragbottombar=new bottombarfragment();
-        fragbottombar.setData(new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-                requestpermissions();
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        });
-        gethelper().replaceFragment(fragbottombar, false, true);*/
-
-        composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
-        gethelper().replaceFragment(fragbottombar, false, true);
     }
 
     public  void opengallery()
@@ -1197,11 +1216,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 });
             }
         }).start();
-
-
     }
-
-
 
     @Override
     public void onPause() {
@@ -1239,7 +1254,6 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 getActivity().startActivity(Intent.createChooser(share, "Share video"));
             }
-
         }
         else if(type == 2)
         {
@@ -1251,10 +1265,8 @@ public class medialistreader extends basefragment implements View.OnClickListene
 
             }else if(videoobj.getmimetype().startsWith("video/")){
                 showalertdialog(videoobj,getActivity().getResources().getString(R.string.delete_confirm_video));
-
             }
         }else if(type == 3){
-            //arrayvideolist.clear();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1263,8 +1275,6 @@ public class medialistreader extends basefragment implements View.OnClickListene
                         updatemedialocation(videoobj.getVideostarttransactionid(),videoobj.getPath());
                 }
             },500);
-
-            //fetchmedialistfromdirectory();
 
         }else if(type == 4){
             if(videoobj.getmimetype().startsWith("image/")){
@@ -1285,13 +1295,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 videoreaderfragment readervideofragment=new videoreaderfragment();
                 readervideofragment.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(readervideofragment, false, true);
-
-               /* xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
-                composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
-                //videoplayercomposerfragment.setdata(videoobj.getPath());
-                gethelper().replaceFragment(videoplayercomposerfragment, false, true);*/
             }
-
         }
         else if(type == 6){
             showfolderdialog(videoobj.getPath());
@@ -1395,6 +1399,4 @@ public class medialistreader extends basefragment implements View.OnClickListene
                     }
                 }).show();
     }
-
-
 }
