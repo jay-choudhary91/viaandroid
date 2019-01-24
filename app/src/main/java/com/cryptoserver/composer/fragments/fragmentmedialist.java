@@ -614,7 +614,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     long filelength = file.length();
                     int file_size = Integer.parseInt(String.valueOf(filelength/1024));
                     Log.e("Filesize ",""+file.getAbsolutePath()+" "+file_size);
-                    if(file_size > 0)
+                    if(file_size > 0 && (! file.isDirectory()))
                     {
                         Date lastModDate = new Date(file.lastModified());
                         DateFormat outputFormat = new SimpleDateFormat("MM-dd-yy");
@@ -649,7 +649,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                                     ismedia=true;
                                 }
-                                else
+                                else if(! videoobj.getPath().contains(".pcm"))
                                 {
                                     //Adjust data source as per the requirement if file, URI, etc.
                                     extractor.setDataSource(file.getAbsolutePath());
@@ -712,7 +712,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     else
                     {
                         try {
-                            common.delete(file);
+                            if(! file.isDirectory())
+                                common.delete(file);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

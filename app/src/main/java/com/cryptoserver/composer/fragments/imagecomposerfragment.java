@@ -327,8 +327,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     LinearLayout layout_drawer;
 
-    RecyclerView recyview_hashes;
-    RecyclerView recyview_metrices;
     LinearLayout linearLayout;
     FrameLayout fragment_graphic_container;
 
@@ -542,9 +540,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rl_containerview = (RelativeLayout) rootview.findViewById(R.id.rl_containerview);
             linearLayout=rootview.findViewById(R.id.content);
 
-            recyview_hashes = (RecyclerView) rootview.findViewById(R.id.recyview_item);
-            recyview_metrices = (RecyclerView) rootview.findViewById(R.id.recyview_metrices);
-
             imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
             imgrighthandle = (ImageView) rootview.findViewById(R.id.img_righthandle);
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
@@ -589,12 +584,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             rl_containerview.setVisibility(View.GONE);
 
             flingactionmindstvac=common.getdrawerswipearea();
-
             fragment_graphic_container.setVisibility(View.VISIBLE);
-
-
             keytype=common.checkkey();
-
             brustmodeenabled=false;
             img_stop_watch.setImageResource(R.drawable.stopwatch);
         }
@@ -690,7 +681,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             mhashesitems.clear();
 
             mhashesitems.add(new videomodel(selectedhashes));
-            recyview_hashes.scrollToPosition(mhashesitems.size()-1);
 
             if(madapterclick != null)
                 madapterclick.onItemClicked(capturedimagefile.getAbsolutePath(),2);
@@ -701,97 +691,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public String getkeyvalue(byte[] data)
-    {
-        String value="";
-        String salt="";
-
-        switch (keytype)
-        {
-            case config.prefs_md5:
-                value= md5.calculatebytemd5(data);
-                break;
-
-            case config.prefs_md5_salt:
-                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
-                if(! salt.trim().isEmpty())
-                {
-                    byte[] saltbytes=salt.getBytes();
-                    try {
-                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                        outputstream.write(saltbytes);
-                        outputstream.write(data);
-                        byte updatedarray[] = outputstream.toByteArray();
-                        value= md5.calculatebytemd5(updatedarray);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    value= md5.calculatebytemd5(data);
-                }
-
-                break;
-            case config.prefs_sha:
-                value= sha.sha1(data);
-                break;
-            case config.prefs_sha_salt:
-                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
-                if(! salt.trim().isEmpty())
-                {
-                    byte[] saltbytes=salt.getBytes();
-                    try {
-                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                        outputstream.write(saltbytes);
-                        outputstream.write(data);
-                        byte updatedarray[] = outputstream.toByteArray();
-                        value= sha.sha1(updatedarray);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    value= sha.sha1(data);
-                }
-                break;
-        }
-        return value;
-    }
-
-    // Implement scroll listener
-    private void implementscrolllistener() {
-        recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-            }
-        });
-    }
-
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-
-
-
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-       /* String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        capturedimagefile = new File(getActivity().getExternalFilesDir(null), fileName+".jpg");*/
     }
 
     @Override
@@ -1122,27 +1028,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         capturestillpicture();
     }
 
-    /**
-     * Lock the focus as the first step for a still image capture.
-     */
-    private void lockFocus() {
-        try {
-            // This is how to tell the camera to lock focus.
-            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
-                    CameraMetadata.CONTROL_AF_TRIGGER_START);
-            // Tell #mCaptureCallback to wait for the lock.
-            mState = STATE_WAITING_LOCK;
-            mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
-                    mBackgroundHandler);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Run the precapture sequence for capturing a still image. This method should be called when
-     * we get a response in {@link #mCaptureCallback} from {@link #lockFocus()}.
-     */
     private void runPrecaptureSequence() {
         try {
             // This is how to tell the camera to trigger.
@@ -1157,10 +1042,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    /**
-     * Capture a still picture. This method should be called when we get a response in
-     * {@link #mCaptureCallback} from both {@link #lockFocus()}.
-     */
     private void capturestillpicture() {
         try {
             final Activity activity = getActivity();
@@ -1454,93 +1335,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         myhandler.post(myrunnable);
     }
 
-    public void showsharepopupmain()
-    {
-
-        fm = getActivity().getSupportFragmentManager();
-        popupclickmain=new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-                int i= (int) object;
-                if(i==1){
-                    Log.e("popup","popup");
-                    showsharepopupsub();
-                }
-                else if(i==2){
-                    Log.e("popup 2","popup 2");
-
-                }
-                else if(i==3){
-                    if(maindialogshare != null && maindialogshare.isShowing())
-                        maindialogshare.dismiss();
-
-                    String filepath =  capturedimagefile.getAbsolutePath();
-
-                    xdata.getinstance().saveSetting("selectedphotourl",""+filepath);
-                    imagereaderfragment phototabfrag = new imagereaderfragment();
-                    gethelper().addFragment(phototabfrag, false, true);
-                }
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        };
-
-        mediacompletionpopupmain=new mediacompletiondialogmain(popupclickmain,getResources().getString(R.string.share),getResources().getString(R.string.new_photo),getResources().getString(R.string.view_photo),getResources().getString(R.string.photo_has_been_encrypted),getResources().getString(R.string.congratulations_photo));
-        mediacompletionpopupmain.show(fm, "fragment_name");
-
-    }
-
-    public void showsharepopupsub()
-    {
-
-        fm = getActivity().getSupportFragmentManager();
-        popupclicksub=new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-                int i= (int) object;
-                if(i==4){
-                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            common.exportimage(capturedimagefile,true);
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    progressdialog.dismisswaitdialog();
-                                    launchmedialist();
-                                }
-                            });
-                        }
-                    }).start();
-                }
-                else if(i==5){
-
-                }
-                else if(i==6){
-                    launchmedialist();
-                }
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        };
-
-        mediacompletionpopupsub=new mediacompletiondialogsub(popupclicksub,getResources().getString(R.string.save_to_camera),getResources().getString(R.string.share_partial_photo),getResources().getString(R.string.cancel_viewlist),getResources().getString(R.string.photo_how_would_you),"");
-        mediacompletionpopupsub.show(fm, "fragment_name");
-
-    }
-
-    public void launchmedialist()
-    {
-        gethelper().onBack();
-    }
-
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
@@ -1602,14 +1396,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     });
 
 
-    private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
-        if (mFlashSupported) {
-            requestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
-                    CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
-        }
-    }
-
-
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
@@ -1666,38 +1452,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             // We cast here to ensure the multiplications won't overflow
             return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
                     (long) rhs.getWidth() * rhs.getHeight());
-        }
-
-    }
-
-    /**
-     * Shows an error message dialog.
-     */
-    public static class ErrorDialog extends DialogFragment {
-
-        private static final String ARG_MESSAGE = "message";
-
-        public static ErrorDialog newInstance(String message) {
-            ErrorDialog dialog = new ErrorDialog();
-            Bundle args = new Bundle();
-            args.putString(ARG_MESSAGE, message);
-            dialog.setArguments(args);
-            return dialog;
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Activity activity = getActivity();
-            return new AlertDialog.Builder(activity)
-                    .setMessage(getArguments().getString(ARG_MESSAGE))
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            activity.finish();
-                        }
-                    })
-                    .create();
         }
 
     }
@@ -1791,18 +1545,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
-    }
-
-    public void resetButtonViews(TextView view1, TextView view2, TextView view3)
-    {
-        view1.setBackgroundResource(R.color.videolist_background);
-        view1.setTextColor(ContextCompat.getColor(applicationviavideocomposer.getactivity(),R.color.white));
-
-        view2.setBackgroundResource(R.color.white);
-        view2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
-
-        view3.setBackgroundResource(R.color.white);
-        view3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.videolist_background));
     }
 
     public void setData(adapteritemclick madapterclick) {

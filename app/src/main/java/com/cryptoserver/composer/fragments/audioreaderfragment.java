@@ -416,7 +416,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             mFormatBuilder = new StringBuilder();
             mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
-            playpausebutton.setImageResource(R.drawable.play);
+            playpausebutton.setImageResource(R.drawable.play_btn);
 
             showcontrollers=rootview.findViewById(R.id.video_container);
             {
@@ -512,7 +512,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(player!=null)
                     {
                         player.pause();
-                        playpausebutton.setImageResource(R.drawable.play);
+                        playpausebutton.setImageResource(R.drawable.play_btn);
                     }
                 }
 
@@ -1446,7 +1446,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     player.seekTo(0);
                         wavevisualizerslist.clear();
 
-                    playpausebutton.setImageResource(R.drawable.play);
+                    playpausebutton.setImageResource(R.drawable.play_btn);
                 }
             }
         },200);
@@ -1534,7 +1534,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
            mainvideoframes.clear();
            mallframes.clear();
            audioduration = 0;
-           playpausebutton.setImageResource(R.drawable.play);
+           playpausebutton.setImageResource(R.drawable.play_btn);
            rlcontrollerview.setVisibility(View.VISIBLE);
            playerposition = 0;
         //   righthandle.setVisibility(View.VISIBLE);

@@ -6,7 +6,10 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -185,7 +188,6 @@ public class appdialog
         dialog.setContentView(R.layout.create_dir_dialog);
 
         final EditText edtInputData1 = (EditText) dialog.findViewById(R.id.edt_inputdata_1);
-
         TextView TxtPositiveButton = (TextView) dialog.findViewById(R.id.tv_positive);
         TxtPositiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,6 +210,17 @@ public class appdialog
                 }
             }
         });
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
+                edtInputData1.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
+                edtInputData1.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0));
+
+            }
+        }, 200);
+
 
         dialog.show();
 
