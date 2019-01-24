@@ -1245,12 +1245,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                             if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
 
-                                DateFormat format = new SimpleDateFormat("MM-dd-yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                                 final Date startdate = format.parse(mediadate);
                                 Date enddate = format.parse(completedate);
-                                final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
+                                final String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(startdate);
                                 final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+                                SimpleDateFormat spf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss a");
                                 final String starttime = spf.format(startdate);
                                 Log.e("starttime",starttime);
                                 final String endtime = spf.format(enddate);
