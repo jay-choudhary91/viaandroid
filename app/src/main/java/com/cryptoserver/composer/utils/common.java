@@ -841,6 +841,20 @@ public class common {
         }
     }
 
+
+    public static void setgraphicalblockchainvalue(String keyname,String value,boolean ismetricsselected){
+
+         if (keyname.equalsIgnoreCase(config.blockchainid)) {
+            xdata.getinstance().saveSetting(config.blockchainid,(ismetricsselected)?value:"NA");
+         } else if (keyname.equalsIgnoreCase(config.hashformula)) {
+                 xdata.getinstance().saveSetting(config.hashformula,(ismetricsselected)?value:"NA");
+         } else if (keyname.equalsIgnoreCase(config.datahash)) {
+                     xdata.getinstance().saveSetting(config.datahash,(ismetricsselected)?value:"NA");
+         } else if (keyname.equalsIgnoreCase(config.matrichash)) {
+                         xdata.getinstance().saveSetting(config.matrichash,(ismetricsselected)?value:"NA");
+         }
+    }
+
     public static String metric_display(String key) {
         String metricItemName = "";
         if (key.equalsIgnoreCase("imeinumber")) {
@@ -1910,12 +1924,6 @@ public class common {
                                       final TextView txt_cpuusage, final TextView txt_brightness, final TextView txt_timezone, final TextView txt_memoryusage, final TextView txt_bluetooth,
                                       final TextView txt_localtime, final TextView txt_storageavailable, final TextView txt_language,
                                       final TextView txt_systemuptime, final TextView txt_battery) {
-
-
-
-
-
-
 
     }
 

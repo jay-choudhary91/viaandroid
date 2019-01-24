@@ -1260,6 +1260,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
                 }
 
+                common.setgraphicalblockchainvalue(config.blockchainid,"",true);
+                common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
+                common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
+                common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
+
                 myhandler.postDelayed(this, 1000);
             }
         };

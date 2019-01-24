@@ -319,6 +319,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
             common.setdrawabledata(getResources().getString(R.string.battery),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
 
+            common.setdrawabledata(getResources().getString(R.string.blockchain_id),common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
+            common.setdrawabledata(getResources().getString(R.string.block_id),common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
+            common.setdrawabledata(getResources().getString(R.string.block_number), common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
+            common.setdrawabledata(getResources().getString(R.string.metrichash),common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
+
+
+
         String latitude=xdata.getinstance().getSetting(config.Latitude);
         String longitude=xdata.getinstance().getSetting(config.Longitude);
         if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
@@ -342,10 +349,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
         }
 
-        common.setdrawabledata(getResources().getString(R.string.blockchain_id),videostarttransactionid, tvblockchainid);
-        common.setdrawabledata(getResources().getString(R.string.block_id),hashmethod, tvblockid);
-        common.setdrawabledata(getResources().getString(R.string.block_number), valuehash, tvblocknumber);
-        common.setdrawabledata(getResources().getString(R.string.metrichash),metahash, tvmetahash);
+
 
     }
 

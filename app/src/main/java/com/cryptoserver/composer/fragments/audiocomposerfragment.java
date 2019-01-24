@@ -939,6 +939,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 }
 
+                common.setgraphicalblockchainvalue(config.blockchainid,"",true);
+                common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
+                common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
+                common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
+
+
+
+
                 myHandler.postDelayed(this, 1000);
             }
         };

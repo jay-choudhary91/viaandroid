@@ -99,6 +99,13 @@ public class config {
     public static final String address = "address";
     public static final String carrier = "carrier";
 
+    public static final String blockchainid = "blockchainid";
+    public static final String hashformula = "hashformula";
+    public static final String datahash = "datahash";
+    public static final String matrichash = "matrichash";
+
+
+
     //graphicaldata
     public static final String Latitude="Latitude";
     public static final String Longitude="Longitude";

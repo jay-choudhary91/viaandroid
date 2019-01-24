@@ -140,8 +140,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     NoScrollRecycler recyview_frames;
     @BindView(R.id.layout_scrubberview)
     RelativeLayout layout_scrubberview;
-    @BindView(R.id.fragment_graphic_drawer_container)
-    FrameLayout fragment_graphic_container;
 
     //tabdetails
 
@@ -280,10 +278,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     customfonttextview tvuptime;
     @BindView(R.id.txt_battery)
     customfonttextview tvbattery;
-    @BindView(R.id.img_lefthandle)
-    ImageView handleimageview;
-    @BindView(R.id.img_righthandle)
-    ImageView imgrighthandle;
     @BindView(R.id.btn_playpause)
     circularImageview playpausebutton;
     @BindView(R.id.txt_title_actionbarcomposer)
@@ -368,8 +362,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ArrayList<String> addhashvaluelist = new ArrayList<>();
     private BroadcastReceiver coredatabroadcastreceiver;
     int count = 0;
-    fragmentgraphicaldrawer  graphicaldrawerfragment;
-    FullDrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
     private long audioduration =0, currentaudioduration =0, currentaudiodurationseconds =0;
     private int ontime =0, videostarttime =0, endtime =0, fTime = 5000, bTime = 5000;
@@ -401,6 +393,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
             gethelper().setrecordingrunning(false);
+            gethelper().drawerenabledisable(false);
 
             videotextureview = (TextureView) findViewById(R.id.videotextureview);
             linearLayout=rootview.findViewById(R.id.content);
@@ -410,34 +403,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
             videotextureview.setSurfaceTextureListener(this);
 
-            //drawer implementation
-            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            drawertoggle = new ActionBarDrawerToggle(
-                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
-
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    handleimageview.setVisibility(View.VISIBLE);
-                    imgrighthandle.setVisibility(View.GONE);
-                }
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    handleimageview.setVisibility(View.GONE);
-                    imgrighthandle.setVisibility(View.VISIBLE);
-                }
-            };
-            navigationdrawer.addDrawerListener(drawertoggle);
-            drawertoggle.syncState();
-            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
-
             mediaseekbar.setPadding(0,0,0,0);
-
             mheightview = getContext().getResources().getDimensionPixelOffset(R.dimen.frames_video_height);
 
-            handleimageview.setVisibility(View.GONE);
             playpausebutton.setImageResource(R.drawable.play_btn);
-
 
             frameduration=common.checkframeduration();
             keytype=common.checkkey();
@@ -638,16 +607,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
             flingactionmindstvac = common.getdrawerswipearea();
 
-           /* handleimageview.setOnTouchListener(new setonTouch());
-            righthandle.setOnTouchListener(new setonTouch());
-            videotextureview.setOnTouchListener(new setonTouch());*/
-
             img_dotmenu.setOnClickListener(new setonClick());
             img_folder.setOnClickListener(new setonClick());
             img_camera.setOnClickListener(new setonClick());
             img_arrow_back.setOnClickListener(new setonClick());
-            handleimageview.setOnClickListener(new setonClick());
-            imgrighthandle.setOnClickListener(new setonClick());
             videotextureview.setOnClickListener(new setonClick());
             img_delete_media.setOnClickListener(new setonClick());
             imgpause.setOnClickListener(new setonClick());
@@ -702,21 +665,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             });
 
 
-            fragment_graphic_container.setVisibility(View.VISIBLE);
-
             txtslotencyption.setOnClickListener(new setonClick());
             txtslotmeta.setOnClickListener(new setonClick());
             txtslotmedia.setOnClickListener(new setonClick());
             resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
 
-            if (graphicaldrawerfragment == null) {
-                // fragmentgraphic = new graphicalfragment();
-                graphicaldrawerfragment =new fragmentgraphicaldrawer();
-                graphicaldrawerfragment.setphotocapture(true);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_drawer_container, graphicaldrawerfragment);
-                transaction.commit();
-            }
             String[] items=common.getallfolders();
             if(items != null && items.length > 0)
             {
@@ -987,23 +940,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     showalertdialog(getActivity().getResources().getString(R.string.delete_confirm_video));
                     break;
 
-                case R.id.img_lefthandle:
-                    navigationdrawer.openDrawer(Gravity.START);
-                    //handleimageview.setVisibility(View.GONE);
-                    break;
-
-                case R.id.img_righthandle:
-                    navigationdrawer.closeDrawers();
-                    break;
-
                 case R.id.img_arrow_back:
                     gethelper().onBack();
                     break;
                 case R.id.img_fullscreen:
                     if(layout_photodetails.getVisibility()==View.VISIBLE){
-                      //  navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                        navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                        handleimageview.setVisibility(View.VISIBLE);
+                        gethelper().drawerenabledisable(true);
                         expand(videotextureview,100,targetheight);
                         layout_photodetails.setVisibility(View.GONE);
                         scrollview_detail.setVisibility(View.GONE);
@@ -1019,9 +961,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         img_fullscreen.setVisibility(View.INVISIBLE);
                         recenterplaypause();
                     } else{
-                        navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                        //navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                        handleimageview.setVisibility(View.GONE);
+                        gethelper().drawerenabledisable(false);
                         collapse(videotextureview,100,previousheight);
                         layout_photodetails.setVisibility(View.VISIBLE);
                         tab_layout.setVisibility(View.VISIBLE);
@@ -1692,8 +1632,13 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 if(!isdraweropen)
                 {
                   if(arraycontainerformetric != null){
-                      graphicaldrawerfragment.getencryptiondata(arraycontainerformetric.getHashmethod(),arraycontainerformetric.getVideostarttransactionid(),
+                     /* graphicaldrawerfragment.getencryptiondata(arraycontainerformetric.getHashmethod(),arraycontainerformetric.getVideostarttransactionid(),
                               arraycontainerformetric.getValuehash(),arraycontainerformetric.getMetahash());
+*/
+                      common.setgraphicalblockchainvalue(config.blockchainid,arraycontainerformetric.getVideostarttransactionid(),true);
+                      common.setgraphicalblockchainvalue(config.hashformula,arraycontainerformetric.getHashmethod(),true);
+                      common.setgraphicalblockchainvalue(config.datahash,arraycontainerformetric.getValuehash(),true);
+                      common.setgraphicalblockchainvalue(config.matrichash,arraycontainerformetric.getMetahash(),true);
 
                       common.setspannable(getResources().getString(R.string.blockchain_id)," "+ arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
                       common.setspannable(getResources().getString(R.string.block_id)," "+ arraycontainerformetric.getHashmethod(), txt_blockid);
@@ -1712,54 +1657,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                   metricItemArraylist.get(j).getMetricTrackValue(),true);
 
                           setmetadatavalue(metricItemArraylist.get(j));
-
-                          if(graphicaldrawerfragment != null)
-                          {
-                              if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
-                              {
-
-                                  if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
-                                  {
-                                      latt=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                      if(longg != 0)
-                                      {
-                                          if(graphicaldrawerfragment != null)
-                                          {
-                                              graphicaldrawerfragment.drawmappoints(new LatLng(latt,longg));
-                                              latt=0;longg=0;
-                                          }
-                                      }
-                                  }
-                              }
-                              if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
-                              {
-                                  if(! metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA"))
-                                  {
-                                      longg=Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                      if(latt != 0)
-                                      {
-                                          if(graphicaldrawerfragment != null)
-                                          {
-                                              graphicaldrawerfragment.drawmappoints(new LatLng(latt,longg));
-                                              latt=0;longg=0;
-                                          }
-                                      }
-                                  }
-                              }
-
-                          }
                       }
                   }
-
                   setmetricesgraphicaldata();
-
-                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen=true;
                 }
 
-               /* if(graphicaldrawerfragment != null)
-                    graphicaldrawerfragment.setdrawerproperty(graphicopen);
-*/
                 myHandler.postDelayed(this, 3000);
             }
         };
@@ -1816,15 +1718,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                 (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-
-
-        if(fragment_graphic_container .getVisibility() == View.VISIBLE)
-        {
-            if(graphicaldrawerfragment != null){
-                graphicaldrawerfragment.setmetricesdata();
-                //graphicaldrawerfragment.getvisualizerwavecomposer(wavevisualizerslist);
-            }
-        }
     }
 
     public class setonmediacompletion implements MediaPlayer.OnCompletionListener

@@ -1410,6 +1410,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         selectedmetrices="";
                     }
                 }
+
+                common.setgraphicalblockchainvalue(config.blockchainid,"",true);
+                common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
+                common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
+                common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
+
                 myHandler.postDelayed(this, 1000);
             }
         };

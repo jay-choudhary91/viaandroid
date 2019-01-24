@@ -387,21 +387,21 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
 
             navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             drawertoggle = new ActionBarDrawerToggle(
                     getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
 
                 /** Called when a drawer has settled in a completely closed state. */
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
-                    handleimageview.setVisibility(View.VISIBLE);
+                    handleimageview.setVisibility(View.GONE);
                     imgrighthandle.setVisibility(View.GONE);
                 }
                 /** Called when a drawer has settled in a completely open state. */
                 public void onDrawerOpened(View drawerView) {
                     super.onDrawerOpened(drawerView);
                     handleimageview.setVisibility(View.GONE);
-                    imgrighthandle.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.GONE);
                 }
             };
 
@@ -409,9 +409,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             // Where do I put this?
             drawertoggle.syncState();
-
             navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
-            handleimageview.setVisibility(View.VISIBLE);
+            handleimageview.setVisibility(View.GONE);
             textfetchdata.setVisibility(View.GONE);
 
             mFormatBuilder = new StringBuilder();
