@@ -325,11 +325,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      */
     private int mSensorOrientation;
 
-    LinearLayout layout_drawer;
-
     LinearLayout linearLayout;
-    FrameLayout fragment_graphic_container;
-
 
     ImageView imgflashon,handle,img_dotmenu,img_warning,img_close,img_stop_watch;
 
@@ -348,7 +344,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private Runnable myrunnable;
     JSONObject metadatametricesjson=new JSONObject();
     private LinearLayoutManager mLayoutManager;
-    private fragmentgraphicaldrawer graphicaldrawerfragment;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
     ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
@@ -361,10 +356,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     adapteritemclick popupclicksub;
     String hashvalue = "",metrichashvalue = "";
 
-    DrawerLayout navigationdrawer;
-    private ActionBarDrawerToggle drawertoggle;
-    ImageView imglefthandle,imgrighthandle;
-    RelativeLayout rl_containerview;
+
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
@@ -503,6 +495,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     @BindView(R.id.linear_header)
     LinearLayout linearheader;
 
+
     public static imagecomposerfragment newInstance() {
         return new imagecomposerfragment();
     }
@@ -523,10 +516,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                              Bundle savedInstanceState) {
 
         if(rootview == null) {
-
-
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+            gethelper().drawerenabledisable(true);
 
             mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
@@ -535,38 +527,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
             img_close = (ImageView) rootview.findViewById(R.id.img_close);
             handle = (ImageView) rootview.findViewById(R.id.handle);
-            layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
-            fragment_graphic_container = (FrameLayout) rootview.findViewById(R.id.fragment_graphic_drawer_container);
-            rl_containerview = (RelativeLayout) rootview.findViewById(R.id.rl_containerview);
             linearLayout=rootview.findViewById(R.id.content);
-
-            imglefthandle = (ImageView) rootview.findViewById(R.id.img_lefthandle);
-            imgrighthandle = (ImageView) rootview.findViewById(R.id.img_righthandle);
-            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            drawertoggle = new ActionBarDrawerToggle(
-                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
-
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    imglefthandle.setVisibility(View.VISIBLE);
-                    linearheader.setVisibility(View.VISIBLE);
-                    imgrighthandle.setVisibility(View.GONE);
-                    if(madapterclick != null)
-                        madapterclick.onItemClicked(null,10);
-                }
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    imglefthandle.setVisibility(View.GONE);
-                    linearheader.setVisibility(View.GONE);
-                    imgrighthandle.setVisibility(View.VISIBLE);
-                    if(madapterclick != null)
-                        madapterclick.onItemClicked(null,9);
-
-                }
-            };
-            navigationdrawer.addDrawerListener(drawertoggle);
-            drawertoggle.syncState();
-            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
             timerhandler = new Handler() ;
             mTextureView.setOnTouchListener(this);
@@ -575,16 +536,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             img_stop_watch.setOnClickListener(this);
             img_warning.setOnClickListener(this);
             img_close.setOnClickListener(this);
-            imglefthandle.setOnClickListener(this);
-            imgrighthandle.setOnClickListener(this);
 
             img_dotmenu.setVisibility(View.VISIBLE);
             imgflashon.setVisibility(View.VISIBLE);
             img_stop_watch.setVisibility(View.VISIBLE);
-            rl_containerview.setVisibility(View.GONE);
 
             flingactionmindstvac=common.getdrawerswipearea();
-            fragment_graphic_container.setVisibility(View.VISIBLE);
             keytype=common.checkkey();
             brustmodeenabled=false;
             img_stop_watch.setImageResource(R.drawable.stopwatch);
@@ -730,14 +687,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         public void doafterallpermissions()
         {
-            if(graphicaldrawerfragment == null)
-            {
-                graphicaldrawerfragment =new fragmentgraphicaldrawer();
-
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-                transaction.commit();
-            }
             startBackgroundThread();
             if (mTextureView.isAvailable()) {
                 openCamera(mTextureView.getWidth(), mTextureView.getHeight());
@@ -1185,13 +1134,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 }
                 break;
             }
-            case R.id.img_lefthandle:
-                navigationdrawer.openDrawer(Gravity.START);
-                break;
-
-            case R.id.img_righthandle:
-                navigationdrawer.closeDrawers();
-                break;
 
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
@@ -1312,23 +1254,17 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 {
                     if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
                     {
-                        rl_containerview.setVisibility(View.VISIBLE);
                         mmetricsitems.add(new videomodel(selectedmetrices));
                         selectedmetrices="";
                     }
 
-                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen=true;
                 }
 
-                if((graphicaldrawerfragment!= null && mmetricsitems.size() > 0))
-                {
-                    graphicaldrawerfragment.setdrawerproperty(graphicopen);
-                    graphicaldrawerfragment.getencryptiondata(keytype,"",hashvalue,metrichashvalue);
-                    graphicaldrawerfragment.setmetricesdata();
+                common.setgraphicalblockchainvalue(config.blockchainid,"",true);
+                common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
+                common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
+                common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
 
-                //    fragmentgraphic.setphotocapture(true);
-                }
                 myhandler.postDelayed(this, 1000);
             }
         };

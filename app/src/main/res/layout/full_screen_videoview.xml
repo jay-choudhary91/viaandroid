@@ -16,13 +16,6 @@
         android:handle="@+id/handle"
         android:layout_centerVertical="true">
 
-        <com.cryptoserver.composer.utils.FullDrawerLayout
-            android:id="@+id/drawer_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            tools:openDrawer="start" >
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:orientation="vertical"
@@ -299,15 +292,6 @@
 
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/img_lefthandle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/ic_arrow_left"
-                    />
-
                 <RelativeLayout
                     android:id="@+id/layout_mediatype"
                     android:layout_width="match_parent"
@@ -323,27 +307,5 @@
 
 
             </RelativeLayout>
-
-            <android.support.design.widget.NavigationView
-                android:id="@+id/navigation_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/blacktransparent"
-                android:visibility="gone"
-                android:fitsSystemWindows="true"
-                android:layout_gravity="start"
-                >
-
-                <include
-                    layout="@layout/layout_graphical_drawer_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </include>
-
-            </android.support.design.widget.NavigationView>
-
-        </com.cryptoserver.composer.utils.FullDrawerLayout>
-
     </RelativeLayout>
 </RelativeLayout>

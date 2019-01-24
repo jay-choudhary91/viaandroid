@@ -131,14 +131,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ScrollView scrollview_metrices;
     @BindView(R.id.scrollview_hashes)
     ScrollView scrollview_hashes;
-    @BindView(R.id.fragment_graphic_drawer_container)
-    FrameLayout fragment_graphic_container;
     @BindView(R.id.content)
     LinearLayout linearLayout;
-    @BindView(R.id.img_lefthandle)
-    ImageView handleimageview;
-    @BindView(R.id.img_righthandle)
-    ImageView imgrighthandle;
 
     @BindView(R.id.righthandle)
     ImageView righthandle;
@@ -216,7 +210,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private boolean isdraweropen = false;
     public int selectedsection = 1;
     graphicalfragment fragmentgraphic;
-    fragmentgraphicaldrawer  graphicaldrawerfragment;
     ArrayList<videomodel> mmetricsitems = new ArrayList<>();
     ArrayList<videomodel> mhashesitems = new ArrayList<>();
     private int REQUESTCODE_PICK = 301;
@@ -241,8 +234,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     boolean img_fullscrnshow=false;
    // RelativeLayout layout_photoreader,layout_mediatype;
     int targetheight,previousheight;
-    FullDrawerLayout navigationdrawer;
-    private ActionBarDrawerToggle drawertoggle;
 
     GoogleMap mgooglemap;
 
@@ -276,35 +267,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
-            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            drawertoggle = new ActionBarDrawerToggle(
-                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
-
-                /** Called when a drawer has settled in a completely closed state. */
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    handleimageview.setVisibility(View.VISIBLE);
-                    imgrighthandle.setVisibility(View.GONE);
-                }
-
-                /** Called when a drawer has settled in a completely open state. */
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    handleimageview.setVisibility(View.GONE);
-                    imgrighthandle.setVisibility(View.VISIBLE);
-
-                }
-            };
-
-            navigationdrawer.addDrawerListener(drawertoggle);
-
-            // Where do I put this?
-            drawertoggle.syncState();
-
-            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
-            handleimageview.setVisibility(View.GONE);
+            gethelper().drawerenabledisable(false);
 
             img_dotmenu.setOnClickListener(this);
             img_folder.setOnClickListener(this);
@@ -318,7 +281,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_arrow_back.setVisibility(View.VISIBLE);
 
 
-           // handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
             tab_photoreader.setOnClickListener(this);
 
@@ -386,7 +348,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_compass= rootview.findViewById(R.id.img_compass);
 
             photospinner.setOnItemSelectedListener(this);
-          //  handleimageview.setOnTouchListener(this);
             righthandle.setOnTouchListener(this);
 
             String blockchainid = " EOLZ03D0K91734JADFL2";
@@ -405,39 +366,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             edt_medianotes.setFocusable(false);
             edt_medianotes.setFocusableInTouchMode(false);
 
-            righthandle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
-                    linearLayout.startAnimation(leftswipe);
-                    linearLayout.setVisibility(View.INVISIBLE);
-                    righthandle.setVisibility(View.VISIBLE);
-                    handleimageview.setVisibility(View.GONE);
-                    leftswipe.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            handleimageview.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                }
-            });
             flingactionmindstvac = common.getdrawerswipearea();
 
             txtSlot1.setOnClickListener(this);
             txtSlot2.setOnClickListener(this);
             txtSlot3.setOnClickListener(this);
-            handleimageview.setOnClickListener(this);
-            imgrighthandle.setOnClickListener(this);
 
 
             txtslotencyption.setOnClickListener(this);
@@ -456,7 +389,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             scrollview_metrices.setVisibility(View.INVISIBLE);
             scrollview_hashes.setVisibility(View.INVISIBLE);
 
-            fragment_graphic_container.setVisibility(View.VISIBLE);
 
             {
                 mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
@@ -495,14 +427,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 implementscrolllistener();
             }
 
-            if (graphicaldrawerfragment == null) {
-               // fragmentgraphic = new graphicalfragment();
-                graphicaldrawerfragment =new fragmentgraphicaldrawer();
-                graphicaldrawerfragment.setphotocapture(true);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_drawer_container, graphicaldrawerfragment);
-                transaction.commit();
-            }
             String[] items=common.getallfolders();
             if(items != null && items.length > 0)
             {
@@ -583,13 +507,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
         switch (view.getId()) {
-            case R.id.handle:
-                flingswipe.onTouchEvent(motionEvent);
-                break;
-
-            case R.id.righthandle:
-                flingswipe.onTouchEvent(motionEvent);
-                break;
         }
         return true;
     }
@@ -606,7 +523,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                     recyview_hashes.setVisibility(View.VISIBLE);
                     recyview_metrices.setVisibility(View.INVISIBLE);
-                    fragment_graphic_container.setVisibility(View.INVISIBLE);
 
                     txt_metrics.setVisibility(View.INVISIBLE);
                     txt_hashes.setVisibility(View.INVISIBLE);
@@ -621,7 +537,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     selectedsection = 2;
                     scrollview_metrices.setVisibility(View.INVISIBLE);
                     scrollview_hashes.setVisibility(View.INVISIBLE);
-                    fragment_graphic_container.setVisibility(View.INVISIBLE);
 
                     txt_hashes.setVisibility(View.INVISIBLE);
                     txt_metrics.setVisibility(View.INVISIBLE);
@@ -637,7 +552,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             case R.id.txt_slot3:
                 if (selectedsection != 3) {
                     selectedsection = 3;
-                    fragment_graphic_container.setVisibility(View.VISIBLE);
                     scrollview_metrices.setVisibility(View.INVISIBLE);
                     scrollview_hashes.setVisibility(View.INVISIBLE);
                     recyview_metrices.setVisibility(View.INVISIBLE);
@@ -709,15 +623,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 launchbottombarfragment();
                 break;
 
-            case R.id.img_lefthandle:
-                navigationdrawer.openDrawer(Gravity.START);
-                handleimageview.setVisibility(View.GONE);
-                break;
-
-            case R.id.img_righthandle:
-                navigationdrawer.closeDrawers();
-                break;
-
             case R.id.img_delete_media:
                 showalertdialog(getActivity().getResources().getString(R.string.dlt_cnfm_photo));
                 break;
@@ -735,8 +640,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }, 150);
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
-                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    handleimageview.setVisibility(View.VISIBLE);
+                    gethelper().drawerenabledisable(true);
                     expand(tab_photoreader,100,targetheight);
                     layout_photodetails.setVisibility(View.GONE);
                     scrollview_detail.setVisibility(View.GONE);
@@ -748,8 +652,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     img_fullscreen.setVisibility(View.INVISIBLE);
 
                 } else{
-                    navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    handleimageview.setVisibility(View.GONE);
+                    gethelper().drawerenabledisable(false);
                     collapse(tab_photoreader,100,previousheight);
                     layout_photodetails.setVisibility(View.VISIBLE);
                     tab_layout.setVisibility(View.VISIBLE);
@@ -833,88 +736,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener() {
-
-        @Override
-        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
-                               float flingActionYcoSpdPsgVal) {
-            if (fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac) {
-                // TskTdo :=> On Right to Left fling
-                swiperighttoleft();
-                return false;
-            } else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac) {
-                // TskTdo :=> On Left to Right fling
-                swipelefttoright();
-                return false;
-            }
-
-            if (fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac) {
-                // TskTdo :=> On Bottom to Top fling
-
-                return false;
-            } else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac) {
-                // TskTdo :=> On Top to Bottom fling
-
-                return false;
-            }
-            return false;
-        }
-    });
-
-    public void swipelefttoright() {
-        isdraweropen = true;
-        Animation rightswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.right_slide);
-        linearLayout.startAnimation(rightswipe);
-        handleimageview.setVisibility(View.GONE);
-        linearLayout.setVisibility(View.VISIBLE);
-        rightswipe.start();
-        righthandle.setVisibility(View.VISIBLE);
-        rightswipe.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                righthandle.setImageResource(R.drawable.righthandle);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                righthandle.setImageResource(R.drawable.lefthandle);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
-
-    public void swiperighttoleft() {
-        isdraweropen = false;
-        Animation leftswipe = AnimationUtils.loadAnimation(applicationviavideocomposer.getactivity(), R.anim.left_slide);
-        linearLayout.startAnimation(leftswipe);
-        linearLayout.setVisibility(View.INVISIBLE);
-        righthandle.setVisibility(View.VISIBLE);
-        handleimageview.setVisibility(View.GONE);
-        leftswipe.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                handleimageview.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
 
     private void implementscrolllistener() {
         recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -1033,14 +854,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                     setmetricesgraphicaldata();
 
-                    if ((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen = true;
                 }
 
-                /*if (graphicaldrawerfragment != null)
-                    graphicaldrawerfragment.setdrawerproperty(graphicopen);
-
-                graphicaldrawerfragment.setmetricesdata();*/
 
                 myhandler.postDelayed(this, 1000);
             }
@@ -1059,8 +874,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 double latt = 0, longg = 0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
 
-                graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
+               /* graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
                         metricmainarraylist.get(0).getValuehash(), metricmainarraylist.get(0).getMetahash());
+*/
+                common.setgraphicalblockchainvalue(config.blockchainid,metricmainarraylist.get(0).getVideostarttransactionid(),true);
+                common.setgraphicalblockchainvalue(config.hashformula,metricmainarraylist.get(0).getHashmethod(),true);
+                common.setgraphicalblockchainvalue(config.datahash,metricmainarraylist.get(0).getValuehash(),true);
+                common.setgraphicalblockchainvalue(config.matrichash,metricmainarraylist.get(0).getMetahash(),true);
 
                 common.setspannable(getResources().getString(R.string.blockchain_id)," "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
                 common.setspannable(getResources().getString(R.string.block_id)," "+metricmainarraylist.get(0).getHashmethod(), txt_blockid);
@@ -1076,33 +896,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                     setmetadatavalue(metricItemArraylist.get(j));
 
-                    if (mgooglemap != null) {
-                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
-                            if (!metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA")) {
-                                latt = Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                if (longg != 0) {
-                                    if (mgooglemap != null) {
-                                        drawmappoints(new LatLng(latt, longg));
-                                        latt = 0;
-                                        longg = 0;
-                                    }
-                                }
-                            }
-                        }
-                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
-                            if (!metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA")) {
-                                longg = Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                if (latt != 0) {
-                                    if (mgooglemap != null) {
-                                        drawmappoints(new LatLng(latt, longg));
-                                        latt = 0;
-                                        longg = 0;
-                                    }
-                                }
-                            }
-                        }
-
-                    }
                 }
                 selectedmetrices = selectedmetrices + "\n";
             }
@@ -1111,12 +904,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                 populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
 
-
-            if (fragment_graphic_container.getVisibility() == View.VISIBLE) {
-                if (graphicaldrawerfragment != null)
-                    graphicaldrawerfragment.setmetricesdata();
-
-            }
         }
     }
 
@@ -1246,11 +1033,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                         if(!mediadate.isEmpty()){
 
-                            DateFormat format = new SimpleDateFormat("dd- MM- yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("MM-dd-yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
                             String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
                             String filecreateddate = new SimpleDateFormat("MM/dd/yyyy").format(date);
-                            String filecreated = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                            String filecreated = new SimpleDateFormat("MM-dd-yyyy").format(date);
 
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
@@ -1275,11 +1062,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                         if(!mediadate.isEmpty()){
 
-                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                            DateFormat format = new SimpleDateFormat("MM-dd-yyyy'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                             Date date = format.parse(mediadate);
                             String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
                             String filecreateddate = new SimpleDateFormat("MM/dd/yyyy").format(date);
-                            String filecreated = new SimpleDateFormat("yyyy-MM-dd").format(date);
+                            String filecreated = new SimpleDateFormat("MM-dd-yyyy").format(date);
                             tvdate.setText(filecreateddate);
                             txt_createdtime.setText(time);
                             tvtime.setText(time);

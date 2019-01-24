@@ -15,13 +15,6 @@
         android:orientation="horizontal"
         android:layout_centerVertical="true">
 
-        <com.cryptoserver.composer.utils.FullDrawerLayout
-            android:id="@+id/drawer_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            tools:openDrawer="start" >
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -100,35 +93,6 @@
                 <include layout="@layout/action_bar_composer"></include>
             </LinearLayout>
 
-            <android.support.design.widget.NavigationView
-                android:id="@+id/navigation_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/blacktransparent"
-                android:visibility="visible"
-                android:fitsSystemWindows="true"
-                android:layout_gravity="start"
-                >
-
-                <include
-                    layout="@layout/layout_graphical_drawer_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                </include>
-
-                <!--<include layout="@layout/layout_drawer_content_composer"></include>-->
-
-            </android.support.design.widget.NavigationView>
-
-
-
-        </com.cryptoserver.composer.utils.FullDrawerLayout>
-
-
     </RelativeLayout>
-
-
-
 
 </RelativeLayout>
