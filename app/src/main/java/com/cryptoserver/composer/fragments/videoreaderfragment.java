@@ -818,7 +818,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             Log.e("oncreate","oncreate");
 
             loadmap();
-            setmetriceshashesdata();
+            //setmetriceshashesdata();
         }
         return rootview;
     }
@@ -1390,11 +1390,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }).start();
     }
 
-    public void fetchmediastartinfo()
-    {
-
-    }
-
     public void fetchdataforreader()
     {
         if(mediafilepath != null && (! mediafilepath.isEmpty())) {
@@ -1656,102 +1651,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }
     }
 
-    public void getframesbitmap()
-    {
-
-        mbitmaplist.add(new frame(0,null,true));
-
-        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
-        m_mediaMetadataRetriever.setDataSource(applicationviavideocomposer.getactivity(),uri);
-        String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-
-        long timeInmillisec=0;
-        if(time != null)
-            timeInmillisec = Long.parseLong( time );
-
-        long duration = timeInmillisec / 1000;
-        long hours = duration / 3600;
-        long minutes = (duration - hours * 3600) / 60;
-        long seconds = duration - (hours * 3600 + minutes * 60);
-        long n;
-
-        if(minutes!=0)
-            minutes = minutes*60;
-
-        seconds = seconds + minutes;
-        Log.e("videoseconds  =  ",""+seconds);
-        if(seconds>60){
-            n=30;
-        }else if(seconds==1){
-            n=1;
-        }else if(seconds==2){
-            n=2;
-        } else{
-            n=seconds/2;
-        }
-
-        Bitmap image = BitmapFactory.decodeResource(applicationviavideocomposer.getactivity().getResources(), R.drawable.imagebitmap);
-
-        for(int j=1;j<=n;j++){
-
-           // Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
-           // Bitmap bmp = Bitmap.createBitmap(image,100, 100, false);
-            Bitmap bitmap = Bitmap.createScaledBitmap(image, 100, 100, false);
-            mbitmaplist.add(new frame(j,bitmap,false));
-
-        }
-
-        runmethod = true;
-        if(mbitmaplist.size()!=0)
-            mbitmaplist.add(new frame(0,null,true));
-
-
-        for(int i=1;i<=n;i++)
-        {
-            Bitmap m_bitmap = null;
-            try
-            {
-                m_mediaMetadataRetriever = new MediaMetadataRetriever();
-                m_mediaMetadataRetriever.setDataSource(mediafilepath);
-                m_bitmap = m_mediaMetadataRetriever.getFrameAtTime(i * 1000000);
-
-
-                if(m_bitmap != null && runmethod)
-                {
-                    Log.e("Bitmap on ",""+i);
-                    Bitmap bitmap = Bitmap.createScaledBitmap(m_bitmap, 100, 100, false);
-                    /*mbitmaplist.add(new frame(i,bitmap,false));
-                    mbitmaplist.set(i,bitmap);*/
-
-                    mbitmaplist.set(i,new frame(i,bitmap,false));
-
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(adapter != null){
-                                adapter.notifyDataSetChanged();
-                                scurraberverticalbar.setVisibility(View.GONE);
-                                //runmethod = true;
-                            }
-
-                        }
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            finally
-            {
-                if (m_mediaMetadataRetriever != null)
-                    m_mediaMetadataRetriever.release();
-            }
-        }
-    }
-
     public void setupVideoPlayer(final Uri selecteduri)
     {
         try {
@@ -1789,12 +1688,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             e.printStackTrace();
         }
     }
-
-    public void  changeactionbarcolor(){
-        gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
-                (R.color.videoPlayer_header));
-    }
-
 
     public void setmetriceshashesdata()
     {
@@ -1985,55 +1878,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }
     }
 
-
-
-    public void setmargin(){
-        if(mbitmaplist.size()>0 && player.getCurrentPosition()>0){
-                double totalduration=player.getDuration()/1000;
-                double totalbitmapframe=mbitmaplist.size()-2;
-                double c=totalduration/totalbitmapframe;
-                double leftmargin= 100/c;
-                double currentpostion=(player.getCurrentPosition()/1000);
-                double leftsidemargin=-((leftmargin)*(currentpostion));
-                /*RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                relativeParams.setMargins((int)(leftsidemargin) , 0,0, 0);
-                recyview_frames.requestLayout();
-                recyview_frames.setLayoutParams(relativeParams);
-                recyview_frames.scrollToPosition(0);*/
-
-        }
-    }
-
-
-    private void initAudio() {
-
-        if(player != null){
-
-            try {
-                applicationviavideocomposer.getactivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
-                setupVisualizerFxAndUI();
-                // Make sure the visualizer is enabled only when you actually want to
-                // receive data, and
-                // when it makes sense to receive data.
-                mVisualizer.setEnabled(true);
-                // When the stream ends, we don't need to collect any more data. We
-                // don't do this in
-                // setupVisualizerFxAndUI because we likely want to have more,
-                // non-Visualizer related code
-                // in this callback.
-                player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    public void onCompletion(MediaPlayer mediaPlayer) {
-                        //mVisualizer.setEnabled(false);
-                    }
-                });
-                //mMediaPlayer.start();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-        }
-    }
 
     private void setupVisualizerFxAndUI() {
 
