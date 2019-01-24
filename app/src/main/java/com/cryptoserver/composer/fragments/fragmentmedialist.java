@@ -180,6 +180,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
+        gethelper().drawerenabledisable(false);
         isinbackground=false;
         recyclerviewlist.addOnItemTouchListener(onTouchListener);
     }
@@ -221,6 +222,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
             listlayout=rootview.findViewById(R.id.listlayout);
+
+            gethelper().drawerenabledisable(false);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

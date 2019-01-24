@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -26,6 +30,7 @@ import com.cryptoserver.composer.fragments.bottombarfragment;
 import com.cryptoserver.composer.fragments.bottombarrederfrag;
 import com.cryptoserver.composer.fragments.composeoptionspagerfragment;
 import com.cryptoserver.composer.fragments.composervideoplayerfragment;
+import com.cryptoserver.composer.fragments.fragmentgraphicaldrawer;
 import com.cryptoserver.composer.fragments.fragmentmedialist;
 import com.cryptoserver.composer.fragments.framemetricssettings;
 import com.cryptoserver.composer.fragments.imagecomposerfragment;
@@ -70,6 +75,17 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     FrameLayout fragment_container;
     @BindView(R.id.img_backarrow)
     ImageView img_backbtn;
+    @BindView(R.id.img_lefthandle)
+    ImageView imglefthandle;
+    @BindView(R.id.img_righthandle)
+    ImageView imgrighthandle;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout navigationdrawer;
+    private ActionBarDrawerToggle drawertoggle;
+    fragmentgraphicaldrawer graphicaldrawerfragment;
+    private Handler myhandler;
+    private Runnable myrunnable;
 
     private bottombarfragment fragbottombar;
     private readermedialist fragreadermedialist;
@@ -80,6 +96,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
 
+        updateactionbar(0,getResources().getColor(R.color.dark_blue_solid));
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             /*fragreadermedialist=new readermedialist();
@@ -94,6 +111,25 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             replaceFragment(fragvideolist, false, true);
         }
 
+        drawertoggle = new ActionBarDrawerToggle(
+                this, navigationdrawer, R.string.drawer_open, R.string.drawer_close){
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                imglefthandle.setVisibility(View.VISIBLE);
+                imgrighthandle.setVisibility(View.GONE);
+                // layout_bottom.setVisibility(View.VISIBLE);
+            }
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                imglefthandle.setVisibility(View.GONE);
+                imgrighthandle.setVisibility(View.VISIBLE);
+            }
+        };
+        navigationdrawer.addDrawerListener(drawertoggle);
+        drawertoggle.syncState();
+        navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
+
         imgaddicon.setOnClickListener(this);
         imgsettingsicon.setOnClickListener(this);
         img_back.setOnClickListener(this);
@@ -103,6 +139,17 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_menu.setOnClickListener(this);
         img_help.setOnClickListener(this);
         img_backbtn.setOnClickListener(this);
+        imglefthandle.setOnClickListener(this);
+        imgrighthandle.setOnClickListener(this);
+
+        if(graphicaldrawerfragment == null)
+        {
+            //fragmentgraphic  = new graphicalfragment();
+            graphicaldrawerfragment =new fragmentgraphicaldrawer();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
+            transaction.commit();
+        }
 
         actionbar.post(new Runnable() {
             @Override
@@ -117,8 +164,20 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         if (!isMyServiceRunning(mService.getClass()))
             startService(mIntent);
 
+
+        new Handler().postDelayed(new Runnable()
+        {
+            public void run()
+            {
+                setdrawerdata();
+            }
+        }, 2000);
+
+
+
         }
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+
+        private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -170,10 +229,31 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
     }
 //(getcurrentfragment() instanceof fragmentmedialist)
+@Override
+public void updateactionbar(int showHide, int color) {
+    if(showHide == 0){ View decorView = getWindow().getDecorView();
+        // show the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN; //hide status bar
+        decorView.setSystemUiVisibility(uiOptions);
+    }else{
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE; // show the status bar.
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+        /*actionbar.setBackgroundColor(color);
+        getWindow().setStatusBarColor(color);*/
+}
+
     @Override
-    public void updateactionbar(int showHide, int color) {
-        actionbar.setBackgroundColor(color);
-        getWindow().setStatusBarColor(color);
+    public void drawerenabledisable(boolean isenable) {
+        if(isenable){
+            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            imglefthandle.setVisibility(View.VISIBLE);
+
+        }else{
+            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            imglefthandle.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -230,7 +310,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             img_menu.setVisibility(View.VISIBLE);
             img_help.setVisibility(View.VISIBLE);
             actionbar.setVisibility(View.GONE);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+         //   updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
@@ -256,7 +336,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             imgshareicon.setVisibility(View.VISIBLE);
              actionbar.setVisibility(View.GONE);
             imgsettingsicon.setEnabled(true);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
@@ -267,7 +347,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              imguploadicon.setVisibility(View.GONE);
              actionbar.setVisibility(View.GONE);
              imgsettingsicon.setEnabled(true);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -285,7 +365,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              img_menu.setVisibility(View.VISIBLE);
              img_help.setVisibility(View.VISIBLE);
              actionbar.setVisibility(View.GONE);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+            // updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
@@ -295,7 +375,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              img_menu.setVisibility(View.VISIBLE);
              img_help.setVisibility(View.VISIBLE);
              actionbar.setVisibility(View.GONE);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
+            // updateactionbar(01,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
@@ -306,7 +386,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                  img_menu.setVisibility(View.VISIBLE);
                  imgshareicon.setVisibility(View.VISIBLE);
                  imgsettingsicon.setEnabled(true);
-                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
                  RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                          RelativeLayout.LayoutParams.MATCH_PARENT);
                  fragment_container.setLayoutParams(params);
@@ -325,7 +405,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                  img_menu.setVisibility(View.VISIBLE);
                  imgshareicon.setVisibility(View.VISIBLE);
                  imgsettingsicon.setEnabled(true);
-                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
                  RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                          RelativeLayout.LayoutParams.MATCH_PARENT);
                  fragment_container.setLayoutParams(params);
@@ -334,7 +414,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                  img_menu.setVisibility(View.VISIBLE);
                  imgshareicon.setVisibility(View.VISIBLE);
                  imgsettingsicon.setEnabled(true);
-                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+                 updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
                  RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                          RelativeLayout.LayoutParams.MATCH_PARENT);
                  fragment_container.setLayoutParams(params);
@@ -352,7 +432,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              imgsettingsicon.setVisibility(View.VISIBLE);
              imguploadicon.setVisibility(View.GONE);
              imgsettingsicon.setEnabled(true);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -373,6 +453,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              actionbar.setVisibility(View.GONE);
          }
          else if(fragment instanceof composeoptionspagerfragment){
+             updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+
              actionbar.setVisibility(View.GONE);
          }
          else if(fragment instanceof myfolderfragment){
@@ -424,6 +506,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             case R.id.img_backarrow:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_backarrow);
                 break;
+            case R.id.img_lefthandle:
+                navigationdrawer.openDrawer(Gravity.START);
+                break;
+
+            case R.id.img_righthandle:
+                navigationdrawer.closeDrawers();
+                break;
         }
     }
 
@@ -444,6 +533,36 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         return super.dispatchTouchEvent( event );
     }
 
+
+    public void setdrawerdata(){
+
+        if(myhandler != null && myhandler != null)
+            myhandler.removeCallbacks(myrunnable);
+
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
+            @Override
+            public void run() {
+                if((graphicaldrawerfragment!= null))
+                {
+                    graphicaldrawerfragment.setmetricesdata();
+                }
+
+                myhandler.postDelayed(this, 1000);
+            }
+        };
+        myhandler.post(myrunnable);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(myhandler != null && myhandler != null)
+            myhandler.removeCallbacks(myrunnable);
+
+    }
 }
 
 

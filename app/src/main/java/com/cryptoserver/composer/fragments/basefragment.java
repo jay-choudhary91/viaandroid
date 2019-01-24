@@ -41,6 +41,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 
 import com.cryptoserver.composer.applicationviavideocomposer;
@@ -251,6 +252,8 @@ public abstract class basefragment extends Fragment {
         public void getCallInfo();
 
         public void getairplanemodeon();
+
+        public void drawerenabledisable(boolean enable);
 
         public ArrayList<metricmodel> getmetricarraylist();
         public void setrecordingrunning(boolean toggle);
