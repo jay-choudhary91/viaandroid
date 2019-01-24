@@ -2145,7 +2145,7 @@ public class common {
             localTime =  "" + convertedVal;
         }
 
-        DateFormat date1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.getDefault());
+        DateFormat date1 = new SimpleDateFormat("MM-dd-yyyy'T'HH:mm:ss.SSSZ", Locale.getDefault());
 
         String currenttime[] = {date1.format(currentLocalTime),localTime };
 
