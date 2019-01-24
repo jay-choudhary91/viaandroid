@@ -747,7 +747,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     layout_mediatype.setVisibility(View.GONE);
                     img_fullscreen.setVisibility(View.INVISIBLE);
 
-
                 } else{
                     navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     handleimageview.setVisibility(View.GONE);
@@ -757,6 +756,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     scrollview_detail.setVisibility(View.VISIBLE);
                     layout_footer.setVisibility(View.VISIBLE);
                     img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+                    gethelper().updateactionbar(0,getResources().getColor(R.color.dark_blue_solid));
                     resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                 }
                 break;
