@@ -845,8 +845,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         File[] files = videodir.listFiles();
         for (File file : files)
         {
-            long file_size = file.length();
-            if(file_size >= 0)
+            long filelength = file.length();
+            int file_size = Integer.parseInt(String.valueOf(filelength/1024));
+            if(file_size > 0)
             {
                 video videoobj=new video();
                 videoobj.setPath(file.getAbsolutePath());
@@ -876,7 +877,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 {
                     long filelength = file.length();
                     int file_size = Integer.parseInt(String.valueOf(filelength/1024));
-                    if(file_size > 0)
+                    if(file_size > 0 && (! file.isDirectory()))
                     {
                         video videoobj=new video();
                         videoobj.setPath(file.getAbsolutePath());
@@ -887,12 +888,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                             {
                                 imagearraylist.add(videoobj.getPath());
                             }
-                            else
+                            else if((! videoobj.getPath().contains(".pcm") && (! videoobj.getPath().contains(".m4a"))))
                             {
-                                //Adjust data source as per the requirement if file, URI, etc.
-                                File fileforsize = new File(videoobj.getPath());
-                                int file_sizekb = Integer.parseInt(String.valueOf(file.length()/1024));
-
                                 extractor.setDataSource(file.getAbsolutePath());
                                 int numTracks = extractor.getTrackCount();
                                 if(numTracks > 0)
@@ -911,7 +908,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     else
                     {
                         try {
-                            common.delete(file);
+                            if(! file.isDirectory())
+                                common.delete(file);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
