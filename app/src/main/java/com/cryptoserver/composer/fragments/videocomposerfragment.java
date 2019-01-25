@@ -1453,7 +1453,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         try {
 
-            metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
+            metrichash = md5.calculatestringtomd5(metricesjsonarray.get(0).toString());
+            Log.e("Metric hash",""+metrichash);
 
             mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"","",""));

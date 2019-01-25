@@ -88,10 +88,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ImageView img_mediathumbnail;
     @BindView(R.id.layout_no_gps_wifi)
     LinearLayout layout_no_gps_wifi;
+    @BindView(R.id.layout_validating)
+    LinearLayout layout_validating;
     @BindView(R.id.layout_section_heading)
     RelativeLayout layout_section_heading;
     @BindView(R.id.txt_section_validating)
     TextView txt_section_validating;
+    @BindView(R.id.txt_section_validating_secondary)
+    TextView txt_section_validating_secondary;
     @BindView(R.id.shimmer_view_container)
     ShimmerFrameLayout shimmer_view_container;
     @BindView(R.id.layout_recorder)
@@ -110,7 +114,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     imagecomposerfragment fragimgcapture=null;
 
     View rootview=null;
-    int pageritems = 3,currentselectedcomposer=0;
+    int currentselectedcomposer=0;
 
     private int flingactionmindstvac;
     private  final int flingactionmindspdvac = 100;
@@ -119,8 +123,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private static final int request_permissions = 1;
     ArrayList<permissions> permissionslist =new ArrayList<>();
 
-    String[] pagerelements={"VIDEO","PHOTO","AUDIO"};
-    int[] viewelements={R.layout.adapter_composefooter,R.layout.adapter_composefooter,R.layout.adapter_composefooter,};
     ArrayList<String> imagearraylist =new ArrayList<>();
     ArrayList<String> videoarraylist =new ArrayList<>();
     ArrayList<String> audioarraylist =new ArrayList<>();
@@ -340,27 +342,74 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     }
 
     public void visiblewarningcontrollers(){
-        if(layout_no_gps_wifi != null)
-            layout_no_gps_wifi.setVisibility(View.VISIBLE);
 
-        if(fragvideocomposer != null)
+        if(fragvideocomposer != null && fragvideocomposer.isvideorecording)
         {
+            layout_validating.setVisibility(View.GONE);
             fragvideocomposer.showwarningorclosebutton();
             fragvideocomposer.showwarningsection(showwarningsection);
+            if(layout_no_gps_wifi != null)
+                layout_no_gps_wifi.setVisibility(View.VISIBLE);
         }
-
-        if(fragaudiocomposer != null)
+        else if(fragaudiocomposer != null && fragaudiocomposer.isaudiorecording)
         {
+            layout_validating.setVisibility(View.GONE);
             fragaudiocomposer.showwarningorclosebutton();
             fragaudiocomposer.showwarningsection(showwarningsection);
+            if(layout_no_gps_wifi != null)
+                layout_no_gps_wifi.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            layout_validating.setVisibility(View.GONE);
+            hidewarningsection();
         }
 
-        if(fragimgcapture != null)
+        /*if(fragimgcapture != null)
         {
             fragimgcapture.showwarningorclosebutton();
             fragimgcapture.showwarningsection(showwarningsection);
-           // fragimgcapture.layoutrecorder(layoutrecorder.getVisibility());
+        }*/
+    }
+
+    public void hidewarningsection()
+    {
+        if(layout_no_gps_wifi != null)
+            layout_no_gps_wifi.setVisibility(View.GONE);
+
+        if(fragvideocomposer != null)
+            fragvideocomposer.hideallsection();
+
+        if(fragaudiocomposer != null)
+            fragaudiocomposer.hideallsection();
+
+        if(fragimgcapture != null)
+            fragimgcapture.hideallsection();
+    }
+
+    public void validatingcontrollers(){
+
+        if(fragvideocomposer != null && fragvideocomposer.isvideorecording)
+        {
+            hidewarningsection();
+            layout_validating.setVisibility(View.VISIBLE);
         }
+        else if(fragaudiocomposer != null && fragaudiocomposer.isaudiorecording)
+        {
+            hidewarningsection();
+            layout_validating.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            hidewarningsection();
+            layout_validating.setVisibility(View.GONE);
+        }
+
+        /*if(fragimgcapture != null)
+        {
+            fragimgcapture.showwarningorclosebutton();
+            fragimgcapture.showwarningsection(showwarningsection);
+        }*/
     }
 
     public void runhandler()
@@ -377,32 +426,22 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
+                        txt_section_validating.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                         visiblewarningcontrollers();
                     }
-                    else if(! locationawareactivity.checkPermission(applicationviavideocomposer.getactivity()))
+                    else
+                    {
+                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+                        validatingcontrollers();
+                    }
+                    /*else if(! locationawareactivity.checkPermission(applicationviavideocomposer.getactivity()))
                     {
                         if(permissionslist.size() >= 2)
                         {
                             if(permissionslist.get(0).isIspermissionskiped() || permissionslist.get(1).isIspermissionskiped())
-                            {
                                 visiblewarningcontrollers();
-                            }
                         }
-                    }
-                    else
-                    {
-                        if(layout_no_gps_wifi != null)
-                            layout_no_gps_wifi.setVisibility(View.GONE);
-
-                        if(fragvideocomposer != null)
-                            fragvideocomposer.hideallsection();
-
-                        if(fragaudiocomposer != null)
-                            fragaudiocomposer.hideallsection();
-
-                        if(fragimgcapture != null)
-                            fragimgcapture.hideallsection();
-                    }
+                    }*/
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -433,11 +472,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         showselectedfragment();
         getlatestmediafromdirectory();
         getlatestaudiofromdirectory();
-    }
-
-    public float dipToPixels(Context context, float dipValue) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 
     public void showselecteditemincenter(TextView textView,int sectionnumber)
@@ -965,90 +999,5 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     .transition(GenericTransitionOptions.with(R.anim.fadein)).
                     into(img_mediathumbnail);
         }
-    }
-
-    private class footerpageradapter extends FragmentPagerAdapter {
-
-        public footerpageradapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int pos) {
-            switch(pos) {
-
-                case 0: return composefooterpagerfragment.newInstance("VIDEO");
-                case 1: return composefooterpagerfragment.newInstance("PHOTO");
-                case 2: return composefooterpagerfragment.newInstance("AUDIO");
-                default: return composefooterpagerfragment.newInstance("VIDEO");
-            }
-        }
-
-        @Override
-        public int getItemPosition(@NonNull Object object) {
-            return POSITION_NONE;
-        }
-
-        @Override
-        public int getCount() {
-            return pageritems;
-        }
-    }
-
-    //==========================================================================================================================
-
-    public class CustomPagerAdapter extends PagerAdapter {
-
-        private Context mContext;
-
-        public CustomPagerAdapter(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup collection, final int position) {
-
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            ViewGroup layout = (ViewGroup) inflater.inflate(viewelements[position], collection, false);
-            TextView txt_content=(TextView)layout.findViewById(R.id.txt_content);
-            txt_content.setText(pagerelements[position]);
-            layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //pagerfooter.setCurrentItem(position,true);
-                    currentselectedcomposer=position;
-                    showselectedfragment();
-                    //Toast.makeText(getActivity(),""+position,Toast.LENGTH_SHORT).show();
-                }
-            });
-            collection.addView(layout);
-            return layout;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup collection, int position, Object view) {
-            collection.removeView((View) view);
-        }
-
-        @Override
-        public int getItemPosition(@NonNull Object object) {
-            return POSITION_NONE;
-        }
-
-        @Override
-        public int getCount() {
-            return pagerelements.length;
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return pagerelements[position];
-        }
-
     }
 }
