@@ -1,4 +1,4 @@
-<com.cryptoserver.composer.videotrimmer.hglvideotrimmer
+<com.deeptruth.app.android.videotrimmer.hglvideotrimmer
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/timeLine"
     android:layout_width="match_parent"

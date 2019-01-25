@@ -12,7 +12,7 @@
         android:id="@+id/actionbarnormal"
         android:padding="5dp">
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

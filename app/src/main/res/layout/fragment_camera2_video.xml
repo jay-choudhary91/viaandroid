@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
 
-    <com.cryptoserver.composer.fragments.AutoFitTextureView
+    <com.deeptruth.app.android.fragments.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

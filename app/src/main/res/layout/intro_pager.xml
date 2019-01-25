@@ -20,7 +20,7 @@
             android:layout_height="0dp"
             android:layout_weight="2"/>-->
 
-        <com.cryptoserver.composer.views.pagercustomduration
+        <com.deeptruth.app.android.views.pagercustomduration
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/viewpager_footer"
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
     </LinearLayout>
 
 
-    <com.cryptoserver.composer.views.customfonttextview
+    <com.deeptruth.app.android.views.customfonttextview
         app:fontType="OpenSans_Regular"
         android:id="@+id/btn_start_record"
         android:layout_width="wrap_content"

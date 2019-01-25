@@ -6,7 +6,7 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.cryptoserver.composer.views.customfonttextview
+    <com.deeptruth.app.android.views.customfonttextview
         android:id="@+id/text_encryption"
         app:fontType="Comfortaa-Regular"
         style="@style/txt_drawer_graphical_title"
@@ -22,7 +22,7 @@
             android:orientation="horizontal"
             android:layout_height="wrap_content">
 
-            <com.cryptoserver.composer.views.customfonttextview
+            <com.deeptruth.app.android.views.customfonttextview
                 app:fontType="Comfortaa-Regular"
                 style="@style/txt_row_encryption"
                 android:layout_weight="0.3"
@@ -37,7 +37,7 @@
             android:layout_weight="0.3"
             android:layout_height="wrap_content">
 
-            <com.cryptoserver.composer.views.customfonttextview
+            <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_row_encryption"
                 android:id="@+id/txt_hash_formula"
                 android:layout_weight="0.3"
@@ -51,7 +51,7 @@
             android:orientation="horizontal"
             android:layout_height="wrap_content">
 
-            <com.cryptoserver.composer.views.customfonttextview
+            <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_row_encryption"
                 android:id="@+id/txt_data_hash"
                 android:layout_weight="0.3"
@@ -67,7 +67,7 @@
             android:layout_weight="0.3"
             android:layout_height="wrap_content">
 
-            <com.cryptoserver.composer.views.customfonttextview
+            <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_row_encryption"
                 android:id="@+id/txt_dictionary_hash"
                 app:fontType="Comfortaa-Regular"

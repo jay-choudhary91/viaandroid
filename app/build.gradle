@@ -17,7 +17,7 @@ repositories {
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.cryptoserver.composer"
+        applicationId "com.deeptruth.app.android"
         minSdkVersion 22
         targetSdkVersion 27
         versionCode 1
@@ -39,12 +39,12 @@ android {
         reader {
             versionCode 1
             versionName "1.0"
-            applicationId 'com.cryptoserver.reader'
+            applicationId 'com.deeptruth.app.reader.android'
         }
         composer {
             versionCode 1
             versionName "1.0"
-            applicationId 'com.cryptoserver.composer'
+            applicationId 'com.deeptruth.app.composer.android'
         }
     }
     packagingOptions {

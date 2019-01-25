@@ -17,7 +17,7 @@
            android:visibility="visible"
            android:orientation="vertical">
 
-           <com.cryptoserver.composer.views.customfonttextview
+           <com.deeptruth.app.android.views.customfonttextview
                android:id="@+id/txt_locationtracking"
                style="@style/txt_drawer_graphical_title"
                android:text="@string/locationtracking"
@@ -50,14 +50,14 @@
            android:layout_marginTop="10dp"
            android:orientation="vertical">
 
-           <com.cryptoserver.composer.views.customfonttextview
+           <com.deeptruth.app.android.views.customfonttextview
                android:id="@+id/txt_locationanalytics"
                style="@style/txt_drawer_graphical_title"
                android:text="@string/locationanalytics"
                app:fontType="Comfortaa-Regular"
                />
 
-           <com.cryptoserver.composer.views.customfonttextview
+           <com.deeptruth.app.android.views.customfonttextview
                android:id="@+id/txt_address"
                app:fontType="Comfortaa-Regular"
                style="@style/txt_normalview"
@@ -94,7 +94,7 @@
                        android:layout_marginTop="5dp"
                        android:orientation="horizontal">
 
-                       <com.cryptoserver.composer.views.customfonttextview
+                       <com.deeptruth.app.android.views.customfonttextview
                            android:id="@+id/txt_latitude"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
@@ -103,7 +103,7 @@
                            android:layout_weight="0.5"
                            android:text="Latitude"/>
 
-                       <com.cryptoserver.composer.views.customfonttextview
+                       <com.deeptruth.app.android.views.customfonttextview
                            android:id="@+id/txt_longitude"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
@@ -120,7 +120,7 @@
                        android:layout_marginTop="5dp"
                        android:orientation="horizontal">
 
-                       <com.cryptoserver.composer.views.customfonttextview
+                       <com.deeptruth.app.android.views.customfonttextview
                            android:id="@+id/txt_altitude"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
@@ -129,7 +129,7 @@
                            android:layout_weight="0.5"
                            android:text="Altitude"/>
 
-                       <com.cryptoserver.composer.views.customfonttextview
+                       <com.deeptruth.app.android.views.customfonttextview
                            android:id="@+id/txt_speed"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
@@ -146,7 +146,7 @@
                        android:layout_marginTop="5dp"
                        android:orientation="horizontal">
 
-                       <com.cryptoserver.composer.views.customfonttextview
+                       <com.deeptruth.app.android.views.customfonttextview
                            android:id="@+id/txt_heading"
                            app:fontType="OpenSans_Regular"
                            android:gravity="left"
@@ -155,7 +155,7 @@
                            android:layout_weight="0.5"
                            android:text="Heading"/>
 
-                       <com.cryptoserver.composer.views.customfonttextview
+                       <com.deeptruth.app.android.views.customfonttextview
                            android:id="@+id/txt_traveled"
                            app:fontType="OpenSans_Regular"
                            style="@style/txt_row_encryption"
@@ -181,7 +181,7 @@
                android:visibility="visible"
                android:orientation="vertical">
 
-               <com.cryptoserver.composer.views.customfonttextview
+               <com.deeptruth.app.android.views.customfonttextview
                    style="@style/txt_drawer_graphical_title"
                    android:id="@+id/txt_orientation"
                    android:text="@string/orientation"
@@ -202,7 +202,7 @@
                    android:gravity="top"
                    android:orientation="horizontal">
 
-                   <com.cryptoserver.composer.views.customfonttextview
+                   <com.deeptruth.app.android.views.customfonttextview
                        android:id="@+id/txt_xaxis"
                        app:fontType="OpenSans_Regular"
                        style="@style/txt_normalview"
@@ -210,7 +210,7 @@
                        android:layout_weight="0.2"
                        android:text="X-Axis"/>
 
-                   <com.cryptoserver.composer.views.customfonttextview
+                   <com.deeptruth.app.android.views.customfonttextview
                        android:id="@+id/txt_yaxis"
                        app:fontType="OpenSans_Regular"
                        style="@style/txt_normalview"
@@ -218,7 +218,7 @@
                        android:layout_weight="0.2"
                        android:text="Y-Axis"/>
 
-                   <com.cryptoserver.composer.views.customfonttextview
+                   <com.deeptruth.app.android.views.customfonttextview
                        android:id="@+id/txt_zaxis"
                        app:fontType="OpenSans_Regular"
                        style="@style/txt_normalview"
@@ -245,7 +245,7 @@
             android:visibility="visible"
             android:orientation="vertical">
 
-            <com.cryptoserver.composer.views.customfonttextview
+            <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_drawer_graphical_title"
                 android:id="@+id/txt_Phoneanalytics"
                 app:fontType="Comfortaa-Regular"
@@ -262,7 +262,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_phone"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -271,7 +271,7 @@
                     android:layout_weight="0.5"
                     android:text="Phone"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_network"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -280,7 +280,7 @@
                     android:gravity="left"
                     android:text="Network"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_connection"
                     app:fontType="OpenSans_Regular"
                     android:layout_marginTop="5dp"
@@ -296,7 +296,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_version"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -305,7 +305,7 @@
                     android:layout_weight="0.5"
                     android:text="Version"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_wifi"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -314,7 +314,7 @@
                     android:layout_marginTop="5dp"
                     android:text="WiFi"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_gps_accuracy"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -330,7 +330,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_screen"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -339,7 +339,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Screen"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_country"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -348,7 +348,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Country"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_cpu_usage"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -364,7 +364,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_brightness"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -373,7 +373,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Brightness"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_timezone"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -382,7 +382,7 @@
                     android:layout_marginTop="5dp"
                     android:text="Time Zone"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_memoryusage"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -398,7 +398,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_bluetooth"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -407,7 +407,7 @@
                     android:layout_weight="0.5"
                     android:text="Bluetooth"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_localtime"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -416,7 +416,7 @@
                     android:layout_weight="0.5"
                     android:text="localtime"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_storagefree"
                     app:fontType="OpenSans_Regular"
                     android:gravity="left"
@@ -432,7 +432,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_language"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -441,7 +441,7 @@
                     android:layout_weight="0.5"
                     android:text="language"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_uptime"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"
@@ -450,7 +450,7 @@
                     android:layout_weight="0.5"
                     android:text="Phone UpTime"/>
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/txt_battery"
                     app:fontType="OpenSans_Regular"
                     style="@style/txt_row_encryption"

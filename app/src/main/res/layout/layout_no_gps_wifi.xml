@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/warning_icon"/>
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Regular"
             style="@style/txt_no_gps_wifi"
             android:layout_centerVertical="true"
@@ -37,7 +37,7 @@
         app:shimmer_duration="2000"
         >
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_section_validating"
             app:fontType="OpenSans_Regular"
             style="@style/txt_no_gps_wifi"

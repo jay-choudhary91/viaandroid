@@ -86,7 +86,7 @@
                         android:scaleType="centerCrop"
                         />
 
-                    <com.cryptoserver.composer.utils.visualizeraudiorecorder
+                    <com.deeptruth.app.android.utils.visualizeraudiorecorder
                         android:id="@+id/myvisualizerviewmedia"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -95,7 +95,7 @@
                         android:layout_marginBottom="50dp"
                         android:visibility="gone"
                         />
-                    <com.cryptoserver.composer.utils.circularImageview
+                    <com.deeptruth.app.android.utils.circularImageview
                         android:id="@+id/btn_playpause"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
@@ -133,7 +133,7 @@
                             android:thumb="@drawable/custom_thumb"/>
 
 
-                        <com.cryptoserver.composer.views.customfonttextview
+                        <com.deeptruth.app.android.views.customfonttextview
                             android:id="@+id/time_current"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -148,7 +148,7 @@
                             app:fontType="OpenSans_Regular" />
 
 
-                        <com.cryptoserver.composer.views.customfonttextview
+                        <com.deeptruth.app.android.views.customfonttextview
                             android:id="@+id/time"
                             android:textSize="14sp"
                             android:textStyle="bold"

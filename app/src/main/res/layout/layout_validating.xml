@@ -12,7 +12,7 @@
         app:shimmer_duration="2000"
         >
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_section_validating_secondary"
             app:fontType="OpenSans_Regular"
             style="@style/txt_no_gps_wifi"

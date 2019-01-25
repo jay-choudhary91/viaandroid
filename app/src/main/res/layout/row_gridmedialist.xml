@@ -28,7 +28,7 @@
             android:background="@color/dark_blue_solid_a"
             android:adjustViewBounds="true"/>
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Regular"
             android:id="@+id/tv_mediaduration"
             android:layout_width="wrap_content"

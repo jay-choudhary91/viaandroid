@@ -24,7 +24,7 @@
             android:background="@drawable/rectangle_edittext"
             />
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_hash_label"
             style="@style/textview"
             android:layout_width="wrap_content"
@@ -34,7 +34,7 @@
             android:layout_toLeftOf="@id/edt_framescount"
             app:fontType="OpenSans_Regular"/>
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             style="@style/textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:background="@drawable/rectangle_edittext"
             />
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             style="@style/textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             android:layout_toLeftOf="@id/edt_update_every"
             app:fontType="OpenSans_Regular"/>
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             style="@style/textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

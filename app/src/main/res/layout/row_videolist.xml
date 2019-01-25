@@ -157,7 +157,7 @@
                         android:imeOptions="actionDone"
                         />
 
-                    <com.cryptoserver.composer.views.customfonttextview
+                    <com.deeptruth.app.android.views.customfonttextview
                         app:fontType="OpenSans_Regular"
                         android:id="@+id/tv_videoname"
                         android:layout_width="match_parent"
@@ -175,7 +175,7 @@
                         android:layout_marginTop="3dp"
                         android:orientation="horizontal">
 
-                        <com.cryptoserver.composer.views.customfonttextview
+                        <com.deeptruth.app.android.views.customfonttextview
                             app:fontType="OpenSans_Regular"
                             android:id="@+id/tv_videoduration"
                             android:layout_width="wrap_content"
@@ -186,7 +186,7 @@
                             android:text="xx-xx-xx"
                             />
 
-                        <com.cryptoserver.composer.views.customfonttextview
+                        <com.deeptruth.app.android.views.customfonttextview
                             android:id="@+id/txt_pipesign"
                             app:fontType="OpenSans_Regular"
                             android:layout_width="wrap_content"
@@ -199,7 +199,7 @@
                             android:text="|"
                             />
 
-                        <com.cryptoserver.composer.views.customfonttextview
+                        <com.deeptruth.app.android.views.customfonttextview
                             app:fontType="OpenSans_Regular"
                             android:id="@+id/tv_videocreatedate"
                             android:layout_width="wrap_content"
@@ -213,7 +213,7 @@
                     </LinearLayout>
 
 
-                    <com.cryptoserver.composer.views.customfonttextview
+                    <com.deeptruth.app.android.views.customfonttextview
                         app:fontType="OpenSans_Regular"
                         android:id="@+id/tv_localkey"
                         android:layout_width="match_parent"
@@ -228,7 +228,7 @@
                         android:text=""
                         />
 
-                    <com.cryptoserver.composer.views.customfonttextview
+                    <com.deeptruth.app.android.views.customfonttextview
                         app:fontType="OpenSans_Regular"
                         android:id="@+id/tv_medianotes"
                         android:layout_width="match_parent"
@@ -241,7 +241,7 @@
                         android:text=""
                         />
 
-                    <com.cryptoserver.composer.views.customfonttextview
+                    <com.deeptruth.app.android.views.customfonttextview
                         app:fontType="OpenSans_Regular"
                         android:id="@+id/tv_sync_status"
                         android:layout_width="match_parent"

@@ -41,7 +41,7 @@
                     android:src="@drawable/ic_upgrade"
                     />
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     style="@style/btn_settings_screen"
                     android:id="@+id/txt_upgrade"
                     android:layout_toRightOf="@+id/img_upgrade"
@@ -69,7 +69,7 @@
                     android:src="@drawable/ic_privacy"
                     />
 
-                <com.cryptoserver.composer.views.customfonttextview
+                <com.deeptruth.app.android.views.customfonttextview
                     style="@style/btn_settings_screen"
                     android:id="@+id/txt_privacy"
                     android:layout_toRightOf="@+id/img_privacy"
@@ -98,7 +98,7 @@
                 android:src="@drawable/ic_faq_help"
                 />
 
-            <com.cryptoserver.composer.views.customfonttextview
+            <com.deeptruth.app.android.views.customfonttextview
                 style="@style/btn_settings_screen"
                 android:id="@+id/txt_help"
                 android:layout_toRightOf="@+id/img_help"

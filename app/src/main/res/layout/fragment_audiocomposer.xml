@@ -12,7 +12,7 @@
 
 
 
-            <com.cryptoserver.composer.utils.visualizeraudiorecorder
+            <com.deeptruth.app.android.utils.visualizeraudiorecorder
                 android:id="@+id/myvisualizerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
