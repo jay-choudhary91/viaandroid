@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     android:layout_height="match_parent">
 
-   <com.cryptoserver.composer.utils.FullDrawerLayout
+   <com.deeptruth.app.android.utils.FullDrawerLayout
        android:id="@+id/drawer_layout"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
@@ -61,6 +61,6 @@
 
          </include>
       </android.support.design.widget.NavigationView>
-   </com.cryptoserver.composer.utils.FullDrawerLayout>
+   </com.deeptruth.app.android.utils.FullDrawerLayout>
 
    </RelativeLayout>

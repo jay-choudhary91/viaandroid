@@ -79,7 +79,7 @@
                                 android:scaleType="centerCrop"/>
                         </FrameLayout>
 
-                        <com.cryptoserver.composer.utils.circularImageview
+                        <com.deeptruth.app.android.utils.circularImageview
                             android:id="@+id/btn_playpause"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
                                     android:layout_centerHorizontal="true"
                                     android:layout_alignParentBottom="false">
 
-                                    <com.cryptoserver.composer.utils.NoScrollRecycler
+                                    <com.deeptruth.app.android.utils.NoScrollRecycler
                                         android:id="@+id/recyview_frames"
                                         android:layout_width="match_parent"
                                         android:visibility="visible"
@@ -156,7 +156,7 @@
 
                                 </RelativeLayout>
 
-                                    <com.cryptoserver.composer.views.customseekbar
+                                    <com.deeptruth.app.android.views.customseekbar
                                         android:id="@+id/mediacontroller_progress"
                                         android:layout_width="match_parent"
                                         android:layout_centerInParent="true"
@@ -177,7 +177,7 @@
                                         android:layout_above="@id/mediacontroller_progress"
                                         android:orientation="vertical">
 
-                                        <com.cryptoserver.composer.views.customfonttextview
+                                        <com.deeptruth.app.android.views.customfonttextview
                                             android:id="@+id/txt_mediatimethumb"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
@@ -223,7 +223,7 @@
                                         android:visibility="gone"
                                         android:layout_height="1dp"/>
 
-                                    <com.cryptoserver.composer.views.customfonttextview
+                                    <com.deeptruth.app.android.views.customfonttextview
                                         android:id="@+id/time_current"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -237,7 +237,7 @@
                                         app:fontType="OpenSans_Regular" />
 
 
-                                    <com.cryptoserver.composer.views.customfonttextview
+                                    <com.deeptruth.app.android.views.customfonttextview
                                         android:id="@+id/time"
                                         android:textSize="14sp"
                                         android:textStyle="bold"
@@ -305,7 +305,7 @@
 
                 </RelativeLayout>
 
-
             </RelativeLayout>
+
     </RelativeLayout>
 </RelativeLayout>

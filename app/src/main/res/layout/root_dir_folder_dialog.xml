@@ -17,7 +17,7 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
             android:background="@color/grey_x"
             android:layout_marginTop="20dp"/>
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/tv_positive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

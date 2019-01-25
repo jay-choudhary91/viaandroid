@@ -22,7 +22,7 @@
         android:paddingBottom="20dp"
         >
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_title_actionbarcomposer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:layout_centerVertical="true"
             android:src="@drawable/ic_folder_icon"/>
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_media_quality"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

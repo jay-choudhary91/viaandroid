@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <com.cryptoserver.composer.views.customfonttextview
+    <com.deeptruth.app.android.views.customfonttextview
         android:id="@+id/txt_md_info"
         style="@style/tv_basic"
         android:layout_width="wrap_content"

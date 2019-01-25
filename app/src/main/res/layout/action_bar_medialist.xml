@@ -18,7 +18,7 @@
         android:id="@+id/actionbarcomposer"
         android:padding="10dp">
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_title_actionbarcomposer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                 android:visibility="gone"
                 android:src="@drawable/ic_folder_icon"/>
 
-            <com.cryptoserver.composer.views.customfonttextview
+            <com.deeptruth.app.android.views.customfonttextview
                 android:id="@+id/txt_media_quality"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Semibold"
             android:id="@+id/txt_mediatype_b"
             android:layout_width="wrap_content"
@@ -122,7 +122,7 @@
             android:text="PHOTOS"
             />
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Regular"
             android:id="@+id/txt_mediatype_a"
             android:layout_width="wrap_content"
@@ -137,7 +137,7 @@
             />
 
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Regular"
             android:id="@+id/txt_mediatype_c"
             android:layout_width="wrap_content"
@@ -184,7 +184,7 @@
         android:orientation="horizontal"
         >
 
-        <com.cryptoserver.composer.views.customfonttextview
+        <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Semibold"
             android:id="@+id/txt_searchcancel"
             android:layout_width="wrap_content"
@@ -198,7 +198,7 @@
             android:text="Cancel"
             />
 
-        <com.cryptoserver.composer.views.customfontedittext
+        <com.deeptruth.app.android.views.customfontedittext
             app:fontType="OpenSans_Regular"
             android:id="@+id/edt_searchitem"
             android:layout_width="match_parent"

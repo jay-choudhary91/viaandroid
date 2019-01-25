@@ -12,7 +12,7 @@
         android:padding="10dp"
         >
 
-    <com.cryptoserver.composer.views.customfonttextview
+    <com.deeptruth.app.android.views.customfonttextview
         android:id="@+id/txt_title_actionbarcomposer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

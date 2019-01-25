@@ -33,7 +33,7 @@ public class splashactivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
         //ImageView img_image=(ImageView)findViewById(R.id.img_image);
         new Handler().postDelayed(new Runnable() {
@@ -57,7 +57,7 @@ public class splashactivity extends AppCompatActivity {
 
 
 
-    @Override
+    /*@Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
@@ -68,7 +68,7 @@ public class splashactivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
-    }
+    }*/
 
 
      /*int[] color = {getResources().getColor(R.color.dark_blue_solid),getResources().getColor(R.color.blue)};
