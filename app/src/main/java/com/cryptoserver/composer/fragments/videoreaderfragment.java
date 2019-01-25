@@ -360,7 +360,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     private Visualizer mVisualizer;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     ArrayList<String> addhashvaluelist = new ArrayList<>();
-    private BroadcastReceiver coredatabroadcastreceiver;
     int count = 0;
     private ActionBarDrawerToggle drawertoggle;
     private long audioduration =0, currentaudioduration =0, currentaudiodurationseconds =0;
@@ -746,10 +745,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 };
                 thread.start();
 
-                registerbroadcastreciver();
-                registerbroadcastreciverforencryptionmetadata();
             }
-
+            registerbroadcastreciver();
+            registerbroadcastreciverforencryptionmetadata();
             Log.e("oncreate","oncreate");
 
             loadmap();
@@ -1479,7 +1477,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     public void onStop() {
         super.onStop();
         try {
-            applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
             applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
             applicationviavideocomposer.getactivity().unregisterReceiver(getencryptionmetadatabroadcastreceiver);
         }catch (Exception e)
