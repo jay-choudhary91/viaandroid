@@ -2149,7 +2149,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                 Gson userGson=new GsonBuilder().create();
 
-                mainobject.put("dictionary",jsonArray.get(0));
+                mainobject.put("dictionary",userGson.toJson(jsonArray.get(0)));
                 mainobject.put("sequenceno",sequenceno);
                 mainobject.put("recorddate",""+recordate);
                 mainobject.put("dictionaryhashmethod",""+hashmethod);

@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cryptoserver.composer.BuildConfig;
 import com.cryptoserver.composer.R;
 import com.cryptoserver.composer.adapter.adaptermediagrid;
 import com.cryptoserver.composer.adapter.folderdataadapter;
@@ -85,6 +86,15 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             img_arrow_back.setOnClickListener(this);
             img_camera.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
+
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                img_camera.setVisibility(View.GONE);
+            }
+            else
+            {
+                img_camera.setVisibility(View.VISIBLE);
+            }
 
             int numberOfColumns = 2;
             recyclerlist.setLayoutManager(new GridLayoutManager(getActivity(), numberOfColumns));

@@ -614,8 +614,16 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
             img_dotmenu.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
-            img_camera.setVisibility(View.VISIBLE);
             img_arrow_back.setVisibility(View.VISIBLE);
+
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                img_camera.setVisibility(View.GONE);
+            }
+            else
+            {
+                img_camera.setVisibility(View.VISIBLE);
+            }
 
             //tabs_detail
             txtslotmedia.setText(getResources().getString(R.string.video));
