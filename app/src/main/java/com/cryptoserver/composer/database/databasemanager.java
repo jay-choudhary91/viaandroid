@@ -383,46 +383,6 @@ public class databasemanager {
         return  mCur;
     }
 
-    public void insertstartvideoinfo(String header,String type,String location,String localkey,
-                                      String token,String videokey,String sync,String date , String action_type,
-                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,String videocompletedevicedate,String videostarttransactionid,
-                                     String filename,String notes,String folder)
-    {
-        try {
-            lock.lock();
-
-            ContentValues values = new ContentValues();
-            values.put("header", "" + header);
-            values.put("type", ""+type);
-            values.put("location", location);
-            values.put("localkey", ""+localkey);
-            values.put("token", ""+token);
-            values.put("videokey", ""+videokey);
-            values.put("sync", ""+sync);
-            values.put("action_type", ""+action_type);
-            values.put("sync_date",  date);
-            values.put("apirequestdevicedate",  apirequestdevicedate);
-            values.put("videostartdevicedate",  videostartdevicedate);
-            values.put("devicetimeoffset",  devicetimeoffset);
-            values.put("videocompletedevicedate",  videocompletedevicedate);
-            values.put("videostarttransactionid",  videostarttransactionid);
-            values.put("file_name",  filename);
-            values.put("notes",  notes);
-            values.put("folder",  folder);
-
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            long l=mDb.insert("tblstartmediainfo", null, values);
-            Log.e("Id ",""+l);
-
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
-            throw mSQLException;
-        } finally {
-            lock.unlock();
-        }
-    }
-
     public Cursor fatchstartvideoinfo() {
 
         Cursor mCur=null;

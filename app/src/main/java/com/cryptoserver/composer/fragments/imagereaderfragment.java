@@ -82,6 +82,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -115,33 +116,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_bottom;*/
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
-    @BindView(R.id.txt_slot1)
-    TextView txtSlot1;
-    @BindView(R.id.txt_slot2)
-    TextView txtSlot2;
-    @BindView(R.id.txt_slot3)
-    TextView txtSlot3;
-    @BindView(R.id.txt_metrics)
-    TextView txt_metrics;
-    @BindView(R.id.txt_hashes)
-    TextView txt_hashes;
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
-    @BindView(R.id.scrollview_metrices)
-    ScrollView scrollview_metrices;
-    @BindView(R.id.scrollview_hashes)
-    ScrollView scrollview_hashes;
     @BindView(R.id.content)
     LinearLayout linearLayout;
 
     @BindView(R.id.righthandle)
     ImageView righthandle;
-    @BindView(R.id.recyview_item)
-    RecyclerView recyview_hashes;
-    @BindView(R.id.recyview_metrices)
-    RecyclerView recyview_metrices;
-   /* @BindView(R.id.recyview_hashes)
-    RecyclerView recyview_hashes;*/
 
     //tabdetails
     @BindView(R.id.spinner)
@@ -203,37 +184,18 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.layout_time)
     LinearLayout layout_time;
 
-
- //   LinearLayout layout_bottom, layout_drawer;
-    videoframeadapter mmetricesadapter, mhashesadapter;
-    private LinearLayoutManager mLayoutManager;
-    private boolean isdraweropen = false;
-    public int selectedsection = 1;
-    graphicalfragment fragmentgraphic;
-    ArrayList<videomodel> mmetricsitems = new ArrayList<>();
-    ArrayList<videomodel> mhashesitems = new ArrayList<>();
-    private int REQUESTCODE_PICK = 301;
-    private Uri selectedphotouri = null;
     private String imageurl = null;
-    private ArrayList<videomodel> mainphotoframes = new ArrayList<>();
-    private ArrayList<videomodel> mphotoframes = new ArrayList<>();
-    private ArrayList<videomodel> mallframes = new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     @BindView(R.id.tab_photoreader)
     ImageView tab_photoreader;
     private Handler myhandler;
     private Runnable myrunnable;
     String selectedmetrices = "", selectedhashes = "";
-    private String keytype = config.prefs_md5, firsthash = "";
-    private boolean suspendframequeue = false, suspendbitmapqueue = false, isnewphotofound = false;
-    private boolean ishashprocessing = false;
-    JSONArray metadatametricesjson = new JSONArray();
+    private String keytype = config.prefs_md5;
     public int flingactionmindstvac;
     private static final int request_read_external_storage = 1;
     private final int flingactionmindspdvac = 10;
-    boolean img_fullscrnshow=false;
-   // RelativeLayout layout_photoreader,layout_mediatype;
-    int targetheight,previousheight;
+    int targetheight=0,previousheight=0;
 
     GoogleMap mgooglemap;
 
@@ -367,65 +329,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             edt_medianotes.setFocusableInTouchMode(false);
 
             flingactionmindstvac = common.getdrawerswipearea();
-
-            txtSlot1.setOnClickListener(this);
-            txtSlot2.setOnClickListener(this);
-            txtSlot3.setOnClickListener(this);
-
-
             txtslotencyption.setOnClickListener(this);
             txtslotmeta.setOnClickListener(this);
             txtslotmedia.setOnClickListener(this);
             resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-
-            resetButtonViews(txtSlot1, txtSlot2, txtSlot3);
-            txtSlot1.setVisibility(View.VISIBLE);
-            txtSlot2.setVisibility(View.VISIBLE);
-            txtSlot3.setVisibility(View.VISIBLE);
-            txt_metrics.setVisibility(View.INVISIBLE);
-            txt_hashes.setVisibility(View.INVISIBLE);
-            recyview_hashes.setVisibility(View.VISIBLE);
-            recyview_metrices.setVisibility(View.INVISIBLE);
-            scrollview_metrices.setVisibility(View.INVISIBLE);
-            scrollview_hashes.setVisibility(View.INVISIBLE);
-
-
-            {
-                mhashesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mhashesitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                recyview_hashes.setLayoutManager(mLayoutManager);
-                recyview_hashes.setItemAnimator(new DefaultItemAnimator());
-                recyview_hashes.setAdapter(mhashesadapter);
-            }
-
-            {
-                mmetricesadapter = new videoframeadapter(applicationviavideocomposer.getactivity(), mmetricsitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                mLayoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
-                recyview_metrices.setLayoutManager(mLayoutManager);
-                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-                recyview_metrices.setAdapter(mmetricesadapter);
-                implementscrolllistener();
-            }
 
             String[] items=common.getallfolders();
             if(items != null && items.length > 0)
@@ -515,56 +422,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.txt_slot1:
-                if (selectedsection != 1) {
-                    selectedsection = 1;
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-
-                    recyview_hashes.setVisibility(View.VISIBLE);
-                    recyview_metrices.setVisibility(View.INVISIBLE);
-
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    resetButtonViews(txtSlot1, txtSlot2, txtSlot3);
-                }
-
-                break;
-
-            case R.id.txt_slot2:
-                if (selectedsection != 2) {
-                    selectedsection = 2;
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-
-                    recyview_metrices.setVisibility(View.VISIBLE);
-                    recyview_hashes.setVisibility(View.INVISIBLE);
-
-                    resetButtonViews(txtSlot2, txtSlot1, txtSlot3);
-                }
-
-                break;
-
-            case R.id.txt_slot3:
-                if (selectedsection != 3) {
-                    selectedsection = 3;
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-                    recyview_metrices.setVisibility(View.INVISIBLE);
-                    recyview_hashes.setVisibility(View.INVISIBLE);
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    resetButtonViews(txtSlot3, txtSlot1, txtSlot2);
-
-                    /*if (fragmentgraphic != null)
-                        fragmentgraphic.setphotocapture(true);*/
-                }
-                break;
-
             case R.id.txt_slot4:
                 resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                 scrollview_detail.setVisibility(View.VISIBLE);
@@ -736,24 +593,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-
-    private void implementscrolllistener() {
-        recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-            }
-        });
-    }
-
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
@@ -763,7 +602,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     common.shareimage(getActivity(), imageurl);
                 break;
             case R.id.img_upload_icon:
-                //  checkwritestoragepermission();
+
                 break;
             case R.id.img_setting:
                 framemetricssettings fragmatriclist = new framemetricssettings();
@@ -784,11 +623,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             new Thread() {
                 public void run() {
                     try {
-                        findmediafirsthash();
-                        getmediadata();
-                        if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
-                            getmetadetareader();
-                        }
+                        fetchmetadatafromdb();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -832,37 +667,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         myrunnable = new Runnable() {
             @Override
             public void run() {
-                boolean graphicopen = false;
-
-                if (!isdraweropen) {
-                    if ((recyview_hashes.getVisibility() == View.VISIBLE) && (!selectedhashes.trim().isEmpty())) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mhashesitems.add(new videomodel(selectedhashes));
-                                mhashesadapter.notifyItemChanged(mhashesitems.size() - 1);
-                                selectedhashes = "";
-                            }
-                        });
-                    }
-
-                    if ((tab_photoreader != null) && (!selectedmetrices.toString().trim().isEmpty())) {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size() - 1);
-                        selectedmetrices = "";
-                    }
-
-                    setmetricesgraphicaldata();
-
-                }
-
-
-                myhandler.postDelayed(this, 1000);
+                setmetricesgraphicaldata();
+                myhandler.postDelayed(this, 3000);
             }
         };
         myhandler.post(myrunnable);
     }
-
 
     public void setmetricesgraphicaldata() {
 
@@ -928,236 +738,184 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void registerbroadcastreciver() {
-        IntentFilter intentFilter = null;
-        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-            //intentFilter = new IntentFilter(config.reader_service_getmetadata);
-        }
-        else
-        {
-
-        }*/
-
-        intentFilter = new IntentFilter(config.composer_service_savemetadata);
-
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
         getmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Thread thread = new Thread() {
-                    public void run() {
-                        if (mhashesitems.size() == 0)
-                            getmediadata();
-                    }
-                };
-                thread.start();
+                fetchmetadatafromdb();
             }
         };
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
     }
-
 
     public void registerbroadcastreciverforencryptionmetadata() {
         IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
         getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                getmediadata();
+                fetchmetadatafromdb();
             }
         };
         getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
     }
 
-    public void getmediadata() {
-        try {
-            databasemanager mdbhelper = null;
-            String videoid = "", videotoken = "", audiostatus = "";
-            if (mdbhelper == null) {
-                mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-                mdbhelper.createDatabase();
-            }
-
-            try {
-                mdbhelper.open();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-            if (!firsthash.trim().isEmpty()) {
-                Cursor mediainfocursor = mdbhelper.getmediainfobyfirsthash(firsthash);
-
-                if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
-                    if (mediainfocursor.moveToFirst()) {
-                        do {
-                            audiostatus = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("status"));
-                            mediadate = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videostartdevicedate"));
-                            medianame = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_name"));
-                            medianotes =  "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_notes"));
-                            mediafolder =  "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("media_folder"));
-                            mediatransectionid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videostarttransactionid"));
-
-                            videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
-                        } while (mediainfocursor.moveToNext());
-                    }
-                }
-            }
-
-
-            String completedate = mdbhelper.getcompletedate(firsthash);
-            if (!completedate.isEmpty()) {
-
-                /*getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        textfetchdata.setVisibility(View.GONE);
-                    }
-                });*/
-                ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadata(firsthash);
-                //metricmainarraylist.clear();
-                String framelabel = "";
-
-                if (metricmainarraylist.size() > 0 && BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
-
-                    for (int i = 0; i < mitemlist.size(); i++) {
-                        String sequencehash = mitemlist.get(i).getSequencehash();
-                        String hashmethod = mitemlist.get(i).getHashmethod();
-                        String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                        String serverdictionaryhash = mitemlist.get(i).getValuehash();
-
-                        metricmainarraylist.set(i, new arraycontainer(hashmethod, videostarttransactionid, sequencehash, serverdictionaryhash));
-                    }
-
-                } else {
-
-                    if (audiostatus.equalsIgnoreCase(config.sync_complete) && metricmainarraylist.size() == 0) {
-
-                        if(!mediadate.isEmpty()){
-
-                            DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                            Date date = format.parse(mediadate);
-                            String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                            String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(date);
-                            String filecreated = new SimpleDateFormat("yyyy-mm-dd").format(date);
-
-                            tvdate.setText(filecreateddate);
-                            txt_createdtime.setText(time);
-                            tvtime.setText(time);
-                            txt_title_actionbarcomposer.setText(filecreated);
-                        }
-
-
-                        if(!medianame.isEmpty()){
-                            int index =  medianame.lastIndexOf('.');
-                            if(index >=0)
-                                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
-                            edt_medianame.setText(medianame);
-                        }
-
-                        if(!medianotes.isEmpty())
-                            edt_medianotes.setText(medianotes);
-
-                           setmetricdata(mitemlist);
-                    } else {
-
-                        if(!mediadate.isEmpty()){
-
-                            DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                            Date date = format.parse(mediadate);
-                            String time = new SimpleDateFormat("hh:mm:ss aa").format(date);
-                            String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(date);
-                            String filecreated = new SimpleDateFormat("yyyy-mm-dd").format(date);
-                            tvdate.setText(filecreateddate);
-                            txt_createdtime.setText(time);
-                            tvtime.setText(time);
-                            txt_title_actionbarcomposer.setText(filecreated);
-                        }
-
-
-                        if(!medianame.isEmpty()){
-                            int index =  medianame.lastIndexOf('.');
-                            if(index >=0)
-                                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
-                            edt_medianame.setText(medianame);
-                        }
-
-                        if(!medianotes.isEmpty())
-                            edt_medianotes.setText(medianotes);
-
-                        setmetricdata(mitemlist);
-                    }
-                }
-
+    public void fetchmetadatafromdb() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
                 try {
-                    mdbhelper.close();
-                } catch (Exception e) {
+                    databasemanager mdbhelper = null;
+                    if (mdbhelper == null) {
+                        mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                        mdbhelper.createDatabase();
+                    }
+
+                    try {
+                        mdbhelper.open();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(imageurl));
+                    String completedate="";
+                    if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
+                    {
+                        do{
+                            completedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                            mediadate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
+                            medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
+                            medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
+                            mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
+                            mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
+                        }while(cur.moveToNext());
+                    }
+
+                    if (!completedate.isEmpty()){
+
+                        ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
+                        if(metricmainarraylist.size()>0){
+
+                            for(int i=0;i<mitemlist.size();i++)
+                            {
+                                String sequencehash = mitemlist.get(i).getSequencehash();
+                                String hashmethod = mitemlist.get(i).getHashmethod();
+                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
+                            }
+
+                        }else{
+
+                            for(int i=0;i<mitemlist.size();i++)
+                            {
+                                String metricdata=mitemlist.get(i).getMetricdata();
+                                String sequencehash = mitemlist.get(i).getSequencehash();
+                                String hashmethod = mitemlist.get(i).getHashmethod();
+                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
+                            }
+
+                            if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
+
+                                DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                final Date startdate = format.parse(mediadate);
+                                Date enddate = format.parse(completedate);
+                                final String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(startdate);
+                                final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+                                SimpleDateFormat spf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss a");
+                                final String starttime = spf.format(startdate);
+                                Log.e("starttime",starttime);
+                                final String endtime = spf.format(enddate);
+
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tvtime.setText(starttime);
+                                        txt_createdtime.setText(createdtime);
+                                        txt_title_actionbarcomposer.setText(filecreateddate);
+                                    }
+                                });
+                            }
+                            if(!medianame.isEmpty()){
+                                int index =  medianame.lastIndexOf('.');
+                                if(index >=0)
+                                    medianame = medianame.substring(0, medianame.lastIndexOf('.'));
+
+
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        edt_medianame.setText(medianame);
+                                    }
+                                });
+                            }
+
+                            if(!medianotes.isEmpty()){
+                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        edt_medianotes.setText(medianotes);
+                                    }
+                                });
+                            }
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    final Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            // Do something after 5s = 5000ms
+                                            //setmetadatavalue();
+                                        }
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        try
+                        {
+                            mdbhelper.close();
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }catch (Exception e)
+                {
                     e.printStackTrace();
                 }
-
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                       /* mhashesitems.clear();
-                        mhashesadapter.notifyDataSetChanged();*/
-
-                        mphotoframes.add(new videomodel(selectedhashes));
-                        mhashesadapter.notifyDataSetChanged();
-                        recyview_hashes.scrollToPosition(mhashesitems.size() - 1);
-                    }
-                });
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
-    public void setmetricdata(ArrayList<metadatahash> mitemlist) {
-        String framelabel = "";
-        for (int i = 0; i < mitemlist.size(); i++) {
-            String metahash = "";
-            String metricdata = mitemlist.get(i).getMetricdata();
-            String valuehash = mitemlist.get(i).getSequencehash();
-            String hashmethod = mitemlist.get(i).getHashmethod();
-            String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-
-            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)) {
-                metahash = mitemlist.get(i).getValuehash();
-            } else {
-                metahash = mitemlist.get(i).getMetahash();
-            }
-            parsemetadata(metricdata, valuehash, hashmethod, videostarttransactionid, metahash);
-            selectedhashes = selectedhashes + "\n";
-            framelabel = "Frame ";
-            selectedhashes = selectedhashes + framelabel + mitemlist.get(i).getSequenceno() + " " + mitemlist.get(i).getHashmethod() +
-                    ": " + mitemlist.get(i).getSequencehash();
-        }
-    }
-
-
-    public void parsemetadata(String metadata, String valuehash, String hashmethod, String videostarttransactionid, String metahash) {
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
         try {
 
-            if (BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)) {
-                JSONObject object = new JSONObject(metadata);
-                Iterator<String> myIter = object.keys();
+            Object json = new JSONTokener(metadata).nextValue();
+            JSONObject jsonobject=null;
+            if(json instanceof JSONObject)
+            {
+                jsonobject=new JSONObject(metadata);
                 ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                Iterator<String> myIter = jsonobject.keys();
                 while (myIter.hasNext()) {
                     String key = myIter.next();
-                    String value = object.optString(key);
+                    String value = jsonobject.optString(key);
                     metricmodel model = new metricmodel();
                     model.setMetricTrackKeyName(key);
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist, hashmethod, videostarttransactionid, valuehash, metahash));
-
-            } else {
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+            }
+            else if(json instanceof JSONArray)
+            {
                 JSONArray array = new JSONArray(metadata);
-                if (array.length() > 0) {
-                    JSONObject object = array.getJSONObject(0);
-                    Iterator<String> myIter = object.keys();
+                for (int j = 0; j < array.length(); j++) {
                     ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                    JSONObject object = array.getJSONObject(j);
+                    Iterator<String> myIter = object.keys();
                     while (myIter.hasNext()) {
                         String key = myIter.next();
                         String value = object.optString(key);
@@ -1166,32 +924,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist, hashmethod, videostarttransactionid, valuehash, metahash));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
                 }
-
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public String findmediafirsthash() {
-        firsthash = md5.fileToMD5(imageurl);
-        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-            if(! firsthash.trim().isEmpty())
-            {
-                Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);
-                intent.putExtra("firsthash", firsthash);
-                intent.putExtra("mediapath", imageurl);
-                intent.putExtra("keytype",keytype);
-                intent.putExtra("mediatype","image");
-                applicationviavideocomposer.getactivity().startService(intent);
-            }
-        }*/
-        return firsthash;
     }
 
     public void getmetadetareader() {
@@ -1200,7 +938,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run() {
 
-                getmediadata();
+                fetchmetadatafromdb();
 
                 myhandler.postDelayed(this, 5000);
             }
