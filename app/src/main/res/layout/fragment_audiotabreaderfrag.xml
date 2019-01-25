@@ -7,298 +7,238 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:content="@+id/content"
-        android:handle="@+id/handle"
-        android:fitsSystemWindows="true"
-        android:layout_centerVertical="true">
-
-        <com.cryptoserver.composer.utils.FullDrawerLayout
-            android:id="@+id/drawer_layout"
+        android:orientation="vertical"
+        android:id="@+id/layout_photoreader"
+        android:layout_height="match_parent"
+        >
+        <RelativeLayout
+            android:id="@+id/layout_footer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            tools:openDrawer="start" >
+            android:background="@drawable/bottomborder"
+            android:layout_gravity="bottom|end"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:visibility="visible"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/normal_margin_left"
+                android:layout_marginRight="@dimen/normal_margin_right"
+                android:id="@+id/img_share_media"
+                android:background="@drawable/share"/>
+
+            <ImageView
+                android:id="@+id/img_delete_media"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/normal_margin_left"
+                android:layout_marginRight="@dimen/normal_margin_right"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/garbage"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/layout_footer"
+            android:layout_height="wrap_content">
 
             <RelativeLayout
+                android:id="@+id/layout_mediatype"
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/layout_photoreader"
-                android:layout_height="match_parent"
-                >
-                <RelativeLayout
-                    android:id="@+id/layout_footer"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/bottomborder"
-                    android:layout_gravity="bottom|end"
-                    android:layout_alignParentBottom="true"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:visibility="visible"
-                    android:layout_height="wrap_content">
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin_left"
-                        android:layout_marginRight="@dimen/normal_margin_right"
-                        android:id="@+id/img_share_media"
-                        android:background="@drawable/share"/>
-
-                    <ImageView
-                        android:id="@+id/img_delete_media"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin_left"
-                        android:layout_marginRight="@dimen/normal_margin_right"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/garbage"/>
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_alignParentTop="true"
-                    android:layout_above="@+id/layout_footer"
-                    android:layout_height="wrap_content">
-
-                    <RelativeLayout
-                        android:id="@+id/layout_mediatype"
-                        android:layout_width="match_parent"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <include layout="@layout/action_bar_mediadetails"></include>
-
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:id="@+id/frontview"
-                        android:visibility="gone"
-                        android:background="@color/white"
-                        android:layout_height="match_parent">
-
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/rl_controllerview"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="0.65"
-                        android:background="@color/audio_composer_bg"
-                        android:visibility="visible"
-                        >
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="visible"
-                            android:layout_above="@+id/layout_scrubberview"
-
-                            >
-
-                            <ImageView
-                                android:id="@+id/img_audiowave"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_centerVertical="true"
-                                android:scaleType="centerCrop"
-                                />
-
-                            <com.cryptoserver.composer.utils.visualizeraudiorecorder
-                                android:id="@+id/myvisualizerviewmedia"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_centerInParent="true"
-                                android:layout_marginTop="50dp"
-                                android:layout_marginBottom="50dp"
-                                android:visibility="gone"
-                                />
-                            <com.cryptoserver.composer.utils.circularImageview
-                                android:id="@+id/btn_playpause"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_centerInParent="true"
-                                android:contentDescription="@string/description"
-                                android:layout_centerHorizontal="true"
-                                android:layout_margin="10dp"
-                                />
-
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:id="@+id/layout_scrubberview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:layout_alignParentBottom="true"
-                            android:orientation="vertical"
-                            >
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="60dp"
-                                android:layout_marginBottom="10dp"
-                                >
-
-                                <SeekBar
-                                    android:id="@+id/mediacontroller_progress"
-                                    android:layout_width="match_parent"
-                                    android:layout_centerInParent="true"
-                                    android:progressDrawable="@drawable/custom_seekbar"
-                                    android:layout_height="30dip"
-                                    android:layout_marginLeft="@dimen/margin_15dp"
-                                    android:layout_marginRight="@dimen/margin_15dp"
-                                    android:thumbOffset="0dp"
-                                    android:thumb="@drawable/custom_thumb"/>
-
-
-                                <com.cryptoserver.composer.views.customfonttextview
-                                    android:id="@+id/time_current"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_below="@id/mediacontroller_progress"
-                                    android:layout_marginLeft="@dimen/margin_15dp"
-                                    android:layout_toRightOf="@+id/img_volume"
-                                    android:paddingLeft="0dip"
-                                    android:textColor="@color/black"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    app:fontType="OpenSans_Regular" />
-
-
-                                <com.cryptoserver.composer.views.customfonttextview
-                                    android:id="@+id/time"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    app:fontType="OpenSans_Regular"
-                                    android:layout_below="@+id/mediacontroller_progress"
-                                    android:paddingRight="0dip"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_marginRight="@dimen/margin_15dp"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/black"
-                                    android:paddingLeft="4dip" />
-
-                            </RelativeLayout>
-                        </LinearLayout>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_below="@+id/tab_photoreader"
-                        android:layout_weight="0.35"
-                        android:visibility="visible"
-                        android:id="@+id/layout_photodetails"
-                        android:layout_height="0dp">
-
-                        <include layout="@layout/layout_mediadetails"></include>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content">
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:content="@+id/content"
-                            android:handle="@+id/handle"
-                            android:orientation="horizontal"
-                            android:layout_above="@id/layout_bottom"
-                            android:layout_centerVertical="true">
-
-                            <ImageView
-                                android:id="@id/handle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:src="@drawable/lefthandle"
-                                />
-
-                            <LinearLayout
-                                android:id="@id/content"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
-                                android:orientation="horizontal"
-                                android:visibility="gone"
-                                android:weightSum="1"
-                                >
-
-                                <LinearLayout
-                                    android:id="@+id/layout_drawer"
-                                    android:layout_width="0dp"
-                                    android:layout_weight="0.9"
-                                    android:layout_height="match_parent"
-                                    android:orientation="vertical"
-                                    android:background="@color/whitetransparent"
-                                    >
-
-                                    <include layout="@layout/layout_drawer_content"></include>
-
-                                </LinearLayout>
-
-                                <ImageView
-                                    android:layout_width="0dp"
-                                    android:layout_weight=".1"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/righthandle"
-                                    android:visibility="gone"
-                                    android:layout_gravity="center_vertical"
-                                    android:id="@+id/righthandle"
-                                    />
-                            </LinearLayout>
-
-
-                        </RelativeLayout>
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/img_lefthandle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/ic_arrow_left"
-                    />
+                <include layout="@layout/action_bar_mediadetails"></include>
 
 
             </RelativeLayout>
 
-            <android.support.design.widget.NavigationView
-                android:id="@+id/navigation_drawer"
+            <RelativeLayout
+                android:id="@+id/rl_controllerview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/blacktransparent"
-                android:visibility="gone"
-                android:fitsSystemWindows="true"
-                android:layout_gravity="start"
+                android:layout_height="0dp"
+                android:layout_weight="0.65"
+                android:background="@color/audio_composer_bg"
+                android:visibility="visible"
                 >
 
-                <include
-                    layout="@layout/layout_graphical_drawer_content"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:layout_above="@+id/layout_scrubberview"
 
-                </include>
+                    >
 
-            </android.support.design.widget.NavigationView>
+                    <ImageView
+                        android:id="@+id/img_audiowave"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:scaleType="centerCrop"
+                        />
+
+                    <com.cryptoserver.composer.utils.visualizeraudiorecorder
+                        android:id="@+id/myvisualizerviewmedia"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="50dp"
+                        android:layout_marginBottom="50dp"
+                        android:visibility="gone"
+                        />
+                    <com.cryptoserver.composer.utils.circularImageview
+                        android:id="@+id/btn_playpause"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerInParent="true"
+                        android:contentDescription="@string/description"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="10dp"
+                        />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_scrubberview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"
+                    >
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginBottom="10dp"
+                        >
+
+                        <SeekBar
+                            android:id="@+id/mediacontroller_progress"
+                            android:layout_width="match_parent"
+                            android:layout_centerInParent="true"
+                            android:progressDrawable="@drawable/custom_seekbar"
+                            android:layout_height="30dip"
+                            android:layout_marginLeft="@dimen/margin_15dp"
+                            android:layout_marginRight="@dimen/margin_15dp"
+                            android:thumbOffset="0dp"
+                            android:thumb="@drawable/custom_thumb"/>
 
 
-        </com.cryptoserver.composer.utils.FullDrawerLayout>
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/time_current"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_below="@id/mediacontroller_progress"
+                            android:layout_marginLeft="@dimen/margin_15dp"
+                            android:layout_toRightOf="@+id/img_volume"
+                            android:paddingLeft="0dip"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:fontType="OpenSans_Regular" />
+
+
+                        <com.cryptoserver.composer.views.customfonttextview
+                            android:id="@+id/time"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            app:fontType="OpenSans_Regular"
+                            android:layout_below="@+id/mediacontroller_progress"
+                            android:paddingRight="0dip"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="@dimen/margin_15dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:paddingLeft="4dip" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_below="@+id/tab_photoreader"
+                android:layout_weight="0.35"
+                android:visibility="visible"
+                android:id="@+id/layout_photodetails"
+                android:layout_height="0dp">
+
+                <include layout="@layout/layout_mediadetails"></include>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:content="@+id/content"
+                    android:handle="@+id/handle"
+                    android:orientation="horizontal"
+                    android:layout_above="@id/layout_bottom"
+                    android:layout_centerVertical="true">
+
+                    <ImageView
+                        android:id="@id/handle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/lefthandle"
+                        />
+
+                    <LinearLayout
+                        android:id="@id/content"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        android:weightSum="1"
+                        >
+
+                        <LinearLayout
+                            android:id="@+id/layout_drawer"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.9"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:background="@color/whitetransparent"
+                            >
+
+                            <include layout="@layout/layout_drawer_content"></include>
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_weight=".1"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/righthandle"
+                            android:visibility="gone"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/righthandle"
+                            />
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

@@ -91,6 +91,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -127,30 +128,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
     LinearLayout layout_scrubberview;
-    @BindView(R.id.frontview)
-    RelativeLayout frontview;
-    @BindView(R.id.txt_slot1)
-    TextView txtSlot1;
-    @BindView(R.id.txt_slot2)
-    TextView txtSlot2;
-    @BindView(R.id.txt_slot3)
-    TextView txtSlot3;
-    @BindView(R.id.txt_hashes)
-    TextView txt_hashes;
-    @BindView(R.id.txt_metrics)
-    TextView txt_metrics;
-    @BindView(R.id.scrollview_metrices)
-    ScrollView scrollview_metrices;
-    @BindView(R.id.scrollview_hashes)
-    ScrollView scrollview_hashes;
-    @BindView(R.id.recyview_metrices)
-    RecyclerView recyview_metrices;
-    @BindView(R.id.recyview_item)
-    RecyclerView recyview_hashes;
-    @BindView(R.id.fragment_graphic_container)
-    FrameLayout fragment_graphic_container;
-    @BindView(R.id.textfetchdata)
-    TextView textfetchdata;
 
     @BindView(R.id.spinner)
     Spinner photospinner;
@@ -275,10 +252,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     customfonttextview tvuptime;
     @BindView(R.id.txt_battery)
     customfonttextview tvbattery;
-    @BindView(R.id.img_lefthandle)
-    ImageView handleimageview;
-    @BindView(R.id.img_righthandle)
-    ImageView imgrighthandle;
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
 
@@ -292,13 +265,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView img_audiowave;
 
     GoogleMap mgooglemap;
-    FullDrawerLayout navigationdrawer;
-    private ActionBarDrawerToggle drawertoggle;
-    fragmentgraphicaldrawer  graphicaldrawerfragment;
 
     private String audiourl = null;
 
-    private RelativeLayout showcontrollers;
     private MediaPlayer player;
     private View rootview = null;
     private String selectedmetrics="";
@@ -307,36 +276,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private String keytype = config.prefs_md5;
     private long currentframenumber =0,playerposition=0;
     private long frameduration =15, mframetorecordcount =0;
-    private boolean ishashprocessing=false,isbitmapprocessing=false;
-    private boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
-    private int REQUESTCODE_PICK=201;
-    private static final int request_read_external_storage = 1;
     private Uri selectedvideouri =null;
     private boolean issurafcedestroyed=false;
-    private boolean isscrubbing=true;
     private Handler myHandler,handlerrecycler;
     private Runnable myRunnable,runnablerecycler;
     private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0, currentaudiodurationseconds =0;
     private boolean isdraweropen=false;
-    private LinearLayoutManager mlinearlayoutmanager;
-    private String selectedhaeshes="";
-    private int lastmetricescount=0;
-    private SurfaceHolder holder;
-    private ArrayList<videomodel> mainvideoframes =new ArrayList<>();
-    private ArrayList<videomodel> mvideoframes =new ArrayList<>();
-    private ArrayList<videomodel> mallframes =new ArrayList<>();
-    private ArrayList<videomodel> mmetricsitems =new ArrayList<>();
-    private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    private videoframeadapter mmetricesadapter,mhashesadapter;
-    private framebitmapadapter adapter;
-    private graphicalfragment fragmentgraphic;
-    private Handler wavehandler;
-    private Runnable waverunnable;
-    boolean runmethod = false;
-    private LinearLayoutManager mLayoutManager;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
-    public int selectedsection=1;
     public boolean imediacompleted =false;
     circularImageview playpausebutton;
     private TextView songName, time_current, time;
@@ -348,15 +294,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RelativeLayout rlcontrollerview;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
-    String soundamplitudealue = "";
-    String[] soundamplitudealuearray ;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
-    metricmodel metricmodeldata;
     adapteritemclick mcontrollernavigator;
 
     public audioreaderfragment() {
@@ -385,118 +328,25 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             mediaseekbar.setPadding(0,0,0,0);
 
-
-            navigationdrawer = (FullDrawerLayout) rootview.findViewById(R.id.drawer_layout);
-            navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            drawertoggle = new ActionBarDrawerToggle(
-                    getActivity(), navigationdrawer, R.string.drawer_open, R.string.drawer_close){
-
-                /** Called when a drawer has settled in a completely closed state. */
-                public void onDrawerClosed(View view) {
-                    super.onDrawerClosed(view);
-                    handleimageview.setVisibility(View.GONE);
-                    imgrighthandle.setVisibility(View.GONE);
-                }
-                /** Called when a drawer has settled in a completely open state. */
-                public void onDrawerOpened(View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    handleimageview.setVisibility(View.GONE);
-                    imgrighthandle.setVisibility(View.GONE);
-                }
-            };
-
-            navigationdrawer.addDrawerListener(drawertoggle);
-
-            // Where do I put this?
-            drawertoggle.syncState();
-            navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
-            handleimageview.setVisibility(View.GONE);
-            textfetchdata.setVisibility(View.GONE);
-
             mFormatBuilder = new StringBuilder();
             mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
             playpausebutton.setImageResource(R.drawable.play_btn);
 
-            showcontrollers=rootview.findViewById(R.id.video_container);
-            {
-                mhashesadapter = new videoframeadapter(getActivity(), mmetricsitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                recyview_metrices.setLayoutManager(mLayoutManager);
-                recyview_metrices.setItemAnimator(new DefaultItemAnimator());
-                recyview_metrices.setAdapter(mhashesadapter);
-                implementscrolllistener();
-            }
-
-            {
-                mmetricesadapter = new videoframeadapter(getActivity(), mhashesitems, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-
-                    }
-                });
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                recyview_hashes.setLayoutManager(mLayoutManager);
-                recyview_hashes.setItemAnimator(new DefaultItemAnimator());
-                recyview_hashes.setAdapter(mmetricesadapter);
-            }
-
             frameduration= common.checkframeduration();
             keytype=common.checkkey();
 
-            frontview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gethelper().updateactionbar(1);
-
-                }
-            });
-           /* handleimageview.setOnTouchListener(this);
-            righthandle.setOnTouchListener(this);*/
-
-            txtSlot1.setOnClickListener(this);
-            txtSlot2.setOnClickListener(this);
-            txtSlot3.setOnClickListener(this);
             playpausebutton.setOnClickListener(this);
 
             img_dotmenu.setOnClickListener(this);
             img_folder.setOnClickListener(this);
             img_camera.setOnClickListener(this);
             img_arrow_back.setOnClickListener(this);
-            handleimageview.setOnClickListener(this);
-            imgrighthandle.setOnClickListener(this);
             img_delete_media.setOnClickListener(this);
 
             img_dotmenu.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
             img_camera.setVisibility(View.VISIBLE);
             img_arrow_back.setVisibility(View.VISIBLE);
-
-            resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-            txtSlot1.setVisibility(View.VISIBLE);
-            txtSlot2.setVisibility(View.VISIBLE);
-            txtSlot3.setVisibility(View.VISIBLE);
-            txt_metrics.setVisibility(View.INVISIBLE);
-            txt_hashes.setVisibility(View.INVISIBLE);
-            recyview_hashes.setVisibility(View.VISIBLE);
-            recyview_metrices.setVisibility(View.INVISIBLE);
-            scrollview_metrices.setVisibility(View.INVISIBLE);
-            scrollview_hashes.setVisibility(View.INVISIBLE);
-            fragment_graphic_container.setVisibility(View.VISIBLE);
 
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
@@ -615,121 +465,24 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             txtslotmeta.setOnClickListener(this);
             txtslotmedia.setOnClickListener(this);
             resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-            if (graphicaldrawerfragment == null) {
-                 fragmentgraphic = new graphicalfragment();
-                graphicaldrawerfragment =new fragmentgraphicaldrawer();
-                graphicaldrawerfragment.setphotocapture(true);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_graphic_drawer_container, graphicaldrawerfragment);
-                transaction.commit();
-            }
-
-
             loadmap();
             setmetriceshashesdata();
             setupaudiodata();
 
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            {
-                getmediametadata();
-                getmetadetareader();
-            }
-            else
-            {
-                Thread thread = new Thread() {
-                    public void run() {
-                        getmediadata();
-                    }
-                };
-                thread.start();
-            }
-
-
+            Thread thread = new Thread() {
+                public void run() {
+                    getmediadata();
+                }
+            };
+            thread.start();
         }
         return rootview;
-    }
-
-    // Implement scroll listener
-    private void implementscrolllistener() {
-        recyview_metrices.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                /*visibleItemCount = mLayoutManager.getChildCount();
-                totalItemCount = mLayoutManager.getItemCount();
-                pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
-                if ((visibleItemCount + pastVisiblesItems) == totalItemCount) {
-                    if(selectedmetrics.toString().trim().length() > 0)
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrics));
-                        mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
-                        selectedmetrics="";
-                    }
-                }*/
-            }
-        });
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId())
         {
-            case R.id.txt_slot1:
-                if(selectedsection != 1) {
-                    selectedsection = 1;
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-                    fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-                    recyview_hashes.setVisibility(View.VISIBLE);
-                    recyview_metrices.setVisibility(View.INVISIBLE);
-
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-                }
-
-                break;
-
-            case R.id.txt_slot2:
-                if(selectedsection != 2) {
-                    selectedsection = 2;
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-                    fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-
-                    recyview_metrices.setVisibility(View.VISIBLE);
-                    recyview_hashes.setVisibility(View.INVISIBLE);
-
-                    resetButtonViews(txtSlot2,txtSlot1,txtSlot3);
-                }
-
-                break;
-
-            case R.id.txt_slot3:
-                if(selectedsection != 3) {
-                    selectedsection = 3;
-                    fragment_graphic_container.setVisibility(View.VISIBLE);
-                    scrollview_metrices.setVisibility(View.INVISIBLE);
-                    scrollview_hashes.setVisibility(View.INVISIBLE);
-                    recyview_metrices.setVisibility(View.INVISIBLE);
-                    recyview_hashes.setVisibility(View.INVISIBLE);
-                    txt_hashes.setVisibility(View.INVISIBLE);
-                    txt_metrics.setVisibility(View.INVISIBLE);
-                    resetButtonViews(txtSlot3,txtSlot1,txtSlot2);
-                }
-
             case R.id.txt_slot4:
                 resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                 scrollview_detail.setVisibility(View.VISIBLE);
@@ -794,15 +547,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             case R.id.img_delete_media:
                 showalertdialog(getActivity().getResources().getString(R.string.dlt_cnfm_audio));
-                break;
-
-            case R.id.img_lefthandle:
-                navigationdrawer.openDrawer(Gravity.START);
-               // handleimageview.setVisibility(View.GONE);
-                break;
-
-            case R.id.img_righthandle:
-                navigationdrawer.closeDrawers();
                 break;
 
             case R.id.rl_controllerview:
@@ -883,10 +627,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void setmetriceslistitems(ArrayList<metricmodel> mitems) {
         super.setmetriceslistitems(mitems);
-        /*metricItemArraylist.clear();
-        metricItemArraylist.addAll(mitems);
-        itemMetricAdapter.notifyDataSetChanged();*/
-
     }
 
     @Override
@@ -948,7 +688,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         isdraweropen=true;
         Animation rightswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.right_slide);
         linearLayout.startAnimation(rightswipe);
-        handleimageview.setVisibility(View.GONE);
         linearLayout.setVisibility(View.VISIBLE);
         rightswipe.start();
      //   righthandle.setVisibility(View.VISIBLE);
@@ -976,7 +715,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         Animation leftswipe = AnimationUtils.loadAnimation(getActivity(), R.anim.left_slide);
         linearLayout.startAnimation(leftswipe);
         linearLayout.setVisibility(View.INVISIBLE);
-        handleimageview.setVisibility(View.GONE);
         leftswipe.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -985,7 +723,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                handleimageview.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -1048,9 +785,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 {
                     frameduration=common.checkframeduration();
                     keytype=common.checkkey();
-                    mvideoframes.clear();
-                    mainvideoframes.clear();
-                    mallframes.clear();
                 }
             }
         } catch (IllegalArgumentException e) {
@@ -1114,33 +848,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mp.seekTo(100);
             }
 
-            if(fragmentgraphic != null){
-                fragmentgraphic.setmediaplayer(true,null);
-            }else{
-                if(audiourl!=null && fragmentgraphic != null){
-                    fragmentgraphic.setmediaplayer(true,null);
-                }
-            }
-
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-
-        frontview.setVisibility(View.GONE);
     }
-
-    adapteritemclick mitemclick=new adapteritemclick() {
-        @Override
-        public void onItemClicked(Object object) {
-        }
-
-        @Override
-        public void onItemClicked(Object object, int type) {
-
-        }
-
-    };
 
     public void start() {
         if(player != null)
@@ -1163,67 +875,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    public String getkeyvalue(byte[] data)
-    {
-        String value="";
-        String salt="";
-
-        switch (keytype)
-        {
-            case config.prefs_md5:
-                value= md5.calculatebytemd5(data);
-                break;
-
-            case config.prefs_md5_salt:
-                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
-                if(! salt.trim().isEmpty())
-                {
-                    byte[] saltbytes=salt.getBytes();
-                    try {
-                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                        outputstream.write(saltbytes);
-                        outputstream.write(data);
-                        byte updatedarray[] = outputstream.toByteArray();
-                        value= md5.calculatebytemd5(updatedarray);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    value= md5.calculatebytemd5(data);
-                }
-
-                break;
-            case config.prefs_sha:
-                value= sha.sha1(data);
-                break;
-            case config.prefs_sha_salt:
-                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
-                if(! salt.trim().isEmpty())
-                {
-                    byte[] saltbytes=salt.getBytes();
-                    try {
-                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                        outputstream.write(saltbytes);
-                        outputstream.write(data);
-                        byte updatedarray[] = outputstream.toByteArray();
-                        value= sha.sha1(updatedarray);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    value= sha.sha1(data);
-                }
-                break;
-        }
-        return value;
-    }
-
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
@@ -1238,9 +889,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 break;
             case R.id.img_setting:
-                //destroyvideoplayer();
-                /*framemetricssettings fragmatriclist=new framemetricssettings();
-                gethelper().replaceFragment(fragmatriclist, false, true);*/
+
                 break;
         }
     }
@@ -1248,14 +897,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
         try {
 
-            JSONArray array = new JSONArray(metadata);
-            for (int j = 0; j < array.length(); j++) {
+            Object json = new JSONTokener(metadata).nextValue();
+            JSONObject jsonobject=null;
+            if(json instanceof JSONObject)
+            {
+                jsonobject=new JSONObject(metadata);
                 ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-                JSONObject object = array.getJSONObject(j);
-                Iterator<String> myIter = object.keys();
+                Iterator<String> myIter = jsonobject.keys();
                 while (myIter.hasNext()) {
                     String key = myIter.next();
-                    String value = object.optString(key);
+                    String value = jsonobject.optString(key);
                     metricmodel model = new metricmodel();
                     model.setMetricTrackKeyName(key);
                     model.setMetricTrackValue(value);
@@ -1263,11 +914,28 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
                 metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
             }
+            else if(json instanceof JSONArray)
+            {
+                JSONArray array = new JSONArray(metadata);
+                for (int j = 0; j < array.length(); j++) {
+                    ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                    JSONObject object = array.getJSONObject(j);
+                    Iterator<String> myIter = object.keys();
+                    while (myIter.hasNext()) {
+                        String key = myIter.next();
+                        String value = object.optString(key);
+                        metricmodel model = new metricmodel();
+                        model.setMetricTrackKeyName(key);
+                        model.setMetricTrackValue(value);
+                        metricItemArraylist.add(model);
+                    }
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     public void setupaudioplayer(final Uri selecteduri)
     {
         try {
@@ -1283,7 +951,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if(player!=null){
                     changeactionbarcolor();
-                    fragmentgraphic.setvisualizerwave();
                     wavevisualizerslist.clear();
                 }
             }
@@ -1330,9 +997,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }*/
 
                     setmetricesgraphicaldata();
-
-                    if((fragment_graphic_container.getVisibility() == View.VISIBLE))
-                        graphicopen=true;
                 }
                /* if(fragmentgraphic != null)
                     fragmentgraphic.setdrawerproperty(graphicopen);*/
@@ -1367,9 +1031,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
 
-                graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(i).getHashmethod(), metricmainarraylist.get(i).getVideostarttransactionid(),
-                        metricmainarraylist.get(i).getValuehash(), metricmainarraylist.get(i).getMetahash());
-
                 //tvblockchainid.setText("hiii hello");
                 common.setspannable(getResources().getString(R.string.blockchain_id), " "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
                 common.setspannable(getResources().getString(R.string.block_id)," "+ metricmainarraylist.get(0).getHashmethod(), txt_blockid);
@@ -1385,34 +1046,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             metricItemArraylist.get(j).getMetricTrackValue(), true);
 
                     setmetadatavalue(metricItemArraylist.get(j));
-
-                    if (graphicaldrawerfragment != null) {
-                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslatitude")) {
-                            if (!metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA")) {
-                                latt = Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                if (longg != 0) {
-                                    if (graphicaldrawerfragment != null) {
-                                        drawmappoints(new LatLng(latt, longg));
-                                        latt = 0;
-                                        longg = 0;
-                                    }
-                                }
-                            }
-                        }
-                        if (metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase("gpslongitude")) {
-                            if (!metricItemArraylist.get(j).getMetricTrackValue().equalsIgnoreCase("NA")) {
-                                longg = Double.parseDouble(metricItemArraylist.get(j).getMetricTrackValue());
-                                if (latt != 0) {
-                                    if (graphicaldrawerfragment != null) {
-                                        drawmappoints(new LatLng(latt, longg));
-                                        latt = 0;
-                                        longg = 0;
-                                    }
-                                }
-                            }
-                        }
-
-                    }
                 }
                 selectedmetrics = selectedmetrics + "\n";
             }
@@ -1421,15 +1054,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         if (((!latitude.trim().isEmpty()) && (!latitude.equalsIgnoreCase("NA"))) &&
                 (!longitude.trim().isEmpty()) && (!longitude.equalsIgnoreCase("NA")))
             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
-
-
-        if(fragment_graphic_container .getVisibility() == View.VISIBLE)
-        {
-            if(graphicaldrawerfragment != null){
-                graphicaldrawerfragment.setmetricesdata();
-                fragmentgraphic.getvisualizerwavecomposer(wavevisualizerslist);
-            }
-        }
 
     }
 
@@ -1509,30 +1133,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
        mediaseekbar.setProgress(starttime);
    }
 
-   public void selectionmetadata(){
-       selectedsection = 1;
-
-       resetButtonViews(txtSlot1,txtSlot2,txtSlot3);
-       txtSlot1.setVisibility(View.VISIBLE);
-       txtSlot2.setVisibility(View.VISIBLE);
-       txtSlot3.setVisibility(View.VISIBLE);
-       txt_metrics.setVisibility(View.INVISIBLE);
-       txt_hashes.setVisibility(View.INVISIBLE);
-       recyview_hashes.setVisibility(View.VISIBLE);
-       recyview_metrices.setVisibility(View.INVISIBLE);
-       scrollview_metrices.setVisibility(View.INVISIBLE);
-       scrollview_hashes.setVisibility(View.INVISIBLE);
-       fragment_graphic_container.setVisibility(View.INVISIBLE);
-
-   }
-
    public void setupaudiodata() {
        audiourl = xdata.getinstance().getSetting("selectedaudiourl");
        if (audiourl != null && (!audiourl.isEmpty())) {
 
-           mvideoframes.clear();
-           mainvideoframes.clear();
-           mallframes.clear();
            audioduration = 0;
            playpausebutton.setImageResource(R.drawable.play_btn);
            rlcontrollerview.setVisibility(View.VISIBLE);
@@ -1582,7 +1186,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             public void onReceive(Context context, Intent intent) {
                 Thread thread = new Thread() {
                     public void run() {
-                        if(mhashesitems.size() == 0)
                                getmediadata();
                     }
                 };
@@ -1670,15 +1273,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                         {
                                             e.printStackTrace();
                                         }
-                                        if(mhashesitems.size() == (metadatacursor.getCount()-1))
-                                        {
-                                            mhashesitems.add(new videomodel("Last Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
-                                        }
-                                        else
-                                        {
-                                            mhashesitems.add(new videomodel("Frame "+hashmethod+" "+sequenceno+": "+sequencehash));
-                                        }
-
                                     } while (metadatacursor.moveToNext());
                                 }
                             }
@@ -1695,18 +1289,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 {
                     e.printStackTrace();
                 }
-
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        if(mhashesitems.size() !=0){
-                            textfetchdata.setVisibility(View.GONE);
-                            mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                            selectedhaeshes ="";
-                        }
-                    }
-                });
             }
         }
     }
@@ -1739,20 +1321,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                     thumbnailurl = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
 
-
                 }while(cur.moveToNext());
             }
 
             if (!completedate.isEmpty()){
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        textfetchdata.setVisibility(View.GONE);
-                    }
-                });
-
-                String framelabel="";
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
 
@@ -1776,14 +1349,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         String serverdictionaryhash = mitemlist.get(i).getValuehash();
 
                         parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
-                        // selectedhaeshes = selectedhaeshes+"\n";
-                        framelabel="Frame ";
-                        if(i == mitemlist.size()-1)
-                        {
-                            framelabel="Last Frame ";
-                        }
-                                /*selectedhaeshes = selectedhaeshes+framelabel+mitemlist.get(i).getSequenceno()+" "+mitemlist.get(i).getHashmethod()+
-                                        ": "+mitemlist.get(i).getSequencehash();*/
                     }
 
 
@@ -1860,17 +1425,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             e.printStackTrace();
         }
     }
-
-    public int[] getFormattedData(byte[] rawVizData) {
-        int[] arraydata=new int[rawVizData.length];
-        for (int i = 0; i < arraydata.length; i++) {
-            // convert from unsigned 8 bit to signed 16 bit
-            int tmp = ((int) rawVizData[i] & 0xFF) - 128;
-            arraydata[i] = tmp;
-        }
-        return arraydata;
-    }
-
 
     public void getmetadetareader(){
         myHandler=new Handler();
