@@ -98,7 +98,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
 
-        updateactionbar(0,getResources().getColor(R.color.dark_blue_solid));
+       // updateactionbar(0,getResources().getColor(R.color.dark_blue_solid));
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             fragmedialistreader=new medialistreader();
@@ -230,7 +230,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 //(getcurrentfragment() instanceof fragmentmedialist)
 @Override
 public void updateactionbar(int showHide, int color) {
-    if(showHide == 0){ View decorView = getWindow().getDecorView();
+    /*if(showHide == 0){ View decorView = getWindow().getDecorView();
         // show the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN; //hide status bar
         decorView.setSystemUiVisibility(uiOptions);
@@ -238,9 +238,9 @@ public void updateactionbar(int showHide, int color) {
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE; // show the status bar.
         decorView.setSystemUiVisibility(uiOptions);
-    }
-        /*actionbar.setBackgroundColor(color);
-        getWindow().setStatusBarColor(color);*/
+    }*/
+        actionbar.setBackgroundColor(color);
+        getWindow().setStatusBarColor(color);
 }
 
     @Override
