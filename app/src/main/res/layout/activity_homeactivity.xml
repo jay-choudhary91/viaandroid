@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent">
-
-
 
    <com.cryptoserver.composer.utils.FullDrawerLayout
        android:id="@+id/drawer_layout"

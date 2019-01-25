@@ -877,8 +877,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 case R.id.txt_slot4:
                     resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                     scrollview_detail.setVisibility(View.VISIBLE);
-                    scrollView_encyrption.setVisibility(View.INVISIBLE);
-                    scrollview_meta.setVisibility(View.INVISIBLE);
+                    scrollView_encyrption.setVisibility(View.GONE);
+                    scrollview_meta.setVisibility(View.GONE);
                     break;
 
                 case R.id.txt_slot5:
@@ -894,24 +894,24 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     scrollview_meta.setVisibility(View.INVISIBLE);
                     break;
                 case R.id.img_edit_name:
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     edt_medianame.setClickable(true);
                     edt_medianame.setEnabled(true);
                     edt_medianame.setFocusable(true);
                     edt_medianame.setFocusableInTouchMode(true);
                     edt_medianame.setSelection(edt_medianame.getText().length());
                     edt_medianame.requestFocus();
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     break;
                 case R.id.img_edit_notes:
+                    InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     edt_medianotes.setClickable(true);
                     edt_medianotes.setEnabled(true);
                     edt_medianotes.setFocusable(true);
                     edt_medianotes.setFocusableInTouchMode(true);
                     edt_medianotes.setSelection(edt_medianotes.getText().length());
                     edt_medianotes.requestFocus();
-                    InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
                     break;
                 case R.id.img_share_media:

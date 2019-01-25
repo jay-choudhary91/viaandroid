@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/dark_blue_solid</item>
         <item name="colorPrimaryDark">@color/dark_blue_solid</item>
         <item name="colorAccent">@color/dark_blue_solid</item>
-        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFullscreen">false</item>
     </style>
 
     <style name="textview">
