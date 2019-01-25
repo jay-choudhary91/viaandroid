@@ -32,8 +32,8 @@
 
             <ImageView
                 android:id="@+id/img_flash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:visibility="gone"
                 android:src="@drawable/ic_no_flash_icon"/>
 
