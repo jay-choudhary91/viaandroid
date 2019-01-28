@@ -1551,9 +1551,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         if(isvideocompleted)
             count=metricmainarraylist.size()-1;
 
-        arraycontainerformetric = new arraycontainer();
-        arraycontainerformetric = metricmainarraylist.get(count);
-        metricmainarraylist.get(position).setIsupdated(true);
+        if(count < metricmainarraylist.size())
+        {
+            arraycontainerformetric = new arraycontainer();
+            arraycontainerformetric = metricmainarraylist.get(count);
+            metricmainarraylist.get(position).setIsupdated(true);
+        }
 
         if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                 (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
