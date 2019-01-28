@@ -29,7 +29,6 @@
       </FrameLayout>
 
       <include layout="@layout/action_bar" android:id="@+id/actionbar"></include>
-
          <ImageView
              android:id="@+id/img_lefthandle"
              android:layout_width="wrap_content"
