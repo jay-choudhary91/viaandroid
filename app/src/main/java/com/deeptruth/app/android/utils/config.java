@@ -151,6 +151,9 @@ public class config {
     public static final String item_video="VIDEO";
     public static final String item_audio="AUDIO";
 
+    public static final String caution="CAUTION";
+    public static final String verified="VERIFIED";
+
     public static int selectedmediatype=0;   // video,photo,camera
     // An Enum class
     public enum permissions

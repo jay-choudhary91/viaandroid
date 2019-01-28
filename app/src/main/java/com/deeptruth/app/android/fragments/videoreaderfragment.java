@@ -292,6 +292,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     ImageView imgpause;
     @BindView(R.id.scrub_layout)
     RelativeLayout scrublayout;
+    @BindView(R.id.layout_validating)
+    LinearLayout layout_validating;
+    @BindView(R.id.txt_section_validating_secondary)
+    TextView txt_section_validating_secondary;
 
     @BindView(R.id.layout_seekbartiming)
     RelativeLayout layout_seekbartiming;
@@ -420,7 +424,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
                     R.drawable.custom_thumb));*/
 
-                 mediaseekbar.setThumbOffset(-0);
+            mediaseekbar.setThumbOffset(-0);
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 long seeked_progess;
 
@@ -1200,6 +1204,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                     if (!completedate.isEmpty()){
 
+                        layout_validating.setVisibility(View.VISIBLE);
+                        txt_section_validating_secondary.setText(config.verified);
+                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green));
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
                         if(metricmainarraylist.size()>0){
 
@@ -1292,6 +1299,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         {
                             e.printStackTrace();
                         }
+                    }
+                    else
+                    {
+                        txt_section_validating_secondary.setText(config.caution);
+                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                     }
                 }catch (Exception e)
                 {
