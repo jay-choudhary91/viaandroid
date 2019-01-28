@@ -248,6 +248,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView img_compass;
     @BindView(R.id.img_audiowave)
     ImageView img_audiowave;
+    @BindView(R.id.layout_validating)
+    LinearLayout layout_validating;
+    @BindView(R.id.txt_section_validating_secondary)
+    TextView txt_section_validating_secondary;
 
     GoogleMap mgooglemap;
 
@@ -1318,6 +1322,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
             if (!completedate.isEmpty()){
+                layout_validating.setVisibility(View.VISIBLE);
+                txt_section_validating_secondary.setText(config.verified);
+                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green));
 
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
@@ -1412,6 +1419,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 {
                     e.printStackTrace();
                 }
+            }
+            else
+            {
+                txt_section_validating_secondary.setText(config.caution);
+                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
             }
         }catch (Exception e)
         {

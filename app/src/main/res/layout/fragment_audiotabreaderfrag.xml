@@ -61,6 +61,18 @@
 
             </RelativeLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_validating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_below="@id/layout_mediatype"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_validating"></include>
+
+            </LinearLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_controllerview"
                 android:layout_width="match_parent"

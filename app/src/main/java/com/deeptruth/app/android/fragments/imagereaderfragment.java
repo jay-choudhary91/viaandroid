@@ -169,6 +169,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_date;
     @BindView(R.id.layout_time)
     LinearLayout layout_time;
+    @BindView(R.id.layout_validating)
+    LinearLayout layout_validating;
+    @BindView(R.id.txt_section_validating_secondary)
+    TextView txt_section_validating_secondary;
+
 
     private String imageurl = null;
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
@@ -785,6 +790,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
 
                     if (!completedate.isEmpty()){
+                        layout_validating.setVisibility(View.VISIBLE);
+                        txt_section_validating_secondary.setText(config.verified);
+                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green));
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
                         if(metricmainarraylist.size()>0){
@@ -874,6 +882,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         {
                             e.printStackTrace();
                         }
+                    }
+                    else
+                    {
+                        txt_section_validating_secondary.setText(config.caution);
+                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                     }
                 }catch (Exception e)
                 {
