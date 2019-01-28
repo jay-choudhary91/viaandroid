@@ -2405,7 +2405,7 @@ public class common {
             encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             encryptionstring.setSpan(new RelativeSizeSpan(1.1f),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             txt_encryption.setText(encryptionstring);
-            
+
     }
 
     public static String filesize(String imageurl) {
