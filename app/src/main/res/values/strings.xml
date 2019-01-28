@@ -186,5 +186,5 @@
     <string name="language">Language</string>
     <string name="uptime">Phone UpTime</string>
     <string name="battery">Battery</string>
-
+    <string name="type_of_chart">Type of Chart:</string>
 </resources>
