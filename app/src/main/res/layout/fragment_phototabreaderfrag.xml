@@ -124,7 +124,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:src="@drawable/ic_arrow_left"
+                            android:src="@drawable/handle_left_arrow"
                             />
 
                         <LinearLayout
