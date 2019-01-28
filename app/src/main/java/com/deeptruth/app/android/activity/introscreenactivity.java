@@ -66,7 +66,7 @@ public class introscreenactivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+      //  requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_introactivity2);
         xdata.getinstance().saveSetting(xdata.developermode,"");
 
@@ -281,7 +281,7 @@ public class introscreenactivity extends AppCompatActivity {
             return Integer.MAX_VALUE;
         }
     }
-    @Override
+   /* @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
@@ -292,6 +292,6 @@ public class introscreenactivity extends AppCompatActivity {
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
-    }
+    }*/
 
 }
