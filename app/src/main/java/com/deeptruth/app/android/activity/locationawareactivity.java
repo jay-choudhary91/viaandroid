@@ -91,6 +91,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -2143,32 +2144,43 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             try {
 
                 JSONArray jsonArray = new JSONArray(metricdata);
-
+                org.json.simple.JSONObject obj=new org.json.simple.JSONObject();
+                for(int i=0;i<jsonArray.length();i++)
+                {
+                    Iterator<String> myIter = jsonArray.getJSONObject(0).keys();
+                    while (myIter.hasNext()) {
+                        String key = myIter.next();
+                        String value = jsonArray.getJSONObject(0).optString(key);
+                        obj.put(key,value);
+                    }
+                }
                 JSONObject mainobject=new JSONObject();
-                finalobject=new JSONObject();
+                StringWriter out = new StringWriter();
+                obj.writeJSONString(out);
 
-                Gson userGson=new GsonBuilder().create();
+                String jsontext = out.toString();
+                String dictionaryhashvalue = md5.calculatestringtomd5(jsontext);
 
-                mainobject.put("dictionary",userGson.toJson(jsonArray.get(0)));
-                mainobject.put("sequenceno",sequenceno);
-                mainobject.put("recorddate",""+recordate);
-                mainobject.put("dictionaryhashmethod",""+hashmethod);
-                mainobject.put("sequencehashvalue",sequencehash);
-                mainobject.put("dictionaryhashvalue",""+valuehash);
                 mainobject.put("sequencedevicedate",""+sequencedevicedate);
+                mainobject.put("sequenceno",sequenceno);
                 mainobject.put("sequencehashmethod",""+hashmethod);
-
+                mainobject.put("dictionaryhashmethod",""+hashmethod);
+                mainobject.put("dictionaryhashvalue",dictionaryhashvalue);
+                mainobject.put("recorddate",""+recordate);
+                mainobject.put("dictionary",jsontext);
+                mainobject.put("sequencehashvalue",sequencehash);
                 array.put(mainobject);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
             mpairslist.put("html","0");
             mpairslist.put("key",""+finalvideokey);
             mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
             mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
 
-            mpairslist.put("sequencelist",  array);
+            mpairslist.put("sequencelist",array);
 
             final String finalSequenceno = sequenceno;
             String actiontype = "";
