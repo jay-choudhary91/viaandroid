@@ -374,6 +374,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     int position=0;
     metricmodel setmetricmodel;
+    boolean shouldshowvalidationg=false;
     int mheightview = 0;
 
     private float videoheight, videowidth;
@@ -424,6 +425,27 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             mediaseekbar.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
+                    switch(motionEvent.getAction())
+                    {
+                        case MotionEvent.ACTION_DOWN:
+                            if(shouldshowvalidationg)
+                            {
+                                shouldshowvalidationg=false;
+                                layout_progressline.setVisibility(View.GONE);
+                            }
+                            else
+                            {
+                                shouldshowvalidationg=true;
+                                layout_progressline.setVisibility(View.VISIBLE);
+                            }
+                            break;
+                        case MotionEvent.ACTION_MOVE:
+
+                            break;
+                        case MotionEvent.ACTION_UP:
+
+                            break;
+                    }
                     return false;
                 }
             });
