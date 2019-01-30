@@ -249,10 +249,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView img_compass;
     @BindView(R.id.img_audiowave)
     ImageView img_audiowave;
-    @BindView(R.id.layout_validating)
-    LinearLayout layout_validating;
-    @BindView(R.id.txt_section_validating_secondary)
-    TextView txt_section_validating_secondary;
+    @BindView(R.id.img_verified)
+    ImageView img_verified;
 
     GoogleMap mgooglemap;
 
@@ -359,14 +357,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     mProgressAtStartTracking = seekBar.getProgress();
                     if(Math.abs(mProgressAtStartTracking - seekBar.getProgress()) <= SENSITIVITY){
                         // react to thumb click
-                        if(layout_validating.getVisibility() == View.VISIBLE)
-                        {
-                            layout_validating.setVisibility(View.GONE);
-                        }
-                        else
-                        {
-                            layout_validating.setVisibility(View.VISIBLE);
-                        }
+
                     }
                 }
 
@@ -472,9 +463,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             loadmap();
             setmetriceshashesdata();
             setupaudiodata();
-
-            txt_section_validating_secondary.setText(config.caution);
-            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
 
             Thread thread = new Thread() {
                 public void run() {
@@ -1062,23 +1050,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
                 common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
-                txt_section_validating_secondary.setText(config.verified);
-                if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
-                {
-                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                            getactivity().getResources().getColor(R.color.green_background));
-                }
-                else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red))
-                {
-                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                            getactivity().getResources().getColor(R.color.red));
-                }
-                else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow))
-                {
-                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                            getactivity().getResources().getColor(R.color.yellow_background));
-                }
-
                 selectedmetrics = selectedmetrics + "\n";
 
                 if(scrollview_meta.getVisibility() == View.VISIBLE)
@@ -1287,7 +1258,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0){
                         if(! videoid.trim().isEmpty())
                         {
-
+                            img_verified.setVisibility(View.VISIBLE);
                             Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
                             if (metadatacursor != null && metadatacursor.getCount() > 0) {
                                 if (metadatacursor.moveToFirst()) {
