@@ -312,7 +312,7 @@
                     android:textColor="@color/black"
                     android:gravity="left"
                     app:fontType="OpenSans_Regular"
-                    android:text="100kb"
+                    android:text=""
                     />
 
             </LinearLayout>

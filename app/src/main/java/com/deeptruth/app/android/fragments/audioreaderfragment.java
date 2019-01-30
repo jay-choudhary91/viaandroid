@@ -85,6 +85,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
@@ -845,6 +846,23 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mp.seekTo(100);
             }
 
+            File file=new File(audiourl);
+            Date lastmodifieddate = new Date(file.lastModified());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(lastmodifieddate);
+            int decreaseseconds=player.getDuration()/1000;
+            calendar.add(Calendar.SECOND, -decreaseseconds);
+            Date startdate = calendar.getTime();
+            SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+            String startformatteddate=formatted.format(startdate);
+            String endformatteddate=formatted.format(lastmodifieddate);
+            final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
+            final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+            txt_starttime.setText(startformatteddate);
+            txt_endtime.setText(endformatteddate);
+            txt_title_actionbarcomposer.setText(filecreateddate);
+            txt_createdtime.setText(createdtime);
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -891,7 +909,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
+                              String color) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -909,7 +928,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,color));
             }
             else if(json instanceof JSONArray)
             {
@@ -926,7 +945,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,color));
                 }
             }
         } catch (Exception e) {
@@ -1249,6 +1268,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                         String metricdata = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metricdata"));
                                         String videostarttransactionid = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videostarttransactionid"));
                                         String metahash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metahash"));
+                                        String color = "" + metadatacursor.getString(metadatacursor.getColumnIndex("color"));
 
 
                                         //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
@@ -1265,7 +1285,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                                 model.setMetricTrackValue(value);
                                                 metricItemArraylist.add(model);
                                             }
-                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,sequencehash,metahash));
+                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,
+                                                    videostarttransactionid,sequencehash,metahash,color));
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
@@ -1335,7 +1356,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         String hashmethod = mitemlist.get(i).getHashmethod();
                         String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                         String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                        metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
+                        String color = mitemlist.get(i).getColor();
+                        metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color));
                     }
 
                 }else{
@@ -1347,8 +1369,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         String hashmethod = mitemlist.get(i).getHashmethod();
                         String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                         String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                        String color = mitemlist.get(i).getColor();
 
-                        parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
+                        parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color);
                     }
 
 
@@ -1357,25 +1380,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                     if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
 
-                        DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                        final Date startdate = format.parse(mediadate);
-                        Date enddate = format.parse(completedate);
-                        final String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(startdate);
-                        final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                        SimpleDateFormat spf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss a");
-                        final String starttime = spf.format(startdate);
-                        Log.e("starttime",starttime);
-                        final String endtime = spf.format(enddate);
-
-
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                txt_starttime.setText(starttime);
-                                txt_endtime.setText(endtime);
-                                tvtime.setText(starttime);
-                                txt_createdtime.setText(createdtime);
-                                txt_title_actionbarcomposer.setText(filecreateddate);
 
                                 if(! thumbnailurl.trim().isEmpty() && new File(thumbnailurl).exists())
                                 {

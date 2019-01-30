@@ -29,7 +29,6 @@ import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.bottombarfragment;
 import com.deeptruth.app.android.fragments.bottombarrederfrag;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
-import com.deeptruth.app.android.fragments.composervideoplayerfragment;
 import com.deeptruth.app.android.fragments.fragmentgraphicaldrawer;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.framemetricssettings;
@@ -218,7 +217,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 getcurrentfragment() instanceof imagecomposerfragment
                 || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof videoreaderfragment
-                || getcurrentfragment() instanceof composervideoplayerfragment
                 || getcurrentfragment() instanceof fragmentmedialist || getcurrentfragment() instanceof bottombarfragment
                 || getcurrentfragment() instanceof bottombarrederfrag || getcurrentfragment() instanceof audioreaderfragment
                 || getcurrentfragment() instanceof imagereaderfragment || getcurrentfragment() instanceof readermedialist
@@ -365,14 +363,6 @@ public void updateactionbar(int showHide, int color) {
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }
-        else if(fragment instanceof composervideoplayerfragment){
-            imgshareicon.setVisibility(View.VISIBLE);
-            img_menu.setVisibility(View.VISIBLE);
-            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT);
-            fragment_container.setLayoutParams(params);
-
-        }
          else if(fragment instanceof imagecomposerfragment){
              img_menu.setVisibility(View.VISIBLE);
              img_help.setVisibility(View.VISIBLE);

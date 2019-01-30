@@ -20,13 +20,15 @@ public class metadatahash
     public String sequencedevicedate="";
     public String videostarttransactionid="";
     public String serverdictionaryhash="";
+    public String color="";
 
 
     public String metahash="";
 
     public metadatahash(String id,String blockchain,String valuehash,String hashmethod,
                         String localkey,String recorddate,String metricdata,String rsequenceno,String sequencehash,String sequenceno,
-                        String serverdate,String sequencedevicedate,String videostarttransactionid,String serverdictionaryhash,String metahash)
+                        String serverdate,String sequencedevicedate,String videostarttransactionid,String serverdictionaryhash,
+                        String metahash,String color)
     {
         setId(id);
         setBlockchain(blockchain);
@@ -43,6 +45,15 @@ public class metadatahash
         setVideostarttransactionid(videostarttransactionid);
         setServerdictionaryhash(serverdictionaryhash);
         setMetahash(metahash);
+        setColor(color);
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public String getId() {

@@ -104,6 +104,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
@@ -1214,7 +1215,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 String hashmethod = mitemlist.get(i).getHashmethod();
                                 String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
+                                String color = mitemlist.get(i).getColor();
+                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color));
                             }
 
                         }else{
@@ -1226,10 +1228,17 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 String hashmethod = mitemlist.get(i).getHashmethod();
                                 String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
+                                String color = mitemlist.get(i).getColor();
+                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color);
                             }
 
-                            if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
+                            if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null))
+                            {
+
+                                /*java.text.DateFormat df = new java.text.SimpleDateFormat("hh:mm:ss");
+                                java.util.Date date1 = df.parse("18:40:10");
+                                java.util.Date date2 = df.parse("19:05:15");
+                                java.util.Date date3 = date2.getTime() - date1.getTime();
 
                                 DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                                 final Date startdate = format.parse(mediadate);
@@ -1239,18 +1248,19 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 SimpleDateFormat spf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss a");
                                 final String starttime = spf.format(startdate);
                                 Log.e("starttime",starttime);
-                                final String endtime = spf.format(enddate);
+                                final String endtime = spf.format(enddate);*/
 
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         txt_starttime.setText(starttime);
                                         txt_endtime.setText(endtime);
-                                        tvtime.setText(starttime);
-                                        txt_createdtime.setText(createdtime);
+
+                                        *//*tvtime.setText(starttime);
+                                        txt_createdtime.setText(createdtime);*//*
                                         txt_title_actionbarcomposer.setText(filecreateddate);
                                     }
-                                });
+                                });*/
                             }
                             if(!medianame.isEmpty()){
                                 int index =  medianame.lastIndexOf('.');
@@ -1311,7 +1321,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }).start();
     }
 
-    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,String color) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -1329,7 +1339,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,color));
             }
             else if(json instanceof JSONArray)
             {
@@ -1346,7 +1356,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,color));
                 }
             }
         } catch (Exception e) {
@@ -1418,6 +1428,23 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 {
                     mediaPlayer.seekTo(100);
                 }
+
+                File file=new File(mediafilepath);
+                Date lastmodifieddate = new Date(file.lastModified());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(lastmodifieddate);
+                int decreaseseconds=player.getDuration()/1000;
+                calendar.add(Calendar.SECOND, -decreaseseconds);
+                Date startdate = calendar.getTime();
+                SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+                String startformatteddate=formatted.format(startdate);
+                String endformatteddate=formatted.format(lastmodifieddate);
+                final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
+                final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+                txt_starttime.setText(startformatteddate);
+                txt_endtime.setText(endformatteddate);
+                txt_title_actionbarcomposer.setText(filecreateddate);
+                txt_createdtime.setText(createdtime);
 
             }catch (Exception e)
             {

@@ -15,17 +15,19 @@ public class arraycontainer implements Serializable {
     String videostarttransactionid = "" ;
     String valuehash = "";
     String metahash ="";
+    String color ="";
 
 
 
     public arraycontainer(ArrayList<metricmodel> metricItemArraylist, String hashmethod,String videostarttransactionid,
-                          String valuehash,String metahash)
+                          String valuehash,String metahash,String color)
     {
         setMetricItemArraylist(metricItemArraylist);
         setHashmethod(hashmethod);
         setVideostarttransactionid(videostarttransactionid);
         setValuehash(valuehash);
         setMetahash(metahash);
+        setColor(color);
 
     }
 
@@ -34,13 +36,14 @@ public class arraycontainer implements Serializable {
     }
 
     public arraycontainer( String hashmethod,String videostarttransactionid,
-                          String valuehash,String metahash)
+                          String valuehash,String metahash,String color)
     {
         setMetricItemArraylist(metricItemArraylist);
         setHashmethod(hashmethod);
         setVideostarttransactionid(videostarttransactionid);
         setValuehash(valuehash);
         setMetahash(metahash);
+        setColor(color);
     }
 
     public ArrayList<metricmodel> getMetricItemArraylist() {
@@ -50,6 +53,14 @@ public class arraycontainer implements Serializable {
     public void setMetricItemArraylist(ArrayList<metricmodel> metricItemArraylist) {
         this.metricItemArraylist = metricItemArraylist;
 
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public boolean isIsupdated() {

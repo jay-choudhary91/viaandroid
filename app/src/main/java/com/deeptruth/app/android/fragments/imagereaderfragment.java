@@ -71,9 +71,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
@@ -803,7 +805,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 String hashmethod = mitemlist.get(i).getHashmethod();
                                 String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash));
+                                String color = mitemlist.get(i).getColor();
+                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,
+                                        sequencehash,serverdictionaryhash,color));
                             }
 
                         }else{
@@ -815,29 +819,22 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 String hashmethod = mitemlist.get(i).getHashmethod();
                                 String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash);
+                                String color = mitemlist.get(i).getColor();
+                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash
+                                ,color);
                             }
 
                             if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
 
-                                DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                final Date startdate = format.parse(mediadate);
-                                Date enddate = format.parse(completedate);
-                                final String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(startdate);
-                                final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                SimpleDateFormat spf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss a");
-                                final String starttime = spf.format(startdate);
-                                Log.e("starttime",starttime);
-                                final String endtime = spf.format(enddate);
+                                File file=new File(imageurl);
+                                Date lastmodifieddate = new Date(file.lastModified());
+                                SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
+                                SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss a");
+                                tvdate.setText(formatteddate.format(lastmodifieddate));
+                                tvtime.setText(formattedtime.format(lastmodifieddate));
+                                txt_title_actionbarcomposer.setText(formatteddate.format(lastmodifieddate));
+                                txt_createdtime.setText(formattedtime.format(lastmodifieddate));
 
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        tvtime.setText(starttime);
-                                        txt_createdtime.setText(createdtime);
-                                        txt_title_actionbarcomposer.setText(filecreateddate);
-                                    }
-                                });
                             }
                             if(!medianame.isEmpty()){
                                 int index =  medianame.lastIndexOf('.');
@@ -896,7 +893,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }).start();
     }
 
-    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash) {
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash
+            ,String color) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -914,7 +912,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,
+                        hashvalue,metahash,color));
             }
             else if(json instanceof JSONArray)
             {
@@ -931,7 +930,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,
+                            hashvalue,metahash,color));
                 }
             }
         } catch (Exception e) {

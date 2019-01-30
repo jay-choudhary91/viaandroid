@@ -557,42 +557,6 @@ public class databasemanager {
 
     //=========================  Methods for reader implementation
 
-
-    public ArrayList<metadatahash> getmediametadata(String firsthash) {
-        ArrayList<metadatahash> mitemlist=new ArrayList<>();
-        String localkey=getlocalkeybyfirsthash(firsthash);
-        if(! localkey.trim().isEmpty())
-        {
-            Cursor cur=null;
-            try {
-                lock.lock();
-                String sql = "SELECT * FROM tblmetadata where localkey = '"+localkey+"'";
-                if(mDb == null)
-                    mDb = mDbHelper.getReadableDatabase();
-                cur = mDb.rawQuery(sql, null);
-                if (cur.moveToFirst())
-                {
-                    do{
-                        mitemlist.add(new metadatahash(cur.getString(cur.getColumnIndex("id")),cur.getString(cur.getColumnIndex("blockchain")),
-                                cur.getString(cur.getColumnIndex("valuehash")),cur.getString(cur.getColumnIndex("hashmethod")),
-                                cur.getString(cur.getColumnIndex("localkey")),cur.getString(cur.getColumnIndex("recordate")),
-                                cur.getString(cur.getColumnIndex("metricdata")),cur.getString(cur.getColumnIndex("rsequenceno")),
-                                cur.getString(cur.getColumnIndex("sequencehash")),cur.getString(cur.getColumnIndex("sequenceno")),
-                                cur.getString(cur.getColumnIndex("serverdate")),cur.getString(cur.getColumnIndex("sequencedevicedate")),
-                                cur.getString(cur.getColumnIndex("videostarttransactionid")),cur.getString(cur.getColumnIndex("serverdictionaryhash")),
-                                cur.getString(cur.getColumnIndex("metahash"))));
-                    }while(cur.moveToNext());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            finally {
-                lock.unlock();
-            }
-        }
-        return  mitemlist;
-    }
-
     public ArrayList<metadatahash> getmediametadatabyfilename(String filename) {
         ArrayList<metadatahash> mitemlist=new ArrayList<>();
         String localkey=getlocalkeybyfilename(filename);
@@ -615,7 +579,7 @@ public class databasemanager {
                                 cur.getString(cur.getColumnIndex("sequencehash")),cur.getString(cur.getColumnIndex("sequenceno")),
                                 cur.getString(cur.getColumnIndex("serverdate")),cur.getString(cur.getColumnIndex("sequencedevicedate")),
                                 cur.getString(cur.getColumnIndex("videostarttransactionid")),cur.getString(cur.getColumnIndex("serverdictionaryhash")),
-                                cur.getString(cur.getColumnIndex("metahash"))));
+                                cur.getString(cur.getColumnIndex("metahash")),cur.getString(cur.getColumnIndex("color"))));
 
                     }while(cur.moveToNext());
                 }
