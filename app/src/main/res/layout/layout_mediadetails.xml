@@ -76,6 +76,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
+            android:layout_marginTop="@dimen/margin_10dp"
             android:layout_height="match_parent">
 
             <LinearLayout
@@ -390,7 +391,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.70"
                     android:layout_marginRight="10dp"
-                    android:layout_marginBottom="@dimen/margin_5dp"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/edittext_bg">
 
                     <EditText
