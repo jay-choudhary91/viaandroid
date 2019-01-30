@@ -421,6 +421,13 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             edt_medianotes.setFocusable(false);
             edt_medianotes.setFocusableInTouchMode(false);
 
+            mediaseekbar.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    return false;
+                }
+            });
+
             /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
                     R.drawable.custom_thumb));*/
 
