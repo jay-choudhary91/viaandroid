@@ -1080,14 +1080,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
 
                 selectedmetrics = selectedmetrics + "\n";
-                for (int j = 0; j < metricItemArraylist.size(); j++) {
-                    selectedmetrics = selectedmetrics + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
-                            metricItemArraylist.get(j).getMetricTrackValue();
 
-                    common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                            metricItemArraylist.get(j).getMetricTrackValue(), true);
+                if(scrollview_meta.getVisibility() == View.VISIBLE)
+                {
+                    for (int j = 0; j < metricItemArraylist.size(); j++) {
+                        selectedmetrics = selectedmetrics + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
+                                metricItemArraylist.get(j).getMetricTrackValue();
 
-                    setmetadatavalue(metricItemArraylist.get(j));
+                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                metricItemArraylist.get(j).getMetricTrackValue(), true);
+
+                        setmetadatavalue(metricItemArraylist.get(j));
+                    }
                 }
                 selectedmetrics = selectedmetrics + "\n";
             }

@@ -1543,18 +1543,22 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                       ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
 
-                      for(int j=0;j<metricItemArraylist.size();j++)
+                      if(scrollview_meta.getVisibility() == View.VISIBLE)
                       {
-                          common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                  metricItemArraylist.get(j).getMetricTrackValue(),true);
+                          for(int j=0;j<metricItemArraylist.size();j++)
+                          {
+                              common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                      metricItemArraylist.get(j).getMetricTrackValue(),true);
 
-                          setmetadatavalue(metricItemArraylist.get(j));
+                              setmetadatavalue(metricItemArraylist.get(j));
+                          }
                       }
+
                   }
                   setmetricesgraphicaldata();
                 }
 
-                myHandler.postDelayed(this, 3000);
+                myHandler.postDelayed(this, 1500);
             }
         };
         myHandler.post(myRunnable);
