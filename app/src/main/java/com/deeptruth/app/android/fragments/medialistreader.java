@@ -1187,7 +1187,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                             @Override
                             public void run() {
                                 progressdialog.dismisswaitdialog();
-                                Toast.makeText(getActivity(),"Video upload successfully!",Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(getActivity(),"Video upload successfully!",Toast.LENGTH_SHORT).show();
                             }
                         });
 
