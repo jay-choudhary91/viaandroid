@@ -374,7 +374,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     int position=0;
     metricmodel setmetricmodel;
-    boolean shouldshowvalidationg=false;
     int mheightview = 0;
 
     private float videoheight, videowidth;
@@ -422,41 +421,16 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             edt_medianotes.setFocusable(false);
             edt_medianotes.setFocusableInTouchMode(false);
 
-            mediaseekbar.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    switch(motionEvent.getAction())
-                    {
-                        case MotionEvent.ACTION_DOWN:
-                            if(shouldshowvalidationg)
-                            {
-                                shouldshowvalidationg=false;
-                                layout_progressline.setVisibility(View.GONE);
-                            }
-                            else
-                            {
-                                shouldshowvalidationg=true;
-                                layout_progressline.setVisibility(View.VISIBLE);
-                            }
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-
-                            break;
-                        case MotionEvent.ACTION_UP:
-
-                            break;
-                    }
-                    return false;
-                }
-            });
+            txt_section_validating_secondary.setText(config.caution);
+            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
 
             /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
                     R.drawable.custom_thumb));*/
 
             mediaseekbar.setThumbOffset(-0);
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                long seeked_progess;
-
+                private int mProgressAtStartTracking=0;
+                private final int SENSITIVITY=0;
                 @Override
                 public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser)
                 {
@@ -507,10 +481,17 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    if(player!=null)
-                    {
-                        /*player.pause();
-                        playpausebutton.setImageResource(R.drawable.play);*/
+                    mProgressAtStartTracking = seekBar.getProgress();
+                    if(Math.abs(mProgressAtStartTracking - seekBar.getProgress()) <= SENSITIVITY){
+                        // react to thumb click
+                        if(layout_validating.getVisibility() == View.VISIBLE)
+                        {
+                            layout_validating.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            layout_validating.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
@@ -1232,9 +1213,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                     if (!completedate.isEmpty()){
 
-                        layout_validating.setVisibility(View.VISIBLE);
-                        txt_section_validating_secondary.setText(config.verified);
-                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green_background));
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
                         if(metricmainarraylist.size()>0){
 
@@ -1261,36 +1239,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color);
                             }
 
-                            if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null))
-                            {
-
-                                /*java.text.DateFormat df = new java.text.SimpleDateFormat("hh:mm:ss");
-                                java.util.Date date1 = df.parse("18:40:10");
-                                java.util.Date date2 = df.parse("19:05:15");
-                                java.util.Date date3 = date2.getTime() - date1.getTime();
-
-                                DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                final Date startdate = format.parse(mediadate);
-                                Date enddate = format.parse(completedate);
-                                final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
-                                final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
-                                final String starttime = spf.format(startdate);
-                                Log.e("starttime",starttime);
-                                final String endtime = spf.format(enddate);*/
-
-                                /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        txt_starttime.setText(starttime);
-                                        txt_endtime.setText(endtime);
-
-                                        *//*tvtime.setText(starttime);
-                                        txt_createdtime.setText(createdtime);*//*
-                                        txt_title_actionbarcomposer.setText(filecreateddate);
-                                    }
-                                });*/
-                            }
                             if(!medianame.isEmpty()){
                                 int index =  medianame.lastIndexOf('.');
                                 if(index >=0)
@@ -1336,11 +1284,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         {
                             e.printStackTrace();
                         }
-                    }
-                    else
-                    {
-                        txt_section_validating_secondary.setText(config.caution);
-                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                     }
                 }catch (Exception e)
                 {
@@ -1579,22 +1522,43 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                       common.setspannable(getResources().getString(R.string.block_number)," "+ arraycontainerformetric.getValuehash(), txt_blocknumber);
                       common.setspannable(getResources().getString(R.string.metrichash)," "+arraycontainerformetric.getMetahash(), txt_metahash);
 
+                      txt_section_validating_secondary.setText(config.verified);
+                      if(arraycontainerformetric.getColor().equalsIgnoreCase(config.color_green))
+                      {
+                          txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                  getactivity().getResources().getColor(R.color.green_background));
+                      }
+                      else if(arraycontainerformetric.getColor().equalsIgnoreCase(config.color_red))
+                      {
+                          txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                  getactivity().getResources().getColor(R.color.red));
+                      }
+                      else if(arraycontainerformetric.getColor().equalsIgnoreCase(config.color_yellow))
+                      {
+                          txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                  getactivity().getResources().getColor(R.color.yellow_background));
+                      }
+
                       double latt=0,longg=0;
 
                       ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
 
-                      for(int j=0;j<metricItemArraylist.size();j++)
+                      if(scrollview_meta.getVisibility() == View.VISIBLE)
                       {
-                          common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                  metricItemArraylist.get(j).getMetricTrackValue(),true);
+                          for(int j=0;j<metricItemArraylist.size();j++)
+                          {
+                              common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                      metricItemArraylist.get(j).getMetricTrackValue(),true);
 
-                          setmetadatavalue(metricItemArraylist.get(j));
+                              setmetadatavalue(metricItemArraylist.get(j));
+                          }
                       }
+
                   }
                   setmetricesgraphicaldata();
                 }
 
-                myHandler.postDelayed(this, 3000);
+                myHandler.postDelayed(this, 1500);
             }
         };
         myHandler.post(myRunnable);

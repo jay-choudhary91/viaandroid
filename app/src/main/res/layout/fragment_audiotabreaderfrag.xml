@@ -61,18 +61,6 @@
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_validating"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_below="@id/layout_mediatype"
-                android:orientation="vertical">
-
-                <include layout="@layout/layout_validating"></include>
-
-            </LinearLayout>
-
             <RelativeLayout
                 android:id="@+id/rl_controllerview"
                 android:layout_width="match_parent"
@@ -115,6 +103,17 @@
                         android:contentDescription="@string/description"
                         android:layout_centerHorizontal="true"
                         android:layout_margin="10dp"
+                        />
+
+                    <com.deeptruth.app.android.utils.circularImageview
+                        android:id="@+id/img_verified"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="10dp"
+                        android:visibility="gone"
+                        android:background="@drawable/audiochecked"
                         />
 
                 </RelativeLayout>

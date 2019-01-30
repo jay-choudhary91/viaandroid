@@ -97,6 +97,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
 
+        config.selectedmediatype=0;
        // updateactionbar(0,getResources().getColor(R.color.dark_blue_solid));
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {

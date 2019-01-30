@@ -249,10 +249,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView img_compass;
     @BindView(R.id.img_audiowave)
     ImageView img_audiowave;
-    @BindView(R.id.layout_validating)
-    LinearLayout layout_validating;
-    @BindView(R.id.txt_section_validating_secondary)
-    TextView txt_section_validating_secondary;
+    @BindView(R.id.img_verified)
+    ImageView img_verified;
 
     GoogleMap mgooglemap;
 
@@ -347,8 +345,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                long seeked_progess;
-
+                private int mProgressAtStartTracking=0;
+                private final int SENSITIVITY=0;
                 @Override
                 public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -356,16 +354,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    if(player!=null)
-                    {
-                        player.pause();
-                        playpausebutton.setImageResource(R.drawable.play_btn);
+                    mProgressAtStartTracking = seekBar.getProgress();
+                    if(Math.abs(mProgressAtStartTracking - seekBar.getProgress()) <= SENSITIVITY){
+                        // react to thumb click
+
                     }
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-
                     player.seekTo(seekBar.getProgress());
                 }
             });
@@ -1054,14 +1051,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
                 selectedmetrics = selectedmetrics + "\n";
-                for (int j = 0; j < metricItemArraylist.size(); j++) {
-                    selectedmetrics = selectedmetrics + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
-                            metricItemArraylist.get(j).getMetricTrackValue();
 
-                    common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                            metricItemArraylist.get(j).getMetricTrackValue(), true);
+                if(scrollview_meta.getVisibility() == View.VISIBLE)
+                {
+                    for (int j = 0; j < metricItemArraylist.size(); j++) {
+                        selectedmetrics = selectedmetrics + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
+                                metricItemArraylist.get(j).getMetricTrackValue();
 
-                    setmetadatavalue(metricItemArraylist.get(j));
+                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                metricItemArraylist.get(j).getMetricTrackValue(), true);
+
+                        setmetadatavalue(metricItemArraylist.get(j));
+                    }
                 }
                 selectedmetrics = selectedmetrics + "\n";
             }
@@ -1257,7 +1258,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0){
                         if(! videoid.trim().isEmpty())
                         {
-
+                            img_verified.setVisibility(View.VISIBLE);
                             Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
                             if (metadatacursor != null && metadatacursor.getCount() > 0) {
                                 if (metadatacursor.moveToFirst()) {
@@ -1343,9 +1344,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
             if (!completedate.isEmpty()){
-                layout_validating.setVisibility(View.VISIBLE);
-                txt_section_validating_secondary.setText(config.verified);
-                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green_background));
 
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
@@ -1429,8 +1427,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
             else
             {
-                txt_section_validating_secondary.setText(config.caution);
-                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+
             }
         }catch (Exception e)
         {

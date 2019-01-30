@@ -151,6 +151,10 @@ public class config {
     public static final String item_video="VIDEO";
     public static final String item_audio="AUDIO";
 
+    public static final String color_red="red";
+    public static final String color_yellow="yellow";
+    public static final String color_green="green";
+
     public static final String caution="CAUTION";
     public static final String verified="VERIFIED";
 
