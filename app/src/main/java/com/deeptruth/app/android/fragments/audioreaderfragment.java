@@ -347,8 +347,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                long seeked_progess;
-
+                private int mProgressAtStartTracking=0;
+                private final int SENSITIVITY=0;
                 @Override
                 public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -356,16 +356,22 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {
-                    if(player!=null)
-                    {
-                        player.pause();
-                        playpausebutton.setImageResource(R.drawable.play_btn);
+                    mProgressAtStartTracking = seekBar.getProgress();
+                    if(Math.abs(mProgressAtStartTracking - seekBar.getProgress()) <= SENSITIVITY){
+                        // react to thumb click
+                        if(layout_validating.getVisibility() == View.VISIBLE)
+                        {
+                            layout_validating.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            layout_validating.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
-
                     player.seekTo(seekBar.getProgress());
                 }
             });
@@ -466,6 +472,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             loadmap();
             setmetriceshashesdata();
             setupaudiodata();
+
+            txt_section_validating_secondary.setText(config.caution);
+            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
 
             Thread thread = new Thread() {
                 public void run() {
@@ -1053,6 +1062,23 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
                 common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
+                txt_section_validating_secondary.setText(config.verified);
+                if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
+                {
+                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                            getactivity().getResources().getColor(R.color.green_background));
+                }
+                else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red))
+                {
+                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                            getactivity().getResources().getColor(R.color.red));
+                }
+                else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow))
+                {
+                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                            getactivity().getResources().getColor(R.color.yellow_background));
+                }
+
                 selectedmetrics = selectedmetrics + "\n";
                 for (int j = 0; j < metricItemArraylist.size(); j++) {
                     selectedmetrics = selectedmetrics + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
@@ -1343,9 +1369,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
             if (!completedate.isEmpty()){
-                layout_validating.setVisibility(View.VISIBLE);
-                txt_section_validating_secondary.setText(config.verified);
-                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green_background));
 
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
@@ -1429,8 +1452,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
             else
             {
-                txt_section_validating_secondary.setText(config.caution);
-                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+
             }
         }catch (Exception e)
         {

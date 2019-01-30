@@ -397,6 +397,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             });
 
+            txt_section_validating_secondary.setText(config.caution);
+            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+
             loadmap();
             setmetriceshashesdata();
             setupimagedata();
@@ -688,6 +691,23 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                /* graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
                         metricmainarraylist.get(0).getValuehash(), metricmainarraylist.get(0).getMetahash());
 */
+                txt_section_validating_secondary.setText(config.verified);
+                if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
+                {
+                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                            getactivity().getResources().getColor(R.color.green_background));
+                }
+                else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red))
+                {
+                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                            getactivity().getResources().getColor(R.color.red));
+                }
+                else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow))
+                {
+                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                            getactivity().getResources().getColor(R.color.yellow_background));
+                }
+
                 common.setgraphicalblockchainvalue(config.blockchainid,metricmainarraylist.get(0).getVideostarttransactionid(),true);
                 common.setgraphicalblockchainvalue(config.hashformula,metricmainarraylist.get(0).getHashmethod(),true);
                 common.setgraphicalblockchainvalue(config.datahash,metricmainarraylist.get(0).getValuehash(),true);
@@ -792,9 +812,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
 
                     if (!completedate.isEmpty()){
-                        layout_validating.setVisibility(View.VISIBLE);
-                        txt_section_validating_secondary.setText(config.verified);
-                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green_background));
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
                         if(metricmainarraylist.size()>0){
@@ -879,11 +896,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         {
                             e.printStackTrace();
                         }
-                    }
-                    else
-                    {
-                        txt_section_validating_secondary.setText(config.caution);
-                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                     }
                 }catch (Exception e)
                 {
