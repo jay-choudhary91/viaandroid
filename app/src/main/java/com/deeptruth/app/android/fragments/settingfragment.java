@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +30,9 @@ public class settingfragment extends basefragment implements View.OnClickListene
     TextView txt_upgrade,txt_privacy,txt_help;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
+    @BindView(R.id.setting_webview)
+    WebView webview;
+    String url = "http://console.dev.crypto-servers.com/inapp-settings.php";
     LinearLayout layout_upgrade,layout_privacy,layout_help;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +52,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
           txt_help.setText(getResources().getString(R.string.faq));
             img_arrow_back.setOnClickListener(this);
 
+            webview.loadUrl(url);
 
          //   gethelper().updateheader("Settings");
         }

@@ -35,6 +35,7 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
+                    android:visibility="gone"
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/handle_left_arrow"
                     />

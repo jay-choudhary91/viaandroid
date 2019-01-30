@@ -14,6 +14,7 @@
     <com.deeptruth.app.android.views.customfonttextview
         android:id="@+id/text_encryption"
         app:fontType="Comfortaa-Regular"
+        android:layout_marginTop="20dp"
         style="@style/txt_drawer_graphical_title"
         android:text="@string/encryption_information" />
 
@@ -85,13 +86,14 @@
             android:id="@+id/layout_datalatency"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:visibility="visible"
             android:orientation="vertical">
 
                 <com.deeptruth.app.android.views.customfonttextview
                     android:id="@+id/text_dataletency"
                     app:fontType="OpenSans_Regular"
+                    android:textSize="15dp"
                     style="@style/txt_drawer_graphical_title"
                     android:text="@string/type_of_chart" />
 
@@ -99,6 +101,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
+                    android:paddingRight="5dp"
+                    android:paddingLeft="5dp"
                     android:orientation="horizontal"
                     android:background="@color/white">
 

@@ -13,10 +13,18 @@
         android:layout_height="match_parent">
 
         <include layout="@layout/actionbar_settings"></include>
+
+        <WebView
+            android:layout_width="match_parent"
+            android:id="@+id/setting_webview"
+            android:layout_height="match_parent">
+
+        </WebView>
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_weight="3"
+            android:visibility="gone"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="@dimen/margin_left"
             android:layout_marginRight="@dimen/margin_right"
@@ -115,6 +123,7 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/bottom_margin"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:layout_weight="1"
             android:layout_height="0dp">
 

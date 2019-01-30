@@ -2462,5 +2462,15 @@ public class common {
         return buf.toString();
     }
 
+    /*public static void setvideoquality(String value , TextView text){
+        String textvalue =  value;
+        Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
+        Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
+        SpannableStringBuilder encryptionstring=new SpannableStringBuilder(textvalue);
+        encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,textvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        encryptionstring.setSpan(new RelativeSizeSpan(1.1f),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txt_encryption.setText(encryptionstring);
+    }*/
 
 }
