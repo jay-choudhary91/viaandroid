@@ -1258,7 +1258,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0){
                         if(! videoid.trim().isEmpty())
                         {
-                            img_verified.setVisibility(View.VISIBLE);
                             Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
                             if (metadatacursor != null && metadatacursor.getCount() > 0) {
                                 if (metadatacursor.moveToFirst()) {
@@ -1344,7 +1343,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
 
             if (!completedate.isEmpty()){
-
+                img_verified.setVisibility(View.VISIBLE);
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
 

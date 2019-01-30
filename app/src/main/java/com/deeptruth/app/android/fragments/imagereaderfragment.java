@@ -691,6 +691,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                /* graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
                         metricmainarraylist.get(0).getValuehash(), metricmainarraylist.get(0).getMetahash());
 */
+                layout_validating.setVisibility(View.VISIBLE);
                 txt_section_validating_secondary.setText(config.verified);
                 if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
                 {
@@ -706,6 +707,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 {
                     txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
                             getactivity().getResources().getColor(R.color.yellow_background));
+                }
+                else
+                {
+                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                            getactivity().getResources().getColor(R.color.green_background));
                 }
 
                 common.setgraphicalblockchainvalue(config.blockchainid,metricmainarraylist.get(0).getVideostarttransactionid(),true);

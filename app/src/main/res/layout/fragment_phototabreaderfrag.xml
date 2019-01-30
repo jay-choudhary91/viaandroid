@@ -68,17 +68,7 @@
 
                 </RelativeLayout>
 
-                    <LinearLayout
-                        android:id="@+id/layout_validating"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_below="@id/layout_mediatype"
-                        android:orientation="vertical">
 
-                        <include layout="@layout/layout_validating"></include>
-
-                    </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -102,6 +92,19 @@
                        android:padding="10dp"
                        android:layout_marginRight="5dp"
                        android:layout_marginBottom="5dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/layout_validating"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/layout_validating"></include>
+
+                    </LinearLayout>
 
                 </RelativeLayout>
 
