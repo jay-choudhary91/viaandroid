@@ -30,113 +30,117 @@
     <RelativeLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:padding="5dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:padding="15dp"
         android:background="@drawable/gradient_fade_dark_blue"
         android:animateLayoutChanges="true"
         >
-
-        <ImageView
-            android:id="@+id/img_mediathumbnail"
-            android:layout_width="60dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
-            android:scaleType="centerCrop"
-            android:layout_centerVertical="true"/>
-
         <RelativeLayout
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/layout_recorder"
-            android:background="@drawable/shape_recorder_off"
-            android:layout_centerInParent="true"
-            >
-            <com.deeptruth.app.android.utils.AnimatableCardView
-                android:id="@+id/base_view"
+            android:id="@+id/layout_mediatype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Bold"
+                android:id="@+id/txt_mediatype_b"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textSize="13sp"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                app:cardElevation="0dp">
+                android:textColor="@color/wave_blue"
+                android:text="PHOTO"
+                />
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:id="@+id/img_video_capture"
-                    android:src="@drawable/recorderimage"
-                    />
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                android:id="@+id/txt_mediatype_a"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="13sp"
+                android:padding="8dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/txt_mediatype_b"
+                android:textColor="@color/white"
+                android:text="VIDEO"
+                />
 
-            </com.deeptruth.app.android.utils.AnimatableCardView>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="Comfortaa-Regular"
+                android:id="@+id/txt_mediatype_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:padding="8dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/txt_mediatype_b"
+                android:textSize="13sp"
+                android:textColor="@color/white"
+                android:text="AUDIO"
+                />
 
         </RelativeLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/img_rotate_camera"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_camera_flip_icon"
-            />
-
-    </RelativeLayout>
+        <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_below="@+id/layout_mediatype"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/img_mediathumbnail"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:scaleType="centerCrop"
+        android:layout_centerVertical="true"/>
 
     <RelativeLayout
-        android:id="@+id/layout_mediatype"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/layout_bottom"
-        android:orientation="horizontal">
-
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="Comfortaa-Bold"
-            android:id="@+id/txt_mediatype_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textSize="13sp"
-            android:layout_centerHorizontal="true"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/layout_recorder"
+        android:background="@drawable/shape_recorder_off"
+        android:layout_centerInParent="true"
+        >
+        <com.deeptruth.app.android.utils.AnimatableCardView
+            android:id="@+id/base_view"
             android:layout_centerVertical="true"
-            android:textColor="@color/wave_blue"
-            android:text="PHOTO"
-            />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            app:cardElevation="0dp">
 
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="Comfortaa-Regular"
-            android:id="@+id/txt_mediatype_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textSize="13sp"
-            android:padding="10dp"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/txt_mediatype_b"
-            android:textColor="@color/white"
-            android:text="VIDEO"
-            />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:id="@+id/img_video_capture"
+                android:src="@drawable/recorderimage"
+                />
 
-
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="Comfortaa-Regular"
-            android:id="@+id/txt_mediatype_c"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:padding="10dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/txt_mediatype_b"
-            android:textSize="13sp"
-            android:textColor="@color/white"
-            android:text="AUDIO"
-            />
+        </com.deeptruth.app.android.utils.AnimatableCardView>
 
     </RelativeLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_rotate_camera"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_camera_flip_icon"
+        />
+        </RelativeLayout>
+     </RelativeLayout>
+
 
 
     <LinearLayout
