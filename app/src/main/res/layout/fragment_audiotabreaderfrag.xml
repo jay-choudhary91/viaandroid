@@ -109,8 +109,8 @@
                         />
                     <com.deeptruth.app.android.utils.circularImageview
                         android:id="@+id/btn_playpause"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:contentDescription="@string/description"
                         android:layout_centerHorizontal="true"

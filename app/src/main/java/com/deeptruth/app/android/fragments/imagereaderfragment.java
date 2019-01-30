@@ -823,17 +823,18 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 DateFormat format = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                                 final Date startdate = format.parse(mediadate);
                                 Date enddate = format.parse(completedate);
-                                final String filecreateddate = new SimpleDateFormat("yyyy-mm-dd").format(startdate);
+                                final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
                                 final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                SimpleDateFormat spf = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss a");
-                                final String starttime = spf.format(startdate);
-                                Log.e("starttime",starttime);
+                                SimpleDateFormat spf = new SimpleDateFormat("MM/dd/yyyy");
+                                final String date = spf.format(startdate);
+                                Log.e("starttime",date);
                                 final String endtime = spf.format(enddate);
 
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        tvtime.setText(starttime);
+                                        tvdate.setText(date);
+                                        tvtime.setText(createdtime);
                                         txt_createdtime.setText(createdtime);
                                         txt_title_actionbarcomposer.setText(filecreateddate);
                                     }
