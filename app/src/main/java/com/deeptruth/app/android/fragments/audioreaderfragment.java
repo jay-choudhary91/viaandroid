@@ -1324,7 +1324,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             if (!completedate.isEmpty()){
                 layout_validating.setVisibility(View.VISIBLE);
                 txt_section_validating_secondary.setText(config.verified);
-                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green));
+                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.green_background));
 
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){

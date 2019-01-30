@@ -1479,8 +1479,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            mdbstartitemcontainer.add(new dbitemcontainer(json,"video","Local storage path", mediakey,"","","0","0",
-                    config.type_video_start,devicestartdate,devicestartdate,timeoffset,""));
+            if(mdbstartitemcontainer.size() == 0)
+            {
+                mdbstartitemcontainer.add(new dbitemcontainer(json,"video","Local storage path", mediakey,"","","0","0",
+                        config.type_video_start,devicestartdate,devicestartdate,timeoffset,""));
+                Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -141,7 +141,8 @@ public class databasemanager {
     public void insertframemetricesinfo(String blockchain,String valuehash,String hashmethod,String localkey,
                                         String metricdata,String recordate,String rsequenceno,String sequencehash,
                                         String sequenceno,String serverdate,String sequencedevicedate,String serverdictionaryhash,
-                                        String completehashvalue,String sequenceid,String videostarttransactionid,String metahash)
+                                        String completehashvalue,String sequenceid,String videostarttransactionid,String metahash,
+                                        String color)
     {
         try {
             lock.lock();
@@ -163,6 +164,7 @@ public class databasemanager {
             values.put("sequenceid", ""+sequenceid);
             values.put("videostarttransactionid",  videostarttransactionid);
             values.put("metahash",  metahash);
+            values.put("color",  color);
 
 
             if(mDb == null)
@@ -363,13 +365,18 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor updatevideoupdateapiresponse(String videoid, String sequence, String serverdate, String serverdictionaryhash, String sequenceid, String videoframetransactionid) {
+    public Cursor updatevideoupdateapiresponse(String videoid, String sequence, String serverdate, String serverdictionaryhash,
+                                               String sequenceid, String videoframetransactionid,String color) {
         Cursor mCur=null;
         try {
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblmetadata set rsequenceno = '"+sequence+"',serverdate ='"+serverdate+"', serverdictionaryhash = '"+serverdictionaryhash+"', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where id='"+videoid+"'");
+            mDb.execSQL("update tblmetadata set rsequenceno = '"+sequence+
+                    "',serverdate ='"+serverdate+
+                    "',color ='"+color+
+                    "', serverdictionaryhash = '"+serverdictionaryhash+
+                    "', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where id='"+videoid+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {

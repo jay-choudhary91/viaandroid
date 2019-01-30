@@ -574,8 +574,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            mdbstartitemcontainer.add(new dbitemcontainer(json,"audio","Local storage path", mediakey,"","","0","0",
-                    config.type_audio_start,devicestartdate,devicestartdate,timeoffset,""));
+            if(mdbstartitemcontainer.size() == 0)
+            {
+                mdbstartitemcontainer.add(new dbitemcontainer(json,"audio","Local storage path", mediakey,"","","0","0",
+                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,""));
+                Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

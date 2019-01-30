@@ -530,13 +530,14 @@ public class readmediadataservice extends Service {
                                     String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
                                     String metahash = (object.has("videoframedevicemetahashvalue")?object.getString("videoframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("videoframeservermetahashmethod")?object.getString("videoframeservermetahashmethod"):"");
+                                    String color = (object.has("color")?object.getString("color"):"");
 
                                     meta=common.refactordegreequotesformat(meta);
 
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
-                                            "","0",videoframetransactionid,metahash);
+                                            "","0",videoframetransactionid,metahash,color);
                                 }
                             }
                             else if(mediatype.equalsIgnoreCase("audio"))
@@ -561,13 +562,14 @@ public class readmediadataservice extends Service {
                                     String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
                                     String metahash = (object.has("audioframedevicemetahashvalue")?object.getString("audioframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("audioframeservermetahashmethod")?object.getString("audioframeservermetahashmethod"):"");
+                                    String color = (object.has("color")?object.getString("color"):"");
 
                                     meta=common.refactordegreequotesformat(meta);
 
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
-                                            "","0",videoframetransactionid,metahash);
+                                            "","0",videoframetransactionid,metahash,color);
                                 }
                             }
                             else if(mediatype.equalsIgnoreCase("image"))
@@ -591,6 +593,7 @@ public class readmediadataservice extends Service {
                                     String hashmethod = (object.has("hashmethod")?object.getString("hashmethod"):"");
                                     String metahash = (object.has("imageframedevicemetahashvalue")?object.getString("imageframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("imageframeservermetahashmethod")?object.getString("imageframeservermetahashmethod"):"");
+                                    String color = (object.has("color")?object.getString("color"):"");
 
                                     if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
                                         sequenceno="1";
@@ -600,7 +603,7 @@ public class readmediadataservice extends Service {
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,devicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",devicedatetime,"",
-                                            "","0",frametransactionid,metahash);
+                                            "","0",frametransactionid,metahash,color);
                                 }
                             }
 

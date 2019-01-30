@@ -2215,7 +2215,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                             JSONObject object = (JSONObject) response.getData();
                             JSONObject jsonObject = object.getJSONObject("sequences");
-                            String sequenceid =  "",mediaframetransactionid = "",serverdictionaryhash="",sequencekey = "";
+                            String sequenceid =  "",color="", mediaframetransactionid = "",serverdictionaryhash="",sequencekey = "";
 
                             Iterator itr = jsonObject.keys();
                             while(itr.hasNext()){
@@ -2234,11 +2234,15 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 if(jobject.has("imageframetransactionid"))
                                     mediaframetransactionid = jobject.getString("imageframetransactionid");
 
+                                if(jobject.has("color"))
+                                    color = jobject.getString("color");
+
                                 serverdictionaryhash = jobject.getString("serverdictionaryhash");
                             }
 
                             String serverdate = object.getString("serverdate");
-                            updatevideoupdateapiresponse(finalselectedid,sequencekey,serverdate,serverdictionaryhash,sequenceid,mediaframetransactionid);
+                            updatevideoupdateapiresponse(finalselectedid,sequencekey,serverdate,serverdictionaryhash,
+                                    sequenceid,mediaframetransactionid,color);
 
                         }catch (Exception e)
                         {
@@ -2446,7 +2450,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
 
-    public void updatevideoupdateapiresponse(String selectedid, String sequence, String serverdate, String serverdictionaryhash, String sequenceid, String videoframetransactionid)
+    public void updatevideoupdateapiresponse(String selectedid, String sequence, String serverdate, String serverdictionaryhash,
+                                             String sequenceid, String videoframetransactionid,String color)
     {
 
         if (mdbhelper == null) {
@@ -2460,7 +2465,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
         try {
-            mdbhelper.updatevideoupdateapiresponse(selectedid,sequence,serverdate,serverdictionaryhash,sequenceid,videoframetransactionid);
+            mdbhelper.updatevideoupdateapiresponse(selectedid,sequence,serverdate,
+                    serverdictionaryhash,sequenceid,videoframetransactionid,color);
             mdbhelper.close();
         }catch (Exception e)
         {
