@@ -886,7 +886,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             }
         });
     }
-    
+
     public class setonClick implements View.OnClickListener
     {
 
