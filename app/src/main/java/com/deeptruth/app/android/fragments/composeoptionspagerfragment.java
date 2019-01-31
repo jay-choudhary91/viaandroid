@@ -712,6 +712,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             case 0:
                 imgrotatecamera.setVisibility(View.VISIBLE);
+                showhideactionbottombaricon(1);
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
@@ -721,6 +722,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             case 1:
                 imgrotatecamera.setVisibility(View.VISIBLE);
+                showhideactionbottombaricon(1);
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
@@ -731,6 +733,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             case 2:
                 imgrotatecamera.setVisibility(View.GONE);
+                showhideactionbottombaricon(3);
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
@@ -787,10 +790,21 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         public void onItemClicked(Object object, int type) {
             if(type == 1) // for video record start,audio record start and image capture button click
             {
-               // setimagerecordstart();
+                if(currentselectedcomposer == 0){
+                    showhideactionbottombaricon(0);
+                }else if(currentselectedcomposer == 2){
+                   showhideactionbottombaricon(2);
+                }
+
+              // setimagerecordstart();
             }
             else if(type == 2) // for video record stop,audio record stop and image captured button click
             {
+                if(currentselectedcomposer == 0){
+                    showhideactionbottombaricon(1);
+                }else if(currentselectedcomposer == 2){
+                    showhideactionbottombaricon(3);
+                }
                // setimagerecordstop();
                 /*if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
                 {
@@ -991,4 +1005,25 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     into(img_mediathumbnail);
         }
     }
+
+    public void showhideactionbottombaricon(int i){
+        if(i == 0){
+            img_mediathumbnail.setVisibility(View.INVISIBLE);
+            imgrotatecamera.setVisibility(View.INVISIBLE);
+            layout_mediatype.setVisibility(View.INVISIBLE);
+        } else if(i == 1){
+            img_mediathumbnail.setVisibility(View.VISIBLE);
+            imgrotatecamera.setVisibility(View.VISIBLE);
+            layout_mediatype.setVisibility(View.VISIBLE);
+        } else if( i == 2){
+            layout_mediatype.setVisibility(View.INVISIBLE);
+            img_mediathumbnail.setVisibility(View.INVISIBLE);
+        }
+        else if( i == 3){
+            layout_mediatype.setVisibility(View.VISIBLE);
+            img_mediathumbnail.setVisibility(View.VISIBLE);
+        }
+
+    }
+
 }
