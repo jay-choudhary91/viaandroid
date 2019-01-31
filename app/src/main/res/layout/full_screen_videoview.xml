@@ -117,6 +117,7 @@
                                     android:id="@+id/layout_scrubberview"
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
+                                    android:layout_marginTop="5dp"
                                     android:visibility="visible"
                                     android:layout_marginLeft="@dimen/margin_15dp"
                                     android:layout_marginRight="@dimen/margin_15dp"
@@ -127,7 +128,6 @@
                                         android:id="@+id/recyview_frames"
                                         android:layout_width="match_parent"
                                         android:visibility="visible"
-                                        android:layout_marginTop="5dp"
                                         android:overScrollMode="never"
                                         android:layout_gravity="center_horizontal"
                                         android:layout_height="wrap_content"/>
@@ -136,9 +136,9 @@
                                         android:layout_width="20dp"
                                         android:id="@+id/scrubberverticalbar"
                                         android:layout_centerHorizontal="true"
-                                        android:background="@color/whitetransparent"
                                         android:layout_marginLeft="@dimen/margin_15dp"
                                         android:layout_marginRight="@dimen/margin_15dp"
+                                        android:background="@color/black"
                                         android:visibility="gone"
                                         android:layout_height="50dp">
 
@@ -161,7 +161,8 @@
                                         android:layout_width="match_parent"
                                         android:layout_centerInParent="true"
                                         android:progressDrawable="@drawable/custom_seekbar"
-                                        android:layout_height="30dip"
+                                        android:layout_height="wrap_content"
+                                        android:background="@color/dark_green"
                                         android:thumb="@drawable/custom_thumb"
                                         android:layout_below="@+id/layout_scrubberview"
                                         android:layout_marginLeft="@dimen/margin_15dp"
@@ -183,7 +184,6 @@
                                             android:layout_height="wrap_content"
                                             android:textColor="@color/black"
                                             android:textSize="10sp"
-                                            android:padding="2dp"
                                             android:visibility="invisible"
                                             android:background="@color/white"
                                             android:singleLine="true"
@@ -193,7 +193,7 @@
 
                                         <RelativeLayout
                                             android:layout_width="4dp"
-                                            android:layout_height="50dp"
+                                            android:layout_height="60dp"
                                             android:gravity="center"
                                             android:background="@color/white"
                                             android:layout_centerHorizontal="true"
@@ -201,6 +201,7 @@
                                             android:orientation="vertical">
 
                                             <View
+                                                android:visibility="visible"
                                                 android:id="@+id/view_progressline"
                                                 android:layout_width="2dp"
                                                 android:layout_height="45dp"

@@ -86,6 +86,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     RelativeLayout layout_drawertouchable;
     @BindView(R.id.linear_header)
     LinearLayout linearheader;
+    @BindView(R.id.img_flash)
+    ImageView img_flash;
 
     LinearLayout layout_drawer;
     RecyclerView recyview_hashes;
@@ -167,7 +169,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
             layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
             linearLayout=rootview.findViewById(R.id.content);
-
+            img_flash.setVisibility(View.GONE);
             timerhandler = new Handler() ;
             layout_drawertouchable.setOnTouchListener(this);
             img_dotmenu.setVisibility(View.VISIBLE);
@@ -180,7 +182,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             frameduration=common.checkframeduration();
 
             startnoise();
-
+            txt_title_actionbarcomposer.setText("deeptruth");
             setmetriceshashesdata();
             try {
                 int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
@@ -270,6 +272,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             gethelper().setrecordingrunning(true);
             stoptimer();
             resettimer();
+            img_dotmenu.setVisibility(View.VISIBLE);
+            txt_title_actionbarcomposer.setText("deeptruth");
 
             try {
                 if(common.getstoragedeniedpermissions().isEmpty() && (recordedmediafile != null )
@@ -301,6 +305,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
             if(madapterclick != null)
                 madapterclick.onItemClicked(null,1);
+            img_dotmenu.setVisibility(View.INVISIBLE);
         }
         else
         {
@@ -402,7 +407,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         Minutes = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        txt_title_actionbarcomposer.setText("00:00:00");
+        txt_title_actionbarcomposer.setText("deeptruth");
     }
 
     public Runnable runnable = new Runnable() {
@@ -670,6 +675,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         if(madapterclick != null)
             madapterclick.onItemClicked(recordedmediafile,2);
+        img_dotmenu.setVisibility(View.VISIBLE);
 
         if(madapterclick != null)
             madapterclick.onItemClicked(null,4);

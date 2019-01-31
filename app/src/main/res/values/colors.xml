@@ -39,6 +39,8 @@
     <color name="wave_color">#474747</color>
     <color name="audiowave">#474747</color>
     <color name="blue">#00ADE5</color>
+    <color name="img_bg">#919191</color>
+    <color name="img_blue_bg">#0074ab</color>
 
     <color name="btn_background">#00ADE5</color>
     <color name="dark_green">#19B16D</color>

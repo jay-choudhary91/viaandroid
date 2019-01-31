@@ -11,5 +11,4 @@
         android:height="24dp"
         android:width="10dp" />
 
-    <padding android:left="@dimen/padding_10dp"></padding>
 </shape>

@@ -392,7 +392,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 txt_media_quality.setText("420P");
 
             timerhandler = new Handler() ;
-            txt_title_actionbarcomposer.setText("00:00:00");
+            txt_title_actionbarcomposer.setText("deeptruth");
             if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
                 frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
@@ -903,6 +903,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     public void run() {
                         if(madapterclick != null)
                             madapterclick.onItemClicked(lastrecordedvideo.getAbsoluteFile(),2);
+                        showhideactionbaricon(1);
 
                         firsthashvalue = true;
 
@@ -1029,6 +1030,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             if(madapterclick != null)
                 madapterclick.onItemClicked(null,1);
+            showhideactionbaricon(0);
         }
     }
 
@@ -1145,7 +1147,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 },finalArray[0]);
             }
         }
-        txt_title_actionbarcomposer.setText("00:00:00");
+        txt_title_actionbarcomposer.setText("deeptruth");
     }
 
     @Override
@@ -1195,6 +1197,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void onPause() {
         Log.e("onpause","onpause");
         closemediawithtimer();
+        showhideactionbaricon(1);
         super.onPause();
     }
 
@@ -1587,6 +1590,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void reopenCamera() {
         if (mTextureView.isAvailable())
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+
+    }
+    public void showhideactionbaricon(int i){
+        if(i == 0){
+            txt_title_actionbarcomposer.setText("00:00:00");
+            img_dotmenu.setVisibility(View.INVISIBLE);
+            txt_media_quality.setVisibility(View.INVISIBLE);
+
+        }else{
+            txt_title_actionbarcomposer.setText("deeptuth");
+            img_dotmenu.setVisibility(View.VISIBLE);
+            txt_media_quality.setVisibility(View.VISIBLE);
+        }
 
     }
 }
