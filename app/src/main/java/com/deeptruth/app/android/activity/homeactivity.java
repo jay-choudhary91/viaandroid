@@ -286,7 +286,7 @@ public void updateactionbar(int showHide, int color) {
     @Override
     public void onfragmentbackstackchanged() {
         super.onfragmentbackstackchanged();
-        common.resetgraphicaldata();
+       // common.resetgraphicaldata();
         basefragment fragment = getcurrentfragment();
         img_back.setVisibility(View.GONE);
         img_cancel.setVisibility(View.GONE);
