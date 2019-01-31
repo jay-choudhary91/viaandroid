@@ -886,7 +886,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             }
         });
     }
-
+    
     public class setonClick implements View.OnClickListener
     {
 
@@ -1050,7 +1050,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                             img_fullscreen.setVisibility(View.INVISIBLE);
                             layoutcustomcontroller.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.VISIBLE);
-                            dividerline.setVisibility(View.VISIBLE);
+                            dividerline.setVisibility(View.GONE);
                         }
                         start();
                     }

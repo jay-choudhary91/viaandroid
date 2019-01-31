@@ -81,7 +81,8 @@ public class framebitmapadapter extends RecyclerView.Adapter<framebitmapadapter.
         else
         {
             int img_height = (int) applicationviavideocomposer.getactivity().getResources().getDimension(R.dimen.image_height);
-            final LinearLayout.LayoutParams param=new LinearLayout.LayoutParams(100, img_height);
+            int img_width = (int) applicationviavideocomposer.getactivity().getResources().getDimension(R.dimen.img_width);
+            final LinearLayout.LayoutParams param=new LinearLayout.LayoutParams(img_width, img_height);
             holder.img_item.setLayoutParams(param);
             holder.view_empty.setVisibility(View.GONE);
             holder.img_item.setVisibility(View.VISIBLE);
