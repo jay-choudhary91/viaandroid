@@ -134,7 +134,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
     private BroadcastReceiver medialistitemaddreceiver;
     private static final int request_read_external_storage = 1;
     private int REQUESTCODE_PICK=201;
-
+    private BroadcastReceiver broadcastmediauploaded;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_readermedialist;
@@ -146,16 +146,42 @@ public class medialistreader extends basefragment implements View.OnClickListene
         ButterKnife.bind(this,parent);
     }
 
+    // Called just after any media uploaded
+    public void registerbroadcastmediadownloaded()
+    {
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
+        broadcastmediauploaded = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                getallmedialistfromdb();
+                if(adaptermedialist != null && arrayvideolist.size() > 0)
+                    adaptermedialist.notifyDataSetChanged();
+
+                if(adaptergrid != null && arrayvideolist.size() > 0)
+                    adaptergrid.notifyDataSetChanged();
+            }
+        };
+        applicationviavideocomposer.getactivity().registerReceiver(broadcastmediauploaded, intentFilter);
+    }
+
 
     @Override
     public void onStart() {
         super.onStart();
+        registerbroadcastmediadownloaded();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         isinbackground=true;
+        try {
+            applicationviavideocomposer.getactivity().unregisterReceiver(broadcastmediauploaded);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -701,7 +727,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                                     videoobj.setLocalkey(getdata[2]);
                                     videoobj.setMediatitle(getdata[4]);
                                     videoobj.setMedianotes(getdata[5]);
-                                    //videoobj.setCreatedatetime(getdata[6]);
+                                    videoobj.setMediacolor(getdata[6]);
 
                                     ismedia=true;
                                 }
@@ -727,7 +753,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                                                 videoobj.setThumbnailpath(getdata[3]);
                                                 videoobj.setMediatitle(getdata[4]);
                                                 videoobj.setMedianotes(getdata[5]);
-                                                //videoobj.setCreatedatetime(getdata[6]);
+                                                videoobj.setMediacolor(getdata[6]);
 
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                                     long seconds = format.getLong(MediaFormat.KEY_DURATION);
@@ -971,6 +997,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
                 String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
                 String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
+                String color = "" + cursor.getString(cursor.getColumnIndex("color"));
                 for(int i=0;i<arrayvideolist.size();i++)
                 {
                     if(common.getfilename(arrayvideolist.get(i).getPath()).equalsIgnoreCase(location))
@@ -979,6 +1006,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                         arrayvideolist.get(i).setThumbnailpath(thumbnailurl);
                         arrayvideolist.get(i).setMediatitle(media_name);
                         arrayvideolist.get(i).setMedianotes(media_notes);
+                        arrayvideolist.get(i).setMediacolor(color);
                         break;
                     }
                 }
