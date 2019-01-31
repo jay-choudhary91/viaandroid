@@ -586,7 +586,8 @@ public class databasemanager {
                                 cur.getString(cur.getColumnIndex("sequencehash")),cur.getString(cur.getColumnIndex("sequenceno")),
                                 cur.getString(cur.getColumnIndex("serverdate")),cur.getString(cur.getColumnIndex("sequencedevicedate")),
                                 cur.getString(cur.getColumnIndex("videostarttransactionid")),cur.getString(cur.getColumnIndex("serverdictionaryhash")),
-                                cur.getString(cur.getColumnIndex("metahash")),cur.getString(cur.getColumnIndex("color"))));
+                                cur.getString(cur.getColumnIndex("metahash")),cur.getString(cur.getColumnIndex("color")),
+                                cur.getString(cur.getColumnIndex("latency"))));
 
                     }while(cur.moveToNext());
                 }

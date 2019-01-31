@@ -42,6 +42,7 @@ import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoplayfragment;
 import com.deeptruth.app.android.services.callservice;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 
@@ -285,6 +286,7 @@ public void updateactionbar(int showHide, int color) {
     @Override
     public void onfragmentbackstackchanged() {
         super.onfragmentbackstackchanged();
+        common.resetgraphicaldata();
         basefragment fragment = getcurrentfragment();
         img_back.setVisibility(View.GONE);
         img_cancel.setVisibility(View.GONE);
@@ -312,7 +314,6 @@ public void updateactionbar(int showHide, int color) {
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
-
         }
         else if(fragment instanceof framemetricssettings){
             img_back.setVisibility(View.VISIBLE);
@@ -523,11 +524,9 @@ public void updateactionbar(int showHide, int color) {
             @Override
             public void run() {
                 if((graphicaldrawerfragment!= null))
-                {
                     graphicaldrawerfragment.setmetricesdata();
-                }
 
-                myhandler.postDelayed(this, 1000);
+                myhandler.postDelayed(this, 5000);
             }
         };
         myhandler.post(myrunnable);
@@ -543,20 +542,3 @@ public void updateactionbar(int showHide, int color) {
 
     }
 }
-
-
-
-
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        try
-        {
-            imgaddicon.setVisibility(View.VISIBLE);
-            imgsettingsicon.setVisibility(View.VISIBLE);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-    }*/

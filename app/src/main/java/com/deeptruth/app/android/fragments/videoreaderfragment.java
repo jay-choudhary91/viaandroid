@@ -1222,7 +1222,9 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
                                 String color = mitemlist.get(i).getColor();
-                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color));
+                                String latency = mitemlist.get(i).getLatency();
+                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,
+                                        sequencehash,serverdictionaryhash,color,latency));
                             }
 
                         }else{
@@ -1235,7 +1237,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                                 String serverdictionaryhash = mitemlist.get(i).getValuehash();
                                 String color = mitemlist.get(i).getColor();
-                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color);
+                                String latency = mitemlist.get(i).getLatency();
+                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency);
                             }
 
                             if(!medianame.isEmpty()){
@@ -1292,7 +1295,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         }).start();
     }
 
-    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,String color) {
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
+                              String color,String latency) {
         try {
 
             Object json = new JSONTokener(metadata).nextValue();
@@ -1310,7 +1314,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     model.setMetricTrackValue(value);
                     metricItemArraylist.add(model);
                 }
-                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,color));
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
+                        color,latency));
             }
             else if(json instanceof JSONArray)
             {
@@ -1327,7 +1332,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         model.setMetricTrackValue(value);
                         metricItemArraylist.add(model);
                     }
-                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,color));
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,
+                            metahash,color,latency));
                 }
             }
         } catch (Exception e) {
@@ -1522,10 +1528,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                       else if(arraycontainerformetric.getColor().equalsIgnoreCase(config.color_yellow))
                       {
                           txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                  getactivity().getResources().getColor(R.color.yellow_background));
+                                  getactivity().getResources().getColor(R.color.green_background));
                       }
-
-                      double latt=0,longg=0;
 
                       ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
 

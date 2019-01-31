@@ -157,7 +157,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     String latitude = "", longitude = "",screenheight = "",screenwidth = "",lastsavedangle="";
     private float currentDegree = 0f;
     String hashmethod= "",videostarttransactionid = "",valuehash = "",metahash = "";
-
+    ArrayList<Entry> latencyvalues = new ArrayList<Entry>();
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -365,8 +365,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
         }
 
+        float val = (float) (Math.random() * 20) + 3;
+        latencyvalues.add(new Entry(latencyvalues.size(), val, 0));
 
-
+        // add data
+        setlatencydata();
+        mChart.animateX(10);
+        Legend l = mChart.getLegend();
+        l.setForm(Legend.LegendForm.LINE);
     }
 
 
@@ -809,50 +815,23 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         //mChart.getViewPortHandler().setMaximumScaleY(2f);
         //mChart.getViewPortHandler().setMaximumScaleX(2f);
-
-        // add data
-        setData(5, 25);
-
-//        mChart.setVisibleXRange(20);
-//        mChart.setVisibleYRange(20f, AxisDependency.LEFT);
-//        mChart.centerViewTo(20, 50, AxisDependency.LEFT);
-
-        mChart.animateX(2500);
-
-        //mChart.invalidate();
-
-        // get the legend (only possible after setting data)
-        Legend l = mChart.getLegend();
-
-        // modify the legend ...
-        l.setForm(Legend.LegendForm.LINE);
-
-        // // dont forget to refresh the drawing
-// mChart.invalidate();
     }
 
 
-    private void setData(int count, float range) {
-
-        ArrayList<Entry> values = new ArrayList<Entry>();
-
-        for (int i = 0; i < count; i++) {
-
-            float val = (float) (Math.random() * range) + 3;
-            values.add(new Entry(i, val, 0));
-        }
+    private void setlatencydata() {
 
         LineDataSet set1;
 
         if (mChart.getData() != null &&
-                mChart.getData().getDataSetCount() > 0) {
+                mChart.getData().getDataSetCount() > 0)
+        {
             set1 = (LineDataSet)mChart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
+            set1.setValues(latencyvalues);
             mChart.getData().notifyDataChanged();
             mChart.notifyDataSetChanged();
         } else {
             // create a dataset and give it a type
-            set1 = new LineDataSet(values, "");
+            set1 = new LineDataSet(latencyvalues, "");
             set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
             set1.setDrawIcons(false);

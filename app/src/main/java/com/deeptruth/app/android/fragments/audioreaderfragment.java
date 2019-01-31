@@ -1330,7 +1330,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                         String serverdictionaryhash = mitemlist.get(i).getValuehash();
                         String color = mitemlist.get(i).getColor();
-                        metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color));
+                        metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,sequencehash,
+                                serverdictionaryhash,color));
                     }
 
                 }else{
