@@ -21,6 +21,7 @@ public class metadatahash
     public String videostarttransactionid="";
     public String serverdictionaryhash="";
     public String color="";
+    public String latency="";
 
 
     public String metahash="";
@@ -28,7 +29,7 @@ public class metadatahash
     public metadatahash(String id,String blockchain,String valuehash,String hashmethod,
                         String localkey,String recorddate,String metricdata,String rsequenceno,String sequencehash,String sequenceno,
                         String serverdate,String sequencedevicedate,String videostarttransactionid,String serverdictionaryhash,
-                        String metahash,String color)
+                        String metahash,String color,String latency)
     {
         setId(id);
         setBlockchain(blockchain);
@@ -46,6 +47,15 @@ public class metadatahash
         setServerdictionaryhash(serverdictionaryhash);
         setMetahash(metahash);
         setColor(color);
+        setLatency(latency);
+    }
+
+    public String getLatency() {
+        return latency;
+    }
+
+    public void setLatency(String latency) {
+        this.latency = latency;
     }
 
     public String getColor() {

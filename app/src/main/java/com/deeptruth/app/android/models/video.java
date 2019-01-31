@@ -25,6 +25,7 @@ public class video
     public String thumbnailpath = "";
     public String mediatitle = "";
     public String medianotes = "";
+    public String mediacolor = "";
     public boolean ischeck = false;
     public boolean doenable = false;
     public int griditemheight = 0;
@@ -44,6 +45,14 @@ public class video
     public  video()
     {
 
+    }
+
+    public String getMediacolor() {
+        return mediacolor;
+    }
+
+    public void setMediacolor(String mediacolor) {
+        this.mediacolor = mediacolor;
     }
 
     public String getMediatitle() {

@@ -16,8 +16,21 @@ public class arraycontainer implements Serializable {
     String valuehash = "";
     String metahash ="";
     String color ="";
+    String latency ="";
 
 
+
+    public arraycontainer(ArrayList<metricmodel> metricItemArraylist, String hashmethod,String videostarttransactionid,
+                          String valuehash,String metahash,String color,String latency)
+    {
+        setMetricItemArraylist(metricItemArraylist);
+        setHashmethod(hashmethod);
+        setVideostarttransactionid(videostarttransactionid);
+        setValuehash(valuehash);
+        setMetahash(metahash);
+        setColor(color);
+        setLatency(latency);
+    }
 
     public arraycontainer(ArrayList<metricmodel> metricItemArraylist, String hashmethod,String videostarttransactionid,
                           String valuehash,String metahash,String color)
@@ -28,7 +41,6 @@ public class arraycontainer implements Serializable {
         setValuehash(valuehash);
         setMetahash(metahash);
         setColor(color);
-
     }
 
     public arraycontainer()
@@ -36,7 +48,19 @@ public class arraycontainer implements Serializable {
     }
 
     public arraycontainer( String hashmethod,String videostarttransactionid,
-                          String valuehash,String metahash,String color)
+                          String valuehash,String metahash,String color,String latency)
+    {
+        setMetricItemArraylist(metricItemArraylist);
+        setHashmethod(hashmethod);
+        setVideostarttransactionid(videostarttransactionid);
+        setValuehash(valuehash);
+        setMetahash(metahash);
+        setColor(color);
+        setLatency(latency);
+    }
+
+    public arraycontainer( String hashmethod,String videostarttransactionid,
+                           String valuehash,String metahash,String color)
     {
         setMetricItemArraylist(metricItemArraylist);
         setHashmethod(hashmethod);
@@ -53,6 +77,14 @@ public class arraycontainer implements Serializable {
     public void setMetricItemArraylist(ArrayList<metricmodel> metricItemArraylist) {
         this.metricItemArraylist = metricItemArraylist;
 
+    }
+
+    public String getLatency() {
+        return latency;
+    }
+
+    public void setLatency(String latency) {
+        this.latency = latency;
     }
 
     public String getColor() {

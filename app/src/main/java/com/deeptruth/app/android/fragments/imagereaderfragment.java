@@ -207,7 +207,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ImageView img_compass;
     adapteritemclick mcontrollernavigator;
 
-    private BroadcastReceiver getmetadatabroadcastreceiver, getencryptionmetadatabroadcastreceiver;
+    private BroadcastReceiver getmetadatabroadcastreceiver;
 
     @Override
     public int getlayoutid() {
@@ -750,7 +750,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void onStart() {
         super.onStart();
         registerbroadcastreciver();
-        registerbroadcastreciverforencryptionmetadata();
     }
 
     @Override
@@ -758,7 +757,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.onStop();
         try {
             applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
-            applicationviavideocomposer.getactivity().unregisterReceiver(getencryptionmetadatabroadcastreceiver);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -773,17 +771,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
         };
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
-    }
-
-    public void registerbroadcastreciverforencryptionmetadata() {
-        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
-        getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                fetchmetadatafromdb();
-            }
-        };
-        getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
     }
 
     public void fetchmetadatafromdb() {

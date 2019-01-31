@@ -403,7 +403,8 @@ public class insertmediadataservice extends Service {
                     ,mdbmiddleitemcontainer.getItem6(),mdbmiddleitemcontainer.getItem7(),mdbmiddleitemcontainer.getItem8(),
                     mdbmiddleitemcontainer.getItem9(),mdbmiddleitemcontainer.getItem10(),mdbmiddleitemcontainer.getItem11()
                     ,mdbmiddleitemcontainer.getItem12(),mdbmiddleitemcontainer.getItem13(),mdbmiddleitemcontainer.getItem14(),
-                    mdbmiddleitemcontainer.getItem15(),mdbmiddleitemcontainer.getItem16(),mdbmiddleitemcontainer.getItem17());
+                    mdbmiddleitemcontainer.getItem15(),mdbmiddleitemcontainer.getItem16(),mdbmiddleitemcontainer.getItem17(),
+                    mdbmiddleitemcontainer.getItem18());
             try {
                 mdbhelper.close();
             } catch (Exception e) {

@@ -769,6 +769,47 @@ public class common {
         return direction_text;
     }
 
+    public static void resetgraphicaldata()
+    {
+            xdata.getinstance().saveSetting(config.PhoneType,"NA");
+            xdata.getinstance().saveSetting(config.CellProvider,"NA");
+            xdata.getinstance().saveSetting(config.OSversion,"NA");
+            xdata.getinstance().saveSetting(config.WIFINetwork,"NA");
+            xdata.getinstance().saveSetting(config.GPSAccuracy,"NA");
+            xdata.getinstance().saveSetting(config.ScreenWidth,"NA");
+            xdata.getinstance().saveSetting(config.ScreenHeight,"NA");
+            xdata.getinstance().saveSetting(config.Country,"NA");
+            xdata.getinstance().saveSetting(config.Brightness,"NA");
+            xdata.getinstance().saveSetting(config.TimeZone,"NA");
+            xdata.getinstance().saveSetting(config.MemoryUsage,"NA");
+            xdata.getinstance().saveSetting(config.Bluetooth,"NA");
+            xdata.getinstance().saveSetting(config.LocalTime,"NA");
+            xdata.getinstance().saveSetting(config.StorageAvailable,"NA");
+            xdata.getinstance().saveSetting(config.Language,"NA");
+            xdata.getinstance().saveSetting(config.SystemUptime,"NA");
+            xdata.getinstance().saveSetting(config.Battery,"NA");
+            xdata.getinstance().saveSetting(config.CPUUsage,"NA");
+            xdata.getinstance().saveSetting(config.Orientation,"NA");
+            xdata.getinstance().saveSetting(config.Heading,"0");
+            xdata.getinstance().saveSetting(config.orientation,"0");
+            xdata.getinstance().saveSetting(config.Latitude,"");
+            xdata.getinstance().saveSetting(config.Longitude,"");
+            xdata.getinstance().saveSetting(config.LatitudeDegree,"");
+            xdata.getinstance().saveSetting(config.LongitudeDegree,"");
+            xdata.getinstance().saveSetting(config.Altitude,"");
+            xdata.getinstance().saveSetting(config.GPSAccuracy,"NA");
+            xdata.getinstance().saveSetting(config.Address,"NA");
+            xdata.getinstance().saveSetting(config.Speed,"NA");
+            xdata.getinstance().saveSetting(config.acceleration_x,"NA");
+            xdata.getinstance().saveSetting(config.acceleration_y,"NA");
+            xdata.getinstance().saveSetting(config.acceleration_z,"NA");
+            xdata.getinstance().saveSetting(config.Connectionspeed,"NA");
+            xdata.getinstance().saveSetting(config.blockchainid,"NA");
+            xdata.getinstance().saveSetting(config.hashformula,"NA");
+            xdata.getinstance().saveSetting(config.datahash,"NA");
+            xdata.getinstance().saveSetting(config.matrichash,"NA");
+    }
+
     public static void setgraphicalitems(String keyname,String value,boolean ismetricsselected)
     {
         if (keyname.equalsIgnoreCase("model") || keyname.equalsIgnoreCase("phonetype")) {
