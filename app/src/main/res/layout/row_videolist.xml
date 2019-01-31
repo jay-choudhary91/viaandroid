@@ -260,6 +260,14 @@
         </RelativeLayout>
 
 
+        <ImageView
+            android:id="@+id/img_scanover"
+            android:layout_width="50dp"
+            android:layout_height="110dp"
+            android:layout_alignParentLeft="true"
+            android:alpha="0.4"
+            android:background="@drawable/gradient_verify_yellow"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.9dp"

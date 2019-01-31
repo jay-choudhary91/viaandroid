@@ -25,6 +25,7 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
         EditText edtvideoname;
-        public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete;
+        public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public RelativeLayout root_view;
 
         public myViewHolder(View view) {
@@ -64,6 +65,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             img_slide_share = (ImageView) view.findViewById(R.id.img_slide_share);
             img_slide_create_dir = (ImageView) view.findViewById(R.id.img_slide_create_dir);
             img_slide_delete = (ImageView) view.findViewById(R.id.img_slide_delete);
+            img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
             root_view = (RelativeLayout) view.findViewById(R.id.root_view);
         }
     }
@@ -90,6 +92,26 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
         if(arrayvideolist.get(position).isDoenable())
         {
+            if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
+            {
+                holder.img_scanover.setVisibility(View.VISIBLE);
+                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
+            }
+            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_yellow))
+            {
+                holder.img_scanover.setVisibility(View.VISIBLE);
+                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
+            }
+            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_red))
+            {
+                holder.img_scanover.setVisibility(View.VISIBLE);
+                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
+            }
+            else
+            {
+                holder.img_scanover.setVisibility(View.GONE);
+            }
+
             holder.root_view.setVisibility(View.VISIBLE);
             if(arrayvideolist.get(position).getMediatitle().trim().isEmpty())
                 arrayvideolist.get(position).setMediatitle(common.getfilename(arrayvideolist.get(position).getPath()));

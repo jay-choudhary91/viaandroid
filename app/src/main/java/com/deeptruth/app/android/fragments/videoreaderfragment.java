@@ -312,7 +312,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
-    private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
+    private BroadcastReceiver getmetadatabroadcastreceiver;
     int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
     private Handler hdlr = new Handler();
     StringBuilder mFormatBuilder;
@@ -766,7 +766,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
             }
             registerbroadcastreciver();
-            registerbroadcastreciverforencryptionmetadata();
             Log.e("oncreate","oncreate");
 
             loadmap();
@@ -1354,24 +1353,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
     }
 
-    public void registerbroadcastreciverforencryptionmetadata()
-    {
-        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
-        getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                fetchmetadatafromdb();
-            }
-        };
-        getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
-    }
-
     @Override
     public void onStop() {
         super.onStop();
         try {
             applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
-            applicationviavideocomposer.getactivity().unregisterReceiver(getencryptionmetadatabroadcastreceiver);
         }catch (Exception e)
         {
             e.printStackTrace();

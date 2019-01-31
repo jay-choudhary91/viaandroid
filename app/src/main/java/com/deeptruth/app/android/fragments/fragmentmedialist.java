@@ -130,6 +130,30 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private Uri selectedimageuri =null;
     private String selectedvideopath ="";
     private BroadcastReceiver medialistitemaddreceiver;
+    private imagereaderfragment fragmentimagereader=null;
+    private audioreaderfragment fragmentaudioreader=null;
+    private videoreaderfragment fragmentvideoreader=null;
+    private BroadcastReceiver broadcastmediauploaded;
+
+    // Called just after any media uploaded
+    public void registerbroadcastmediauploaded()
+    {
+        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
+        broadcastmediauploaded = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                getallmedialistfromdb();
+                if(adaptermedialist != null && arrayvideolist.size() > 0)
+                    adaptermedialist.notifyDataSetChanged();
+
+                if(adaptergrid != null && arrayvideolist.size() > 0)
+                    adaptergrid.notifyDataSetChanged();
+            }
+        };
+        applicationviavideocomposer.getactivity().registerReceiver(broadcastmediauploaded, intentFilter);
+    }
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videolist;
@@ -145,12 +169,19 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onStart() {
         super.onStart();
+        registerbroadcastmediauploaded();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         isinbackground=true;
+        try {
+            applicationviavideocomposer.getactivity().unregisterReceiver(broadcastmediauploaded);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -637,6 +668,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     videoobj.setLocalkey(getdata[2]);
                                     videoobj.setMediatitle(getdata[4]);
                                     videoobj.setMedianotes(getdata[5]);
+                                    videoobj.setMediacolor(getdata[6]);
                                     //videoobj.setCreatedatetime(getdata[6]);
 
                                     ismedia=true;
@@ -663,7 +695,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                                 videoobj.setThumbnailpath(getdata[3]);
                                                 videoobj.setMediatitle(getdata[4]);
                                                 videoobj.setMedianotes(getdata[5]);
-                                                //videoobj.setCreatedatetime(getdata[6]);
+                                                videoobj.setMediacolor(getdata[6]);
 
                                                 if (format.containsKey(MediaFormat.KEY_DURATION)) {
                                                     long seconds = format.getLong(MediaFormat.KEY_DURATION);
@@ -867,6 +899,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
                 String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
                 String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
+                String color = "" + cursor.getString(cursor.getColumnIndex("color"));
                 for(int i=0;i<arrayvideolist.size();i++)
                 {
                     if(common.getfilename(arrayvideolist.get(i).getPath()).equalsIgnoreCase(location))
@@ -875,6 +908,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arrayvideolist.get(i).setThumbnailpath(thumbnailurl);
                         arrayvideolist.get(i).setMediatitle(media_name);
                         arrayvideolist.get(i).setMedianotes(media_notes);
+                        arrayvideolist.get(i).setMediacolor(color);
                         break;
                     }
                 }
@@ -1225,31 +1259,25 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             },500);
 
             //fetchmedialistfromdirectory();
-
         }else if(type == 4){
             if(videoobj.getmimetype().startsWith("image/")){
                 xdata.getinstance().saveSetting("selectedphotourl",""+videoobj.getPath());
-                imagereaderfragment phototabfrag = new imagereaderfragment();
-                phototabfrag.setdata(mcontrollernavigator);
-                gethelper().replaceFragment(phototabfrag, false, true);
+                fragmentimagereader = new imagereaderfragment();
+                fragmentimagereader.setdata(mcontrollernavigator);
+                gethelper().replaceFragment(fragmentimagereader, false, true);
 
             }else if(videoobj.getmimetype().startsWith("audio/")){
                 xdata.getinstance().saveSetting("selectedaudiourl",""+videoobj.getPath());
-                audioreaderfragment audiotabfrag = new audioreaderfragment();
-                audiotabfrag.setdata(mcontrollernavigator);
-                gethelper().replaceFragment(audiotabfrag, false, true);
+                fragmentaudioreader = new audioreaderfragment();
+                fragmentaudioreader.setdata(mcontrollernavigator);
+                gethelper().replaceFragment(fragmentaudioreader, false, true);
 
             }else if(videoobj.getmimetype().startsWith("video/")){
 
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
-                videoreaderfragment readervideofragment=new videoreaderfragment();
-                readervideofragment.setdata(mcontrollernavigator);
-                gethelper().replaceFragment(readervideofragment, false, true);
-
-               /* xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
-                composervideoplayerfragment videoplayercomposerfragment = new composervideoplayerfragment();
-                //videoplayercomposerfragment.setdata(videoobj.getPath());
-                gethelper().replaceFragment(videoplayercomposerfragment, false, true);*/
+                fragmentvideoreader=new videoreaderfragment();
+                fragmentvideoreader.setdata(mcontrollernavigator);
+                gethelper().replaceFragment(fragmentvideoreader, false, true);
             }
 
         }

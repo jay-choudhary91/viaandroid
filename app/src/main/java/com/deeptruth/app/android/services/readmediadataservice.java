@@ -326,7 +326,7 @@ public class readmediadataservice extends Service {
                     Log.e("Found hash ",""+hashvalue);
                     String framecount="",mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
                             remainingframes="50",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",savedsequencecount="",
-                    mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "",mediacompleteddate="";
+                    mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "",mediacompleteddate="",color="";
 
                     try {
                         JSONObject object = (JSONObject) response.getData();
@@ -350,6 +350,7 @@ public class readmediadataservice extends Service {
                             mediatitle = (object.has("videotitle")?object.getString("videotitle"):"");
                             mediacompleteddate = (object.has("videocompleteddate")?object.getString("videocompleteddate"):"");
                             savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
+                            color = (object.has("color")?object.getString("color"):"");
 
                             actiontype = config.type_videoframes_get;
                         }
@@ -376,6 +377,7 @@ public class readmediadataservice extends Service {
                             mediatoken = (object.has("audiotoken")?object.getString("audiotoken"):"");
                             mediatitle = (object.has("audioname")?object.getString("audioname"):"");
                             mediacompleteddate = (object.has("audiocompleteddate")?object.getString("audiocompleteddate"):"");
+                            color = (object.has("color")?object.getString("color"):"");
 
                             actiontype = config.type_audioframes_get;
                         }
@@ -401,6 +403,7 @@ public class readmediadataservice extends Service {
                             mediatypeshortname = (object.has("imagetypeshortname")?object.getString("imagetypeshortname"):"");
                             savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("imagetoken")?object.getString("imagetoken"):"");
+                            color = (object.has("color")?object.getString("color"):"");
                             //mediacompleteddate = (object.has("imagecompleteddate")?object.getString("imagecompleteddate"):"");
                             //mediatitle = (object.has("imagename")?object.getString("imagename"):"");
                             mediacompleteddate="xyz";
@@ -425,7 +428,7 @@ public class readmediadataservice extends Service {
                             mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
                                     mediatoken,mediakey,"",syncdate[0] , actiontype,
                                     "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
-                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate);
+                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate,color);
 
                             int framestart=1;int maxframes=50;
                             getmediaframes(mediatoken,framestart,maxframes,mediafilepath);
@@ -436,7 +439,7 @@ public class readmediadataservice extends Service {
                             mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
                                     mediatoken,mediakey,"",syncdate[0] , actiontype,
                                     "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
-                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate);
+                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate,color);
                             sendbroadcastreader();
                         }
 
@@ -531,13 +534,14 @@ public class readmediadataservice extends Service {
                                     String metahash = (object.has("videoframedevicemetahashvalue")?object.getString("videoframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("videoframeservermetahashmethod")?object.getString("videoframeservermetahashmethod"):"");
                                     String color = (object.has("color")?object.getString("color"):"");
+                                    String latency = (object.has("latency")?object.getString("latency"):"");
 
                                     meta=common.refactordegreequotesformat(meta);
 
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
-                                            "","0",videoframetransactionid,metahash,color);
+                                            "","0",videoframetransactionid,metahash,color,latency);
                                 }
                             }
                             else if(mediatype.equalsIgnoreCase("audio"))
@@ -563,13 +567,14 @@ public class readmediadataservice extends Service {
                                     String metahash = (object.has("audioframedevicemetahashvalue")?object.getString("audioframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("audioframeservermetahashmethod")?object.getString("audioframeservermetahashmethod"):"");
                                     String color = (object.has("color")?object.getString("color"):"");
+                                    String latency = (object.has("latency")?object.getString("latency"):"");
 
                                     meta=common.refactordegreequotesformat(meta);
 
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
-                                            "","0",videoframetransactionid,metahash,color);
+                                            "","0",videoframetransactionid,metahash,color,latency);
                                 }
                             }
                             else if(mediatype.equalsIgnoreCase("image"))
@@ -594,6 +599,7 @@ public class readmediadataservice extends Service {
                                     String metahash = (object.has("imageframedevicemetahashvalue")?object.getString("imageframedevicemetahashvalue"):"");
                                     String metahashmethod = (object.has("imageframeservermetahashmethod")?object.getString("imageframeservermetahashmethod"):"");
                                     String color = (object.has("color")?object.getString("color"):"");
+                                    String latency = (object.has("latency")?object.getString("latency"):"");
 
                                     if(sequenceno == null || sequenceno.equalsIgnoreCase("null"))
                                         sequenceno="1";
@@ -603,7 +609,7 @@ public class readmediadataservice extends Service {
                                     dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
                                             meta,devicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",devicedatetime,"",
-                                            "","0",frametransactionid,metahash,color);
+                                            "","0",frametransactionid,metahash,color,latency);
                                 }
                             }
 

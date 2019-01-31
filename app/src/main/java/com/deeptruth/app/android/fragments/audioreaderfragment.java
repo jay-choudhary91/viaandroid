@@ -283,7 +283,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
-    private BroadcastReceiver getmetadatabroadcastreceiver,getencryptionmetadatabroadcastreceiver;
+    private BroadcastReceiver getmetadatabroadcastreceiver;
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
@@ -1170,7 +1170,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void onStart() {
         super.onStart();
         registerbroadcastreciver();
-        registerbroadcastreciverforencryptionmetadata();
     }
 
     @Override
@@ -1178,7 +1177,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         super.onStop();
         try {
             applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
-            applicationviavideocomposer.getactivity().unregisterReceiver(getencryptionmetadatabroadcastreceiver);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1187,16 +1185,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void registerbroadcastreciver()
     {
-      /* // IntentFilter intentFilter = null;
-        *//*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-           // intentFilter = new IntentFilter(config.reader_service_getmetadata);
-        }
-        else*//*
-        {
-            IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
-        }*/
-
         IntentFilter intentFilter = new IntentFilter(config.composer_service_savemetadata);
         getmetadatabroadcastreceiver = new BroadcastReceiver() {
             @Override
@@ -1210,18 +1198,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         };
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
-    }
-
-    public void registerbroadcastreciverforencryptionmetadata()
-    {
-        IntentFilter intentFilter = new IntentFilter(config.composer_service_getencryptionmetadata);
-        getencryptionmetadatabroadcastreceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                getmediadata();
-            }
-        };
-        getActivity().registerReceiver(getencryptionmetadatabroadcastreceiver, intentFilter);
     }
 
     public void getmediametadata()

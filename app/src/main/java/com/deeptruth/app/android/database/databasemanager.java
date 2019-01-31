@@ -114,7 +114,8 @@ public class databasemanager {
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
                                      String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
-                                     String status,String remainingframes,String lastframe,String framecount,String sync_status,String completeddate)
+                                     String status,String remainingframes,String lastframe,String framecount,String sync_status,
+                                     String completeddate,String color)
     {
         try {
             lock.lock();
@@ -124,6 +125,7 @@ public class databasemanager {
                     devicetimeoffset +"',videocompletedevicedate = '"+videocompletedevicedate +"'," +
                     "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
                     "status = '"+status +"'," +
+                    "color = '"+color +"'," +
                     "completeddate = '"+completeddate +"'," +
                     "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
                     "sync_status = '"+sync_status +"' where location='"+location+"'";
@@ -142,7 +144,7 @@ public class databasemanager {
                                         String metricdata,String recordate,String rsequenceno,String sequencehash,
                                         String sequenceno,String serverdate,String sequencedevicedate,String serverdictionaryhash,
                                         String completehashvalue,String sequenceid,String videostarttransactionid,String metahash,
-                                        String color)
+                                        String color,String latency)
     {
         try {
             lock.lock();
@@ -165,6 +167,7 @@ public class databasemanager {
             values.put("videostarttransactionid",  videostarttransactionid);
             values.put("metahash",  metahash);
             values.put("color",  color);
+            values.put("latency",  latency);
 
 
             if(mDb == null)
@@ -366,7 +369,7 @@ public class databasemanager {
     }
 
     public Cursor updatevideoupdateapiresponse(String videoid, String sequence, String serverdate, String serverdictionaryhash,
-                                               String sequenceid, String videoframetransactionid,String color) {
+                                               String sequenceid, String videoframetransactionid,String color,String latency) {
         Cursor mCur=null;
         try {
             lock.lock();
@@ -375,6 +378,7 @@ public class databasemanager {
             mDb.execSQL("update tblmetadata set rsequenceno = '"+sequence+
                     "',serverdate ='"+serverdate+
                     "',color ='"+color+
+                    "',latency ='"+latency+
                     "', serverdictionaryhash = '"+serverdictionaryhash+
                     "', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where id='"+videoid+"'");
             if (mCur != null)
@@ -493,13 +497,16 @@ public class databasemanager {
     }
 
 
-    public Cursor updatevideosyncdate(String localkey,String syncdate,String syncstatus) {
+    public Cursor updatevideosyncdate(String localkey,String syncdate,String syncstatus,String color) {
         Cursor mCur=null;
         try {
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblstartmediainfo set sync_date ='"+syncdate+"',sync_status ='"+syncstatus+"' where localkey='"+localkey+"'");
+            mDb.execSQL("update tblstartmediainfo set sync_date = '"+syncdate+
+                    "',sync_status ='"+syncstatus+
+                    "',color ='"+color+
+                    "' where localkey='"+localkey+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -594,7 +601,7 @@ public class databasemanager {
     }
 
     public String[] getlocalkeybylocation(String filename) {
-        String[] localkey ={"","","","","","",""};
+        String[] localkey ={"","","","","","","",""};
         Cursor cur=null;
         try {
             lock.lock();
@@ -612,6 +619,7 @@ public class databasemanager {
                     localkey[4] = "" + cur.getString(cur.getColumnIndex("media_name"));
                     localkey[5] = "" + cur.getString(cur.getColumnIndex("media_notes"));
                     localkey[6] = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
+                    localkey[7] = "" + cur.getString(cur.getColumnIndex("color"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {

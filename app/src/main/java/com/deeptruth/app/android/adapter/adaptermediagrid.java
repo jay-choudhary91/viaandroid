@@ -1,12 +1,16 @@
 package com.deeptruth.app.android.adapter;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,6 +20,9 @@ import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.video;
+import com.deeptruth.app.android.utils.config;
+import com.facebook.shimmer.Shimmer;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,17 +36,20 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adapteritemclick adapter;
+    ObjectAnimator objectanimator = null;
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediaduration;
-        public ImageView img_mediathumbnail;
+        public ImageView img_mediathumbnail,img_scanover;
         public RelativeLayout rl_row_media;
-        public Button btnedit;
+        public ShimmerFrameLayout shimmer_view_container;
 
         public myViewHolder(View view) {
             super(view);
             tv_mediaduration = (TextView) view.findViewById(R.id.tv_mediaduration);
             img_mediathumbnail = (ImageView) view.findViewById(R.id.img_mediathumbnail);
+            img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
             rl_row_media = (RelativeLayout) view.findViewById(R.id.rl_row_media);
+            shimmer_view_container = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         }
     }
 
@@ -64,6 +74,35 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
 
         if(arrayvideolist.get(position).isDoenable())
         {
+            /*objectanimator = ObjectAnimator.ofFloat(holder.img_scanover,"x",300);
+            objectanimator.setDuration(5000);
+            objectanimator.setRepeatCount(Animation.INFINITE);
+            objectanimator.setRepeatMode(ValueAnimator.RESTART);
+            objectanimator.start();*/
+            if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
+            {
+                /*int colors[] = { 0xff255779, 0xffa6c0cd };
+                holder.img_scanover.setVisibility(View.VISIBLE);
+                GradientDrawable gradientDrawable = new GradientDrawable(
+                        GradientDrawable.Orientation.LEFT_RIGHT, colors);*/
+                holder.img_scanover.setVisibility(View.VISIBLE);
+                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
+            }
+            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_yellow))
+            {
+                holder.img_scanover.setVisibility(View.VISIBLE);
+                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
+            }
+            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_red))
+            {
+                holder.img_scanover.setVisibility(View.VISIBLE);
+                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
+            }
+            else
+            {
+                holder.img_scanover.setVisibility(View.GONE);
+            }
+
             holder.rl_row_media.setVisibility(View.VISIBLE);
             if (arrayvideolist.get(position).getmimetype().contains("image/"))
             {
@@ -114,11 +153,13 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 }
             });
             holder.img_mediathumbnail.getLayoutParams().height = arrayvideolist.get(position).getGriditemheight();
+            holder.img_scanover.getLayoutParams().height = arrayvideolist.get(position).getGriditemheight();
         }
         else
         {
             holder.rl_row_media.setVisibility(View.GONE);
             holder.img_mediathumbnail.getLayoutParams().height = 0;
+            holder.img_scanover.getLayoutParams().height = 0;
         }
     }
 
