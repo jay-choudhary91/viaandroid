@@ -23,7 +23,6 @@ import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
-import com.deeptruth.app.android.fragments.readermedialist;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
@@ -209,13 +208,6 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             finish();
             return;
         }
-
-
-        if(getcurrentfragment() instanceof readermedialist){
-            finish();
-            return;
-        }
-
 
         if(getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
                 || getcurrentfragment() instanceof imagecomposerfragment)

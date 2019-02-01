@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +52,10 @@ import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.xdata;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -139,6 +144,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
     private static final int request_read_external_storage = 1;
     private int REQUESTCODE_PICK=201;
     private BroadcastReceiver broadcastmediauploaded;
+    private FFmpeg ffmpeg;;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_readermedialist;
@@ -339,6 +345,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
             RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
 
             recyclerviewgrid.setLayoutManager(mLayoutManager);
+            loadffmpeglibrary();
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 fetchmedialistfromdirectory();
@@ -959,6 +966,29 @@ public class medialistreader extends basefragment implements View.OnClickListene
         });
     }
 
+    public void loadffmpeglibrary()
+    {
+        if (ffmpeg == null) {
+            Log.d("ffmpeg", "ffmpeg : is loading..");
+
+            ffmpeg = FFmpeg.getInstance(applicationviavideocomposer.getactivity());
+        }
+        try {
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.d("ffmpeg", "ffmpeg : loaded..");
+                }
+            });
+        } catch (FFmpegNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
     public void resetmedialist(){
 
         if (arrayvideolist != null && arrayvideolist.size() > 0)
@@ -968,62 +998,152 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 String status ="",videostarttransactionid="";
                 if(! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_complete))
                 {
+                    databasemanager mdbhelper=null;
+                    if (mdbhelper == null) {
+                        mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                        mdbhelper.createDatabase();
+                    }
 
+                    try {
+                        mdbhelper.open();
+                    }catch (Exception e)
                     {
-                        databasemanager mdbhelper=null;
-                        if (mdbhelper == null) {
-                            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-                            mdbhelper.createDatabase();
-                        }
+                        e.printStackTrace();
+                    }
 
-                        try {
-                            mdbhelper.open();
-                        }catch (Exception e)
+                    Cursor cursor = mdbhelper.getsinglemediastartdata(common.getfilename(arrayvideolist.get(i).getPath()));
+                    if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
+                    {
+                        do{
+
+                            String location = "" + cursor.getString(cursor.getColumnIndex("location"));
+                            status = "" + cursor.getString(cursor.getColumnIndex("sync_status"));
+                            videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
+                            String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
+                            String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
+                            String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
+                            String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
+
+                        }while(cursor.moveToNext());
+                    }
+                    else
+                    {
+                        try
                         {
-                            e.printStackTrace();
-                        }
+                            if(arrayvideolist.get(i).getPath().contains(".m4a") || arrayvideolist.get(i).getPath().contains(".mp3"))
+                            {
+                                final File destinationfilepath = common.gettempfileforaudiowave();
+                                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                                        BuildConfig.APPLICATION_ID + ".provider", new File(arrayvideolist.get(i).getPath()));
 
-                        Cursor cursor = mdbhelper.getsinglemediastartdata(common.getfilename(arrayvideolist.get(i).getPath()));
-                        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
-                        {
-                            do{
+                                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+                                mediaMetadataRetriever.setDataSource(applicationviavideocomposer.getactivity(),uri);
+                                long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
 
-                                String location = "" + cursor.getString(cursor.getColumnIndex("location"));
-                                status = "" + cursor.getString(cursor.getColumnIndex("sync_status"));
-                                videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
-                                String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
-                                String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
-                                String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
-                                String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
+                                String starttime = common.converttimeformate(0);
+                                String endtime = common.converttimeformate(mediatotalduration);
 
-                            }while(cursor.moveToNext());
-                        }
-                        else
-                        {
-                            try {
+                                String[] command = { "-ss", starttime,"-i", arrayvideolist.get(i).getPath(), "-to",endtime, "-filter_complex",
+                                        "compand=gain=-20,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
+
+                                String syncdate[] = common.getcurrentdatewithtimezone();
+                                final String audiofilepath=arrayvideolist.get(i).getPath();
+
+                                mdbhelper.insertstartvideoinfo("",arrayvideolist.get(i).getmimetype(),common.getfilename(arrayvideolist.get(i).getPath()),"",
+                                        "","","",syncdate[0]  , "",
+                                        "","","","","",
+                                        "","",config.sync_pending,"","","","","","","");
+
+                                ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                                    @Override
+                                    public void onFailure(String s) {
+                                        Log.e("Failure with output : ","IN onFailure");
+                                    }
+
+                                    @Override
+                                    public void onSuccess(String s) {
+                                        Log.e("SUCCESS with output : ","onSuccess");
+                                        updateaudiothumbnail(common.getfilename(audiofilepath),destinationfilepath.getAbsolutePath());
+
+                                        if(adaptermedialist != null && arrayvideolist.size() > 0)
+                                            adaptermedialist.notifyDataSetChanged();
+
+                                        if(adaptergrid != null && arrayvideolist.size() > 0)
+                                            adaptergrid.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onProgress(String s) {
+                                        Log.e( "audiothumbnail : " , "audiothumbnail onProgress");
+
+                                    }
+
+                                    @Override
+                                    public void onStart() {
+                                        Log.e("Start with output : ","IN onStart");
+                                    }
+
+                                    @Override
+                                    public void onFinish() {
+                                        Log.e("Start with output : ","IN onFinish");
+                                    }
+                                });
+
+
+                            }
+                            else
+                            {
                                 String syncdate[] = common.getcurrentdatewithtimezone();
                                 mdbhelper.insertstartvideoinfo("",arrayvideolist.get(i).getmimetype(),common.getfilename(arrayvideolist.get(i).getPath()),"",
                                         "","","",syncdate[0]  , "",
                                         "","","","","",
                                         "","",config.sync_pending,"","","","","","","");
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-                        }
 
-                        try
-                        {
-                            mdbhelper.close();
-                        }catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    try
+                    {
+                        mdbhelper.close();
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
                     }
                 }
             }
         }
     }
+    public void update(String filepath,String thumbnailurl)
+    {
 
+    }
+
+    public void updateaudiothumbnail(String filepath,String thumbnailurl)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try
+        {
+            mdbhelper.updateaudiothumbnail(common.getfilename(filepath),thumbnailurl);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public void getallmedialistfromdb()
     {

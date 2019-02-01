@@ -36,13 +36,11 @@ import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
 import com.deeptruth.app.android.fragments.medialistreader;
 import com.deeptruth.app.android.fragments.myfolderfragment;
-import com.deeptruth.app.android.fragments.readermedialist;
 import com.deeptruth.app.android.fragments.settingfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoplayfragment;
 import com.deeptruth.app.android.services.callservice;
-import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 
@@ -88,8 +86,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     private Handler myhandler;
     private Runnable myrunnable;
 
-    private bottombarfragment fragbottombar;
-    private readermedialist fragreadermedialist;
     private fragmentmedialist fragvideolist;
     private medialistreader fragmedialistreader;
     @Override
@@ -221,7 +217,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 || getcurrentfragment() instanceof videoreaderfragment
                 || getcurrentfragment() instanceof fragmentmedialist || getcurrentfragment() instanceof bottombarfragment
                 || getcurrentfragment() instanceof bottombarrederfrag || getcurrentfragment() instanceof audioreaderfragment
-                || getcurrentfragment() instanceof imagereaderfragment || getcurrentfragment() instanceof readermedialist
                 )
         {
             txt_title.setText("");
@@ -406,18 +401,7 @@ public void updateactionbar(int showHide, int color) {
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
-         }
-         else if(fragment instanceof readermedialist){
-             img_menu.setVisibility(View.VISIBLE);
-             imgsettingsicon.setVisibility(View.VISIBLE);
-             imguploadicon.setVisibility(View.GONE);
-             imgsettingsicon.setEnabled(true);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
-         } else if(fragment instanceof settingfragment){
+         }else if(fragment instanceof settingfragment){
              img_menu.setVisibility(View.GONE);
              actionbar.setVisibility(View.GONE);
              imgsettingsicon.setVisibility(View.GONE);
