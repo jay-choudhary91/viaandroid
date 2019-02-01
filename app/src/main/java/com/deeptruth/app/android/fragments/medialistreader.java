@@ -762,6 +762,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                                                     long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
                                                     long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
                                                     long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                                                    Log.e("seconds",""+second);
                                                     if(second == 0)
                                                         second=1;
 
