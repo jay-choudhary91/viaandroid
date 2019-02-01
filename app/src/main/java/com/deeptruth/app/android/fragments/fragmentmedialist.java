@@ -757,9 +757,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                                     long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
                                                     if(second == 0)
                                                         second=1;
-
-                                                    videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
-
+                                                    if(videoobj.getDuration().isEmpty()){
+                                                        videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                                    }
                                                     ismedia=true;
                                                 }
                                             }
