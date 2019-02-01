@@ -2140,6 +2140,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
 
             final String finalselectedid =  selectedid;
+            String dictionaryhashvalue = "";
 
             try {
 
@@ -2159,7 +2160,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 obj.writeJSONString(out);
 
                 String jsontext = out.toString();
-                String dictionaryhashvalue = md5.calculatestringtomd5(jsontext);
+                dictionaryhashvalue = md5.calculatestringtomd5(jsontext);
 
                 mainobject.put("sequencedevicedate",""+sequencedevicedate);
                 mainobject.put("sequenceno",sequenceno);
@@ -2179,7 +2180,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             mpairslist.put("key",""+finalvideokey);
             mpairslist.put("devicetimeoffset",""+finaldevicetimeoffset);
             mpairslist.put("apirequestdevicedate",""+finalapirequestdevicedate);
-
             mpairslist.put("sequencelist",array);
 
             final String finalSequenceno = sequenceno;
@@ -2205,6 +2205,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
 
             // api calling for video_update or audio_update
+            final String finalDictionaryhashvalue = dictionaryhashvalue;
             xapipost_sendjson(locationawareactivity.this,actiontype, mpairslist, new apiresponselistener() {
                 @Override
                 public void onResponse(taskresult response)
@@ -2245,7 +2246,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                             String serverdate = object.getString("serverdate");
                             updatevideoupdateapiresponse(finalselectedid,sequencekey,serverdate,serverdictionaryhash,
-                                    sequenceid,mediaframetransactionid,color,latency);
+                                    sequenceid,mediaframetransactionid,color,latency, finalDictionaryhashvalue);
 
                         }catch (Exception e)
                         {
@@ -2456,7 +2457,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
 
     public void updatevideoupdateapiresponse(String selectedid, String sequence, String serverdate, String serverdictionaryhash,
-                                             String sequenceid, String videoframetransactionid,String color,String latency)
+                                             String sequenceid, String videoframetransactionid,String color,String latency,String dictionaryhashvalue)
     {
 
         if (mdbhelper == null) {
@@ -2471,7 +2472,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         try {
             mdbhelper.updatevideoupdateapiresponse(selectedid,sequence,serverdate,
-                    serverdictionaryhash,sequenceid,videoframetransactionid,color,latency);
+                    serverdictionaryhash,sequenceid,videoframetransactionid,color,latency,dictionaryhashvalue);
             mdbhelper.close();
         }catch (Exception e)
         {

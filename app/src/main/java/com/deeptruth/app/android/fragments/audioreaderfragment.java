@@ -287,8 +287,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediadate = "",mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
+            mediastartdevicedate = "",mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
     adapteritemclick mcontrollernavigator;
+    arraycontainer arraycontainerformetric =null;
 
     public audioreaderfragment() {
     }
@@ -463,13 +464,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             loadmap();
             setmetriceshashesdata();
             setupaudiodata();
-
-            Thread thread = new Thread() {
-                public void run() {
-                    getmediadata();
-                }
-            };
-            thread.start();
         }
         return rootview;
     }
@@ -843,27 +837,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mp.seekTo(100);
             }
 
-            File file=new File(audiourl);
-            Date lastmodifieddate = new Date(file.lastModified());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(lastmodifieddate);
-            int decreaseseconds=player.getDuration()/1000;
-            calendar.add(Calendar.SECOND, -decreaseseconds);
-            Date startdate = calendar.getTime();
-            SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
-            String startformatteddate=formatted.format(startdate);
-            String endformatteddate=formatted.format(lastmodifieddate);
-            final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
-            final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-            txt_starttime.setText(startformatteddate);
-            txt_endtime.setText(endformatteddate);
-            txt_title_actionbarcomposer.setText(filecreateddate);
-            txt_createdtime.setText(createdtime);
-
         }catch (Exception e)
         {
             e.printStackTrace();
         }
+
+        getmediadata();
     }
 
     public void start() {
@@ -993,28 +972,37 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         myRunnable = new Runnable() {
             @Override
             public void run() {
-               boolean graphicopen=false;
-                if(!isdraweropen)
+
+                if(arraycontainerformetric != null)
                 {
-                    /*if((recyview_hashes.getVisibility() == View.VISIBLE) && (! selectedhaeshes.trim().isEmpty()))
+                    common.setgraphicalblockchainvalue(config.blockchainid,arraycontainerformetric.getVideostarttransactionid(),true);
+                    common.setgraphicalblockchainvalue(config.hashformula,arraycontainerformetric.getHashmethod(),true);
+                    common.setgraphicalblockchainvalue(config.datahash,arraycontainerformetric.getValuehash(),true);
+                    common.setgraphicalblockchainvalue(config.matrichash,arraycontainerformetric.getMetahash(),true);
+
+                    common.setspannable(getResources().getString(R.string.blockchain_id)," "+ arraycontainerformetric.getVideostarttransactionid(), txt_blockchainid);
+                    common.setspannable(getResources().getString(R.string.block_id)," "+ arraycontainerformetric.getHashmethod(), txt_blockid);
+                    common.setspannable(getResources().getString(R.string.block_number)," "+ arraycontainerformetric.getValuehash(), txt_blocknumber);
+                    common.setspannable(getResources().getString(R.string.metrichash)," "+arraycontainerformetric.getMetahash(), txt_metahash);
+
+                    ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+
+                    if(scrollview_meta.getVisibility() == View.VISIBLE)
                     {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mhashesitems.add(new videomodel(selectedhaeshes));
-                                mhashesadapter.notifyItemChanged(mhashesitems.size()-1);
-                                selectedhaeshes="";
-                            }
-                        });
+                        for(int j=0;j<metricItemArraylist.size();j++)
+                        {
+                            common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                    metricItemArraylist.get(j).getMetricTrackValue(),true);
 
-                    }*/
-
-                    setmetricesgraphicaldata();
+                            setmetadatavalue(metricItemArraylist.get(j));
+                        }
+                    }
                 }
-               /* if(fragmentgraphic != null)
-                    fragmentgraphic.setdrawerproperty(graphicopen);*/
 
-                myHandler.postDelayed(this, 5000);
+
+                setmetricesgraphicaldata();
+
+                myHandler.postDelayed(this, 2000);
             }
         };
         myHandler.post(myRunnable);
@@ -1035,43 +1023,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         if(n> metricmainarraylist.size() || imediacompleted)
             n=metricmainarraylist.size();
 
-        Log.e("Current duration ",""+n+" "+currentduration+" "+metricmainarraylist.size());
-
-        for(int i=0;i<1;i++) {
-            if (!metricmainarraylist.get(i).isIsupdated()) {
-                metricmainarraylist.get(i).setIsupdated(true);
-                double latt = 0, longg = 0;
-
-                ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(i).getMetricItemArraylist();
-
-                //tvblockchainid.setText("hiii hello");
-                common.setspannable(getResources().getString(R.string.blockchain_id), " "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                common.setspannable(getResources().getString(R.string.block_id)," "+ metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
-
-                selectedmetrics = selectedmetrics + "\n";
-
-                if(scrollview_meta.getVisibility() == View.VISIBLE)
-                {
-                    for (int j = 0; j < metricItemArraylist.size(); j++) {
-                        selectedmetrics = selectedmetrics + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
-                                metricItemArraylist.get(j).getMetricTrackValue();
-
-                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                metricItemArraylist.get(j).getMetricTrackValue(), true);
-
-                        setmetadatavalue(metricItemArraylist.get(j));
-                    }
-                }
+        for(int i=0; i < n ;i++)
+        {
+            if (! metricmainarraylist.get(i).isIsupdated())
+            {
+                arraycontainerformetric = new arraycontainer();
+                arraycontainerformetric = metricmainarraylist.get(i);
                 selectedmetrics = selectedmetrics + "\n";
             }
-
         }
         if (((!latitude.trim().isEmpty()) && (!latitude.equalsIgnoreCase("NA"))) &&
                 (!longitude.trim().isEmpty()) && (!longitude.equalsIgnoreCase("NA")))
             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
-
     }
 
     @Override
@@ -1303,12 +1266,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 e.printStackTrace();
             }
             Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(audiourl));
-            String completedate="";
+            String mediacompleteddate="";
             if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
             {
                 do{
-                    completedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
-                    mediadate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
+                    mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                    mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                     medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                     medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                     mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
@@ -1318,7 +1281,49 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }while(cur.moveToNext());
             }
 
-            if (!completedate.isEmpty()){
+            if (!mediacompleteddate.isEmpty()){
+
+
+                final String finalMediacompleteddate = mediacompleteddate;
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            SimpleDateFormat formatted = null;
+                            Date mediadate = null;
+                            if(finalMediacompleteddate.contains("T"))
+                            {
+                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                mediadate = format.parse(finalMediacompleteddate);
+                            }
+                            else
+                            {
+                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                mediadate = format.parse(finalMediacompleteddate);
+                            }
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(mediadate);
+                            int decreaseseconds=player.getDuration()/1000;
+                            calendar.add(Calendar.SECOND, -decreaseseconds);
+                            Date startdate = calendar.getTime();
+                            formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+                            String startformatteddate=formatted.format(startdate);
+                            String endformatteddate=formatted.format(mediadate);
+                            final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
+                            final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+                            txt_starttime.setText(startformatteddate);
+                            txt_endtime.setText(endformatteddate);
+                            txt_title_actionbarcomposer.setText(filecreateddate);
+                            txt_createdtime.setText(createdtime);
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
+
                 img_verified.setVisibility(View.VISIBLE);
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
@@ -1352,7 +1357,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                   //  txt_duration.setText("00:00:02:17.3");
 
 
-                    if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
+                    if((!mediastartdevicedate.isEmpty()) && (!mediacompleteddate.isEmpty() && mediacompleteddate!= null)){
 
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
@@ -1370,19 +1375,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             }
                         });
                     }
-                    if(!medianame.isEmpty()){
-                        int index =  medianame.lastIndexOf('.');
-                        if(index >=0)
-                            medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
-
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                edt_medianame.setText(medianame);
-                            }
-                        });
-                    }
+                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            edt_medianame.setText(medianame);
+                        }
+                    });
 
                     if(!medianotes.isEmpty()){
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {

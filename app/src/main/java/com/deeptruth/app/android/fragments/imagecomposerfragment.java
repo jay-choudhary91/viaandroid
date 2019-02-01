@@ -581,11 +581,17 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void setimagehash() throws FileNotFoundException
     {
         try {
+            String keyvalue="";
+            for(int i=0;i<5;i++)
+            {
+                keyvalue =  md5.fileToMD5(capturedimagefile.getAbsolutePath());
+                if(keyvalue.trim().length() > 0)
+                    break;
+            }
 
-            String keyvalue =  md5.fileToMD5(capturedimagefile.getAbsolutePath());
             selectedhashes =  keyvalue;
             selectedhashes=keytype+" : "+selectedhashes;
-            Log.e("keyhash = ","" +selectedhashes);
+            Log.e("imagekeyhash = ","" +selectedhashes);
             hashvalue = selectedhashes;
 
             ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();

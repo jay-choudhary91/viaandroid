@@ -70,6 +70,10 @@ public class databasemanager {
         try {
             lock.lock();
 
+            int index =  medianame.lastIndexOf('.');
+            if(index >=0)
+                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
+
             ContentValues values = new ContentValues();
             values.put("header", "" + header);
             values.put("type", ""+type);
@@ -119,6 +123,12 @@ public class databasemanager {
     {
         try {
             lock.lock();
+
+            String medianame="";
+            int index =  location.lastIndexOf('.');
+            if(index >=0)
+                medianame = location.substring(0, location.lastIndexOf('.'));
+
             String query="update tblstartmediainfo set header='"+ header +"',type = '"+type +"',localkey='"+ localkey +"',token = '"+token +"'" +
                     ",videokey='"+ videokey +"',sync = '"+sync +"',sync_date='"+ date +"',action_type = '"+action_type +"'," +
                     "apirequestdevicedate='"+ apirequestdevicedate +"',videostartdevicedate = '"+videostartdevicedate +"',devicetimeoffset='"+
@@ -126,6 +136,7 @@ public class databasemanager {
                     "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
                     "status = '"+status +"'," +
                     "color = '"+color +"'," +
+                    "media_name = '"+medianame +"'," +
                     "completeddate = '"+completeddate +"'," +
                     "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
                     "sync_status = '"+sync_status +"' where location='"+location+"'";
@@ -369,7 +380,7 @@ public class databasemanager {
     }
 
     public Cursor updatevideoupdateapiresponse(String videoid, String sequence, String serverdate, String serverdictionaryhash,
-                                               String sequenceid, String videoframetransactionid,String color,String latency) {
+                                               String sequenceid, String videoframetransactionid,String color,String latency,String dictionaryhashvalue) {
         Cursor mCur=null;
         try {
             lock.lock();
@@ -379,6 +390,7 @@ public class databasemanager {
                     "',serverdate ='"+serverdate+
                     "',color ='"+color+
                     "',latency ='"+latency+
+                    "',valuehash ='"+dictionaryhashvalue+
                     "', serverdictionaryhash = '"+serverdictionaryhash+
                     "', sequenceid = '"+sequenceid+"' , videostarttransactionid = '"+videoframetransactionid+"' where id='"+videoid+"'");
             if (mCur != null)
