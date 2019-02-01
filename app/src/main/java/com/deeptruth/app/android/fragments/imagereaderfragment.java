@@ -846,19 +846,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 txt_createdtime.setText(formattedtime.format(lastmodifieddate));
 
                             }
-                            if(!medianame.isEmpty()){
-                                int index =  medianame.lastIndexOf('.');
-                                if(index >=0)
-                                    medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
-
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        edt_medianame.setText(medianame);
-                                    }
-                                });
-                            }
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    edt_medianame.setText(medianame);
+                                }
+                            });
 
                             if(!medianotes.isEmpty()){
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {

@@ -538,7 +538,7 @@ public class readmediadataservice extends Service {
 
                                     meta=common.refactordegreequotesformat(meta);
 
-                                    dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                    dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
                                             "","0",videoframetransactionid,metahash,color,latency);
@@ -571,7 +571,7 @@ public class readmediadataservice extends Service {
 
                                     meta=common.refactordegreequotesformat(meta);
 
-                                    dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                    dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
                                             meta,videoframedevicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",videoframedevicedatetime,"",
                                             "","0",videoframetransactionid,metahash,color,latency);
@@ -606,7 +606,7 @@ public class readmediadataservice extends Service {
 
                                     meta=common.refactordegreequotesformat(meta);
 
-                                    dbmanager.insertframemetricesinfo("","",hashmethod,objectparentid,
+                                    dbmanager.insertframemetricesinfo("",metahash,hashmethod,objectparentid,
                                             meta,devicedatetime,hashmethod,hashvalue,
                                             sequenceno,"",devicedatetime,"",
                                             "","0",frametransactionid,metahash,color,latency);

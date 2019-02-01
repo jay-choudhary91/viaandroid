@@ -1241,19 +1241,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency);
                             }
 
-                            if(!medianame.isEmpty()){
-                                int index =  medianame.lastIndexOf('.');
-                                if(index >=0)
-                                    medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
-
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        edt_medianame.setText(medianame);
-                                    }
-                                });
-                            }
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    edt_medianame.setText(medianame);
+                                }
+                            });
 
                             if(!medianotes.isEmpty()){
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
