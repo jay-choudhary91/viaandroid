@@ -826,8 +826,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     e.printStackTrace();
                 }
 
-                currentselectedcomposer=config.selectedmediatype;
-                showselectedfragment();
+                /*currentselectedcomposer=config.selectedmediatype;
+                showselectedfragment();*/
                 if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
                 {
                     getlatestmediafromdirectory();
@@ -870,8 +870,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         for (File file : files)
         {
             long filelength = file.length();
-            int file_size = Integer.parseInt(String.valueOf(filelength/1024));
-            if(file_size > 0)
+            if(filelength > 0)
             {
                 video videoobj=new video();
                 videoobj.setPath(file.getAbsolutePath());
