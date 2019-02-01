@@ -41,6 +41,7 @@ import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoplayfragment;
 import com.deeptruth.app.android.services.callservice;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 
@@ -281,7 +282,7 @@ public void updateactionbar(int showHide, int color) {
     @Override
     public void onfragmentbackstackchanged() {
         super.onfragmentbackstackchanged();
-       // common.resetgraphicaldata();
+        common.resetgraphicaldata();
         basefragment fragment = getcurrentfragment();
         img_back.setVisibility(View.GONE);
         img_cancel.setVisibility(View.GONE);
