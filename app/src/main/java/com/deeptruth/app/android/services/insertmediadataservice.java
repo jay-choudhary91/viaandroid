@@ -248,52 +248,11 @@ public class insertmediadataservice extends Service {
                                                             mdbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("audio"))
                                                     {
 
-                                                        final File destinationfilepath = common.gettempfileforaudiowave();
-                                                        Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                                                                BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
-
-                                                        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                                                        mediaMetadataRetriever.setDataSource(getApplicationContext(),uri);
-                                                        long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
-
-                                                        String starttime = common.converttimeformate(0);
-                                                        String endtime = common.converttimeformate(mediatotalduration);
-
-                                                        String[] command = { "-ss", starttime,"-i", mediapath, "-to",endtime, "-filter_complex",
-                                                                "compand=gain=-20,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
-
-                                                        ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
-                                                            @Override
-                                                            public void onFailure(String s) {
-                                                                Log.e("Failure with output : ","IN onFailure");
-                                                            }
-
-                                                            @Override
-                                                            public void onSuccess(String s) {
-                                                                Log.e("SUCCESS with output : ","onSuccess");
-                                                                updateaudiothumbnail(mediapath,destinationfilepath.getAbsolutePath());
-                                                                medialistitemaddbroadcast();
-                                                            }
-
-                                                            @Override
-                                                            public void onProgress(String s) {
-                                                                Log.e( "audiothumbnail : " , "audiothumbnail onProgress");
-
-                                                            }
-
-                                                            @Override
-                                                            public void onStart() {
-                                                                Log.e("Start with output : ","IN onStart");
-                                                            }
-
-                                                            @Override
-                                                            public void onFinish() {
-                                                                Log.e("Start with output : ","IN onFinish");
-                                                            }
-                                                        });
+                                                        updateaudiothumbnail(mediapath,mdbstartitemcontainer.get(0).getItem15());
+                                                        medialistitemaddbroadcast();
                                                     }
 
-                                                } catch (FFmpegCommandAlreadyRunningException e) {
+                                                } catch (Exception e) {
                                                     // do nothing for now
                                                 }
                                             }

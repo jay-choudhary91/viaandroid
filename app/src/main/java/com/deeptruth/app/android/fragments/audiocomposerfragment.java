@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -15,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,8 +33,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.frameinfo;
@@ -49,6 +54,11 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.visualizeraudiorecorder;
 import com.deeptruth.app.android.utils.xdata;
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -144,7 +154,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     FragmentManager fm ;
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
-
+    FFmpeg ffmpeg;
 
     @Override
     public int getlayoutid() {
@@ -181,6 +191,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             keytype=common.checkkey();
             frameduration=common.checkframeduration();
 
+            loadffmpeglibrary();
             startnoise();
             txt_title_actionbarcomposer.setText("deeptruth");
             setmetriceshashesdata();
@@ -582,7 +593,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             if(mdbstartitemcontainer.size() == 0)
             {
                 mdbstartitemcontainer.add(new dbitemcontainer(json,"audio","Local storage path", mediakey,"","","0","0",
-                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,""));
+                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,"","",""));
                 Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
             }
         } catch (Exception e) {
@@ -624,6 +635,30 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         return file;
     }
 
+    public void loadffmpeglibrary()
+    {
+        if (ffmpeg == null) {
+            Log.d("ffmpeg", "ffmpeg : is loading..");
+
+            ffmpeg = FFmpeg.getInstance(applicationviavideocomposer.getactivity());
+        }
+        try {
+            ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.d("ffmpeg", "ffmpeg : loaded..");
+                }
+            });
+        } catch (FFmpegNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void stoprecording() {
 
         try{
@@ -657,30 +692,86 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
 
         try {
-            Gson gson = new Gson();
-            String list1 = gson.toJson(mdbstartitemcontainer);
-            String list2 = gson.toJson(mdbmiddleitemcontainer);
-            xdata.getinstance().saveSetting("liststart",list1);
-            xdata.getinstance().saveSetting("listmiddle",list2);
-            xdata.getinstance().saveSetting("mediapath",recordedmediafile);
-            xdata.getinstance().saveSetting("keytype",keytype);
 
-            Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
-            applicationviavideocomposer.getactivity().startService(intent);
+            if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 &&
+                    mdbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("audio"))
+            {
 
-        }catch (Exception e)
-        {
-            e.printStackTrace();
+                final File destinationfilepath = common.gettempfileforaudiowave();
+                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                        BuildConfig.APPLICATION_ID + ".provider", new File(recordedmediafile));
+
+                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+                mediaMetadataRetriever.setDataSource(applicationviavideocomposer.getactivity(),uri);
+                long mediatotalduration = Long.parseLong(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+
+                String starttime = common.converttimeformate(0);
+                String endtime = common.converttimeformate(mediatotalduration);
+
+                String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
+                        "compand=gain=-20,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
+
+                ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
+                    @Override
+                    public void onFailure(String s) {
+                        Log.e("Failure with output : ","IN onFailure");
+                        callserviceforinsertintodb();
+                    }
+
+                    @Override
+                    public void onSuccess(String s) {
+                        Log.e("SUCCESS with output : ","onSuccess");
+                        if(mdbstartitemcontainer.size() > 0)
+                        {
+                            mdbstartitemcontainer.get(0).setItem15(destinationfilepath.getAbsolutePath());
+                            callserviceforinsertintodb();
+
+                            if(madapterclick != null)
+                                madapterclick.onItemClicked(recordedmediafile,2);
+                            img_dotmenu.setVisibility(View.VISIBLE);
+
+                            if(madapterclick != null)
+                                madapterclick.onItemClicked(null,4);
+
+                            resetaudioreder();
+                        }
+                    }
+
+                    @Override
+                    public void onProgress(String s) {
+                        Log.e( "audiothumbnail : " , "audiothumbnail onProgress");
+
+                    }
+
+                    @Override
+                    public void onStart() {
+                        Log.e("Start with output : ","IN onStart");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        Log.e("Start with output : ","IN onFinish");
+                    }
+                });
+            }
+
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            // do nothing for now
         }
+    }
 
-        if(madapterclick != null)
-            madapterclick.onItemClicked(recordedmediafile,2);
-        img_dotmenu.setVisibility(View.VISIBLE);
+    public void callserviceforinsertintodb()
+    {
+        Gson gson = new Gson();
+        String list1 = gson.toJson(mdbstartitemcontainer);
+        String list2 = gson.toJson(mdbmiddleitemcontainer);
+        xdata.getinstance().saveSetting("liststart",list1);
+        xdata.getinstance().saveSetting("listmiddle",list2);
+        xdata.getinstance().saveSetting("mediapath",recordedmediafile);
+        xdata.getinstance().saveSetting("keytype",keytype);
 
-        if(madapterclick != null)
-            madapterclick.onItemClicked(null,4);
-
-        resetaudioreder();
+        Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
+        applicationviavideocomposer.getactivity().startService(intent);
     }
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)
