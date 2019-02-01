@@ -765,8 +765,10 @@ public class medialistreader extends basefragment implements View.OnClickListene
                                                     Log.e("seconds",""+second);
                                                     if(second == 0)
                                                         second=1;
+                                                    if(videoobj.getDuration().isEmpty()){
+                                                        videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                                    }
 
-                                                    videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
 
                                                     ismedia=true;
                                                 }
