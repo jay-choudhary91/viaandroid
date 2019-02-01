@@ -959,7 +959,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void  changeactionbarcolor(){
         gethelper().updateactionbar(1, applicationviavideocomposer.getactivity().getResources().getColor
-                (R.color.videoPlayer_header));
+                (R.color.dark_blue_solid));
     }
 
 

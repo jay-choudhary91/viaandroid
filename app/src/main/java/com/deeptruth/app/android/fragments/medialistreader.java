@@ -112,6 +112,10 @@ public class medialistreader extends basefragment implements View.OnClickListene
     ImageView img_header_search;
     @BindView(R.id.img_search_editicon)
     ImageView img_search_editicon;
+    @BindView(R.id.btn_gallerylist)
+    ImageView btn_gallerylist;
+    @BindView(R.id.btn_gridlist)
+    ImageView btn_gridlist;
 
     int selectedstyletype=1,selectedmediatype=-1,listviewheight=0;
     RelativeLayout listlayout;
@@ -254,7 +258,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
 
             selectedstyletype=1;
             lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.grey_xxx));
+            lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
             lay_gridstyle.setOnClickListener(this);
             lay_liststyle.setOnClickListener(this);
             txt_mediatype_a.setOnClickListener(this);
@@ -283,6 +287,22 @@ public class medialistreader extends basefragment implements View.OnClickListene
             try {
                 DrawableCompat.setTint(img_search_editicon.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                         , R.color.grey_xxx));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+                DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_bg));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            try {
+                DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                        , R.color.img_blue_bg));
             }catch (Exception e)
             {
                 e.printStackTrace();
@@ -407,16 +427,48 @@ public class medialistreader extends basefragment implements View.OnClickListene
             case R.id.lay_gridstyle:
                 selectedstyletype=1;
                 lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
-                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.grey_xxx));
+                lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
                 recyclerviewlist.setVisibility(View.GONE);
                 recyclerviewgrid.setVisibility(View.VISIBLE);
+
+                try {
+                    DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                            , R.color.img_bg));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                try {
+                    DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                            , R.color.img_blue_bg));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.lay_liststyle:
                 selectedstyletype=2;
-                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.grey_xxx));
+                lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
                 lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
                 recyclerviewlist.setVisibility(View.VISIBLE);
                 recyclerviewgrid.setVisibility(View.GONE);
+
+                try {
+                    DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                            , R.color.img_bg));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                try {
+                    DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                            , R.color.img_blue_bg));
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.txt_mediatype_a:
                 showselecteditemincenter(txt_mediatype_a,1);
@@ -762,10 +814,13 @@ public class medialistreader extends basefragment implements View.OnClickListene
                                                     long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
                                                     long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
                                                     long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                                                    Log.e("seconds",""+second);
                                                     if(second == 0)
                                                         second=1;
+                                                    if(videoobj.getDuration().isEmpty()){
+                                                        videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                                                    }
 
-                                                    videoobj.setDuration(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
 
                                                     ismedia=true;
                                                 }
