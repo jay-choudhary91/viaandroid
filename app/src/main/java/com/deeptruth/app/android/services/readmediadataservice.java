@@ -342,7 +342,8 @@ public class readmediadataservice extends Service {
                             mediadevicetimeoffset = (object.has("videodevicetimeoffset")?object.getString("videodevicetimeoffset"):"");
                             String videopublickey = (object.has("videopublickey")?object.getString("videopublickey"):"");
                             String videotypeid = (object.has("videotypeid")?object.getString("videotypeid"):"");
-                            mediacompleteddevicedatetime = (object.has("videocreateddate")?object.getString("videocreateddate"):"");
+                            mediacompleteddevicedatetime = (object.has("videocompletedevicedatetime")?object.getString("videocompletedevicedatetime"):"");
+                            String videocreateddate = (object.has("videocreateddate")?object.getString("videocreateddate"):"");
                             String videorank = (object.has("videorank")?object.getString("videorank"):"");
                             medianame = (object.has("videoname")?object.getString("videoname"):"");
                             mediatypeshortname = (object.has("videotypeshortname")?object.getString("videotypeshortname"):"");
@@ -437,9 +438,9 @@ public class readmediadataservice extends Service {
                         {
                             String syncdate[] = common.getcurrentdatewithtimezone();
                             mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
-                                    mediatoken,mediakey,"",syncdate[0] , actiontype,
-                                    "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
-                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate,color);
+                            mediatoken,mediakey,"",syncdate[0] , actiontype,
+                            "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
+                            firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate,color);
                             sendbroadcastreader();
                         }
 
@@ -711,7 +712,7 @@ public class readmediadataservice extends Service {
     public void sendbroadcastreader()
     {
         xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
-        Intent i = new Intent(config.reader_service_getmetadata);
+        Intent i = new Intent(config.composer_service_getencryptionmetadata);
         sendBroadcast(i);
     }
     //* End of broadcast register

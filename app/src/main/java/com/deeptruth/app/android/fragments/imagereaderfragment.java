@@ -71,7 +71,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -202,7 +201,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout googlemap;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-    mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
+    mediastartdevicedate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     ImageView img_compass;
     adapteritemclick mcontrollernavigator;
@@ -791,12 +790,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
 
                     Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(imageurl));
-                    String completedate="";
+                    String mediacompleteddate="";
                     if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
                     {
                         do{
-                            completedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
-                            mediadate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
+                            mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                            mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                             mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
@@ -804,7 +803,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         }while(cur.moveToNext());
                     }
 
-                    if (!completedate.isEmpty()){
+                    if (!mediacompleteddate.isEmpty()){
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
                         if(metricmainarraylist.size()>0){
@@ -834,46 +833,41 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 ,color);
                             }
 
-                            if((!mediadate.isEmpty()&& mediadate != null) && (!completedate.isEmpty() && completedate!= null)){
+                            if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediacompleteddate.isEmpty() && mediacompleteddate!= null)){
 
-                                File file=new File(imageurl);
-                                Date lastmodifieddate = new Date(file.lastModified());
-                                SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
-                                SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss a");
-                                tvdate.setText(formatteddate.format(lastmodifieddate));
-                                tvtime.setText(formattedtime.format(lastmodifieddate));
-                                txt_title_actionbarcomposer.setText(formatteddate.format(lastmodifieddate));
-                                txt_createdtime.setText(formattedtime.format(lastmodifieddate));
-
-                            }
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    edt_medianame.setText(medianame);
-                                }
-                            });
-
-                            if(!medianotes.isEmpty()){
+                                final String finalMediacompleteddate = mediacompleteddate;
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        edt_medianotes.setText(medianotes);
+                                        try {
+                                            SimpleDateFormat formatted = null;
+                                            Date mediadate = null;
+                                            if(finalMediacompleteddate.contains("T"))
+                                            {
+                                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                                mediadate = format.parse(finalMediacompleteddate);
+                                            }
+                                            else
+                                            {
+                                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                                mediadate = format.parse(finalMediacompleteddate);
+                                            }
+                                            SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
+                                            SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss a");
+                                            tvdate.setText(formatteddate.format(mediadate));
+                                            tvtime.setText(formattedtime.format(mediadate));
+                                            txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
+                                            txt_createdtime.setText(formattedtime.format(mediadate));
+                                            edt_medianame.setText(medianame);
+                                            edt_medianotes.setText(medianotes);
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+
                                     }
                                 });
                             }
-                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    final Handler handler = new Handler();
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            // Do something after 5s = 5000ms
-                                            //setmetadatavalue();
-                                        }
-                                    }, 2000);
-                                }
-                            });
                         }
                         try
                         {

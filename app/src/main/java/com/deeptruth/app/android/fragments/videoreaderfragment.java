@@ -310,7 +310,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediadate = "",mediatime = "",mediasize="",lastsavedangle="";
+            mediastartdevicedate = "",mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver;
     int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
@@ -750,7 +750,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 }
             });
 
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
 
             }
@@ -764,12 +764,11 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                 };
                 thread.start();
 
-            }
+            }*/
             registerbroadcastreciver();
             Log.e("oncreate","oncreate");
 
             loadmap();
-            setmetriceshashesdata();
         }
         return rootview;
     }
@@ -1195,12 +1194,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     }
 
                     Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
-                    String completedate="";
+                    String mediacompleteddate="";
                     if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
                     {
                         do{
-                            completedate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
-                            mediadate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
+                            mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                            mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                             mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
@@ -1210,7 +1209,49 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                         }while(cur.moveToNext());
                     }
 
-                    if (!completedate.isEmpty()){
+                    if (!mediacompleteddate.isEmpty())
+                    {
+                        final String finalMediacompleteddate = mediacompleteddate;
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    SimpleDateFormat formatted = null;
+                                    Date mediadate = null;
+                                    if(finalMediacompleteddate.contains("T"))
+                                    {
+                                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                        mediadate = format.parse(finalMediacompleteddate);
+                                    }
+                                    else
+                                    {
+                                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                        mediadate = format.parse(finalMediacompleteddate);
+                                    }
+
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTime(mediadate);
+                                    int decreaseseconds=player.getDuration()/1000;
+                                    calendar.add(Calendar.SECOND, -decreaseseconds);
+                                    Date startdate = calendar.getTime();
+                                    formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+                                    String startformatteddate=formatted.format(startdate);
+                                    String endformatteddate=formatted.format(mediadate);
+                                    final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
+                                    final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
+                                    txt_starttime.setText(startformatteddate);
+                                    txt_endtime.setText(endformatteddate);
+                                    txt_title_actionbarcomposer.setText(filecreateddate);
+                                    txt_createdtime.setText(createdtime);
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        });
+
+
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
                         if(metricmainarraylist.size()>0){
@@ -1244,33 +1285,10 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    edt_medianotes.setText(medianotes);
                                     edt_medianame.setText(medianame);
                                 }
                             });
-
-                            if(!medianotes.isEmpty()){
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        edt_medianotes.setText(medianotes);
-                                    }
-                                });
-                            }
-
-
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        final Handler handler = new Handler();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                // Do something after 5s = 5000ms
-                                                //setmetadatavalue();
-                                            }
-                                        }, 2000);
-                                    }
-                                });
                         }
                         try
                         {
@@ -1386,28 +1404,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                     mediaPlayer.seekTo(100);
                 }
 
-                File file=new File(mediafilepath);
-                Date lastmodifieddate = new Date(file.lastModified());
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(lastmodifieddate);
-                int decreaseseconds=player.getDuration()/1000;
-                calendar.add(Calendar.SECOND, -decreaseseconds);
-                Date startdate = calendar.getTime();
-                SimpleDateFormat formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
-                String startformatteddate=formatted.format(startdate);
-                String endformatteddate=formatted.format(lastmodifieddate);
-                final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
-                final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                txt_starttime.setText(startformatteddate);
-                txt_endtime.setText(endformatteddate);
-                txt_title_actionbarcomposer.setText(filecreateddate);
-                txt_createdtime.setText(createdtime);
-
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
 
+            setmetriceshashesdata();
             Log.e("onprepared","onprepared");
         }
     }
