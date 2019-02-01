@@ -790,9 +790,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         public void onItemClicked(Object object, int type) {
             if(type == 1) // for video record start,audio record start and image capture button click
             {
-                if(currentselectedcomposer == 0){
+                if(currentselectedcomposer == 0)
+                {
                     showhideactionbottombaricon(0);
-                }else if(currentselectedcomposer == 2){
+                }
+                else if(currentselectedcomposer == 2)
+                {
                    showhideactionbottombaricon(2);
                 }
 
@@ -800,25 +803,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             else if(type == 2) // for video record stop,audio record stop and image captured button click
             {
-                if(currentselectedcomposer == 0){
-                    showhideactionbottombaricon(1);
-                }else if(currentselectedcomposer == 2){
-                    showhideactionbottombaricon(3);
-                }
-               // setimagerecordstop();
-                /*if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
+                if(currentselectedcomposer == 0)
                 {
-                    getlatestmediafromdirectory();
+                    showhideactionbottombaricon(1);
                 }
                 else if(currentselectedcomposer == 2)
                 {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            getlatestaudiofromdirectory();
-                        }
-                    },3000);
-                }*/
+                    showhideactionbottombaricon(3);
+                }
             }
             else if(type == 3) // For swipe gesture to change fragment
             {
@@ -842,15 +834,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
                 else if(currentselectedcomposer == 2)
                 {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            getlatestaudiofromdirectory();
-                        }
-                    },3000);
+                    getlatestaudiofromdirectory();
                 }
-
-                //gethelper().onBack();
             }
             else if(type == 5) // For swipe gesture to change fragment
             {
