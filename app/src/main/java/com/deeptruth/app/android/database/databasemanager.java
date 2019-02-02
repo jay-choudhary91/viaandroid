@@ -719,11 +719,11 @@ public class databasemanager {
             String sqlquery="";
             if(selectedfolder.equalsIgnoreCase(config.dirallmedia))
             {
-                sqlquery = "SELECT * FROM tblstartmediainfo";
+                sqlquery = "SELECT * FROM tblstartmediainfo order by id DESC";
             }
             else
             {
-                sqlquery = "SELECT * FROM tblstartmediainfo where media_folder= '"+selectedfolder+"'";
+                sqlquery = "SELECT * FROM tblstartmediainfo where media_folder= '"+selectedfolder+"' order by  id DESC";
             }
 
             if(mDb == null)
