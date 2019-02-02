@@ -23,9 +23,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.location.Location;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -71,7 +69,6 @@ import com.deeptruth.app.android.utils.camerautil;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
-import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.xdata;
 import com.google.gson.Gson;
@@ -810,9 +807,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     private File getVideoFile(Context context) {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.videodir, fileName+".mp4");
+        File file=new File(config.dirallmedia, fileName+".mp4");
 
-        File destinationDir=new File(config.videodir);
+        File destinationDir=new File(config.dirallmedia);
         try {
 
             if (!destinationDir.exists())
@@ -1485,7 +1482,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(mdbstartitemcontainer.size() == 0)
             {
                 mdbstartitemcontainer.add(new dbitemcontainer(json,"video","Local storage path", mediakey,"","","0","0",
-                        config.type_video_start,devicestartdate,devicestartdate,timeoffset,"","",""));
+                        config.type_video_start,devicestartdate,devicestartdate,timeoffset,"","","",
+                        xdata.getinstance().getSetting(config.selected_folder)));
                 Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
             }
 

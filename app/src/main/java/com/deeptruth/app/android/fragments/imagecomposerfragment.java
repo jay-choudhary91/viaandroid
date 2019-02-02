@@ -556,7 +556,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             mdbstartitemcontainer.add(new dbitemcontainer(json,"image",filename,
                     mediakey,"","","0","0",
-                    config.type_image_start,devicestartdate,devicestartdate,timeoffset,completeddate,firsthash));
+                    config.type_image_start,devicestartdate,devicestartdate,timeoffset,completeddate,firsthash,"",
+                    xdata.getinstance().getSetting(config.selected_folder)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1393,9 +1394,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     private File getImageFile(Context context) {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        capturedimagefile =new File(config.videodir, fileName+".jpg");
+        capturedimagefile =new File(config.dirallmedia, fileName+".jpg");
 
-        File destinationDir=new File(config.videodir);
+        File destinationDir=new File(config.dirallmedia);
         try {
 
             if (!destinationDir.exists())

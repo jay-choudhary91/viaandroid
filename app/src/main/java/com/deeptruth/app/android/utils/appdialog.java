@@ -157,7 +157,7 @@ public class appdialog
             public void onClick(View view) {
                 if(edtInputData1.getText().toString().trim().length() > 0)
                 {
-                    if(new File(config.rootdir+File.separator+edtInputData1.getText().toString().trim()).exists())
+                    if(new File(config.dirmedia +File.separator+edtInputData1.getText().toString().trim()).exists())
                     {
                         Toast.makeText(activity,"Folder already exist!",Toast.LENGTH_SHORT).show();
                     }
@@ -194,7 +194,7 @@ public class appdialog
             public void onClick(View view) {
                 if(edtInputData1.getText().toString().trim().length() > 0)
                 {
-                    if(new File(config.rootdir+File.separator+edtInputData1.getText().toString().trim()).exists())
+                    if(new File(config.dirmedia +File.separator+edtInputData1.getText().toString().trim()).exists())
                     {
                         Toast.makeText(activity,"Folder already exist!",Toast.LENGTH_SHORT).show();
                     }

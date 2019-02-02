@@ -80,7 +80,6 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -1828,7 +1827,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     //** start code of media reader sync process
     public void updatesyncedreaderitems()
     {
-        File videodir = new File(config.videodir);
+        File videodir = new File(config.dirallmedia);
         if(! videodir.exists())
             return;
 
@@ -1863,7 +1862,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             String status = "" + cursor.getString(cursor.getColumnIndex("status"));
 
                             video videoobj = new video();
-                            videoobj.setPath(config.videodir+File.separator+location);
+                            videoobj.setPath(config.dirallmedia +File.separator+location);
                             videoobj.setmimetype(type);
                             videoobj.setMediastatus(status);
                             if(! status.equalsIgnoreCase(config.sync_complete) && (! status.equalsIgnoreCase(config.sync_notfound)))

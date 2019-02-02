@@ -888,7 +888,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             @Override
             public void run()
             {
-                File videodir = new File(config.videodir);
+                File videodir = new File(config.dirallmedia);
                 if(! videodir.exists())
                     return;
 

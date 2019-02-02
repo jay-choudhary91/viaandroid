@@ -1238,7 +1238,7 @@ public class common {
     {
         File sourcefile=new File(filename);
         try {
-            File dir = new File(config.videodir);
+            File dir = new File(config.dirallmedia);
             if (dir.isDirectory())
             {
                 String[] children = dir.list();
@@ -1285,7 +1285,7 @@ public class common {
         }
         else
         {
-            destinationDir=new File(config.videodir);
+            destinationDir=new File(config.dirallmedia);
         }
 
         if (!destinationDir.exists())
@@ -1338,7 +1338,7 @@ public class common {
         }
         else
         {
-            destinationDir=new File(config.videodir);
+            destinationDir=new File(config.dirallmedia);
         }
 
         if (!destinationDir.exists())
@@ -1399,7 +1399,7 @@ public class common {
 
     public static String[] getallfolders()
     {
-        File rootdir = new File(config.rootdir);
+        File rootdir = new File(config.dirmedia);
         if(! rootdir.exists())
             return null;
 
@@ -1480,7 +1480,7 @@ public class common {
         }
         else
         {
-            destinationDir=new File(config.videodir);
+            destinationDir=new File(config.dirallmedia);
         }
 
         if (!destinationDir.exists())

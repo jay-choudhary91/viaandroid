@@ -36,7 +36,6 @@ import android.widget.Toast;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
-import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.frameinfo;
@@ -593,7 +592,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             if(mdbstartitemcontainer.size() == 0)
             {
                 mdbstartitemcontainer.add(new dbitemcontainer(json,"audio","Local storage path", mediakey,"","","0","0",
-                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,"","",""));
+                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,"","","",
+                        xdata.getinstance().getSetting(config.selected_folder)));
                 Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
             }
         } catch (Exception e) {
@@ -603,9 +603,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private File getfile() {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.videodir, fileName+".m4a");
+        File file=new File(config.dirallmedia, fileName+".m4a");
 
-        File destinationDir=new File(config.videodir);
+        File destinationDir=new File(config.dirallmedia);
         try {
 
             if (!destinationDir.exists())
@@ -620,9 +620,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private File gettempfile() {
         String fileName = "audiotemp.pcm";
-        File file=new File(config.videodir, fileName);
+        File file=new File(config.dirallmedia, fileName);
 
-        File destinationDir=new File(config.videodir);
+        File destinationDir=new File(config.dirallmedia);
         try {
 
             if (!destinationDir.exists())

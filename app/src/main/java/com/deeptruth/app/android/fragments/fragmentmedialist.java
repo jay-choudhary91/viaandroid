@@ -603,7 +603,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void showfolderdialog(final String sourcefilepath)
     {
-        File rootdir = new File(config.rootdir);
+        File rootdir = new File(config.dirmedia);
         if(! rootdir.exists())
             return;
 
@@ -678,7 +678,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             @Override
             public void run()
             {
-                File videodir = new File(config.videodir);
+                File videodir = new File(config.dirallmedia);
                 if(! videodir.exists())
                     return;
 
@@ -1161,7 +1161,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 {
                     long space=sourceFile.getTotalSpace();
 
-                    String destinationDir = config.videodir;
+                    String destinationDir = config.dirallmedia;
 
                     // check for existance of file.
                     File destinationFile = null;

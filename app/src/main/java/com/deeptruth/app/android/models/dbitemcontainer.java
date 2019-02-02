@@ -75,7 +75,7 @@ public class dbitemcontainer implements Serializable
 
 
     public dbitemcontainer(String item1,String item2,String item3,String item4,String item5,String item6,String item7,String item8
-            ,String item9,String item10,String item11,String item12,String item13,String item14,String item15)
+            ,String item9,String item10,String item11,String item12,String item13,String item14,String item15,String item16)
     {
         setItem1(item1);
         setItem2(item2);
@@ -92,6 +92,7 @@ public class dbitemcontainer implements Serializable
         setItem13(item13);
         setItem14(item14);
         setItem15(item15);
+        setItem16(item16);
     }
 
 

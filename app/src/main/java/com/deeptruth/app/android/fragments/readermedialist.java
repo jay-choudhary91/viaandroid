@@ -229,7 +229,7 @@ public class readermedialist extends basefragment {
             @Override
             public void run()
             {
-                File videodir = new File(config.videodir);
+                File videodir = new File(config.dirallmedia);
                 if(! videodir.exists())
                     return;
 
@@ -637,7 +637,7 @@ public class readermedialist extends basefragment {
                 {
                     long space=sourceFile.getTotalSpace();
 
-                    String destinationDir = config.videodir;
+                    String destinationDir = config.dirallmedia;
 
                     // check for existance of file.
                     File destinationFile = null;
