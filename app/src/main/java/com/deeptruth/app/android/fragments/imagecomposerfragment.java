@@ -1437,10 +1437,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
     private File getImageFile(Context context) {
+        String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        capturedimagefile =new File(config.dirallmedia, fileName+".jpg");
+        capturedimagefile =new File(storagedirectory, fileName+".jpg");
 
-        File destinationDir=new File(config.dirallmedia);
+        File destinationDir=new File(storagedirectory);
         try {
 
             if (!destinationDir.exists())

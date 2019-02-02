@@ -101,7 +101,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                     }
                     else if(type == 3)
                     {
-                        xdata.getinstance().saveSetting(config.selected_folder,myfolder.getFoldername());
+                        xdata.getinstance().saveSetting(config.selected_folder,myfolder.getFolderdir());
                         //Toast.makeText(getActivity(),myfolder.getFoldername(),Toast.LENGTH_SHORT).show();
                     }
                     else if(type == 4)

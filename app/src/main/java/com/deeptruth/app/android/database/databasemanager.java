@@ -12,6 +12,8 @@ import com.deeptruth.app.android.models.mediametadatainfo;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.startmediainfo;
 import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.xdata;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -713,10 +715,20 @@ public class databasemanager {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tblstartmediainfo";
+            String selectedfolder= xdata.getinstance().getSetting(config.selected_folder);
+            String sqlquery="";
+            if(selectedfolder.equalsIgnoreCase(config.dirallmedia))
+            {
+                sqlquery = "SELECT * FROM tblstartmediainfo";
+            }
+            else
+            {
+                sqlquery = "SELECT * FROM tblstartmediainfo where media_folder= '"+selectedfolder+"'";
+            }
+
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            cur = mDb.rawQuery(sql, null);
+            cur = mDb.rawQuery(sqlquery, null);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -96,7 +96,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         applicationviavideocomposer.setActivity(homeactivity.this);
 
         config.selectedmediatype=0;
-        xdata.getinstance().saveSetting(config.selected_folder,config.allmedia);
+        xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             fragmedialistreader=new medialistreader();
