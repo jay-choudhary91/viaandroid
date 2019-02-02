@@ -163,6 +163,8 @@ public class config {
     public static final String caution="CAUTION";
     public static final String verified="VERIFIED";
 
+    public static final String selected_folder="selected_folder";
+
     public static int selectedmediatype=0;   // video,photo,camera
     // An Enum class
     public enum permissions

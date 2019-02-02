@@ -1482,7 +1482,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(mdbstartitemcontainer.size() == 0)
             {
                 mdbstartitemcontainer.add(new dbitemcontainer(json,"video","Local storage path", mediakey,"","","0","0",
-                        config.type_video_start,devicestartdate,devicestartdate,timeoffset,"","",""));
+                        config.type_video_start,devicestartdate,devicestartdate,timeoffset,"","","",
+                        xdata.getinstance().getSetting(config.selected_folder)));
                 Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
             }
 

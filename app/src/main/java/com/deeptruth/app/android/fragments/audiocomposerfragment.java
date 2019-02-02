@@ -592,7 +592,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             if(mdbstartitemcontainer.size() == 0)
             {
                 mdbstartitemcontainer.add(new dbitemcontainer(json,"audio","Local storage path", mediakey,"","","0","0",
-                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,"","",""));
+                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,"","","",
+                        xdata.getinstance().getSetting(config.selected_folder)));
                 Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
             }
         } catch (Exception e) {

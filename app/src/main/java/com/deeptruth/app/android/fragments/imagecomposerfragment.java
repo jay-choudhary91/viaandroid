@@ -556,7 +556,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             mdbstartitemcontainer.add(new dbitemcontainer(json,"image",filename,
                     mediakey,"","","0","0",
-                    config.type_image_start,devicestartdate,devicestartdate,timeoffset,completeddate,firsthash));
+                    config.type_image_start,devicestartdate,devicestartdate,timeoffset,completeddate,firsthash,"",
+                    xdata.getinstance().getSetting(config.selected_folder)));
         } catch (Exception e) {
             e.printStackTrace();
         }
