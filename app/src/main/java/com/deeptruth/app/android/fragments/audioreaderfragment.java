@@ -26,7 +26,9 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
@@ -251,6 +254,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView img_audiowave;
     @BindView(R.id.img_verified)
     ImageView img_verified;
+    @BindView(R.id.audio_container)
+     RelativeLayout audiorootview;
+    @BindView(R.id.layout_dtls)
+    LinearLayout layout_dtls;
 
     GoogleMap mgooglemap;
 
@@ -385,6 +392,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             layout_endtime.setVisibility(View.VISIBLE);
             layout_starttime.setVisibility(View.VISIBLE);
 
+
             edt_medianame.setEnabled(false);
             edt_medianame.setClickable(false);
             edt_medianame.setFocusable(false);
@@ -448,7 +456,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     return false;
                 }
             });
-
+            layout_dtls.setOnClickListener(this);
             String[] items=common.getallfolders();
             if(items != null && items.length > 0)
             {
@@ -461,6 +469,30 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             txtslotmeta.setOnClickListener(this);
             txtslotmedia.setOnClickListener(this);
             resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+
+            audiorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int heightDiff = audiorootview.getRootView().getHeight() - audiorootview.getHeight();
+                    if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
+                        // ... do something here
+                        Log.e("ikeyboardshowing","iskeyboardshowing....true");
+                        rlcontrollerview.setVisibility(View.GONE);
+                        layout_footer.setVisibility(View.GONE);
+
+                    }else
+                    {
+                        if(rlcontrollerview.getVisibility()==View.GONE){
+                            rlcontrollerview.setVisibility(View.VISIBLE);
+                            layout_footer.setVisibility(View.VISIBLE);
+                            edt_medianame.setFocusable(false);
+                            edt_medianotes.setFocusable(false);
+                        }
+
+                        Log.e("ikeyboardshowing","iskeyboardshowing....false");
+                    }
+                }
+            });
             loadmap();
             setmetriceshashesdata();
             setupaudiodata();
@@ -549,6 +581,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
 
                 break;
+            case R.id.layout_dtls:
+                Log.e("ontouch","ontouchscrollview");
+                if(rlcontrollerview.getVisibility() == View.GONE){
+                    view.clearFocus();
+                    InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    immm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                }
+                break;
+
 
             case R.id.btn_playpause:
 
@@ -1674,5 +1716,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void setdata(adapteritemclick mcontrollernavigator) {
         this.mcontrollernavigator = mcontrollernavigator;
+    }
+
+    public static float dpToPx(Context context, float valueInDp) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 }

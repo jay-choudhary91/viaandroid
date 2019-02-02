@@ -405,6 +405,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             txt_section_validating_secondary.setText(config.caution);
             txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+           //detuct keyboard is open or not
             photorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
@@ -420,6 +421,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         if(layout_halfscrn.getVisibility()==View.GONE){
                             layout_halfscrn.setVisibility(View.VISIBLE);
                             layout_footer.setVisibility(View.VISIBLE);
+                             edt_medianame.setFocusable(false);
+                             edt_medianotes.setFocusable(false);
                         }
 
                         Log.e("ikeyboardshowing","iskeyboardshowing....false");
