@@ -48,6 +48,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.mediacompletiondialogmain;
@@ -524,40 +525,26 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
 
     // Initilize when get 1st frame
-    public void savestartmediainfo(String firsthash)
+    public void savestartmediainfo()
     {
         try {
 
             String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            //randomstring gen = new randomstring(20, ThreadLocalRandom.current());
             mediakey=currenttimestamp;
             Log.e("localkey ",mediakey);
 
-            String filename = common.getfilename(capturedimagefile.getAbsolutePath());
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("fps","30");
-            map.put("firsthash", firsthash);
-            map.put("hashmethod",keytype);
-            map.put("name",filename);
-            map.put("duration","1");
-            map.put("frmaecounts","1");
-            map.put("finalhash",firsthash);
-
-            Gson gson = new Gson();
-            String json = gson.toJson(map);
-
-            //common.getCurrentDate();
             String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            String updatecompletedate[] = common.getcurrentdatewithtimezone();
-            String completeddate = updatecompletedate[0];
+            if(mdbstartitemcontainer.size() == 0)
+            {
+                mdbstartitemcontainer.add(new dbitemcontainer("","image",capturedimagefile.getAbsolutePath(), mediakey,"","","0","0",
+                        config.type_image_start,devicestartdate,devicestartdate,timeoffset,"","","",
+                        xdata.getinstance().getSetting(config.selected_folder)));
+                Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
+            }
 
-            mdbstartitemcontainer.add(new dbitemcontainer(json,"image",filename,
-                    mediakey,"","","0","0",
-                    config.type_image_start,devicestartdate,devicestartdate,timeoffset,completeddate,firsthash,"",
-                    xdata.getinstance().getSetting(config.selected_folder)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -601,9 +588,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             JSONArray metricesarray=new JSONArray();
             metricesarray.put(metadatametricesjson);
 
-            savestartmediainfo(keyvalue);
+            savestartmediainfo();
             savemediaupdate(metricesarray,"1",keyvalue);
 
+            insertstartmediainfo(keyvalue);
             Gson gson = new Gson();
             String list1 = gson.toJson(mdbstartitemcontainer);
             String list2 = gson.toJson(mdbmiddleitemcontainer);
@@ -626,6 +614,62 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         {
             e.printStackTrace();
         }
+    }
+
+    public void insertstartmediainfo(String firsthash)
+    {
+        if(capturedimagefile != null)
+        {
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("fps","1");
+            map.put("firsthash", firsthash);
+            map.put("hashmethod",keytype);
+            map.put("name",common.getfilename(capturedimagefile.getAbsolutePath()));
+            map.put("duration","1");
+            map.put("framecounts","1");
+            map.put("finalhash",firsthash);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(map);
+
+            String updatecompletedate[] = common.getcurrentdatewithtimezone();
+            String completeddate = updatecompletedate[0];
+            String medianame=common.getfilename(capturedimagefile.getAbsolutePath());
+
+            mdbstartitemcontainer.get(0).setItem1(json);
+            mdbstartitemcontainer.get(0).setItem3(capturedimagefile.getAbsolutePath());
+            mdbstartitemcontainer.get(0).setItem13(completeddate);
+
+            if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
+            {
+                databasemanager mdbhelper=null;
+                if (mdbhelper == null) {
+                    mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                    mdbhelper.createDatabase();
+                }
+
+                try {
+                    mdbhelper.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                mdbhelper.insertstartvideoinfo(mdbstartitemcontainer.get(0).getItem1(),mdbstartitemcontainer.get(0).getItem2()
+                        ,mdbstartitemcontainer.get(0).getItem3(),mdbstartitemcontainer.get(0).getItem4(),mdbstartitemcontainer.get(0).getItem5()
+                        ,mdbstartitemcontainer.get(0).getItem6(),mdbstartitemcontainer.get(0).getItem7(),mdbstartitemcontainer.get(0).getItem8(),
+                        mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
+                        ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
+                        ,"0","sync_pending","","","0","inprogress",medianame,"",
+                        mdbstartitemcontainer.get(0).getItem16());
+
+                try {
+                    mdbhelper.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     @Override

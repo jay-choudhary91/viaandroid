@@ -1205,7 +1205,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                             mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
                             mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
 
-
                         }while(cur.moveToNext());
                     }
 
@@ -1250,8 +1249,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
                             }
                         });
-
-
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
                         if(metricmainarraylist.size()>0){
@@ -1616,54 +1613,51 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
 
     public void setupvideodata() {
 
-        tvsize.setText(common.filesize(mediafilepath));
-        playpausebutton.setImageResource(R.drawable.play_btn);
-        position = 0;
-        if (mediafilepath.equalsIgnoreCase("blank")) {
-            //frontview.setVisibility(View.VISIBLE);
-        } else {
-            if (mediafilepath != null && (!mediafilepath.isEmpty())) {
+        if (mediafilepath != null && (!mediafilepath.isEmpty())) {
 
-                if(mediafilepath == null || (mediafilepath.trim().isEmpty()))
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
-                    return;
-                }
-
-                if(! (new File(mediafilepath).exists()))
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
-                    return;
-                }
-
-                File file=new File(mediafilepath);
-                long file_size = file.length();
-                if(file_size == 0)
-                {
-                    common.showalert(getActivity(),getResources().getString(R.string.file_is_empty));
-                    return;
-                }
-
-                frameduration = common.checkframeduration();
-                keytype = common.checkkey();
-
-                if (mbitmaplist.size() != 0)
-                    runmethod = false;
-
-                scurraberverticalbar.setVisibility(View.GONE);
-                Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                        BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
-                setupVideoPlayer(uri);
-                videoduration = 0;
-                playerposition = 0;
-               // righthandle.setVisibility(View.GONE);
-                framecount = 0;
-                if (mediafilepath != null && (!mediafilepath.isEmpty())) {
-                    mvideoframes.clear();
-                    mainvideoframes.clear();
-                    mallframes.clear();
-                }
+            if(mediafilepath == null || (mediafilepath.trim().isEmpty()))
+            {
+                common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                return;
             }
+
+            if(! (new File(mediafilepath).exists()))
+            {
+                common.showalert(getActivity(),getResources().getString(R.string.file_doesnot_exist));
+                return;
+            }
+
+            File file=new File(mediafilepath);
+            long file_size = file.length();
+            if(file_size == 0)
+            {
+                common.showalert(getActivity(),getResources().getString(R.string.file_is_empty));
+                return;
+            }
+
+            frameduration = common.checkframeduration();
+            keytype = common.checkkey();
+
+            if (mbitmaplist.size() != 0)
+                runmethod = false;
+
+            scurraberverticalbar.setVisibility(View.GONE);
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", new File(mediafilepath));
+            setupVideoPlayer(uri);
+            videoduration = 0;
+            playerposition = 0;
+            // righthandle.setVisibility(View.GONE);
+            framecount = 0;
+            if (mediafilepath != null && (!mediafilepath.isEmpty())) {
+                mvideoframes.clear();
+                mainvideoframes.clear();
+                mallframes.clear();
+            }
+
+            tvsize.setText(common.filesize(mediafilepath));
+            playpausebutton.setImageResource(R.drawable.play_btn);
+            position = 0;
         }
     }
 

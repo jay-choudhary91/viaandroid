@@ -25,6 +25,7 @@ import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.xdata;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -100,7 +101,8 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                     }
                     else if(type == 3)
                     {
-                        Toast.makeText(getActivity(),myfolder.getFoldername(),Toast.LENGTH_SHORT).show();
+                        xdata.getinstance().saveSetting(config.selected_folder,myfolder.getFoldername());
+                        //Toast.makeText(getActivity(),myfolder.getFoldername(),Toast.LENGTH_SHORT).show();
                     }
                     else if(type == 4)
                     {

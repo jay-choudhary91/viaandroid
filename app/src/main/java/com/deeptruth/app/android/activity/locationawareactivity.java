@@ -2282,7 +2282,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             JSONObject objheader = new JSONObject(header);
 
 
-            framecount  = objheader.getString("frmaecounts");
+            framecount  = objheader.getString("framecounts");
             videoduration  = objheader.getString("duration");
 
             synccurrentdate = obj.getString("firstdate");

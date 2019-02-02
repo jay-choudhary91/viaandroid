@@ -2204,25 +2204,38 @@ public class common {
 
     public static String getvideotimefromurl(String url){
 
-        MediaMetadataRetriever m_mediaMetadataRetriever = new MediaMetadataRetriever();
-        m_mediaMetadataRetriever.setDataSource(url);
+        String duration="";
+        MediaExtractor extractor = new MediaExtractor();
+        try {
+            //Adjust data source as per the requirement if file, URI, etc.
+            extractor.setDataSource(url);
+            int numTracks = extractor.getTrackCount();
+            if(numTracks > 0)
+            {
+                for (int i = 0; i < numTracks; ++i) {
+                    MediaFormat format = extractor.getTrackFormat(i);
+                    if (format.containsKey(MediaFormat.KEY_DURATION)) {
+                        long seconds = format.getLong(MediaFormat.KEY_DURATION);
+                        seconds=seconds/1000000;
+                        int day = (int) TimeUnit.SECONDS.toDays(seconds);
+                        long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
+                        long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
+                        long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                        if(second == 0)
+                            second=1;
 
-        String time = m_mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-
-        long timeInmillisec=0;
-
-        if(time != null)
-            timeInmillisec = Long.parseLong( time );
-
-        long duration = timeInmillisec / 1000;
-        long hours = duration / 3600;
-        long minutes = (duration - hours * 3600) / 60;
-        long seconds = duration - (hours * 3600 + minutes * 60);
-
-        seconds = seconds + minutes;
-        Log.e("videoseconds  =  ",""+seconds);
-
-        return ""+ minutes + ":" +seconds;
+                        duration=(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                        break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            //Release stuff
+            extractor.release();
+        }
+        return duration;
     }
 
     public static int dpToPx(int dp, Context context) {
