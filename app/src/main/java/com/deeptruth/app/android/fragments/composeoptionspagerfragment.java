@@ -9,6 +9,7 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaExtractor;
@@ -42,6 +43,7 @@ import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.permissions;
 import com.deeptruth.app.android.models.video;
@@ -461,8 +463,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
 
         showselectedfragment();
-        getlatestmediafromdirectory();
-        getlatestaudiofromdirectory();
+        getlatestthumbnailfromdirectory();
     }
 
     public void showselecteditemincenter(TextView textView,int sectionnumber)
@@ -828,14 +829,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 /*currentselectedcomposer=config.selectedmediatype;
                 showselectedfragment();*/
-                if(currentselectedcomposer == 0 || currentselectedcomposer == 1)
-                {
-                    getlatestmediafromdirectory();
-                }
-                else if(currentselectedcomposer == 2)
-                {
-                    getlatestaudiofromdirectory();
-                }
+                getlatestthumbnailfromdirectory();
             }
             else if(type == 5) // For swipe gesture to change fragment
             {
@@ -858,95 +852,68 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     };
 
-    public void getlatestaudiofromdirectory()
+    public void getlatestthumbnailfromdirectory()
     {
-        File videodir = new File(config.audiowavesdir);
-        if(! videodir.exists())
-            return;
-
         audioarraylist.clear();
+        videoarraylist.clear();
+        imagearraylist.clear();
 
-        File[] files = videodir.listFiles();
-        for (File file : files)
-        {
-            long filelength = file.length();
-            if(filelength > 0)
-            {
-                video videoobj=new video();
-                videoobj.setPath(file.getAbsolutePath());
-
-                if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png") || videoobj.getPath().contains(".jpeg"))
-                    audioarraylist.add(videoobj.getPath());
-            }
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
         }
-        setimagethumbnail();
-    }
 
-    public void getlatestmediafromdirectory()
-    {
-        new Thread(new Runnable() {
-            @Override
-            public void run()
-            {
-                File videodir = new File(config.dirallmedia);
-                if(! videodir.exists())
-                    return;
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
-                imagearraylist.clear();
-                videoarraylist.clear();
+        Cursor cursor = mdbhelper.getallmediabyfolder(config.dirallmedia);
+        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
+        {
+            do{
+                String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
+                String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
 
-                File[] files = videodir.listFiles();
-                for (File file : files)
+                if(mediafilepath.contains(".mp4"))
                 {
-                    long filelength = file.length();
-                    int file_size = Integer.parseInt(String.valueOf(filelength/1024));
-                    if(file_size > 0 && (! file.isDirectory()))
-                    {
-                        video videoobj=new video();
-                        videoobj.setPath(file.getAbsolutePath());
-
-                        MediaExtractor extractor = new MediaExtractor();
-                        try {
-                            if(videoobj.getPath().contains(".jpg") || videoobj.getPath().contains(".png") || videoobj.getPath().contains(".jpeg"))
-                            {
-                                imagearraylist.add(videoobj.getPath());
-                            }
-                            else if((! videoobj.getPath().contains(".pcm") && (! videoobj.getPath().contains(".m4a"))))
-                            {
-                                extractor.setDataSource(file.getAbsolutePath());
-                                int numTracks = extractor.getTrackCount();
-                                if(numTracks > 0)
-                                {
-                                    if(videoobj.getPath().contains(".mp4"))
-                                        videoarraylist.add(videoobj.getPath());
-                                }
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }finally {
-                            //Release stuff
-                            extractor.release();
-                        }
-                    }
-                    else
-                    {
-                        try {
-                            if(! file.isDirectory())
-                                common.delete(file);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    videoarraylist.add(mediafilepath);
                 }
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run()
-                    {
-                        setimagethumbnail();
-                    }
-                });
-            }
-        }).start();
+                else if(mediafilepath.contains(".jpg") || mediafilepath.contains(".png") ||
+                        mediafilepath.contains(".jpeg"))
+                {
+                    imagearraylist.add(mediafilepath);
+                }
+                else if(mediafilepath.contains(".m4a"))
+                {
+                    audioarraylist.add(thumbnailurl);
+                }
+
+                if(videoarraylist.size() > 0 && imagearraylist.size() > 0 && audioarraylist.size() > 0)
+                    break;
+
+            }while(cursor.moveToNext());
+        }
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            setimagethumbnail();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void setimagethumbnail()

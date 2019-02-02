@@ -645,6 +645,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                                 String folderpath=itempath.get(selectedPosition);
                                 common.copyfile(new File(sourcefilepath),new File(folderpath));
+                                updatefilemediafolderdirectory(sourcefilepath,folderpath);
                                 // Do something useful withe the position of the selected radio button
 
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -667,6 +668,33 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     }
                 })
                 .show();
+    }
+
+    public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            mdbhelper.updatefilemediafolderdir(sourcefile,destinationmediafolder);
+
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void removehandler()
@@ -713,60 +741,62 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         String header = "" + cursor.getString(cursor.getColumnIndex("header"));
                         String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
 
-                        video videoobject=new video();
-                        videoobject.setPath(mediafilepath);
-                        videoobject.setmimetype(type);
-                        videoobject.setVideostarttransactionid(videostarttransactionid);
-                        videoobject.setThumbnailpath(thumbnailurl);
-                        videoobject.setMediatitle(media_name);
-                        videoobject.setMedianotes(media_notes);
-                        videoobject.setMediacolor(color);
-                        videoobject.setExtension(common.getvideoextension(location));
-                        videoobject.setName(common.getfilename(location));
-                        videoobject.setDoenable(false);
+                        if(! isexistinarraay(mediafilepath))
+                        {
+                            video videoobject=new video();
+                            videoobject.setPath(mediafilepath);
+                            videoobject.setmimetype(type);
+                            videoobject.setVideostarttransactionid(videostarttransactionid);
+                            videoobject.setThumbnailpath(thumbnailurl);
+                            videoobject.setMediatitle(media_name);
+                            videoobject.setMedianotes(media_notes);
+                            videoobject.setMediacolor(color);
+                            videoobject.setExtension(common.getvideoextension(location));
+                            videoobject.setName(common.getfilename(location));
+                            videoobject.setDoenable(false);
 
-                        int gridviewwidth=(arrayvideolist.size() % 2) * 100 + 300 + (int) (Math.random() * 300);
-                        videoobject.setGriditemheight(gridviewwidth);
-
-                        try {
-                            Date mediadatetime = null;
-                            if(videocompletedevicedate.contains("T"))
-                            {
-                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                mediadatetime = format.parse(videocompletedevicedate);
-                            }
-                            else
-                            {
-                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                                mediadatetime = format.parse(videocompletedevicedate);
-                            }
-
-                            final String filecreateddate = new SimpleDateFormat("MM-dd-yy").format(mediadatetime);
-                            final String endtime = new SimpleDateFormat("hh:mm:ss aa").format(mediadatetime);
+                            int gridviewwidth=(arrayvideolist.size() % 2) * 100 + 300 + (int) (Math.random() * 300);
+                            videoobject.setGriditemheight(gridviewwidth);
 
                             try {
-                                if(header.trim().length() > 0)
+                                Date mediadatetime = null;
+                                if(videocompletedevicedate.contains("T"))
                                 {
-                                    JSONObject object=new JSONObject(header);
-                                    String duration=object.getString("duration");
-                                    videoobject.setDuration(duration);
+                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                    mediadatetime = format.parse(videocompletedevicedate);
                                 }
+                                else
+                                {
+                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                    mediadatetime = format.parse(videocompletedevicedate);
+                                }
+
+                                final String filecreateddate = new SimpleDateFormat("MM-dd-yy").format(mediadatetime);
+                                final String endtime = new SimpleDateFormat("hh:mm:ss aa").format(mediadatetime);
+
+                                try {
+                                    if(header.trim().length() > 0)
+                                    {
+                                        JSONObject object=new JSONObject(header);
+                                        String duration=object.getString("duration");
+                                        videoobject.setDuration(duration);
+                                    }
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                videoobject.setCreatedate(filecreateddate);
+                                videoobject.setCreatetime(endtime);
+
                             }catch (Exception e)
                             {
                                 e.printStackTrace();
                             }
-                            videoobject.setCreatedate(filecreateddate);
-                            videoobject.setCreatetime(endtime);
 
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
+                            File file=new File(mediafilepath);
+                            if(file.exists())
+                                arrayvideolist.add(videoobject);
                         }
-
-                        File file=new File(mediafilepath);
-                        if(file.exists())
-                            arrayvideolist.add(videoobject);
-
                     }while(cursor.moveToNext());
                 }
 
@@ -1503,14 +1533,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     };
 
-    public boolean isexistinarraay(String name,String modifieddatetime)
+    public boolean isexistinarraay(String filepath)
     {
         if(arrayvideolist.size() > 0)
         {
             for(int i=0;i<arrayvideolist.size();i++)
             {
-                if(arrayvideolist.get(i).getName().equalsIgnoreCase(name) && arrayvideolist.get(i).getCreatedate().
-                        equalsIgnoreCase(modifieddatetime))
+                if(arrayvideolist.get(i).getPath().equalsIgnoreCase(filepath))
                 {
                     return true;
                 }

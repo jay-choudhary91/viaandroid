@@ -103,6 +103,8 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                     {
                         xdata.getinstance().saveSetting(config.selected_folder,myfolder.getFolderdir());
                         //Toast.makeText(getActivity(),myfolder.getFoldername(),Toast.LENGTH_SHORT).show();
+                        fragmentmedialist fragmatriclist=new fragmentmedialist();
+                        gethelper().replaceFragment(fragmatriclist, true, false);
                     }
                     else if(type == 4)
                     {
@@ -163,7 +165,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                 if(file.exists())
                 {
                     arraylist.remove(arraylist.size()-1);
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),"",0,false,false));
+                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),"","0",false,false));
                     arraylist.add(new folder("",false,true));
                     adapter.notifyDataSetChanged();
                 }
@@ -226,42 +228,68 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
                 if(file.getName().equalsIgnoreCase(config.allmedia))
                 {
-                    String thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath,filecount,true,false));
+                    String[] thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
+                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath[0],thumbnailpath[1],true,false));
                 }
                 else
                 {
-                    String thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath,filecount,false,false));
+                    String[] thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
+                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath[0],thumbnailpath[1],false,false));
                 }
             }
         }
         arraylist.add(new folder("",false,true));
     }
 
-    public String getfolderthumbnailpath(String directorypath)
+    public String[] getfolderthumbnailpath(String directorypath)
     {
-        String thumbnailurl="";
-        File folderdir = new File(directorypath);
-        File[] files = folderdir.listFiles();
-        if(files.length > 0)
-        {
-            for (File file : files)
-            {
-                if(file.getAbsolutePath().contains(".mp4") || file.getAbsolutePath().contains(".jpg") || file.getAbsolutePath().contains(".png") ||
-                        file.getAbsolutePath().contains(".jpeg"))
-                {
-                    thumbnailurl=file.getAbsolutePath();
-                    break;
-                }
-                else if(file.getAbsolutePath().contains(".m4a"))
-                {
-                    thumbnailurl=getaudiothumbnail(file.getAbsolutePath());
-                    break;
-                }
-            }
+
+        String[] filedirectoryinfo ={"","0"};
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
         }
-        return thumbnailurl;
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        Cursor cursor = mdbhelper.getallmediabyfolder(directorypath);
+        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
+        {
+            do{
+                String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
+                String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
+
+                if(mediafilepath.contains(".mp4") || mediafilepath.contains(".jpg") || mediafilepath.contains(".png") ||
+                        mediafilepath.contains(".jpeg"))
+                {
+                    filedirectoryinfo[0] = mediafilepath;
+                }
+                else if(mediafilepath.contains(".m4a"))
+                {
+                    filedirectoryinfo[0] = thumbnailurl;
+                }
+
+                break;
+
+            }while(cursor.moveToNext());
+
+            filedirectoryinfo[1]=""+cursor.getCount();
+        }
+
+        try
+        {
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return  filedirectoryinfo;
     }
 
     public String getaudiothumbnail(String filepath)

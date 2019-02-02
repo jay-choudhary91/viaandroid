@@ -597,6 +597,25 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor updatefilemediafolderdir(String location,String destinationfolder) {
+        Cursor mCur=null;
+        try {
+            location=common.getfilename(location);
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL("update tblstartmediainfo set media_folder='"+destinationfolder+"' where location='"+location+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
     public void insertreadergetvideoinfo(String framecount,String videotoken,String video,String remainingframes,
                                      String frames)
     {
@@ -710,6 +729,31 @@ public class databasemanager {
         return cur;
     }
 
+    public Cursor getallmediabyfolder(String selectedfolder) {
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sqlquery="";
+            if(selectedfolder.equalsIgnoreCase(config.dirallmedia))
+            {
+                sqlquery = "SELECT * FROM tblstartmediainfo order by id DESC";
+            }
+            else
+            {
+                sqlquery = "SELECT * FROM tblstartmediainfo where media_folder= '"+selectedfolder+"' order by  id DESC";
+            }
+
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            cur = mDb.rawQuery(sqlquery, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return cur;
+    }
 
     public Cursor getallmediastartdata() {
         Cursor cur=null;
