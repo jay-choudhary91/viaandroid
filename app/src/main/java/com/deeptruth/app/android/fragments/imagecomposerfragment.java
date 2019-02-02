@@ -1393,9 +1393,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     private File getImageFile(Context context) {
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        capturedimagefile =new File(config.videodir, fileName+".jpg");
+        capturedimagefile =new File(config.dirallmedia, fileName+".jpg");
 
-        File destinationDir=new File(config.videodir);
+        File destinationDir=new File(config.dirallmedia);
         try {
 
             if (!destinationDir.exists())

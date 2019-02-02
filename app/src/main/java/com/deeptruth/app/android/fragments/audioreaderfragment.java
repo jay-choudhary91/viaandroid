@@ -986,23 +986,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     common.setspannable(getResources().getString(R.string.metrichash)," "+arraycontainerformetric.getMetahash(), txt_metahash);
 
                     ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
-
-                    if(scrollview_meta.getVisibility() == View.VISIBLE)
+                    for(int j=0;j<metricItemArraylist.size();j++)
                     {
-                        for(int j=0;j<metricItemArraylist.size();j++)
-                        {
-                            common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                    metricItemArraylist.get(j).getMetricTrackValue(),true);
+                        common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                metricItemArraylist.get(j).getMetricTrackValue(),true);
 
+                        if(scrollview_meta.getVisibility() == View.VISIBLE)
                             setmetadatavalue(metricItemArraylist.get(j));
-                        }
                     }
                 }
-
-
                 setmetricesgraphicaldata();
 
-                myHandler.postDelayed(this, 2000);
+                myHandler.postDelayed(this, 1500);
             }
         };
         myHandler.post(myRunnable);

@@ -14,7 +14,7 @@ public class config {
     public static final String rootdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID;
 
-    public static final String videodir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
+    public static final String dirallmedia = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID+File.separator+allmedia;
 
     public static final String hashesdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+

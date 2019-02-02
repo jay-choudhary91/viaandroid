@@ -745,7 +745,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
             @Override
             public void run()
             {
-                File videodir = new File(config.videodir);
+                File videodir = new File(config.dirallmedia);
                 if(! videodir.exists())
                     return;
 
@@ -1347,7 +1347,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
                 {
                     long space=sourceFile.getTotalSpace();
 
-                    String destinationDir = config.videodir;
+                    String destinationDir = config.dirallmedia;
 
                     // check for existance of file.
                     File destinationFile = null;
