@@ -162,7 +162,7 @@ public class insertmediadataservice extends Service {
                                                         map.put("hashmethod",keytype);
                                                         map.put("name",filename);
                                                         map.put("duration","");
-                                                        map.put("frmaecounts","");
+                                                        map.put("framecounts","");
                                                         map.put("finalhash","");
                                                         Gson gson = new Gson();
                                                         String json = gson.toJson(map);
@@ -228,15 +228,13 @@ public class insertmediadataservice extends Service {
 
                                                 if(mvideoframes.size() > 0)
                                                 {
-                                                    String updatecompletedate[] = common.getcurrentdatewithtimezone();
-                                                    String completeddate = updatecompletedate[0];
                                                     String filename = common.getfilename(mediapath);
                                                     String lastframe="";
                                                     if(mvideoframes.size() > 0)
                                                         lastframe = mvideoframes.get(mvideoframes.size() -1).getkeyvalue();
 
                                                     // update last frame in database
-                                                    updateendvideoinfo(firsthash,filename,completeddate,lastframe,"" + count,mediapath,keytype,videokey);
+                                                    updateendvideoinfo(firsthash,filename,lastframe,"" + count,mediapath,keytype,videokey);
                                                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
                                                 }
 
@@ -326,12 +324,13 @@ public class insertmediadataservice extends Service {
 
             for(int i=0;i<mdbstartitemcontainer.size();i++)
             {
-                mdbhelper.insertstartvideoinfo(mdbstartitemcontainer.get(i).getItem1(),mdbstartitemcontainer.get(i).getItem2()
-                        ,mdbstartitemcontainer.get(i).getItem3(),mdbstartitemcontainer.get(i).getItem4(),mdbstartitemcontainer.get(i).getItem5()
-                        ,mdbstartitemcontainer.get(i).getItem6(),mdbstartitemcontainer.get(i).getItem7(),mdbstartitemcontainer.get(i).getItem8(),
-                        mdbstartitemcontainer.get(i).getItem9(),mdbstartitemcontainer.get(i).getItem10(),mdbstartitemcontainer.get(i).getItem11()
-                        ,mdbstartitemcontainer.get(i).getItem12(),mdbstartitemcontainer.get(i).getItem13(),"",mdbstartitemcontainer.get(i).getItem14()
-                        ,"0","sync_pending","","","0","inprogress",mdbstartitemcontainer.get(i).getItem3(),"","");
+                mdbhelper.updatestartmediainfocomposer(mdbstartitemcontainer.get(i).getItem1(),mdbstartitemcontainer.get(i).getItem2()
+                ,mdbstartitemcontainer.get(i).getItem3(),mdbstartitemcontainer.get(i).getItem4(),mdbstartitemcontainer.get(i).getItem5()
+                ,mdbstartitemcontainer.get(i).getItem6(),mdbstartitemcontainer.get(i).getItem7(),mdbstartitemcontainer.get(i).getItem8(),
+                mdbstartitemcontainer.get(i).getItem9(),mdbstartitemcontainer.get(i).getItem10(),mdbstartitemcontainer.get(i).getItem11()
+                ,mdbstartitemcontainer.get(i).getItem12(),mdbstartitemcontainer.get(i).getItem13(),"",mdbstartitemcontainer.get(i).getItem14()
+                ,"0","sync_pending","","","0","inprogress",mdbstartitemcontainer.get(i).getItem3(),"",
+                mdbstartitemcontainer.get(i).getItem16(),"");
             }
 
             try {
@@ -373,7 +372,7 @@ public class insertmediadataservice extends Service {
     }
 
     // Calling when frames are getting from ffmpegframegrabber
-    public void updateendvideoinfo(String updatefirsthash, String file_name,String completeddate,String lastframe,String lastcount,
+    public void updateendvideoinfo(String updatefirsthash, String file_name,String lastframe,String lastcount,
                                      String videourl,String keytype,String videokey)
     {
         String duration = "";
@@ -387,7 +386,7 @@ public class insertmediadataservice extends Service {
             map.put("hashmethod",keytype);
             map.put("name",file_name);
             map.put("duration",duration);
-            map.put("frmaecounts",lastcount);
+            map.put("framecounts",lastcount);
             map.put("finalhash",lastframe);
             Gson gson = new Gson();
             String json = gson.toJson(map);
@@ -404,7 +403,7 @@ public class insertmediadataservice extends Service {
                 e.printStackTrace();
             }
 
-            mdbhelper.updatestartvideoinfo(json,videokey,completeddate);
+            mdbhelper.updatestartvideoinfo(json,videokey);
 
             try {
                 mdbhelper.close();

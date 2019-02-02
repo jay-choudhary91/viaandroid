@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.frameinfo;
@@ -545,7 +546,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             mediakey=currenttimestamp;
                             Log.e("localkey ",mediakey);
                             String keyvalue= getkeyvalue(data);
-                            savestartmediainfo(keyvalue);
+                            savestartmediainfo();
                         }
 
                         framegap=0;
@@ -568,44 +569,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    // Initilize when get 1st frame from recorder
-    public void savestartmediainfo(String firsthash)
-    {
-        try {
-            HashMap<String, String> map = new HashMap<String, String>();
-            map.put("fps","30");
-            map.put("firsthash", firsthash);
-            map.put("hashmethod",keytype);
-            map.put("name","");
-            map.put("duration","");
-            map.put("frmaecounts","");
-            map.put("finalhash","");
-
-            Gson gson = new Gson();
-            String json = gson.toJson(map);
-
-            //common.getCurrentDate();
-            String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
-            String devicestartdate = currenttimewithoffset[0];
-            String timeoffset = currenttimewithoffset[1];
-
-            if(mdbstartitemcontainer.size() == 0)
-            {
-                mdbstartitemcontainer.add(new dbitemcontainer(json,"audio","Local storage path", mediakey,"","","0","0",
-                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,"","","",
-                        xdata.getinstance().getSetting(config.selected_folder)));
-                Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private File getfile() {
+        String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.dirallmedia, fileName+".m4a");
+        File file=new File(storagedirectory, fileName+".m4a");
 
-        File destinationDir=new File(config.dirallmedia);
+        File destinationDir=new File(storagedirectory);
         try {
 
             if (!destinationDir.exists())
@@ -619,10 +588,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
     private File gettempfile() {
-        String fileName = "audiotemp.pcm";
-        File file=new File(config.dirallmedia, fileName);
+        String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
+        String fileName = config.audiotempfile;
+        File file=new File(storagedirectory, fileName);
 
-        File destinationDir=new File(config.dirallmedia);
+        File destinationDir=new File(storagedirectory);
         try {
 
             if (!destinationDir.exists())
@@ -708,7 +678,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 String starttime = common.converttimeformate(0);
                 String endtime = common.converttimeformate(mediatotalduration);
 
-                String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
+                final String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
                         "compand=gain=-20,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
 
                 ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
@@ -726,6 +696,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             mdbstartitemcontainer.get(0).setItem15(destinationfilepath.getAbsolutePath());
                             callserviceforinsertintodb();
 
+                            try {
+                                String selecteddir=xdata.getinstance().getSetting(config.selected_folder);
+                                String selectedfile=selecteddir+File.separator+config.audiotempfile;
+                                if(new File(selectedfile).exists())
+                                    common.delete(new File(selectedfile));
+
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
                             if(madapterclick != null)
                                 madapterclick.onItemClicked(recordedmediafile,2);
                             img_dotmenu.setVisibility(View.VISIBLE);
@@ -762,6 +742,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void callserviceforinsertintodb()
     {
+        insertstartmediainfo();
+
         Gson gson = new Gson();
         String list1 = gson.toJson(mdbstartitemcontainer);
         String list2 = gson.toJson(mdbmiddleitemcontainer);
@@ -772,6 +754,87 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         Intent intent = new Intent(applicationviavideocomposer.getactivity(), insertmediadataservice.class);
         applicationviavideocomposer.getactivity().startService(intent);
+    }
+
+    // Initilize when get 1st frame from recorder
+    public void savestartmediainfo()
+    {
+        try {
+
+            String currenttimewithoffset[] = common.getcurrentdatewithtimezone();
+            String devicestartdate = currenttimewithoffset[0];
+            String timeoffset = currenttimewithoffset[1];
+
+            if(mdbstartitemcontainer.size() == 0)
+            {
+                mdbstartitemcontainer.add(new dbitemcontainer("","audio","Local storage path", mediakey,"","","0","0",
+                        config.type_audio_start,devicestartdate,devicestartdate,timeoffset,"","","",
+                        xdata.getinstance().getSetting(config.selected_folder)));
+                Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void insertstartmediainfo()
+    {
+        if(recordedmediafile != null)
+        {
+            String duration = common.getvideotimefromurl(recordedmediafile);
+
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("fps","30");
+            map.put("firsthash", "");
+            map.put("hashmethod",keytype);
+            map.put("name",common.getfilename(recordedmediafile));
+            map.put("duration",duration);
+            map.put("framecounts","");
+            map.put("finalhash","");
+
+            Gson gson = new Gson();
+            String json = gson.toJson(map);
+
+            String updatecompletedate[] = common.getcurrentdatewithtimezone();
+            String completeddate = updatecompletedate[0];
+            String medianame=common.getfilename(recordedmediafile);
+
+            mdbstartitemcontainer.get(0).setItem1(json);
+            mdbstartitemcontainer.get(0).setItem3(recordedmediafile);
+            mdbstartitemcontainer.get(0).setItem13(completeddate);
+
+            if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
+            {
+                databasemanager mdbhelper=null;
+                if (mdbhelper == null) {
+                    mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                    mdbhelper.createDatabase();
+                }
+
+                try {
+                    mdbhelper.open();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                mdbhelper.insertstartvideoinfo(mdbstartitemcontainer.get(0).getItem1(),mdbstartitemcontainer.get(0).getItem2()
+                        ,mdbstartitemcontainer.get(0).getItem3(),mdbstartitemcontainer.get(0).getItem4(),mdbstartitemcontainer.get(0).getItem5()
+                        ,mdbstartitemcontainer.get(0).getItem6(),mdbstartitemcontainer.get(0).getItem7(),mdbstartitemcontainer.get(0).getItem8(),
+                        mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
+                        ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
+                        ,"0","sync_pending","","","0","inprogress",medianame,"",
+                        mdbstartitemcontainer.get(0).getItem16());
+
+                try {
+                    mdbhelper.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     public void updatelistitemnotify(final byte[] array, final long framenumber, final String message)

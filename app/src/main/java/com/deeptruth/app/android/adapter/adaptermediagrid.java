@@ -104,7 +104,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             }
 
             holder.rl_row_media.setVisibility(View.VISIBLE);
-            if (arrayvideolist.get(position).getmimetype().contains("image/"))
+            if (arrayvideolist.get(position).getmimetype().contains("image"))
             {
                 holder.tv_mediaduration.setText("");
             }

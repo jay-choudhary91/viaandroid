@@ -11,6 +11,9 @@ import android.util.Log;
 import com.deeptruth.app.android.models.mediametadatainfo;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.startmediainfo;
+import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.xdata;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +63,44 @@ public class databasemanager {
         mDbHelper.close();
     }
 
+    public void updatestartmediainfocomposer(String header,String type,String location,String localkey,
+                                             String token,String videokey,String sync,String date , String action_type,
+                                             String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
+                                             String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
+                                             String status,String remainingframes,String lastframe,String framecount,String sync_status,String medianame,
+                                             String medianotes,String mediafolder,String color)
+    {
+        try {
+            lock.lock();
+
+            int index =  location.lastIndexOf('.');
+            if(index >=0)
+                medianame = location.substring(0, location.lastIndexOf('.'));
+
+            String query="update tblstartmediainfo set header='"+ header +"',type = '"+type +"',localkey='"+ localkey +"',token = '"+token +"'" +
+                    ",videokey='"+ videokey +"',sync = '"+sync +"',sync_date='"+ date +"',action_type = '"+action_type +"'," +
+                    "apirequestdevicedate='"+ apirequestdevicedate +"',videostartdevicedate = '"+videostartdevicedate +"',devicetimeoffset='"+
+                    devicetimeoffset +"',videocompletedevicedate = '"+videocompletedevicedate +"'," +
+                    "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
+                    "status = '"+status +"'," +
+                    "color = '"+color +"'," +
+                    "media_name = '"+medianame +"'," +
+                    "media_notes = '"+medianotes +"'," +
+                    "media_folder = '"+mediafolder +"'," +
+                    "completeddate = 0," +
+                    "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
+                    "sync_status = '"+sync_status +"' where location='"+location+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
     public void insertstartvideoinfo(String header,String type,String location,String localkey,
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
@@ -73,6 +114,10 @@ public class databasemanager {
             int index =  medianame.lastIndexOf('.');
             if(index >=0)
                 medianame = medianame.substring(0, medianame.lastIndexOf('.'));
+
+            String mediafilapth=location;
+            location= common.getfilename(location);
+
 
             ContentValues values = new ContentValues();
             values.put("header", "" + header);
@@ -98,6 +143,7 @@ public class databasemanager {
             values.put("sync_status",""+sync_status);
             values.put("completeddate","0");
             values.put("media_name",  medianame);
+            values.put("mediafilepath",  mediafilapth);
             values.put("media_notes",  medianotes);
             values.put("media_folder",  mediafolder);
 
@@ -129,6 +175,9 @@ public class databasemanager {
             if(index >=0)
                 medianame = location.substring(0, location.lastIndexOf('.'));
 
+            String mediafilapth=location;
+            location= common.getfilename(location);
+
             String query="update tblstartmediainfo set header='"+ header +"',type = '"+type +"',localkey='"+ localkey +"',token = '"+token +"'" +
                     ",videokey='"+ videokey +"',sync = '"+sync +"',sync_date='"+ date +"',action_type = '"+action_type +"'," +
                     "apirequestdevicedate='"+ apirequestdevicedate +"',videostartdevicedate = '"+videostartdevicedate +"',devicetimeoffset='"+
@@ -136,6 +185,7 @@ public class databasemanager {
                     "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
                     "status = '"+status +"'," +
                     "color = '"+color +"'," +
+                    "mediafilepath = '"+mediafilapth +"'," +
                     "media_name = '"+medianame +"'," +
                     "completeddate = '"+completeddate +"'," +
                     "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
@@ -194,14 +244,13 @@ public class databasemanager {
         }
     }
 
-    public Cursor updatestartvideoinfo(String header , String localkey ,String completedate) {
+    public Cursor updatestartvideoinfo(String header , String localkey) {
         Cursor mCur=null;
         try {
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblstartmediainfo set header='"+ header +"',videocompletedevicedate = '"+
-                    completedate +"' where localkey='"+localkey+"'");;
+            mDb.execSQL("update tblstartmediainfo set header='"+ header +"' where localkey='"+localkey+"'");;
 
             if (mCur != null)
                 mCur.moveToNext();
@@ -548,6 +597,25 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor updatefilemediafolderdir(String location,String destinationfolder) {
+        Cursor mCur=null;
+        try {
+            location=common.getfilename(location);
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL("update tblstartmediainfo set media_folder='"+destinationfolder+"' where location='"+location+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
     public void insertreadergetvideoinfo(String framecount,String videotoken,String video,String remainingframes,
                                      String frames)
     {
@@ -661,15 +729,50 @@ public class databasemanager {
         return cur;
     }
 
+    public Cursor getallmediabyfolder(String selectedfolder) {
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sqlquery="";
+            if(selectedfolder.equalsIgnoreCase(config.dirallmedia))
+            {
+                sqlquery = "SELECT * FROM tblstartmediainfo order by id DESC";
+            }
+            else
+            {
+                sqlquery = "SELECT * FROM tblstartmediainfo where media_folder= '"+selectedfolder+"' order by  id DESC";
+            }
+
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            cur = mDb.rawQuery(sqlquery, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return cur;
+    }
 
     public Cursor getallmediastartdata() {
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT * FROM tblstartmediainfo";
+            String selectedfolder= xdata.getinstance().getSetting(config.selected_folder);
+            String sqlquery="";
+            if(selectedfolder.equalsIgnoreCase(config.dirallmedia))
+            {
+                sqlquery = "SELECT * FROM tblstartmediainfo order by id DESC";
+            }
+            else
+            {
+                sqlquery = "SELECT * FROM tblstartmediainfo where media_folder= '"+selectedfolder+"' order by  id DESC";
+            }
+
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            cur = mDb.rawQuery(sql, null);
+            cur = mDb.rawQuery(sqlquery, null);
         } catch (Exception e) {
             e.printStackTrace();
         }

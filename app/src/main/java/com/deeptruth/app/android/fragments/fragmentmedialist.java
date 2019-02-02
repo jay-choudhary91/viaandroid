@@ -52,6 +52,8 @@ import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.xdata;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -61,9 +63,11 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -641,6 +645,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                                 String folderpath=itempath.get(selectedPosition);
                                 common.copyfile(new File(sourcefilepath),new File(folderpath));
+                                updatefilemediafolderdirectory(sourcefilepath,folderpath);
                                 // Do something useful withe the position of the selected radio button
 
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -665,6 +670,33 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 .show();
     }
 
+    public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            mdbhelper.updatefilemediafolderdir(sourcefile,destinationmediafolder);
+
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
     public void removehandler()
     {
         if(myhandler != null && myrunnable != null)
@@ -678,7 +710,122 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             @Override
             public void run()
             {
-                File videodir = new File(config.dirallmedia);
+                databasemanager mdbhelper=null;
+                if (mdbhelper == null) {
+                    mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                    mdbhelper.createDatabase();
+                }
+
+                try {
+                    mdbhelper.open();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                Cursor cursor = mdbhelper.getallmediastartdata();
+                if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
+                {
+                    do{
+
+                        String location = "" + cursor.getString(cursor.getColumnIndex("location"));
+                        String sync_status = "" + cursor.getString(cursor.getColumnIndex("sync_status"));
+                        String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
+                        String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
+                        String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
+                        String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
+                        String media_name = "" + cursor.getString(cursor.getColumnIndex("media_name"));
+                        String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
+                        String color = "" + cursor.getString(cursor.getColumnIndex("color"));
+                        String type = "" + cursor.getString(cursor.getColumnIndex("type"));
+                        String header = "" + cursor.getString(cursor.getColumnIndex("header"));
+                        String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
+
+                        if(! isexistinarraay(mediafilepath))
+                        {
+                            video videoobject=new video();
+                            videoobject.setPath(mediafilepath);
+                            videoobject.setmimetype(type);
+                            videoobject.setVideostarttransactionid(videostarttransactionid);
+                            videoobject.setThumbnailpath(thumbnailurl);
+                            videoobject.setMediatitle(media_name);
+                            videoobject.setMedianotes(media_notes);
+                            videoobject.setMediacolor(color);
+                            videoobject.setExtension(common.getvideoextension(location));
+                            videoobject.setName(common.getfilename(location));
+                            videoobject.setDoenable(false);
+
+                            int gridviewwidth=(arrayvideolist.size() % 2) * 100 + 300 + (int) (Math.random() * 300);
+                            videoobject.setGriditemheight(gridviewwidth);
+
+                            try {
+                                Date mediadatetime = null;
+                                if(videocompletedevicedate.contains("T"))
+                                {
+                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                    mediadatetime = format.parse(videocompletedevicedate);
+                                }
+                                else
+                                {
+                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                    mediadatetime = format.parse(videocompletedevicedate);
+                                }
+
+                                final String filecreateddate = new SimpleDateFormat("MM-dd-yy").format(mediadatetime);
+                                final String endtime = new SimpleDateFormat("hh:mm:ss aa").format(mediadatetime);
+
+                                try {
+                                    if(header.trim().length() > 0)
+                                    {
+                                        JSONObject object=new JSONObject(header);
+                                        String duration=object.getString("duration");
+                                        videoobject.setDuration(duration);
+                                    }
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                                videoobject.setCreatedate(filecreateddate);
+                                videoobject.setCreatetime(endtime);
+
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                            File file=new File(mediafilepath);
+                            if(file.exists())
+                                arrayvideolist.add(videoobject);
+                        }
+                    }while(cursor.moveToNext());
+                }
+
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (arrayvideolist != null && arrayvideolist.size() > 0)
+                        {
+                            if(adaptermedialist != null && arrayvideolist.size() > 0)
+                                adaptermedialist.notifyDataSetChanged();
+
+                            if(adaptergrid != null && arrayvideolist.size() > 0)
+                                adaptergrid.notifyDataSetChanged();
+                        }
+                    }
+                });
+
+                try
+                {
+                    mdbhelper.close();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+
+                //================================================================================================================
+
+                /*File videodir = new File(config.dirallmedia);
                 if(! videodir.exists())
                     return;
 
@@ -822,7 +969,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                adaptergrid.notifyDataSetChanged();
                         }
                     }
-                });
+                });*/
             }
         }).start();
     }
@@ -1258,7 +1405,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         if(type == 1)
         {
-            if(videoobj.getmimetype().startsWith("image/")){
+            if(videoobj.getmimetype().startsWith("image")){
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -1266,7 +1413,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 share.setType("image/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 getActivity().startActivity(Intent.createChooser(share, "Share photo"));
-            }else if(videoobj.getmimetype().startsWith("audio/")){
+            }else if(videoobj.getmimetype().startsWith("audio")){
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -1275,7 +1422,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 getActivity().startActivity(Intent.createChooser(share, "Share audio"));
 
-            }else if(videoobj.getmimetype().startsWith("video/")){
+            }else if(videoobj.getmimetype().startsWith("video")){
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
                 Intent share = new Intent(Intent.ACTION_SEND);
@@ -1288,13 +1435,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
         else if(type == 2)
         {
-            if(videoobj.getmimetype().startsWith("image/")){
+            if(videoobj.getmimetype().startsWith("image")){
                 showalertdialog(videoobj,getActivity().getResources().getString(R.string.dlt_cnfm_photo));
 
-            }else if(videoobj.getmimetype().startsWith("audio/")){
+            }else if(videoobj.getmimetype().startsWith("audio")){
                 showalertdialog(videoobj,getActivity().getResources().getString(R.string.dlt_cnfm_audio));
 
-            }else if(videoobj.getmimetype().startsWith("video/")){
+            }else if(videoobj.getmimetype().startsWith("video")){
                 showalertdialog(videoobj,getActivity().getResources().getString(R.string.delete_confirm_video));
 
             }
@@ -1309,21 +1456,20 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             },500);
 
-            //fetchmedialistfromdirectory();
         }else if(type == 4){
-            if(videoobj.getmimetype().startsWith("image/")){
+            if(videoobj.getmimetype().startsWith("image")){
                 xdata.getinstance().saveSetting("selectedphotourl",""+videoobj.getPath());
                 fragmentimagereader = new imagereaderfragment();
                 fragmentimagereader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentimagereader, false, true);
 
-            }else if(videoobj.getmimetype().startsWith("audio/")){
+            }else if(videoobj.getmimetype().startsWith("audio")){
                 xdata.getinstance().saveSetting("selectedaudiourl",""+videoobj.getPath());
                 fragmentaudioreader = new audioreaderfragment();
                 fragmentaudioreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentaudioreader, false, true);
 
-            }else if(videoobj.getmimetype().startsWith("video/")){
+            }else if(videoobj.getmimetype().startsWith("video")){
 
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
                 fragmentvideoreader=new videoreaderfragment();
@@ -1387,14 +1533,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     };
 
-    public boolean isexistinarraay(String name,String modifieddatetime)
+    public boolean isexistinarraay(String filepath)
     {
         if(arrayvideolist.size() > 0)
         {
             for(int i=0;i<arrayvideolist.size();i++)
             {
-                if(arrayvideolist.get(i).getName().equalsIgnoreCase(name) && arrayvideolist.get(i).getCreatedate().
-                        equalsIgnoreCase(modifieddatetime))
+                if(arrayvideolist.get(i).getPath().equalsIgnoreCase(filepath))
                 {
                     return true;
                 }
