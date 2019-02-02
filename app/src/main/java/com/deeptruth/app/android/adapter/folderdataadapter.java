@@ -105,7 +105,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
         holder.img_mediathumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(! myfolder.isIsplus() && (! myfolder.isIsallfolder()))
+                if(! myfolder.isIsplus())
                 {
                     if(mItemClick != null)
                         mItemClick.onItemClicked(myfolder,3);  // Simple click
