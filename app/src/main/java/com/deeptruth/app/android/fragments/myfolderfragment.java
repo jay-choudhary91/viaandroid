@@ -104,6 +104,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                         xdata.getinstance().saveSetting(config.selected_folder,myfolder.getFolderdir());
                         //Toast.makeText(getActivity(),myfolder.getFoldername(),Toast.LENGTH_SHORT).show();
                         fragmentmedialist fragmatriclist=new fragmentmedialist();
+                        fragmatriclist.shouldlaunchcomposer(false);
                         gethelper().replaceFragment(fragmatriclist, true, false);
                     }
                     else if(type == 4)

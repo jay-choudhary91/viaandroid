@@ -124,6 +124,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private Handler myhandler;
     private Runnable myrunnable;
     boolean isinbackground=false;
+    boolean shouldlaunchcomposer=true;
     Date initialdate;
 
     View rootview = null;
@@ -347,7 +348,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
-            launchbottombarfragment();
+            if(shouldlaunchcomposer)
+                launchbottombarfragment();
+
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 fetchmedialistfromdirectory();
@@ -1243,19 +1246,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void launchbottombarfragment()
     {
-        /*bottombarfragment fragbottombar=new bottombarfragment();
-        fragbottombar.setData(new adapteritemclick() {
-            @Override
-            public void onItemClicked(Object object) {
-                requestpermissions();
-            }
-
-            @Override
-            public void onItemClicked(Object object, int type) {
-
-            }
-        });
-        gethelper().replaceFragment(fragbottombar, false, true);*/
 
         composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
         gethelper().replaceFragment(fragbottombar, false, true);
@@ -1481,6 +1471,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         else if(type == 6){
             showfolderdialog(videoobj.getPath());
         }
+    }
+
+    public void shouldlaunchcomposer(boolean shouldlaunchcomposer)
+    {
+        this.shouldlaunchcomposer=shouldlaunchcomposer;
     }
 
     adapteritemclick mcontrollernavigator=new adapteritemclick() {
