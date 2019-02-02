@@ -55,7 +55,7 @@
 
         <activity
             android:name="com.deeptruth.app.android.activity.homeactivity"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
 
         <service

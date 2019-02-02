@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
+    android:id="@+id/photorootview"
     android:layout_height="match_parent"
     >
 
@@ -73,7 +74,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:id="@+id/layout_halfscrnimg"
+                    android:id="@+id/layout_halfscrn"
                     android:layout_weight="1">
 
                     <ImageView
