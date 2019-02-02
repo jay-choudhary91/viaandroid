@@ -807,10 +807,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mediarecorder.prepare();
     }
     private File getVideoFile(Context context) {
+        String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.dirallmedia, fileName+".mp4");
+        File file=new File(storagedirectory, fileName+".mp4");
 
-        File destinationDir=new File(config.dirallmedia);
+        File destinationDir=new File(storagedirectory);
         try {
 
             if (!destinationDir.exists())

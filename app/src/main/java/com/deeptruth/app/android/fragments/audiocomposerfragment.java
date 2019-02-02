@@ -570,10 +570,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
     private File getfile() {
+        String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File file=new File(config.dirallmedia, fileName+".m4a");
+        File file=new File(storagedirectory, fileName+".m4a");
 
-        File destinationDir=new File(config.dirallmedia);
+        File destinationDir=new File(storagedirectory);
         try {
 
             if (!destinationDir.exists())
@@ -587,10 +588,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
     private File gettempfile() {
-        String fileName = "audiotemp.pcm";
-        File file=new File(config.dirallmedia, fileName);
+        String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
+        String fileName = config.audiotempfile;
+        File file=new File(storagedirectory, fileName);
 
-        File destinationDir=new File(config.dirallmedia);
+        File destinationDir=new File(storagedirectory);
         try {
 
             if (!destinationDir.exists())
@@ -676,7 +678,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 String starttime = common.converttimeformate(0);
                 String endtime = common.converttimeformate(mediatotalduration);
 
-                String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
+                final String[] command = { "-ss", starttime,"-i", recordedmediafile, "-to",endtime, "-filter_complex",
                         "compand=gain=-20,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
 
                 ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
@@ -694,6 +696,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             mdbstartitemcontainer.get(0).setItem15(destinationfilepath.getAbsolutePath());
                             callserviceforinsertintodb();
 
+                            try {
+                                String selecteddir=xdata.getinstance().getSetting(config.selected_folder);
+                                String selectedfile=selecteddir+File.separator+config.audiotempfile;
+                                if(new File(selectedfile).exists())
+                                    common.delete(new File(selectedfile));
+
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
                             if(madapterclick != null)
                                 madapterclick.onItemClicked(recordedmediafile,2);
                             img_dotmenu.setVisibility(View.VISIBLE);

@@ -763,7 +763,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             e.printStackTrace();
                         }
 
-                        arrayvideolist.add(videoobject);
+                        File file=new File(mediafilepath);
+                        if(file.exists())
+                            arrayvideolist.add(videoobject);
 
                     }while(cursor.moveToNext());
                 }

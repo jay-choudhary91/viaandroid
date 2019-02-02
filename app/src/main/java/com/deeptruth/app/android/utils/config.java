@@ -12,6 +12,7 @@ public class config {
 
     public static String allmedia="allmedia";
     public static String media="media";
+    public static String audiotempfile="audiotemp.pcm";
 
     public static final String rootdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID;
