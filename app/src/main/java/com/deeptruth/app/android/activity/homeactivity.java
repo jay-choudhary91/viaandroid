@@ -105,6 +105,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         else
         {
             fragvideolist=new fragmentmedialist();
+            fragvideolist.shouldlaunchcomposer(true);
             replaceFragment(fragvideolist, false, true);
         }
 
