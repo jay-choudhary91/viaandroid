@@ -348,8 +348,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
-            if(shouldlaunchcomposer)
-                launchbottombarfragment();
+            //if(shouldlaunchcomposer)
+            launchbottombarfragment();
 
             if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
@@ -1246,7 +1246,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void launchbottombarfragment()
     {
-
         composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
         gethelper().replaceFragment(fragbottombar, false, true);
     }
