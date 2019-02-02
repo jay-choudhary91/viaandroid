@@ -152,7 +152,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             @Override
             public void onItemClicked(Object object) {
                 String foldername=(String)object;
-                String directoryname=config.rootdir+File.separator+foldername;
+                String directoryname=config.dirmedia +File.separator+foldername;
                 File file=new File(directoryname);
 
                 if (!file.exists())
@@ -210,7 +210,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
     public void fetchfoldersfromdirectory()
     {
 
-        File rootdir = new File(config.rootdir);
+        File rootdir = new File(config.dirmedia);
         if(! rootdir.exists())
             return;
 

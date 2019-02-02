@@ -603,7 +603,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void showfolderdialog(final String sourcefilepath)
     {
-        File rootdir = new File(config.rootdir);
+        File rootdir = new File(config.dirmedia);
         if(! rootdir.exists())
             return;
 

@@ -1399,7 +1399,7 @@ public class common {
 
     public static String[] getallfolders()
     {
-        File rootdir = new File(config.rootdir);
+        File rootdir = new File(config.dirmedia);
         if(! rootdir.exists())
             return null;
 

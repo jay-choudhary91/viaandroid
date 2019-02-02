@@ -11,17 +11,22 @@ import java.io.File;
 public class config {
 
     public static String allmedia="allmedia";
+    public static String media="media";
+
     public static final String rootdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID;
 
+    public static final String dirmedia = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
+            BuildConfig.APPLICATION_ID+File.separator+media;
+
     public static final String dirallmedia = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
-            BuildConfig.APPLICATION_ID+File.separator+allmedia;
+            BuildConfig.APPLICATION_ID+File.separator+media+File.separator+allmedia;
 
     public static final String hashesdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
-            BuildConfig.APPLICATION_ID+File.separator+allmedia+File.separator+"hashes";
+            BuildConfig.APPLICATION_ID+File.separator+"hashes";
 
     public static final String audiowavesdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
-            BuildConfig.APPLICATION_ID+File.separator+allmedia+File.separator+"audiowaves";
+            BuildConfig.APPLICATION_ID+File.separator+"audiowaves";
 
     public static final double STATIC_LAT = 43.65844179931329;
     public static final double STATIC_LNG = -116.69653460383417;

@@ -670,7 +670,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
 
     public void showfolderdialog(final String sourcefilepath)
     {
-        File rootdir = new File(config.rootdir);
+        File rootdir = new File(config.dirmedia);
         if(! rootdir.exists())
             return;
 
