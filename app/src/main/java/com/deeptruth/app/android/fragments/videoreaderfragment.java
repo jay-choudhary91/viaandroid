@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
@@ -40,6 +41,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LongSparseArray;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -221,6 +223,8 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
     TextView totalduration;
     @BindView(R.id.layout_customcontroller)
     LinearLayout layoutcustomcontroller;
+    @BindView(R.id.linear_seekbarcolorview)
+    LinearLayout linearseekbarcolorview;
 
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
@@ -448,7 +452,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 RelativeLayout.LayoutParams.WRAP_CONTENT);
                         p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                         Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                        p.setMargins(thumbRect.centerX()+2,0, 0, 0);
+                        p.setMargins(thumbRect.centerX()+5,0, 0, 0);
                         Log.e("thumbleft ",""+thumbRect.left);
                         layout_progressline.setLayoutParams(p);
                         txt_mediatimethumb.setText(stringForTime(player.getCurrentPosition()));
@@ -665,6 +669,19 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             layout_starttime.setVisibility(View.VISIBLE);
             layout_endtime.setVisibility(View.VISIBLE);
             layout_dtls.setOnClickListener(this);
+
+            mediaseekbar.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbar.getHeight());
+                    parms.setMargins(15,0,15,0);
+                    parms.addRule(RelativeLayout.BELOW,R.id.layout_scrubberview);
+                    linearseekbarcolorview.setLayoutParams(parms);
+
+                    Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
+                }
+            });
 
             layout_videoreader.post(new Runnable() {
                 @Override
@@ -1312,7 +1329,6 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,
                                         sequencehash,serverdictionaryhash,color,latency));
                             }
-
                         }else{
 
                             for(int i=0;i<mitemlist.size();i++)
@@ -1335,6 +1351,13 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                                 }
                             });
                         }
+
+                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setseekbarlayoutcolor();
+                            }
+                        });
                         try
                         {
                             mdbhelper.close();
@@ -1570,6 +1593,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
                       }
 
                       ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+
                       for(int j=0;j<metricItemArraylist.size();j++)
                       {
                           common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
@@ -2245,4 +2269,46 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
+
+
+    private void setseekbarlayoutcolor(){
+        try
+        {
+            linearseekbarcolorview.removeAllViews();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        for(int i=0 ; i<metricmainarraylist.size();i++)
+        {
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+                param.leftMargin=0;
+
+                View view = new View(getActivity());
+                view.setLayoutParams(param);
+
+
+                if(!metricmainarraylist.get(i).getColor().isEmpty() && metricmainarraylist.get(i).getColor() != null){
+                    view.setBackgroundColor(Color.parseColor(metricmainarraylist.get(i).getColor()));
+                }else{
+                    view.setBackgroundColor(Color.parseColor("white"));
+                }
+
+
+               /* if(i % 2 == 0){
+                    view.setBackgroundResource(R.color.black);
+                }else{
+                    view.setBackgroundResource(R.color.red);
+                    //
+                }*/
+                Log.e("setcolorcount =", ""+ i);
+                linearseekbarcolorview.addView(view);
+
+        }
+    }
 }
+
+
+

@@ -156,19 +156,30 @@
 
                                 </RelativeLayout>
 
-                                    <com.deeptruth.app.android.views.customseekbar
-                                        android:id="@+id/mediacontroller_progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_centerInParent="true"
-                                        android:progressDrawable="@drawable/custom_seekbar"
-                                        android:layout_height="wrap_content"
-                                        android:background="@color/dark_green"
-                                        android:thumb="@drawable/custom_thumb"
-                                        android:layout_below="@+id/layout_scrubberview"
-                                        android:layout_marginLeft="@dimen/margin_15dp"
-                                        android:layout_marginRight="@dimen/margin_15dp"
-                                        />
 
+                                <LinearLayout
+                                    android:id="@+id/linear_seekbarcolorview"
+                                    android:layout_width="match_parent"
+                                    android:layout_centerInParent="true"
+                                    android:orientation="horizontal"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/transparent"
+                                    android:layout_below="@+id/layout_scrubberview"
+                                    android:layout_marginLeft="@dimen/margin_15dp"
+                                    android:layout_marginRight="@dimen/margin_15dp"
+                                    />
+
+                                <com.deeptruth.app.android.views.customseekbar
+                                    android:id="@+id/mediacontroller_progress"
+                                    android:layout_width="351dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/layout_scrubberview"
+                                    android:layout_centerInParent="true"
+                                    android:layout_marginLeft="@dimen/margin_15dp"
+                                    android:layout_marginRight="@dimen/margin_15dp"
+                                    android:background="@color/transparent"
+                                    android:progressDrawable="@drawable/custom_seekbar"
+                                    android:thumb="@drawable/custom_thumb" />
                                     <RelativeLayout
                                         android:id="@+id/layout_progressline"
                                         android:layout_width="wrap_content"
