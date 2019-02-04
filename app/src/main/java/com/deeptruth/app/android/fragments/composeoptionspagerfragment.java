@@ -924,15 +924,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         if(currentselectedcomposer == 0 && videoarraylist.size() > 0)
         {
-            mediapath=videoarraylist.get(videoarraylist.size()-1);
+            mediapath=videoarraylist.get(0);
         }
         else if(currentselectedcomposer == 1 && imagearraylist.size() > 0)
         {
-            mediapath=imagearraylist.get(imagearraylist.size()-1);
+            mediapath=imagearraylist.get(0);
         }
         else if(currentselectedcomposer == 2 && audioarraylist.size() > 0)
         {
-            mediapath=audioarraylist.get(audioarraylist.size()-1);
+            mediapath=audioarraylist.get(0);
             img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
 
             RequestOptions options = new RequestOptions();

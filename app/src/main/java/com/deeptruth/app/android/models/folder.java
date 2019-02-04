@@ -13,6 +13,11 @@ public class folder
     public boolean isallfolder = false;
     public boolean isplus = false;
 
+    public folder()
+    {
+
+    }
+
     public folder(String foldername,boolean isallfolder,boolean isplus)
     {
         setFoldername(foldername);

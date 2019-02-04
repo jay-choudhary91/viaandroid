@@ -54,10 +54,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.arraycontainer;
+import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.wavevisualizer;
@@ -89,6 +91,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -98,7 +101,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener,AdapterView.OnItemSelectedListener {
+        MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener {
 
     @BindView(R.id.img_delete_media)
     ImageView img_delete_media;
@@ -116,7 +119,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     LinearLayout layout_scrubberview;
 
     @BindView(R.id.spinner)
-    Spinner photospinner;
+    Spinner spinnermediafolder;
     @BindView(R.id.txt_slot4)
     TextView txtslotmedia;
     @BindView(R.id.txt_slot5)
@@ -371,7 +374,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             //tabs_detail
             tab_layout.setVisibility(View.VISIBLE);
             txtslotmedia.setText(getResources().getString(R.string.audio));
-            photospinner.setOnItemSelectedListener(this);
             img_share_media.setOnClickListener(this);
             img_edit_name.setOnClickListener(this);
             img_edit_notes.setOnClickListener(this);
@@ -402,7 +404,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         v.setFocusable(false);
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                        // if (arrayvideolist.size() > 0) {
+                        // if (arraymediaitemlist.size() > 0) {
                         String medianotes = edt_medianotes.getText().toString();
 
                         if(!mediatransectionid.isEmpty())
@@ -419,7 +421,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         v.setFocusable(false);
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                        // if (arrayvideolist.size() > 0) {
+                        // if (arraymediaitemlist.size() > 0) {
                         String renamevalue = edt_medianame.getText().toString();
                         if(!mediatransectionid.isEmpty())
                             updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString(),"allmedia");
@@ -437,7 +439,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                     if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
                   /*  Log.i(TAG,"Here you can write the code");*/
-                        //  if (arrayvideolist.size() > 0) {
+                        //  if (arraymediaitemlist.size() > 0) {
                         String renamevalue = edt_medianame.getText().toString();
                         editabletext();
 
@@ -448,14 +450,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     return false;
                 }
             });
-
-            String[] items=common.getallfolders();
-            if(items != null && items.length > 0)
-            {
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, common.getallfolders());
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                photospinner.setAdapter(dataAdapter);
-            }
 
             txtslotencyption.setOnClickListener(this);
             txtslotmeta.setOnClickListener(this);
@@ -1310,6 +1304,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             txt_endtime.setText(endformatteddate);
                             txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(createdtime);
+
+                            if(mediafolder.trim().length() > 0)
+                                setfolderspinner();
                         }catch (Exception e)
                         {
                             e.printStackTrace();
@@ -1404,6 +1401,91 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
+    public void setfolderspinner()
+    {
+        final List<folder> folderitem=common.getalldirfolders();
+        folderdirectoryspinneradapter adapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
+                R.layout.row_myfolderspinneradapter,folderitem);
+
+        int selectedposition=0;
+        final File foldername = new File(mediafolder);
+        for(int i=0;i<folderitem.size();i++)
+        {
+            if(folderitem.get(i).getFoldername().equalsIgnoreCase(foldername.getName()))
+            {
+                selectedposition=i;
+                break;
+            }
+        }
+
+        spinnermediafolder.setAdapter(adapter);
+        spinnermediafolder.setSelection(selectedposition,true);
+        spinnermediafolder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
+            {
+                if(! folderitem.get(position).getFoldername().equalsIgnoreCase(foldername.getName()))
+                {
+                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                String folderpath=folderitem.get(position).getFolderdir();
+                                if(! folderpath.equalsIgnoreCase(new File(audiourl).getParent()))
+                                {
+                                    common.copyfile(new File(audiourl),new File(folderpath));
+                                    //common.delete(new File(sourcefilepath));
+                                    updatefilemediafolderdirectory(audiourl,folderpath);
+                                }
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressdialog.dismisswaitdialog();
+                                }
+                            });
+                        }
+                    }).start();
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            mdbhelper.updatefilemediafolderdir(sourcefile,destinationmediafolder);
+
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
     public void getmetadetareader(){
         myHandler=new Handler();
         myRunnable = new Runnable() {
@@ -1417,16 +1499,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         };
         myHandler.post(myRunnable);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     public void editabletext(){

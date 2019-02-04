@@ -55,6 +55,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
 
+    adapteritemclick mitemclick=null;
     folderdataadapter adapter;
     ArrayList<folder> arraylist=new ArrayList<>();
     @Override
@@ -93,21 +94,28 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                     folder myfolder=(folder)object;
                     if(type == 1)
                     {
-                        createdirectory();
+                        createdirectory();  // Clicked on plus icon
                     }
                     else if(type == 2)
                     {
 
                     }
-                    else if(type == 3)
+                    else if(type == 3)  // Clicked on folder items (Not plus icon case)
                     {
                         xdata.getinstance().saveSetting(config.selected_folder,myfolder.getFolderdir());
-                        //Toast.makeText(getActivity(),myfolder.getFoldername(),Toast.LENGTH_SHORT).show();
-                        fragmentmedialist fragmatriclist=new fragmentmedialist();
-                        fragmatriclist.shouldlaunchcomposer(false);
-                        gethelper().replaceFragment(fragmatriclist, true, false);
+                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                        {
+                            medialistreader fragmatriclist=new medialistreader();
+                            gethelper().replaceFragment(fragmatriclist, true, false);
+                        }
+                        else
+                        {
+                            fragmentmedialist fragmatriclist=new fragmentmedialist();
+                            fragmatriclist.shouldlaunchcomposer(false);
+                            gethelper().replaceFragment(fragmatriclist, true, false);
+                        }
                     }
-                    else if(type == 4)
+                    else if(type == 4)   // Delete prompt
                     {
                         String message="Are you sure to delete "+myfolder.getFoldername()+ " folder or directory?";
                         showdeletealert(message,myfolder);
@@ -137,6 +145,9 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                                 fetchfoldersfromdirectory();
                                 adapter.notifyDataSetChanged();
                             }
+
+                            if(mitemclick != null)
+                                mitemclick.onItemClicked(null);
 
                             if(dialog != null)
                                 dialog.dismiss();
@@ -295,5 +306,9 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             e.printStackTrace();
         }
         return  filedirectoryinfo;
+    }
+
+    public void setdata(adapteritemclick mitemclick) {
+        this.mitemclick = mitemclick;
     }
 }
