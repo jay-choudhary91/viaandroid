@@ -320,9 +320,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             photospinner.setOnItemSelectedListener(this);
             righthandle.setOnTouchListener(this);
 
-            String blockchainid = " EOLZ03D0K91734JADFL2";
-            String blockid = " ZD38MGUQ4FADLK5A";
-            String blocknumber = " 4";
+            String blockchainid = " ";
+            String blockid = " ";
+            String blocknumber = " ";
             common.setspannable(getResources().getString(R.string.blockchain_id), blockchainid, txt_blockchainid);
             common.setspannable(getResources().getString(R.string.block_id), blockid, txt_blockid);
             common.setspannable(getResources().getString(R.string.block_number), blocknumber, txt_blocknumber);
@@ -1125,6 +1125,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 rotatecompass(degree);
             }
             lastsavedangle=strdegree;
+        }
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+            Log.e("drawpoints","drawvalues");
         }
     }
 

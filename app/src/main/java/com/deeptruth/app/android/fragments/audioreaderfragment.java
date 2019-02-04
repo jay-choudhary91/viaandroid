@@ -1570,6 +1570,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
             lastsavedangle=strdegree;
         }
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+            Log.e("drawpoints","drawvalues");
+        }
     }
 
     private void loadmap() {

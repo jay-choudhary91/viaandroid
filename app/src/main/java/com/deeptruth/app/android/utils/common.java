@@ -808,6 +808,7 @@ public class common {
             xdata.getinstance().saveSetting(config.hashformula,"NA");
             xdata.getinstance().saveSetting(config.datahash,"NA");
             xdata.getinstance().saveSetting(config.matrichash,"NA");
+            xdata.getinstance().saveSetting(config.distancetravelled,"NA");
     }
 
     public static void setgraphicalitems(String keyname,String value,boolean ismetricsselected)
@@ -878,6 +879,8 @@ public class common {
             xdata.getinstance().saveSetting(config.acceleration_z,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("connectionspeed")) {
             xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"NA"));
+        } else if (keyname.equalsIgnoreCase("distancetravelled")) {
+            xdata.getinstance().saveSetting(config.distancetravelled,((ismetricsselected)?value:"NA"));
         }
     }
 

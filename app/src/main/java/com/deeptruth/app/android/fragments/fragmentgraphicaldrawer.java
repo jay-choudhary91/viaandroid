@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.utils.common;
@@ -224,9 +225,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     {
         if(mgooglemap != null)
         {
-            if(ismediaplayer || photocapture)
-            {
-
                 Log.e("GraphicalLatLng",""+latlng.latitude+" "+latlng.longitude);
                 {
                     /*points.add(latlng);
@@ -241,7 +239,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     mgooglemap.addMarker(new MarkerOptions()
                             .position(latlng)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
-                }
+
 
                 /*{
                     points.add(latlng);
@@ -269,6 +267,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         String longitudedegree = xdata.getinstance().getSetting(config.Longitude);
         String altitude=xdata.getinstance().getSetting(config.Altitude);
         String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
+        Log.e("distancetravelled",xdata.getinstance().getSetting(config.distancetravelled));
 
         if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
         {
@@ -309,6 +308,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
 
             common.setdrawabledata(getResources().getString(R.string.traveled),"\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
+
             common.setdrawabledata(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
 
             common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
@@ -347,8 +347,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                 (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-        if(ismediaplayer || photocapture)
-        {
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+            drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+            Log.e("drawpoints","drawvalues");
+        }
+        /*if(ismediaplayer || photocapture)
+        {*/
             if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
             {
                 String strdegree=xdata.getinstance().getSetting(config.orientation);
@@ -363,7 +370,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 lastsavedangle=strdegree;
 
             }
-        }
+      //  }
 
         float val = (float) (Math.random() * 20) + 3;
         latencyvalues.add(new Entry(latencyvalues.size(), val, 0));
