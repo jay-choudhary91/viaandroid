@@ -55,6 +55,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -148,6 +149,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     @BindView(R.id.linechart)
     LineChart mChart;
 
+    String[] latencyarray;
+    String latency = "";
+
 
     View rootview;
     GoogleMap mgooglemap;
@@ -217,6 +221,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             //setmetadatavalue();
             loadmap();
             setchartdata();
+
         }
         return rootview;
     }
@@ -372,8 +377,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
       //  }
 
-        float val = (float) (Math.random() * 20) + 3;
-        latencyvalues.add(new Entry(latencyvalues.size(), val, 0));
+        latency = xdata.getinstance().getSetting(config.latency).toString();
+
+        if(latencyvalues != null && latencyvalues.size()!=0)
+                latencyvalues.clear();
+
+           if(latency != null && !latency.isEmpty() ){
+               latencyarray = latency.split(",");
+
+               for(int i = 0 ;i< latencyarray.length;i++){
+                   //float val = (float) (Math.random() * 20) + 3;
+                   latencyvalues.add(new Entry(latencyvalues.size(),Float.parseFloat(latencyarray[i]),0));
+               }
+           }
 
         // add data
         setlatencydata();
