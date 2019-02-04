@@ -37,6 +37,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
@@ -498,6 +499,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             setupaudiodata();
         }
         return rootview;
+    }
+
+    @Override
+    public void initviews(View parent, Bundle savedInstanceState) {
+        super.initviews(parent, savedInstanceState);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        ButterKnife.bind(this, parent);
     }
 
     @Override

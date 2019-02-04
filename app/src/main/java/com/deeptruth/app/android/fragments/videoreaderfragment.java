@@ -49,6 +49,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
@@ -805,6 +806,12 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
         return rootview;
     }
 
+    @Override
+    public void initviews(View parent, Bundle savedInstanceState) {
+        super.initviews(parent, savedInstanceState);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        ButterKnife.bind(this, parent);
+    }
 
     public void disabletouchedevents()
     {
