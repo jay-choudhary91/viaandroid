@@ -871,7 +871,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             e.printStackTrace();
         }
 
-        Cursor cursor = mdbhelper.getallmediabyfolder(config.dirallmedia);
+        Cursor cursor = mdbhelper.getallmediabyfolder(xdata.getinstance().getSetting(config.selected_folder));
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
         {
             do{

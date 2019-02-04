@@ -637,8 +637,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 .setTitle("Select folder")
                 .setSingleChoiceItems(items, 0, null)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, int whichButton) {
-
+                    public void onClick(final DialogInterface dialog, int whichButton)
+                    {
                         progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
                         final int selectedPosition = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
 
@@ -646,11 +646,19 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             @Override
                             public void run() {
 
-                                String folderpath=itempath.get(selectedPosition);
-                                common.copyfile(new File(sourcefilepath),new File(folderpath));
-                                updatefilemediafolderdirectory(sourcefilepath,folderpath);
-                                // Do something useful withe the position of the selected radio button
-
+                                try {
+                                    String folderpath=itempath.get(selectedPosition);
+                                    String fileparentdir=new File(sourcefilepath).getParent();
+                                    if(! folderpath.equalsIgnoreCase(new File(sourcefilepath).getParent()))
+                                    {
+                                        common.copyfile(new File(sourcefilepath),new File(folderpath));
+                                        common.delete(new File(sourcefilepath));
+                                        updatefilemediafolderdirectory(sourcefilepath,folderpath);
+                                    }
+                                }catch (Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -749,6 +757,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             video videoobject=new video();
                             videoobject.setPath(mediafilepath);
                             videoobject.setmimetype(type);
+                            videoobject.setLocalkey(localkey);
                             videoobject.setVideostarttransactionid(videostarttransactionid);
                             videoobject.setThumbnailpath(thumbnailurl);
                             videoobject.setMediatitle(media_name);
@@ -1110,6 +1119,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arrayvideolist.get(i).setMediatitle(media_name);
                         arrayvideolist.get(i).setMedianotes(media_notes);
                         arrayvideolist.get(i).setMediacolor(color);
+                        arrayvideolist.get(i).setLocalkey(localkey);
                         break;
                     }
                 }

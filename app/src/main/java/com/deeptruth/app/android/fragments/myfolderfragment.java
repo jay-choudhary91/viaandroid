@@ -130,8 +130,13 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                             if(new File(myfolder.getFolderdir()).exists())
                                 common.delete(new File(myfolder.getFolderdir()));
 
-                            arraylist.remove(myfolder);
-                            adapter.notifyDataSetChanged();
+                            if(adapter != null)
+                            {
+                                arraylist.clear();
+                                adapter.notifyDataSetChanged();
+                                fetchfoldersfromdirectory();
+                                adapter.notifyDataSetChanged();
+                            }
 
                             if(dialog != null)
                                 dialog.dismiss();
@@ -224,17 +229,13 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
         {
             if(! file.getName().equalsIgnoreCase("cache"))
             {
-                File[] folderfiles = file.listFiles();
-                int filecount=folderfiles.length;
-
+                String[] thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
                 if(file.getName().equalsIgnoreCase(config.allmedia))
                 {
-                    String[] thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
                     arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath[0],thumbnailpath[1],true,false));
                 }
                 else
                 {
-                    String[] thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
                     arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath[0],thumbnailpath[1],false,false));
                 }
             }
@@ -244,7 +245,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
     public String[] getfolderthumbnailpath(String directorypath)
     {
-
+        String thumbnailurl="";
         String[] filedirectoryinfo ={"","0"};
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -260,27 +261,30 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
         }
 
         Cursor cursor = mdbhelper.getallmediabyfolder(directorypath);
+        int filecount=0;
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
         {
             do{
+                filecount++;
                 String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
-                String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
+                String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
 
-                if(mediafilepath.contains(".mp4") || mediafilepath.contains(".jpg") || mediafilepath.contains(".png") ||
-                        mediafilepath.contains(".jpeg"))
+                if(! new File(mediafilepath).exists())
                 {
-                    filedirectoryinfo[0] = mediafilepath;
+                    filecount--;
+                    mdbhelper.deletefromstartvideoinfobylocalkey(localkey);
+                    mdbhelper.deletefrommetadatabylocalkey(localkey);
                 }
-                else if(mediafilepath.contains(".m4a"))
+                else
                 {
-                    filedirectoryinfo[0] = thumbnailurl;
+                    if(thumbnailurl.trim().isEmpty())
+                        thumbnailurl= "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
                 }
-
-                break;
 
             }while(cursor.moveToNext());
 
-            filedirectoryinfo[1]=""+cursor.getCount();
+            filedirectoryinfo[0] = thumbnailurl;
+            filedirectoryinfo[1]=""+filecount;
         }
 
         try
@@ -291,39 +295,5 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             e.printStackTrace();
         }
         return  filedirectoryinfo;
-    }
-
-    public String getaudiothumbnail(String filepath)
-    {
-        String thumbnailurl="";
-        databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
-
-        try {
-            mdbhelper.open();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        Cursor cursor = mdbhelper.getstartmediainfo(common.getfilename(filepath));
-        if(cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
-        {
-            do {
-                thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
-            }while (cursor.moveToNext());
-        }
-
-        try
-        {
-            mdbhelper.close();
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return thumbnailurl;
     }
 }
