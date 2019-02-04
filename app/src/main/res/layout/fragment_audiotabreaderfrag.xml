@@ -118,17 +118,28 @@
 
                 </RelativeLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/layout_scrubberview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:layout_alignParentBottom="true"
                     android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/linear_seekbarcolorview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_15dp"
+                        android:layout_marginRight="@dimen/margin_15dp"
+                        android:background="@color/transparent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        />
+
                         <SeekBar
                             android:id="@+id/mediacontroller_progress"
                             android:layout_width="match_parent"
-                            android:layout_centerInParent="true"
                             android:progressDrawable="@drawable/custom_seekbar"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/margin_15dp"
@@ -172,7 +183,7 @@
                             android:textColor="@color/black"
                             android:paddingLeft="4dip" />
                     </RelativeLayout>
-                </LinearLayout>
+                </RelativeLayout>
 
             </RelativeLayout>
 

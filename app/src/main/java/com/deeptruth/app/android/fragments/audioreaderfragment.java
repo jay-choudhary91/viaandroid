@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -120,7 +121,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.layout_drawer)
     LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
-    LinearLayout layout_scrubberview;
+    RelativeLayout layout_scrubberview;
+    @BindView(R.id.linear_seekbarcolorview)
+    LinearLayout linearseekbarcolorview;
 
     @BindView(R.id.spinner)
     Spinner spinnermediafolder;
@@ -376,6 +379,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     player.seekTo(seekBar.getProgress());
+                }
+            });
+
+            mediaseekbar.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbar.getHeight());
+                    parms.setMargins(15,5,15,0);
+                    linearseekbarcolorview.setLayoutParams(parms);
+
+                    Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
                 }
             });
 
@@ -1276,6 +1291,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         }
                     }
 
+                   /* applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setseekbarlayoutcolor();
+                        }
+                    });*/
+
                     try {
                         mdbhelper.close();
                     } catch (Exception e) {
@@ -1434,6 +1456,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         });
                     }
                 }
+
+                /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setseekbarlayoutcolor();
+                    }
+                });*/
+
                 try
                 {
                     mdbhelper.close();
@@ -1809,5 +1839,41 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public static float dpToPx(Context context, float valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
+    }
+
+    private void setseekbarlayoutcolor(){
+        try
+        {
+            linearseekbarcolorview.removeAllViews();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        for(int i=0 ; i<metricmainarraylist.size();i++)
+        {
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+            param.leftMargin=0;
+
+            View view = new View(getActivity());
+            view.setLayoutParams(param);
+
+            if(!metricmainarraylist.get(i).getColor().isEmpty() && metricmainarraylist.get(i).getColor() != null){
+                view.setBackgroundColor(Color.parseColor(metricmainarraylist.get(i).getColor()));
+            }else{
+                view.setBackgroundColor(Color.parseColor("white"));
+            }
+
+               /* if(i % 2 == 0){
+                    view.setBackgroundResource(R.color.black);
+                }else{
+                    view.setBackgroundResource(R.color.red);
+                    //
+                }*/
+            Log.e("setcolorcount =", ""+ i);
+            linearseekbarcolorview.addView(view);
+
+        }
     }
 }
