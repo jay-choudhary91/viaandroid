@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -79,6 +81,21 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             objectanimator.setRepeatCount(Animation.INFINITE);
             objectanimator.setRepeatMode(ValueAnimator.RESTART);
             objectanimator.start();*/
+            // Load the animation like this
+            /*Animation animslide = AnimationUtils.loadAnimation(context,R.anim.slide_leftright);
+            animslide.setRepeatCount(5);  // animation repeat count
+            animslide.setRepeatMode(2);
+            holder.img_scanover.startAnimation(animslide);*/
+
+            TranslateAnimation animation = new TranslateAnimation(-50.0f, 500.0f,
+                    0.0f, 0.0f);
+            animation.setDuration(3000);
+            //animation.setStartOffset(position*100);
+            animation.setRepeatCount(Animation.INFINITE);
+            animation.setRepeatMode(ValueAnimator.RESTART);
+            animation.setFillAfter(true);
+            holder.img_scanover.startAnimation(animation);
+
             if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
             {
                 /*int colors[] = { 0xff255779, 0xffa6c0cd };

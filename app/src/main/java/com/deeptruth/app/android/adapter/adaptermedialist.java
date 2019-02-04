@@ -1,5 +1,6 @@
 package com.deeptruth.app.android.adapter;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -92,6 +95,15 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
         if(arrayvideolist.get(position).isDoenable())
         {
+            TranslateAnimation animation = new TranslateAnimation(-50.0f, 1000.0f,
+                    0.0f, 0.0f);
+            animation.setDuration(4000);
+            //animation.setStartOffset(position*100);
+            animation.setRepeatCount(Animation.INFINITE);
+            animation.setRepeatMode(ValueAnimator.RESTART);
+            animation.setFillAfter(true);
+            holder.img_scanover.startAnimation(animation);
+
             if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
             {
                 holder.img_scanover.setVisibility(View.VISIBLE);
