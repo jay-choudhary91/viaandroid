@@ -652,7 +652,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     if(! folderpath.equalsIgnoreCase(new File(sourcefilepath).getParent()))
                                     {
                                         common.copyfile(new File(sourcefilepath),new File(folderpath));
-                                        common.delete(new File(sourcefilepath));
+                                        //common.delete(new File(sourcefilepath));
                                         updatefilemediafolderdirectory(sourcefilepath,folderpath);
                                     }
                                 }catch (Exception e)
