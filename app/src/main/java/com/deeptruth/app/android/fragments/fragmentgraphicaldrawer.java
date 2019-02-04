@@ -382,20 +382,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(latencyvalues != null && latencyvalues.size()!=0)
                 latencyvalues.clear();
 
-           if(latency != null && !latency.isEmpty() ){
+           if(latency != null && (! latency.trim().isEmpty()) ){
                latencyarray = latency.split(",");
 
                for(int i = 0 ;i< latencyarray.length;i++){
                    //float val = (float) (Math.random() * 20) + 3;
                    latencyvalues.add(new Entry(latencyvalues.size(),Float.parseFloat(latencyarray[i]),0));
                }
-           }
 
-        // add data
-        setlatencydata();
-        mChart.animateX(10);
-        Legend l = mChart.getLegend();
-        l.setForm(Legend.LegendForm.LINE);
+               // add data
+               setlatencydata();
+               mChart.animateX(10);
+               Legend l = mChart.getLegend();
+               l.setForm(Legend.LegendForm.LINE);
+           }
     }
 
 
