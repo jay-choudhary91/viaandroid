@@ -460,14 +460,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             });
             layout_dtls.setOnClickListener(this);
-            String[] items=common.getallfolders();
-            if(items != null && items.length > 0)
-            {
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, common.getallfolders());
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                photospinner.setAdapter(dataAdapter);
-            }
-
 
             txtslotencyption.setOnClickListener(this);
             txtslotmeta.setOnClickListener(this);
