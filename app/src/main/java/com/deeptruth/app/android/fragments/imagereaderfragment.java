@@ -23,12 +23,16 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
@@ -133,8 +137,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     RelativeLayout layout_photoreader;
     @BindView(R.id.txt_createdtime)
     TextView txt_createdtime;
-    @BindView(R.id.layout_halfscrnimg)
-    RelativeLayout layout_halfscrnimg;
+    @BindView(R.id.layout_halfscrn)
+    RelativeLayout layout_halfscrn;
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
     @BindView(R.id.layout_photodetails)
@@ -177,6 +181,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_validating;
     @BindView(R.id.txt_section_validating_secondary)
     TextView txt_section_validating_secondary;
+    @BindView(R.id.photorootview)
+    RelativeLayout photorootview;
+    @BindView(R.id.layout_dtls)
+    LinearLayout layout_dtls;
 
 
     private String imageurl = null;
@@ -225,7 +233,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
             gethelper().drawerenabledisable(false);
-
             img_dotmenu.setOnClickListener(this);
             img_folder.setOnClickListener(this);
             img_camera.setOnClickListener(this);
@@ -263,6 +270,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             layout_mediatype.setVisibility(View.VISIBLE);
             layout_date.setVisibility(View.VISIBLE);
             layout_time.setVisibility(View.VISIBLE);
+            layout_photodetails.setOnClickListener(this);
+            layout_dtls.setOnClickListener(this);
 
             layout_photoreader.post(new Runnable() {
                 @Override
@@ -313,9 +322,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             righthandle.setOnTouchListener(this);
 
-            String blockchainid = " EOLZ03D0K91734JADFL2";
-            String blockid = " ZD38MGUQ4FADLK5A";
-            String blocknumber = " 4";
+            String blockchainid = " ";
+            String blockid = " ";
+            String blocknumber = " ";
             common.setspannable(getResources().getString(R.string.blockchain_id), blockchainid, txt_blockchainid);
             common.setspannable(getResources().getString(R.string.block_id), blockid, txt_blockid);
             common.setspannable(getResources().getString(R.string.block_number), blocknumber, txt_blocknumber);
@@ -391,7 +400,30 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             txt_section_validating_secondary.setText(config.caution);
             txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+           //detuct keyboard is open or not
+            photorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int heightDiff = photorootview.getRootView().getHeight() - photorootview.getHeight();
+                    if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
+                        // ... do something here
+                        Log.e("ikeyboardshowing","iskeyboardshowing....true");
+                        layout_halfscrn.setVisibility(View.GONE);
+                        layout_footer.setVisibility(View.GONE);
 
+                    }else
+                    {
+                        if(layout_halfscrn.getVisibility()==View.GONE){
+                            layout_halfscrn.setVisibility(View.VISIBLE);
+                            layout_footer.setVisibility(View.VISIBLE);
+                             edt_medianame.setFocusable(false);
+                             edt_medianotes.setFocusable(false);
+                        }
+
+                        Log.e("ikeyboardshowing","iskeyboardshowing....false");
+                    }
+                }
+            });
             loadmap();
             setmetriceshashesdata();
             setupimagedata();
@@ -403,6 +435,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         ButterKnife.bind(this, parent);
     }
 
@@ -538,6 +571,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                 }
 
+                break;
+            case R.id.layout_dtls:
+                 Log.e("ontouch","ontouchscrollview");
+                if(layout_halfscrn.getVisibility() == View.GONE){
+                    v.clearFocus();
+                    InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    immm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                }
                 break;
         }
 
@@ -1159,6 +1201,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
             lastsavedangle=strdegree;
         }
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+            Log.e("drawpoints","drawvalues");
+        }
     }
 
     private void loadmap() {
@@ -1354,4 +1403,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void setdata(adapteritemclick mcontrollernavigator) {
         this.mcontrollernavigator = mcontrollernavigator;
     }
+    public static float dpToPx(Context context, float valueInDp) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
+    }
+
 }

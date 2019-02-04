@@ -36,8 +36,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LongSparseArray;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -46,6 +48,8 @@ import android.view.SurfaceHolder;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
@@ -300,6 +304,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_validating;
     @BindView(R.id.txt_section_validating_secondary)
     TextView txt_section_validating_secondary;
+    @BindView(R.id.layout_dtls)
+    LinearLayout layout_dtls;
 
     @BindView(R.id.layout_seekbartiming)
     RelativeLayout layout_seekbartiming;
@@ -660,6 +666,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             layout_duration.setVisibility(View.VISIBLE);
             layout_starttime.setVisibility(View.VISIBLE);
             layout_endtime.setVisibility(View.VISIBLE);
+            layout_dtls.setOnClickListener(this);
 
             layout_videoreader.post(new Runnable() {
                 @Override
@@ -759,6 +766,32 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 thread.start();
 
             }*/
+            //detuct keyboard is open or not
+            showcontrollers.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int heightDiff = showcontrollers.getRootView().getHeight() - showcontrollers.getHeight();
+                    if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
+                        // ... do something here
+                        Log.e("ikeyboardshowing","iskeyboardshowing....true");
+                        layout_halfscrnimg.setVisibility(View.GONE);
+                        layout_mediatype.setVisibility(View.GONE);
+                        layout_footer.setVisibility(View.GONE);
+
+                    }else
+                    {
+                        if(layout_halfscrnimg.getVisibility()==View.GONE){
+                            layout_mediatype.setVisibility(View.VISIBLE);
+                            layout_halfscrnimg.setVisibility(View.VISIBLE);
+                            layout_footer.setVisibility(View.VISIBLE);
+                            edt_medianame.setFocusable(false);
+                            edt_medianotes.setFocusable(false);
+                        }
+
+                        Log.e("ikeyboardshowing","iskeyboardshowing....false");
+                    }
+                }
+            });
             registerbroadcastreciver();
             Log.e("oncreate","oncreate");
 
@@ -767,6 +800,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         return rootview;
     }
 
+    @Override
+    public void initviews(View parent, Bundle savedInstanceState) {
+        super.initviews(parent, savedInstanceState);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        ButterKnife.bind(this, parent);
+    }
 
     public void disabletouchedevents()
     {
@@ -1054,6 +1093,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             time_current.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.GONE);
                         }
+                    }
+                    break;
+
+                case R.id.layout_dtls:
+                    Log.e("ontouch","ontouchscrollview");
+                    if(layout_halfscrnimg.getVisibility() == View.GONE){
+                        view.clearFocus();
+                        InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        immm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
                     break;
             }
@@ -1845,6 +1893,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
             lastsavedangle=strdegree;
         }
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+            Log.e("drawpoints","drawvalues");
+        }
     }
 
     private void loadmap() {
@@ -2264,5 +2318,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params.addRule(RelativeLayout.ABOVE,R.id.layout_customcontroller );
         img_fullscreen.setLayoutParams(params);
+    }
+
+    public static float dpToPx(Context context, float valueInDp) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 }

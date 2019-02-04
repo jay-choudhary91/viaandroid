@@ -482,7 +482,7 @@ public void updateactionbar(int showHide, int color) {
         }
     }
 
-    @Override
+    /*@Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
@@ -497,7 +497,7 @@ public void updateactionbar(int showHide, int color) {
             }
         }
         return super.dispatchTouchEvent( event );
-    }
+    }*/
 
 
     public void setdrawerdata(){
