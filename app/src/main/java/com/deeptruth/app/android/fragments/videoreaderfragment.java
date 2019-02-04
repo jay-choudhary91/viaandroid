@@ -433,7 +433,7 @@ public class videoreaderfragment extends basefragment implements AdapterView.OnI
             /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
                     R.drawable.custom_thumb));*/
 
-            mediaseekbar.setThumbOffset(-0);
+            mediaseekbar.setThumbOffset(0);
             mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 private int mProgressAtStartTracking=0;
                 private final int SENSITIVITY=0;
