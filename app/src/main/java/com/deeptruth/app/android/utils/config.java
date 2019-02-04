@@ -166,6 +166,8 @@ public class config {
 
     public static final String selected_folder="selected_folder";
 
+    public static final String latency = "latency";
+
     public static int selectedmediatype=0;   // video,photo,camera
     // An Enum class
     public enum permissions
