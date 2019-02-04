@@ -171,7 +171,7 @@
 
                                 <com.deeptruth.app.android.views.customseekbar
                                     android:id="@+id/mediacontroller_progress"
-                                    android:layout_width="351dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/layout_scrubberview"
                                     android:layout_centerInParent="true"

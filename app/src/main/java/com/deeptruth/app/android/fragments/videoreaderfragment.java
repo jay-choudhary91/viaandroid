@@ -677,7 +677,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 public void run() {
 
                     RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbar.getHeight());
-                    parms.setMargins(15,0,15,0);
+                    parms.setMargins(28,0,30,0);
                     parms.addRule(RelativeLayout.BELOW,R.id.layout_scrubberview);
                     linearseekbarcolorview.setLayoutParams(parms);
 
