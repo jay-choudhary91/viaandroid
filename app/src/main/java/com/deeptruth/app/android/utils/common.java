@@ -75,6 +75,7 @@ import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
+import com.deeptruth.app.android.models.folder;
 
 import org.json.JSONArray;
 
@@ -1425,6 +1426,27 @@ public class common {
 
         String[] items = itemname.toArray(new String[itemname.size()]);
         return items;
+    }
+
+    public static List<folder> getalldirfolders()
+    {
+        List<folder> folderitem=new ArrayList<>();
+        File rootdir = new File(config.dirmedia);
+        if(! rootdir.exists())
+            return folderitem;
+
+        File[] files = rootdir.listFiles();
+        for (File file : files)
+        {
+            if((! file.getName().equalsIgnoreCase("cache")))
+            {
+                folder myfolder=new folder();
+                myfolder.setFoldername(file.getName());
+                myfolder.setFolderdir(file.getAbsolutePath());
+                folderitem.add(myfolder);
+            }
+        }
+        return folderitem;
     }
 
     public static void copyfile(File sourcefile,File destinationfolder)

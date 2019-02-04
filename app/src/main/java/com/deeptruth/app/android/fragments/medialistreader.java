@@ -996,7 +996,7 @@ public class medialistreader extends basefragment implements View.OnClickListene
         if (arrayvideolist != null && arrayvideolist.size() > 0)
         {
             for (int i = 0; i < arrayvideolist.size(); i++) {
-                //String status = arrayvideolist.get(i).getMediastatus();
+                //String status = arraymediaitemlist.get(i).getMediastatus();
                 String status ="",videostarttransactionid="";
                 if(! arrayvideolist.get(i).getMediastatus().equalsIgnoreCase(config.sync_complete))
                 {

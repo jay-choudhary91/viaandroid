@@ -39,7 +39,6 @@ import android.view.animation.RotateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -51,10 +50,12 @@ import android.widget.TextView;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.arraycontainer;
+import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.utils.common;
@@ -75,11 +76,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -88,7 +91,8 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class imagereaderfragment extends basefragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener ,AdapterView.OnItemSelectedListener {
+public class imagereaderfragment extends basefragment implements View.OnClickListener,
+        ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener {
 
     View rootview;
 
@@ -116,7 +120,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     //tabdetails
     @BindView(R.id.spinner)
-    Spinner photospinner;
+    Spinner spinnermediafolder;
     @BindView(R.id.txt_slot4)
     TextView txtslotmedia;
     @BindView(R.id.txt_slot5)
@@ -254,7 +258,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             //tabs_detail
             txtslotmedia.setText(getResources().getString(R.string.photo));
-            photospinner.setOnItemSelectedListener(this);
             img_share_media.setOnClickListener(this);
             img_edit_name.setOnClickListener(this);
             img_edit_notes.setOnClickListener(this);
@@ -317,7 +320,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             googlemap= rootview.findViewById(R.id.googlemap);
             img_compass= rootview.findViewById(R.id.img_compass);
 
-            photospinner.setOnItemSelectedListener(this);
             righthandle.setOnTouchListener(this);
 
             String blockchainid = " ";
@@ -342,14 +344,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             txtslotmedia.setOnClickListener(this);
             resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
 
-            String[] items=common.getallfolders();
-            if(items != null && items.length > 0)
-            {
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, common.getallfolders());
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                photospinner.setAdapter(dataAdapter);
-            }
-
             edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
@@ -357,7 +351,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         v.setFocusable(false);
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                        // if (arrayvideolist.size() > 0) {
+                        // if (arraymediaitemlist.size() > 0) {
                         String medianotes = edt_medianotes.getText().toString();
 
                         if(!mediatransectionid.isEmpty())
@@ -374,7 +368,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         v.setFocusable(false);
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                        // if (arrayvideolist.size() > 0) {
+                        // if (arraymediaitemlist.size() > 0) {
                         String renamevalue = edt_medianame.getText().toString();
                         if(!mediatransectionid.isEmpty())
                             updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString(),"allmedia");
@@ -392,7 +386,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                     if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
                   /*  Log.i(TAG,"Here you can write the code");*/
-                        //  if (arrayvideolist.size() > 0) {
+                        //  if (arraymediaitemlist.size() > 0) {
                         String renamevalue = edt_medianame.getText().toString();
                         editabletext();
 
@@ -847,7 +841,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     if (!mediacompleteddate.isEmpty()){
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
-                        if(metricmainarraylist.size()>0){
+                        if(metricmainarraylist.size() > 0)
+                        {
 
                             for(int i=0;i<mitemlist.size();i++)
                             {
@@ -901,6 +896,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                             txt_createdtime.setText(formattedtime.format(mediadate));
                                             edt_medianame.setText(medianame);
                                             edt_medianotes.setText(medianotes);
+
+                                            if(mediafolder.trim().length() > 0)
+                                                setfolderspinner();
+
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
@@ -924,6 +923,91 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         }).start();
+    }
+
+    public void setfolderspinner()
+    {
+        final List<folder> folderitem=common.getalldirfolders();
+        folderdirectoryspinneradapter adapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
+                R.layout.row_myfolderspinneradapter,folderitem);
+
+        int selectedposition=0;
+        final File foldername = new File(mediafolder);
+        for(int i=0;i<folderitem.size();i++)
+        {
+            if(folderitem.get(i).getFoldername().equalsIgnoreCase(foldername.getName()))
+            {
+                selectedposition=i;
+                break;
+            }
+        }
+
+        spinnermediafolder.setAdapter(adapter);
+        spinnermediafolder.setSelection(selectedposition,true);
+        spinnermediafolder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
+            {
+                if(! folderitem.get(position).getFoldername().equalsIgnoreCase(foldername.getName()))
+                {
+                    progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            try {
+                                String folderpath=folderitem.get(position).getFolderdir();
+                                if(! folderpath.equalsIgnoreCase(new File(imageurl).getParent()))
+                                {
+                                    common.copyfile(new File(imageurl),new File(folderpath));
+                                    //common.delete(new File(sourcefilepath));
+                                    updatefilemediafolderdirectory(imageurl,folderpath);
+                                }
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressdialog.dismisswaitdialog();
+                                }
+                            });
+                        }
+                    }).start();
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
+    {
+        databasemanager mdbhelper=null;
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
+        }
+
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            mdbhelper.updatefilemediafolderdir(sourcefile,destinationmediafolder);
+
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash
@@ -984,15 +1068,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
         };
         myhandler.post(myrunnable);
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // On selecting a spinner item
-        String item = parent.getItemAtPosition(position).toString();
-
-        // Showing selected spinner item
-        //  Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
     }
 
     public void onNothingSelected(AdapterView<?> arg0) {

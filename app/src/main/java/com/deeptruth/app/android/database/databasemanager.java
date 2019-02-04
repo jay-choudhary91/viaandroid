@@ -146,6 +146,7 @@ public class databasemanager {
             values.put("mediafilepath",  mediafilapth);
             values.put("media_notes",  medianotes);
             values.put("media_folder",  mediafolder);
+            values.put("thumbnailurl",  mediafilapth);
 
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
@@ -985,6 +986,20 @@ public class databasemanager {
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
             mDb.execSQL("delete from tblstartmediainfo where location='"+filename+"'");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
+    public void deletefromstartvideoinfobyfilepath(String filepath) {
+        try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL("delete from tblstartmediainfo where mediafilepath='"+filepath+"'");
         } catch (Exception e) {
             e.printStackTrace();
         }
