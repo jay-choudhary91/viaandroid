@@ -328,8 +328,8 @@ public class insertmediadataservice extends Service {
                 ,mdbstartitemcontainer.get(i).getItem3(),mdbstartitemcontainer.get(i).getItem4(),mdbstartitemcontainer.get(i).getItem5()
                 ,mdbstartitemcontainer.get(i).getItem6(),mdbstartitemcontainer.get(i).getItem7(),mdbstartitemcontainer.get(i).getItem8(),
                 mdbstartitemcontainer.get(i).getItem9(),mdbstartitemcontainer.get(i).getItem10(),mdbstartitemcontainer.get(i).getItem11()
-                ,mdbstartitemcontainer.get(i).getItem12(),mdbstartitemcontainer.get(i).getItem13(),"",mdbstartitemcontainer.get(i).getItem14()
-                ,"0","sync_pending","","","0","inprogress",mdbstartitemcontainer.get(i).getItem3(),"",
+                ,mdbstartitemcontainer.get(i).getItem12(),mdbstartitemcontainer.get(i).getItem13(),"",mdbstartitemcontainer.get(i).getItem14(),
+                mdbstartitemcontainer.get(i).getItem15(),"0","sync_pending","","","0","inprogress",mdbstartitemcontainer.get(i).getItem3(),"",
                 mdbstartitemcontainer.get(i).getItem16(),"");
             }
 

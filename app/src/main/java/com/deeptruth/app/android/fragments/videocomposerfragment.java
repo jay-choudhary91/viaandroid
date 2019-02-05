@@ -1510,6 +1510,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             mdbstartitemcontainer.get(0).setItem1(json);
             mdbstartitemcontainer.get(0).setItem3(lastrecordedvideo.getAbsolutePath());
+            mdbstartitemcontainer.get(0).setItem15(lastrecordedvideo.getAbsolutePath());
             mdbstartitemcontainer.get(0).setItem13(completeddate);
 
             if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)

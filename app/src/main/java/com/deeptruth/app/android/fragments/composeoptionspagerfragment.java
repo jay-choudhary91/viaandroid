@@ -930,39 +930,57 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         img_mediathumbnail.setImageResource(0);
         img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
 
-        if(currentselectedcomposer == 0 && videoarraylist.size() > 0)
+        if(currentselectedcomposer == 0)
         {
-            mediapath=videoarraylist.get(0);
+            if(videoarraylist.size() > 0)
+            {
+                setthumbnailimage(videoarraylist.get(0));
+            }
+            else
+            {
+                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+            }
         }
-        else if(currentselectedcomposer == 1 && imagearraylist.size() > 0)
+        else if(currentselectedcomposer == 1)
         {
-            mediapath=imagearraylist.get(0);
+            if(imagearraylist.size() > 0)
+            {
+                setthumbnailimage(imagearraylist.get(0));
+            }
+            else
+            {
+                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+            }
         }
-        else if(currentselectedcomposer == 2 && audioarraylist.size() > 0)
+        else if(currentselectedcomposer == 2)
         {
-            mediapath=audioarraylist.get(0);
-            img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+            if(audioarraylist.size() > 0)
+            {
+                setthumbnailimage(audioarraylist.get(0));
+                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+            }
+            else
+            {
+                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+            }
+        }
+    }
 
-            RequestOptions options = new RequestOptions();
-            options.centerCrop();
-          //  options.override(150,100);
+    public void setthumbnailimage(String mediapath)
+    {
+        Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
+        Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
+                .transition(GenericTransitionOptions.with(R.anim.fadein)).
+                into(img_mediathumbnail);
+    }
 
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                    BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
-            Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
-                    .transition(GenericTransitionOptions.with(R.anim.fadein)).
-                    apply(options).
-                    into(img_mediathumbnail);
-        }
-
-        if((currentselectedcomposer == 0 || currentselectedcomposer == 1) && mediapath != null && (! mediapath.trim().isEmpty()))
-        {
-            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
-                    BuildConfig.APPLICATION_ID + ".provider", new File(mediapath));
-            Glide.with(applicationviavideocomposer.getactivity()).load(uri).thumbnail(0.1f)
-                    .transition(GenericTransitionOptions.with(R.anim.fadein)).
-                    into(img_mediathumbnail);
-        }
+    public void setthumbnailimageplaceholder(int placeholder)
+    {
+        Glide.with(applicationviavideocomposer.getactivity()).
+                load(placeholder).
+                thumbnail(0.1f).
+                into(img_mediathumbnail);
     }
 
     public void showhideactionbottombaricon(int i){
