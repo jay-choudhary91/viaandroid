@@ -41,11 +41,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.metricmodel;
+import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.noise;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -252,7 +256,8 @@ public abstract class basefragment extends Fragment {
 
         public void getairplanemodeon();
 
-        public void drawerenabledisable(boolean enable);
+        public void drawerenabledisable(boolean enable,RelativeLayout layoutfooter, LinearLayout layoutheader,circularImageview playpausebutton,LinearLayout layoutcustomcontroller
+        ,ImageView img_fullscreen);
 
         public ArrayList<metricmodel> getmetricarraylist();
         public void setrecordingrunning(boolean toggle);

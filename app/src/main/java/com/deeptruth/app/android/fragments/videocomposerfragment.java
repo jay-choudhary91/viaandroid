@@ -50,6 +50,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -319,6 +320,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
+    RelativeLayout layout_bottom;
     File lastrecordedvideo=null;
     String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
     int metriceslastupdatedposition=0;
@@ -375,9 +377,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
             linearLayout=rootview.findViewById(R.id.content);
 
-
-            gethelper().drawerenabledisable(true);
-
+            gethelper().drawerenabledisable(true,layout_bottom,linearheader,null,null,null);
 
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
                 apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
@@ -1042,9 +1042,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void setData(boolean autostartvideo,adapteritemclick madapterclick) {
+    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom) {
         this.autostartvideo = autostartvideo;
         this.madapterclick = madapterclick;
+        this.layout_bottom = layout_bottom;
     }
 
     public static Fragment newInstance()

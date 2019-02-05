@@ -94,7 +94,7 @@ public class bottombarfragment extends basefragment  {
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
-                fragvideocomposer.setData(false, mclick);
+                //fragvideocomposer.setData(false, mclick,layout_bottom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
                 isviewloaded=false;
                 startloadtimer(1500);
@@ -103,7 +103,7 @@ public class bottombarfragment extends basefragment  {
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
-                fragaudiocomposer.setData(mclick);
+               // fragaudiocomposer.setData(mclick);
                 gethelper().replacetabfragment(fragaudiocomposer,false,true);
                 isviewloaded=false;
                 startloadtimer(1000);
@@ -112,7 +112,7 @@ public class bottombarfragment extends basefragment  {
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
-                fragimgcapture.setData(mclick);
+               // fragimgcapture.setData(mclick);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
                 isviewloaded=false;
                 startloadtimer(1500);

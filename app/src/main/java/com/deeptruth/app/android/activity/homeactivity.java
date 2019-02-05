@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoplayfragment;
 import com.deeptruth.app.android.services.callservice;
+import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
@@ -87,6 +89,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     private Handler myhandler;
     private Runnable myrunnable;
 
+    RelativeLayout layoutbottom;
+    LinearLayout layoutheader;
+    circularImageview playpausebutton;
+    LinearLayout layoutcustomcontroller;
+    ImageView img_fullscreen;
+
     private fragmentmedialist fragvideolist;
     private medialistreader fragmedialistreader;
     @Override
@@ -116,12 +124,33 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 super.onDrawerClosed(view);
                 imglefthandle.setVisibility(View.VISIBLE);
                 imgrighthandle.setVisibility(View.GONE);
+                if(layoutbottom !=null)
+                      layoutbottom.setVisibility(View.VISIBLE);
+                if(layoutheader != null)
+                    layoutheader.setVisibility(View.VISIBLE);
+                if(playpausebutton != null)
+                    playpausebutton.setVisibility(View.VISIBLE);
+                if(layoutcustomcontroller != null)
+                    layoutcustomcontroller.setVisibility(View.VISIBLE);
+                if(img_fullscreen != null)
+                    img_fullscreen.setVisibility(View.VISIBLE);
                 // layout_bottom.setVisibility(View.VISIBLE);
             }
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 imglefthandle.setVisibility(View.GONE);
                 imgrighthandle.setVisibility(View.VISIBLE);
+                if(layoutbottom !=null)
+                    layoutbottom.setVisibility(View.GONE);
+                if(layoutheader != null)
+                    layoutheader.setVisibility(View.GONE);
+                if(playpausebutton != null)
+                    playpausebutton.setVisibility(View.GONE);
+                if(layoutcustomcontroller != null)
+                    layoutcustomcontroller.setVisibility(View.GONE);
+                if(img_fullscreen != null)
+                    img_fullscreen.setVisibility(View.GONE);
+                // layout_bottom.setVisibility(View.VISIBLE);
             }
         };
         navigationdrawer.addDrawerListener(drawertoggle);
@@ -240,8 +269,10 @@ public void updateactionbar(int showHide, int color) {
         getWindow().setStatusBarColor(color);
 }
 
+
     @Override
-    public void drawerenabledisable(boolean isenable) {
+    public void drawerenabledisable(boolean isenable, RelativeLayout layoutfooter, LinearLayout layoutheader, circularImageview playpausebutton, LinearLayout layoutcustomcontroller, ImageView img_fullscreen) {
+
         if(isenable){
             navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             imglefthandle.setVisibility(View.VISIBLE);
@@ -250,6 +281,12 @@ public void updateactionbar(int showHide, int color) {
             navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             imglefthandle.setVisibility(View.GONE);
         }
+        this.layoutbottom = layoutfooter;
+        this.layoutheader = layoutheader;
+        this.playpausebutton = playpausebutton;
+        this.layoutcustomcontroller = layoutcustomcontroller;
+        this.img_fullscreen = img_fullscreen;
+
     }
 
     @Override
@@ -357,7 +394,7 @@ public void updateactionbar(int showHide, int color) {
              imgsettingsicon.setEnabled(true);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
-             drawerenabledisable(false);
+             drawerenabledisable(false,null,null,null,null,null);
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
