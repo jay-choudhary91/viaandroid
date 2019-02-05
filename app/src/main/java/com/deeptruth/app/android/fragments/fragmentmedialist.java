@@ -70,10 +70,10 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * Created by devesh on 6/8/18.
+ * Created by ${matraex} on 6/8/18.
  */
 
-public class fragmentmedialist extends basefragment implements View.OnClickListener {
+public class fragmentmedialist extends basefragment implements View.OnClickListener, View.OnTouchListener {
 
     @BindView(R.id.rv_medialist_list)
     RecyclerView recyclerviewlist;
@@ -116,28 +116,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     int selectedstyletype=1,selectedmediatype=-1,listviewheight=0;
     RelativeLayout listlayout;
-    boolean touched =false;
     private Handler myhandler;
     private Runnable myrunnable;
     boolean isinbackground=false;
     boolean shouldlaunchcomposer=true;
-    Date initialdate;
 
     View rootview = null;
     private static final int request_permissions = 1;
-    ArrayList<video> arraymediaitemlist = new ArrayList<video>();
+    ArrayList<video> arraymediaitemlist = new ArrayList<>();
     adaptermedialist adaptermedialist;
     adaptermediagrid adaptermediagrid;
     private RecyclerTouchListener onTouchListener;
     int request_take_gallery_video = 101,audiocount=0,videocount=0,imagecount=0;
 
     private static final int request_read_external_storage = 1;
-    private Uri selectedimageuri =null;
-    private String selectedvideopath ="";
     private BroadcastReceiver medialistitemaddreceiver;
-    private imagereaderfragment fragmentimagereader=null;
-    private audioreaderfragment fragmentaudioreader=null;
-    private videoreaderfragment fragmentvideoreader=null;
     private BroadcastReceiver broadcastmediauploaded;
 
     // Called just after any media uploaded
@@ -167,7 +160,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void initviews(View parent, Bundle savedInstanceState) {
         super.initviews(parent, savedInstanceState);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        applicationviavideocomposer.getactivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         ButterKnife.bind(this,parent);
     }
 
@@ -201,7 +194,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             e.printStackTrace();
         }
 
-        if(myhandler != null && myhandler != null)
+        if(myhandler != null)
             myhandler.removeCallbacks(myrunnable);
     }
 
@@ -222,7 +215,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         } else {
             String[] array = new String[common.getstoragedeniedpermissions().size()];
             array = common.getstoragedeniedpermissions().toArray(array);
-            ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+            ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), array, request_permissions);
         }
     }
 
@@ -259,11 +252,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             recyclerviewlist.setLayoutManager(layoutManager);
             ((DefaultItemAnimator) recyclerviewlist.getItemAnimator()).setSupportsChangeAnimations(false);
             recyclerviewlist.getItemAnimator().setChangeDuration(0);
-            //DividerItemDecoration itemDecor = new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
-            //itemDecor.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.devidercolor));
-            //recyclerviewlist.addItemDecoration(itemDecor);
-
-            selectedstyletype=1;
             lay_gridstyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
             lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
             lay_gridstyle.setOnClickListener(this);
@@ -348,34 +336,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
-            if(shouldlaunchcomposer)
-                launchbottombarfragment();
-
-            if (common.getstoragedeniedpermissions().isEmpty()) {
-                // All permissions are granted
-                fetchmedialistfromdirectory();
-            }
-
-            recyclerviewlist.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-
-                    switch (event.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            touched = true;
-                            initialdate = new Date();
-                            Log.e("user touch","on touch" + touched);
-                            break;
-
-                        case MotionEvent.ACTION_UP:
-                            touched = false;
-                            Log.e("on touch end ","on touch end" + touched);
-                            break;
-                    }
-                    return false;
-                }
-            });
-            resetmedialist();
             IntentFilter intentFilter = new IntentFilter(config.broadcast_medialistnewitem);
             medialistitemaddreceiver = new BroadcastReceiver() {
                 @Override
@@ -384,6 +344,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
+
+            selectedstyletype=1;
+            if(shouldlaunchcomposer)
+                launchbottombarfragment();
+
+            if (common.getstoragedeniedpermissions().isEmpty()) {
+                // All permissions are granted
+                fetchmedialistfromdirectory();
+            }
+            resetmedialist();
         }
         return rootview;
     }
@@ -418,6 +388,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     }
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return false;
+    }
 
     @Override
     public void onClick(View view) {
@@ -499,20 +473,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 folderfragment.setdata(new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
-                        try
-                        {
-                            arraymediaitemlist.clear();
-                            if(adaptermediagrid != null)
-                                adaptermediagrid.notifyDataSetChanged();
-
-                            if(adaptermedialist != null)
-                                adaptermedialist.notifyDataSetChanged();
-
-                            fetchmedialistfromdirectory();
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
+                        resetmediaitemsadapter();
                     }
                     @Override
                     public void onItemClicked(Object object, int type) {
@@ -521,6 +482,25 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 });
                 gethelper().addFragment(folderfragment, false, true);
                 break;
+        }
+    }
+
+    private void resetmediaitemsadapter()
+    {
+        try
+        {
+            arraymediaitemlist.clear();
+            if(adaptermediagrid != null)
+                adaptermediagrid.notifyDataSetChanged();
+
+            if(adaptermedialist != null)
+                adaptermedialist.notifyDataSetChanged();
+
+            fetchmedialistfromdirectory();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -672,7 +652,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     if(! folderpath.equalsIgnoreCase(new File(sourcefilepath).getParent()))
                                     {
                                         if(common.movemediafile(new File(sourcefilepath),new File(folderpath)))
-                                            updatefilemediafolderdirectory(sourcefilepath,folderpath);
+                                        {
+                                            File destinationmediafile = new File(folderpath + File.separator + new File(sourcefilepath).getName());
+                                            updatefilemediafolderdirectory(destinationmediafile.getAbsolutePath(),folderpath);
+                                        }
                                     }
                                 }catch (Exception e)
                                 {
@@ -682,15 +665,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     @Override
                                     public void run()
                                     {
-                                        progressdialog.dismisswaitdialog();
-                                        if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                                            adaptermedialist.notifyDataSetChanged();
-
-                                        if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
-                                            adaptermediagrid.notifyDataSetChanged();
-
                                         if(dialog != null)
                                             dialog.dismiss();
+
+                                        progressdialog.dismisswaitdialog();
+                                        resetmediaitemsadapter();
                                     }
                                 });
                             }
@@ -701,11 +680,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
     {
-        databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
+        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+        mdbhelper.createDatabase();
 
         try {
             mdbhelper.open();
@@ -717,13 +693,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         try
         {
             mdbhelper.updatefilemediafolderdir(sourcefile,destinationmediafolder);
-
             mdbhelper.close();
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-
     }
 
     public void removehandler()
@@ -739,11 +713,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             @Override
             public void run()
             {
-                databasemanager mdbhelper=null;
-                if (mdbhelper == null) {
-                    mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-                    mdbhelper.createDatabase();
-                }
+                databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                mdbhelper.createDatabase();
 
                 try {
                     mdbhelper.open();
@@ -758,7 +729,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     do{
 
                         String location = "" + cursor.getString(cursor.getColumnIndex("location"));
-                        String sync_status = "" + cursor.getString(cursor.getColumnIndex("sync_status"));
                         String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
                         String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
                         String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
@@ -789,7 +759,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             videoobject.setGriditemheight(gridviewwidth);
 
                             try {
-                                Date mediadatetime = null;
+                                Date mediadatetime;
                                 if(videocompletedevicedate.contains("T"))
                                 {
                                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
@@ -797,12 +767,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 }
                                 else
                                 {
-                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
                                     mediadatetime = format.parse(videocompletedevicedate);
                                 }
 
-                                final String filecreateddate = new SimpleDateFormat("MM-dd-yy").format(mediadatetime);
-                                final String endtime = new SimpleDateFormat("hh:mm:ss aa").format(mediadatetime);
+                                final String filecreateddate = new SimpleDateFormat("MM-dd-yy",Locale.ENGLISH).format(mediadatetime);
+                                final String endtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH).format(mediadatetime);
 
                                 try {
                                     if(header.trim().length() > 0)
@@ -928,9 +898,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void resetmedialist(){
 
-        if(myhandler != null && myhandler != null)
-            myhandler.removeCallbacks(myrunnable);
-
         myhandler =new Handler();
         myrunnable = new Runnable() {
             @Override
@@ -954,11 +921,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void getallmedialistfromdb()
     {
-        databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
+        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+        mdbhelper.createDatabase();
 
         try {
             mdbhelper.open();
@@ -973,7 +937,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             do{
 
                 String location = "" + cursor.getString(cursor.getColumnIndex("location"));
-                String sync_status = "" + cursor.getString(cursor.getColumnIndex("sync_status"));
                 String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
                 String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
                 String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
@@ -1006,13 +969,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     }
 
-    public String deletemediainfo(String localkey)
+    public void deletemediainfo(String localkey)
     {
-        databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
+        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+        mdbhelper.createDatabase();
 
         try {
             mdbhelper.open();
@@ -1029,16 +989,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             e.printStackTrace();
         }
-        return localkey;
     }
 
     public void updatemedialocation(String transactionid,String mediapath)
     {
-        databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
+        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+        mdbhelper.createDatabase();
 
         try {
             mdbhelper.open();
@@ -1059,7 +1015,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     private void checkwritestoragepermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_GRANTED ) {
                 opengallery();
             } else {
@@ -1121,9 +1077,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == request_take_gallery_video) {
             if (resultCode == RESULT_OK) {
-                selectedimageuri = data.getData();
+                Uri selectedimageuri = data.getData();
                 // OI FILE Manager
-                selectedvideopath = common.getpath(getActivity(), selectedimageuri);
+                String selectedvideopath = common.getpath(getActivity(), selectedimageuri);
 
                 if(selectedvideopath == null){
                     common.showalert(getActivity(),getResources().getString(R.string.file_not_supported));
@@ -1146,17 +1102,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 if(sourceFile.exists())
                 {
-                    long space=sourceFile.getTotalSpace();
-
                     String destinationDir = config.dirallmedia;
-
                     // check for existance of file.
-                    File destinationFile = null;
+                    File destinationFile;
                     File pathFile=new File(destinationDir+File.separator+sourceFile.getName());
                     if(pathFile.exists())
                     {
                         String extension = pathFile.getAbsolutePath().substring(pathFile.getAbsolutePath().lastIndexOf("."));
-                        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss",Locale.ENGLISH).format(new Date());
                         destinationFile = new File(destinationDir+File.separator+fileName+extension);
                     }
                     else
@@ -1243,7 +1196,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void setAdapter(final video videoobj, int type)
     {
-        if(type == 1)
+        if(type == 1)   // Media shairing
         {
             if(videoobj.getmimetype().startsWith("image")){
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
@@ -1252,7 +1205,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("image/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                getActivity().startActivity(Intent.createChooser(share, "Share photo"));
+                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share photo"));
             }else if(videoobj.getmimetype().startsWith("audio")){
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
@@ -1260,7 +1213,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("audio/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                getActivity().startActivity(Intent.createChooser(share, "Share audio"));
+                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share audio"));
 
             }else if(videoobj.getmimetype().startsWith("video")){
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
@@ -1269,11 +1222,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 share.putExtra(Intent.EXTRA_STREAM, uri);
                 share.setType("video/*");
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                getActivity().startActivity(Intent.createChooser(share, "Share video"));
+                applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(share, "Share video"));
             }
 
         }
-        else if(type == 2)
+        else if(type == 2)   // Delete prompt
         {
             if(videoobj.getmimetype().startsWith("image")){
                 showalertdialog(videoobj,getActivity().getResources().getString(R.string.dlt_cnfm_photo));
@@ -1286,7 +1239,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             }
         }else if(type == 3){
-            //arraymediaitemlist.clear();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1296,29 +1248,32 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             },500);
 
-        }else if(type == 4){
-            if(videoobj.getmimetype().startsWith("image")){
+        }else if(type == 4)     // Clicked on media item
+        {
+            if(videoobj.getmimetype().startsWith("image"))
+            {
                 xdata.getinstance().saveSetting("selectedphotourl",""+videoobj.getPath());
-                fragmentimagereader = new imagereaderfragment();
+                imagereaderfragment fragmentimagereader = new imagereaderfragment();
                 fragmentimagereader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentimagereader, false, true);
 
-            }else if(videoobj.getmimetype().startsWith("audio")){
+            }else if(videoobj.getmimetype().startsWith("audio"))
+            {
                 xdata.getinstance().saveSetting("selectedaudiourl",""+videoobj.getPath());
-                fragmentaudioreader = new audioreaderfragment();
+                audioreaderfragment fragmentaudioreader = new audioreaderfragment();
                 fragmentaudioreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentaudioreader, false, true);
 
-            }else if(videoobj.getmimetype().startsWith("video")){
-
+            }else if(videoobj.getmimetype().startsWith("video"))
+            {
                 xdata.getinstance().saveSetting("selectedvideourl",""+videoobj.getPath());
-                fragmentvideoreader=new videoreaderfragment();
+                videoreaderfragment fragmentvideoreader=new videoreaderfragment();
                 fragmentvideoreader.setdata(mcontrollernavigator);
                 gethelper().replaceFragment(fragmentvideoreader, false, true);
             }
-
         }
-        else if(type == 6){
+        else if(type == 6)
+        {
             showfolderdialog(videoobj.getPath());
         }
     }
@@ -1424,6 +1379,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     }
                 }).show();
     }
+
 
 
 }

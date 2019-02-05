@@ -1070,29 +1070,25 @@ public class common {
         return false;
     }
 
-    public static boolean movemediafile(File sourcefile,File destinationfolder)
+    public static boolean movemediafile(File sourcemediafile,File destinationfolder)
     {
-        String sourcePath = sourcefile.getAbsolutePath();
-        File sourceFile = new File(sourcePath);
+        File sourcefile = new File(sourcemediafile.getAbsolutePath());
 
-        File destinationDir=destinationfolder;
+        if (!destinationfolder.exists())
+            destinationfolder.mkdirs();
 
-        if (!destinationDir.exists())
-            destinationDir.mkdirs();
-
-        final File mediaFile = new File(destinationDir.getPath() + File.separator +
-                sourceFile.getName());
+        final File destinationmediafile = new File(destinationfolder.getPath() + File.separator + sourcefile.getName());
         try
         {
-            if (!mediaFile.getParentFile().exists())
-                mediaFile.getParentFile().mkdirs();
+            if (!destinationmediafile.getParentFile().exists())
+                destinationmediafile.getParentFile().mkdirs();
 
-            if (!mediaFile.exists()) {
-                mediaFile.createNewFile();
+            if (!destinationmediafile.exists()) {
+                destinationmediafile.createNewFile();
             }
 
-            InputStream in = new FileInputStream(sourceFile);
-            OutputStream out = new FileOutputStream(mediaFile);
+            InputStream in = new FileInputStream(sourcefile);
+            OutputStream out = new FileOutputStream(destinationmediafile);
 
             // Copy the bits from instream to outstream
             byte[] buf = new byte[1024];
@@ -1105,7 +1101,7 @@ public class common {
             in.close();
             out.close();
 
-            if(delete(sourceFile))
+            if(delete(sourcefile))
             {
                 return true;
             }
@@ -1125,7 +1121,6 @@ public class common {
     public static String displayCurrencyInfoForLocale(Locale locale) {
         System.out.println("Locale: " + locale.getDisplayName());
         Currency currency = Currency.getInstance(locale);
-
         return currency.getDisplayName();
     }
 

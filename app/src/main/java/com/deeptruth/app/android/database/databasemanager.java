@@ -601,11 +601,12 @@ public class databasemanager {
     public Cursor updatefilemediafolderdir(String location,String destinationfolder) {
         Cursor mCur=null;
         try {
+            String mediafilepath=location;
             location=common.getfilename(location);
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblstartmediainfo set media_folder='"+destinationfolder+"' where location='"+location+"'");
+            mDb.execSQL("update tblstartmediainfo set media_folder = '"+destinationfolder+"',mediafilepath ='"+mediafilepath+"' where location='"+location+"'");
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -993,21 +994,6 @@ public class databasemanager {
             lock.unlock();
         }
     }
-
-    public void deletefromstartvideoinfobyfilepath(String filepath) {
-        try {
-            lock.lock();
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("delete from tblstartmediainfo where mediafilepath='"+filepath+"'");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-    }
-
 
     //* call from reader. Checking sync status of requested media.
 
