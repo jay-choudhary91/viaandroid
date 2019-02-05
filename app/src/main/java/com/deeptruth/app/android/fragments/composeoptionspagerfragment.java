@@ -512,6 +512,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 break;
 
             case R.id.img_video_capture:
+                mrecordimagebutton.setClickable(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        mrecordimagebutton.setClickable(true);
+                    }
+                }, 500);
 
                 if(currentselectedcomposer == 0)
                 {
