@@ -398,7 +398,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 //looping through existing elements
                 for (video object : arraymediaitemlist) {
                     //if the existing elements contains the search input
-                    if (object.getName().contains(text.toLowerCase()) && object.isDoenable()) {
+                    if (object.getMediatitle().contains(text.toLowerCase()) && object.isDoenable()) {
                         //adding the element to filtered list
                         filterdnames.add(object);
                     }
@@ -669,12 +669,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                                 try {
                                     String folderpath=itempath.get(selectedPosition);
-                                    String fileparentdir=new File(sourcefilepath).getParent();
                                     if(! folderpath.equalsIgnoreCase(new File(sourcefilepath).getParent()))
                                     {
-                                        common.copyfile(new File(sourcefilepath),new File(folderpath));
-                                        //common.delete(new File(sourcefilepath));
-                                        updatefilemediafolderdirectory(sourcefilepath,folderpath);
+                                        if(common.movemediafile(new File(sourcefilepath),new File(folderpath)))
+                                            updatefilemediafolderdirectory(sourcefilepath,folderpath);
                                     }
                                 }catch (Exception e)
                                 {
@@ -682,9 +680,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 }
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
-                                    public void run() {
+                                    public void run()
+                                    {
                                         progressdialog.dismisswaitdialog();
-
                                         if(adaptermedialist != null && arraymediaitemlist.size() > 0)
                                             adaptermedialist.notifyDataSetChanged();
 
@@ -698,8 +696,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             }
                         }).start();
                     }
-                })
-                .show();
+                }).show();
     }
 
     public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
