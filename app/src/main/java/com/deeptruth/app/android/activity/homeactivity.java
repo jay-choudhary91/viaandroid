@@ -332,6 +332,7 @@ public void updateactionbar(int showHide, int color) {
         imguploadicon.setVisibility(View.GONE);
         imgsettingsicon.setVisibility(View.GONE);
         img_backbtn.setVisibility(View.GONE);
+        imglefthandle.setVisibility(View.GONE);
         updateheader("");
 
         {
