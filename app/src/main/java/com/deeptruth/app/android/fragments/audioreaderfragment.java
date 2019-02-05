@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.AudioManager;
@@ -371,7 +372,24 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             private final int SENSITIVITY=0;
             @Override
             public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
+                /*if(progress > 0)
+                {
+                    int progresspercentage = (progress*100)/mediaseekbar.getMax();
+                    int arraycountvalue=0;
+                    if(progresspercentage > 0)
+                        arraycountvalue =(int) (metricmainarraylist.size()*progresspercentage)/100;
 
+                    Log.e("arraycountvalue total ",""+arraycountvalue+" "+metricmainarraylist.size());
+
+                    if(imediacompleted)
+                        arraycountvalue=metricmainarraylist.size()-1;
+
+                    if(arraycountvalue < metricmainarraylist.size())
+                    {
+                        arraycontainerformetric = new arraycontainer();
+                        arraycontainerformetric = metricmainarraylist.get(arraycountvalue);
+                    }
+                }*/
             }
 
             @Override
