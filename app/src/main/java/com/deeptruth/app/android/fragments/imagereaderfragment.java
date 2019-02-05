@@ -234,35 +234,34 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void loadviewdata()
     {
-        gethelper().drawerenabledisable(false);
         img_dotmenu.setOnClickListener(this);
         img_folder.setOnClickListener(this);
         img_camera.setOnClickListener(this);
         img_arrow_back.setOnClickListener(this);
         img_delete_media.setOnClickListener(this);
-            gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,null,null,img_fullscreen);
+        gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,null,null,img_fullscreen);
 
-            img_dotmenu.setOnClickListener(this);
-            img_folder.setOnClickListener(this);
-            img_camera.setOnClickListener(this);
-            img_arrow_back.setOnClickListener(this);
-            img_delete_media.setOnClickListener(this);
+        img_dotmenu.setOnClickListener(this);
+        img_folder.setOnClickListener(this);
+        img_camera.setOnClickListener(this);
+        img_arrow_back.setOnClickListener(this);
+        img_delete_media.setOnClickListener(this);
 
-            img_dotmenu.setVisibility(View.VISIBLE);
-            img_folder.setVisibility(View.VISIBLE);
-            img_arrow_back.setVisibility(View.VISIBLE);
+        img_dotmenu.setVisibility(View.VISIBLE);
+        img_folder.setVisibility(View.VISIBLE);
+        img_arrow_back.setVisibility(View.VISIBLE);
 
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            {
-                img_camera.setVisibility(View.GONE);
-            }
-            else
-            {
-                img_camera.setVisibility(View.VISIBLE);
-            }
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            img_camera.setVisibility(View.GONE);
+        }
+        else
+        {
+            img_camera.setVisibility(View.VISIBLE);
+        }
 
 
-            tab_photoreader.setOnClickListener(this);
+        tab_photoreader.setOnClickListener(this);
 
         //tabs_detail
         txtslotmedia.setText(getResources().getString(R.string.photo));

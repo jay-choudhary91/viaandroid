@@ -384,9 +384,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void loadviewdata()
     {
         gethelper().setrecordingrunning(false);
-        gethelper().drawerenabledisable(false);
-            gethelper().setrecordingrunning(false);
-            gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,playpausebutton,layoutcustomcontroller,img_fullscreen);
+        gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,playpausebutton,layoutcustomcontroller,img_fullscreen);
 
         videotextureview = (TextureView) findViewById(R.id.videotextureview);
         showcontrollers=rootview.findViewById(R.id.video_container);
@@ -412,9 +410,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         txt_section_validating_secondary.setText(config.caution);
         txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
-
-            /*mediaseekbar.setThumb(applicationviavideocomposer.getactivity().getResources().getDrawable(
-                    R.drawable.custom_thumb));*/
 
         mediaseekbar.setThumbOffset(0);
         mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -801,9 +796,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 case R.id.img_fullscreen:
                     if(layout_photodetails.getVisibility()==View.VISIBLE){
                         gethelper().drawerenabledisable(true,layout_footer,layout_mediatype,playpausebutton,null,img_fullscreen);
-
-                        expand(videotextureview,100,targetheight);
-                        gethelper().drawerenabledisable(true);
                         expand(videotextureview,targetheight);
                         layout_photodetails.setVisibility(View.GONE);
                         scrollview_detail.setVisibility(View.GONE);
@@ -820,8 +812,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         recenterplaypause();
                     } else{
                         gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,playpausebutton,null,img_fullscreen);
-                        collapse(videotextureview,100,previousheight);
-                        gethelper().drawerenabledisable(false);
                         collapse(videotextureview,previousheight);
                         layout_photodetails.setVisibility(View.VISIBLE);
                         tab_layout.setVisibility(View.VISIBLE);
