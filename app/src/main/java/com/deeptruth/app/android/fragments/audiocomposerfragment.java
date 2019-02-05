@@ -828,6 +828,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         ,"0","sync_pending","","","0","inprogress",medianame,"",
                         mdbstartitemcontainer.get(0).getItem16());
 
+                mdbhelper.updateaudiothumbnail(common.getfilename(mdbstartitemcontainer.get(0).getItem3()),mdbstartitemcontainer.get(0).getItem15());
+
                 try {
                     mdbhelper.close();
                 } catch (Exception e) {

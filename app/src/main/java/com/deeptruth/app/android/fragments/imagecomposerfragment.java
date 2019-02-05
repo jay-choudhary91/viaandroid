@@ -640,6 +640,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             mdbstartitemcontainer.get(0).setItem1(json);
             mdbstartitemcontainer.get(0).setItem3(capturedimagefile.getAbsolutePath());
+            mdbstartitemcontainer.get(0).setItem15(capturedimagefile.getAbsolutePath());
             mdbstartitemcontainer.get(0).setItem13(completeddate);
 
             if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
