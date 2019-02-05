@@ -232,204 +232,186 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            gethelper().drawerenabledisable(false);
-            img_dotmenu.setOnClickListener(this);
-            img_folder.setOnClickListener(this);
-            img_camera.setOnClickListener(this);
-            img_arrow_back.setOnClickListener(this);
-            img_delete_media.setOnClickListener(this);
-
-            img_dotmenu.setVisibility(View.VISIBLE);
-            img_folder.setVisibility(View.VISIBLE);
-            img_arrow_back.setVisibility(View.VISIBLE);
-
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            {
-                img_camera.setVisibility(View.GONE);
-            }
-            else
-            {
-                img_camera.setVisibility(View.VISIBLE);
-            }
-
-
-            righthandle.setOnTouchListener(this);
-            tab_photoreader.setOnClickListener(this);
-
-            //tabs_detail
-            txtslotmedia.setText(getResources().getString(R.string.photo));
-            img_share_media.setOnClickListener(this);
-            img_edit_name.setOnClickListener(this);
-            img_edit_notes.setOnClickListener(this);
-            img_fullscreen.setOnClickListener(this);
-            scrollview_detail.setVisibility(View.VISIBLE);
-            tab_layout.setVisibility(View.VISIBLE);
-            layout_footer.setVisibility(View.VISIBLE);
-            img_fullscreen.setVisibility(View.VISIBLE);
-            layout_photodetails.setVisibility(View.VISIBLE);
-            layout_mediatype.setVisibility(View.VISIBLE);
-            layout_date.setVisibility(View.VISIBLE);
-            layout_time.setVisibility(View.VISIBLE);
-            layout_photodetails.setOnClickListener(this);
-            layout_dtls.setOnClickListener(this);
-
-            layout_photoreader.post(new Runnable() {
-                @Override
-                public void run() {
-                    targetheight= layout_photoreader.getHeight();
-                    Log.e("targetheight",""+targetheight);
-                }
-            });
-            tab_photoreader.post(new Runnable() {
-                @Override
-                public void run() {
-                    previousheight = tab_photoreader.getHeight();
-                    Log.e("previousheight",""+previousheight);
-                }
-            });
-
-            tvaddress=rootview.findViewById(R.id.txt_address);
-            tvlatitude=rootview.findViewById(R.id.txt_latitude);
-            tvlongitude=rootview.findViewById(R.id.txt_longitude);
-            tvaltitude=rootview.findViewById(R.id.txt_altitude);
-            tvspeed=rootview.findViewById(R.id.txt_speed);
-            tvheading=rootview.findViewById(R.id.txt_heading);
-            tvtraveled=rootview.findViewById(R.id.txt_traveled);
-            tvxaxis=rootview.findViewById(R.id.txt_xaxis);
-            tvyaxis=rootview.findViewById(R.id.txt_yaxis);
-            tvzaxis=rootview.findViewById(R.id.txt_zaxis);
-            tvphone=rootview.findViewById(R.id.txt_phone);
-            tvnetwork=rootview.findViewById(R.id.txt_network);
-            tvconnection=rootview.findViewById(R.id.txt_connection);
-            tvversion=rootview.findViewById(R.id.txt_version);
-            tvwifi=rootview.findViewById(R.id.txt_wifi);
-            tvgpsaccuracy=rootview.findViewById(R.id.txt_gps_accuracy);
-            tvscreen=rootview.findViewById(R.id.txt_screen);
-            tvcountry=rootview.findViewById(R.id.txt_country);
-            tvcpuusage=rootview.findViewById(R.id.txt_cpu_usage);
-            tvbrightness=rootview.findViewById(R.id.txt_brightness);
-            tvtimezone=rootview.findViewById(R.id.txt_timezone);
-            tvmemoryusage=rootview.findViewById(R.id.txt_memoryusage);
-            tvbluetooth=rootview.findViewById(R.id.txt_bluetooth);
-            tvlocaltime=rootview.findViewById(R.id.txt_localtime);
-            tvstoragefree=rootview.findViewById(R.id.txt_storagefree);
-            tvlanguage=rootview.findViewById(R.id.txt_language);
-            tvuptime=rootview.findViewById(R.id.txt_uptime);
-            tvbattery=rootview.findViewById(R.id.txt_battery);
-            layout_googlemap= rootview.findViewById(R.id.layout_googlemap);
-            googlemap= rootview.findViewById(R.id.googlemap);
-            img_compass= rootview.findViewById(R.id.img_compass);
-
-            righthandle.setOnTouchListener(this);
-
-            String blockchainid = " ";
-            String blockid = " ";
-            String blocknumber = " ";
-            common.setspannable(getResources().getString(R.string.blockchain_id), blockchainid, txt_blockchainid);
-            common.setspannable(getResources().getString(R.string.block_id), blockid, txt_blockid);
-            common.setspannable(getResources().getString(R.string.block_number), blocknumber, txt_blocknumber);
-            edt_medianame.setEnabled(false);
-            edt_medianame.setClickable(false);
-            edt_medianame.setFocusable(false);
-            edt_medianame.setFocusableInTouchMode(false);
-
-            edt_medianotes.setEnabled(false);
-            edt_medianotes.setClickable(false);
-            edt_medianotes.setFocusable(false);
-            edt_medianotes.setFocusableInTouchMode(false);
-
-            flingactionmindstvac = common.getdrawerswipearea();
-            txtslotencyption.setOnClickListener(this);
-            txtslotmeta.setOnClickListener(this);
-            txtslotmedia.setOnClickListener(this);
-            resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-
-            edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        v.setFocusable(false);
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                        // if (arraymediaitemlist.size() > 0) {
-                        String medianotes = edt_medianotes.getText().toString();
-
-                        if(!mediatransectionid.isEmpty())
-                            updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes,"allmedia");
-                    }
-                }
-            });
-
-            edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        edt_medianame.setKeyListener(null);
-                        v.setFocusable(false);
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                        // if (arraymediaitemlist.size() > 0) {
-                        String renamevalue = edt_medianame.getText().toString();
-                        if(!mediatransectionid.isEmpty())
-                            updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString(),"allmedia");
-
-                        editabletext();
-                        //   edt_medianame.setKeyListener(null);
-                        //   }
-                    }
-                }
-            });
-
-            edt_medianame.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
-                    if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
-                  /*  Log.i(TAG,"Here you can write the code");*/
-                        //  if (arraymediaitemlist.size() > 0) {
-                        String renamevalue = edt_medianame.getText().toString();
-                        editabletext();
-
-
-                        edt_medianame.setKeyListener(null);
-                    }
-                    // }
-                    return false;
-                }
-            });
-
-            txt_section_validating_secondary.setText(config.caution);
-            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
-           //detuct keyboard is open or not
-            photorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    int heightDiff = photorootview.getRootView().getHeight() - photorootview.getHeight();
-                    if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
-                        // ... do something here
-                        Log.e("ikeyboardshowing","iskeyboardshowing....true");
-                        layout_halfscrn.setVisibility(View.GONE);
-                        layout_footer.setVisibility(View.GONE);
-
-                    }else
-                    {
-                        if(layout_halfscrn.getVisibility()==View.GONE){
-                            layout_halfscrn.setVisibility(View.VISIBLE);
-                            layout_footer.setVisibility(View.VISIBLE);
-                             edt_medianame.setFocusable(false);
-                             edt_medianotes.setFocusable(false);
-                        }
-
-                        Log.e("ikeyboardshowing","iskeyboardshowing....false");
-                    }
-                }
-            });
-            loadmap();
-            setmetriceshashesdata();
-            setupimagedata();
+            loadviewdata();
 
         }
         return rootview;
+    }
+
+    public void loadviewdata()
+    {
+        gethelper().drawerenabledisable(false);
+        img_dotmenu.setOnClickListener(this);
+        img_folder.setOnClickListener(this);
+        img_camera.setOnClickListener(this);
+        img_arrow_back.setOnClickListener(this);
+        img_delete_media.setOnClickListener(this);
+
+        img_dotmenu.setVisibility(View.VISIBLE);
+        img_folder.setVisibility(View.VISIBLE);
+        img_arrow_back.setVisibility(View.VISIBLE);
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            img_camera.setVisibility(View.GONE);
+        }
+        else
+        {
+            img_camera.setVisibility(View.VISIBLE);
+        }
+
+
+        righthandle.setOnTouchListener(this);
+        tab_photoreader.setOnClickListener(this);
+
+        //tabs_detail
+        txtslotmedia.setText(getResources().getString(R.string.photo));
+        img_share_media.setOnClickListener(this);
+        img_edit_name.setOnClickListener(this);
+        img_edit_notes.setOnClickListener(this);
+        img_fullscreen.setOnClickListener(this);
+        scrollview_detail.setVisibility(View.VISIBLE);
+        tab_layout.setVisibility(View.VISIBLE);
+        layout_footer.setVisibility(View.VISIBLE);
+        img_fullscreen.setVisibility(View.VISIBLE);
+        layout_photodetails.setVisibility(View.VISIBLE);
+        layout_mediatype.setVisibility(View.VISIBLE);
+        layout_date.setVisibility(View.VISIBLE);
+        layout_time.setVisibility(View.VISIBLE);
+        layout_photodetails.setOnClickListener(this);
+        layout_dtls.setOnClickListener(this);
+
+        layout_photoreader.post(new Runnable() {
+            @Override
+            public void run() {
+                targetheight= layout_photoreader.getHeight();
+                Log.e("targetheight",""+targetheight);
+            }
+        });
+        tab_photoreader.post(new Runnable() {
+            @Override
+            public void run() {
+                previousheight = tab_photoreader.getHeight();
+                Log.e("previousheight",""+previousheight);
+            }
+        });
+
+        tvaddress=rootview.findViewById(R.id.txt_address);
+        tvlatitude=rootview.findViewById(R.id.txt_latitude);
+        tvlongitude=rootview.findViewById(R.id.txt_longitude);
+        tvaltitude=rootview.findViewById(R.id.txt_altitude);
+        tvspeed=rootview.findViewById(R.id.txt_speed);
+        tvheading=rootview.findViewById(R.id.txt_heading);
+        tvtraveled=rootview.findViewById(R.id.txt_traveled);
+        tvxaxis=rootview.findViewById(R.id.txt_xaxis);
+        tvyaxis=rootview.findViewById(R.id.txt_yaxis);
+        tvzaxis=rootview.findViewById(R.id.txt_zaxis);
+        tvphone=rootview.findViewById(R.id.txt_phone);
+        tvnetwork=rootview.findViewById(R.id.txt_network);
+        tvconnection=rootview.findViewById(R.id.txt_connection);
+        tvversion=rootview.findViewById(R.id.txt_version);
+        tvwifi=rootview.findViewById(R.id.txt_wifi);
+        tvgpsaccuracy=rootview.findViewById(R.id.txt_gps_accuracy);
+        tvscreen=rootview.findViewById(R.id.txt_screen);
+        tvcountry=rootview.findViewById(R.id.txt_country);
+        tvcpuusage=rootview.findViewById(R.id.txt_cpu_usage);
+        tvbrightness=rootview.findViewById(R.id.txt_brightness);
+        tvtimezone=rootview.findViewById(R.id.txt_timezone);
+        tvmemoryusage=rootview.findViewById(R.id.txt_memoryusage);
+        tvbluetooth=rootview.findViewById(R.id.txt_bluetooth);
+        tvlocaltime=rootview.findViewById(R.id.txt_localtime);
+        tvstoragefree=rootview.findViewById(R.id.txt_storagefree);
+        tvlanguage=rootview.findViewById(R.id.txt_language);
+        tvuptime=rootview.findViewById(R.id.txt_uptime);
+        tvbattery=rootview.findViewById(R.id.txt_battery);
+        layout_googlemap= rootview.findViewById(R.id.layout_googlemap);
+        googlemap= rootview.findViewById(R.id.googlemap);
+        img_compass= rootview.findViewById(R.id.img_compass);
+
+        righthandle.setOnTouchListener(this);
+
+        String blockchainid = " ";
+        String blockid = " ";
+        String blocknumber = " ";
+        common.setspannable(getResources().getString(R.string.blockchain_id), blockchainid, txt_blockchainid);
+        common.setspannable(getResources().getString(R.string.block_id), blockid, txt_blockid);
+        common.setspannable(getResources().getString(R.string.block_number), blocknumber, txt_blocknumber);
+        edt_medianame.setEnabled(false);
+        edt_medianame.setClickable(false);
+        edt_medianame.setFocusable(false);
+        edt_medianame.setFocusableInTouchMode(false);
+
+        edt_medianotes.setEnabled(false);
+        edt_medianotes.setClickable(false);
+        edt_medianotes.setFocusable(false);
+        edt_medianotes.setFocusableInTouchMode(false);
+
+        flingactionmindstvac = common.getdrawerswipearea();
+        txtslotencyption.setOnClickListener(this);
+        txtslotmeta.setOnClickListener(this);
+        txtslotmedia.setOnClickListener(this);
+        resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+
+        edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    v.setFocusable(false);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
+                    // if (arraymediaitemlist.size() > 0) {
+                    String medianotes = edt_medianotes.getText().toString();
+
+                    if(!mediatransectionid.isEmpty())
+                        updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes);
+                }
+            }
+        });
+
+        edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    edt_medianame.setKeyListener(null);
+                    v.setFocusable(false);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
+                    // if (arraymediaitemlist.size() > 0) {
+                    String renamevalue = edt_medianame.getText().toString();
+                    if(!mediatransectionid.isEmpty())
+                        updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString());
+
+                    editabletext();
+                }
+            }
+        });
+
+        txt_section_validating_secondary.setText(config.caution);
+        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+        //detuct keyboard is open or not
+        photorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = photorootview.getRootView().getHeight() - photorootview.getHeight();
+                if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
+                    // ... do something here
+                    layout_halfscrn.setVisibility(View.GONE);
+                    layout_footer.setVisibility(View.GONE);
+
+                }else
+                {
+                    if(layout_halfscrn.getVisibility()==View.GONE){
+                        layout_halfscrn.setVisibility(View.VISIBLE);
+                        layout_footer.setVisibility(View.VISIBLE);
+                        edt_medianame.setFocusable(false);
+                        edt_medianotes.setFocusable(false);
+                    }
+                }
+            }
+        });
+        loadmap();
+        setmetriceshashesdata();
+        setupimagedata();
     }
 
     @Override
@@ -958,9 +940,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 String folderpath=folderitem.get(position).getFolderdir();
                                 if(! folderpath.equalsIgnoreCase(new File(imageurl).getParent()))
                                 {
-                                    common.copyfile(new File(imageurl),new File(folderpath));
-                                    //common.delete(new File(sourcefilepath));
-                                    updatefilemediafolderdirectory(imageurl,folderpath);
+                                    if(common.movemediafile(new File(imageurl),new File(folderpath)))
+                                    {
+                                        File destinationmediafile = new File(folderpath + File.separator + new File(imageurl).getName());
+                                        updatefilemediafolderdirectory(imageurl,destinationmediafile.getAbsolutePath(),folderpath);
+                                        imageurl=destinationmediafile.getAbsolutePath();
+                                        xdata.getinstance().saveSetting("selectedphotourl",imageurl);
+                                    }
                                 }
                             }catch (Exception e)
                             {
@@ -970,6 +956,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 @Override
                                 public void run() {
                                     progressdialog.dismisswaitdialog();
+                                    if(mcontrollernavigator != null)
+                                        mcontrollernavigator.onItemClicked(imageurl,3);
+
+                                    loadviewdata();
                                 }
                             });
                         }
@@ -983,13 +973,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         });
     }
 
-    public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
+    public void updatefilemediafolderdirectory(String sourcefile,String destinationfilepath,String destinationmediafolder)
     {
-        databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
+        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+        mdbhelper.createDatabase();
 
         try {
             mdbhelper.open();
@@ -1000,14 +987,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
         try
         {
-            mdbhelper.updatefilemediafolderdir(sourcefile,destinationmediafolder);
-
+            mdbhelper.updatefilemediafolderdir(sourcefile,destinationfilepath,destinationmediafolder);
             mdbhelper.close();
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-
     }
 
     public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash
@@ -1373,7 +1358,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         currentDegree = -degree;
     }
 
-    public void updatemediainfo(String transactionid,String medianame,String medianotes,String mediafolder)
+    public void updatemediainfo(String transactionid,String medianame,String medianotes)
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -1387,7 +1372,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
-        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes,mediafolder);
+        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes);
         try
         {
             mdbhelper.close();

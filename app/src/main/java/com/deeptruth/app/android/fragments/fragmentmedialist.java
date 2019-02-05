@@ -654,7 +654,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                         if(common.movemediafile(new File(sourcefilepath),new File(folderpath)))
                                         {
                                             File destinationmediafile = new File(folderpath + File.separator + new File(sourcefilepath).getName());
-                                            updatefilemediafolderdirectory(destinationmediafile.getAbsolutePath(),folderpath);
+                                            updatefilemediafolderdirectory(sourcefilepath,destinationmediafile.getAbsolutePath(),folderpath);
                                         }
                                     }
                                 }catch (Exception e)
@@ -678,7 +678,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }).show();
     }
 
-    public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
+    public void updatefilemediafolderdirectory(String sourcefile,String destinationfilepath,String destinationmediafolder)
     {
         databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
         mdbhelper.createDatabase();
@@ -692,7 +692,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         try
         {
-            mdbhelper.updatefilemediafolderdir(sourcefile,destinationmediafolder);
+            mdbhelper.updatefilemediafolderdir(sourcefile,destinationfilepath,destinationmediafolder);
             mdbhelper.close();
         }catch (Exception e)
         {
@@ -1329,6 +1329,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     }
                     showselectedmediatypeitems();
                 }
+            }
+            else if(type == 3)    // Calling from media details screen where user is going to change media directory.
+            {
+                resetmediaitemsadapter();
             }
         }
     };

@@ -10,7 +10,7 @@ import java.io.File;
 
 public class config {
 
-    public static String allmedia="allmedia";
+    public static String allmedia="All Media";
     public static String media="media";
     public static String audiotempfile="audiotemp.pcm";
 

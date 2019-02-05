@@ -320,195 +320,180 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            gethelper().setrecordingrunning(false);
-            linearLayout=rootview.findViewById(R.id.content);
-         //   righthandle=rootview.findViewById(R.id.righthandle);
-            playpausebutton = (circularImageview)rootview.findViewById(R.id.btn_playpause);
-            mediaseekbar = (SeekBar) rootview.findViewById(R.id.mediacontroller_progress);
-            time_current = (TextView) rootview.findViewById(R.id.time_current);
-            time = (TextView) rootview.findViewById(R.id.time);
-            rlcontrollerview = (RelativeLayout) rootview.findViewById(R.id.rl_controllerview);
-
-            mediaseekbar.setPadding(0,0,0,0);
-
-            mFormatBuilder = new StringBuilder();
-            mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
-            playpausebutton.setImageResource(R.drawable.play_btn);
-
-            frameduration= common.checkframeduration();
-            keytype=common.checkkey();
-
-            playpausebutton.setOnClickListener(this);
-
-            img_dotmenu.setOnClickListener(this);
-            img_folder.setOnClickListener(this);
-            img_camera.setOnClickListener(this);
-            img_arrow_back.setOnClickListener(this);
-            img_delete_media.setOnClickListener(this);
-
-            img_dotmenu.setVisibility(View.VISIBLE);
-            img_folder.setVisibility(View.VISIBLE);
-            img_arrow_back.setVisibility(View.VISIBLE);
-
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-            {
-                img_camera.setVisibility(View.GONE);
-            }
-            else
-            {
-                img_camera.setVisibility(View.VISIBLE);
-            }
-
-            mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                private int mProgressAtStartTracking=0;
-                private final int SENSITIVITY=0;
-                @Override
-                public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
-
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    mProgressAtStartTracking = seekBar.getProgress();
-                    if(Math.abs(mProgressAtStartTracking - seekBar.getProgress()) <= SENSITIVITY){
-                        // react to thumb click
-
-                    }
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    player.seekTo(seekBar.getProgress());
-                }
-            });
-
-            mediaseekbar.post(new Runnable() {
-                @Override
-                public void run() {
-
-                    RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbar.getHeight());
-                    parms.setMargins(15,5,15,0);
-                    linearseekbarcolorview.setLayoutParams(parms);
-
-                    Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
-                }
-            });
-
-            //tabs_detail
-            tab_layout.setVisibility(View.VISIBLE);
-            txtslotmedia.setText(getResources().getString(R.string.audio));
-            img_share_media.setOnClickListener(this);
-            img_edit_name.setOnClickListener(this);
-            img_edit_notes.setOnClickListener(this);
-            rlcontrollerview.setOnClickListener(this);
-            scrollview_detail.setVisibility(View.VISIBLE);
-            tab_layout.setVisibility(View.VISIBLE);
-            layout_footer.setVisibility(View.VISIBLE);
-            layout_photodetails.setVisibility(View.VISIBLE);
-            layout_mediatype.setVisibility(View.VISIBLE);
-            layout_duration.setVisibility(View.VISIBLE);
-            layout_endtime.setVisibility(View.VISIBLE);
-            layout_starttime.setVisibility(View.VISIBLE);
-
-
-            edt_medianame.setEnabled(false);
-            edt_medianame.setClickable(false);
-            edt_medianame.setFocusable(false);
-            edt_medianame.setFocusableInTouchMode(false);
-
-            edt_medianotes.setEnabled(false);
-            edt_medianotes.setClickable(false);
-            edt_medianotes.setFocusable(false);
-            edt_medianotes.setFocusableInTouchMode(false);
-
-            edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        v.setFocusable(false);
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                        // if (arraymediaitemlist.size() > 0) {
-                        String medianotes = edt_medianotes.getText().toString();
-
-                        if(!mediatransectionid.isEmpty())
-                            updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes,"allmedia");
-                    }
-                }
-            });
-
-            edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (!hasFocus) {
-                        edt_medianame.setKeyListener(null);
-                        v.setFocusable(false);
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
-                        // if (arraymediaitemlist.size() > 0) {
-                        String renamevalue = edt_medianame.getText().toString();
-                        if(!mediatransectionid.isEmpty())
-                            updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString(),"allmedia");
-
-                        editabletext();
-                        //   edt_medianame.setKeyListener(null);
-                        //   }
-                    }
-                }
-            });
-
-            edt_medianame.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
-                    if  ((actionId == EditorInfo.IME_ACTION_DONE)) {
-                  /*  Log.i(TAG,"Here you can write the code");*/
-                        //  if (arraymediaitemlist.size() > 0) {
-                        String renamevalue = edt_medianame.getText().toString();
-                        editabletext();
-
-
-                        edt_medianame.setKeyListener(null);
-                    }
-                    // }
-                    return false;
-                }
-            });
-            layout_dtls.setOnClickListener(this);
-
-            txtslotencyption.setOnClickListener(this);
-            txtslotmeta.setOnClickListener(this);
-            txtslotmedia.setOnClickListener(this);
-            resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-
-            audiorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    int heightDiff = audiorootview.getRootView().getHeight() - audiorootview.getHeight();
-                    if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
-                        // ... do something here
-                        Log.e("ikeyboardshowing","iskeyboardshowing....true");
-                        rlcontrollerview.setVisibility(View.GONE);
-                        layout_footer.setVisibility(View.GONE);
-
-                    }else
-                    {
-                        if(rlcontrollerview.getVisibility()==View.GONE){
-                            rlcontrollerview.setVisibility(View.VISIBLE);
-                            layout_footer.setVisibility(View.VISIBLE);
-                            edt_medianame.setFocusable(false);
-                            edt_medianotes.setFocusable(false);
-                        }
-
-                        Log.e("ikeyboardshowing","iskeyboardshowing....false");
-                    }
-                }
-            });
-            loadmap();
-            setmetriceshashesdata();
-            setupaudiodata();
+            loadviewdata();
         }
         return rootview;
+    }
+
+    public void loadviewdata()
+    {
+        gethelper().setrecordingrunning(false);
+        linearLayout=rootview.findViewById(R.id.content);
+        //   righthandle=rootview.findViewById(R.id.righthandle);
+        playpausebutton = (circularImageview)rootview.findViewById(R.id.btn_playpause);
+        mediaseekbar = (SeekBar) rootview.findViewById(R.id.mediacontroller_progress);
+        time_current = (TextView) rootview.findViewById(R.id.time_current);
+        time = (TextView) rootview.findViewById(R.id.time);
+        rlcontrollerview = (RelativeLayout) rootview.findViewById(R.id.rl_controllerview);
+
+        mediaseekbar.setPadding(0,0,0,0);
+
+        mFormatBuilder = new StringBuilder();
+        mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+        playpausebutton.setImageResource(R.drawable.play_btn);
+
+        frameduration= common.checkframeduration();
+        keytype=common.checkkey();
+
+        playpausebutton.setOnClickListener(this);
+
+        img_dotmenu.setOnClickListener(this);
+        img_folder.setOnClickListener(this);
+        img_camera.setOnClickListener(this);
+        img_arrow_back.setOnClickListener(this);
+        img_delete_media.setOnClickListener(this);
+
+        img_dotmenu.setVisibility(View.VISIBLE);
+        img_folder.setVisibility(View.VISIBLE);
+        img_arrow_back.setVisibility(View.VISIBLE);
+
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            img_camera.setVisibility(View.GONE);
+        }
+        else
+        {
+            img_camera.setVisibility(View.VISIBLE);
+        }
+
+        mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            private int mProgressAtStartTracking=0;
+            private final int SENSITIVITY=0;
+            @Override
+            public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mProgressAtStartTracking = seekBar.getProgress();
+                if(Math.abs(mProgressAtStartTracking - seekBar.getProgress()) <= SENSITIVITY){
+                    // react to thumb click
+
+                }
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                player.seekTo(seekBar.getProgress());
+            }
+        });
+
+        mediaseekbar.post(new Runnable() {
+            @Override
+            public void run() {
+
+                RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbar.getHeight());
+                parms.setMargins(15,5,15,0);
+                linearseekbarcolorview.setLayoutParams(parms);
+
+                Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
+            }
+        });
+
+        //tabs_detail
+        tab_layout.setVisibility(View.VISIBLE);
+        txtslotmedia.setText(getResources().getString(R.string.audio));
+        img_share_media.setOnClickListener(this);
+        img_edit_name.setOnClickListener(this);
+        img_edit_notes.setOnClickListener(this);
+        rlcontrollerview.setOnClickListener(this);
+        scrollview_detail.setVisibility(View.VISIBLE);
+        tab_layout.setVisibility(View.VISIBLE);
+        layout_footer.setVisibility(View.VISIBLE);
+        layout_photodetails.setVisibility(View.VISIBLE);
+        layout_mediatype.setVisibility(View.VISIBLE);
+        layout_duration.setVisibility(View.VISIBLE);
+        layout_endtime.setVisibility(View.VISIBLE);
+        layout_starttime.setVisibility(View.VISIBLE);
+
+
+        edt_medianame.setEnabled(false);
+        edt_medianame.setClickable(false);
+        edt_medianame.setFocusable(false);
+        edt_medianame.setFocusableInTouchMode(false);
+
+        edt_medianotes.setEnabled(false);
+        edt_medianotes.setClickable(false);
+        edt_medianotes.setFocusable(false);
+        edt_medianotes.setFocusableInTouchMode(false);
+
+        edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    v.setFocusable(false);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
+                    // if (arraymediaitemlist.size() > 0) {
+                    String medianotes = edt_medianotes.getText().toString();
+
+                    if(!mediatransectionid.isEmpty())
+                        updatemediainfo(mediatransectionid,edt_medianame.getText().toString(),medianotes);
+                }
+            }
+        });
+
+        edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    edt_medianame.setKeyListener(null);
+                    v.setFocusable(false);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
+                    // if (arraymediaitemlist.size() > 0) {
+                    String renamevalue = edt_medianame.getText().toString();
+                    if(!mediatransectionid.isEmpty())
+                        updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString());
+
+                    editabletext();
+                    //   edt_medianame.setKeyListener(null);
+                    //   }
+                }
+            }
+        });
+
+        layout_dtls.setOnClickListener(this);
+        txtslotencyption.setOnClickListener(this);
+        txtslotmeta.setOnClickListener(this);
+        txtslotmedia.setOnClickListener(this);
+        resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+
+        audiorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = audiorootview.getRootView().getHeight() - audiorootview.getHeight();
+                if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
+                    // ... do something here
+                    rlcontrollerview.setVisibility(View.GONE);
+                    layout_footer.setVisibility(View.GONE);
+
+                }else
+                {
+                    if(rlcontrollerview.getVisibility()==View.GONE){
+                        rlcontrollerview.setVisibility(View.VISIBLE);
+                        layout_footer.setVisibility(View.VISIBLE);
+                        edt_medianame.setFocusable(false);
+                        edt_medianotes.setFocusable(false);
+                    }
+
+                }
+            }
+        });
+        loadmap();
+        setmetriceshashesdata();
+        setupaudiodata();
     }
 
     @Override
@@ -1515,9 +1500,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 String folderpath=folderitem.get(position).getFolderdir();
                                 if(! folderpath.equalsIgnoreCase(new File(audiourl).getParent()))
                                 {
-                                    common.copyfile(new File(audiourl),new File(folderpath));
-                                    //common.delete(new File(sourcefilepath));
-                                    updatefilemediafolderdirectory(audiourl,folderpath);
+                                    if(common.movemediafile(new File(audiourl),new File(folderpath)))
+                                    {
+                                        File destinationmediafile = new File(folderpath + File.separator + new File(audiourl).getName());
+                                        updatefilemediafolderdirectory(audiourl,destinationmediafile.getAbsolutePath(),folderpath);
+                                        audiourl=destinationmediafile.getAbsolutePath();
+                                        xdata.getinstance().saveSetting("selectedaudiourl",audiourl);
+                                    }
                                 }
                             }catch (Exception e)
                             {
@@ -1527,6 +1516,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 @Override
                                 public void run() {
                                     progressdialog.dismisswaitdialog();
+                                    if(mcontrollernavigator != null)
+                                        mcontrollernavigator.onItemClicked(audiourl,3);
+
+                                    loadviewdata();
                                 }
                             });
                         }
@@ -1540,13 +1533,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         });
     }
 
-    public void updatefilemediafolderdirectory(String sourcefile,String destinationmediafolder)
+    public void updatefilemediafolderdirectory(String sourcefile,String destinationfilepath,String destinationmediafolder)
     {
-        databasemanager mdbhelper=null;
-        if (mdbhelper == null) {
-            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-            mdbhelper.createDatabase();
-        }
+        databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+        mdbhelper.createDatabase();
 
         try {
             mdbhelper.open();
@@ -1557,14 +1547,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         try
         {
-            mdbhelper.updatefilemediafolderdir(sourcefile,destinationmediafolder);
-
+            mdbhelper.updatefilemediafolderdir(sourcefile,destinationfilepath,destinationmediafolder);
             mdbhelper.close();
         }catch (Exception e)
         {
             e.printStackTrace();
         }
-
     }
 
     public void getmetadetareader(){
@@ -1805,7 +1793,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         currentDegree = -degree;
     }
 
-    public void updatemediainfo(String transactionid,String medianame,String medianotes,String mediafolder)
+    public void updatemediainfo(String transactionid,String medianame,String medianotes)
     {
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
@@ -1819,7 +1807,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
-        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes,mediafolder);
+        mdbhelper.updatemediainfofromstarttransactionid(transactionid,medianame,medianotes);
         try
         {
             mdbhelper.close();
