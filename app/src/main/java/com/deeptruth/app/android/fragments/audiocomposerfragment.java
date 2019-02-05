@@ -155,6 +155,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
     FFmpeg ffmpeg;
+    RelativeLayout layoutbottom;
 
     @Override
     public int getlayoutid() {
@@ -173,7 +174,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            gethelper().drawerenabledisable(true);
+            gethelper().drawerenabledisable(true,layoutbottom,linearheader,null,null,null);
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
@@ -1250,8 +1251,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
 
 
-    public void setData(adapteritemclick madapterclick) {
+    public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom) {
         this.madapterclick = madapterclick;
+        this.layoutbottom = layoutbottom;
     }
 
     @Override

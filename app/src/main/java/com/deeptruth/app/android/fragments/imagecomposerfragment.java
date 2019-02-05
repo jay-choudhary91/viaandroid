@@ -44,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
@@ -329,6 +330,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
     String hashvalue = "",metrichashvalue = "";
+    RelativeLayout layoutbottom;
 
 
 
@@ -492,7 +494,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            gethelper().drawerenabledisable(true);
+            gethelper().drawerenabledisable(true,layoutbottom,linearheader,null,null,null);
 
             mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
@@ -1508,8 +1510,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void setData(adapteritemclick madapterclick) {
+    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom) {
         this.madapterclick = madapterclick;
+        this.layoutbottom = layoutbottom;
     }
 
 }

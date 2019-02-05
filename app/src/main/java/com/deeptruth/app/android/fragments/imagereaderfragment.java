@@ -108,15 +108,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ImageView img_arrow_back;
     /*@BindView(R.id.layout_bottom)
     LinearLayout layout_bottom;*/
-    @BindView(R.id.layout_drawer)
-    LinearLayout layout_drawer;
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
-    @BindView(R.id.content)
-    LinearLayout linearLayout;
 
-    @BindView(R.id.righthandle)
-    ImageView righthandle;
 
     //tabdetails
     @BindView(R.id.spinner)
@@ -140,7 +134,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.layout_halfscrn)
     RelativeLayout layout_halfscrn;
     @BindView(R.id.layout_mediatype)
-    RelativeLayout layout_mediatype;
+    LinearLayout layout_mediatype;
     @BindView(R.id.layout_photodetails)
     RelativeLayout layout_photodetails;
     @BindView(R.id.scrollview_detail)
@@ -246,23 +240,29 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         img_camera.setOnClickListener(this);
         img_arrow_back.setOnClickListener(this);
         img_delete_media.setOnClickListener(this);
+            gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,null,null,img_fullscreen);
 
-        img_dotmenu.setVisibility(View.VISIBLE);
-        img_folder.setVisibility(View.VISIBLE);
-        img_arrow_back.setVisibility(View.VISIBLE);
+            img_dotmenu.setOnClickListener(this);
+            img_folder.setOnClickListener(this);
+            img_camera.setOnClickListener(this);
+            img_arrow_back.setOnClickListener(this);
+            img_delete_media.setOnClickListener(this);
 
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-            img_camera.setVisibility(View.GONE);
-        }
-        else
-        {
-            img_camera.setVisibility(View.VISIBLE);
-        }
+            img_dotmenu.setVisibility(View.VISIBLE);
+            img_folder.setVisibility(View.VISIBLE);
+            img_arrow_back.setVisibility(View.VISIBLE);
+
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                img_camera.setVisibility(View.GONE);
+            }
+            else
+            {
+                img_camera.setVisibility(View.VISIBLE);
+            }
 
 
-        righthandle.setOnTouchListener(this);
-        tab_photoreader.setOnClickListener(this);
+            tab_photoreader.setOnClickListener(this);
 
         //tabs_detail
         txtslotmedia.setText(getResources().getString(R.string.photo));
@@ -328,7 +328,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         googlemap= rootview.findViewById(R.id.googlemap);
         img_compass= rootview.findViewById(R.id.img_compass);
 
-        righthandle.setOnTouchListener(this);
 
         String blockchainid = " ";
         String blockid = " ";
@@ -508,7 +507,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }, 150);
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
-                    gethelper().drawerenabledisable(true);
+                    gethelper().drawerenabledisable(true,layout_footer,layout_mediatype,null,null,img_fullscreen);
+
                     expand(tab_photoreader,100,targetheight);
                     layout_photodetails.setVisibility(View.GONE);
                     scrollview_detail.setVisibility(View.GONE);
@@ -520,7 +520,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     img_fullscreen.setVisibility(View.INVISIBLE);
 
                 } else{
-                    gethelper().drawerenabledisable(false);
+                    gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,null,null,img_fullscreen);
+
                     collapse(tab_photoreader,100,previousheight);
                     layout_photodetails.setVisibility(View.VISIBLE);
                     tab_layout.setVisibility(View.VISIBLE);

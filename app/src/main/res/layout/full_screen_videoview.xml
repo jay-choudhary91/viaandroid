@@ -92,7 +92,7 @@
                             android:id="@+id/img_fullscreen"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
-                           android:layout_above="@+id/layout_customcontroller"
+                            android:layout_above="@+id/layout_customcontroller"
                             android:layout_alignParentRight="true"
                             android:src="@drawable/ic_full_screen_mode"
                             android:padding="10dp"
@@ -106,6 +106,7 @@
                             android:layout_alignParentBottom="true"
                             android:orientation="vertical"
                             android:gravity="center"
+
                             >
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -304,7 +305,7 @@
 
                 </LinearLayout>
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/layout_mediatype"
                     android:layout_width="match_parent"
                     android:visibility="gone"
@@ -315,7 +316,7 @@
                     <include layout="@layout/action_bar_mediadetails"></include>
 
 
-                </RelativeLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_validating"
