@@ -946,7 +946,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(imagearraylist.size() > 0)
             {
                 setthumbnailimage(imagearraylist.get(0));
-                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
             }
             else
             {
@@ -958,6 +957,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(audioarraylist.size() > 0)
             {
                 setthumbnailimage(audioarraylist.get(0));
+                img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
             }
             else
             {
