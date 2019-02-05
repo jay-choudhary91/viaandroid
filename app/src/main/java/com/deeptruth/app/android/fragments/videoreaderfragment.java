@@ -1534,6 +1534,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
             videoduration=mediaPlayer.getDuration();
             txt_duration.setText( common.gettimestring(mediaPlayer.getDuration()) );
+            if(player!=null)
+            {
+                setvideodata();
+                // changeactionbarcolor();
+                // initAudio();
+                // fragmentgraphic.setvisualizerwave();
+                wavevisualizerslist.clear();
+
+            }
+
 
             try {
                 if(playerposition > 0)
@@ -1597,22 +1607,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             controller = new videocontrollerview(applicationviavideocomposer.getactivity(),mitemclick,true);
             if(selecteduri!=null){
                 player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                player.reset();
                 player.setDataSource(applicationviavideocomposer.getactivity(),selecteduri);
                 player.setSurface(surfacetexture);
                 player.prepareAsync();
+                Log.e("time","onprepare");
                 player.setOnPreparedListener(new setonmediaprepared());
                 player.setOnCompletionListener(new setonmediacompletion());
                 player.setOnVideoSizeChangedListener(this);
                 player.setOnBufferingUpdateListener(this);
-                if(player!=null)
-                {
-                    setaudiodata();
-                   // changeactionbarcolor();
-                   // initAudio();
-                   // fragmentgraphic.setvisualizerwave();
-                    wavevisualizerslist.clear();
 
-                }
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -2200,14 +2204,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void setaudiodata(){
+    public void setvideodata(){
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 endtime = player.getDuration();
+                Log.e("endtime",""+endtime);
                 videostarttime = player.getCurrentPosition();
+                Log.e("videostarttime",""+videostarttime);
 
                 audioduration  = endtime;
 
