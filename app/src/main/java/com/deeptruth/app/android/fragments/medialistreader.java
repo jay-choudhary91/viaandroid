@@ -1118,10 +1118,6 @@ public class medialistreader extends basefragment implements View.OnClickListene
             }
         }
     }
-    public void update(String filepath,String thumbnailurl)
-    {
-
-    }
 
     public void updateaudiothumbnail(String filepath,String thumbnailurl)
     {
@@ -1584,33 +1580,33 @@ public class medialistreader extends basefragment implements View.OnClickListene
 
     public void showalertdialog(final video videoobj, String message){
         new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
-                .setTitle("Alert!!")
-                .setMessage(message)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        File fdelete = new File(videoobj.getPath());
-                        if (fdelete.exists()) {
-                            if (fdelete.delete()) {
-                                String localkey=videoobj.getLocalkey();
-                                System.out.println("file Deleted :" + videoobj.getPath());
-                                arrayvideolist.remove(videoobj);
-                                dialog.dismiss();
-                                if(! localkey.trim().isEmpty())
-                                    deletemediainfo(localkey);
+            .setTitle("Alert!!")
+            .setMessage(message)
+            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    File fdelete = new File(videoobj.getPath());
+                    if (fdelete.exists()) {
+                        if (fdelete.delete()) {
+                            String localkey=videoobj.getLocalkey();
+                            System.out.println("file Deleted :" + videoobj.getPath());
+                            arrayvideolist.remove(videoobj);
+                            dialog.dismiss();
+                            if(! localkey.trim().isEmpty())
+                                deletemediainfo(localkey);
 
-                            } else {
-                                System.out.println("file not Deleted :" + videoobj.getPath());
-                            }
+                        } else {
+                            System.out.println("file not Deleted :" + videoobj.getPath());
                         }
-                        showselectedmediatypeitems();
                     }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }).show();
+                    showselectedmediatypeitems();
+                }
+            })
+            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).show();
     }
 }

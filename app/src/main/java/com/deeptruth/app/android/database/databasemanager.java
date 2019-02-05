@@ -598,14 +598,29 @@ public class databasemanager {
         return  mCur;
     }
 
-    public Cursor updatefilemediafolderdir(String location,String destinationfolder) {
+    public Cursor updatefilemediafolderdir(String sourcefile,String destinationfile,String destinationfolder) {
         Cursor mCur=null;
         try {
-            location=common.getfilename(location);
+            String mediafilepath=destinationfile;
+            sourcefile=common.getfilename(sourcefile);
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblstartmediainfo set media_folder='"+destinationfolder+"' where location='"+location+"'");
+            if(sourcefile.contains(".mp4") || sourcefile.contains(".jpg") || sourcefile.contains(".png") || sourcefile.contains(".jpeg"))
+            {
+                String query="update tblstartmediainfo set media_folder = '"+destinationfolder+
+                        "',mediafilepath ='"+mediafilepath+
+                        "',thumbnailurl = '"+mediafilepath +
+                        "' where location='"+sourcefile+"'";
+                mDb.execSQL(query);
+            }
+            else
+            {
+                mDb.execSQL("update tblstartmediainfo set media_folder = '"+destinationfolder+
+                    "',mediafilepath ='"+mediafilepath+
+                    "' where location='"+sourcefile+"'");
+            }
+
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
@@ -616,34 +631,6 @@ public class databasemanager {
         }
         return  mCur;
     }
-
-    public void insertreadergetvideoinfo(String framecount,String videotoken,String video,String remainingframes,
-                                     String frames)
-    {
-        try {
-            lock.lock();
-
-            ContentValues values = new ContentValues();
-            values.put("framecount", "" + framecount);
-            values.put("videotoken", ""+videotoken);
-            values.put("video_info", video);
-            values.put("remainingframes", ""+remainingframes);
-            values.put("frames", ""+frames);
-
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            long l=mDb.insert("tblgetvideoinfo", null, values);
-            Log.e("Id ",""+l);
-
-        } catch (SQLException mSQLException) {
-            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
-            throw mSQLException;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    //=========================  Methods for reader implementation
 
     public ArrayList<metadatahash> getmediametadatabyfilename(String filename) {
         ArrayList<metadatahash> mitemlist=new ArrayList<>();
@@ -937,12 +924,12 @@ public class databasemanager {
     }
 
 
-    public void updatemediainfofromstarttransactionid(String starttransactionid,String location,String medianotes,String mediafolder) {
+    public void updatemediainfofromstarttransactionid(String starttransactionid,String location,String medianotes) {
         try {
             lock.lock();
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("update tblstartmediainfo set media_name ='"+location+"', media_notes ='"+medianotes+"' ,media_folder ='"+mediafolder+"' where videostarttransactionid='"+starttransactionid+"'");
+            mDb.execSQL("update tblstartmediainfo set media_name ='"+location+"', media_notes ='"+medianotes+"' where videostarttransactionid='"+starttransactionid+"'");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -993,21 +980,6 @@ public class databasemanager {
             lock.unlock();
         }
     }
-
-    public void deletefromstartvideoinfobyfilepath(String filepath) {
-        try {
-            lock.lock();
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL("delete from tblstartmediainfo where mediafilepath='"+filepath+"'");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-    }
-
 
     //* call from reader. Checking sync status of requested media.
 

@@ -133,23 +133,10 @@ public class common {
     public static final String NETWORK_EHRPD = "EHRPD (3G)";
     public static final String NETWORK_HSPAP = "HSPAP (3G)";
     public static final String NETWORK_UNKOWN = "Unknown";
-
-    public static final int maxlength = 400;
-
-    public static final String broadcastreceivervideo = "broadcastreceivervideo";
-
-    private static final String ACTION_USB_PERMISSION =
-            "com.android.example.USB_PERMISSION";
+    private static final String ACTION_USB_PERMISSION ="com.android.example.USB_PERMISSION";
 
     static AlertDialog alertdialog = null;
     static Dialog custompermissiondialog =null;
-    public static void changefocusstyle(View view, int fullbordercolor, int fullbackcolor, float borderradius) {
-        view.setBackgroundResource(R.drawable.style_rounded_view);
-        GradientDrawable drawable = (GradientDrawable) view.getBackground();
-        drawable.setStroke(2, fullbordercolor);
-        drawable.setCornerRadius(borderradius);
-        drawable.setColor(fullbackcolor);
-    }
 
     public static boolean isnetworkconnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
@@ -276,7 +263,7 @@ public class common {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getdatacolumn(Context context, Uri uri, String selection,
+    private static String getdatacolumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 
         Cursor cursor = null;
@@ -297,233 +284,6 @@ public class common {
                 cursor.close();
         }
         return null;
-    }
-
-
-    /* Get uri related content real local file path. */
-    public static String getUriRealPath(Context ctx, Uri uri) {
-        String ret = "";
-
-        if (isAboveKitKat()) {
-            // Android OS above sdk version 19.
-            ret = getUriRealPathAboveKitkat(ctx, uri);
-        } else {
-            // Android OS below sdk version 19
-            ret = getImageRealPath(ctx.getContentResolver(), uri, null);
-        }
-
-        return ret;
-    }
-
-    public static String getUriRealPathAboveKitkat(Context ctx, Uri uri) {
-        String ret = "";
-
-        if (ctx != null && uri != null) {
-
-            if (isContentUri(uri)) {
-                if (isGooglePhotoDoc(uri.getAuthority())) {
-                    ret = uri.getLastPathSegment();
-                } else {
-                    ret = getImageRealPath(ctx.getContentResolver(), uri, null);
-                }
-            } else if (isFileUri(uri)) {
-                ret = uri.getPath();
-            } else if (isDocumentUri(ctx, uri)) {
-
-                // Get uri related document id.
-                String documentId = DocumentsContract.getDocumentId(uri);
-
-                // Get uri authority.
-                String uriAuthority = uri.getAuthority();
-
-                if (isMediaDoc(uriAuthority)) {
-                    String idArr[] = documentId.split(":");
-                    if (idArr.length == 2) {
-                        // First item is document type.
-                        String docType = idArr[0];
-
-                        // Second item is document real id.
-                        String realDocId = idArr[1];
-
-                        // Get content uri by document type.
-                        Uri mediaContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                        if ("image".equals(docType)) {
-                            mediaContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                        } else if ("video".equals(docType)) {
-                            mediaContentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                        } else if ("audio".equals(docType)) {
-                            mediaContentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                        }
-
-                        // Get where clause with real document id.
-                        String whereClause = MediaStore.Images.Media._ID + " = " + realDocId;
-
-                        ret = getImageRealPath(ctx.getContentResolver(), mediaContentUri, whereClause);
-                    }
-
-                } else if (isDownloadDoc(uriAuthority)) {
-                    // Build download uri.
-                    Uri downloadUri = Uri.parse("content://downloads/public_downloads");
-
-                    // Append download document id at uri end.
-                    Uri downloadUriAppendId = ContentUris.withAppendedId(downloadUri, Long.valueOf(documentId));
-
-                    ret = getImageRealPath(ctx.getContentResolver(), downloadUriAppendId, null);
-
-                } else if (isExternalStoreDoc(uriAuthority)) {
-                    String idArr[] = documentId.split(":");
-                    if (idArr.length == 2) {
-                        String type = idArr[0];
-                        String realDocId = idArr[1];
-
-                        if ("primary".equalsIgnoreCase(type)) {
-                            ret = Environment.getExternalStorageDirectory() + "/" + realDocId;
-                        }
-                    }
-                }
-            }
-        }
-
-        return ret;
-    }
-
-    /* Check whether current android os version is bigger than kitkat or not. */
-    public static boolean isAboveKitKat() {
-        boolean ret = false;
-        ret = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-        return ret;
-    }
-
-    /* Check whether this uri represent a document or not. */
-    public static boolean isDocumentUri(Context ctx, Uri uri) {
-        boolean ret = false;
-        if (ctx != null && uri != null) {
-            ret = DocumentsContract.isDocumentUri(ctx, uri);
-        }
-        return ret;
-    }
-
-    /* Check whether this uri is a content uri or not.
-     *  content uri like content://media/external/images/media/1302716
-     *  */
-    public static boolean isContentUri(Uri uri) {
-        boolean ret = false;
-        if (uri != null) {
-            String uriSchema = uri.getScheme();
-            if ("content".equalsIgnoreCase(uriSchema)) {
-                ret = true;
-            }
-        }
-        return ret;
-    }
-
-    /* Check whether this uri is a file uri or not.
-     *  file uri like file:///storage/41B7-12F1/DCIM/Camera/IMG_20180211_095139.jpg
-     * */
-    public static boolean isFileUri(Uri uri) {
-        boolean ret = false;
-        if (uri != null) {
-            String uriSchema = uri.getScheme();
-            if ("file".equalsIgnoreCase(uriSchema)) {
-                ret = true;
-            }
-        }
-        return ret;
-    }
-
-
-    /* Check whether this document is provided by ExternalStorageProvider. */
-    public static boolean isExternalStoreDoc(String uriAuthority) {
-        boolean ret = false;
-
-        if ("com.android.externalstorage.documents".equals(uriAuthority)) {
-            ret = true;
-        }
-
-        return ret;
-    }
-
-    /* Check whether this document is provided by DownloadsProvider. */
-    public static boolean isDownloadDoc(String uriAuthority) {
-        boolean ret = false;
-
-        if ("com.android.providers.downloads.documents".equals(uriAuthority)) {
-            ret = true;
-        }
-
-        return ret;
-    }
-
-    /* Check whether this document is provided by MediaProvider. */
-    public static boolean isMediaDoc(String uriAuthority) {
-        boolean ret = false;
-
-        if ("com.android.providers.media.documents".equals(uriAuthority)) {
-            ret = true;
-        }
-
-        return ret;
-    }
-
-    /* Check whether this document is provided by google photos. */
-    public static boolean isGooglePhotoDoc(String uriAuthority) {
-        boolean ret = false;
-
-        if ("com.google.android.apps.photos.content".equals(uriAuthority)) {
-            ret = true;
-        }
-
-        return ret;
-    }
-
-    /* Return uri represented document file real local path.*/
-    public static String getImageRealPath(ContentResolver contentResolver, Uri uri, String whereClause) {
-        String ret = "";
-
-        // Query the uri with condition.
-        Cursor cursor = contentResolver.query(uri, null, whereClause, null, null);
-
-        if (cursor != null) {
-            boolean moveToFirst = cursor.moveToFirst();
-            if (moveToFirst) {
-
-                // Get columns name by uri type.
-                String columnName = MediaStore.Images.Media.DATA;
-
-                if (uri == MediaStore.Images.Media.EXTERNAL_CONTENT_URI) {
-                    columnName = MediaStore.Images.Media.DATA;
-                } else if (uri == MediaStore.Audio.Media.EXTERNAL_CONTENT_URI) {
-                    columnName = MediaStore.Audio.Media.DATA;
-                } else if (uri == MediaStore.Video.Media.EXTERNAL_CONTENT_URI) {
-                    columnName = MediaStore.Video.Media.DATA;
-                }
-
-                // Get column index.
-                int imageColumnIndex = cursor.getColumnIndex(columnName);
-
-                // Get column value which is the uri related file local path.
-                ret = cursor.getString(imageColumnIndex);
-            }
-        }
-
-        return ret;
-    }
-
-    public static boolean isDeviceInPortraitMode(Context mContext) {
-        Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int rotation = display.getRotation();
-        if (rotation == 0)
-            return true;
-
-        return false;
-    }
-
-    public static void setDevicePortraitMode(boolean mode) {
-        if (mode) {
-            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } else {
-            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
     }
 
     public static boolean isExternalStorageDocument(Uri uri) {
@@ -594,38 +354,6 @@ public class common {
         }
     }
 
-    public static long getvideoduration(String selectedvideopath) {
-        File file = new File(selectedvideopath);
-        if (!file.exists())
-            return 0;
-
-        long duration = 0; //may be default
-
-        MediaExtractor extractor = new MediaExtractor();
-
-        try {
-            //Adjust data source as per the requirement if file, URI, etc.
-            extractor.setDataSource(selectedvideopath);
-            int numTracks = extractor.getTrackCount();
-            for (int i = 0; i < numTracks; ++i) {
-                MediaFormat format = extractor.getTrackFormat(i);
-                String mime = format.getString(MediaFormat.KEY_MIME);
-                if (mime.startsWith("video/")) {
-                    if (format.containsKey(MediaFormat.KEY_DURATION)) {
-                        duration = format.getLong(MediaFormat.KEY_DURATION);
-                        duration = duration / 1000000;
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            //Release stuff
-            extractor.release();
-        }
-        return duration;
-    }
-
     public static String mapNetworkTypeToName(Context context) {
 
         TelephonyManager mTelephonyManager = (TelephonyManager)
@@ -679,12 +407,6 @@ public class common {
         return meta;
     }
 
-    public static String getmediafirstframehash(String mediafilepath,String type)
-    {
-        String firsthash="";
-
-        return firsthash;
-    }
     public static String executeTop() {
         java.lang.Process p = null;
         BufferedReader in = null;
@@ -720,54 +442,6 @@ public class common {
             return str1;
         }
         return str;
-    }
-
-    public static String getnamefrompath(String path)
-    {
-        String str="";
-        if(path != null && (! path.trim().isEmpty()))
-        {
-            File file=new File(path);
-            str=file.getName();
-            if(str.contains("."))
-                str=str.substring(0,str.indexOf("."));
-
-            return str;
-        }
-        return str;
-    }
-
-    public static String getGpsDirection(float degree) {
-        String direction_text = "";
-        if (degree == 0 && degree < 45 || degree >= 315
-                && degree == 360) {
-            direction_text = ("You are: Northbound");
-        }
-
-        if (degree >= 45 && degree < 90) {
-            direction_text = ("NorthEastbound");
-        }
-
-        if (degree >= 90 && degree < 135) {
-            direction_text = ("Eastbound");
-        }
-
-        if (degree >= 135 && degree < 180) {
-            direction_text = ("SouthEastbound");
-        }
-
-        if (degree >= 180 && degree < 225) {
-            direction_text = ("SouthWestbound");
-        }
-
-        if (degree >= 225 && degree < 270) {
-            direction_text = ("Westbound");
-        }
-
-        if (degree >= 270 && degree < 315) {
-            direction_text = ("NorthWestbound");
-        }
-        return direction_text;
     }
 
     public static void resetgraphicaldata()
@@ -1258,7 +932,7 @@ public class common {
         }
     }
 
-    public static void delete(File f) throws IOException {
+    public static boolean delete(File f) throws IOException {
         if (f.isDirectory()) {
             int count=f.listFiles().length;
             if(count > 0)
@@ -1269,10 +943,15 @@ public class common {
             }
             f.delete();
         } else {
-            if (!f.delete()) {
+            if (f.delete()) {
+                return true;
+            }
+            else
+            {
                 new FileNotFoundException("Failed to delete file: " + f);
             }
         }
+        return false;
     }
 
     public static void exportaudio(final File file, boolean savetohome)
@@ -1327,107 +1006,6 @@ public class common {
         }
     }
 
-
-    public static void exportimage(final File file, boolean savetohome)
-    {
-        String sourcePath = file.getAbsolutePath();
-        File sourceFile = new File(sourcePath);
-
-        File destinationDir=null;
-
-        if(savetohome)
-        {
-            destinationDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), BuildConfig.APPLICATION_ID);
-        }
-        else
-        {
-            destinationDir=new File(config.dirallmedia);
-        }
-
-        if (!destinationDir.exists())
-            destinationDir.mkdirs();
-
-        final File mediaFile = new File(destinationDir.getPath() + File.separator +
-                sourceFile.getName());
-        try
-        {
-            if (!mediaFile.getParentFile().exists())
-                mediaFile.getParentFile().mkdirs();
-
-            if (!mediaFile.exists()) {
-                mediaFile.createNewFile();
-            }
-
-            InputStream in = new FileInputStream(sourceFile);
-            OutputStream out = new FileOutputStream(mediaFile);
-
-            // Copy the bits from instream to outstream
-            byte[] buf = new byte[1024];
-            int len;
-
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
-
-            in.close();
-            out.close();
-
-            try
-            {
-                if(savetohome)
-                {
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ContentValues values = new ContentValues();
-                            values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-                            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-                            values.put(MediaStore.MediaColumns.DATA, file.getAbsolutePath());
-                            applicationviavideocomposer.getactivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-                        }
-                    });
-                }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-                Log.e("Video export ","Error1");
-            }
-
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            Log.e("Video export ","Error2");
-        }
-    }
-
-    public static String[] getallfolders()
-    {
-        File rootdir = new File(config.dirmedia);
-        if(! rootdir.exists())
-            return null;
-
-        ArrayList<String> itemname=new ArrayList<>();
-        final ArrayList<String> itempath=new ArrayList<>();
-        File[] files = rootdir.listFiles();
-        for (File file : files)
-        {
-            if((! file.getName().equalsIgnoreCase("cache")))
-            {
-                itemname.add(file.getName());
-                itempath.add(file.getAbsolutePath());
-            }
-        }
-
-        if(itemname.size() == 0)
-        {
-            return null;
-        }
-
-        String[] items = itemname.toArray(new String[itemname.size()]);
-        return items;
-    }
-
     public static List<folder> getalldirfolders()
     {
         List<folder> folderitem=new ArrayList<>();
@@ -1449,7 +1027,7 @@ public class common {
         return folderitem;
     }
 
-    public static void copyfile(File sourcefile,File destinationfolder)
+    public static boolean copyfile(File sourcefile,File destinationfolder)
     {
         String sourcePath = sourcefile.getAbsolutePath();
         File sourceFile = new File(sourcePath);
@@ -1484,46 +1062,33 @@ public class common {
             in.close();
             out.close();
 
+            return true;
         }catch (Exception e)
         {
             e.printStackTrace();
         }
+        return false;
     }
 
-
-    public static void exportvideo(File lastrecordedvideo,boolean savetohome)
+    public static boolean movemediafile(File sourcemediafile,File destinationfolder)
     {
-        String sourcePath = lastrecordedvideo.getAbsolutePath();
-        File sourceFile = new File(sourcePath);
+        File sourcefile = new File(sourcemediafile.getAbsolutePath());
 
-        File destinationDir=null;
+        if (!destinationfolder.exists())
+            destinationfolder.mkdirs();
 
-        if(savetohome)
-        {
-            destinationDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_MOVIES), BuildConfig.APPLICATION_ID);
-        }
-        else
-        {
-            destinationDir=new File(config.dirallmedia);
-        }
-
-        if (!destinationDir.exists())
-            destinationDir.mkdirs();
-
-        final File mediaFile = new File(destinationDir.getPath() + File.separator +
-                sourceFile.getName());
+        final File destinationmediafile = new File(destinationfolder.getPath() + File.separator + sourcefile.getName());
         try
         {
-            if (!mediaFile.getParentFile().exists())
-                mediaFile.getParentFile().mkdirs();
+            if (!destinationmediafile.getParentFile().exists())
+                destinationmediafile.getParentFile().mkdirs();
 
-            if (!mediaFile.exists()) {
-                mediaFile.createNewFile();
+            if (!destinationmediafile.exists()) {
+                destinationmediafile.createNewFile();
             }
 
-            InputStream in = new FileInputStream(sourceFile);
-            OutputStream out = new FileOutputStream(mediaFile);
+            InputStream in = new FileInputStream(sourcefile);
+            OutputStream out = new FileOutputStream(destinationmediafile);
 
             // Copy the bits from instream to outstream
             byte[] buf = new byte[1024];
@@ -1536,39 +1101,26 @@ public class common {
             in.close();
             out.close();
 
-            try
+            if(delete(sourcefile))
             {
-                if(savetohome)
-                {
-                    applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            ContentValues values = new ContentValues(3);
-                            values.put(MediaStore.Video.Media.TITLE, "Via composer");
-                            values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                            values.put(MediaStore.Video.Media.DATA, mediaFile.getAbsolutePath());
-                            applicationviavideocomposer.getactivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-                        }
-                    });
-                }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-                Log.e("Video export ","Error1");
+                return true;
             }
-
+            else
+            {
+                Log.e("Operation ","File move operation failed! ");
+                return false;
+            }
         }catch (Exception e)
         {
             e.printStackTrace();
-            Log.e("Video export ","Error2");
         }
+        return false;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static String displayCurrencyInfoForLocale(Locale locale) {
         System.out.println("Locale: " + locale.getDisplayName());
         Currency currency = Currency.getInstance(locale);
-
         return currency.getDisplayName();
     }
 
@@ -1696,40 +1248,6 @@ public class common {
         }
     }
 
-
-    BroadcastReceiver mUsbAttachReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-
-            if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action)) {
-
-                UsbManager manager = (UsbManager) context.getSystemService(USB_SERVICE);
-                HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
-                Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
-
-                String i = "";
-                while (deviceIterator.hasNext()) {
-                    UsbDevice device = deviceIterator.next();
-                    i += "\n" +
-                            "DeviceID: " + device.getDeviceId() + "\n" +
-                            "DeviceName: " + device.getDeviceName() + "\n" +
-                            "DeviceClass: " + device.getDeviceClass() + " - "
-                            + translateDeviceClass(device.getDeviceClass()) + "\n" +
-                            "DeviceSubClass: " + device.getDeviceSubclass() + "\n" +
-                            "VendorID: " + device.getVendorId() + "\n" +
-                            "ProductID: " + device.getProductId() + "\n";
-                }
-
-                //textInfo.setText(i);
-                Toast.makeText(context, "" + i, Toast.LENGTH_LONG).show();
-
-                Log.e("Usb connected device = ", "" + i);
-
-
-            }
-        }
-    };
-
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
 
         public void onReceive(Context context, Intent intent) {
@@ -1801,28 +1319,6 @@ public class common {
                 .show();
     }
 
-    public static boolean isMyServiceRunning(Activity activity, Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static String converttimeformates(long millis) {
-
-        String hms = String.format("%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), // The change is in this line
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-        return hms;
-    }
-
-
     public static String converttimeformate(long milliSeconds) {
         // Create a DateFormatter object for displaying date in specified format.
         Date date = new Date(milliSeconds);
@@ -1830,27 +1326,6 @@ public class common {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         return formatter.format(date);
     }
-
-    public static boolean isdevelopermodeenable() {
-        if (xdata.getinstance().getSetting(xdata.developermode).toString().trim().isEmpty() ||
-                xdata.getinstance().getSetting(xdata.developermode).toString().equalsIgnoreCase("0")) {
-            return false;
-        }
-        return true;
-    }
-
-    /*public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
-                                             final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
-
-        txt_latitude.setText(config.Latitude);
-        txt_longitude.setText(config.Latitude);
-        txt_altitude.setText(config.Latitude);
-        txt_heading.setText(config.Latitude);
-        txt_orientation.setText(config.Latitude);
-        txt_speed.setText(config.Latitude);
-        txt_address.setText(config.Latitude);
-    }*/
-
 
     public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
                                              final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
@@ -1913,67 +1388,6 @@ public class common {
 
             txt_address.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)));
         }
-    }
-
-    public static String getkeyvalue(byte[] data,String keytype)
-    {
-        String value="";
-        String salt="";
-
-        switch (keytype)
-        {
-            case config.prefs_md5:
-                value= md5.calculatebytemd5(data);
-                break;
-
-            case config.prefs_md5_salt:
-                salt= xdata.getinstance().getSetting(config.prefs_md5_salt);
-                if(! salt.trim().isEmpty())
-                {
-                    byte[] saltbytes=salt.getBytes();
-                    try {
-                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                        outputstream.write(saltbytes);
-                        outputstream.write(data);
-                        byte updatedarray[] = outputstream.toByteArray();
-                        value= md5.calculatebytemd5(updatedarray);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    value= md5.calculatebytemd5(data);
-                }
-
-                break;
-            case config.prefs_sha:
-                value= sha.sha1(data);
-                break;
-            case config.prefs_sha_salt:
-                salt= xdata.getinstance().getSetting(config.prefs_sha_salt);
-                if(! salt.trim().isEmpty())
-                {
-                    byte[] saltbytes=salt.getBytes();
-                    try {
-                        ByteArrayOutputStream outputstream = new ByteArrayOutputStream( );
-                        outputstream.write(saltbytes);
-                        outputstream.write(data);
-                        byte updatedarray[] = outputstream.toByteArray();
-                        value= sha.sha1(updatedarray);
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    value= sha.sha1(data);
-                }
-                break;
-        }
-        return value;
     }
 
     public  static String getxdatavalue(String value)
@@ -2094,42 +1508,6 @@ public class common {
         return items;
     }
 
-    public static float getamplitudevalue(double amp){
-
-        if(amp >= 45){
-            return 0.0f;
-        }else if (amp >= 40 && amp < 45){
-            return 0.1f;
-        }else if (amp >= 30 && amp < 40){
-            return 0.2f;
-        }else if (amp >=25 && amp < 30){
-            return 0.3f;
-        }else if (amp >= 15 && amp < 25){
-            return 0.5f;
-        }else if (amp >= 10 && amp < 15){
-            return 0.7f;
-        }else if (amp >= 5 && amp < 10){
-            return 0.8f;
-        }else if (amp >= 0 && amp < 5){
-            return 1.0f;
-        }
-        return 0.0f;
-    }
-
-
-    public static String getSaltString() {
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-        while (salt.length() < 18) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-        String saltStr = salt.toString();
-        return saltStr;
-
-    }
-
     public static String getCurrentDate(){
         Date c = Calendar.getInstance().getTime();
         System.out.println("Current time => " + c);
@@ -2171,30 +1549,6 @@ public class common {
             key=config.prefs_sha_salt;
         }
         return key;
-    }
-
-    public static JSONArray getjson(JSONArray metadatametricesjson)
-    {
-        JSONArray jsonArray=new JSONArray();
-        try {
-            Log.e("Meta data length ",""+metadatametricesjson.length());
-            if(metadatametricesjson.length() > maxlength)
-            {
-                int n=maxlength;
-                for(int i=n;n>0;n--)
-                {
-                    jsonArray.put(metadatametricesjson.get(i));
-                }
-            }
-            else
-            {
-                jsonArray=metadatametricesjson;
-            }
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return jsonArray;
     }
 
     public static String[] getcurrentdatewithtimezone(){
@@ -2261,11 +1615,6 @@ public class common {
             extractor.release();
         }
         return duration;
-    }
-
-    public static int dpToPx(int dp, Context context) {
-        float density = context.getResources().getDisplayMetrics().density;
-        return Math.round((float) dp * density);
     }
 
     public static File gettempfileforaudiowave() {
@@ -2346,29 +1695,6 @@ public class common {
         return gettempfileforhash();
     }
 
-    public static Bitmap roundcornerimage(Bitmap raw, float round) {
-        int width = raw.getWidth();
-        int height = raw.getHeight();
-        Bitmap result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(result);
-        canvas.drawARGB(0, 0, 0, 0);
-
-        final Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setColor(Color.parseColor("#000000"));
-
-        final Rect rect = new Rect(0, 0, width, height);
-        final RectF rectF = new RectF(rect);
-
-        canvas.drawRoundRect(rectF, round, round, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(raw, rect, rect, paint);
-
-        return result;
-    }
-
-
     public static void showcustompermissiondialog(Context context, final adapteritemclick mitemclick, final String permission)
     {
         if(custompermissiondialog != null && custompermissiondialog.isShowing())
@@ -2442,14 +1768,6 @@ public class common {
 
         custompermissiondialog.getWindow().setAttributes(lp);
         custompermissiondialog.show();
-    }
-
-    public static boolean iscustompermissiondialogshowing()
-    {
-        if(custompermissiondialog != null && custompermissiondialog.isShowing())
-            return true;
-
-        return false;
     }
         public static void dismisscustompermissiondialog()
     {
@@ -2540,16 +1858,5 @@ public class common {
 
         return buf.toString();
     }
-
-    /*public static void setvideoquality(String value , TextView text){
-        String textvalue =  value;
-        Typeface regularfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Regular.ttf");
-        Typeface semiboldfonttype = Typeface.createFromAsset(applicationviavideocomposer.getactivity().getApplication().getAssets(), "fonts/OpenSans-Semibold.ttf");
-        SpannableStringBuilder encryptionstring=new SpannableStringBuilder(textvalue);
-        encryptionstring.setSpan(new StyleSpan(regularfonttype.getStyle()),0,textvalue.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        encryptionstring.setSpan(new StyleSpan(semiboldfonttype.getStyle()),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        encryptionstring.setSpan(new RelativeSizeSpan(1.1f),encryption_key.length(),encryptionstr.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        txt_encryption.setText(encryptionstring);
-    }*/
 
 }
