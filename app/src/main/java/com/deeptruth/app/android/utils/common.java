@@ -484,6 +484,7 @@ public class common {
             xdata.getinstance().saveSetting(config.datahash,"NA");
             xdata.getinstance().saveSetting(config.matrichash,"NA");
             xdata.getinstance().saveSetting(config.distancetravelled,"NA");
+            xdata.getinstance().saveSetting(config.latency,"");
     }
 
     public static void setgraphicalitems(String keyname,String value,boolean ismetricsselected)
