@@ -2079,8 +2079,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                    // Set thumbnail properties (Thumbs are squares)
 
-                   if (mheightview == 50)
-                       mheightview = mheightview * 2;
+                  /* if (mheightview == 50)
+                       mheightview = mheightview * 2;*/
 
                    final int thumbWidth = mheightview;
                    final int thumbHeight = mheightview;

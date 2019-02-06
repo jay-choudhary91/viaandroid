@@ -1448,7 +1448,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             String endtime = common.converttimeformate(mediatotalduration);
 
                             String[] command = { "-ss", starttime,"-i", destinationFile.getAbsolutePath(), "-to",endtime, "-filter_complex",
-                                    "compand=gain=-20,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
+                                    "compand=gain=-10,showwavespic=s=400x400:colors=#0076a6", "-frames:v","1",destinationfilepath.getAbsolutePath()};
 
                             ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                                 @Override
