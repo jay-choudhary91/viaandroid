@@ -51,7 +51,7 @@
                 android:textSize="14sp"
                 android:layout_marginLeft="10dp"
                 android:textColor="@color/white"
-                app:fontType="OpenSans_Regular"/>
+                app:fontType="Comfortaa-Regular"/>
 
             <ImageView
                 android:id="@+id/img_stop_watch"

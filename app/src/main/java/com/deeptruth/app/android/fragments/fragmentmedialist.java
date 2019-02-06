@@ -461,6 +461,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 break;
             case R.id.txt_searchcancel:
                 edt_searchitem.setText("");
+                hidekeyboard();
                 layout_sectionsearch.setVisibility(View.GONE);
                 break;
             case R.id.img_dotmenu:
