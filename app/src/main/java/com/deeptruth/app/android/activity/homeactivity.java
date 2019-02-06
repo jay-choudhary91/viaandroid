@@ -84,7 +84,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     RelativeLayout layoutbottom;
     LinearLayout layoutheader;
     circularImageview playpausebutton;
-    LinearLayout layoutcustomcontroller;
+    RelativeLayout layoutcustomcontroller;
     ImageView img_fullscreen;
 
     private fragmentmedialist fragvideolist;
@@ -264,7 +264,7 @@ public void updateactionbar(int showHide, int color) {
 
 
     @Override
-    public void drawerenabledisable(boolean isenable, RelativeLayout layoutfooter, LinearLayout layoutheader, circularImageview playpausebutton, LinearLayout layoutcustomcontroller, ImageView img_fullscreen) {
+    public void drawerenabledisable(boolean isenable, RelativeLayout layoutfooter, LinearLayout layoutheader, circularImageview playpausebutton, RelativeLayout layoutcustomcontroller, ImageView img_fullscreen) {
 
         if(isenable){
             navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -325,6 +325,7 @@ public void updateactionbar(int showHide, int color) {
         imguploadicon.setVisibility(View.GONE);
         imgsettingsicon.setVisibility(View.GONE);
         img_backbtn.setVisibility(View.GONE);
+        imglefthandle.setVisibility(View.GONE);
         imglefthandle.setVisibility(View.GONE);
         imgrighthandle.setVisibility(View.GONE);
         updateheader("");

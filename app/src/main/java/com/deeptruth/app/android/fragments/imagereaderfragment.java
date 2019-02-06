@@ -624,6 +624,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.onHeaderBtnClick(btnid);
         switch (btnid) {
             case R.id.img_share_icon:
+                img_share_media.setClickable(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        img_share_media.setClickable(true);
+                    }
+                }, 150);
                 if (imageurl != null && (!imageurl.isEmpty()))
                     common.shareimage(getActivity(), imageurl);
                 break;

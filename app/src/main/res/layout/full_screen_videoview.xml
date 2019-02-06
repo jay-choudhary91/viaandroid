@@ -92,203 +92,216 @@
                             android:id="@+id/img_fullscreen"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
-                            android:layout_above="@+id/layout_customcontroller"
+                            android:layout_above="@+id/layout_backgroundcontroller"
                             android:layout_alignParentRight="true"
                             android:src="@drawable/ic_full_screen_mode"
                             android:padding="10dp"
                             />
 
-                        <LinearLayout
-                            android:id="@+id/layout_customcontroller"
+                        <RelativeLayout
+                            android:id="@+id/layout_backgroundcontroller"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
                             android:layout_alignParentBottom="true"
-                            android:orientation="vertical"
-                            android:gravity="center"
+                            android:background="@color/transparent">
 
-                            >
-                            <RelativeLayout
+                            <LinearLayout
+                                android:id="@+id/layout_customcontroller"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/scrub_layout"
-                                >
+                                android:layout_marginTop="@dimen/margin_15dp"
+                                android:background="@color/white"
+                                android:gravity="center"
+                                android:orientation="vertical">
 
                                 <RelativeLayout
-                                    android:id="@+id/layout_scrubberview"
+                                    android:id="@+id/scrub_layout"
                                     android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:layout_marginTop="5dp"
-                                    android:visibility="visible"
-                                    android:layout_marginLeft="@dimen/margin_15dp"
-                                    android:layout_marginRight="@dimen/margin_15dp"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_alignParentBottom="false">
-
-                                    <com.deeptruth.app.android.utils.NoScrollRecycler
-                                        android:id="@+id/recyview_frames"
-                                        android:layout_width="match_parent"
-                                        android:visibility="visible"
-                                        android:overScrollMode="never"
-                                        android:layout_gravity="center_horizontal"
-                                        android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                   >
 
                                     <RelativeLayout
-                                        android:layout_width="20dp"
-                                        android:id="@+id/scrubberverticalbar"
+                                        android:id="@+id/layout_scrubberview"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="50dp"
+                                        android:layout_alignParentBottom="false"
                                         android:layout_centerHorizontal="true"
+                                        android:layout_marginTop="5dp"
                                         android:layout_marginLeft="@dimen/margin_15dp"
                                         android:layout_marginRight="@dimen/margin_15dp"
-                                        android:background="@color/black"
-                                        android:visibility="gone"
-                                        android:layout_height="50dp">
+                                        android:visibility="visible">
 
-                                        <View
-                                            android:layout_width="2dp"
-                                            android:background="@color/blue_button"
-                                            android:visibility="gone"
-                                            android:layout_centerHorizontal="true"
-                                            android:layout_height="50dp">
-
-                                        </View>
-
-
-                                    </RelativeLayout>
-
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:id="@+id/linear_seekbarcolorview"
-                                    android:layout_width="match_parent"
-                                    android:layout_centerInParent="true"
-                                    android:orientation="horizontal"
-                                    android:layout_height="wrap_content"
-                                    android:background="@color/transparent"
-                                    android:layout_below="@+id/layout_scrubberview"
-                                    android:layout_marginLeft="@dimen/margin_15dp"
-                                    android:layout_marginRight="@dimen/margin_15dp"
-                                    />
-
-                                <com.deeptruth.app.android.views.customseekbar
-                                    android:id="@+id/mediacontroller_progress"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/layout_scrubberview"
-                                    android:layout_centerInParent="true"
-                                    android:layout_marginLeft="@dimen/margin_15dp"
-                                    android:layout_marginRight="@dimen/margin_15dp"
-                                    android:background="@color/transparent"
-                                    android:progressDrawable="@drawable/custom_seekbar"
-                                    android:thumb="@drawable/custom_thumb" />
-                                    <RelativeLayout
-                                        android:id="@+id/layout_progressline"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="center"
-                                        android:visibility="visible"
-                                        android:layout_above="@id/mediacontroller_progress"
-                                        android:orientation="vertical">
-
-                                        <com.deeptruth.app.android.views.customfonttextview
-                                            android:id="@+id/txt_mediatimethumb"
-                                            android:layout_width="wrap_content"
+                                        <com.deeptruth.app.android.utils.NoScrollRecycler
+                                            android:id="@+id/recyview_frames"
+                                            android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:textColor="@color/black"
-                                            android:textSize="10sp"
-                                            android:visibility="invisible"
-                                            android:background="@color/white"
-                                            android:singleLine="true"
-                                            android:maxLines="1"
-                                            android:gravity="center_horizontal"
-                                            app:fontType="OpenSans_Regular" />
+                                            android:layout_gravity="center_horizontal"
+                                            android:overScrollMode="never"
+                                            android:visibility="visible" />
 
                                         <RelativeLayout
-                                            android:layout_width="4dp"
-                                            android:layout_height="60dp"
-                                            android:gravity="center"
-                                            android:background="@color/white"
+                                            android:id="@+id/scrubberverticalbar"
+                                            android:layout_width="20dp"
+                                            android:layout_height="50dp"
                                             android:layout_centerHorizontal="true"
-                                            android:layout_below="@id/txt_mediatimethumb"
-                                            android:orientation="vertical">
+                                            android:layout_marginLeft="@dimen/margin_15dp"
+                                            android:layout_marginRight="@dimen/margin_15dp"
+                                            android:background="@color/black"
+                                            android:visibility="gone">
 
                                             <View
-                                                android:visibility="visible"
-                                                android:id="@+id/view_progressline"
                                                 android:layout_width="2dp"
-                                                android:layout_height="45dp"
+                                                android:layout_height="50dp"
                                                 android:layout_centerHorizontal="true"
-                                                android:background="@color/black"></View>
+                                                android:background="@color/blue_button"
+                                                android:visibility="gone">
+
+                                            </View>
+
 
                                         </RelativeLayout>
 
                                     </RelativeLayout>
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:id="@+id/layout_seekbartiming"
-                                    android:layout_below="@+id/mediacontroller_progress"
-                                    android:visibility="visible"
-                                    android:layout_height="wrap_content">
-                                    <View
+
+
+                                    <LinearLayout
+                                        android:id="@+id/linear_seekbarcolorview"
                                         android:layout_width="match_parent"
-                                        android:background="@color/uvv_gray"
-                                        android:id="@+id/dividerline"
-                                        android:visibility="gone"
-                                        android:layout_height="1dp"/>
-
-                                    <com.deeptruth.app.android.views.customfonttextview
-                                        android:id="@+id/time_current"
-                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_alignParentLeft="true"
+                                        android:layout_below="@+id/layout_scrubberview"
+                                        android:layout_centerInParent="true"
                                         android:layout_marginLeft="@dimen/margin_15dp"
-                                        android:layout_toRightOf="@+id/img_volume"
-                                        android:paddingLeft="0dip"
-                                        android:textColor="@color/black"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold"
-                                        app:fontType="OpenSans_Regular" />
-
-
-                                    <com.deeptruth.app.android.views.customfonttextview
-                                        android:id="@+id/time"
-                                        android:textSize="14sp"
-                                        android:textStyle="bold"
-                                        app:fontType="OpenSans_Regular"
-                                        android:paddingRight="0dip"
-                                        android:layout_alignParentRight="true"
                                         android:layout_marginRight="@dimen/margin_15dp"
-                                        android:layout_width="wrap_content"
+                                        android:background="@color/transparent"
+                                        android:orientation="horizontal" />
+
+                                    <com.deeptruth.app.android.views.customseekbar
+                                        android:id="@+id/mediacontroller_progress"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/black"
-                                        android:paddingLeft="4dip" />
+                                        android:layout_below="@+id/layout_scrubberview"
+                                        android:layout_centerInParent="true"
+                                        android:layout_marginLeft="@dimen/margin_15dp"
+                                        android:layout_marginRight="@dimen/margin_15dp"
+                                        android:background="@color/transparent"
+                                        android:progressDrawable="@drawable/custom_seekbar"
+                                        android:thumb="@drawable/custom_thumb" />
+
+                                    <RelativeLayout
+                                        android:id="@+id/layout_seekbartiming"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/mediacontroller_progress"
+                                        android:visibility="visible">
+
+                                        <View
+                                            android:id="@+id/dividerline"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1dp"
+                                            android:background="@color/uvv_gray"
+                                            android:visibility="gone" />
+
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            android:id="@+id/time_current"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentLeft="true"
+                                            android:layout_marginLeft="@dimen/margin_15dp"
+                                            android:layout_toRightOf="@+id/img_volume"
+                                            android:paddingLeft="0dip"
+                                            android:textColor="@color/black"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold"
+                                            app:fontType="OpenSans_Regular" />
+
+
+                                        <com.deeptruth.app.android.views.customfonttextview
+                                            android:id="@+id/time"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentRight="true"
+                                            android:layout_marginRight="@dimen/margin_15dp"
+                                            android:paddingLeft="4dip"
+                                            android:paddingRight="0dip"
+                                            android:textColor="@color/black"
+                                            android:textSize="14sp"
+                                            android:textStyle="bold"
+                                            app:fontType="OpenSans_Regular" />
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:id="@+id/layoutpause"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/layout_seekbartiming"
+                                        android:padding="5dp"
+                                        android:visibility="visible">
+
+                                        <ImageButton
+                                            android:id="@+id/img_pause"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerHorizontal="true"
+                                            android:layout_centerInParent="true"
+                                            android:layout_gravity="center"
+                                            android:layout_margin="5dp"
+                                            android:background="@drawable/pause_btn_icon"
+                                            android:paddingBottom="@dimen/margin_10dp"
+                                            android:paddingLeft="@dimen/margin_15dp"
+                                            android:paddingRight="@dimen/margin_15dp"
+                                            android:visibility="visible" />
+                                    </RelativeLayout>
+
                                 </RelativeLayout>
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/layout_progressline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_alignParentTop="true"
+                                android:orientation="vertical"
+                                android:visibility="visible">
+
+                                <com.deeptruth.app.android.views.customfonttextview
+                                    android:id="@+id/txt_mediatimethumb"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_rectangle"
+                                    android:gravity="center_horizontal"
+                                    android:maxLines="1"
+                                    android:padding="2dp"
+                                    android:layout_marginTop="2dp"
+                                    android:singleLine="true"
+                                    android:textColor="@color/black"
+                                    android:textSize="10sp"
+                                    android:visibility="invisible"
+                                    app:fontType="OpenSans_Regular" />
 
                                 <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:visibility="visible"
-                                    android:id="@+id/layoutpause"
-                                    android:padding="5dp"
-                                    android:layout_below="@+id/layout_seekbartiming"
-                                    android:layout_height="wrap_content">
+                                    android:layout_width="4dp"
+                                    android:layout_height="50dp"
+                                    android:layout_below="@id/txt_mediatimethumb"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="@color/white"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
 
-                                    <ImageButton
-                                        android:id="@+id/img_pause"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                    <View
+                                        android:id="@+id/view_progressline"
+                                        android:layout_width="2dp"
+                                        android:layout_height="45dp"
                                         android:layout_centerHorizontal="true"
-                                        android:layout_gravity="center"
-                                        android:padding="10dp"
-                                        android:layout_margin="5dp"
-                                        android:background="@drawable/pause_btn_icon"
-                                        android:paddingLeft="10dip"
-                                        android:layout_centerInParent="true"
-                                        android:paddingRight="4dip"
-                                        android:visibility="gone" />
+                                        android:background="@color/black"
+                                        android:visibility="visible"></View>
+
                                 </RelativeLayout>
 
                             </RelativeLayout>
-                        </LinearLayout>
+
+                        </RelativeLayout>
+
                     </RelativeLayout>
 
 

@@ -387,7 +387,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality.setVisibility(View.VISIBLE);
 
             if(videobitrate == 2000000)
-                txt_media_quality.setText("420P");
+                txt_media_quality.setText("420p");
 
             timerhandler = new Handler() ;
             txt_title_actionbarcomposer.setText("deeptruth");
