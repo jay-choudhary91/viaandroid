@@ -256,7 +256,7 @@ public abstract class basefragment extends Fragment {
 
         public void getairplanemodeon();
 
-        public void drawerenabledisable(boolean enable,RelativeLayout layoutfooter, LinearLayout layoutheader,circularImageview playpausebutton,LinearLayout layoutcustomcontroller
+        public void drawerenabledisable(boolean enable,RelativeLayout layoutfooter, LinearLayout layoutheader,circularImageview playpausebutton,RelativeLayout layoutcustomcontroller
         ,ImageView img_fullscreen);
 
         public ArrayList<metricmodel> getmetricarraylist();

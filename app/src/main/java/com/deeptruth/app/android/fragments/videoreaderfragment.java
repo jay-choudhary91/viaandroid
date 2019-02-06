@@ -29,24 +29,18 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.LongSparseArray;
 import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +49,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -226,6 +218,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     TextView totalduration;
     @BindView(R.id.layout_customcontroller)
     LinearLayout layoutcustomcontroller;
+    @BindView(R.id.layout_backgroundcontroller)
+    RelativeLayout layoutbackgroundcontroller;
     @BindView(R.id.linear_seekbarcolorview)
     LinearLayout linearseekbarcolorview;
 
@@ -384,7 +378,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void loadviewdata()
     {
         gethelper().setrecordingrunning(false);
-        gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,playpausebutton,layoutcustomcontroller,img_fullscreen);
+        gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,playpausebutton,layoutbackgroundcontroller,img_fullscreen);
 
         videotextureview = (TextureView) findViewById(R.id.videotextureview);
         showcontrollers=rootview.findViewById(R.id.video_container);
@@ -812,7 +806,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         updatetextureviewsize(targetwidth,targetheight);
                         layout_footer.setVisibility(View.GONE);
                         layout_mediatype.setVisibility(View.GONE);
-                        layoutcustomcontroller.setVisibility(View.GONE);
+                        layoutbackgroundcontroller.setVisibility(View.GONE);
                         playpausebutton.setVisibility(View.GONE);
                         imgpause.setVisibility(View.GONE);
                         img_fullscreen.setVisibility(View.INVISIBLE);
@@ -829,13 +823,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         layout_footer.setVisibility(View.VISIBLE);
                         layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
                         updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
-                        layoutcustomcontroller.setVisibility(View.VISIBLE);
+                        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                         layout_seekbartiming.getResources().getColor(R.color.white);
                         dividerline.setVisibility(View.GONE);
                         playpausebutton.setVisibility(View.VISIBLE);
                         imgpause.setVisibility(View.GONE);
                         collapseimg_view();
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+                        img_fullscreen.setVisibility(View.VISIBLE);
                         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
                         recenterplaypause();
                     }
@@ -878,7 +873,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         pause();
                     }else{
                         if(layout_photodetails.getVisibility()==View.GONE){
-                            gethelper().drawerenabledisable(true,null,layout_mediatype,null,layoutcustomcontroller,null);
+                            gethelper().drawerenabledisable(true,null,layout_mediatype,null,layoutbackgroundcontroller,null);
                             layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
@@ -889,7 +884,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             videotextureview.setClickable(false);
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.INVISIBLE);
-                            layoutcustomcontroller.setVisibility(View.VISIBLE);
+                            layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.VISIBLE);
                             dividerline.setVisibility(View.GONE);
                         }
@@ -909,7 +904,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             playpausebutton.setVisibility(View.VISIBLE);
                             img_fullscreen.setVisibility(View.VISIBLE);
                             layout_footer.setVisibility(View.VISIBLE);
-                            layoutcustomcontroller.setVisibility(View.GONE);
+                            layoutbackgroundcontroller.setVisibility(View.GONE);
                             totalduration.setVisibility(View.VISIBLE);
                             time_current.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.GONE);
@@ -1523,10 +1518,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             if(layout_footer.getVisibility()==View.GONE && layout_photodetails.getVisibility()==View.GONE){
                 showcontrollers();
                 gethelper().drawerenabledisable(true,layout_footer,layout_mediatype,playpausebutton,null,img_fullscreen);
-                layoutcustomcontroller.setVisibility(View.GONE);
+                layoutbackgroundcontroller.setVisibility(View.GONE);
             }else{
                 showcontrollers();
-                layoutcustomcontroller.setVisibility(View.VISIBLE);
+                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
             }
 
             new Handler().postDelayed(new Runnable() {
@@ -2144,7 +2139,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params.addRule(RelativeLayout.ABOVE,R.id.layout_customcontroller );
+        params.addRule(RelativeLayout.ABOVE,R.id.layout_backgroundcontroller );
         img_fullscreen.setLayoutParams(params);
     }
 
