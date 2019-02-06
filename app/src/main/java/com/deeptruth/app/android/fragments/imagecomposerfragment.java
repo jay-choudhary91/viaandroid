@@ -627,7 +627,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             map.put("firsthash", firsthash);
             map.put("hashmethod",keytype);
             map.put("name",common.getfilename(capturedimagefile.getAbsolutePath()));
-            map.put("duration","0");
+            map.put("duration","1");
             map.put("framecounts","1");
             map.put("finalhash",firsthash);
 
