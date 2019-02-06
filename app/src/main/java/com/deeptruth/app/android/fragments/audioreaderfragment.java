@@ -592,6 +592,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 break;
 
             case R.id.img_arrow_back:
+                try {
+                    img_arrow_back.setClickable(false);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
                 gethelper().onBack();
                 break;
 
