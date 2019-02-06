@@ -793,6 +793,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
 
                 case R.id.img_arrow_back:
+                    try {
+                        img_arrow_back.setClickable(false);
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                     gethelper().onBack();
                     break;
                 case R.id.img_fullscreen:

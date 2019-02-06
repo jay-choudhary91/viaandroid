@@ -103,17 +103,9 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                     else if(type == 3)  // Clicked on folder items (Not plus icon case)
                     {
                         xdata.getinstance().saveSetting(config.selected_folder,myfolder.getFolderdir());
-                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-                        {
-                            medialistreader fragmatriclist=new medialistreader();
-                            gethelper().replaceFragment(fragmatriclist, true, false);
-                        }
-                        else
-                        {
-                            fragmentmedialist fragmatriclist=new fragmentmedialist();
-                            fragmatriclist.shouldlaunchcomposer(false);
-                            gethelper().replaceFragment(fragmatriclist, true, false);
-                        }
+                        fragmentmedialist fragmatriclist=new fragmentmedialist();
+                        fragmatriclist.shouldlaunchcomposer(false);
+                        gethelper().replaceFragment(fragmatriclist, true, false);
                     }
                     else if(type == 4)   // Delete prompt
                     {

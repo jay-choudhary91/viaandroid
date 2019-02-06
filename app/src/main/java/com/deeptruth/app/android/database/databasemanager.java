@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.mediametadatainfo;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.startmediainfo;
@@ -63,6 +64,38 @@ public class databasemanager {
         mDbHelper.close();
     }
 
+    /*String header,String type,String location,String localkey,
+    String token,String videokey,String sync,String date , String action_type,
+    String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
+    String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
+    String status,String remainingframes,String lastframe,String framecount,String sync_status,String medianame,
+    String medianotes,String mediafolder*/
+
+    public void updatestartmediainfo(mediainfotablefields mediainfo)
+    {
+        try {
+            lock.lock();
+
+            String query="update tblstartmediainfo set header='"+ mediainfo.getHeader() +"',type = '"+mediainfo.getType() +"',localkey='"+ mediainfo.getLocalkey() +"',token = '"+mediainfo.getToken() +"'" +
+                ",videokey='"+ mediainfo.getMediakey() +"',sync = '"+mediainfo.getSync() +"',sync_date='"+ mediainfo.getDate() +"',action_type = '"+mediainfo.getAction_type() +"'," +
+                "apirequestdevicedate='"+ mediainfo.getApirequestdevicedate() +"',videostartdevicedate = '"+mediainfo.getMediastartdevicedate() +"',devicetimeoffset='"+
+                mediainfo.getDevicetimeoffset() +"',videocompletedevicedate = '"+mediainfo.getMediacompletedevicedate() +"',mediaduration= '" +mediainfo.getMediaduration()+"',"+
+                "videostarttransactionid='"+ mediainfo.getMediastarttransactionid() +"',firsthash = '"+mediainfo.getFirsthash() +"',videoid='"+ mediainfo.getMediaid() +"'," +
+                "status = '"+mediainfo.getStatus() +"',color = '"+mediainfo.getColor() +"',completeddate = '"+mediainfo.getMediacompletedate() +"'," +
+                "remainingframes='"+ mediainfo.getRemainingframes() +"',lastframe = '"+mediainfo.getLastframe() +"',framecount='"+ mediainfo.getFramecount() +"'," +
+                "sync_status = '"+mediainfo.getSyncstatus() +"' where location='"+mediainfo.getLocation()+"'";
+
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
     public void updatestartmediainfocomposer(String header,String type,String location,String localkey,
                                              String token,String videokey,String sync,String date , String action_type,
                                              String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
@@ -102,12 +135,60 @@ public class databasemanager {
         }
     }
 
+    public void insertstartvideoinfo(mediainfotablefields mediainfo)
+    {
+        try {
+            lock.lock();
+
+            ContentValues values = new ContentValues();
+            values.put("header", "" + mediainfo.getHeader());
+            values.put("type", ""+mediainfo.getType());
+            values.put("location", mediainfo.getLocation());
+            values.put("localkey", ""+mediainfo.getLocalkey());
+            values.put("token", ""+mediainfo.getToken());
+            values.put("videokey", ""+mediainfo.getMediakey());
+            values.put("sync", ""+mediainfo.getSync());
+            values.put("action_type", ""+mediainfo.getAction_type());
+            values.put("sync_date",  mediainfo.getDate());
+            values.put("apirequestdevicedate",  mediainfo.getApirequestdevicedate());
+            values.put("videostartdevicedate",  mediainfo.getMediastartdevicedate());
+            values.put("devicetimeoffset",  mediainfo.getDevicetimeoffset());
+            values.put("videocompletedevicedate",  mediainfo.getMediacompletedevicedate());
+            values.put("videostarttransactionid",  mediainfo.getMediastarttransactionid());
+            values.put("videoid",""+mediainfo.getMediaid());
+            values.put("status",""+mediainfo.getStatus());
+            values.put("remainingframes",""+mediainfo.getRemainingframes());
+            values.put("lastframe",""+mediainfo.getLastframe());
+            values.put("firsthash",""+mediainfo.getFirsthash());
+            values.put("framecount",""+mediainfo.getFramecount());
+            values.put("sync_status",""+mediainfo.getSyncstatus());
+            values.put("completeddate","0");
+            values.put("media_name",  mediainfo.getMedianame());
+            values.put("mediafilepath",  mediainfo.getMediafilepath());
+            values.put("media_notes",  mediainfo.getMedianotes());
+            values.put("media_folder",  mediainfo.getMediafolder());
+            values.put("thumbnailurl",  mediainfo.getThumbnailurl());
+            values.put("mediaduration",  mediainfo.getMediaduration());
+
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            long l=mDb.insert("tblstartmediainfo", null, values);
+            Log.e("Id ",""+l);
+
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "gettestdata >>" + mSQLException.toString());
+            throw mSQLException;
+        } finally {
+            lock.unlock();
+        }
+    }
+
     public void insertstartvideoinfo(String header,String type,String location,String localkey,
                                      String token,String videokey,String sync,String date , String action_type,
                                      String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
                                      String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
                                      String status,String remainingframes,String lastframe,String framecount,String sync_status,String medianame,
-                                     String medianotes,String mediafolder)
+                                     String medianotes,String mediafolder,String mediaduration)
     {
         try {
             lock.lock();
@@ -148,6 +229,7 @@ public class databasemanager {
             values.put("media_notes",  medianotes);
             values.put("media_folder",  mediafolder);
             values.put("thumbnailurl",  mediafilapth);
+            values.put("mediaduration",  mediaduration);
 
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
@@ -172,11 +254,6 @@ public class databasemanager {
         try {
             lock.lock();
 
-            String medianame="";
-            int index =  location.lastIndexOf('.');
-            if(index >=0)
-                medianame = location.substring(0, location.lastIndexOf('.'));
-
             String mediafilapth=location;
             location= common.getfilename(location);
 
@@ -188,7 +265,6 @@ public class databasemanager {
                     "status = '"+status +"'," +
                     "color = '"+color +"'," +
                     "mediafilepath = '"+mediafilapth +"'," +
-                    "media_name = '"+medianame +"'," +
                     "completeddate = '"+completeddate +"'," +
                     "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
                     "sync_status = '"+sync_status +"' where location='"+location+"'";

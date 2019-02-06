@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.netutils.xapipostjson;
 import com.deeptruth.app.android.utils.common;
@@ -326,7 +327,8 @@ public class readmediadataservice extends Service {
                     Log.e("Found hash ",""+hashvalue);
                     String framecount="",mediatypeshortname = "",mediatitle = "",mediakey = "",mediatoken = "",mediaid = "",
                             remainingframes="50",lastframe="0", mediastartdevicedatetime = "",mediadevicetimeoffset = "",savedsequencecount="",
-                    mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "",mediacompleteddate="",color="";
+                    mediacompleteddevicedatetime="",mediatarttransactionid = "",medianame = "",mediacompleteddate="",color="",
+                            mediaduration="";
 
                     try {
                         JSONObject object = (JSONObject) response.getData();
@@ -335,6 +337,7 @@ public class readmediadataservice extends Service {
                             mediaid = (object.has("videoid")?object.getString("videoid"):"");
                             mediakey = (object.has("videokey")?object.getString("videokey"):"");
                             framecount = (object.has("videoframecount")?object.getString("videoframecount"):"1");
+                            mediaduration = (object.has("videoduration")?object.getString("videoduration"):"");
                             String videohashmethod = (object.has("videohashmethod")?object.getString("videohashmethod"):"");
                             String videohashvalue = (object.has("videohashvalue")?object.getString("videohashvalue"):"");
                             mediastartdevicedatetime = (object.has("videostartdevicedatetime")?object.getString("videostartdevicedatetime"):"");
@@ -360,6 +363,7 @@ public class readmediadataservice extends Service {
                             mediaid = (object.has("audioid")?object.getString("audioid"):"");
                             mediakey = (object.has("audiokey")?object.getString("audiokey"):"");
                             framecount = (object.has("audioframecount")?object.getString("audioframecount"):"1");
+                            mediaduration = (object.has("audioduration")?object.getString("audioduration"):"");
                             String audiohashmethod = (object.has("audiohashmethod")?object.getString("audiohashmethod"):"");
                             String audiohashvalue = (object.has("audiohashvalue")?object.getString("audiohashvalue"):"");
                             mediastartdevicedatetime = (object.has("audiostartdevicedatetime")?object.getString("audiostartdevicedatetime"):"");
@@ -376,7 +380,8 @@ public class readmediadataservice extends Service {
                             mediatypeshortname = (object.has("audiotypeshortname")?object.getString("audiotypeshortname"):"");
                             savedsequencecount = (object.has("savedsequencecount")?object.getString("savedsequencecount"):"");
                             mediatoken = (object.has("audiotoken")?object.getString("audiotoken"):"");
-                            mediatitle = (object.has("audioname")?object.getString("audioname"):"");
+                           // mediatitle = (object.has("audioname")?object.getString("audioname"):"");
+                            mediatitle = (object.has("audiotitle")?object.getString("audiotitle"):"");
                             mediacompleteddate = (object.has("audiocompleteddate")?object.getString("audiocompleteddate"):"");
                             color = (object.has("color")?object.getString("color"):"");
 
@@ -426,10 +431,12 @@ public class readmediadataservice extends Service {
                         if((! mediacompleteddate.trim().isEmpty() && (! mediacompleteddate.equalsIgnoreCase("null"))))
                         {
                             String syncdate[] = common.getcurrentdatewithtimezone();
-                            mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
-                                    mediatoken,mediakey,"",syncdate[0] , actiontype,
+                            mdbhelper.updatestartmediainfo(new mediainfotablefields("",mediatype,common.getfilename(mediapath),mediaid,
+                                    mediatoken,mediakey,"",syncdate[0]  , actiontype,
                                     "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
-                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate,color);
+                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe
+                                    ,framecount,"",medianame,"",xdata.getinstance().getSetting(config.selected_folder),
+                                    "","",mediaduration,mediacompleteddate,color,""));
 
                             int framestart=1;int maxframes=50;
                             getmediaframes(mediatoken,framestart,maxframes,mediafilepath);
@@ -437,10 +444,13 @@ public class readmediadataservice extends Service {
                         else
                         {
                             String syncdate[] = common.getcurrentdatewithtimezone();
-                            mdbhelper.updatestartvideoinfo(firsthash,mediatypeshortname,common.getfilename(mediapath),mediaid,
-                            mediatoken,mediakey,"",syncdate[0] , actiontype,
-                            "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
-                            firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe,framecount,"",mediacompleteddate,color);
+                            mdbhelper.updatestartmediainfo(new mediainfotablefields("",mediatype,common.getfilename(mediapath),mediaid,
+                                    mediatoken,mediakey,"",syncdate[0]  , actiontype,
+                                    "",mediastartdevicedatetime,mediadevicetimeoffset,mediacompleteddevicedatetime,mediatarttransactionid,
+                                    firsthash,mediaid,config.sync_inprogress,remainingframes,lastframe
+                                    ,framecount,"",medianame,"",xdata.getinstance().getSetting(config.selected_folder),
+                                    "","",mediaduration,mediacompleteddate,color,""));
+
                             sendbroadcastreader();
                         }
 
