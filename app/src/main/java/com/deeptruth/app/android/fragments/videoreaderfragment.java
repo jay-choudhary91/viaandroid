@@ -435,7 +435,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     {
                         arraycontainerformetric = new arraycontainer();
                         arraycontainerformetric = metricmainarraylist.get(arraycountvalue);
-                        metricmainarraylist.get(position).setIsupdated(true);
                     }
 
                     layout_progressline.setVisibility(View.VISIBLE);
