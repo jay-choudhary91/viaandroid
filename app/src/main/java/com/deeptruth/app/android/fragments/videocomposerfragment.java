@@ -362,7 +362,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(rootview == null) {
+        if(rootview == null)
+        {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
 
@@ -420,9 +421,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             img_warning.setOnClickListener(this);
             img_close.setOnClickListener(this);
 
-
             setmetriceshashesdata();
         }
+
         return rootview;
     }
 
@@ -477,8 +478,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                     else
                     {
-                        if(madapterclick != null)
-                            madapterclick.onItemClicked(motionEvent,3);
+                        if(! isvideorecording)
+                        {
+                            if(madapterclick != null)
+                                madapterclick.onItemClicked(motionEvent,3);
+                        }
+
                     }
                     return true;
                 } catch (Exception e) {
