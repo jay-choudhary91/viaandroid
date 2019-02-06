@@ -43,6 +43,7 @@
         android:id="@+id/img_scanover"
         android:layout_width="50dp"
         android:layout_height="match_parent"
+        android:layout_marginLeft="-50dp"
         android:layout_alignParentLeft="true"
         android:alpha="0.4"/>
 

@@ -96,6 +96,23 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             animation.setFillAfter(true);
             holder.img_scanover.startAnimation(animation);
 
+           animation.setAnimationListener(new Animation.AnimationListener() {
+               @Override
+               public void onAnimationStart(Animation animation) {
+               }
+
+               @Override
+               public void onAnimationEnd(Animation animation) {
+               }
+
+               @Override
+               public void onAnimationRepeat(Animation animation) {
+                   animation.setStartOffset(5000);
+               }
+           });
+
+
+
             if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
             {
                 /*int colors[] = { 0xff255779, 0xffa6c0cd };
