@@ -363,7 +363,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     arraycontainer arraycontainerformetric =null;
     adapteritemclick mcontrollernavigator;
-
+    int currentprocessframe=0;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -422,19 +422,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 {
                     //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
                     int progresspercentage = (progress*100)/mediaseekbar.getMax();
-                    int arraycountvalue=0;
                     if(progresspercentage > 0)
-                        arraycountvalue =(int) (metricmainarraylist.size()*progresspercentage)/100;
-
-                    Log.e("arraycountvalue total ",""+arraycountvalue+" "+metricmainarraylist.size());
+                        currentprocessframe =(int) (metricmainarraylist.size()*progresspercentage)/100;
 
                     if(isvideocompleted)
-                        arraycountvalue=metricmainarraylist.size()-1;
+                        currentprocessframe=metricmainarraylist.size()-1;
 
-                    if(arraycountvalue < metricmainarraylist.size())
+                    if(currentprocessframe < metricmainarraylist.size())
                     {
                         arraycontainerformetric = new arraycontainer();
-                        arraycontainerformetric = metricmainarraylist.get(arraycountvalue);
+                        arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
                     }
 
                     layout_progressline.setVisibility(View.VISIBLE);
@@ -1442,7 +1439,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if(metricmainarraylist.size() == 0)
                     fetchmetadatafromdb();
 
-                  if(arraycontainerformetric != null) {
+                  if(arraycontainerformetric != null)
+                  {
                       common.setgraphicalblockchainvalue(config.blockchainid, arraycontainerformetric.getVideostarttransactionid(), true);
                       common.setgraphicalblockchainvalue(config.hashformula, arraycontainerformetric.getHashmethod(), true);
                       common.setgraphicalblockchainvalue(config.datahash, arraycontainerformetric.getValuehash(), true);
@@ -1467,6 +1465,22 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                   (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                               populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                   }
+                if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())
+                {
+                    String data="";
+                    for(int i=0;i<currentprocessframe;i++)
+                    {
+                        if(data.trim().isEmpty())
+                        {
+                            data=metricmainarraylist.get(i).getLatency();
+                        }
+                        else
+                        {
+                            data=data+","+metricmainarraylist.get(i).getLatency();
+                        }
+                    }
+                    xdata.getinstance().saveSetting(config.latency,data);
+                }
                   //setmetricesgraphicaldata();
 
                 myHandler.postDelayed(this, 1500);

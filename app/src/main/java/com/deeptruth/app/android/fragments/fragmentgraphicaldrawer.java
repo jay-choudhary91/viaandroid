@@ -142,16 +142,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
+    @BindView(R.id.layout_datalatency)
+    LinearLayout layout_datalatency;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
     @BindView(R.id.img_compass)
     ImageView img_compass;
     @BindView(R.id.linechart)
     LineChart mChart;
-
-    String[] latencyarray;
-    String latency = "";
-
 
     View rootview;
     GoogleMap mgooglemap;
@@ -377,25 +375,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
       //  }
 
-        latency = xdata.getinstance().getSetting(config.latency).toString();
-
-        if(latencyvalues != null && latencyvalues.size()!=0)
-                latencyvalues.clear();
-
-           if(latency != null && (! latency.trim().isEmpty()) ){
-               latencyarray = latency.split(",");
-
-               for(int i = 0 ;i< latencyarray.length;i++){
-                   //float val = (float) (Math.random() * 20) + 3;
-                   latencyvalues.add(new Entry(latencyvalues.size(),Float.parseFloat(latencyarray[i]),0));
-               }
-
-               // add data
-               setlatencydata();
-               mChart.animateX(10);
-               Legend l = mChart.getLegend();
-               l.setForm(Legend.LegendForm.LINE);
-           }
+        latencyvalues.clear();
+        String latency = xdata.getinstance().getSetting(config.latency).toString();
+        if(latency != null && (! latency.trim().isEmpty()) )
+        {
+            layout_datalatency.setVisibility(View.VISIBLE);
+            String[] latencyarray = latency.split(",");
+            for(int i = 0 ;i< latencyarray.length;i++){
+                //float val = (float) (Math.random() * 20) + 3;
+                latencyvalues.add(new Entry(latencyvalues.size(),Float.parseFloat(latencyarray[i]),0));
+            }
+            setlatencydata();
+            mChart.animateX(10);
+            Legend l = mChart.getLegend();
+            l.setForm(Legend.LegendForm.LINE);
+        }
+        else
+        {
+            layout_datalatency.setVisibility(View.GONE);
+        }
     }
 
 
@@ -823,8 +821,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
-        leftAxis.setAxisMaximum(30f);
-        leftAxis.setAxisMinimum(0f);
+        //leftAxis.setAxisMaximum(60f);
+        //leftAxis.setAxisMinimum(0);
+
         //leftAxis.setYOffset(20f);
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         leftAxis.setDrawZeroLine(false);
@@ -845,8 +844,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         LineDataSet set1;
 
-        if (mChart.getData() != null &&
-                mChart.getData().getDataSetCount() > 0)
+        if (mChart.getData() != null && mChart.getData().getDataSetCount() > 0 && latencyvalues.size() > 0)
         {
             set1 = (LineDataSet)mChart.getData().getDataSetByIndex(0);
             set1.setValues(latencyvalues);
