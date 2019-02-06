@@ -490,8 +490,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        if(rootview == null) {
+        if(rootview == null)
+        {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
             gethelper().drawerenabledisable(true,layoutbottom,linearheader,null,null,null);
@@ -522,6 +522,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             brustmodeenabled=false;
             img_stop_watch.setImageResource(R.drawable.stopwatch);
         }
+
         return rootview;
     }
 

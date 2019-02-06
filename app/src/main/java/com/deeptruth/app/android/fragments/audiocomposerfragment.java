@@ -204,6 +204,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 e.printStackTrace();
             }
         }
+
         return rootview;
     }
 
@@ -985,6 +986,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
 
     public void getaudiowave() {
+
+        if(wavehandler != null && wavehandler != null)
+            wavehandler.removeCallbacks(waverunnable);
+
         wavehandler =new Handler();
         waverunnable = new Runnable() {
             @Override
@@ -1210,50 +1215,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         switch (view.getId())
         {
             case  R.id.layout_drawertouchable:
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(motionEvent,3);
+                if(! isaudiorecording)
+                {
+                    if(madapterclick != null)
+                        madapterclick.onItemClicked(motionEvent,3);
+                }
+
                 break;
         }
         return true;
     }
-
-    GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
-    {
-        @Override
-        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
-                               float flingActionYcoSpdPsgVal)
-        {
-            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Right to Left fling
-                return false;
-            }
-            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Left to Right fling
-                return false;
-            }
-
-            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Bottom to Top fling
-
-                return false;
-            }
-            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Top to Bottom fling
-
-                return false;
-            }
-            return false;
-        }
-    });
-
 
 
     public void setData(adapteritemclick madapterclick,RelativeLayout layoutbottom) {
