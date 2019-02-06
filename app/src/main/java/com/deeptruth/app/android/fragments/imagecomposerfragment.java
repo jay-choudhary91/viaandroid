@@ -627,7 +627,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             map.put("firsthash", firsthash);
             map.put("hashmethod",keytype);
             map.put("name",common.getfilename(capturedimagefile.getAbsolutePath()));
-            map.put("duration","1");
+            map.put("duration","0");
             map.put("framecounts","1");
             map.put("finalhash",firsthash);
 
@@ -663,7 +663,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
                         ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
                         ,"0","sync_pending","","","0","inprogress",medianame,"",
-                        mdbstartitemcontainer.get(0).getItem16());
+                        mdbstartitemcontainer.get(0).getItem16(),"");
 
                 try {
                     mdbhelper.close();

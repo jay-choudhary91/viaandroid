@@ -47,7 +47,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     HashMap<String, Bitmap> cacheBitmap;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvvideoname,tvvideocreatedate,tvvideoduration,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
+        public TextView tvvideoname,tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
         EditText edtvideoname;
         public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public RelativeLayout root_view;
@@ -58,8 +58,8 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             tvvideoname = (TextView) view.findViewById(R.id.tv_videoname);
             txt_pipesign = (TextView) view.findViewById(R.id.txt_pipesign);
             edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
-            tvvideocreatedate = (TextView) view.findViewById(R.id.tv_videocreatedate);
-            tvvideoduration = (TextView) view.findViewById(R.id.tv_videoduration);
+            tv_mediatime = (TextView) view.findViewById(R.id.tv_mediatime);
+            tv_mediadate = (TextView) view.findViewById(R.id.tv_mediadate);
             tv_localkey = (TextView) view.findViewById(R.id.tv_localkey);
             tv_sync_status = (TextView) view.findViewById(R.id.tv_sync_status);
             imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
@@ -101,10 +101,10 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             //animation.setStartOffset(position*100);
             animation.setRepeatCount(Animation.INFINITE);
             animation.setRepeatMode(ValueAnimator.RESTART);
-            animation.setFillAfter(true);
+            //animation.setFillAfter(true);
             holder.img_scanover.startAnimation(animation);
 
-            animation.setAnimationListener(new Animation.AnimationListener() {
+            Animation.AnimationListener listener=new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
                 }
@@ -116,30 +116,30 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 @Override
                 public void onAnimationRepeat(Animation animation) {
                     animation.setStartOffset(5000);
-
                 }
-            });
-
-
-
+            };
 
             if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
             {
+                animation.setAnimationListener(listener);
                 holder.img_scanover.setVisibility(View.VISIBLE);
                 holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
             }
             else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_yellow))
             {
+                animation.setAnimationListener(listener);
                 holder.img_scanover.setVisibility(View.VISIBLE);
                 holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
             }
             else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_red))
             {
+                animation.setAnimationListener(listener);
                 holder.img_scanover.setVisibility(View.VISIBLE);
                 holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
             }
             else
             {
+                holder.img_scanover.setBackgroundResource(0);
                 holder.img_scanover.setVisibility(View.GONE);
             }
 
@@ -160,23 +160,19 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 }
             }
 
-            holder.tvvideocreatedate.setText(arrayvideolist.get(position).getCreatetime());
-            holder.tvvideoduration.setText(arrayvideolist.get(position).getCreatedate());
+            if(arrayvideolist.get(position).getCreatedate().trim().isEmpty())
+            {
+                holder.txt_pipesign.setVisibility(View.GONE);
+                holder.tv_mediadate.setText("NA");
+                holder.tv_mediatime.setText(arrayvideolist.get(position).getCreatetime());
+            }
+            else
+            {
+                holder.txt_pipesign.setVisibility(View.VISIBLE);
+                holder.tv_mediadate.setText(arrayvideolist.get(position).getCreatedate());
+                holder.tv_mediatime.setText(arrayvideolist.get(position).getCreatetime());
+            }
 
-           /* String datetime = arrayvideolist.get(position).getCreatedate();
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-            final Date startdate;
-            try {
-                startdate = format.parse(datetime);
-                String time = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                String filecreateddate = new SimpleDateFormat("MM/dd/yyyy").format(startdate);
-
-                holder.tvvideocreatedate.setText(time);
-                holder.tvvideoduration.setText(filecreateddate);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }*/
 
             holder.tv_medianotes.setText(arrayvideolist.get(position).getMedianotes());
 
@@ -196,17 +192,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
                 holder.tv_sync_status.setText("Status : " + arrayvideolist.get(position).getMediastatus());
             }
-
-           /* if (arrayvideolist.get(position).getmimetype().contains("image/"))
-            {
-                holder.tvvideoduration.setText("");
-                holder.txt_pipesign.setVisibility(View.GONE);
-            }
-            else
-            {
-                holder.txt_pipesign.setVisibility(View.VISIBLE);
-                holder.tvvideoduration.setText(arrayvideolist.get(position).getDuration());
-            }*/
 
             holder.edtvideoname.setEnabled(false);
             holder.edtvideoname.setClickable(false);

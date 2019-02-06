@@ -93,63 +93,55 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             //animation.setStartOffset(position*100);
             animation.setRepeatCount(Animation.INFINITE);
             animation.setRepeatMode(ValueAnimator.RESTART);
-            animation.setFillAfter(true);
+            //animation.setFillAfter(true);
             holder.img_scanover.startAnimation(animation);
 
-           animation.setAnimationListener(new Animation.AnimationListener() {
-               @Override
-               public void onAnimationStart(Animation animation) {
-               }
+           /**/
 
-               @Override
-               public void onAnimationEnd(Animation animation) {
-               }
+            Animation.AnimationListener listener=new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
 
-               @Override
-               public void onAnimationRepeat(Animation animation) {
-                   animation.setStartOffset(5000);
-               }
-           });
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                }
 
-
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    animation.setStartOffset(5000);
+                }
+            };
 
             if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
             {
-                /*int colors[] = { 0xff255779, 0xffa6c0cd };
-                holder.img_scanover.setVisibility(View.VISIBLE);
-                GradientDrawable gradientDrawable = new GradientDrawable(
-                        GradientDrawable.Orientation.LEFT_RIGHT, colors);*/
+                animation.setAnimationListener(listener);
                 holder.img_scanover.setVisibility(View.VISIBLE);
                 holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
             }
             else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_yellow))
             {
+                animation.setAnimationListener(listener);
                 holder.img_scanover.setVisibility(View.VISIBLE);
                 holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
             }
             else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_red))
             {
+                animation.setAnimationListener(listener);
                 holder.img_scanover.setVisibility(View.VISIBLE);
                 holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
             }
             else
             {
+                holder.img_scanover.setBackgroundResource(0);
                 holder.img_scanover.setVisibility(View.GONE);
             }
 
             holder.rl_row_media.setVisibility(View.VISIBLE);
-            if (arrayvideolist.get(position).getmimetype().contains("image"))
-            {
-                holder.tv_mediaduration.setText("");
-            }
-            else
-            {
-                holder.tv_mediaduration.setText(arrayvideolist.get(position).getDuration());
-            }
+            holder.tv_mediaduration.setText(arrayvideolist.get(position).getDuration());
 
             if(! arrayvideolist.get(position).getmimetype().contains("audio"))
             {
-
                 Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getPath()));
                 Glide.with(context).
                         load(uri).

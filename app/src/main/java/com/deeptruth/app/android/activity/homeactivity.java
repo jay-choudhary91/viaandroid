@@ -3,7 +3,6 @@ package com.deeptruth.app.android.activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -11,31 +10,24 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
-import com.deeptruth.app.android.fragments.bottombarfragment;
-import com.deeptruth.app.android.fragments.bottombarrederfrag;
 import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.fragmentgraphicaldrawer;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.framemetricssettings;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
-import com.deeptruth.app.android.fragments.medialistreader;
 import com.deeptruth.app.android.fragments.myfolderfragment;
 import com.deeptruth.app.android.fragments.settingfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
@@ -96,7 +88,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     ImageView img_fullscreen;
 
     private fragmentmedialist fragvideolist;
-    private medialistreader fragmedialistreader;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +96,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         config.selectedmediatype=0;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
             fragmedialistreader=new medialistreader();
             replaceFragment(fragmedialistreader, false, true);
@@ -115,7 +106,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragvideolist=new fragmentmedialist();
             fragvideolist.shouldlaunchcomposer(true);
             replaceFragment(fragvideolist, false, true);
-        }
+        }*/
+
+        fragvideolist=new fragmentmedialist();
+        fragvideolist.shouldlaunchcomposer(true);
+        replaceFragment(fragvideolist, false, true);
 
         drawertoggle = new ActionBarDrawerToggle(
                 this, navigationdrawer, R.string.drawer_open, R.string.drawer_close){
@@ -246,8 +241,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 getcurrentfragment() instanceof imagecomposerfragment
                 || getcurrentfragment() instanceof videoplayfragment
                 || getcurrentfragment() instanceof videoreaderfragment
-                || getcurrentfragment() instanceof fragmentmedialist || getcurrentfragment() instanceof bottombarfragment
-                || getcurrentfragment() instanceof bottombarrederfrag || getcurrentfragment() instanceof audioreaderfragment
                 )
         {
             txt_title.setText("");
@@ -386,19 +379,6 @@ public void updateactionbar(int showHide, int color) {
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }
-         else if(fragment instanceof medialistreader){
-             imgaddicon.setVisibility(View.VISIBLE);
-             imgsettingsicon.setVisibility(View.VISIBLE);
-             imguploadicon.setVisibility(View.GONE);
-             actionbar.setVisibility(View.GONE);
-             imgsettingsicon.setEnabled(true);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-
-             drawerenabledisable(false,null,null,null,null,null);
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
-         }
          else if(fragment instanceof imagecomposerfragment){
              img_menu.setVisibility(View.VISIBLE);
              img_help.setVisibility(View.VISIBLE);
@@ -434,12 +414,6 @@ public void updateactionbar(int showHide, int color) {
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
 
-         }
-         else if(fragment instanceof bottombarrederfrag){
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
          }else if(fragment instanceof settingfragment){
              img_menu.setVisibility(View.GONE);
              actionbar.setVisibility(View.GONE);
@@ -452,10 +426,7 @@ public void updateactionbar(int showHide, int color) {
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
-         }else if(fragment instanceof bottombarfragment){
-             actionbar.setVisibility(View.GONE);
-         }
-         else if(fragment instanceof composeoptionspagerfragment){
+         }else if(fragment instanceof composeoptionspagerfragment){
              updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
              actionbar.setVisibility(View.GONE);

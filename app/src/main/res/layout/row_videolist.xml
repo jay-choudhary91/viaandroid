@@ -177,7 +177,7 @@
 
                         <com.deeptruth.app.android.views.customfonttextview
                             app:fontType="OpenSans_Regular"
-                            android:id="@+id/tv_videoduration"
+                            android:id="@+id/tv_mediadate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -201,7 +201,7 @@
 
                         <com.deeptruth.app.android.views.customfonttextview
                             app:fontType="OpenSans_Regular"
-                            android:id="@+id/tv_videocreatedate"
+                            android:id="@+id/tv_mediatime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="left"
