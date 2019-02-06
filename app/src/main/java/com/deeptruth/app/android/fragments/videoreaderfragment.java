@@ -505,7 +505,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         img_edit_notes.setOnClickListener(new setonClick());
         img_fullscreen.setOnClickListener(new setonClick());
         playpausebutton.setOnClickListener(new setonClick());
-        layout_dtls.setOnClickListener(this);
+        layout_dtls.setOnClickListener(new setonClick());
 
         imgpause.setVisibility(View.GONE);
         img_dotmenu.setVisibility(View.VISIBLE);
