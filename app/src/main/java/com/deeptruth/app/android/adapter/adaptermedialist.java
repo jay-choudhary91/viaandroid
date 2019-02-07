@@ -288,7 +288,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.img_slide_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    adapter.onItemClicked(arrayvideolist.get(position),1);
                     holder.img_slide_share.setClickable(false);
                     new Handler().postDelayed(new Runnable()
                     {
@@ -297,7 +296,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             holder.img_slide_share.setClickable(true);
                         }
                     }, 150);
-
+                    adapter.onItemClicked(arrayvideolist.get(position),1);
                 }
             });
 

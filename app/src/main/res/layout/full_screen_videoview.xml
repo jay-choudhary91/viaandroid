@@ -23,43 +23,12 @@
                 android:layout_height="match_parent"
                 >
 
-                <RelativeLayout
-                    android:id="@+id/layout_footer"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/bottomborder"
-                    android:layout_gravity="bottom|end"
-                    android:layout_alignParentBottom="true"
-                    android:visibility="gone"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin_left"
-                        android:layout_marginRight="@dimen/normal_margin_right"
-                        android:id="@+id/img_share_media"
-                        android:visibility="visible"
-                        android:background="@drawable/share"/>
-
-                    <ImageView
-                        android:id="@+id/img_delete_media"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin_left"
-                        android:layout_marginRight="@dimen/normal_margin_right"
-                        android:layout_alignParentRight="true"
-                        android:visibility="visible"
-                        android:background="@drawable/garbage"/>
-                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_alignParentTop="true"
-                    android:layout_above="@+id/layout_footer"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -311,6 +280,7 @@
                         android:layout_width="match_parent"
                         android:layout_below="@+id/tab_photoreader"
                         android:layout_weight="0.6"
+                        android:paddingBottom="50dp"
                         android:visibility="visible"
                         android:id="@+id/layout_videodetails"
                         android:layout_height="0dp">
@@ -331,6 +301,36 @@
 
 
                 </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/layout_footer"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/bottomborder"
+                    android:layout_gravity="bottom|end"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/normal_margin_left"
+                        android:layout_marginRight="@dimen/normal_margin_right"
+                        android:id="@+id/img_share_media"
+                        android:visibility="visible"
+                        android:background="@drawable/share"/>
+
+                    <ImageView
+                        android:id="@+id/img_delete_media"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/normal_margin_left"
+                        android:layout_marginRight="@dimen/normal_margin_right"
+                        android:layout_alignParentRight="true"
+                        android:visibility="visible"
+                        android:background="@drawable/garbage"/>
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_validating"
@@ -343,8 +343,6 @@
                     <include layout="@layout/layout_validating"></include>
 
                 </LinearLayout>
-
-
 
             </RelativeLayout>
 
