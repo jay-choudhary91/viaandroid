@@ -769,7 +769,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     }, 150);
                     if (mediafilepath != null && (!mediafilepath.isEmpty()))
-                        common.shareimage(getActivity(), mediafilepath);
+                        common.sharevideo(getActivity(), mediafilepath);
 
                     break;
 
