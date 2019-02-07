@@ -49,6 +49,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -311,6 +312,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     View dividerline;
     @BindView(R.id.layoutpause)
     RelativeLayout layoutpause;
+    @BindView(R.id.img_scanover)
+    ImageView img_scanover;
 
     GoogleMap mgooglemap;
     Surface surfacetexture = null;
@@ -401,9 +404,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         edt_medianotes.setClickable(false);
         edt_medianotes.setFocusable(false);
         edt_medianotes.setFocusableInTouchMode(false);
-
-        txt_section_validating_secondary.setText(config.caution);
-        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
 
         mediaseekbar.setThumbOffset(0);
         mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -547,6 +547,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             public void run() {
                 targetheight= layout_videoreader.getHeight();
                 targetwidth = layout_videoreader.getWidth();
+                int totalwidth= targetwidth + 100;
+                TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth ,0.0f, 0.0f);
+                animation.setDuration(3000);
+                animation.setRepeatCount(Animation.INFINITE);
+                animation.setRepeatMode(ValueAnimator.RESTART);
+                img_scanover.startAnimation(animation);
             }
         });
 
@@ -769,7 +775,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     }, 150);
                     if (mediafilepath != null && (!mediafilepath.isEmpty()))
-                        common.shareimage(getActivity(), mediafilepath);
+                        common.sharevideo(getActivity(), mediafilepath);
 
                     break;
 
@@ -1455,23 +1461,24 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                       common.setspannable(getResources().getString(R.string.block_number), " " + arraycontainerformetric.getValuehash(), txt_blocknumber);
                       common.setspannable(getResources().getString(R.string.metrichash), " " + arraycontainerformetric.getMetahash(), txt_metahash);
 
-                          ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
+                      ArrayList<metricmodel> metricItemArraylist = arraycontainerformetric.getMetricItemArraylist();
 
-                          for (int j = 0; j < metricItemArraylist.size(); j++) {
-                              common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                      metricItemArraylist.get(j).getMetricTrackValue(), true);
+                      for (int j = 0; j < metricItemArraylist.size(); j++)
+                      {
+                          common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                  metricItemArraylist.get(j).getMetricTrackValue(), true);
 
-                              if (scrollview_meta.getVisibility() == View.VISIBLE)
-                                  setmetadatavalue(metricItemArraylist.get(j));
-                          }
+                          if (scrollview_meta.getVisibility() == View.VISIBLE)
+                              setmetadatavalue(metricItemArraylist.get(j));
+                      }
 
-                          if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                                  (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                              populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                      if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                              (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                          populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                   }
                 if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())
                 {
-                    String data="";
+                    String data="",location="";
                     for(int i=0;i<currentprocessframe;i++)
                     {
                         if(data.trim().isEmpty())
@@ -1983,7 +1990,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         case "green":
                             layout_validating.setVisibility(View.VISIBLE);
                             txt_section_validating_secondary.setText(config.verified);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor(arraycontainerformetric.getColor()));
+                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
                             break;
                         case "white":
                             layout_validating.setVisibility(View.GONE);
@@ -1991,12 +1998,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         case "red":
                             layout_validating.setVisibility(View.VISIBLE);
                             txt_section_validating_secondary.setText(config.caution);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor(arraycontainerformetric.getColor()));
+                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
                             break;
                         case "yellow":
                             layout_validating.setVisibility(View.VISIBLE);
                             txt_section_validating_secondary.setText(config.caution);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor(arraycontainerformetric.getColor()));
+                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
                             break;
                     }
                 }

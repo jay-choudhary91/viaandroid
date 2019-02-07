@@ -2,6 +2,7 @@ package com.deeptruth.app.android.fragments;
 
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,6 +44,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -372,7 +374,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             private final int SENSITIVITY=0;
             @Override
             public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
-                /*if(progress > 0)
+                if(progress > 0)
                 {
                     int progresspercentage = (progress*100)/mediaseekbar.getMax();
                     int arraycountvalue=0;
@@ -389,7 +391,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         arraycontainerformetric = new arraycontainer();
                         arraycontainerformetric = metricmainarraylist.get(arraycountvalue);
                     }
-                }*/
+                }
             }
 
             @Override
@@ -416,6 +418,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 linearseekbarcolorview.setLayoutParams(parms);
 
                 Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
+            }
+        });
+
+        audiorootview.post(new Runnable() {
+            @Override
+            public void run() {
+
             }
         });
 
@@ -576,7 +585,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 }, 150);
                 if (audiourl != null && (!audiourl.isEmpty()))
-                    common.shareimage(getActivity(), audiourl);
+                    common.shareaudio(getActivity(), audiourl);
                 break;
 
             case R.id.img_dotmenu:

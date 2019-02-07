@@ -22,6 +22,7 @@
                 android:id="@+id/layout_videoreader"
                 android:layout_height="match_parent"
                 >
+
                 <RelativeLayout
                     android:id="@+id/layout_footer"
                     android:layout_width="match_parent"
@@ -342,6 +343,8 @@
                     <include layout="@layout/layout_validating"></include>
 
                 </LinearLayout>
+
+
 
             </RelativeLayout>
 

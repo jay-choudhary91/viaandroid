@@ -789,11 +789,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             String duration = common.getvideotimefromurl(recordedmediafile);
 
+            String medianame=common.getfilename(recordedmediafile);
+            String[] split=medianame.split("\\.");
+            if(split.length > 0)
+                medianame=split[0];
+
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("fps","30");
             map.put("firsthash", "");
             map.put("hashmethod",keytype);
-            map.put("name",common.getfilename(recordedmediafile));
+            map.put("name",medianame);
             map.put("duration",duration);
             map.put("framecounts","");
             map.put("finalhash","");
@@ -803,7 +808,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             String updatecompletedate[] = common.getcurrentdatewithtimezone();
             String completeddate = updatecompletedate[0];
-            String medianame=common.getfilename(recordedmediafile);
 
             mdbstartitemcontainer.get(0).setItem1(json);
             mdbstartitemcontainer.get(0).setItem3(recordedmediafile);

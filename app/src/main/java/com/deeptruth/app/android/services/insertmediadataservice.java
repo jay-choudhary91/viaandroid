@@ -155,12 +155,16 @@ public class insertmediadataservice extends Service {
 
                                                     if(i == 0 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
                                                     {
-                                                        String filename = common.getfilename(mediapath);
+                                                        String medianame = common.getfilename(mediapath);
+                                                        String[] split=medianame.split("\\.");
+                                                        if(split.length > 0)
+                                                            medianame=split[0];
+
                                                         HashMap<String, String> map = new HashMap<String, String>();
                                                         map.put("fps","30");
                                                         map.put("firsthash", keyValue);
                                                         map.put("hashmethod",keytype);
-                                                        map.put("name",filename);
+                                                        map.put("name",medianame);
                                                         map.put("duration","");
                                                         map.put("framecounts","");
                                                         map.put("finalhash","");
@@ -172,7 +176,7 @@ public class insertmediadataservice extends Service {
                                                         videokey=mdbstartitemcontainer.get(0).getItem4();
 
                                                         mdbstartitemcontainer.get(0).setItem1(json);
-                                                        mdbstartitemcontainer.get(0).setItem3(filename);
+                                                        mdbstartitemcontainer.get(0).setItem3(medianame);
                                                         mdbstartitemcontainer.get(0).setItem14(firsthash);
                                                         updatestartframes(mdbstartitemcontainer);
                                                     }

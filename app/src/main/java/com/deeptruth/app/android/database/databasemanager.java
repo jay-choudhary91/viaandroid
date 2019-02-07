@@ -117,7 +117,6 @@ public class databasemanager {
                     "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
                     "status = '"+status +"'," +
                     "color = '"+color +"'," +
-                    "media_name = '"+medianame +"'," +
                     "media_notes = '"+medianotes +"'," +
                     "thumbnailurl = '"+thumbnailpath +"'," +
                     "media_folder = '"+mediafolder +"'," +

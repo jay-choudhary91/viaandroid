@@ -166,7 +166,25 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_validating"></include>
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:shimmer_duration="2000"
+            >
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_section_validating_secondary"
+                app:fontType="OpenSans_Regular"
+                style="@style/txt_no_gps_wifi"
+                android:gravity="right|center_vertical"
+                android:text="@string/validating"
+                android:paddingRight="10dp"
+                android:textColor="@color/white"
+                android:background="@color/red"/>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
     </LinearLayout>
 

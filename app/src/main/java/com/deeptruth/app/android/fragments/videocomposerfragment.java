@@ -1497,11 +1497,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         {
             String duration = common.getvideotimefromurl(lastrecordedvideo.getAbsolutePath());
 
+            String medianame=common.getfilename(lastrecordedvideo.getAbsolutePath());
+            String[] split=medianame.split("\\.");
+            if(split.length > 0)
+                medianame=split[0];
+
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("fps",""+framepersecond);
             map.put("firsthash", firsthash);
             map.put("hashmethod",keytype);
-            map.put("name",common.getfilename(lastrecordedvideo.getAbsolutePath()));
+            map.put("name",medianame);
             map.put("duration",duration);
             map.put("framecounts","");
             map.put("finalhash","");
@@ -1511,7 +1516,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             String updatecompletedate[] = common.getcurrentdatewithtimezone();
             String completeddate = updatecompletedate[0];
-            String medianame=common.getfilename(lastrecordedvideo.getAbsolutePath());
 
             mdbstartitemcontainer.get(0).setItem1(json);
             mdbstartitemcontainer.get(0).setItem3(lastrecordedvideo.getAbsolutePath());
