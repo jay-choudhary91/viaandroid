@@ -1082,7 +1082,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             setmetadatavalue(metricItemArraylist.get(j));
                     }
                 }
-                setmetricesgraphicaldata();
+             //   setmetricesgraphicaldata();
 
                 myHandler.postDelayed(this, 1500);
             }
