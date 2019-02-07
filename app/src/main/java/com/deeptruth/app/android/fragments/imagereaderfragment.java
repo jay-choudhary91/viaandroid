@@ -234,12 +234,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void loadviewdata()
     {
+        gethelper().drawerenabledisable(false);
         img_dotmenu.setOnClickListener(this);
         img_folder.setOnClickListener(this);
         img_camera.setOnClickListener(this);
         img_arrow_back.setOnClickListener(this);
         img_delete_media.setOnClickListener(this);
-        gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,null,null,img_fullscreen);
 
         img_dotmenu.setOnClickListener(this);
         img_folder.setOnClickListener(this);
@@ -512,9 +512,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }, 150);
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
-                    gethelper().drawerenabledisable(true,layout_footer,layout_mediatype,null,null,img_fullscreen);
+                    gethelper().drawerenabledisable(true);
 
-                    expand(tab_photoreader,100,targetheight);
+                    expand(tab_photoreader,100,targetheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
+                    gethelper().updateactionbar(0);
                     layout_photodetails.setVisibility(View.GONE);
                     scrollview_detail.setVisibility(View.GONE);
                     scrollview_meta.setVisibility(View.GONE);
@@ -525,9 +526,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     img_fullscreen.setVisibility(View.INVISIBLE);
 
                 } else{
-                    gethelper().drawerenabledisable(false,layout_footer,layout_mediatype,null,null,img_fullscreen);
+                    gethelper().drawerenabledisable(false);
 
                     collapse(tab_photoreader,100,previousheight);
+                    gethelper().updateactionbar(1);
                     layout_photodetails.setVisibility(View.VISIBLE);
                     tab_layout.setVisibility(View.VISIBLE);
                     scrollview_detail.setVisibility(View.VISIBLE);
@@ -543,11 +545,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 if(layout_photodetails.getVisibility()==View.GONE){
                     if(layout_footer.getVisibility()==(View.GONE)){
+                        gethelper().updateactionbar(1);
                         img_fullscreen.setVisibility(View.VISIBLE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_mediatype.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
                     } else {
+                        gethelper().updateactionbar(0);
                         img_fullscreen.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_mediatype.setVisibility(View.GONE);
@@ -718,9 +722,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 double latt = 0, longg = 0;
                 ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
 
-               /* graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
-                        metricmainarraylist.get(0).getValuehash(), metricmainarraylist.get(0).getMetahash());
-*/
                 layout_validating.setVisibility(View.VISIBLE);
                 txt_section_validating_secondary.setText(config.verified);
                 if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
@@ -1407,4 +1408,23 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 
+    @Override
+    public void showhideviewondrawer(boolean isshow) {
+        super.showhideviewondrawer(isshow);
+
+        if(isshow){
+            gethelper().updateactionbar(0);
+            layout_footer.setVisibility(View.GONE);
+            layout_mediatype.setVisibility(View.GONE);
+            img_fullscreen.setVisibility(View.GONE);
+            layout_validating.setVisibility(View.GONE);
+        }else{
+            gethelper().updateactionbar(1);
+            layout_footer.setVisibility(View.VISIBLE);
+            layout_mediatype.setVisibility(View.VISIBLE);
+            img_fullscreen.setVisibility(View.VISIBLE);
+            layout_validating.setVisibility(View.VISIBLE);
+
+        }
+    }
 }

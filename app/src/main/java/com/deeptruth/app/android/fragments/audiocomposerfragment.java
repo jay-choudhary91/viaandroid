@@ -174,7 +174,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            gethelper().drawerenabledisable(true,layoutbottom,linearheader,null,null,null);
+            gethelper().drawerenabledisable(true);
+            gethelper().updateactionbar(0);
 
             handle = (ImageView) rootview.findViewById(R.id.handle);
             img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
@@ -1250,5 +1251,18 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public static Fragment newInstance() {
         return new audiocomposerfragment();
+    }
+
+    @Override
+    public void showhideviewondrawer(boolean isshow) {
+        super.showhideviewondrawer(isshow);
+
+        if(isshow){
+            layoutbottom.setVisibility(View.GONE);
+            linearheader.setVisibility(View.GONE);
+        }else{
+            layoutbottom.setVisibility(View.VISIBLE);
+            linearheader.setVisibility(View.VISIBLE);
+        }
     }
 }

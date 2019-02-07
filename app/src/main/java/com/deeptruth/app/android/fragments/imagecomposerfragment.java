@@ -302,7 +302,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     LinearLayout linearLayout;
 
-    ImageView imgflashon,handle,img_dotmenu,img_warning,img_close,img_stop_watch;
+    ImageView imgflashon,img_dotmenu,img_warning,img_close,img_stop_watch;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -494,7 +494,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            gethelper().drawerenabledisable(true,layoutbottom,linearheader,null,null,null);
+            gethelper().drawerenabledisable(true);
+            gethelper().updateactionbar(0);
 
             mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
             imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
@@ -502,7 +503,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
             img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
             img_close = (ImageView) rootview.findViewById(R.id.img_close);
-            handle = (ImageView) rootview.findViewById(R.id.handle);
             linearLayout=rootview.findViewById(R.id.content);
 
             timerhandler = new Handler() ;
@@ -1304,14 +1304,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         switch (view.getId())
         {
-            case  R.id.handle:
-                flingswipe.onTouchEvent(motionEvent);
-                break;
-
-            case  R.id.righthandle:
-                flingswipe.onTouchEvent(motionEvent);
-                break;
-
             case  R.id.texture:
                 if(madapterclick != null)
                     madapterclick.onItemClicked(motionEvent,3);
@@ -1319,46 +1311,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
         return true;
     }
-
-    GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
-    {
-
-
-        @Override
-        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
-                               float flingActionYcoSpdPsgVal)
-        {
-            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Right to Left fling
-                return false;
-            }
-            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Left to Right fling
-                return false;
-            }
-
-            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Bottom to Top fling
-
-                return false;
-            }
-            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Top to Bottom fling
-
-                return false;
-            }
-            return false;
-        }
-    });
-
 
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
@@ -1517,4 +1469,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         this.layoutbottom = layoutbottom;
     }
 
+    @Override
+    public void showhideviewondrawer(boolean isshow) {
+        super.showhideviewondrawer(isshow);
+
+        if(isshow){
+            layoutbottom.setVisibility(View.GONE);
+            linearheader.setVisibility(View.GONE);
+        }else{
+            layoutbottom.setVisibility(View.VISIBLE);
+            linearheader.setVisibility(View.VISIBLE);
+        }
+    }
 }
