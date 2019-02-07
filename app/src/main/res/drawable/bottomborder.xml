@@ -5,7 +5,7 @@
         android:color="@color/uvv_light_gray"
         />
 
-    <solid android:color="#05FFFFFF" />
+    <solid android:color="@color/white" />
 
     <!--<padding
         android:left="10dp"

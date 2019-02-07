@@ -311,6 +311,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     View dividerline;
     @BindView(R.id.layoutpause)
     RelativeLayout layoutpause;
+    int footerheight;
 
     GoogleMap mgooglemap;
     Surface surfacetexture = null;
@@ -599,6 +600,19 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
+        layout_footer.post(new Runnable() {
+            @Override
+            public void run() {
+               footerheight = layout_footer.getHeight();
+                /*RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0,0,0,footerheight);
+                layout_photodetails.setLayoutParams(params);
+                layout_photodetails.requestLayout();
+               Log.e("footermargin",""+footerheight);*/
+            }
+        });
+
         showcontrollers.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -825,6 +839,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         totalduration.setVisibility(View.VISIBLE);
                         time_current.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
+                        layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
                         layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
                         updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
                         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
@@ -849,6 +864,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             recenterplaypause();
                             img_fullscreen.setVisibility(View.VISIBLE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+                            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layout_mediatype.setVisibility(View.VISIBLE);
                             layout_footer.setVisibility(View.VISIBLE);
                             playpausebutton.setVisibility(View.VISIBLE);
@@ -881,6 +897,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layoutcustomcontroller.requestLayout();
                             layout_footer.setVisibility(View.GONE);
                             totalduration.setVisibility(View.VISIBLE);
@@ -2152,8 +2169,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void setbottomimgview(){
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,footerheight);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, R.id.layout_halfscrnimg);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         img_fullscreen.setLayoutParams(params);
     }
     public void collapseimg_view(){
