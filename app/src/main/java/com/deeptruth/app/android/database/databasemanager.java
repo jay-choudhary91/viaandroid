@@ -244,41 +244,6 @@ public class databasemanager {
         }
     }
 
-    public void updatestartvideoinfo(String header,String type,String location,String localkey,
-                                     String token,String videokey,String sync,String date , String action_type,
-                                     String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
-                                     String videocompletedevicedate,String videostarttransactionid,String firsthash,String videoid,
-                                     String status,String remainingframes,String lastframe,String framecount,String sync_status,
-                                     String completeddate,String color)
-    {
-        try {
-            lock.lock();
-
-            String mediafilapth=location;
-            location= common.getfilename(location);
-
-            String query="update tblstartmediainfo set header='"+ header +"',type = '"+type +"',localkey='"+ localkey +"',token = '"+token +"'" +
-                    ",videokey='"+ videokey +"',sync = '"+sync +"',sync_date='"+ date +"',action_type = '"+action_type +"'," +
-                    "apirequestdevicedate='"+ apirequestdevicedate +"',videostartdevicedate = '"+videostartdevicedate +"',devicetimeoffset='"+
-                    devicetimeoffset +"',videocompletedevicedate = '"+videocompletedevicedate +"'," +
-                    "videostarttransactionid='"+ videostarttransactionid +"',firsthash = '"+firsthash +"',videoid='"+ videoid +"'," +
-                    "status = '"+status +"'," +
-                    "color = '"+color +"'," +
-                    "mediafilepath = '"+mediafilapth +"'," +
-                    "completeddate = '"+completeddate +"'," +
-                    "remainingframes='"+ remainingframes +"',lastframe = '"+lastframe +"',framecount='"+ framecount +"'," +
-                    "sync_status = '"+sync_status +"' where location='"+location+"'";
-            if(mDb == null)
-                mDb = mDbHelper.getReadableDatabase();
-            mDb.execSQL(query);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        finally {
-            lock.unlock();
-        }
-    }
-
     public void insertframemetricesinfo(String blockchain,String valuehash,String hashmethod,String localkey,
                                         String metricdata,String recordate,String rsequenceno,String sequencehash,
                                         String sequenceno,String serverdate,String sequencedevicedate,String serverdictionaryhash,
