@@ -642,6 +642,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(player.isPlaying()){
                     pause();
                 }else{
+                    imediacompleted=false;
                     start();
                 }
         }
