@@ -58,8 +58,6 @@ import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -217,12 +215,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void requestpermissions()
     {
-        if (common.getstoragedeniedpermissions().isEmpty()) {
+        if (common.getstorageaudiorecorddeniedpermissions().isEmpty()) {
             // All permissions are granted
             fetchmedialistfromdirectory();
         } else {
-            String[] array = new String[common.getstoragedeniedpermissions().size()];
-            array = common.getstoragedeniedpermissions().toArray(array);
+            String[] array = new String[common.getstorageaudiorecorddeniedpermissions().size()];
+            array = common.getstorageaudiorecorddeniedpermissions().toArray(array);
             ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), array, request_permissions);
         }
     }
@@ -369,7 +367,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }
 
             loadffmpeglibrary();
-            if (common.getstoragedeniedpermissions().isEmpty()) {
+            if (common.getstorageaudiorecorddeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 fetchmedialistfromdirectory();
             }
@@ -800,21 +798,24 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                             try {
                                 Date mediadatetime;
-                                if(videocompletedevicedate.contains("T"))
+                                if(! videocompletedevicedate.trim().isEmpty())
                                 {
-                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                    mediadatetime = format.parse(videocompletedevicedate);
-                                }
-                                else
-                                {
-                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
-                                    mediadatetime = format.parse(videocompletedevicedate);
-                                }
+                                    if(videocompletedevicedate.contains("T"))
+                                    {
+                                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                        mediadatetime = format.parse(videocompletedevicedate);
+                                    }
+                                    else
+                                    {
+                                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
+                                        mediadatetime = format.parse(videocompletedevicedate);
+                                    }
 
-                                final String filecreateddate = new SimpleDateFormat("MM-dd-yy",Locale.ENGLISH).format(mediadatetime);
-                                final String endtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH).format(mediadatetime);
-                                videoobject.setCreatedate(filecreateddate);
-                                videoobject.setCreatetime(endtime);
+                                    final String filecreateddate = new SimpleDateFormat("MM-dd-yy",Locale.ENGLISH).format(mediadatetime);
+                                    final String endtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH).format(mediadatetime);
+                                    videoobject.setCreatedate(filecreateddate);
+                                    videoobject.setCreatetime(endtime);
+                                }
 
                             }catch (Exception e)
                             {
@@ -982,21 +983,24 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                         try {
                             Date mediadatetime;
-                            if(videocompletedevicedate.contains("T"))
+                            if(! videocompletedevicedate.trim().isEmpty())
                             {
-                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                mediadatetime = format.parse(videocompletedevicedate);
-                            }
-                            else
-                            {
-                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
-                                mediadatetime = format.parse(videocompletedevicedate);
-                            }
+                                if(videocompletedevicedate.contains("T"))
+                                {
+                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                    mediadatetime = format.parse(videocompletedevicedate);
+                                }
+                                else
+                                {
+                                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
+                                    mediadatetime = format.parse(videocompletedevicedate);
+                                }
 
-                            final String filecreateddate = new SimpleDateFormat("MM-dd-yy",Locale.ENGLISH).format(mediadatetime);
-                            final String endtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH).format(mediadatetime);
-                            arraymediaitemlist.get(i).setCreatedate(filecreateddate);
-                            arraymediaitemlist.get(i).setCreatetime(endtime);
+                                final String filecreateddate = new SimpleDateFormat("MM-dd-yy",Locale.ENGLISH).format(mediadatetime);
+                                final String endtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH).format(mediadatetime);
+                                arraymediaitemlist.get(i).setCreatedate(filecreateddate);
+                                arraymediaitemlist.get(i).setCreatetime(endtime);
+                            }
 
                         }catch (Exception e)
                         {

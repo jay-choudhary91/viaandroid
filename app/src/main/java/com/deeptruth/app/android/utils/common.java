@@ -879,12 +879,27 @@ public class common {
         return String.valueOf(new DecimalFormat("#.#").format(brng));
     }
 
-    public static List<String> getstoragedeniedpermissions()
+    public static List<String> getstorageaudiorecorddeniedpermissions()
     {
         String[] neededpermissions = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.RECORD_AUDIO
+        };
+        List<String> deniedpermissions = new ArrayList<>();
+        for (String permission : neededpermissions) {
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                deniedpermissions.add(permission);
+            }
+        }
+        return deniedpermissions;
+    }
+
+    public static List<String> getstoragedeniedpermissions()
+    {
+        String[] neededpermissions = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
         };
         List<String> deniedpermissions = new ArrayList<>();
         for (String permission : neededpermissions) {

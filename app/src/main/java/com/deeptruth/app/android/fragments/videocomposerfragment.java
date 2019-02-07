@@ -1220,7 +1220,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             resetvideotimer();
             isvideorecording =false;
             try {
-                if(! issavedtofolder && common.getstoragedeniedpermissions().isEmpty() && (selectedvideofile != null )
+                if(! issavedtofolder && common.getstorageaudiorecorddeniedpermissions().isEmpty() && (selectedvideofile != null )
                         && new File(selectedvideofile).exists())
                     common.delete(new File(selectedvideofile));
             }catch (Exception e)

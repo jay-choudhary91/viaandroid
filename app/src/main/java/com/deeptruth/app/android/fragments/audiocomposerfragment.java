@@ -21,7 +21,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -289,7 +288,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             txt_title_actionbarcomposer.setText("deeptruth");
 
             try {
-                if(common.getstoragedeniedpermissions().isEmpty() && (recordedmediafile != null )
+                if(common.getstorageaudiorecorddeniedpermissions().isEmpty() && (recordedmediafile != null )
                         && new File(recordedmediafile).exists())
                     common.deletefile(recordedmediafile);
             }catch (Exception e)
