@@ -99,7 +99,7 @@ public class databasemanager {
     public void updatestartmediainfocomposer(String header,String type,String location,String localkey,
                                              String token,String videokey,String sync,String date , String action_type,
                                              String apirequestdevicedate,String videostartdevicedate,String devicetimeoffset,
-                                             String videocompletedevicedate,String videostarttransactionid,String thumbnailpath,String firsthash,String videoid,
+                                             String videocompletedevicedate,String videostarttransactionid,String firsthash,String thumbnailpath,String videoid,
                                              String status,String remainingframes,String lastframe,String framecount,String sync_status,String medianame,
                                              String medianotes,String mediafolder,String color)
     {
