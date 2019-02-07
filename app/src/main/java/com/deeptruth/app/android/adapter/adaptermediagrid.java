@@ -39,6 +39,8 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adapteritemclick adapter;
     ObjectAnimator objectanimator = null;
+    int imagethumbnail_width,imagescanover_width;
+    float totalwidth;
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediaduration;
         public ImageView img_mediathumbnail,img_scanover;
@@ -86,56 +88,72 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             animslide.setRepeatCount(5);  // animation repeat count
             animslide.setRepeatMode(2);
             holder.img_scanover.startAnimation(animslide);*/
+            holder.img_mediathumbnail.post(new Runnable() {
+                @Override
+                public void run() {
 
-            TranslateAnimation animation = new TranslateAnimation(-50.0f, 500.0f,
-                    0.0f, 0.0f);
-            animation.setDuration(3000);
-            //animation.setStartOffset(position*100);
-            animation.setRepeatCount(Animation.INFINITE);
-            animation.setRepeatMode(ValueAnimator.RESTART);
-            //animation.setFillAfter(true);
-            holder.img_scanover.startAnimation(animation);
+                    imagethumbnail_width = holder.img_mediathumbnail.getWidth();
+                    holder.img_scanover.post(new Runnable() {
+                        @Override
+                        public void run() {
+                         imagescanover_width = holder.img_scanover.getWidth();
+                         totalwidth = imagescanover_width + imagethumbnail_width;
+
+                            TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth,
+                                    0.0f, 0.0f);
+                            animation.setDuration(3000);
+                            //animation.setStartOffset(position*100);
+                            animation.setRepeatCount(Animation.INFINITE);
+                            animation.setRepeatMode(ValueAnimator.RESTART);
+                            //animation.setFillAfter(true);
+                            holder.img_scanover.startAnimation(animation);
 
            /**/
 
-            Animation.AnimationListener listener=new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
+                            Animation.AnimationListener listener=new Animation.AnimationListener() {
+                                @Override
+                                public void onAnimationStart(Animation animation) {
+                                }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                }
+                                @Override
+                                public void onAnimationEnd(Animation animation) {
+                                }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                    animation.setStartOffset(5000);
-                }
-            };
+                                @Override
+                                public void onAnimationRepeat(Animation animation) {
+                                    animation.setStartOffset(5000);
+                                }
+                            };
 
-            if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
-            {
-                animation.setAnimationListener(listener);
-                holder.img_scanover.setVisibility(View.VISIBLE);
-                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
-            }
-            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_yellow))
-            {
-                animation.setAnimationListener(listener);
-                holder.img_scanover.setVisibility(View.VISIBLE);
-                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
-            }
-            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_red))
-            {
-                animation.setAnimationListener(listener);
-                holder.img_scanover.setVisibility(View.VISIBLE);
-                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
-            }
-            else
-            {
-                holder.img_scanover.setBackgroundResource(0);
-                holder.img_scanover.setVisibility(View.GONE);
-            }
+                            if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
+                            {
+                                animation.setAnimationListener(listener);
+                                holder.img_scanover.setVisibility(View.VISIBLE);
+                                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
+                            }
+                            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_yellow))
+                            {
+                                animation.setAnimationListener(listener);
+                                holder.img_scanover.setVisibility(View.VISIBLE);
+                                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
+                            }
+                            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_red))
+                            {
+                                animation.setAnimationListener(listener);
+                                holder.img_scanover.setVisibility(View.VISIBLE);
+                                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
+                            }
+                            else
+                            {
+                                holder.img_scanover.setBackgroundResource(0);
+                                holder.img_scanover.setVisibility(View.GONE);
+                            }
+
+                        }
+                    });
+                }
+            });
+
 
             holder.rl_row_media.setVisibility(View.VISIBLE);
             holder.tv_mediaduration.setText(arrayvideolist.get(position).getDuration());
