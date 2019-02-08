@@ -10,7 +10,6 @@
     <LinearLayout
         android:id="@+id/layout_mediatype"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
