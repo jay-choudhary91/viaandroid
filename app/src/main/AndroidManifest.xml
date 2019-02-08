@@ -101,16 +101,6 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
-
-        <activity android:name="com.deeptruth.app.android.activity.sharedextensionactivity">
-            <intent-filter android:label="@string/save_media">
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="image/*"/>
-                <data android:mimeType="video/*"/>
-                <data android:mimeType="audio/*"/>
-            </intent-filter>
-        </activity>
         <activity android:name="com.deeptruth.app.android.activity.introscreenactivity" />
     </application>
 

@@ -1556,11 +1556,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         try
         {
-            String medianame=common.getfilename(selectedmediafile);
-            int index =  medianame.lastIndexOf('.');
-            if(index >=0)
-                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
             String syncdate[] = common.getcurrentdatewithtimezone();
             mdbhelper.insertstartvideoinfo(new mediainfotablefields("",mediatype,common.getfilename(selectedmediafile),"",
                     "","","",syncdate[0]  , "",

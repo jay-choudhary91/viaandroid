@@ -75,13 +75,12 @@ public class databasemanager {
     {
         try {
             lock.lock();
-
             String query="update tblstartmediainfo set header='"+ mediainfo.getHeader() +"',type = '"+mediainfo.getType() +"',localkey='"+ mediainfo.getLocalkey() +"',token = '"+mediainfo.getToken() +"'" +
                 ",videokey='"+ mediainfo.getMediakey() +"',sync = '"+mediainfo.getSync() +"',sync_date='"+ mediainfo.getDate() +"',action_type = '"+mediainfo.getAction_type() +"'," +
                 "apirequestdevicedate='"+ mediainfo.getApirequestdevicedate() +"',videostartdevicedate = '"+mediainfo.getMediastartdevicedate() +"',devicetimeoffset='"+
                 mediainfo.getDevicetimeoffset() +"',videocompletedevicedate = '"+mediainfo.getMediacompletedevicedate() +"',mediaduration= '" +mediainfo.getMediaduration()+"',"+
                 "videostarttransactionid='"+ mediainfo.getMediastarttransactionid() +"',firsthash = '"+mediainfo.getFirsthash() +"',videoid='"+ mediainfo.getMediaid() +"'," +
-                "status = '"+mediainfo.getStatus() +"',color = '"+mediainfo.getColor() +"',completeddate = '"+mediainfo.getMediacompletedate() +"'," +
+                "status = '"+mediainfo.getStatus() +"',color = '"+mediainfo.getColor() +"',completeddate = '"+mediainfo.getMediacompletedate() +"',media_name= '"+mediainfo.getMedianame()+"',"+
                 "remainingframes='"+ mediainfo.getRemainingframes() +"',lastframe = '"+mediainfo.getLastframe() +"',framecount='"+ mediainfo.getFramecount() +"'," +
                 "sync_status = '"+mediainfo.getSyncstatus() +"' where location='"+mediainfo.getLocation()+"'";
 
