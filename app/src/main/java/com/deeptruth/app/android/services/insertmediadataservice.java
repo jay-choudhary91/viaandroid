@@ -232,13 +232,12 @@ public class insertmediadataservice extends Service {
 
                                                 if(mvideoframes.size() > 0)
                                                 {
-                                                    String filename = common.getfilename(mediapath);
                                                     String lastframe="";
                                                     if(mvideoframes.size() > 0)
                                                         lastframe = mvideoframes.get(mvideoframes.size() -1).getkeyvalue();
 
                                                     // update last frame in database
-                                                    updateendvideoinfo(firsthash,filename,lastframe,"" + count,mediapath,keytype,videokey);
+                                                    updateendvideoinfo(firsthash,lastframe,"" + count,mediapath,keytype,videokey);
                                                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
                                                 }
 
@@ -376,19 +375,24 @@ public class insertmediadataservice extends Service {
     }
 
     // Calling when frames are getting from ffmpegframegrabber
-    public void updateendvideoinfo(String updatefirsthash, String file_name,String lastframe,String lastcount,
+    public void updateendvideoinfo(String updatefirsthash, String lastframe,String lastcount,
                                      String videourl,String keytype,String videokey)
     {
         String duration = "";
         if(!videourl.isEmpty())
             duration = common.getvideotimefromurl(videourl);
 
+        String medianame = common.getfilename(videourl);
+        String[] split=medianame.split("\\.");
+        if(split.length > 0)
+            medianame=split[0];
+
         try {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("fps","30");
             map.put("firsthash", updatefirsthash);
             map.put("hashmethod",keytype);
-            map.put("name",file_name);
+            map.put("name",medianame);
             map.put("duration",duration);
             map.put("framecounts",lastcount);
             map.put("finalhash",lastframe);

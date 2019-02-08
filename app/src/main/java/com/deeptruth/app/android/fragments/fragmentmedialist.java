@@ -760,7 +760,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     do{
 
                         String location = "" + cursor.getString(cursor.getColumnIndex("location"));
-                        String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
+                        //String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
+                        String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
                         String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
                         String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
                         String thumbnailurl = "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
@@ -807,17 +808,17 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                             try {
                                 Date mediadatetime;
-                                if(! videocompletedevicedate.trim().isEmpty())
+                                if(! mediastartdevicedate.trim().isEmpty())
                                 {
-                                    if(videocompletedevicedate.contains("T"))
+                                    if(mediastartdevicedate.contains("T"))
                                     {
                                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                        mediadatetime = format.parse(videocompletedevicedate);
+                                        mediadatetime = format.parse(mediastartdevicedate);
                                     }
                                     else
                                     {
                                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
-                                        mediadatetime = format.parse(videocompletedevicedate);
+                                        mediadatetime = format.parse(mediastartdevicedate);
                                     }
 
                                     final String filecreateddate = new SimpleDateFormat("MM-dd-yy",Locale.ENGLISH).format(mediadatetime);
@@ -975,7 +976,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
                 String color = "" + cursor.getString(cursor.getColumnIndex("color"));
                 String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
-                String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
+                //String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
+                String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
 
                 for(int i = 0; i< arraymediaitemlist.size(); i++)
                 {
@@ -992,17 +994,17 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                         try {
                             Date mediadatetime;
-                            if(! videocompletedevicedate.trim().isEmpty())
+                            if(! mediastartdevicedate.trim().isEmpty())
                             {
-                                if(videocompletedevicedate.contains("T"))
+                                if(mediastartdevicedate.contains("T"))
                                 {
                                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                    mediadatetime = format.parse(videocompletedevicedate);
+                                    mediadatetime = format.parse(mediastartdevicedate);
                                 }
                                 else
                                 {
                                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
-                                    mediadatetime = format.parse(videocompletedevicedate);
+                                    mediadatetime = format.parse(mediastartdevicedate);
                                 }
 
                                 final String filecreateddate = new SimpleDateFormat("MM-dd-yy",Locale.ENGLISH).format(mediadatetime);
@@ -1565,11 +1567,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         try
         {
-            String medianame=common.getfilename(selectedmediafile);
-            int index =  medianame.lastIndexOf('.');
-            if(index >=0)
-                medianame = medianame.substring(0, medianame.lastIndexOf('.'));
-
             String syncdate[] = common.getcurrentdatewithtimezone();
             mdbhelper.insertstartvideoinfo(new mediainfotablefields("",mediatype,common.getfilename(selectedmediafile),"",
                     "","","",syncdate[0]  , "",

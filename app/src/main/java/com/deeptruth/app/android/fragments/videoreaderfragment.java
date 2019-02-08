@@ -321,7 +321,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediastartdevicedate = "",lastsavedangle="";
+            lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver;
     int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
@@ -1065,11 +1065,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
 
                     Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
-                    String mediacompleteddate="";
+                    String mediastartdevicedate="";
                     if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
                     {
                         do{
-                            mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                            //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
                             mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
@@ -1079,38 +1079,39 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }while(cur.moveToNext());
                     }
 
-                    if (!mediacompleteddate.isEmpty())
+                    if (!mediastartdevicedate.isEmpty())
                     {
-                        final String finalMediacompleteddate = mediacompleteddate;
+                        final String finalMediacompleteddate = mediastartdevicedate;
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 try {
                                     SimpleDateFormat formatted = null;
-                                    Date mediadate = null;
+                                    Date startdate = null;
                                     if(finalMediacompleteddate.contains("T"))
                                     {
                                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                        mediadate = format.parse(finalMediacompleteddate);
+                                        startdate = format.parse(finalMediacompleteddate);
                                     }
                                     else
                                     {
                                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                                        mediadate = format.parse(finalMediacompleteddate);
+                                        startdate = format.parse(finalMediacompleteddate);
                                     }
 
                                     Calendar calendar = Calendar.getInstance();
-                                    calendar.setTime(mediadate);
-                                    int decreaseseconds=player.getDuration()/1000;
-                                    calendar.add(Calendar.SECOND, -decreaseseconds);
-                                    Date startdate = calendar.getTime();
+                                    calendar.setTime(startdate);
+                                    int increaseseconds=player.getDuration()/1000;
+                                    calendar.add(Calendar.SECOND, increaseseconds);
+                                    Date enddate = calendar.getTime();
                                     formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
                                     String startformatteddate=formatted.format(startdate);
-                                    String endformatteddate=formatted.format(mediadate);
+                                    String endformatteddate=formatted.format(enddate);
                                     final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
                                     final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
                                     txt_starttime.setText(startformatteddate);
                                     txt_endtime.setText(endformatteddate);
+
                                     txt_title_actionbarcomposer.setText(filecreateddate);
                                     txt_createdtime.setText(createdtime);
 
