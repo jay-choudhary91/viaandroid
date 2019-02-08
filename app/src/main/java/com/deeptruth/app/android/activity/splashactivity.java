@@ -1,13 +1,18 @@
 package com.deeptruth.app.android.activity;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Window;
+import android.widget.LinearLayout;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.xdata;
 
 public class splashactivity extends AppCompatActivity {
 
@@ -16,7 +21,20 @@ public class splashactivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.rootview);
+
         //ImageView img_image=(ImageView)findViewById(R.id.img_image);
+
+        linearLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                getstatusbarheight();
+            }
+        });
+
+
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -34,6 +52,17 @@ public class splashactivity extends AppCompatActivity {
                 }
             }
         },1500);
+    }
+
+
+    public void getstatusbarheight(){
+        Rect rectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        int statusBarHeight = rectangle.top;
+
+        xdata.getinstance().saveSetting("statusbarheight", ""+statusBarHeight);
+
     }
 
 

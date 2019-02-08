@@ -256,8 +256,7 @@ public abstract class basefragment extends Fragment {
 
         public void getairplanemodeon();
 
-        public void drawerenabledisable(boolean enable,RelativeLayout layoutfooter, LinearLayout layoutheader,circularImageview playpausebutton,RelativeLayout layoutcustomcontroller
-        ,ImageView img_fullscreen);
+        public void drawerenabledisable(boolean enable);
 
         public ArrayList<metricmodel> getmetricarraylist();
         public void setrecordingrunning(boolean toggle);
@@ -277,6 +276,10 @@ public abstract class basefragment extends Fragment {
 
     }
     public void onHeaderBtnClick(int btnid) {
+
+    }
+
+    public void showhideviewondrawer(boolean isshow) {
 
     }
 

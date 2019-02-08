@@ -378,8 +378,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
             linearLayout=rootview.findViewById(R.id.content);
 
-            gethelper().drawerenabledisable(true,layout_bottom,linearheader,null,null,null);
-
+            gethelper().drawerenabledisable(true);
+            gethelper().updateactionbar(0);
             if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
                 apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
             flingactionmindstvac=common.getdrawerswipearea();
@@ -432,6 +432,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         return isvideorecording;
     }
+
 
 
 
@@ -1664,6 +1665,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    @Override
+    public void showhideviewondrawer(boolean isshow) {
+        super.showhideviewondrawer(isshow);
+
+        if(isshow){
+            layout_bottom.setVisibility(View.GONE);
+            linearheader.setVisibility(View.GONE);
+        }else{
+            layout_bottom.setVisibility(View.VISIBLE);
+            linearheader.setVisibility(View.VISIBLE);
+        }
     }
 }
 

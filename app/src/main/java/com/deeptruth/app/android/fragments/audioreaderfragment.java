@@ -115,8 +115,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView img_camera;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
-    @BindView(R.id.layout_drawer)
-    LinearLayout layout_drawer;
     @BindView(R.id.layout_scrubberview)
     RelativeLayout layout_scrubberview;
     @BindView(R.id.linear_seekbarcolorview)
@@ -262,9 +260,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
      RelativeLayout audiorootview;
     @BindView(R.id.layout_dtls)
     LinearLayout layout_dtls;
-
     GoogleMap mgooglemap;
-
     private String audiourl = null;
 
     private MediaPlayer player;
@@ -317,7 +313,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
+            setheadermargine();
             loadviewdata();
         }
         return rootview;
@@ -1877,5 +1873,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             linearseekbarcolorview.addView(view);
 
         }
+    }
+
+    public void setheadermargine(){
+        LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+        layout_mediatype.setLayoutParams(params);
     }
 }

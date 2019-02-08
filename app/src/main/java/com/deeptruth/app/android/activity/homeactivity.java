@@ -1,8 +1,12 @@
 package com.deeptruth.app.android.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +16,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -75,6 +81,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @BindView(R.id.img_righthandle)
     ImageView imgrighthandle;
 
+    @BindView(R.id.rootview)
+    RelativeLayout rootview;
+
     @BindView(R.id.drawer_layout)
     DrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
@@ -89,11 +98,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     ImageView img_fullscreen;
 
     private fragmentmedialist fragvideolist;
+    @SuppressLint("RestrictedApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
+
 
         config.selectedmediatype=0;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
@@ -118,35 +129,23 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                imglefthandle.setVisibility(View.VISIBLE);
-                imgrighthandle.setVisibility(View.GONE);
-                if(layoutbottom !=null)
-                      layoutbottom.setVisibility(View.VISIBLE);
-                if(layoutheader != null)
-                    layoutheader.setVisibility(View.VISIBLE);
-                if(playpausebutton != null)
-                    playpausebutton.setVisibility(View.VISIBLE);
-                if(layoutcustomcontroller != null)
-                    layoutcustomcontroller.setVisibility(View.VISIBLE);
-                if(img_fullscreen != null)
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                // layout_bottom.setVisibility(View.VISIBLE);
+
+                getcurrentfragment().showhideviewondrawer(false);
+
+              if(getcurrentfragment() instanceof fragmentmedialist){
+                  imglefthandle.setVisibility(View.GONE);
+              }else{
+                  imglefthandle.setVisibility(View.VISIBLE);
+                  imgrighthandle.setVisibility(View.GONE);
+              }
             }
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 imglefthandle.setVisibility(View.GONE);
                 imgrighthandle.setVisibility(View.VISIBLE);
-                if(layoutbottom !=null)
-                    layoutbottom.setVisibility(View.GONE);
-                if(layoutheader != null)
-                    layoutheader.setVisibility(View.GONE);
-                if(playpausebutton != null)
-                    playpausebutton.setVisibility(View.GONE);
-                if(layoutcustomcontroller != null)
-                    layoutcustomcontroller.setVisibility(View.GONE);
-                if(img_fullscreen != null)
-                    img_fullscreen.setVisibility(View.GONE);
-                // layout_bottom.setVisibility(View.VISIBLE);
+
+                getcurrentfragment().showhideviewondrawer(true);
+
             }
         };
         navigationdrawer.addDrawerListener(drawertoggle);
@@ -255,23 +254,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 //(getcurrentfragment() instanceof fragmentmedialist)
 @Override
 public void updateactionbar(int showHide, int color) {
-    /*if(showHide == 0){ View decorView = getWindow().getDecorView();
-        // show the status bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN; //hide status bar
-        decorView.setSystemUiVisibility(uiOptions);
-    }else{
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE; // show the status bar.
-        decorView.setSystemUiVisibility(uiOptions);
-    }*/
+
         actionbar.setBackgroundColor(color);
         getWindow().setStatusBarColor(color);
 }
 
 
     @Override
-    public void drawerenabledisable(boolean isenable, RelativeLayout layoutfooter, LinearLayout layoutheader, circularImageview playpausebutton, RelativeLayout layoutcustomcontroller, ImageView img_fullscreen) {
-
+    public void drawerenabledisable(boolean isenable) {
         if(isenable){
             navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             imglefthandle.setVisibility(View.VISIBLE);
@@ -280,24 +270,48 @@ public void updateactionbar(int showHide, int color) {
             navigationdrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             imglefthandle.setVisibility(View.GONE);
         }
-        this.layoutbottom = layoutfooter;
-        this.layoutheader = layoutheader;
-        this.playpausebutton = playpausebutton;
-        this.layoutcustomcontroller = layoutcustomcontroller;
-        this.img_fullscreen = img_fullscreen;
-
     }
 
     @Override
     public void updateactionbar(int showHide) {
         if(showHide == 0)
         {
-            actionbar.setVisibility(View.GONE);
-        }
-        else
-        {
-            actionbar.setVisibility(View.VISIBLE);
-        }
+           // hideSystemUI();
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
+
+        }else{
+            //showSystemUI();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+
+            }
+    }
+
+    private void hideSystemUI() {
+        // Set the IMMERSIVE flag.
+        // Set the content to appear under the system bars so that the content
+        // doesn't resize when the system bars hide and show.
+        View decorView = getWindow().getDecorView();
+
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        );
+    }
+
+
+    private void showSystemUI() {
+
+        //make nav bar transparent
+        Window window = getWindow();
+        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_VISIBLE);
     }
 
     @Override
@@ -345,6 +359,7 @@ public void updateactionbar(int showHide, int color) {
             img_menu.setVisibility(View.VISIBLE);
             img_help.setVisibility(View.VISIBLE);
             actionbar.setVisibility(View.GONE);
+            updateactionbar(0);
             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -370,6 +385,7 @@ public void updateactionbar(int showHide, int color) {
             imgshareicon.setVisibility(View.VISIBLE);
              actionbar.setVisibility(View.GONE);
             imgsettingsicon.setEnabled(true);
+            updateactionbar(1);
             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -381,8 +397,8 @@ public void updateactionbar(int showHide, int color) {
              imguploadicon.setVisibility(View.GONE);
              actionbar.setVisibility(View.GONE);
              imgsettingsicon.setEnabled(true);
+             updateactionbar(1);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
@@ -391,6 +407,7 @@ public void updateactionbar(int showHide, int color) {
              img_menu.setVisibility(View.VISIBLE);
              img_help.setVisibility(View.VISIBLE);
              actionbar.setVisibility(View.GONE);
+             updateactionbar(0);
              updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -401,6 +418,7 @@ public void updateactionbar(int showHide, int color) {
              img_menu.setVisibility(View.VISIBLE);
              img_help.setVisibility(View.VISIBLE);
              actionbar.setVisibility(View.GONE);
+             updateactionbar(0);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -417,6 +435,7 @@ public void updateactionbar(int showHide, int color) {
              img_menu.setVisibility(View.VISIBLE);
              imgshareicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setEnabled(true);
+             updateactionbar(1);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -429,6 +448,7 @@ public void updateactionbar(int showHide, int color) {
              imguploadicon.setVisibility(View.GONE);
              img_backbtn.setVisibility(View.VISIBLE);
              imgsettingsicon.setEnabled(true);
+             updateactionbar(1);
              updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -543,4 +563,7 @@ public void updateactionbar(int showHide, int color) {
             myhandler.removeCallbacks(myrunnable);
 
     }
+
+
+
 }

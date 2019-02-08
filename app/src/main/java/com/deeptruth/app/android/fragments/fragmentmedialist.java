@@ -93,6 +93,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @BindView(R.id.layout_sectionsearch)
     RelativeLayout layout_sectionsearch;
 
+    @BindView(R.id.layout_mediatype)
+    RelativeLayout layout_mediatype;
+
     @BindView(R.id.txt_mediatype_b)
     TextView txt_mediatype_b;
     @BindView(R.id.txt_mediatype_a)
@@ -210,7 +213,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        gethelper().drawerenabledisable(false,null,null,null,null,null);
+        setheadermargine();
+        gethelper().drawerenabledisable(false);
         isinbackground=false;
         recyclerviewlist.addOnItemTouchListener(onTouchListener);
     }
@@ -252,8 +256,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
             listlayout=rootview.findViewById(R.id.listlayout);
+            setheadermargine();
 
-            gethelper().drawerenabledisable(false,null,null,null,null,null);
+            gethelper().updateactionbar(1);
+            gethelper().drawerenabledisable(false);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -871,7 +877,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             @Override
             public void run() {
                 listviewheight=recyclerviewgrid.getHeight();
-                adaptermedialist = new adaptermedialist(getActivity(), arraymediaitemlist, new adapteritemclick() {
+                adaptermedialist = new adaptermedialist(applicationviavideocomposer.getactivity(), arraymediaitemlist, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
                     }
@@ -884,7 +890,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 },listviewheight);
                 recyclerviewlist.setAdapter(adaptermedialist);
 
-                adaptermediagrid = new adaptermediagrid(getActivity(), arraymediaitemlist, new adapteritemclick() {
+                adaptermediagrid = new adaptermediagrid(applicationviavideocomposer.getactivity(), arraymediaitemlist, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
                     }
@@ -1601,6 +1607,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             e.printStackTrace();
         }
+    }
+
+    public void setheadermargine(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+        layout_mediatype.setLayoutParams(params);
     }
 
 }
