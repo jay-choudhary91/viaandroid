@@ -2,6 +2,8 @@ package com.deeptruth.app.android.fragments;
 
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -566,12 +568,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         img_fullscreen.setVisibility(View.VISIBLE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_mediatype.setVisibility(View.VISIBLE);
+                        slidetodown();
                         layout_footer.setVisibility(View.VISIBLE);
                     } else {
                         gethelper().updateactionbar(0);
+                        slidetoabove();
                         img_fullscreen.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                        layout_mediatype.setVisibility(View.GONE);
                         layout_footer.setVisibility(View.GONE);
                     }
 
@@ -1462,21 +1465,46 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             /*RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.setMargins(0,0,0,0);
             layout_mediatype.setLayoutParams(params);*/
-
             gethelper().updateactionbar(0);
+            slidetoabove();
             layout_footer.setVisibility(View.GONE);
-            layout_mediatype.setVisibility(View.GONE);
             img_fullscreen.setVisibility(View.GONE);
             layout_validating.setVisibility(View.GONE);
         }else{
            /* setheadermargine();*/
             gethelper().updateactionbar(1);
+            slidetodown();
             layout_footer.setVisibility(View.VISIBLE);
-            layout_mediatype.setVisibility(View.VISIBLE);
             img_fullscreen.setVisibility(View.VISIBLE);
+            layout_mediatype.setVisibility(View.VISIBLE);
             layout_validating.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    public void slidetoabove() {
+        layout_mediatype.animate()
+                .translationY(-40)
+                .alpha(0.0f)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        layout_mediatype.setVisibility(View.GONE);
+                    }
+                });
+
+    }
+
+    public void slidetodown(){
+        layout_mediatype.setAlpha(0.0f);
+        // Start the animation
+        layout_mediatype.animate()
+                .translationY(-1)
+                .alpha(1.0f)
+                .setListener(null);
+        layout_validating.setVisibility(View.VISIBLE);
+
     }
 
     public void setheadermargine(){
