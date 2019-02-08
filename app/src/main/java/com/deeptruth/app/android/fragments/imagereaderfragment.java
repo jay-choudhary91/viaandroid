@@ -423,8 +423,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 img_scanover.startAnimation(animation);
             }
         });
+        fetchmetadatafromdb();
         loadmap();
-        setmetriceshashesdata();
         setupimagedata();
     }
 
@@ -709,118 +709,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.onResume();
     }
 
-    public void setmetriceshashesdata() {
-        if (myhandler != null && myrunnable != null)
-            myhandler.removeCallbacks(myrunnable);
-
-        myhandler = new Handler();
-        myrunnable = new Runnable() {
-            @Override
-            public void run() {
-                setmetricesgraphicaldata();
-                myhandler.postDelayed(this, 3000);
-            }
-        };
-        myhandler.post(myrunnable);
-    }
-
-    public void setmetricesgraphicaldata() {
-
-        if (metricmainarraylist.size() > 0) {
-            if (!metricmainarraylist.get(metricmainarraylist.size() - 1).isIsupdated()) {
-
-                metricmainarraylist.get(metricmainarraylist.size() - 1).setIsupdated(true);
-
-                double latt = 0, longg = 0;
-                ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
-
-               /* graphicaldrawerfragment.getencryptiondata(metricmainarraylist.get(0).getHashmethod(), metricmainarraylist.get(0).getVideostarttransactionid(),
-                        metricmainarraylist.get(0).getValuehash(), metricmainarraylist.get(0).getMetahash());
-*/
-                layout_validating.setVisibility(View.VISIBLE);
-                txt_section_validating_secondary.setText(config.verified);
-                if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
-                {
-                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                            getactivity().getResources().getColor(R.color.green_background));
-                }
-                else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red))
-                {
-                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                            getactivity().getResources().getColor(R.color.red));
-                }
-                else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow))
-                {
-                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                            getactivity().getResources().getColor(R.color.yellow_background));
-                }
-                else
-                {
-                    txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                            getactivity().getResources().getColor(R.color.green_background));
-                }
-
-                common.setgraphicalblockchainvalue(config.blockchainid,metricmainarraylist.get(0).getVideostarttransactionid(),true);
-                common.setgraphicalblockchainvalue(config.hashformula,metricmainarraylist.get(0).getHashmethod(),true);
-                common.setgraphicalblockchainvalue(config.datahash,metricmainarraylist.get(0).getValuehash(),true);
-                common.setgraphicalblockchainvalue(config.matrichash,metricmainarraylist.get(0).getMetahash(),true);
-
-                common.setspannable(getResources().getString(R.string.blockchain_id)," "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                common.setspannable(getResources().getString(R.string.block_id)," "+metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
-
-                arraycontainer arraycontainerformetric =metricmainarraylist.get(0);
-                if(arraycontainerformetric != null)
-                {
-                    String color = "white";
-                    if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
-                        color = arraycontainerformetric.getColor();
-
-                    switch (color) {
-                        case "green":
-                            layout_validating.setVisibility(View.VISIBLE);
-                            txt_section_validating_secondary.setText(config.verified);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#600EAE3E"));
-                            break;
-                        case "white":
-                            layout_validating.setVisibility(View.GONE);
-                            break;
-                        case "red":
-                            layout_validating.setVisibility(View.VISIBLE);
-                            txt_section_validating_secondary.setText(config.caution);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FF3B30"));
-                            break;
-                        case "yellow":
-                            layout_validating.setVisibility(View.VISIBLE);
-                            txt_section_validating_secondary.setText(config.caution);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FDD012"));
-                            break;
-                    }
-                }
-
-                for (int j = 0; j < metricItemArraylist.size(); j++) {
-                    selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
-                            metricItemArraylist.get(j).getMetricTrackValue();
-
-                    common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                            metricItemArraylist.get(j).getMetricTrackValue(), true);
-
-                    setmetadatavalue(metricItemArraylist.get(j));
-
-                }
-                selectedmetrices = selectedmetrices + "\n";
-            }
-
-            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-
-        }
-    }
-
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -882,33 +770,18 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     if (!mediastartdevicedate.isEmpty()){
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
-                        if(metricmainarraylist.size() > 0)
+
+                        for(int i=0;i<mitemlist.size();i++)
                         {
-
-                            for(int i=0;i<mitemlist.size();i++)
-                            {
-                                String sequencehash = mitemlist.get(i).getSequencehash();
-                                String hashmethod = mitemlist.get(i).getHashmethod();
-                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                                String color = mitemlist.get(i).getColor();
-                                metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,
-                                        sequencehash,serverdictionaryhash,color));
-                            }
-
-                        }else{
-
-                            for(int i=0;i<mitemlist.size();i++)
-                            {
-                                String metricdata=mitemlist.get(i).getMetricdata();
-                                String sequencehash = mitemlist.get(i).getSequencehash();
-                                String hashmethod = mitemlist.get(i).getHashmethod();
-                                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
-                                String serverdictionaryhash = mitemlist.get(i).getValuehash();
-                                String color = mitemlist.get(i).getColor();
-                                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash
-                                ,color);
-                            }
+                            String metricdata=mitemlist.get(i).getMetricdata();
+                            String sequencehash = mitemlist.get(i).getSequencehash();
+                            String hashmethod = mitemlist.get(i).getHashmethod();
+                            String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                            String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                            String color = mitemlist.get(i).getColor();
+                            parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash
+                            ,color);
+                        }
 
                             if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
 
@@ -941,6 +814,80 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                             if(mediafolder.trim().length() > 0)
                                                 setfolderspinner();
 
+                                            ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
+                                            layout_validating.setVisibility(View.VISIBLE);
+                                            txt_section_validating_secondary.setText(config.verified);
+                                            if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
+                                            {
+                                                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                                        getactivity().getResources().getColor(R.color.green_background));
+                                            }
+                                            else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red))
+                                            {
+                                                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                                        getactivity().getResources().getColor(R.color.red));
+                                            }
+                                            else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow))
+                                            {
+                                                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                                        getactivity().getResources().getColor(R.color.yellow_background));
+                                            }
+                                            else
+                                            {
+                                                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                                        getactivity().getResources().getColor(R.color.green_background));
+                                            }
+
+                                            common.setgraphicalblockchainvalue(config.blockchainid,metricmainarraylist.get(0).getVideostarttransactionid(),true);
+                                            common.setgraphicalblockchainvalue(config.hashformula,metricmainarraylist.get(0).getHashmethod(),true);
+                                            common.setgraphicalblockchainvalue(config.datahash,metricmainarraylist.get(0).getValuehash(),true);
+                                            common.setgraphicalblockchainvalue(config.matrichash,metricmainarraylist.get(0).getMetahash(),true);
+
+                                            common.setspannable(getResources().getString(R.string.blockchain_id)," "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+                                            common.setspannable(getResources().getString(R.string.block_id)," "+metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                                            common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                                            common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
+
+                                            arraycontainer arraycontainerformetric =metricmainarraylist.get(0);
+                                            if(arraycontainerformetric != null)
+                                            {
+                                                String color = "white";
+                                                if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
+                                                    color = arraycontainerformetric.getColor();
+
+                                                switch (color) {
+                                                    case "green":
+                                                        layout_validating.setVisibility(View.VISIBLE);
+                                                        txt_section_validating_secondary.setText(config.verified);
+                                                        txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#600EAE3E"));
+                                                        break;
+                                                    case "white":
+                                                        layout_validating.setVisibility(View.GONE);
+                                                        break;
+                                                    case "red":
+                                                        layout_validating.setVisibility(View.VISIBLE);
+                                                        txt_section_validating_secondary.setText(config.caution);
+                                                        txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FF3B30"));
+                                                        break;
+                                                    case "yellow":
+                                                        layout_validating.setVisibility(View.VISIBLE);
+                                                        txt_section_validating_secondary.setText(config.caution);
+                                                        txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FDD012"));
+                                                        break;
+                                                }
+                                            }
+
+                                            for (int j = 0; j < metricItemArraylist.size(); j++) {
+                                                selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
+                                                        metricItemArraylist.get(j).getMetricTrackValue();
+
+                                                common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                                        metricItemArraylist.get(j).getMetricTrackValue(), true);
+
+                                                setmetadatavalue(metricItemArraylist.get(j));
+
+                                            }
+
                                         }catch (Exception e)
                                         {
                                             e.printStackTrace();
@@ -948,7 +895,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                                     }
                                 });
-                            }
                         }
                         try
                         {
@@ -1100,24 +1046,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void getmetadetareader() {
-        myhandler = new Handler();
-        myrunnable = new Runnable() {
-            @Override
-            public void run() {
-
-                fetchmetadatafromdb();
-
-                myhandler.postDelayed(this, 5000);
-            }
-        };
-        myhandler.post(myrunnable);
-    }
-
-    public void onNothingSelected(AdapterView<?> arg0) {
-        // TODO Auto-generated method stub
-    }
-
     public void editabletext(){
         Editable editableText=  edt_medianame.getEditableText();
                 if(editableText!=null) {
@@ -1245,13 +1173,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
             lastsavedangle=strdegree;
         }
-
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
-            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-            Log.e("drawpoints","drawvalues");
-        }
     }
 
     private void loadmap() {
@@ -1275,25 +1196,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         this.mgooglemap = googleMap;
         this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
 
-        /*points.add(new LatLng(26.235896,74.24235896));
-        points.add(new LatLng(26.34235896,74.24235896));
-        points.add(new LatLng(26.232435896,74.424235896));
-        points.add(new LatLng(26.22235896,74.2325896));
-        points.add(new LatLng(26.454235896,74.24235896));
-        points.add(new LatLng(26.534235896,74.24235896));
-        points.add(new LatLng(26.5565235896,74.42235896));
-        points.add(new LatLng(26.67235896,74.23235896));
-        points.add(new LatLng(26.878235896,74.22135896));
-        points.add(new LatLng(26.45235896,74.23335896));
-        points.add(new LatLng(26.33235896,74.22335896));
-        polylineOptions.addAll(points);
-        polylineOptions.color(Color.BLUE);
-        polylineOptions.width(20);
-        Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-        //polyline.setEndCap(new RoundCap());
-        //polyline.setJointType(JointType.ROUND);
-         polyline.setPattern(PATTERN_POLYLINE_DOTTED);*/
+        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+            drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
 
+        selectedmetrices = selectedmetrices + "\n";
+
+        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
     }
 
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
@@ -1304,47 +1215,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             return;
 
         googlemap.setVisibility(View.VISIBLE);
-
-
-        //polyline.setPattern(PATTERN_POLYLINE_DOTTED);
-
-        /*Polygon polygon = mgooglemap.addPolygon(new PolygonOptions()
-                .clickable(true)
-                .add(location));
-        polygon.setTag("beta");
-
-
-        String type = "";
-        // Get the data object stored with the polygon.
-        if (polygon.getTag() != null) {
-            type = polygon.getTag().toString();
-        }
-
-        List<PatternItem> pattern = null;
-        int strokeColor = COLOR_BLACK_ARGB;
-        int fillColor = COLOR_WHITE_ARGB;
-
-        switch (type) {
-            // If no type is given, allow the API to use the default.
-            case "alpha":
-                // Apply a stroke pattern to render a dashed line, and define colors.
-                pattern = PATTERN_POLYGON_ALPHA;
-                strokeColor = COLOR_GREEN_ARGB;
-                fillColor = COLOR_PURPLE_ARGB;
-                break;
-            case "beta":
-                // Apply a stroke pattern to render a line of dots and dashes, and define colors.
-                pattern = PATTERN_POLYGON_BETA;
-                strokeColor = COLOR_ORANGE_ARGB;
-                fillColor = COLOR_BLUE_ARGB;
-                break;
-        }
-
-        polygon.setStrokePattern(pattern);
-        polygon.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
-        polygon.setStrokeColor(strokeColor);
-        polygon.setFillColor(fillColor);*/
-
         mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -1356,16 +1226,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
         } else {
-            if(!ismediaplayer)
-            {
-                mgooglemap.setMyLocationEnabled(true);
-            }
-            else
-            {
-                mgooglemap.setMyLocationEnabled(false);
-            }
-            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+            mgooglemap.setMyLocationEnabled(false);
+            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
         }
     }
 
@@ -1374,31 +1237,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     {
         if(mgooglemap != null)
         {
-                Log.e("GraphicalLatLng",""+latlng.latitude+" "+latlng.longitude);
-                {
-                    /*points.add(latlng);
-                    polylineOptions.addAll(points);
-                    polylineOptions.color(Color.BLUE);
-                    polylineOptions.width(20);
-                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-                    polyline.setStartCap(new RoundCap());
-                    polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.DEFAULT);*/
-
-                    mgooglemap.addMarker(new MarkerOptions()
-                            .position(latlng)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
-                }
-                /*{
-                    points.add(latlng);
-                    polylineOptions.addAll(points);
-                    polylineOptions.color(Color.WHITE);
-                    polylineOptions.width(20);
-                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-                    polyline.setStartCap(new RoundCap());
-                    polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.ROUND);
-                }*/
+            mgooglemap.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle)));
         }
     }
     public void rotatecompass(int degree)
