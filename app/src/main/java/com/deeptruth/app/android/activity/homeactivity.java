@@ -100,7 +100,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
@@ -277,19 +276,42 @@ public void updateactionbar(int showHide, int color) {
     public void updateactionbar(int showHide) {
         if(showHide == 0)
         {
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+           // hideSystemUI();
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
 
-               /* View decorView = getWindow().getDecorView();
-                // show the status bar.
-                int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN; //hide status bar
-                decorView.setSystemUiVisibility(uiOptions);*/
         }else{
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            //showSystemUI();
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
 
-                /*View decorView = getWindow().getDecorView();
-                int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE; // show the status bar.
-                decorView.setSystemUiVisibility(uiOptions);*/
             }
+    }
+
+    private void hideSystemUI() {
+        // Set the IMMERSIVE flag.
+        // Set the content to appear under the system bars so that the content
+        // doesn't resize when the system bars hide and show.
+        View decorView = getWindow().getDecorView();
+
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+                        );
+    }
+
+
+    private void showSystemUI() {
+
+        //make nav bar transparent
+        Window window = getWindow();
+        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+
+        View decorView = window.getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_VISIBLE);
     }
 
     @Override

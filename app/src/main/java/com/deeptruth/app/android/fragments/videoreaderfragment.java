@@ -369,6 +369,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+            setheadermargine();
             loadviewdata();
             loadmap();
         }
@@ -2224,6 +2225,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         if(isshow){
 
+            RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0,0,0,0);
+            layout_mediatype.setLayoutParams(params);
+
             if(player.isPlaying() && layoutbackgroundcontroller.getVisibility() == View.VISIBLE){
                 gethelper().updateactionbar(0);
                 layout_mediatype.setVisibility(View.GONE);
@@ -2239,6 +2244,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         }else{
 
+            setheadermargine();
+
             if(player.isPlaying() && layoutbackgroundcontroller.getVisibility() == View.GONE){
                 gethelper().updateactionbar(1);
                 layoutbackgroundcontroller.setVisibility(View.VISIBLE);
@@ -2253,6 +2260,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 layout_validating.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    public void setheadermargine(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+        layout_mediatype.setLayoutParams(params);
     }
 }
 
