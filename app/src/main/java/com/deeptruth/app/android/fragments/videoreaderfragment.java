@@ -2214,7 +2214,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
                 param.leftMargin=0;
 
-                View view = new View(getActivity());
+                View view = new View(applicationviavideocomposer.getactivity());
                 view.setLayoutParams(param);
 
 

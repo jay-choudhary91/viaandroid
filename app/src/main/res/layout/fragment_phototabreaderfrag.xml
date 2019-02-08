@@ -6,7 +6,6 @@
     android:id="@+id/photorootview"
     android:layout_height="match_parent"
     >
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,106 +14,58 @@
         android:handle="@+id/handle"
         android:layout_centerVertical="true">
 
-            <RelativeLayout
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/layout_photoreader"
+            android:layout_height="match_parent"
+            >
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="vertical"
-                android:id="@+id/layout_photoreader"
-                android:layout_height="match_parent"
-                >
-                <RelativeLayout
-                    android:id="@+id/layout_footer"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/bottomborder"
-                    android:layout_gravity="bottom|end"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:layout_alignParentBottom="true"
-                    android:visibility="visible"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin_left"
-                        android:layout_marginRight="@dimen/normal_margin_right"
-                        android:id="@+id/img_share_media"
-                        android:background="@drawable/share"/>
-
-                    <ImageView
-                        android:id="@+id/img_delete_media"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin_left"
-                        android:layout_marginRight="@dimen/normal_margin_right"
-                        android:layout_alignParentRight="true"
-                        android:background="@drawable/garbage"/>
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_alignParentTop="true"
-                    android:layout_above="@+id/layout_footer"
-                    android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:id="@+id/layout_mediatype"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <include layout="@layout/action_bar_mediadetails"></include>
-
-
-                </LinearLayout>
-
-
+                android:layout_alignParentTop="true"
+                android:layout_height="match_parent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:id="@+id/layout_halfscrn"
-                    android:layout_weight="1">
+                    android:id="@+id/layout_halfscrnimg"
+                    android:layout_weight="1.2">
 
-                    <ImageView
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:id="@+id/tab_photoreader"/>
+                        android:id="@+id/layout_halfscrn"
+                        >
 
-                   <ImageView
-                       android:id="@+id/img_fullscreen"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_alignParentBottom="true"
-                       android:layout_alignParentRight="true"
-                       android:src="@drawable/ic_full_screen_mode"
-                       android:padding="10dp"
-                       android:layout_marginRight="5dp"
-                       android:layout_marginBottom="5dp"/>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:id="@+id/tab_photoreader"/>
 
-                    <LinearLayout
-                        android:id="@+id/layout_validating"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/img_fullscreen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/ic_full_screen_mode"
+                            android:padding="10dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginBottom="5dp"/>
 
-                        <include layout="@layout/layout_validating"></include>
 
-                    </LinearLayout>
-
+                    </RelativeLayout>
                 </RelativeLayout>
-
-
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_below="@+id/tab_photoreader"
-                    android:layout_weight="1"
+                    android:layout_weight="0.8"
+                    android:paddingBottom="50dp"
                     android:visibility="visible"
                     android:id="@+id/layout_photodetails"
                     android:layout_height="0dp">
@@ -123,7 +74,62 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_mediatype"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_alignParentTop="true"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <include layout="@layout/action_bar_mediadetails"></include>
+
+
+            </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/layout_footer"
+                android:layout_width="match_parent"
+                android:background="@drawable/bottomborder"
+                android:layout_gravity="bottom|end"
+                android:layout_alignParentBottom="true"
+                android:visibility="visible"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_margin_left"
+                    android:layout_marginRight="@dimen/normal_margin_right"
+                    android:id="@+id/img_share_media"
+                    android:visibility="visible"
+                    android:background="@drawable/share"/>
+
+                <ImageView
+                    android:id="@+id/img_delete_media"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_margin_left"
+                    android:layout_marginRight="@dimen/normal_margin_right"
+                    android:layout_alignParentRight="true"
+                    android:visibility="visible"
+                    android:background="@drawable/garbage"/>
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_validating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_below="@id/layout_mediatype"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_validating"></include>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

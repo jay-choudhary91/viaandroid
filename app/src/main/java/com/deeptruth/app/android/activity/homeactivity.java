@@ -104,12 +104,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
 
-        rootview.post(new Runnable() {
-            @Override
-            public void run() {
-                getstatusbarheight();
-            }
-        });
 
         config.selectedmediatype=0;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
@@ -565,19 +559,5 @@ public void updateactionbar(int showHide, int color) {
     }
 
 
-    public void getstatusbarheight(){
-        Rect rectangle = new Rect();
-        Window window = getWindow();
-        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        int statusBarHeight = rectangle.top;
 
-        xdata.getinstance().saveSetting("statusbarheight", ""+statusBarHeight);
-
-        int contentViewTop =
-                window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
-        int titleBarHeight= contentViewTop - statusBarHeight;
-
-        Log.e("statusbarheight = " ,""+ titleBarHeight);
-
-    }
 }

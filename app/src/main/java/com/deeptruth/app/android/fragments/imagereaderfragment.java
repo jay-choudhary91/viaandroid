@@ -230,6 +230,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+            setheadermargine();
             loadviewdata();
 
         }
@@ -1458,12 +1459,17 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.showhideviewondrawer(isshow);
 
         if(isshow){
+            /*RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0,0,0,0);
+            layout_mediatype.setLayoutParams(params);*/
+
             gethelper().updateactionbar(0);
             layout_footer.setVisibility(View.GONE);
             layout_mediatype.setVisibility(View.GONE);
             img_fullscreen.setVisibility(View.GONE);
             layout_validating.setVisibility(View.GONE);
         }else{
+           /* setheadermargine();*/
             gethelper().updateactionbar(1);
             layout_footer.setVisibility(View.VISIBLE);
             layout_mediatype.setVisibility(View.VISIBLE);
@@ -1471,5 +1477,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             layout_validating.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    public void setheadermargine(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+        layout_mediatype.setLayoutParams(params);
     }
 }
