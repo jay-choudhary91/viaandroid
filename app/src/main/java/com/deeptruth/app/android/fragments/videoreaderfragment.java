@@ -881,7 +881,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layout_mediatype.setVisibility(View.VISIBLE);
-                            slidetodown();
+                            common.slidetodown(layout_mediatype);
                             layout_footer.setVisibility(View.VISIBLE);
                             playpausebutton.setVisibility(View.VISIBLE);
                         } else {
@@ -892,7 +892,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             img_fullscreen.setVisibility(View.GONE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_footer.setVisibility(View.GONE);
-                            slidetoabove();
+                            common.slidetoabove(layout_mediatype);
                         }
 
                     } else {
@@ -2163,58 +2163,36 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         if(isshow){
             if(player.isPlaying() && layoutbackgroundcontroller.getVisibility() == View.VISIBLE){
                 gethelper().updateactionbar(0);
-                slidetoabove();
+                common.slidetoabove(layout_mediatype);
                 layout_validating.setVisibility(View.GONE);
                 layoutbackgroundcontroller.setVisibility(View.GONE);
             }else{
                 gethelper().updateactionbar(0);
+                common.slidetoabove(layout_mediatype);
                 layout_footer.setVisibility(View.GONE);
-                slidetoabove();
                 playpausebutton.setVisibility(View.GONE);
                 layout_validating.setVisibility(View.GONE);
             }
         }else{
             if(player.isPlaying() && layoutbackgroundcontroller.getVisibility() == View.GONE){
                 gethelper().updateactionbar(1);
-                slidetodown();
+                common.slidetodown(layout_mediatype);
                 layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.VISIBLE);
                 playpausebutton.setVisibility(View.VISIBLE);
+                layout_mediatype.setVisibility(View.VISIBLE);
 
             }else{
                 gethelper().updateactionbar(1);
-                slidetodown();
+                common.slidetodown(layout_mediatype);
                 layout_footer.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.VISIBLE);
                 playpausebutton.setVisibility(View.VISIBLE);
+                layout_mediatype.setVisibility(View.VISIBLE);
             }
         }
     }
 
-    public void slidetoabove() {
-        layout_mediatype.animate()
-                .translationY(-40)
-                .alpha(0.0f)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        layout_mediatype.setVisibility(View.GONE);
-                    }
-                });
-
-    }
-
-    public void slidetodown() {
-        layout_mediatype.setAlpha(0.0f);
-        // Start the animation
-        layout_mediatype.animate()
-                .translationY(-1)
-                .alpha(1.0f)
-                .setListener(null);
-        layout_validating.setVisibility(View.VISIBLE);
-
-    }
     public void setheadermargine(){
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
