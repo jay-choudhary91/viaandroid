@@ -155,12 +155,16 @@ public class insertmediadataservice extends Service {
 
                                                     if(i == 0 && mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
                                                     {
-                                                        String filename = common.getfilename(mediapath);
+                                                        String medianame = common.getfilename(mediapath);
+                                                        String[] split=medianame.split("\\.");
+                                                        if(split.length > 0)
+                                                            medianame=split[0];
+
                                                         HashMap<String, String> map = new HashMap<String, String>();
                                                         map.put("fps","30");
                                                         map.put("firsthash", keyValue);
                                                         map.put("hashmethod",keytype);
-                                                        map.put("name",filename);
+                                                        map.put("name",medianame);
                                                         map.put("duration","");
                                                         map.put("framecounts","");
                                                         map.put("finalhash","");
@@ -172,7 +176,7 @@ public class insertmediadataservice extends Service {
                                                         videokey=mdbstartitemcontainer.get(0).getItem4();
 
                                                         mdbstartitemcontainer.get(0).setItem1(json);
-                                                        mdbstartitemcontainer.get(0).setItem3(filename);
+                                                        mdbstartitemcontainer.get(0).setItem3(medianame);
                                                         mdbstartitemcontainer.get(0).setItem14(firsthash);
                                                         updatestartframes(mdbstartitemcontainer);
                                                     }
@@ -228,13 +232,12 @@ public class insertmediadataservice extends Service {
 
                                                 if(mvideoframes.size() > 0)
                                                 {
-                                                    String filename = common.getfilename(mediapath);
                                                     String lastframe="";
                                                     if(mvideoframes.size() > 0)
                                                         lastframe = mvideoframes.get(mvideoframes.size() -1).getkeyvalue();
 
                                                     // update last frame in database
-                                                    updateendvideoinfo(firsthash,filename,lastframe,"" + count,mediapath,keytype,videokey);
+                                                    updateendvideoinfo(firsthash,lastframe,"" + count,mediapath,keytype,videokey);
                                                     mvideoframes.get(mvideoframes.size()-1).settitle("Last Frame ");
                                                 }
 
@@ -372,19 +375,24 @@ public class insertmediadataservice extends Service {
     }
 
     // Calling when frames are getting from ffmpegframegrabber
-    public void updateendvideoinfo(String updatefirsthash, String file_name,String lastframe,String lastcount,
+    public void updateendvideoinfo(String updatefirsthash, String lastframe,String lastcount,
                                      String videourl,String keytype,String videokey)
     {
         String duration = "";
         if(!videourl.isEmpty())
             duration = common.getvideotimefromurl(videourl);
 
+        String medianame = common.getfilename(videourl);
+        String[] split=medianame.split("\\.");
+        if(split.length > 0)
+            medianame=split[0];
+
         try {
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("fps","30");
             map.put("firsthash", updatefirsthash);
             map.put("hashmethod",keytype);
-            map.put("name",file_name);
+            map.put("name",medianame);
             map.put("duration",duration);
             map.put("framecounts",lastcount);
             map.put("finalhash",lastframe);

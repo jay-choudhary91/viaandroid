@@ -21,7 +21,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -290,7 +289,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             txt_title_actionbarcomposer.setText("deeptruth");
 
             try {
-                if(common.getstoragedeniedpermissions().isEmpty() && (recordedmediafile != null )
+                if(common.getstorageaudiorecorddeniedpermissions().isEmpty() && (recordedmediafile != null )
                         && new File(recordedmediafile).exists())
                     common.deletefile(recordedmediafile);
             }catch (Exception e)
@@ -791,11 +790,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             String duration = common.getvideotimefromurl(recordedmediafile);
 
+            String medianame=common.getfilename(recordedmediafile);
+            String[] split=medianame.split("\\.");
+            if(split.length > 0)
+                medianame=split[0];
+
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("fps","30");
             map.put("firsthash", "");
             map.put("hashmethod",keytype);
-            map.put("name",common.getfilename(recordedmediafile));
+            map.put("name",medianame);
             map.put("duration",duration);
             map.put("framecounts","");
             map.put("finalhash","");
@@ -805,7 +809,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             String updatecompletedate[] = common.getcurrentdatewithtimezone();
             String completeddate = updatecompletedate[0];
-            String medianame=common.getfilename(recordedmediafile);
 
             mdbstartitemcontainer.get(0).setItem1(json);
             mdbstartitemcontainer.get(0).setItem3(recordedmediafile);

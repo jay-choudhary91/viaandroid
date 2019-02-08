@@ -46,6 +46,7 @@
     <color name="dark_green">#19B16D</color>
     <color name="green_background">#4CD964</color>
     <color name="yellow_background">#FDD012</color>
+    <color name="yellow_background_transparent">#40FDD012</color>
     <color name="red_background">#FF3B30</color>
     <color name="radio_btn_bg">#092B3B</color>
     <color name="dark_blue_solid">#004860</color>

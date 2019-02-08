@@ -2,8 +2,11 @@ package com.deeptruth.app.android.fragments;
 
 
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -57,7 +59,10 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
     adapteritemclick mitemclick=null;
     folderdataadapter adapter;
-    ArrayList<folder> arraylist=new ArrayList<>();
+    ArrayList<folder> folderitemlist =new ArrayList<>();
+    private final int request_permissions = 101;
+    private Runnable doafterallpermissionsgranted;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
     {
@@ -65,8 +70,6 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
         {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
-            fetchfoldersfromdirectory();
 
             img_camera.setVisibility(View.VISIBLE);
             txt_title_actionbarcomposer.setText("MyFolders");
@@ -85,7 +88,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
             int numberOfColumns = 2;
             recyclerlist.setLayoutManager(new GridLayoutManager(getActivity(), numberOfColumns));
-            adapter = new folderdataadapter(getActivity(),arraylist, new adapteritemclick() {
+            adapter = new folderdataadapter(getActivity(), folderitemlist, new adapteritemclick() {
                 @Override
                 public void onItemClicked(Object object) {
                 }
@@ -119,6 +122,59 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
         return rootview;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getallpermissions();
+    }
+
+    public void getallpermissions() {
+        if (doafterallpermissionsgranted != null) {
+            doafterallpermissionsgranted.run();
+            doafterallpermissionsgranted = null;
+        } else {
+            if (common.getstoragedeniedpermissions().isEmpty()) {
+                // All permissions are granted
+
+                doafterallpermissionsgranted();
+
+            } else {
+                String[] array = new String[common.getstoragedeniedpermissions().size()];
+                array = common.getstoragedeniedpermissions().toArray(array);
+                ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), array, request_permissions);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == request_permissions) {
+            boolean permissionsallgranted = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    permissionsallgranted = false;
+                    break;
+                }
+            }
+            if (permissionsallgranted) {
+                doafterallpermissionsgranted = new Runnable() {
+                    @Override
+                    public void run() {
+                        doafterallpermissionsgranted();
+                    }
+                };
+            } else {
+                getallpermissions();
+            }
+        }
+    }
+
+    private void doafterallpermissionsgranted() {
+        fetchfoldersfromdirectory();
+    }
+
+
     public void showdeletealert(String message, final folder myfolder){
         new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
                 .setTitle("Alert!!")
@@ -131,12 +187,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                                 common.delete(new File(myfolder.getFolderdir()));
 
                             if(adapter != null)
-                            {
-                                arraylist.clear();
-                                adapter.notifyDataSetChanged();
                                 fetchfoldersfromdirectory();
-                                adapter.notifyDataSetChanged();
-                            }
 
                             if(mitemclick != null)
                                 mitemclick.onItemClicked(null);
@@ -173,9 +224,9 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
                 if(file.exists())
                 {
-                    arraylist.remove(arraylist.size()-1);
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),"","0",false,false));
-                    arraylist.add(new folder("",false,true));
+                    folderitemlist.remove(folderitemlist.size()-1);
+                    folderitemlist.add(new folder(file.getName(),file.getAbsolutePath(),"","0",false,false));
+                    folderitemlist.add(new folder("",false,true));
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -222,10 +273,16 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
     public void fetchfoldersfromdirectory()
     {
+        folderitemlist.clear();
+        adapter.notifyDataSetChanged();
 
         File rootdir = new File(config.dirmedia);
         if(! rootdir.exists())
-            return;
+            rootdir.mkdirs();
+
+        File allmediadir = new File(config.dirallmedia);
+        if(! allmediadir.exists())
+            allmediadir.mkdirs();
 
         File[] files = rootdir.listFiles();
         for (File file : files)
@@ -235,15 +292,16 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                 String[] thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
                 if(file.getName().equalsIgnoreCase(config.allmedia))
                 {
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath[0],thumbnailpath[1],true,false));
+                    folderitemlist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath[0],thumbnailpath[1],true,false));
                 }
                 else
                 {
-                    arraylist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath[0],thumbnailpath[1],false,false));
+                    folderitemlist.add(new folder(file.getName(),file.getAbsolutePath(),thumbnailpath[0],thumbnailpath[1],false,false));
                 }
             }
         }
-        arraylist.add(new folder("",false,true));
+        folderitemlist.add(new folder("",false,true));
+        adapter.notifyDataSetChanged();
     }
 
     public String[] getfolderthumbnailpath(String directorypath)

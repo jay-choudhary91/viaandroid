@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -36,6 +37,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -171,14 +173,16 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_date;
     @BindView(R.id.layout_time)
     LinearLayout layout_time;
-    @BindView(R.id.layout_validating)
-    LinearLayout layout_validating;
-    @BindView(R.id.txt_section_validating_secondary)
-    TextView txt_section_validating_secondary;
     @BindView(R.id.photorootview)
     RelativeLayout photorootview;
     @BindView(R.id.layout_dtls)
     LinearLayout layout_dtls;
+    @BindView(R.id.layout_validating)
+    LinearLayout layout_validating;
+    @BindView(R.id.txt_section_validating_secondary)
+    TextView txt_section_validating_secondary;
+    @BindView(R.id.img_scanover)
+    ImageView img_scanover;
 
 
     private String imageurl = null;
@@ -206,7 +210,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout googlemap;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-    mediastartdevicedate = "",mediatime = "",mediasize="",lastsavedangle="";
+    mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     ImageView img_compass;
     adapteritemclick mcontrollernavigator;
@@ -405,6 +409,18 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         edt_medianotes.setFocusable(false);
                     }
                 }
+            }
+        });
+
+        photorootview.post(new Runnable() {
+            @Override
+            public void run() {
+                int totalwidth= photorootview.getWidth() + 100;
+                TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth ,0.0f, 0.0f);
+                animation.setDuration(3000);
+                animation.setRepeatCount(Animation.INFINITE);
+                animation.setRepeatMode(ValueAnimator.RESTART);
+                img_scanover.startAnimation(animation);
             }
         });
         loadmap();
@@ -755,6 +771,35 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
                 common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
+                arraycontainer arraycontainerformetric =metricmainarraylist.get(0);
+                if(arraycontainerformetric != null)
+                {
+                    String color = "white";
+                    if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
+                        color = arraycontainerformetric.getColor();
+
+                    switch (color) {
+                        case "green":
+                            layout_validating.setVisibility(View.VISIBLE);
+                            txt_section_validating_secondary.setText(config.verified);
+                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#600EAE3E"));
+                            break;
+                        case "white":
+                            layout_validating.setVisibility(View.GONE);
+                            break;
+                        case "red":
+                            layout_validating.setVisibility(View.VISIBLE);
+                            txt_section_validating_secondary.setText(config.caution);
+                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FF3B30"));
+                            break;
+                        case "yellow":
+                            layout_validating.setVisibility(View.VISIBLE);
+                            txt_section_validating_secondary.setText(config.caution);
+                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FDD012"));
+                            break;
+                    }
+                }
+
                 for (int j = 0; j < metricItemArraylist.size(); j++) {
                     selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
                             metricItemArraylist.get(j).getMetricTrackValue();
@@ -822,11 +867,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
 
                     Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(imageurl));
-                    String mediacompleteddate="";
+                    String mediastartdevicedate="";
                     if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
                     {
                         do{
-                            mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                            //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
                             mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
@@ -835,7 +880,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         }while(cur.moveToNext());
                     }
 
-                    if (!mediacompleteddate.isEmpty()){
+                    if (!mediastartdevicedate.isEmpty()){
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
                         if(metricmainarraylist.size() > 0)
@@ -866,9 +911,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 ,color);
                             }
 
-                            if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediacompleteddate.isEmpty() && mediacompleteddate!= null)){
+                            if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
 
-                                final String finalMediacompleteddate = mediacompleteddate;
+                                final String finalMediacompleteddate = mediastartdevicedate;
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {

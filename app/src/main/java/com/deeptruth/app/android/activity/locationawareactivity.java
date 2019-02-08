@@ -1860,9 +1860,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             String location = "" + cursor.getString(cursor.getColumnIndex("location"));
                             String type = "" + cursor.getString(cursor.getColumnIndex("type"));
                             String status = "" + cursor.getString(cursor.getColumnIndex("status"));
+                            String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
 
                             video videoobj = new video();
-                            videoobj.setPath(config.dirallmedia +File.separator+location);
+                            videoobj.setPath(mediafilepath);
                             videoobj.setmimetype(type);
                             videoobj.setMediastatus(status);
                             if(! status.equalsIgnoreCase(config.sync_complete) && (! status.equalsIgnoreCase(config.sync_notfound)))
@@ -1909,10 +1910,13 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     public void callreadersyncservice(String mediafilepath,String mimetype)
     {
+        if(! common.isnetworkconnected(getApplicationContext()))
+            return;
+
         String keytype = common.checkkey();
         String firsthash="";
 
-        if(mimetype.startsWith("image/"))
+        if(mimetype.startsWith("image"))
             firsthash= md5.fileToMD5(mediafilepath);
 
         Intent intent = new Intent(applicationviavideocomposer.getactivity(), readmediadataservice.class);

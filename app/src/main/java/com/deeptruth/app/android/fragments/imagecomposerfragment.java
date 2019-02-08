@@ -623,11 +623,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     {
         if(capturedimagefile != null)
         {
+            String medianame=common.getfilename(capturedimagefile.getAbsolutePath());
+            String[] split=medianame.split("\\.");
+            if(split.length > 0)
+                medianame=split[0];
+
             HashMap<String, String> map = new HashMap<String, String>();
             map.put("fps","1");
             map.put("firsthash", firsthash);
             map.put("hashmethod",keytype);
-            map.put("name",common.getfilename(capturedimagefile.getAbsolutePath()));
+            map.put("name",medianame);
             map.put("duration","1");
             map.put("framecounts","1");
             map.put("finalhash",firsthash);
@@ -637,7 +642,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             String updatecompletedate[] = common.getcurrentdatewithtimezone();
             String completeddate = updatecompletedate[0];
-            String medianame=common.getfilename(capturedimagefile.getAbsolutePath());
 
             mdbstartitemcontainer.get(0).setItem1(json);
             mdbstartitemcontainer.get(0).setItem3(capturedimagefile.getAbsolutePath());

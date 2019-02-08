@@ -50,7 +50,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvvideoname,tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
+        public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
         EditText edtvideoname;
         public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public RelativeLayout root_view;
@@ -58,7 +58,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         public myViewHolder(View view) {
             super(view);
             tv_medianotes = (TextView) view.findViewById(R.id.tv_medianotes);
-            tvvideoname = (TextView) view.findViewById(R.id.tv_videoname);
             txt_pipesign = (TextView) view.findViewById(R.id.txt_pipesign);
             edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
             tv_mediatime = (TextView) view.findViewById(R.id.tv_mediatime);
@@ -170,19 +169,12 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             holder.root_view.setVisibility(View.VISIBLE);
             if(arrayvideolist.get(position).getMediatitle().trim().isEmpty())
-                arrayvideolist.get(position).setMediatitle(common.getfilename(arrayvideolist.get(position).getPath()));
-
-            if(arrayvideolist.get(position).getMediatitle() != null && (! arrayvideolist.get(position).getMediatitle().equalsIgnoreCase("null")
-                        && (! arrayvideolist.get(position).getMediatitle().trim().isEmpty())))
             {
-                if(arrayvideolist.get(position).getMediatitle().contains("."))
-                {
-                    holder.edtvideoname.setText(arrayvideolist.get(position).getMediatitle().substring(0, arrayvideolist.get(position).getMediatitle().lastIndexOf(".")));
-                }
-                else
-                {
-                    holder.edtvideoname.setText(arrayvideolist.get(position).getMediatitle().substring(0, arrayvideolist.get(position).getMediatitle().trim().length()));
-                }
+                holder.edtvideoname.setText("NA");
+            }
+            else
+            {
+                holder.edtvideoname.setText(arrayvideolist.get(position).getMediatitle());
             }
 
             if(arrayvideolist.get(position).getCreatedate().trim().isEmpty())
@@ -288,7 +280,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.img_slide_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    adapter.onItemClicked(arrayvideolist.get(position),1);
                     holder.img_slide_share.setClickable(false);
                     new Handler().postDelayed(new Runnable()
                     {
@@ -297,7 +288,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             holder.img_slide_share.setClickable(true);
                         }
                     }, 150);
-
+                    adapter.onItemClicked(arrayvideolist.get(position),1);
                 }
             });
 
