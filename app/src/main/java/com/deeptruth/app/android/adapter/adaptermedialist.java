@@ -295,7 +295,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                         {
                             holder.img_slide_share.setClickable(true);
                         }
-                    }, 150);
+                    }, 500);
                     adapter.onItemClicked(arrayvideolist.get(position),1);
                 }
             });
