@@ -65,12 +65,43 @@
                     android:layout_width="match_parent"
                     android:layout_below="@+id/tab_photoreader"
                     android:layout_weight="0.8"
-                    android:paddingBottom="50dp"
                     android:visibility="visible"
                     android:id="@+id/layout_photodetails"
                     android:layout_height="0dp">
                     <include layout="@layout/layout_mediadetails"></include>
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layout_footer"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/bottomborder"
+                    android:layout_gravity="bottom|end"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/normal_margin_left"
+                        android:layout_marginRight="@dimen/normal_margin_right"
+                        android:id="@+id/img_share_media"
+                        android:visibility="visible"
+                        android:background="@drawable/share"/>
+
+                    <ImageView
+                        android:id="@+id/img_delete_media"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/normal_margin_left"
+                        android:layout_marginRight="@dimen/normal_margin_right"
+                        android:layout_alignParentRight="true"
+                        android:visibility="visible"
+                        android:background="@drawable/garbage"/>
+                </RelativeLayout>
+
 
             </LinearLayout>
 
@@ -86,36 +117,6 @@
 
 
             </LinearLayout>
-            <RelativeLayout
-                android:id="@+id/layout_footer"
-                android:layout_width="match_parent"
-                android:background="@drawable/bottomborder"
-                android:layout_gravity="bottom|end"
-                android:layout_alignParentBottom="true"
-                android:visibility="visible"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/normal_margin_left"
-                    android:layout_marginRight="@dimen/normal_margin_right"
-                    android:id="@+id/img_share_media"
-                    android:visibility="visible"
-                    android:background="@drawable/share"/>
-
-                <ImageView
-                    android:id="@+id/img_delete_media"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/normal_margin_left"
-                    android:layout_marginRight="@dimen/normal_margin_right"
-                    android:layout_alignParentRight="true"
-                    android:visibility="visible"
-                    android:background="@drawable/garbage"/>
-            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/layout_validating"
