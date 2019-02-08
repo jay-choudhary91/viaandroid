@@ -9,29 +9,28 @@
         android:id="@+id/shimmer_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:shimmer_duration="2000"
         >
 
         <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_section_validating_secondary"
             app:fontType="OpenSans_Regular"
             style="@style/txt_no_gps_wifi"
             android:gravity="right|center_vertical"
             android:text="@string/validating"
             android:paddingRight="10dp"
-            android:textColor="@color/white"
-            android:background="@color/red"/>
+            android:textColor="@color/white"/>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
 
     <com.deeptruth.app.android.views.customfonttextview
         app:fontType="OpenSans_Regular"
-        android:id="@+id/txt_section_validating_secondary"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="right|center_vertical"
         android:text="@string/validating"
+        android:visibility="gone"
         android:paddingRight="10dp"
         android:textColor="@color/white"/>
 
@@ -41,6 +40,7 @@
         android:layout_height="30dp"
         android:layout_alignParentLeft="true"
         android:alpha="0.4"
+        android:visibility="gone"
         android:background="@drawable/gradient_verify_white"/>
 
 
