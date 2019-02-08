@@ -348,7 +348,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     boolean runmethod = false;
-    public boolean isvideocompleted=false;
+    public boolean isvideocompleted=false,ismapzoomed=false;
     public int flingactionmindstvac;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     private long currentaudioduration =0;
@@ -1492,7 +1492,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                       if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                               (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                          populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                          drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+
+                      if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                              (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                      {
+                          if(! ismapzoomed)
+                          {
+                              populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                          }
+                      }
                   }
                 if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())
                 {
@@ -1516,37 +1525,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         };
         myHandler.post(myRunnable);
-    }
-
-    public void setmetricesgraphicaldata()
-    {
-        long currentduration=maxincreasevideoduration;
-        long percentage = 0;
-        int totalframes = metricmainarraylist.size();
-        int count = 0;
-
-        if(videoduration > 0 && currentduration > 0)
-               percentage = (currentduration*100)/videoduration ;
-
-        if(percentage > 0)
-            count =(int) (totalframes*percentage)/100;
-
-        if(metricmainarraylist.size() == 0 || currentduration == 0)
-            return;
-
-        if(isvideocompleted)
-            count=metricmainarraylist.size()-1;
-
-        if(count < metricmainarraylist.size())
-        {
-            arraycontainerformetric = new arraycontainer();
-            arraycontainerformetric = metricmainarraylist.get(count);
-            metricmainarraylist.get(position).setIsupdated(true);
-        }
-
-        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
     }
 
     public class setonmediacompletion implements MediaPlayer.OnCompletionListener
@@ -1744,12 +1722,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
             lastsavedangle=strdegree;
         }
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
-            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-            Log.e("drawpoints","drawvalues");
-        }
     }
 
     private void loadmap() {
@@ -1798,50 +1770,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     private void populateUserCurrentLocation(final LatLng location) {
         // DeviceUser user = DeviceUserManager.getInstance().getUser();
+
         if (mgooglemap == null)
             return;
 
         googlemap.setVisibility(View.VISIBLE);
-
-
-        //polyline.setPattern(PATTERN_POLYLINE_DOTTED);
-
-        /*Polygon polygon = mgooglemap.addPolygon(new PolygonOptions()
-                .clickable(true)
-                .add(location));
-        polygon.setTag("beta");
-
-
-        String type = "";
-        // Get the data object stored with the polygon.
-        if (polygon.getTag() != null) {
-            type = polygon.getTag().toString();
-        }
-
-        List<PatternItem> pattern = null;
-        int strokeColor = COLOR_BLACK_ARGB;
-        int fillColor = COLOR_WHITE_ARGB;
-
-        switch (type) {
-            // If no type is given, allow the API to use the default.
-            case "alpha":
-                // Apply a stroke pattern to render a dashed line, and define colors.
-                pattern = PATTERN_POLYGON_ALPHA;
-                strokeColor = COLOR_GREEN_ARGB;
-                fillColor = COLOR_PURPLE_ARGB;
-                break;
-            case "beta":
-                // Apply a stroke pattern to render a line of dots and dashes, and define colors.
-                pattern = PATTERN_POLYGON_BETA;
-                strokeColor = COLOR_ORANGE_ARGB;
-                fillColor = COLOR_BLUE_ARGB;
-                break;
-        }
-
-        polygon.setStrokePattern(pattern);
-        polygon.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
-        polygon.setStrokeColor(strokeColor);
-        polygon.setFillColor(fillColor);*/
 
         mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -1854,16 +1787,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
         } else {
-            if(!ismediaplayer)
-            {
-                mgooglemap.setMyLocationEnabled(true);
-            }
-            else
-            {
-                mgooglemap.setMyLocationEnabled(false);
-            }
-            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+            mgooglemap.setMyLocationEnabled(false);
+            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
+            ismapzoomed=true;
         }
     }
 
@@ -1872,31 +1799,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     {
         if(mgooglemap != null)
         {
-            Log.e("GraphicalLatLng",""+latlng.latitude+" "+latlng.longitude);
-            {
-                    /*points.add(latlng);
-                    polylineOptions.addAll(points);
-                    polylineOptions.color(Color.BLUE);
-                    polylineOptions.width(20);
-                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-                    polyline.setStartCap(new RoundCap());
-                    polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.DEFAULT);*/
-
-                mgooglemap.addMarker(new MarkerOptions()
-                        .position(latlng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
-            }
-                /*{
-                    points.add(latlng);
-                    polylineOptions.addAll(points);
-                    polylineOptions.color(Color.WHITE);
-                    polylineOptions.width(20);
-                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-                    polyline.setStartCap(new RoundCap());
-                    polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.ROUND);
-                }*/
+            mgooglemap.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle)));
         }
     }
     public void rotatecompass(int degree)
