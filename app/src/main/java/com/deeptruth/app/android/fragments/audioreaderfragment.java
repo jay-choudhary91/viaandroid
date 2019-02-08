@@ -1393,29 +1393,31 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     public void run() {
                         try {
                             SimpleDateFormat formatted = null;
-                            Date mediadate = null;
+                            Date startdate = null;
                             if(finalMediacompleteddate.contains("T"))
                             {
                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                mediadate = format.parse(finalMediacompleteddate);
+                                startdate = format.parse(finalMediacompleteddate);
                             }
                             else
                             {
                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                                mediadate = format.parse(finalMediacompleteddate);
+                                startdate = format.parse(finalMediacompleteddate);
                             }
+
                             Calendar calendar = Calendar.getInstance();
-                            calendar.setTime(mediadate);
+                            calendar.setTime(startdate);
                             int increaseseconds=player.getDuration()/1000;
                             calendar.add(Calendar.SECOND, increaseseconds);
-                            Date startdate = calendar.getTime();
+                            Date enddate = calendar.getTime();
                             formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
                             String startformatteddate=formatted.format(startdate);
-                            String endformatteddate=formatted.format(mediadate);
+                            String endformatteddate=formatted.format(enddate);
                             final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
                             final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
                             txt_starttime.setText(startformatteddate);
                             txt_endtime.setText(endformatteddate);
+
                             txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(createdtime);
 
