@@ -526,7 +526,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     {
                         img_fullscreen.setClickable(true);
                     }
-                }, 150);
+                }, 500);
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
                     gethelper().drawerenabledisable(true,layout_footer,layout_mediatype,null,null,img_fullscreen);
 
@@ -647,7 +647,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     {
                         img_share_media.setClickable(true);
                     }
-                }, 150);
+                }, 500);
                 if (imageurl != null && (!imageurl.isEmpty()))
                     common.shareimage(getActivity(), imageurl);
                 break;
