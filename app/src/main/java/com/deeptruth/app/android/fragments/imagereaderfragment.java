@@ -210,7 +210,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout googlemap;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-    mediastartdevicedate = "",mediatime = "",mediasize="",lastsavedangle="";
+    mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     ImageView img_compass;
     adapteritemclick mcontrollernavigator;
@@ -866,11 +866,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
 
                     Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(imageurl));
-                    String mediacompleteddate="";
+                    String mediastartdevicedate="";
                     if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
                     {
                         do{
-                            mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                            //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
                             mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
@@ -879,7 +879,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         }while(cur.moveToNext());
                     }
 
-                    if (!mediacompleteddate.isEmpty()){
+                    if (!mediastartdevicedate.isEmpty()){
 
                         ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
                         if(metricmainarraylist.size() > 0)
@@ -910,9 +910,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                 ,color);
                             }
 
-                            if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediacompleteddate.isEmpty() && mediacompleteddate!= null)){
+                            if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
 
-                                final String finalMediacompleteddate = mediacompleteddate;
+                                final String finalMediacompleteddate = mediastartdevicedate;
                                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {

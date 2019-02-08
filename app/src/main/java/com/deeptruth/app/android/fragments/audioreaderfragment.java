@@ -298,7 +298,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediastartdevicedate = "",mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
+            mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
     adapteritemclick mcontrollernavigator;
     arraycontainer arraycontainerformetric =null;
     int currentprocessframe=0;
@@ -1369,11 +1369,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 e.printStackTrace();
             }
             Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(audiourl));
-            String mediacompleteddate="";
+            String mediastartdevicedate="";
             if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
             {
                 do{
-                    mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                    //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
                     mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                     medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                     medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
@@ -1384,10 +1384,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }while(cur.moveToNext());
             }
 
-            if (!mediacompleteddate.isEmpty()){
+            if (!mediastartdevicedate.isEmpty()){
 
 
-                final String finalMediacompleteddate = mediacompleteddate;
+                final String finalMediacompleteddate = mediastartdevicedate;
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -1406,8 +1406,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             }
                             Calendar calendar = Calendar.getInstance();
                             calendar.setTime(mediadate);
-                            int decreaseseconds=player.getDuration()/1000;
-                            calendar.add(Calendar.SECOND, -decreaseseconds);
+                            int increaseseconds=player.getDuration()/1000;
+                            calendar.add(Calendar.SECOND, increaseseconds);
                             Date startdate = calendar.getTime();
                             formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
                             String startformatteddate=formatted.format(startdate);
@@ -1463,7 +1463,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                   //  txt_duration.setText("00:00:02:17.3");
 
 
-                    if((!mediastartdevicedate.isEmpty()) && (!mediacompleteddate.isEmpty() && mediacompleteddate!= null)){
+                    if((!mediastartdevicedate.isEmpty()) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
 
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override

@@ -321,7 +321,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediastartdevicedate = "",lastsavedangle="";
+            lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver;
     int targetheight=0,previousheight=0,targetwidth=0,previouswidth=0, previouswidthpercentage=0,scrubberviewwidth=0;
@@ -1065,11 +1065,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
 
                     Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
-                    String mediacompleteddate="";
+                    String mediastartdevicedate="";
                     if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
                     {
                         do{
-                            mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
+                            //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
                             mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
@@ -1079,9 +1079,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }while(cur.moveToNext());
                     }
 
-                    if (!mediacompleteddate.isEmpty())
+                    if (!mediastartdevicedate.isEmpty())
                     {
-                        final String finalMediacompleteddate = mediacompleteddate;
+                        final String finalMediacompleteddate = mediastartdevicedate;
                         applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -1101,8 +1101,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                                     Calendar calendar = Calendar.getInstance();
                                     calendar.setTime(mediadate);
-                                    int decreaseseconds=player.getDuration()/1000;
-                                    calendar.add(Calendar.SECOND, -decreaseseconds);
+                                    int increaseseconds=player.getDuration()/1000;
+                                    calendar.add(Calendar.SECOND, increaseseconds);
                                     Date startdate = calendar.getTime();
                                     formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
                                     String startformatteddate=formatted.format(startdate);
