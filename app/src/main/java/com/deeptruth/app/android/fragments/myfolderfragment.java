@@ -15,6 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.BuildConfig;
@@ -47,6 +49,8 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
     @BindView(R.id.recycler_list)
     RecyclerView recyclerlist;
+    @BindView(R.id.layout_mediatype)
+    LinearLayout layout_mediatype;
 
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
@@ -71,6 +75,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
+            setheadermargine();
             img_camera.setVisibility(View.VISIBLE);
             txt_title_actionbarcomposer.setText("MyFolders");
             img_arrow_back.setOnClickListener(this);
@@ -360,5 +365,10 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
 
     public void setdata(adapteritemclick mitemclick) {
         this.mitemclick = mitemclick;
+    }
+    public void setheadermargine(){
+        LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+        layout_mediatype.setLayoutParams(params);
     }
 }
