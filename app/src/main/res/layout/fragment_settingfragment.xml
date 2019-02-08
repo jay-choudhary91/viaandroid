@@ -12,7 +12,25 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <include layout="@layout/actionbar_settings"></include>
+        <RelativeLayout
+            android:id="@+id/layout_mediatype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include layout="@layout/actionbar_settings"></include>
+            <!--<RelativeLayout
+                android:id="@+id/layout_sectionsearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/view_actionbar"
+                android:orientation="horizontal">
+
+            </RelativeLayout>-->
+
+        </RelativeLayout>
+
+
 
         <WebView
             android:layout_width="match_parent"

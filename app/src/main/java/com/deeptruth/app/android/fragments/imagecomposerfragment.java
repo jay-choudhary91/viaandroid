@@ -490,38 +490,35 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(rootview == null)
-        {
-            rootview = super.onCreateView(inflater, container, savedInstanceState);
-            ButterKnife.bind(this, rootview);
-            gethelper().drawerenabledisable(true);
-            gethelper().updateactionbar(0);
+        rootview = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootview);
+        gethelper().drawerenabledisable(true);
+        gethelper().updateactionbar(0);
 
-            mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
-            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
-            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
-            img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
-            img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
-            img_close = (ImageView) rootview.findViewById(R.id.img_close);
-            linearLayout=rootview.findViewById(R.id.content);
+        mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
+        imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
+        img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
+        img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
+        img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
+        img_close = (ImageView) rootview.findViewById(R.id.img_close);
+        linearLayout=rootview.findViewById(R.id.content);
 
-            timerhandler = new Handler() ;
-            mTextureView.setOnTouchListener(this);
-            imgflashon.setOnClickListener(this);
-            img_dotmenu.setOnClickListener(this);
-            img_stop_watch.setOnClickListener(this);
-            img_warning.setOnClickListener(this);
-            img_close.setOnClickListener(this);
+        timerhandler = new Handler() ;
+        mTextureView.setOnTouchListener(this);
+        imgflashon.setOnClickListener(this);
+        img_dotmenu.setOnClickListener(this);
+        img_stop_watch.setOnClickListener(this);
+        img_warning.setOnClickListener(this);
+        img_close.setOnClickListener(this);
 
-            img_dotmenu.setVisibility(View.VISIBLE);
-            imgflashon.setVisibility(View.VISIBLE);
-            img_stop_watch.setVisibility(View.VISIBLE);
+        img_dotmenu.setVisibility(View.VISIBLE);
+        imgflashon.setVisibility(View.VISIBLE);
+        img_stop_watch.setVisibility(View.VISIBLE);
 
-            flingactionmindstvac=common.getdrawerswipearea();
-            keytype=common.checkkey();
-            brustmodeenabled=false;
-            img_stop_watch.setImageResource(R.drawable.stopwatch);
-        }
+        flingactionmindstvac=common.getdrawerswipearea();
+        keytype=common.checkkey();
+        brustmodeenabled=false;
+        img_stop_watch.setImageResource(R.drawable.stopwatch);
 
         return rootview;
     }

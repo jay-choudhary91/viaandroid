@@ -495,6 +495,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 layout_sectionsearch.setVisibility(View.GONE);
                 break;
             case R.id.img_dotmenu:
+                hidekeyboard();
                 settingfragment settingfrag=new settingfragment();
                 gethelper().addFragment(settingfrag, false, true);
                 break;

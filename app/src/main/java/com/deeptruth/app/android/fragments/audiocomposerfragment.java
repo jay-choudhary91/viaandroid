@@ -169,40 +169,37 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        if(rootview == null)
+        rootview = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this, rootview);
+        gethelper().drawerenabledisable(true);
+        gethelper().updateactionbar(0);
+
+        handle = (ImageView) rootview.findViewById(R.id.handle);
+        img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
+        layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
+        linearLayout=rootview.findViewById(R.id.content);
+        img_flash.setVisibility(View.GONE);
+        timerhandler = new Handler() ;
+        layout_drawertouchable.setOnTouchListener(this);
+        img_dotmenu.setVisibility(View.VISIBLE);
+
+        img_warning.setOnClickListener(this);
+        img_close.setOnClickListener(this);
+        img_dotmenu.setOnClickListener(this);
+
+        keytype=common.checkkey();
+        frameduration=common.checkframeduration();
+
+        loadffmpeglibrary();
+        startnoise();
+        txt_title_actionbarcomposer.setText("deeptruth");
+        setmetriceshashesdata();
+        try {
+            int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
+                    RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
+        }catch (Exception e)
         {
-            rootview = super.onCreateView(inflater, container, savedInstanceState);
-            ButterKnife.bind(this, rootview);
-            gethelper().drawerenabledisable(true);
-            gethelper().updateactionbar(0);
-
-            handle = (ImageView) rootview.findViewById(R.id.handle);
-            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
-            layout_drawer = (LinearLayout) rootview.findViewById(R.id.layout_drawer);
-            linearLayout=rootview.findViewById(R.id.content);
-            img_flash.setVisibility(View.GONE);
-            timerhandler = new Handler() ;
-            layout_drawertouchable.setOnTouchListener(this);
-            img_dotmenu.setVisibility(View.VISIBLE);
-
-            img_warning.setOnClickListener(this);
-            img_close.setOnClickListener(this);
-            img_dotmenu.setOnClickListener(this);
-
-            keytype=common.checkkey();
-            frameduration=common.checkframeduration();
-
-            loadffmpeglibrary();
-            startnoise();
-            txt_title_actionbarcomposer.setText("deeptruth");
-            setmetriceshashesdata();
-            try {
-                int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
-                        RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
 
         return rootview;

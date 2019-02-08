@@ -362,68 +362,64 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(rootview == null)
+        rootview = super.onCreateView(inflater, container, savedInstanceState);
+        ButterKnife.bind(this,rootview);
+
+        applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
+        imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
+        img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
+        img_warning = (ImageView) rootview.findViewById(R.id.img_warning);
+        img_close = (ImageView) rootview.findViewById(R.id.img_close);
+        handle = (ImageView) rootview.findViewById(R.id.handle);
+        txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
+        txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
+        linearLayout=rootview.findViewById(R.id.content);
+
+        gethelper().drawerenabledisable(true);
+        gethelper().updateactionbar(0);
+        if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
+            apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
+        flingactionmindstvac=common.getdrawerswipearea();
+
+        imgflashon.setVisibility(View.VISIBLE);
+        txt_media_quality.setVisibility(View.VISIBLE);
+
+        if(videobitrate == 2000000)
+            txt_media_quality.setText("420p");
+
+        timerhandler = new Handler() ;
+        txt_title_actionbarcomposer.setText("deeptruth");
+        if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
+            frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
+
+        if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
+                xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
         {
-            rootview = super.onCreateView(inflater, container, savedInstanceState);
-            ButterKnife.bind(this,rootview);
-
-            applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
-            imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
-            img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
-            img_warning = (ImageView) rootview.findViewById(R.id.img_warning);
-            img_close = (ImageView) rootview.findViewById(R.id.img_close);
-            handle = (ImageView) rootview.findViewById(R.id.handle);
-            txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
-            txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
-            linearLayout=rootview.findViewById(R.id.content);
-
-            gethelper().drawerenabledisable(true);
-            gethelper().updateactionbar(0);
-            if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
-                apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
-            flingactionmindstvac=common.getdrawerswipearea();
-
-            imgflashon.setVisibility(View.VISIBLE);
-            txt_media_quality.setVisibility(View.VISIBLE);
-
-            if(videobitrate == 2000000)
-                txt_media_quality.setText("420p");
-
-            timerhandler = new Handler() ;
-            txt_title_actionbarcomposer.setText("deeptruth");
-            if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
-                frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
-
-            if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5) ||
-                    xdata.getinstance().getSetting(config.hashtype).trim().isEmpty())
-            {
-                keytype=config.prefs_md5;
-            }
-            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
-            {
-                keytype=config.prefs_md5_salt;
-            }
-            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
-            {
-                keytype=config.prefs_sha;
-            }
-            else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
-            {
-                keytype=config.prefs_sha_salt;
-            }
-
-            img_dotmenu.setVisibility(View.VISIBLE);
-            mTextureView.setOnTouchListener(this);
-
-            imgflashon.setOnClickListener(this);
-            img_dotmenu.setOnClickListener(this);
-            img_warning.setOnClickListener(this);
-            img_close.setOnClickListener(this);
-
-            setmetriceshashesdata();
+            keytype=config.prefs_md5;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_md5_salt))
+        {
+            keytype=config.prefs_md5_salt;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha))
+        {
+            keytype=config.prefs_sha;
+        }
+        else if(xdata.getinstance().getSetting(config.hashtype).equalsIgnoreCase(config.prefs_sha_salt))
+        {
+            keytype=config.prefs_sha_salt;
         }
 
+        img_dotmenu.setVisibility(View.VISIBLE);
+        mTextureView.setOnTouchListener(this);
+
+        imgflashon.setOnClickListener(this);
+        img_dotmenu.setOnClickListener(this);
+        img_warning.setOnClickListener(this);
+        img_close.setOnClickListener(this);
+
+        setmetriceshashesdata();
         return rootview;
     }
 
