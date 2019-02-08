@@ -660,16 +660,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
         } else {
-            if(!ismediaplayer)
-            {
-                mgooglemap.setMyLocationEnabled(true);
-            }
-            else
-            {
-                mgooglemap.setMyLocationEnabled(false);
-            }
-            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+            mgooglemap.setMyLocationEnabled(true);
+            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
         }
     }
 

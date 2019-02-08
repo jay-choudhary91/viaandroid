@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Rect;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -33,6 +34,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -277,6 +279,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             img_header_search.setOnClickListener(this);
             txt_searchcancel.setOnClickListener(this);
             img_uploadmedia.setOnClickListener(this);
+            listlayout.setOnClickListener(this);
+            recyclerviewlist.setOnClickListener(this);
+            recyclerviewgrid.setOnClickListener(this);
 
             img_camera.setVisibility(View.VISIBLE);
             img_folder.setVisibility(View.VISIBLE);
@@ -497,6 +502,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 checkwritestoragepermission();
                 break;
             case R.id.img_folder:
+                hidekeyboard();
                 myfolderfragment folderfragment=new myfolderfragment();
                 folderfragment.setdata(new adapteritemclick() {
                     @Override
@@ -509,6 +515,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     }
                 });
                 gethelper().addFragment(folderfragment, false, true);
+                break;
+            case R.id.listlayout:
+                hidekeyboard();
                 break;
         }
     }

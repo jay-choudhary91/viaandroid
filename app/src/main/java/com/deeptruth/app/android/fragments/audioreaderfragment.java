@@ -278,7 +278,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0, currentaudiodurationseconds =0;
     private boolean isdraweropen=false;
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    public boolean ismediacompleted =false;
+    public boolean ismediacompleted =false,ismapzoomed=false;
     circularImageview playpausebutton;
     private TextView songName, time_current, time;
     StringBuilder mFormatBuilder;
@@ -572,7 +572,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     {
                         img_share_media.setClickable(true);
                     }
-                }, 150);
+                }, 500);
                 if (audiourl != null && (!audiourl.isEmpty()))
                     common.shareaudio(getActivity(), audiourl);
                 break;
@@ -1071,12 +1071,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         if(scrollview_meta.getVisibility() == View.VISIBLE)
                             setmetadatavalue(metricItemArraylist.get(j));
                     }
+
+                    if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                            (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                        drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
                 }
 
                 if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                         (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                    populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-             //   setmetricesgraphicaldata();
+                {
+                    if(! ismapzoomed)
+                    {
+                        populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                    }
+                }
 
                 if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())
                 {
@@ -1389,29 +1397,31 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     public void run() {
                         try {
                             SimpleDateFormat formatted = null;
-                            Date mediadate = null;
+                            Date startdate = null;
                             if(finalMediacompleteddate.contains("T"))
                             {
                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                mediadate = format.parse(finalMediacompleteddate);
+                                startdate = format.parse(finalMediacompleteddate);
                             }
                             else
                             {
                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                                mediadate = format.parse(finalMediacompleteddate);
+                                startdate = format.parse(finalMediacompleteddate);
                             }
+
                             Calendar calendar = Calendar.getInstance();
-                            calendar.setTime(mediadate);
+                            calendar.setTime(startdate);
                             int increaseseconds=player.getDuration()/1000;
                             calendar.add(Calendar.SECOND, increaseseconds);
-                            Date startdate = calendar.getTime();
+                            Date enddate = calendar.getTime();
                             formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
                             String startformatteddate=formatted.format(startdate);
-                            String endformatteddate=formatted.format(mediadate);
+                            String endformatteddate=formatted.format(enddate);
                             final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
                             final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
                             txt_starttime.setText(startformatteddate);
                             txt_endtime.setText(endformatteddate);
+
                             txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(createdtime);
 
@@ -1714,12 +1724,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             lastsavedangle=strdegree;
         }
 
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
-            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-            Log.e("drawpoints","drawvalues");
-        }
+
     }
 
     private void loadmap() {
@@ -1742,26 +1747,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private void setMap(GoogleMap googleMap) {
         this.mgooglemap = googleMap;
         this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-        /*points.add(new LatLng(26.235896,74.24235896));
-        points.add(new LatLng(26.34235896,74.24235896));
-        points.add(new LatLng(26.232435896,74.424235896));
-        points.add(new LatLng(26.22235896,74.2325896));
-        points.add(new LatLng(26.454235896,74.24235896));
-        points.add(new LatLng(26.534235896,74.24235896));
-        points.add(new LatLng(26.5565235896,74.42235896));
-        points.add(new LatLng(26.67235896,74.23235896));
-        points.add(new LatLng(26.878235896,74.22135896));
-        points.add(new LatLng(26.45235896,74.23335896));
-        points.add(new LatLng(26.33235896,74.22335896));
-        polylineOptions.addAll(points);
-        polylineOptions.color(Color.BLUE);
-        polylineOptions.width(20);
-        Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-        //polyline.setEndCap(new RoundCap());
-        //polyline.setJointType(JointType.ROUND);
-         polyline.setPattern(PATTERN_POLYLINE_DOTTED);*/
-
     }
 
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
@@ -1783,17 +1768,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-        } else {
-            if(!ismediaplayer)
-            {
-                mgooglemap.setMyLocationEnabled(true);
-            }
-            else
-            {
-                mgooglemap.setMyLocationEnabled(false);
-            }
-            mgooglemap.getUiSettings().setZoomControlsEnabled(false);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(false);
+        } else
+        {
+            mgooglemap.setMyLocationEnabled(false);
+            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
+            ismapzoomed=true;
         }
     }
 
@@ -1802,31 +1782,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     {
         if(mgooglemap != null)
         {
-            Log.e("GraphicalLatLng",""+latlng.latitude+" "+latlng.longitude);
-            {
-                    /*points.add(latlng);
-                    polylineOptions.addAll(points);
-                    polylineOptions.color(Color.BLUE);
-                    polylineOptions.width(20);
-                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-                    polyline.setStartCap(new RoundCap());
-                    polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.DEFAULT);*/
-
-                mgooglemap.addMarker(new MarkerOptions()
-                        .position(latlng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
-            }
-                /*{
-                    points.add(latlng);
-                    polylineOptions.addAll(points);
-                    polylineOptions.color(Color.WHITE);
-                    polylineOptions.width(20);
-                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-                    polyline.setStartCap(new RoundCap());
-                    polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.ROUND);
-                }*/
+            mgooglemap.addMarker(new MarkerOptions()
+                    .position(latlng)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle)));
         }
     }
     public void rotatecompass(int degree)
