@@ -2101,6 +2101,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params.setMargins(0,0,0,-15);
         params.addRule(RelativeLayout.ABOVE,R.id.layout_backgroundcontroller );
         img_fullscreen.setLayoutParams(params);
     }
