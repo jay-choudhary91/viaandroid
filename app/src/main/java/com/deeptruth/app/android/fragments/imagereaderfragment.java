@@ -667,7 +667,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     {
                         img_share_media.setClickable(true);
                     }
-                }, 500);
+                }, 1000);
                 if (imageurl != null && (!imageurl.isEmpty()))
                     common.shareimage(getActivity(), imageurl);
                 break;

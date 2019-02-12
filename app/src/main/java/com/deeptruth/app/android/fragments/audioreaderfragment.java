@@ -572,7 +572,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     {
                         img_share_media.setClickable(true);
                     }
-                }, 500);
+                }, 1000);
                 if (audiourl != null && (!audiourl.isEmpty()))
                     common.shareaudio(getActivity(), audiourl);
                 break;
