@@ -1519,7 +1519,7 @@ public class common {
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
                 "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
-                "satelliteangle","satelliteid","strengthofsatellites"};
+                "satelliteangle","satelliteid","strengthofsatellites","attitude"};
 
         return items;
     }

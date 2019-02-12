@@ -65,6 +65,7 @@ import com.deeptruth.app.android.models.mediametadatainfo;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.startmediainfo;
 import com.deeptruth.app.android.models.video;
+import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.services.locationservice;
 import com.deeptruth.app.android.services.readmediadataservice;
 import com.deeptruth.app.android.utils.common;
@@ -114,7 +115,7 @@ import okhttp3.Response;
 public abstract class locationawareactivity extends baseactivity implements GpsStatus.Listener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener,Orientation.Listener {
 
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "requesting_location_update_key";
     private static final String LOCATION_KEY = "location_key";
@@ -170,6 +171,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     ArrayList<video> readerarraymedialist = new ArrayList<video>();
     private BroadcastReceiver coredatabroadcastreceiver;
     Date initialdate ;
+    private Orientation mOrientation;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,6 +184,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         initialdate = new Date();
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
+            mOrientation = new Orientation(this);
             registerallbroadcast();
             getconnectionspeed();
         }
@@ -194,6 +197,32 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     public void setcameracapture(boolean toggle) {
         iscameracapture=toggle;
+    }
+
+    @Override
+    public void onOrientationChanged(float pitch, float roll) {
+        //attitudeindicator.setAttitude(pitch, roll);
+    }
+
+    @Override
+    public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
+        if(adjustedRotationMatrix != null && adjustedRotationMatrix.length > 0)
+        {
+            String datavalue="";
+            for (float number : adjustedRotationMatrix) {
+                if(datavalue.isEmpty())
+                {
+                    datavalue=""+number;
+                }
+                else
+                {
+                    datavalue=datavalue+","+number;
+                }
+            }
+            xdata.getinstance().saveSetting(config.phone_attitude,datavalue);
+        }
+
+       // Log.e("Pitch roll cases ",xdata.getinstance().getSetting(config.phone_attitude));
     }
 
     @Override
@@ -1217,6 +1246,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("strengthofsatellites")) {
             metricItemValue =xdata.getinstance().getSetting("strengthofsatellites");;
         }
+        else if (key.equalsIgnoreCase("attitude")) {
+            metricItemValue =xdata.getinstance().getSetting(config.phone_attitude);;
+        }
         else if (key.equalsIgnoreCase(config.airplanemode)) {
             metricItemValue = "ON";
             if(Settings.Global.getInt(locationawareactivity.this.getContentResolver(),Settings.Global.AIRPLANE_MODE_ON, 0) == 0)
@@ -1608,6 +1640,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             e.printStackTrace();
         }
 
+        if(mOrientation != null)
+            mOrientation.startListening(this);
+
         try {
             registerAccelerometerSensor();
 
@@ -1754,6 +1789,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         {
             applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
         }
+        if(mOrientation != null)
+            mOrientation.stopListening();
     }
 
     public void syncmediadatabase()

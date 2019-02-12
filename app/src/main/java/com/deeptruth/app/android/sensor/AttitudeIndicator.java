@@ -12,6 +12,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.deeptruth.app.android.R;
@@ -107,6 +108,7 @@ public class AttitudeIndicator extends View {
     float centerY = mHeight / 2;
 
     // Background
+    //canvas.drawColor(Color.RED);
     canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 
     // Save the state without any rotation/translation so
@@ -115,14 +117,29 @@ public class AttitudeIndicator extends View {
 
     // Orient the earth to reflect the pitch and roll angles
     canvas.rotate(mRoll, centerX, centerY);
-    canvas.translate(0, (mPitch / TOTAL_VISIBLE_PITCH_DEGREES) * mHeight);
+    //Log.e("Pitch roll dy ",""+(mPitch / TOTAL_VISIBLE_PITCH_DEGREES) * mHeight);
+    float translatevalue=(mPitch / TOTAL_VISIBLE_PITCH_DEGREES) * mHeight;
+    /*if(translatevalue >= 60)
+    {
+       canvas.translate(0, 60);
+    }
+    else if(translatevalue <= -60)
+    {
+      canvas.translate(0, -60);
+    }
+    else
+    {
+      canvas.translate(0, translatevalue);
+    }*/
+    canvas.translate(0, 15);
+
 
     {
       Paint myPaint = new Paint();
       myPaint.setColor(Color.GRAY);
       myPaint.setStrokeWidth(5);
       //myPaint.setStyle(Paint.Style.STROKE);
-      canvas.drawRect(100, 70, 200, 240, myPaint);
+      canvas.drawRect(100, 70, 170, 200, myPaint);
     }
 
     {
@@ -130,7 +147,7 @@ public class AttitudeIndicator extends View {
       myPaint.setColor(Color.WHITE);
       myPaint.setStrokeWidth(5);
       //myPaint.setStyle(Paint.Style.STROKE);
-      canvas.drawRect(110, 90, 190, 220, myPaint);
+      canvas.drawRect(110, 90, 160, 180, myPaint);
     }
 
     // Return to normal to draw the miniature plane

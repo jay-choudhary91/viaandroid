@@ -369,7 +369,7 @@ public void updateactionbar(int showHide, int color) {
         else if(fragment instanceof framemetricssettings){
             img_back.setVisibility(View.VISIBLE);
             img_cancel.setVisibility(View.VISIBLE);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
         }
         else if(fragment instanceof videoplayfragment){

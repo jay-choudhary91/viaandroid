@@ -117,7 +117,7 @@ public class Orientation implements SensorEventListener {
     float pitch = orientation[1] * -57;
     float roll = orientation[2] * -57;
 
-    Log.e("Pitch roll ",""+pitch+" "+roll);
+    //Log.e("Pitch roll ",""+pitch+" "+roll);
 
     //mListener.onOrientationChanged(pitch, roll);
     mListener.onOrientationChanged(adjustedRotationMatrix, orientation);
