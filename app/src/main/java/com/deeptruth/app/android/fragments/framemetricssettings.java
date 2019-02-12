@@ -57,11 +57,14 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
     RelativeLayout layout_md_salt;
     RelativeLayout layout_sha;
     RelativeLayout layout_sha_salt;
+    LinearLayout layout_mediatype;
 
     ImageView img_md;
     ImageView img_md_salt;
     ImageView img_sha;
     ImageView img_sha_salt;
+    ImageView img_arrow_back;
+    ImageView img_cancel;
 
     EditText edt_md_salt;
     EditText edt_sha_salt;
@@ -81,11 +84,14 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
             layout_md_salt =(RelativeLayout)rootview.findViewById(R.id.layout_md_salt);
             layout_sha =(RelativeLayout)rootview.findViewById(R.id.layout_sha);
             layout_sha_salt =(RelativeLayout)rootview.findViewById(R.id.layout_sha_salt);
+            layout_mediatype =(LinearLayout) rootview.findViewById(R.id.layout_mediatype);
 
             img_md =(ImageView)rootview.findViewById(R.id.img_md);
             img_md_salt= (ImageView)rootview.findViewById(R.id.img_md_salt);
             img_sha =(ImageView)rootview.findViewById(R.id.img_sha);
             img_sha_salt =(ImageView)rootview.findViewById(R.id.img_sha_salt);
+            img_arrow_back =(ImageView)rootview.findViewById(R.id.img_arrow_back);
+            img_cancel =(ImageView)rootview.findViewById(R.id.img_cancel);
 
             edt_update_every =(EditText) rootview.findViewById(R.id.edt_update_every);
             edt_framescount =(EditText) rootview.findViewById(R.id.edt_framescount);
@@ -99,6 +105,8 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
             layout_md_salt.setOnClickListener(this);
             layout_sha.setOnClickListener(this);
             layout_sha_salt.setOnClickListener(this);
+            img_arrow_back.setOnClickListener(this);
+            img_cancel.setOnClickListener(this);
             layout_view.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -204,6 +212,8 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
                     });
                 }
             }).start();
+
+            setheadermargins();
         }
         return rootview;
     }
@@ -235,6 +245,14 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
             case R.id.layout_sha_salt:
                 clearfocus();
                 showselectedunselected(img_sha_salt,img_md,img_md_salt,img_sha,config.prefs_sha_salt);
+                break;
+
+            case R.id.img_arrow_back:
+                saveData();
+                break;
+
+            case R.id.img_cancel:
+                gethelper().onBack();
                 break;
         }
     }
@@ -317,5 +335,11 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
         edt_md_salt.clearFocus();
         edt_sha_salt.clearFocus();
         common.hidekeyboard(applicationviavideocomposer.getactivity());
+    }
+
+    public void setheadermargins(){
+        LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+        layout_mediatype.setLayoutParams(params);
     }
 }

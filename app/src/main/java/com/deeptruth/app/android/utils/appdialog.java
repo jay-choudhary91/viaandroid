@@ -114,7 +114,7 @@ public class appdialog
         developerdialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         developerdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         developerdialog.setCanceledOnTouchOutside(false);
-        developerdialog.setCancelable(false);
+        developerdialog.setCancelable(true);
         developerdialog.setContentView(R.layout.egg_dialog);
 
         final EditText edtInputData1 = (EditText) developerdialog.findViewById(R.id.edt_inputdata_1);
@@ -126,7 +126,7 @@ public class appdialog
             public void onClick(View view) {
                 if(edtInputData1.getText().toString().trim().length() > 0)
                 {
-                    if(edtInputData1.getText().toString().trim().equalsIgnoreCase("8813"))
+                    if(edtInputData1.getText().toString().trim().equalsIgnoreCase("0000"))
                     {
                         xdata.getinstance().saveSetting(xdata.developermode,"1");
                         if(developerdialog != null && developerdialog.isShowing())

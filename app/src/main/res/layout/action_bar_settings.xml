@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/dark_blue_solid_a">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/actionbarcomposer"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        >
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:id="@+id/txt_title_actionbarcomposer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:text="@string/my_settings"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            app:fontType="OpenSans_Regular"/>
+
+        <ImageView
+            android:id="@+id/img_arrow_back"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:background="@drawable/left_arrow"/>
+
+
+        <ImageView
+            android:id="@+id/img_cancel"
+            android:layout_width="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_cancel" />
+
+    </RelativeLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1522,7 +1522,7 @@ public class common {
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
                 "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
                 "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
-                "satelliteangle","satelliteid","strengthofsatellites"};
+                "satelliteangle","satelliteid","strengthofsatellites","attitude"};
 
         return items;
     }
@@ -1901,6 +1901,15 @@ public class common {
                 .setListener(null);
         layout_mediatype.setVisibility(View.VISIBLE);
 
+    }
+
+
+    public static boolean isdevelopermodeenable() {
+        if (xdata.getinstance().getSetting(xdata.developermode).toString().trim().isEmpty() ||
+                xdata.getinstance().getSetting(xdata.developermode).toString().equalsIgnoreCase("0")) {
+            return false;
+        }
+        return true;
     }
 
 

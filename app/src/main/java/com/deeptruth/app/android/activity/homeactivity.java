@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -41,15 +42,18 @@ import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoplayfragment;
 import com.deeptruth.app.android.services.callservice;
+import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class homeactivity extends locationawareactivity implements View.OnClickListener {
+public class homeactivity extends locationawareactivity implements View.OnClickListener, View.OnTouchListener {
 
     @BindView(R.id.txt_title)
     TextView txt_title;
@@ -96,6 +100,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     circularImageview playpausebutton;
     RelativeLayout layoutcustomcontroller;
     ImageView img_fullscreen;
+    Date lastdateselection=null;
+    boolean isviewtouched=false;
 
     private fragmentmedialist fragvideolist;
     @SuppressLint("RestrictedApi")
@@ -163,6 +169,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         img_backbtn.setOnClickListener(this);
         imglefthandle.setOnClickListener(this);
         imgrighthandle.setOnClickListener(this);
+        fragment_container.setOnTouchListener(this);
 
         if(graphicaldrawerfragment == null)
         {
@@ -366,10 +373,8 @@ public void updateactionbar(int showHide, int color) {
             fragment_container.setLayoutParams(params);
         }
         else if(fragment instanceof framemetricssettings){
-            img_back.setVisibility(View.VISIBLE);
-            img_cancel.setVisibility(View.VISIBLE);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid));
 
+            actionbar.setVisibility(View.GONE);
         }
         else if(fragment instanceof videoplayfragment){
             img_menu.setVisibility(View.VISIBLE);
@@ -589,6 +594,21 @@ public void updateactionbar(int showHide, int color) {
                 if((graphicaldrawerfragment!= null))
                     graphicaldrawerfragment.setmetricesdata();
 
+                if(! common.isdevelopermodeenable())
+                {
+                    if(isviewtouched)
+                    {
+                        Date currentDate=new Date();
+                        int secondDifference= (int) (Math.abs(initialdate.getTime()-currentDate.getTime())/1000);
+                        if(secondDifference > 4)
+                        {
+                            initialdate = new Date();
+                            if(! appdialog.isdialogshowing())
+                                appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
+                        }
+                    }
+                }
+
                 myhandler.postDelayed(this, 5000);
             }
         };
@@ -606,5 +626,20 @@ public void updateactionbar(int showHide, int color) {
     }
 
 
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                isviewtouched = true;
+                lastdateselection = new Date();
+                Log.d("user touch","on touch" + isviewtouched);
+                break;
 
+            case MotionEvent.ACTION_UP:
+                isviewtouched = false;
+                Log.d("on touch end ","on touch end" + isviewtouched);
+                break;
+        }
+        return false;
+    }
 }
