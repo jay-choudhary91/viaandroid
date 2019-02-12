@@ -72,7 +72,6 @@ public class introscreenactivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
         //  requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_introactivity2);
-        xdata.getinstance().saveSetting(xdata.developermode,"");
 
         //getconnectionspeed();
         initialdate =new Date();

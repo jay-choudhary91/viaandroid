@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="18sp"
-            android:text="@string/mymedia"
+            android:text="@string/my_settings"
             android:layout_centerVertical="true"
             android:textColor="@color/white"
             app:fontType="OpenSans_Regular"/>
@@ -44,47 +44,14 @@
 
 
         <ImageView
-            android:id="@+id/img_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/img_arrow_back"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_camera_icon"/>
-
-        <ImageView
-            android:id="@+id/img_folder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/img_camera"
-            android:layout_marginLeft="10dp"
-            android:visibility="gone"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_folder_icon"/>
-
-        <com.deeptruth.app.android.views.customfonttextview
-            android:id="@+id/txt_media_quality"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:layout_toRightOf="@id/img_flash"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:visibility="gone"
-            android:textColor="@color/white"
-            app:fontType="OpenSans_Regular"/>
-
-        <ImageView
-            android:id="@+id/img_dotmenu"
-            android:layout_width="wrap_content"
-            android:paddingLeft="15dp"
+            android:id="@+id/img_cancel"
+            android:layout_width="25dp"
             android:layout_marginRight="10dp"
-            android:layout_height="wrap_content"
+            android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_settings" />
+            android:src="@drawable/icon_cancel" />
+
     </RelativeLayout>
 
 

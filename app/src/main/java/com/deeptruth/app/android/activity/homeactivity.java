@@ -373,10 +373,8 @@ public void updateactionbar(int showHide, int color) {
             fragment_container.setLayoutParams(params);
         }
         else if(fragment instanceof framemetricssettings){
-            img_back.setVisibility(View.VISIBLE);
-            img_cancel.setVisibility(View.VISIBLE);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
 
+            actionbar.setVisibility(View.GONE);
         }
         else if(fragment instanceof videoplayfragment){
             img_menu.setVisibility(View.VISIBLE);

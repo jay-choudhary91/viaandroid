@@ -150,6 +150,7 @@
     <string name="faq">FAQ/Help</string>
     <string name="deeptruth_small">deeptruth</string>
     <string name="mymedia">MyMedia</string>
+    <string name="my_settings">Settings</string>
 
     <string name="deeptruth_current_location">Deeptruth Would Like to Use Your Current Location</string>
     <string name="your_current_location">Your current location will be used to verify media by using GPS</string>

@@ -385,6 +385,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             {
                 img_uploadmedia.setVisibility(View.GONE);
                 img_camera.setVisibility(View.VISIBLE);
+                if(common.isdevelopermodeenable())
+                    img_settings.setVisibility(View.VISIBLE);
+
                 if(shouldlaunchcomposer)
                     launchbottombarfragment();
             }
@@ -460,11 +463,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     if (numberOfTaps == 10) {
                         // Toast.makeText(applicationviavideocomposer.getactivity(), "ten taps", Toast.LENGTH_SHORT).show();
                         //handle triple tap
-                        if(! appdialog.isdialogshowing())
-                            appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
-
-                        /*if(! appdialog.isdialogshowing() && (! common.isdevelopermodeenable()))
+                        /*if(! appdialog.isdialogshowing())
                             appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());*/
+
+                        if(! appdialog.isdialogshowing() && (! common.isdevelopermodeenable()))
+                            appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
                     }
                 }
                 break;
