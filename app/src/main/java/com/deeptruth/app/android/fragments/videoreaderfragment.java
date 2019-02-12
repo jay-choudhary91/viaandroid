@@ -2183,14 +2183,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             if(player.isPlaying() && layoutbackgroundcontroller.getVisibility() == View.VISIBLE){
                 gethelper().updateactionbar(0);
                 common.slidetoabove(layout_mediatype);
-                layout_validating.setVisibility(View.GONE);
+               // layout_validating.setVisibility(View.GONE);
                 layoutbackgroundcontroller.setVisibility(View.GONE);
             }else{
                 gethelper().updateactionbar(0);
                 common.slidetoabove(layout_mediatype);
                 layout_footer.setVisibility(View.GONE);
                 playpausebutton.setVisibility(View.GONE);
-                layout_validating.setVisibility(View.GONE);
+               // layout_validating.setVisibility(View.GONE);
                 img_fullscreen.setVisibility(View.GONE);
             }
         }else{
