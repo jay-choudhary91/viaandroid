@@ -230,11 +230,26 @@
 
                </LinearLayout>
 
-               <ImageView
+               <RelativeLayout
                    android:layout_width="0dp"
                    android:layout_height="150dp"
-                   android:layout_weight="0.4"
-                   android:src="@drawable/orientationimage" />
+                   android:layout_weight="0.4">
+
+                   <com.deeptruth.app.android.sensor.AttitudeIndicator
+                       android:id="@+id/attitude_indicator"
+                       android:layout_width="150dp"
+                       android:layout_height="150dp"
+                       android:layout_gravity="center"/>
+
+                   <ImageView
+                       android:layout_width="150dp"
+                       android:layout_height="150dp"
+                       android:layout_weight="0.4"
+                       android:src="@drawable/cordinatesxyz" />
+
+               </RelativeLayout>
+
+
              </LinearLayout>
 
             </LinearLayout>

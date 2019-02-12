@@ -29,6 +29,8 @@ import android.widget.TextView;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.sensor.AttitudeIndicator;
+import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
@@ -61,7 +63,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class fragmentgraphicaldrawer extends basefragment implements OnChartValueSelectedListener, OnChartGestureListener,SensorEventListener {
+public class fragmentgraphicaldrawer extends basefragment implements OnChartValueSelectedListener,
+        OnChartGestureListener,SensorEventListener, Orientation.Listener {
 
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
@@ -150,6 +153,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ImageView img_compass;
     @BindView(R.id.linechart)
     LineChart mChart;
+    @BindView(R.id.attitude_indicator)
+    AttitudeIndicator attitudeindicator;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -161,6 +166,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private float currentDegree = 0f;
     String hashmethod= "",videostarttransactionid = "",valuehash = "",metahash = "";
     ArrayList<Entry> latencyvalues = new ArrayList<Entry>();
+    private Orientation mOrientation;
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -217,11 +223,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvdataletency.setTextColor(getResources().getColor(R.color.white));
 
             //setmetadatavalue();
+            mOrientation = new Orientation(applicationviavideocomposer.getactivity());
             loadmap();
             setchartdata();
 
         }
         return rootview;
+    }
+
+    @Override
+    public void onOrientationChanged(float pitch, float roll) {
+        //attitudeindicator.setAttitude(pitch, roll);
+    }
+
+    @Override
+    public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
+        float pitch = orientation[1] * -57;
+        float roll = orientation[2] * -57;
+        attitudeindicator.setAttitude(pitch, roll);
+        Log.e("Pitch roll ",""+pitch+" "+roll);
     }
 
     public void drawmappoints(LatLng latlng)
@@ -532,6 +552,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     public void onStop() {
         super.onStop();
         isinbackground=true;
+        if(mOrientation != null)
+            mOrientation.stopListening();
     }
 
     @Override
@@ -544,6 +566,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         maccelerometersensormanager = msensormanager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         msensormanager.registerListener(this, maccelerometersensormanager, SensorManager.SENSOR_DELAY_UI);
+        if(mOrientation != null)
+            mOrientation.startListening(this);
     }
 
     @Override
@@ -881,5 +905,4 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             mChart.setData(data);
         }
     }
-
 }
