@@ -1322,7 +1322,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             common.slidetoabove(layout_mediatype);
             layout_footer.setVisibility(View.GONE);
             img_fullscreen.setVisibility(View.GONE);
-            layout_validating.setVisibility(View.GONE);
+          //  layout_validating.setVisibility(View.GONE);
         }else{
             gethelper().updateactionbar(1);
             common.slidetodown(layout_mediatype);
@@ -1330,7 +1330,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_fullscreen.setVisibility(View.VISIBLE);
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             layout_mediatype.setVisibility(View.VISIBLE);
-            layout_validating.setVisibility(View.VISIBLE);
+          //  layout_validating.setVisibility(View.VISIBLE);
             layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
             setbottomimgview();
         }
