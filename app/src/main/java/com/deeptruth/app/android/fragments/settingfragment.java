@@ -10,9 +10,11 @@ import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.utils.xdata;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +32,9 @@ public class settingfragment extends basefragment implements View.OnClickListene
     TextView txt_upgrade,txt_privacy,txt_help;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
+
+    @BindView(R.id.layout_mediatype)
+    RelativeLayout layout_mediatype;
     @BindView(R.id.setting_webview)
     WebView webview;
     String url = "http://console.dev.crypto-servers.com/inapp-settings.php";
@@ -41,6 +46,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
         if (rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+            setheadermargine();
 
 
           txt_help=rootview.findViewById(R.id.txt_help);
@@ -82,6 +88,12 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 gethelper().onBack();
                 break;
         }
+    }
+
+    public void setheadermargine(){
+        LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+        layout_mediatype.setLayoutParams(params);
     }
 
 }

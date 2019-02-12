@@ -7,7 +7,17 @@
     android:background="@color/white">
 
 
-    <include layout="@layout/action_bar_myfolder"></include>
+    <LinearLayout
+        android:id="@+id/layout_mediatype"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <include layout="@layout/action_bar_myfolder"></include>
+
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_list"

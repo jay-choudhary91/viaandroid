@@ -65,12 +65,14 @@
                     android:layout_width="match_parent"
                     android:layout_below="@+id/tab_photoreader"
                     android:layout_weight="0.8"
-                    android:paddingBottom="50dp"
                     android:visibility="visible"
+                    android:paddingBottom="50dp"
                     android:id="@+id/layout_photodetails"
                     android:layout_height="0dp">
                     <include layout="@layout/layout_mediadetails"></include>
                 </RelativeLayout>
+
+
 
             </LinearLayout>
 
@@ -116,7 +118,6 @@
                     android:visibility="visible"
                     android:background="@drawable/garbage"/>
             </RelativeLayout>
-
             <LinearLayout
                 android:id="@+id/layout_validating"
                 android:layout_width="match_parent"

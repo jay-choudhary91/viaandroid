@@ -4,6 +4,8 @@ package com.deeptruth.app.android.utils;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
@@ -68,6 +70,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -1874,6 +1877,32 @@ public class common {
 
         return buf.toString();
     }
+
+    public static void slidetoabove(final LinearLayout layout_mediatype) {
+        layout_mediatype.animate()
+                .translationY(-40)
+                .alpha(0.0f)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        layout_mediatype.setVisibility(View.GONE);
+                    }
+                });
+
+    }
+
+    public static void slidetodown(LinearLayout layout_mediatype){
+        layout_mediatype.setAlpha(0.0f);
+        // Start the animation
+        layout_mediatype.animate()
+                .translationY(-1)
+                .alpha(1.0f)
+                .setListener(null);
+        layout_mediatype.setVisibility(View.VISIBLE);
+
+    }
+
 
     public static boolean isdevelopermodeenable() {
         if (xdata.getinstance().getSetting(xdata.developermode).toString().trim().isEmpty() ||

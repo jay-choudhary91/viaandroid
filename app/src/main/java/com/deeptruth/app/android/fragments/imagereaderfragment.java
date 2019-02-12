@@ -199,6 +199,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private static final int request_read_external_storage = 1;
     private final int flingactionmindspdvac = 10;
     int targetheight=0,previousheight=0;
+    int footerheight;
 
     GoogleMap mgooglemap;
 
@@ -426,6 +427,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 img_scanover.startAnimation(animation);
             }
         });
+        layout_footer.post(new Runnable() {
+            @Override
+            public void run() {
+                footerheight = layout_footer.getHeight();
+            }
+        });
+
         fetchmetadatafromdb();
         loadmap();
         setupimagedata();
@@ -553,6 +561,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     tab_layout.setVisibility(View.VISIBLE);
                     scrollview_detail.setVisibility(View.VISIBLE);
                     layout_footer.setVisibility(View.VISIBLE);
+                    collapseimg_view();
+                    layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
                     img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                     gethelper().updateactionbar(0,getResources().getColor(R.color.dark_blue_solid));
                     resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
@@ -564,15 +574,17 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 if(layout_photodetails.getVisibility()==View.GONE){
                     if(layout_footer.getVisibility()==(View.GONE)){
+                        setbottomimgview();
                         gethelper().updateactionbar(1);
                         img_fullscreen.setVisibility(View.VISIBLE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_mediatype.setVisibility(View.VISIBLE);
-                        slidetodown();
+                        common.slidetodown(layout_mediatype);
                         layout_footer.setVisibility(View.VISIBLE);
+                        layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                     } else {
                         gethelper().updateactionbar(0);
-                        slidetoabove();
+                        common.slidetoabove(layout_mediatype);
                         img_fullscreen.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_footer.setVisibility(View.GONE);
@@ -1306,49 +1318,22 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.showhideviewondrawer(isshow);
 
         if(isshow){
-            /*RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0,0,0,0);
-            layout_mediatype.setLayoutParams(params);*/
             gethelper().updateactionbar(0);
-            slidetoabove();
+            common.slidetoabove(layout_mediatype);
             layout_footer.setVisibility(View.GONE);
             img_fullscreen.setVisibility(View.GONE);
             layout_validating.setVisibility(View.GONE);
         }else{
-           /* setheadermargine();*/
             gethelper().updateactionbar(1);
-            slidetodown();
+            common.slidetodown(layout_mediatype);
             layout_footer.setVisibility(View.VISIBLE);
             img_fullscreen.setVisibility(View.VISIBLE);
+            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             layout_mediatype.setVisibility(View.VISIBLE);
             layout_validating.setVisibility(View.VISIBLE);
-
+            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+            setbottomimgview();
         }
-    }
-
-    public void slidetoabove() {
-        layout_mediatype.animate()
-                .translationY(-40)
-                .alpha(0.0f)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        layout_mediatype.setVisibility(View.GONE);
-                    }
-                });
-
-    }
-
-    public void slidetodown(){
-        layout_mediatype.setAlpha(0.0f);
-        // Start the animation
-        layout_mediatype.animate()
-                .translationY(-1)
-                .alpha(1.0f)
-                .setListener(null);
-        layout_validating.setVisibility(View.VISIBLE);
-
     }
 
     public void setheadermargine(){
@@ -1356,4 +1341,22 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
         layout_mediatype.setLayoutParams(params);
     }
+
+    public void setbottomimgview(){
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,footerheight);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        img_fullscreen.setLayoutParams(params);
+    }
+    public void collapseimg_view(){
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,R.id.layout_halfscrn );
+        img_fullscreen.setLayoutParams(params);
+    }
+
+
 }

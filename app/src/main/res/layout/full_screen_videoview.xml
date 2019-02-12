@@ -59,15 +59,6 @@
                             android:visibility="gone"
                             />
 
-                        <ImageView
-                            android:id="@+id/img_fullscreen"
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
-                            android:layout_above="@+id/layout_backgroundcontroller"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/ic_full_screen_mode"
-                            android:padding="10dp"
-                            />
 
                         <RelativeLayout
                             android:id="@+id/layout_backgroundcontroller"
@@ -273,6 +264,16 @@
 
                         </RelativeLayout>
 
+                        <ImageView
+                            android:id="@+id/img_fullscreen"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_above="@+id/layout_backgroundcontroller"
+                            android:layout_alignParentRight="true"
+                            android:src="@drawable/ic_full_screen_mode"
+                            android:layout_marginBottom="-15dp"
+                            android:padding="10dp"
+                            />
                     </RelativeLayout>
 
 
