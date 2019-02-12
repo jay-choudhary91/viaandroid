@@ -1875,4 +1875,13 @@ public class common {
         return buf.toString();
     }
 
+    public static boolean isdevelopermodeenable() {
+        if (xdata.getinstance().getSetting(xdata.developermode).toString().trim().isEmpty() ||
+                xdata.getinstance().getSetting(xdata.developermode).toString().equalsIgnoreCase("0")) {
+            return false;
+        }
+        return true;
+    }
+
+
 }

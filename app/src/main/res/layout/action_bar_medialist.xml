@@ -85,14 +85,21 @@
         <ImageView
             android:id="@+id/img_dotmenu"
             android:layout_width="wrap_content"
-            android:paddingLeft="20dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_settings"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp">
+            android:paddingLeft="20dp"
+            android:layout_marginRight="10dp"/>
 
-        </ImageView>
+        <ImageView
+            android:id="@+id/img_settings"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@drawable/setting_icon"
+            android:visibility="gone"
+            android:layout_toLeftOf="@id/img_dotmenu"
+            android:layout_centerVertical="true"/>
 
     </RelativeLayout>
         <View

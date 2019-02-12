@@ -83,6 +83,10 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             }
             else
             {
+                if(common.isdevelopermodeenable())
+                {
+
+                }
                 img_camera.setVisibility(View.VISIBLE);
             }
 

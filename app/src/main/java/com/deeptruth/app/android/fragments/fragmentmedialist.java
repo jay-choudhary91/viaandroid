@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -50,6 +51,7 @@ import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.video;
+import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -104,6 +106,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     TextView txt_mediatype_c;
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
+    @BindView(R.id.img_settings)
+    ImageView img_settings;
     @BindView(R.id.txt_searchcancel)
     TextView txt_searchcancel;
     @BindView(R.id.txt_title_actionbarcomposer)
@@ -126,7 +130,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @BindView(R.id.btn_gridlist)
     ImageView btn_gridlist;
 
-    int selectedstyletype=1,selectedmediatype=-1,listviewheight=0;
+    int selectedstyletype=1,selectedmediatype=-1,listviewheight=0,dataupdator=0;
     RelativeLayout listlayout;
     private Handler myhandler;
     private Runnable myrunnable;
@@ -143,7 +147,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private BroadcastReceiver medialistitemaddreceiver;
     private BroadcastReceiver broadcastmediauploaded;
     private int REQUESTCODE_PICK=201,audiocount=0,videocount=0,imagecount=0;
-    private FFmpeg ffmpeg;;
+    private FFmpeg ffmpeg;
+
+    Handler handler = new Handler();
+    int numberOfTaps = 0;
+    long lastTapTimeMs = 0;
+    long touchDownMs = 0;
     // Called just after any media uploaded
     public void registerbroadcastmediauploaded()
     {
@@ -276,6 +285,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             img_dotmenu.setOnClickListener(this);
             img_camera.setOnClickListener(this);
             img_folder.setOnClickListener(this);
+            img_settings.setOnClickListener(this);
             img_header_search.setOnClickListener(this);
             txt_searchcancel.setOnClickListener(this);
             img_uploadmedia.setOnClickListener(this);
@@ -354,6 +364,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
+            layout_mediatype.setOnTouchListener(this);
+
             IntentFilter intentFilter = new IntentFilter(config.broadcast_medialistnewitem);
             medialistitemaddreceiver = new BroadcastReceiver() {
                 @Override
@@ -419,8 +431,45 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        return false;
+    public boolean onTouch(View view, MotionEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                touchDownMs = System.currentTimeMillis();
+                break;
+
+            case MotionEvent.ACTION_UP:
+                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                {
+                    handler.removeCallbacksAndMessages(null);
+                    if ((System.currentTimeMillis() - touchDownMs) > ViewConfiguration.getTapTimeout()) {
+                        //it was not a tap
+                        numberOfTaps = 0;
+                        lastTapTimeMs = 0;
+                        break;
+                    }
+
+                    if (numberOfTaps > 0
+                            && (System.currentTimeMillis() - lastTapTimeMs) < ViewConfiguration.getDoubleTapTimeout()) {
+                        numberOfTaps += 1;
+                    } else {
+                        numberOfTaps = 1;
+                    }
+
+                    lastTapTimeMs = System.currentTimeMillis();
+
+                    if (numberOfTaps == 10) {
+                        // Toast.makeText(applicationviavideocomposer.getactivity(), "ten taps", Toast.LENGTH_SHORT).show();
+                        //handle triple tap
+                        if(! appdialog.isdialogshowing())
+                            appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
+
+                        /*if(! appdialog.isdialogshowing() && (! common.isdevelopermodeenable()))
+                            appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());*/
+                    }
+                }
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -500,6 +549,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 break;
             case R.id.img_uploadmedia:
                 checkwritestoragepermission();
+                break;
+            case R.id.img_settings:
+                {
+                    framemetricssettings fragment=new framemetricssettings();
+                    gethelper().replaceFragment(fragment, false, true);
+                }
                 break;
             case R.id.img_folder:
                 hidekeyboard();
@@ -947,10 +1002,20 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         myrunnable = new Runnable() {
             @Override
             public void run() {
-               if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
+
+                dataupdator++;
+               if(dataupdator >= 5)
+               {
+                   if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
                        getallmedialistfromdb();
 
-                myhandler.postDelayed(this, 5000);
+                   dataupdator=0;
+               }
+
+               if(common.isdevelopermodeenable())
+                   img_settings.setVisibility(View.VISIBLE);
+
+                myhandler.postDelayed(this, 1000);
             }
         };
         myhandler.post(myrunnable);

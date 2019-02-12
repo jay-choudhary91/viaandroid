@@ -35,7 +35,6 @@ public class AttitudeIndicator extends View {
   private Bitmap mSrcBitmap;
   private Canvas mSrcCanvas;
   private Bitmap mDstBitmap;
-  private Bitmap iconbitmap;
   private int mWidth;
   private int mHeight;
 
@@ -74,7 +73,6 @@ public class AttitudeIndicator extends View {
     mMinPlanePaint.setStrokeWidth(5);
     mMinPlanePaint.setStyle(Paint.Style.STROKE);
 
-    iconbitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.starship_c);
   }
 
   public float getPitch() {

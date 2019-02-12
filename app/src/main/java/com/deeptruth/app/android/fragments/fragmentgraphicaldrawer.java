@@ -238,10 +238,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     @Override
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
-        float pitch = orientation[1] * -57;
-        float roll = orientation[2] * -57;
-        attitudeindicator.setAttitude(pitch, roll);
-        Log.e("Pitch roll ",""+pitch+" "+roll);
+        if(xdata.getinstance().getSetting(config.latency).trim().isEmpty())
+        {
+            float pitch = orientation[1] * -57;
+            float roll = orientation[2] * -57;
+            attitudeindicator.setAttitude(pitch, roll);
+            Log.e("Pitch roll ",""+pitch+" "+roll);
+        }
     }
 
     public void drawmappoints(LatLng latlng)
