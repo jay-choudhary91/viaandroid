@@ -166,7 +166,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.layout_mediatype)
     LinearLayout layout_mediatype;
     @BindView(R.id.layout_videodetails)
-    RelativeLayout layout_photodetails;
+    public RelativeLayout layout_photodetails;
     @BindView(R.id.scrollview_detail)
     ScrollView scrollview_detail;
     @BindView(R.id.img_fullscreen)

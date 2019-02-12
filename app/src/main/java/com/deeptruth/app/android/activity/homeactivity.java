@@ -379,6 +379,27 @@ public void updateactionbar(int showHide, int color) {
             fragment_container.setLayoutParams(params);
         }
         else if(fragment instanceof videoreaderfragment){
+
+            try
+            {
+                View view=((videoreaderfragment) getcurrentfragment()).layout_photodetails;
+                if(view != null)
+                {
+                    if(view.getVisibility() == View.VISIBLE)
+                    {
+                        Log.e("viewgone","gone");
+                    }
+                    else
+                    {
+                        imglefthandle.setVisibility(View.VISIBLE);
+                     Log.e("visiblity","visiblity");
+                    }
+                }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
             imgsettingsicon.setVisibility(View.GONE);
             img_menu.setVisibility(View.VISIBLE);
             imgaddicon.setVisibility(View.GONE);
@@ -431,6 +452,26 @@ public void updateactionbar(int showHide, int color) {
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          } else if(fragment instanceof imagereaderfragment){
+
+             try
+             {
+                 View view=((imagereaderfragment) getcurrentfragment()).layout_photodetails;
+                 if(view != null)
+                 {
+                     if(view.getVisibility() == View.VISIBLE)
+                     {
+                         Log.e("viewgone","gone");
+                     }
+                     else
+                     {
+                         imglefthandle.setVisibility(View.VISIBLE);
+                         Log.e("visiblity","visiblity");
+                     }
+                 }
+             }catch (Exception e)
+             {
+                 e.printStackTrace();
+             }
              actionbar.setVisibility(View.GONE);
              img_menu.setVisibility(View.VISIBLE);
              imgshareicon.setVisibility(View.VISIBLE);
