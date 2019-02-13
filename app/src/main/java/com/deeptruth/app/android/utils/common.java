@@ -488,6 +488,7 @@ public class common {
             xdata.getinstance().saveSetting(config.matrichash,"NA");
             xdata.getinstance().saveSetting(config.distancetravelled,"NA");
             xdata.getinstance().saveSetting(config.latency,"");
+            xdata.getinstance().saveSetting(config.attitude_data,"");
     }
 
     public static void setgraphicalitems(String keyname,String value,boolean ismetricsselected)
@@ -560,6 +561,8 @@ public class common {
             xdata.getinstance().saveSetting(config.Connectionspeed,((ismetricsselected)?value:"NA"));
         } else if (keyname.equalsIgnoreCase("distancetravelled")) {
             xdata.getinstance().saveSetting(config.distancetravelled,((ismetricsselected)?value:"NA"));
+        }else if (keyname.equalsIgnoreCase("attitude")) {
+            xdata.getinstance().saveSetting(config.attitude_data,((ismetricsselected)?value:"NA"));
         }
     }
 

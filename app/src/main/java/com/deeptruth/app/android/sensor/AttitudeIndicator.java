@@ -131,6 +131,7 @@ public class AttitudeIndicator extends View {
     {
       canvas.translate(0, translatevalue);
     }*/
+    //canvas.translate(0, translatevalue);
     canvas.translate(0, 15);
 
 

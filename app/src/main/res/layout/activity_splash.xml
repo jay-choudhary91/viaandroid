@@ -19,11 +19,10 @@
 
         <ImageView
             android:id="@+id/img_imagedeep"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_gravity="center"
-            android:visibility="visible"
-            android:src="@drawable/deeptruth_img"/>
+            android:visibility="invisible"/>
         <ImageView
             android:id="@+id/img_imagetext"
             android:layout_width="wrap_content"
