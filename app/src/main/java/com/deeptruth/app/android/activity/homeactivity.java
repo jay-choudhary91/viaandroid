@@ -594,21 +594,6 @@ public void updateactionbar(int showHide, int color) {
                 if((graphicaldrawerfragment!= null))
                     graphicaldrawerfragment.setmetricesdata();
 
-                if(! common.isdevelopermodeenable())
-                {
-                    if(isviewtouched)
-                    {
-                        Date currentDate=new Date();
-                        int secondDifference= (int) (Math.abs(initialdate.getTime()-currentDate.getTime())/1000);
-                        if(secondDifference > 4)
-                        {
-                            initialdate = new Date();
-                            if(! appdialog.isdialogshowing())
-                                appdialog.showeggfeaturedialog(applicationviavideocomposer.getactivity());
-                        }
-                    }
-                }
-
                 myhandler.postDelayed(this, 5000);
             }
         };
