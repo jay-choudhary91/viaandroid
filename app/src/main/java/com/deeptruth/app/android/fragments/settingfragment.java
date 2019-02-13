@@ -46,7 +46,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
         if (rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            setheadermargine();
+           // setheadermargine();
 
 
           txt_help=rootview.findViewById(R.id.txt_help);

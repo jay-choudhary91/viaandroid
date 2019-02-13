@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/dark_blue_solid</item>
         <item name="colorAccent">@color/dark_blue_solid</item>
         <item name="android:windowFullscreen">false</item>
+        <item name="android:statusBarColor">@color/dark_blue_solid</item>
     </style>
 
     <style name="textview">

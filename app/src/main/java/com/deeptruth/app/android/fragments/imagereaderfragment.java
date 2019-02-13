@@ -233,7 +233,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            setheadermargine();
+        //    setheadermargine();
             loadviewdata();
 
         }

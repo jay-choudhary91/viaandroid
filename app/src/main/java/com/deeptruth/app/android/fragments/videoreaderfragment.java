@@ -376,7 +376,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            setheadermargine();
+         //   setheadermargine();
             loadviewdata();
             loadmap();
         }
