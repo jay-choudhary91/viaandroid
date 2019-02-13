@@ -33,7 +33,6 @@
                     android:layout_height="0dp"
                     android:id="@+id/layout_halfscrn"
                     android:layout_weight="1">
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -74,7 +73,30 @@
 
 
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_mediatype"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_alignParentTop="true"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
+                <include layout="@layout/action_bar_mediadetails"></include>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_validating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_below="@id/layout_mediatype"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_validating"></include>
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/layout_footer"
@@ -106,30 +128,6 @@
                     android:visibility="visible"
                     android:background="@drawable/garbage"/>
             </RelativeLayout>
-            <LinearLayout
-                android:id="@+id/layout_mediatype"
-                android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_alignParentTop="true"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <include layout="@layout/action_bar_mediadetails"></include>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_validating"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:layout_below="@id/layout_mediatype"
-                android:orientation="vertical">
-
-                <include layout="@layout/layout_validating"></include>
-
-            </LinearLayout>
 
         </RelativeLayout>
 

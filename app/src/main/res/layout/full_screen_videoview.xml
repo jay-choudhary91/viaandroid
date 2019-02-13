@@ -199,7 +199,7 @@
                                         android:padding="5dp"
                                         android:visibility="visible">
 
-                                        <ImageButton
+                                        <ImageView
                                             android:id="@+id/img_pause"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
@@ -207,7 +207,7 @@
                                             android:layout_centerInParent="true"
                                             android:layout_gravity="center"
                                             android:layout_margin="5dp"
-                                            android:background="@drawable/pause_btn_icon"
+                                            android:src="@drawable/ic_pause"
                                             android:paddingBottom="@dimen/margin_10dp"
                                             android:paddingLeft="@dimen/margin_15dp"
                                             android:paddingRight="@dimen/margin_15dp"

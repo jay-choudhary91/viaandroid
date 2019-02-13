@@ -403,12 +403,16 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     // ... do something here
                     layout_halfscrn.setVisibility(View.GONE);
                     layout_footer.setVisibility(View.GONE);
+                    layout_mediatype.setVisibility(View.GONE);
+                    layout_validating.setVisibility(View.GONE);
 
                 }else
                 {
                     if(layout_halfscrn.getVisibility()==View.GONE){
                         layout_halfscrn.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
+                        layout_mediatype.setVisibility(View.VISIBLE);
+                        layout_validating.setVisibility(View.VISIBLE);
                         edt_medianame.setFocusable(false);
                         edt_medianotes.setFocusable(false);
                     }
