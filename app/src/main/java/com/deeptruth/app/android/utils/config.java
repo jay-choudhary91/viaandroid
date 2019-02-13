@@ -87,6 +87,7 @@ public class config {
     public static final String acceleration_y = "acceleration.y";
     public static final String acceleration_z = "acceleration.z";
     public static final String distancetravelled = "distancetravelled";
+    public static final String attitude_data = "attitude_data";
     public static final String connectedphonenetworkquality = "connectedphonenetworkquality";
     public static final String compass = "compass";
     public static final String airplanemode = "airplanemode";

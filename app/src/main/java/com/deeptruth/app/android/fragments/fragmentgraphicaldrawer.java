@@ -3,6 +3,7 @@ package com.deeptruth.app.android.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -10,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.service.autofill.Dataset;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -59,6 +61,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -397,6 +400,30 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
       //  }
 
+        if(! xdata.getinstance().getSetting(config.attitude_data).trim().isEmpty())
+        {
+            try {
+                float[] adjustedRotationMatrix = new float[9];
+                String attitude = xdata.getinstance().getSetting(config.attitude_data).toString();
+                String[] attitudearray = attitude.split(",");
+                for(int i = 0 ;i< attitudearray.length;i++){
+                    //float val = (float) (Math.random() * 20) + 3;
+                    adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
+                }
+                // Transform rotation matrix into azimuth/pitch/roll
+                float[] orientation = new float[3];
+                SensorManager.getOrientation(adjustedRotationMatrix, orientation);
+
+                float pitch = orientation[1] * -57;
+                float roll = orientation[2] * -57;
+                attitudeindicator.setAttitude(pitch, roll);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
         latencyvalues.clear();
         String latency = xdata.getinstance().getSetting(config.latency).toString();
         if(latency != null && (! latency.trim().isEmpty()) )
@@ -405,7 +432,31 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             String[] latencyarray = latency.split(",");
             for(int i = 0 ;i< latencyarray.length;i++){
                 //float val = (float) (Math.random() * 20) + 3;
-                latencyvalues.add(new Entry(latencyvalues.size(),Float.parseFloat(latencyarray[i]),0));
+                Entry entry=new Entry();
+                entry.setX(latencyvalues.size());
+                entry.setY(Float.parseFloat(latencyarray[i]));
+                if(latencyvalues.size() <= 10)
+                {
+                    Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
+                    entry.setIcon(drawable);
+                }
+                else if(latencyvalues.size() <= 20)
+                {
+                    Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.gradient_verify_green);
+                    entry.setIcon(drawable);
+                }
+                else if(latencyvalues.size() <= 30)
+                {
+                    Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.gradient_fade_header_blue);
+                    entry.setIcon(drawable);
+                }
+                else if(latencyvalues.size() <= 40)
+                {
+                    Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.gradient_verify_yellow);
+                    entry.setIcon(drawable);
+                }
+
+                latencyvalues.add(entry);
             }
             setlatencydata();
             mChart.animateX(10);
@@ -867,12 +918,37 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         {
             set1 = (LineDataSet)mChart.getData().getDataSetByIndex(0);
             set1.setValues(latencyvalues);
-            mChart.getData().notifyDataChanged();
+            set1.setHighlightEnabled(true);
+
+            List<ILineDataSet> dataSets=mChart.getLineData().getDataSets();
+            /*ArrayList<ILineDataSet> newdataSets = new ArrayList<ILineDataSet>();
+            for(int i=0;i<dataSets.size();i++)
+            {
+                ILineDataSet ilineDataSet=dataSets.get(i);
+                int count=ilineDataSet.getEntryCount();
+                count=count/2;
+                for(int j=0;j<count;j++)
+                {
+                    if(j < count)
+                    {
+                        Entry entry=ilineDataSet.getEntryForIndex(j);
+                        Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
+                        entry.setIcon(drawable);
+                    }
+
+                }
+                newdataSets.add(ilineDataSet);
+            }*/
+            LineData data = new LineData(dataSets);
+          //  set1.setColors(new int[] {Color.BLACK, Color.GREEN, Color.GRAY, Color.BLACK, Color.BLUE,Color.RED,Color.BLACK});
+            // set data
+            mChart.setData(data);
             mChart.notifyDataSetChanged();
+            //List<ILineDataSet> dataSets1=mChart.getLineData().getDataSets();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(latencyvalues, "");
-            set1.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            set1.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
 
             set1.setDrawIcons(false);
 
@@ -891,11 +967,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
             set1.setFormSize(15.f);
 
-            if (Utils.getSDKInt() >= 18) {
-                // fill drawable only supported on api level 18 and above
-                Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
-                set1.setFillDrawable(drawable);
-            }
+        /*if (Utils.getSDKInt() >= 18) {
+            // fill drawable only supported on api level 18 and above
+            Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
+            set1.setFillDrawable(drawable);
+        }*/
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
             dataSets.add(set1); // add the datasets

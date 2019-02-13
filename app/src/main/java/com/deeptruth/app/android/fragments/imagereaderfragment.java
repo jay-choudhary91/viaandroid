@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -62,6 +63,7 @@ import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
+import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
@@ -211,6 +213,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_googlemap;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
+    @BindView(R.id.attitude_indicator)
+    AttitudeIndicator attitudeindicator;
+
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
     mediatime = "",mediasize="",lastsavedangle="";
@@ -1192,6 +1197,32 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 rotatecompass(degree);
             }
             lastsavedangle=strdegree;
+        }
+        else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("attitude"))
+        {
+            if(! metricItemArraylist.getMetricTrackValue().trim().isEmpty())
+            {
+                try {
+                    float[] adjustedRotationMatrix = new float[9];
+                    String attitude = metricItemArraylist.getMetricTrackValue().toString();
+                    String[] attitudearray = attitude.split(",");
+                    for(int i = 0 ;i< attitudearray.length;i++){
+                        //float val = (float) (Math.random() * 20) + 3;
+                        adjustedRotationMatrix[i]=Float.parseFloat(attitudearray[i]);
+                    }
+                    // Transform rotation matrix into azimuth/pitch/roll
+                    float[] orientation = new float[3];
+                    SensorManager.getOrientation(adjustedRotationMatrix, orientation);
+
+                    float pitch = orientation[1] * -57;
+                    float roll = orientation[2] * -57;
+                    attitudeindicator.setAttitude(pitch, roll);
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 

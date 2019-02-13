@@ -200,7 +200,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             {
                 setdrawerdata();
             }
-        }, 2000);
+        }, 100);
 
 
 
