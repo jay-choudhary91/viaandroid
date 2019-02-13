@@ -494,12 +494,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     // ... do something here
                     rlcontrollerview.setVisibility(View.GONE);
                     layout_footer.setVisibility(View.GONE);
+                    layout_mediatype.setVisibility(View.GONE);
 
                 }else
                 {
                     if(rlcontrollerview.getVisibility()==View.GONE){
                         rlcontrollerview.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
+                        layout_mediatype.setVisibility(View.VISIBLE);
                         edt_medianame.setFocusable(false);
                         edt_medianotes.setFocusable(false);
                     }
@@ -565,14 +567,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 break;
             case R.id.img_share_media:
-                img_share_media.setClickable(false);
+                img_share_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
                     public void run()
                     {
-                        img_share_media.setClickable(true);
+                        img_share_media.setEnabled(true);
                     }
-                }, 1000);
+                }, 2000);
                 if (audiourl != null && (!audiourl.isEmpty()))
                     common.shareaudio(getActivity(), audiourl);
                 break;

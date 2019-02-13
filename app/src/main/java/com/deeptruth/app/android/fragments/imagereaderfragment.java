@@ -420,7 +420,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
-        photorootview.post(new Runnable() {
+      /*  photorootview.post(new Runnable() {
             @Override
             public void run() {
                 int totalwidth= photorootview.getWidth() + 100;
@@ -430,7 +430,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 animation.setRepeatMode(ValueAnimator.RESTART);
                 img_scanover.startAnimation(animation);
             }
-        });
+        });*/
         layout_footer.post(new Runnable() {
             @Override
             public void run() {
@@ -664,14 +664,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.onHeaderBtnClick(btnid);
         switch (btnid) {
             case R.id.img_share_icon:
-                img_share_media.setClickable(false);
+                img_share_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
                     public void run()
                     {
-                        img_share_media.setClickable(true);
+                        img_share_media.setEnabled(true);
                     }
-                }, 1000);
+                }, 2000);
                 if (imageurl != null && (!imageurl.isEmpty()))
                     common.shareimage(getActivity(), imageurl);
                 break;

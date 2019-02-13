@@ -17,21 +17,20 @@
             android:layout_width="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentRight="true"
-            android:layout_height="wrap_content">
+            android:layout_height="100dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="#7000ADE5"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/img_slide_share"
                     android:layout_width="wrap_content"
+                    android:src="@drawable/img_swipeshare"
                     android:layout_height="match_parent"
-                    android:src="@drawable/slide_share"
-                    android:padding="10dp"
+                    android:scaleType="centerCrop"
                     android:gravity="left"/>
 
             </LinearLayout>
@@ -40,35 +39,34 @@
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="#9000ADE5"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/img_slide_create_dir"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="10dp"
-                    android:src="@drawable/slide_create_dir"
-                    android:gravity="left"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:background="#00ADE5"
                 android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/img_slide_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/slide_delete"
-                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/img_swipedelete"
                     android:gravity="left"/>
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/img_slide_create_dir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/img_swipefolder"
+                    android:scaleType="centerCrop"
+                    android:gravity="left"/>
+
+            </LinearLayout>
+
 
         </LinearLayout>
 

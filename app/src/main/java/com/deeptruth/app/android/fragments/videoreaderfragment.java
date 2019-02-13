@@ -441,7 +441,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             RelativeLayout.LayoutParams.WRAP_CONTENT);
                     p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                     Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                    p.setMargins(thumbRect.centerX(),0, 0, 0);
+                    p.setMargins(thumbRect.left,0, 0, 0);
                     layout_progressline.setLayoutParams(p);
                     txt_mediatimethumb.setText(stringForTime(player.getCurrentPosition()));
                     txt_mediatimethumb.setVisibility(View.VISIBLE);
@@ -788,14 +788,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                     break;
                 case R.id.img_share_media:
-                    img_share_media.setClickable(false);
+                    img_share_media.setEnabled(false);
                     new Handler().postDelayed(new Runnable()
                     {
                         public void run()
                         {
-                            img_share_media.setClickable(true);
+                            img_share_media.setEnabled(true);
                         }
-                    }, 1000);
+                    }, 2000);
+
                     if (mediafilepath != null && (!mediafilepath.isEmpty()))
                         common.sharevideo(getActivity(), mediafilepath);
 
