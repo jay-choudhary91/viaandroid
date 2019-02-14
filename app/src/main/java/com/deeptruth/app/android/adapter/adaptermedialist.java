@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.chauthai.swipereveallayout.SwipeRevealLayout;
+import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.video;
@@ -43,17 +46,14 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     Context context;
     ArrayList<video> arrayvideolist = new ArrayList<video>();
     adapteritemclick adapter;
-    private int row_index = -1,listviewheight=0;
-    HashMap<String, Bitmap> cacheBitmap;
-    int imagethumbanail_width,img_scanoverwidth;
-    float totalwidth;
-
+    private int listviewheight=0,imagethumbanail_width=0,totalwidth=0;
+    ViewBinderHelper binderHelper;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
         EditText edtvideoname;
-        public ImageView imgshareicon,imgdeleteicon,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
-        public RelativeLayout root_view;
+        public ImageView img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
+        public SwipeRevealLayout root_view;
 
         public myViewHolder(View view) {
             super(view);
@@ -64,14 +64,12 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             tv_mediadate = (TextView) view.findViewById(R.id.tv_mediadate);
             tv_localkey = (TextView) view.findViewById(R.id.tv_localkey);
             tv_sync_status = (TextView) view.findViewById(R.id.tv_sync_status);
-            imgshareicon = (ImageView) view.findViewById(R.id.img_shareicon);
-            imgdeleteicon = (ImageView) view.findViewById(R.id.img_deleteicon);
             img_videothumbnail = (ImageView) view.findViewById(R.id.img_videothumbnail);
             img_slide_share = (ImageView) view.findViewById(R.id.img_slide_share);
             img_slide_create_dir = (ImageView) view.findViewById(R.id.img_slide_create_dir);
             img_slide_delete = (ImageView) view.findViewById(R.id.img_slide_delete);
             img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
-            root_view = (RelativeLayout) view.findViewById(R.id.root_view);
+            root_view = (SwipeRevealLayout) view.findViewById(R.id.root_view);
         }
     }
 
@@ -80,6 +78,8 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         this.arrayvideolist = arrayvideolist;
         this.adapter = adapter;
         this.listviewheight = listviewheight;
+        binderHelper = new ViewBinderHelper();
+        binderHelper.setOpenOnlyOne(true);
     }
 
     @NonNull
@@ -97,6 +97,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
         if(arrayvideolist.get(position).isDoenable())
         {
+            binderHelper.bind(holder.root_view,""+arrayvideolist.get(position).getMediatitle());
             holder.img_videothumbnail.post(new Runnable() {
                 @Override
                 public void run() {
@@ -333,9 +334,35 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
     }
 
+    public void notifyitems(ArrayList<video> arrayvideolist)
+    {
+        ArrayList<video> localarray=new ArrayList<>();
+        for(int i=0;i<arrayvideolist.size();i++)
+        {
+            if(arrayvideolist.get(i).isDoenable())
+            {
+                localarray.add(arrayvideolist.get(i));
+            }
+        }
+        this.arrayvideolist=localarray;
+        notifyDataSetChanged();
+    }
+
     public void filterlist(ArrayList<video> arrayvideolist) {
         this.arrayvideolist = arrayvideolist;
         notifyDataSetChanged();
+    }
+
+    public void saveStates(Bundle outState) {
+        binderHelper.saveStates(outState);
+    }
+
+    /**
+     * Only if you need to restore open/close state when the orientation is changed.
+     * Call this method in {@link android.app.Activity#onRestoreInstanceState(Bundle)}
+     */
+    public void restoreStates(Bundle inState) {
+        binderHelper.restoreStates(inState);
     }
 
     @Override

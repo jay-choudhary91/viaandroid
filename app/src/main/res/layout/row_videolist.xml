@@ -1,37 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.chauthai.swipereveallayout.SwipeRevealLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:swipe="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:dragEdge="right"
+    android:id="@+id/root_view"
+    app:mode="same_level"
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        >
+
+    <FrameLayout
+        android:id="@+id/delete_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp">
+
         <LinearLayout
             android:id="@+id/bottom_wraper"
             android:layout_width="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentRight="true"
-            android:layout_height="100dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/img_slide_share"
                     android:layout_width="wrap_content"
-                    android:src="@drawable/img_swipeshare"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:gravity="left"/>
+                    android:src="@drawable/img_swipeshare"/>
 
             </LinearLayout>
 
@@ -46,8 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/img_swipedelete"
-                    android:gravity="left"/>
+                    android:src="@drawable/img_swipedelete"/>
 
             </LinearLayout>
 
@@ -61,209 +61,201 @@
                     android:id="@+id/img_slide_create_dir"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/img_swipefolder"
                     android:scaleType="centerCrop"
-                    android:gravity="left"/>
+                    android:src="@drawable/img_swipefolder"/>
 
             </LinearLayout>
-
-
         </LinearLayout>
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/front_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
         <RelativeLayout
             android:id="@+id/rl_rowfg"
             android:layout_width="match_parent"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:padding="5dp"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            >
+
 
             <RelativeLayout
-                android:id="@+id/rl_sharedeleteicon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:visibility="gone"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/img_shareicon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/share_icon"
-                    android:gravity="left"/>
-
-                <ImageView
-                    android:id="@+id/img_deleteicon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_below="@+id/img_shareicon"
-                    android:background="@drawable/delete_icon"/>
-            </RelativeLayout>
-
-            <LinearLayout
+                android:id="@+id/relative_child"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:layout_toLeftOf="@+id/rl_sharedeleteicon"
-                android:weightSum="1">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    android:layout_weight="0.35"
-                    android:layout_gravity="center_vertical">
-
-                    <ImageView
-                        android:id="@+id/img_videothumbnail"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:scaleType="centerCrop"
-                        android:background="@color/dark_blue_solid"
-                        />
-
-                    <ImageView
-                        android:id="@+id/img_scanover"
-                        android:layout_width="50dp"
-                        android:layout_height="100dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="-50dp"
-                        android:alpha="0.4"
-                        android:background="@drawable/gradient_verify_yellow"/>
-
-                </RelativeLayout>
-
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:padding="5dp"
+                android:layout_height="120dp"
+                android:background="@color/white">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.65"
                     android:background="@color/white"
-                    android:layout_marginLeft="5dp"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:weightSum="1">
 
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="110dp"
+                        android:layout_weight="0.35"
+                        android:layout_gravity="center_vertical">
 
-                    <EditText
-                        android:id="@+id/edt_videoname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:textSize="15sp"
-                        android:ems="1"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:inputType="none"
-                        android:scrollHorizontally="false"
-                        android:background="@drawable/edittext_shap"
-                        android:textColor="@color/black"
-                        android:visibility="visible"
-                        android:imeOptions="actionDone"
-                        />
+                        <ImageView
+                            android:id="@+id/img_videothumbnail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:scaleType="centerCrop"
+                            android:background="@color/dark_blue_solid"
+                            />
+
+                        <ImageView
+                            android:id="@+id/img_scanover"
+                            android:layout_width="50dp"
+                            android:layout_height="100dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="-50dp"
+                            android:alpha="0.4"
+                            android:background="@drawable/gradient_verify_yellow"/>
+
+                    </RelativeLayout>
+
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:orientation="horizontal">
+                        android:layout_weight="0.65"
+                        android:background="@color/white"
+                        android:layout_marginLeft="5dp"
+                        android:orientation="vertical">
 
-                        <com.deeptruth.app.android.views.customfonttextview
-                            app:fontType="OpenSans_Regular"
-                            android:id="@+id/tv_mediadate"
-                            android:layout_width="wrap_content"
+
+                        <EditText
+                            android:id="@+id/edt_videoname"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
-                            android:textSize="12sp"
-                            android:textColor="@color/black"
-                            android:text="xx-xx-xx"
-                            />
-
-                        <com.deeptruth.app.android.views.customfonttextview
-                            android:id="@+id/txt_pipesign"
-                            app:fontType="OpenSans_Regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
                             android:textSize="15sp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
+                            android:ems="1"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:inputType="none"
+                            android:scrollHorizontally="false"
+                            android:background="@drawable/edittext_shap"
                             android:textColor="@color/black"
-                            android:text="|"
+                            android:visibility="visible"
+                            android:imeOptions="actionDone"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:orientation="horizontal">
+
+                            <com.deeptruth.app.android.views.customfonttextview
+                                app:fontType="OpenSans_Regular"
+                                android:id="@+id/tv_mediadate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:textSize="12sp"
+                                android:textColor="@color/black"
+                                android:text="xx-xx-xx"
+                                />
+
+                            <com.deeptruth.app.android.views.customfonttextview
+                                android:id="@+id/txt_pipesign"
+                                app:fontType="OpenSans_Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="15sp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:textColor="@color/black"
+                                android:text="|"
+                                />
+
+                            <com.deeptruth.app.android.views.customfonttextview
+                                app:fontType="OpenSans_Regular"
+                                android:id="@+id/tv_mediatime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:textSize="13sp"
+                                android:textColor="@color/black"
+                                android:text="5/31/2018"
+                                />
+
+                        </LinearLayout>
+
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            app:fontType="OpenSans_Regular"
+                            android:id="@+id/tv_localkey"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:visibility="gone"
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp"
+                            android:layout_below="@+id/tv_videoduration"
+                            android:textColor="@color/black"
+                            android:maxLines="1"
+                            android:text=""
                             />
 
                         <com.deeptruth.app.android.views.customfonttextview
                             app:fontType="OpenSans_Regular"
-                            android:id="@+id/tv_mediatime"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/tv_medianotes"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
                             android:textSize="13sp"
+                            android:layout_marginTop="3dp"
                             android:textColor="@color/black"
-                            android:text="5/31/2018"
+                            android:maxLines="1"
+                            android:text=""
                             />
 
+                        <com.deeptruth.app.android.views.customfonttextview
+                            app:fontType="OpenSans_Regular"
+                            android:id="@+id/tv_sync_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:textSize="13sp"
+                            android:layout_marginTop="3dp"
+                            android:layout_below="@+id/tv_localkey"
+                            android:textColor="@color/black"
+                            android:maxLines="1"
+                            android:visibility="gone"
+                            android:text=""
+                            />
                     </LinearLayout>
-
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        app:fontType="OpenSans_Regular"
-                        android:id="@+id/tv_localkey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:visibility="gone"
-                        android:textSize="13sp"
-                        android:layout_marginTop="3dp"
-                        android:layout_below="@+id/tv_videoduration"
-                        android:textColor="@color/black"
-                        android:maxLines="1"
-                        android:text=""
-                        />
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        app:fontType="OpenSans_Regular"
-                        android:id="@+id/tv_medianotes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:textSize="13sp"
-                        android:layout_marginTop="3dp"
-                        android:textColor="@color/black"
-                        android:maxLines="1"
-                        android:text=""
-                        />
-
-                    <com.deeptruth.app.android.views.customfonttextview
-                        app:fontType="OpenSans_Regular"
-                        android:id="@+id/tv_sync_status"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="left"
-                        android:textSize="13sp"
-                        android:layout_marginTop="3dp"
-                        android:layout_below="@+id/tv_localkey"
-                        android:textColor="@color/black"
-                        android:maxLines="1"
-                        android:visibility="gone"
-                        android:text=""
-                        />
                 </LinearLayout>
-            </LinearLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:layout_below="@id/relative_child"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/uvv_light_gray"
+                ></View>
+
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.9dp"
-            android:layout_below="@id/rl_rowfg"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/uvv_light_gray"
-            ></View>
 
-    </RelativeLayout>
 
-</RelativeLayout>
+    </FrameLayout>
+
+</com.chauthai.swipereveallayout.SwipeRevealLayout>

@@ -163,7 +163,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 getallmedialistfromdb();
                 if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                    adaptermedialist.notifyDataSetChanged();
+                    adaptermedialist.notifyitems(arraymediaitemlist);
 
                 if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
                     adaptermediagrid.notifyDataSetChanged();
@@ -225,7 +225,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
       //  setheadermargine();
         gethelper().drawerenabledisable(false);
         isinbackground=false;
-        recyclerviewlist.addOnItemTouchListener(onTouchListener);
     }
 
     public void requestpermissions()
@@ -333,7 +332,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }
 
 
-            onTouchListener = new RecyclerTouchListener(getActivity(), recyclerviewlist);
+            onTouchListener = new RecyclerTouchListener(applicationviavideocomposer.getactivity(), recyclerviewlist);
             onTouchListener.setSwipeOptionViews(R.id.img_slide_delete).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
             new RecyclerTouchListener.OnSwipeOptionsClickListener() {
                 @Override
@@ -590,7 +589,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 adaptermediagrid.notifyDataSetChanged();
 
             if(adaptermedialist != null)
-                adaptermedialist.notifyDataSetChanged();
+                adaptermedialist.notifyitems(arraymediaitemlist);
 
             fetchmedialistfromdirectory();
 
@@ -672,7 +671,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         if(adaptermedialist != null && adaptermediagrid != null)
         {
-            adaptermedialist.notifyDataSetChanged();
+            adaptermedialist.notifyitems(arraymediaitemlist);
             adaptermediagrid.notifyDataSetChanged();
             recyclerviewlist.smoothScrollToPosition(0);
             recyclerviewgrid.smoothScrollToPosition(0);
@@ -911,7 +910,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
                         {
                             if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                                adaptermedialist.notifyDataSetChanged();
+                                adaptermedialist.notifyitems(arraymediaitemlist);
 
                             if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
                                 adaptermediagrid.notifyDataSetChanged();
@@ -1161,7 +1160,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onPause() {
         super.onPause();
-        recyclerviewlist.removeOnItemTouchListener(onTouchListener);
+        //recyclerviewlist.removeOnItemTouchListener(onTouchListener);
     }
 
     public void setAdapter(final video videoobj, int type)
@@ -1268,7 +1267,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 {
                     getallmedialistfromdb();
                     if(adaptermedialist != null && arraymediaitemlist.size() > 0)
-                        adaptermedialist.notifyDataSetChanged();
+                        adaptermedialist.notifyitems(arraymediaitemlist);
                 }
             }
             else if(type == 2)
