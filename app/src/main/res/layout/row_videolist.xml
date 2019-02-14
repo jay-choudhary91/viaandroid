@@ -125,6 +125,15 @@
                         android:background="@color/dark_blue_solid"
                         />
 
+                    <ImageView
+                        android:id="@+id/img_scanover"
+                        android:layout_width="50dp"
+                        android:layout_height="100dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="-50dp"
+                        android:alpha="0.4"
+                        android:background="@drawable/gradient_verify_yellow"/>
+
                 </RelativeLayout>
 
 
@@ -244,17 +253,6 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-
-
-        <ImageView
-            android:id="@+id/img_scanover"
-            android:layout_width="50dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="-50dp"
-            android:alpha="0.4"
-            android:background="@drawable/gradient_verify_yellow"/>
 
         <View
             android:layout_width="match_parent"

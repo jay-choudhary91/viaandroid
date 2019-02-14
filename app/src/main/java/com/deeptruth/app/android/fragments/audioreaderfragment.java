@@ -266,7 +266,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.attitude_indicator)
     AttitudeIndicator attitudeindicator;
 
-    private String audiourl = null;
+    private String audiourl = null,latency="";
 
     private MediaPlayer player;
     private View rootview = null;
@@ -1506,25 +1506,17 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         @Override
                         public void run() {
                             edt_medianame.setText(medianame);
+                            edt_medianotes.setText(medianotes);
                         }
                     });
-
-                    if(!medianotes.isEmpty()){
-                        applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                edt_medianotes.setText(medianotes);
-                            }
-                        });
-                    }
                 }
 
-                /*applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         setseekbarlayoutcolor();
                     }
-                });*/
+                });
 
                 try
                 {
@@ -1895,8 +1887,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
             param.leftMargin=0;
 
-            View view = new View(getActivity());
+            View view = new View(applicationviavideocomposer.getactivity());
             view.setLayoutParams(param);
+
 
             if(!metricmainarraylist.get(i).getColor().isEmpty() && metricmainarraylist.get(i).getColor() != null){
                 view.setBackgroundColor(Color.parseColor(metricmainarraylist.get(i).getColor()));
@@ -1904,16 +1897,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 view.setBackgroundColor(Color.parseColor("white"));
             }
 
-               /* if(i % 2 == 0){
-                    view.setBackgroundResource(R.color.black);
+
+            if(!metricmainarraylist.get(i).getLatency().isEmpty() && metricmainarraylist.get(i).getLatency() != null){
+                if(latency.isEmpty()){
+                    latency = metricmainarraylist.get(i).getLatency();
                 }else{
-                    view.setBackgroundResource(R.color.red);
-                    //
-                }*/
+                    latency = latency + "," + metricmainarraylist.get(i).getLatency();
+                }
+            }
             Log.e("setcolorcount =", ""+ i);
             linearseekbarcolorview.addView(view);
-
         }
+        xdata.getinstance().saveSetting(config.latency,latency);
     }
 
     public void setheadermargine(){
