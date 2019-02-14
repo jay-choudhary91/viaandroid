@@ -213,7 +213,7 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
                 }
             }).start();
 
-            setheadermargins();
+        //    setheadermargins();
         }
         return rootview;
     }
