@@ -848,7 +848,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         layoutbackgroundcontroller.setVisibility(View.GONE);
                         playpausebutton.setVisibility(View.GONE);
                         imgpause.setVisibility(View.GONE);
-                        img_fullscreen.setVisibility(View.INVISIBLE);
+                        img_fullscreen.setVisibility(View.GONE);
                         recenterplaypause();
                     } else{
                         gethelper().drawerenabledisable(false);
@@ -880,29 +880,61 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 case R.id.videotextureview:
                     Log.e("ontouch","ontouch");
 
-                    if(layout_photodetails.getVisibility()==View.GONE){
-                        if(layout_footer.getVisibility()==(View.GONE)){
+                    if(layout_photodetails.getVisibility()==View.GONE)  // Full screen view
+                    {
+                        if(layout_mediatype.getVisibility()==View.GONE)  // Action bar is hidden
+                        {
                             setbottomimgview();
                             gethelper().updateactionbar(1);
                             recenterplaypause();
-                            img_fullscreen.setVisibility(View.VISIBLE);
+
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layout_mediatype.setVisibility(View.VISIBLE);
-                            common.slidetodown(layout_mediatype);
-                            layout_footer.setVisibility(View.VISIBLE);
+
                             playpausebutton.setVisibility(View.VISIBLE);
-                        } else {
-                           /*
-                            setbottomimgview();*/
-                            gethelper().updateactionbar(0);
+
+                            if(player != null && (! player.isPlaying()))  // Player is pause
+                            {
+                                gethelper().updateactionbar(0);
+                                layout_footer.setVisibility(View.VISIBLE);
+                                img_fullscreen.setVisibility(View.VISIBLE);
+                                layoutbackgroundcontroller.setVisibility(View.GONE);
+                                common.slidetodown(layout_mediatype);
+                                layoutpause.setVisibility(View.GONE);
+                            }
+                            else   // Player is playing
+                            {
+                                gethelper().updateactionbar(1);
+                                layout_footer.setVisibility(View.GONE);
+                                img_fullscreen.setVisibility(View.GONE);
+                                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                                imgpause.setVisibility(View.VISIBLE);
+                                layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                            }
+                        }
+                        else  // Action bar is showing
+                        {
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                             layout_footer.setVisibility(View.GONE);
-                            common.slidetoabove(layout_mediatype);
-                        }
 
+                            if(player != null && (! player.isPlaying()))
+                            {
+                                gethelper().updateactionbar(0);
+                                layoutbackgroundcontroller.setVisibility(View.GONE);
+                                layout_footer.setVisibility(View.GONE);
+                                img_fullscreen.setVisibility(View.GONE);
+                                common.slidetoabove(layout_mediatype);
+                                layoutpause.setVisibility(View.GONE);
+                            }
+                            else
+                            {
+                                gethelper().updateactionbar(1);
+                                layoutpause.setVisibility(View.VISIBLE);
+                            }
+                        }
                     } else {
                         img_fullscreen.setVisibility(View.VISIBLE);
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
@@ -927,7 +959,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             time_current.setVisibility(View.VISIBLE);
                             videotextureview.setClickable(false);
                             playpausebutton.setVisibility(View.GONE);
-                            img_fullscreen.setVisibility(View.INVISIBLE);
+                            img_fullscreen.setVisibility(View.GONE);
                             layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.VISIBLE);
                             dividerline.setVisibility(View.GONE);
@@ -2210,45 +2242,46 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     @Override
-    public void showhideviewondrawer(boolean isshow) {
-        super.showhideviewondrawer(isshow);
+    public void showhideviewondrawer(boolean drawershown) {
+        super.showhideviewondrawer(drawershown);
 
-        if(isshow){
-            if(player.isPlaying() && layoutbackgroundcontroller.getVisibility() == View.VISIBLE){
-                gethelper().updateactionbar(0);
-                common.slidetoabove(layout_mediatype);
-               // layout_validating.setVisibility(View.GONE);
-                layoutbackgroundcontroller.setVisibility(View.GONE);
-            }else{
-                gethelper().updateactionbar(0);
-                common.slidetoabove(layout_mediatype);
+        if(drawershown)
+        {
+            gethelper().updateactionbar(0);
+            common.slidetoabove(layout_mediatype);
+            layoutbackgroundcontroller.setVisibility(View.GONE);
+            layout_footer.setVisibility(View.GONE);
+            playpausebutton.setVisibility(View.GONE);
+            img_fullscreen.setVisibility(View.GONE);
+            imgpause.setVisibility(View.GONE);
+        }
+        else
+        {
+            gethelper().updateactionbar(1);
+            common.slidetodown(layout_mediatype);
+
+            if(player != null && player.isPlaying())
+            {
                 layout_footer.setVisibility(View.GONE);
-                playpausebutton.setVisibility(View.GONE);
-               // layout_validating.setVisibility(View.GONE);
-                img_fullscreen.setVisibility(View.GONE);
-            }
-        }else{
-            if(player.isPlaying() && layoutbackgroundcontroller.getVisibility() == View.GONE){
-                gethelper().updateactionbar(1);
-                common.slidetodown(layout_mediatype);
                 layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.VISIBLE);
-                playpausebutton.setVisibility(View.VISIBLE);
-                layout_mediatype.setVisibility(View.VISIBLE);
-
-            }else{
-                gethelper().updateactionbar(1);
-                common.slidetodown(layout_mediatype);
+                imgpause.setVisibility(View.VISIBLE);
+                layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+            }
+            else
+            {
+                layoutbackgroundcontroller.setVisibility(View.GONE);
                 layout_footer.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.VISIBLE);
                 playpausebutton.setVisibility(View.VISIBLE);
-                layout_mediatype.setVisibility(View.VISIBLE);
                 img_fullscreen.setVisibility(View.VISIBLE);
+
                 img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                 setbottomimgview();
                 layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
             }
         }
+
     }
 
     public void setheadermargine(){
