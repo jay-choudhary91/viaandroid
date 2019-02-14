@@ -638,7 +638,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     layout_halfscrnimg.setVisibility(View.GONE);
                     layout_mediatype.setVisibility(View.GONE);
                     layout_footer.setVisibility(View.GONE);
-                    layout_validating.setVisibility(View.GONE);
 
                 }else
                 {
@@ -646,7 +645,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         layout_mediatype.setVisibility(View.VISIBLE);
                         layout_halfscrnimg.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
-                        layout_validating.setVisibility(View.VISIBLE);
                         edt_medianame.setFocusable(false);
                         edt_medianotes.setFocusable(false);
                     }
@@ -1980,7 +1978,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (time_current != null)
                     time_current.setText(stringForTime(videostarttime));
 
-                if(arraycontainerformetric != null)
+                if(arraycontainerformetric != null && layout_mediatype.getVisibility() == View.VISIBLE)
                 {
                     String color = "white";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
@@ -2006,6 +2004,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
                             break;
                     }
+                }
+                else
+                {
+                    layout_validating.setVisibility(View.GONE);
                 }
 
                 hdlr.postDelayed(this, 10);
