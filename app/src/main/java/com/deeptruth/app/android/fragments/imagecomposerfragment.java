@@ -553,13 +553,21 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     // Calling after 1 by 1 frame duration.
     public void savemediaupdate(JSONArray metricesjsonarray,String sequenceno,String sequencehash)
     {
-        JSONArray metricesarray=new JSONArray();
         String currentdate[] = common.getcurrentdatewithtimezone();
-        String metrichash = "" ;
         try {
-            metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
-            mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
-                    currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
+            try {
+                if(metricesjsonarray != null && metricesjsonarray.length() > 0)
+                {
+                    JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
+                    arrayobject.put("interim_identifying_hashes","");
+                }
+                String metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
+                mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
+                        currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

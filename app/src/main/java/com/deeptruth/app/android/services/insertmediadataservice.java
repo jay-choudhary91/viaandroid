@@ -15,6 +15,7 @@ import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
@@ -23,6 +24,9 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunnin
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -148,6 +152,7 @@ public class insertmediadataservice extends Service {
                                             if(mdbstartitemcontainer.size() > 0)
                                             {
                                                 videomodel lastframehash=null;
+                                                String interim_identifying_hashes="";
                                                 for(int i = 0; i<hasharray.size(); i++){
 
                                                     String keyValue=hasharray.get(i);
@@ -181,6 +186,16 @@ public class insertmediadataservice extends Service {
                                                         updatestartframes(mdbstartitemcontainer);
                                                     }
 
+                                                    if(interim_identifying_hashes.trim().isEmpty())
+                                                    {
+                                                        interim_identifying_hashes=keyValue;
+                                                    }
+                                                    else
+                                                    {
+                                                        interim_identifying_hashes=interim_identifying_hashes+","+keyValue;
+                                                    }
+
+
                                                     if (count == currentframenumber) {
                                                         lastframehash=null;
                                                         currentframenumber = currentframenumber + frameduration;
@@ -197,11 +212,26 @@ public class insertmediadataservice extends Service {
 
                                                         if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
                                                         {
-                                                            Log.e("md5 "+count," "+keyValue);
+                                                            try {
+                                                                JSONArray metricesarray=new JSONArray(mdbmiddleitemcontainer.get(arrayupdator).getItem5());
+                                                                if(metricesarray != null && metricesarray.length() > 0)
+                                                                {
+                                                                    JSONObject arrayobject=metricesarray.getJSONObject(0);
+                                                                    arrayobject.put("interim_identifying_hashes",interim_identifying_hashes);
+                                                                }
+                                                                String metrichash = md5.calculatestringtomd5(metricesarray.toString());
+                                                                mdbmiddleitemcontainer.get(arrayupdator).setItem2(metrichash);
+                                                                mdbmiddleitemcontainer.get(arrayupdator).setItem5(metricesarray.toString());
+
+                                                            }catch (Exception e)
+                                                            {
+                                                                e.printStackTrace();
+                                                            }
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem8(keyValue);
                                                             mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
                                                             updatemiddleframes(mdbmiddleitemcontainer.get(arrayupdator));
+                                                            interim_identifying_hashes="";
                                                         }
                                                         arrayupdator++;
                                                     }
@@ -223,6 +253,21 @@ public class insertmediadataservice extends Service {
 
                                                     if(mdbmiddleitemcontainer.size() > 0 && arrayupdator < mdbmiddleitemcontainer.size())
                                                     {
+                                                        try {
+                                                            JSONArray metricesarray=new JSONArray(mdbmiddleitemcontainer.get(arrayupdator).getItem5());
+                                                            if(metricesarray != null && metricesarray.length() > 0)
+                                                            {
+                                                                JSONObject arrayobject=metricesarray.getJSONObject(0);
+                                                                arrayobject.put("interim_identifying_hashes",interim_identifying_hashes);
+                                                            }
+                                                            String metrichash = md5.calculatestringtomd5(metricesarray.toString());
+                                                            mdbmiddleitemcontainer.get(arrayupdator).setItem2(metrichash);
+                                                            mdbmiddleitemcontainer.get(arrayupdator).setItem5(metricesarray.toString());
+                                                        }catch (Exception e)
+                                                        {
+                                                            e.printStackTrace();
+                                                        }
+
                                                         mdbmiddleitemcontainer.get(arrayupdator).setItem4(videokey);
                                                         mdbmiddleitemcontainer.get(arrayupdator).setItem8(lastframehash.getkeyvalue());
                                                         mdbmiddleitemcontainer.get(arrayupdator).setItem9(""+count);
