@@ -798,7 +798,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         {
                             img_share_media.setEnabled(true);
                         }
-                    }, 2000);
+                    }, 1500);
 
                     if (mediafilepath != null && (!mediafilepath.isEmpty()))
                         common.sharevideo(getActivity(), mediafilepath);
@@ -818,6 +818,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
 
                 case R.id.img_delete_media:
+                    img_delete_media.setEnabled(false);
+                    new Handler().postDelayed(new Runnable()
+                    {
+                        public void run()
+                        {
+                            img_delete_media.setEnabled(true);
+                        }
+                    }, 1500);
                     showalertdialog(getActivity().getResources().getString(R.string.delete_confirm_video));
                     break;
 

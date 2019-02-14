@@ -579,7 +579,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     {
                         img_share_media.setEnabled(true);
                     }
-                }, 2000);
+                }, 1500);
                 if (audiourl != null && (!audiourl.isEmpty()))
                     common.shareaudio(getActivity(), audiourl);
                 break;
@@ -608,6 +608,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 break;
 
             case R.id.img_delete_media:
+                img_delete_media.setEnabled(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        img_delete_media.setEnabled(true);
+                    }
+                }, 1500);
                 showalertdialog(getActivity().getResources().getString(R.string.dlt_cnfm_audio));
                 break;
 

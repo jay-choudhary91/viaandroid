@@ -295,6 +295,14 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.img_slide_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    holder.img_slide_delete.setEnabled(false);
+                    new Handler().postDelayed(new Runnable()
+                    {
+                        public void run()
+                        {
+                            holder.img_slide_delete.setEnabled(true);
+                        }
+                    }, 1000);
                     adapter.onItemClicked(arrayvideolist.get(position),2);
                 }
             });
