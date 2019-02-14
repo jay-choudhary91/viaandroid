@@ -596,6 +596,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             JSONArray metricesarray=new JSONArray();
             metricesarray.put(metadatametricesjson);
 
+            metrichashvalue = md5.calculatestringtomd5(metadatametricesjson.toString());
+
             savestartmediainfo();
             savemediaupdate(metricesarray,"1",keyvalue);
 
@@ -1075,9 +1077,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     }
 
                     setmetriceshashesdata();
-                   /* showsharepopupmain();
-                    Log.d(TAG, capturedimagefile.toString());
-                    unlockfocus();*/
                 }
             };
 
@@ -1262,18 +1261,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             try {
                 object.put(metric.getMetricTrackKeyName(),value);
                 metadatametricesjson.put(metric.getMetricTrackKeyName(),value);
-                metrichashvalue = md5.calculatestringtomd5(metadatametricesjson.toString());
-
-               Log.e("jsondata",metadatametricesjson.toString());
-
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
         builder.append("\n");
-        selectedmetrices =selectedmetrices+builder.toString();
-        metrichashvalue = md5.calculatestringtomd5(selectedmetrices);
     }
 
     public void setmetriceshashesdata()
@@ -1286,7 +1279,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             @Override
             public void run() {
 
-                boolean graphicopen=false;
                 if(!isdraweropen)
                 {
                     if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
