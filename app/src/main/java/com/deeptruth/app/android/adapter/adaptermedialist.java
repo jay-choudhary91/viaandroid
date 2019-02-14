@@ -113,13 +113,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             totalwidth= imagethumbanail_width + (img_scanoverwidth / 2);
                             Log.e("totalwidth", ""+totalwidth);
 
-                            TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth ,
+                            TranslateAnimation animation = new TranslateAnimation(50.0f, -totalwidth ,
                                     0.0f, 0.0f);
                             animation.setDuration(3000);
-                            //animation.setStartOffset(position*100);
                             animation.setRepeatCount(Animation.INFINITE);
                             animation.setRepeatMode(ValueAnimator.RESTART);
-                            //animation.setFillAfter(true);
                             holder.img_scanover.startAnimation(animation);
 
                             Animation.AnimationListener listener =new Animation.AnimationListener() {

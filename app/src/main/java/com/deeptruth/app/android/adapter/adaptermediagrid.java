@@ -78,16 +78,6 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
 
         if(arrayvideolist.get(position).isDoenable())
         {
-            /*objectanimator = ObjectAnimator.ofFloat(holder.img_scanover,"x",300);
-            objectanimator.setDuration(5000);
-            objectanimator.setRepeatCount(Animation.INFINITE);
-            objectanimator.setRepeatMode(ValueAnimator.RESTART);
-            objectanimator.start();*/
-            // Load the animation like this
-            /*Animation animslide = AnimationUtils.loadAnimation(context,R.anim.slide_leftright);
-            animslide.setRepeatCount(5);  // animation repeat count
-            animslide.setRepeatMode(2);
-            holder.img_scanover.startAnimation(animslide);*/
             holder.img_mediathumbnail.post(new Runnable() {
                 @Override
                 public void run() {
@@ -99,16 +89,12 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                          imagescanover_width = holder.img_scanover.getWidth();
                          totalwidth = imagescanover_width + imagethumbnail_width;
 
-                            TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth,
+                            TranslateAnimation animation = new TranslateAnimation(50.0f, -totalwidth,
                                     0.0f, 0.0f);
                             animation.setDuration(3000);
-                            //animation.setStartOffset(position*100);
                             animation.setRepeatCount(Animation.INFINITE);
                             animation.setRepeatMode(ValueAnimator.RESTART);
-                            //animation.setFillAfter(true);
                             holder.img_scanover.startAnimation(animation);
-
-           /**/
 
                             Animation.AnimationListener listener=new Animation.AnimationListener() {
                                 @Override
