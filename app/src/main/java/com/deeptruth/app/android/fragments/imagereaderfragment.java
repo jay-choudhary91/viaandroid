@@ -508,6 +508,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 break;
             case R.id.img_share_media:
+                img_share_media.setEnabled(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        img_share_media.setEnabled(true);
+                    }
+                }, 1500);
                 if (imageurl != null && (!imageurl.isEmpty()))
                     common.shareimage(getActivity(), imageurl);
 
@@ -526,6 +534,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
 
             case R.id.img_delete_media:
+                img_delete_media.setEnabled(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        img_delete_media.setEnabled(true);
+                    }
+                }, 1500);
                 showalertdialog(getActivity().getResources().getString(R.string.dlt_cnfm_photo));
                 break;
 
