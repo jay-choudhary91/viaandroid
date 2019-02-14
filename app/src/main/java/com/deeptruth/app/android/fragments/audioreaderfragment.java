@@ -408,7 +408,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             public void run() {
 
                 RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbar.getHeight());
-                parms.setMargins(15,5,15,0);
+                parms.setMargins(20,0,20,0);
                 linearseekbarcolorview.setLayoutParams(parms);
 
                 Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
