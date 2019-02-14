@@ -1279,21 +1279,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             @Override
             public void run() {
 
-                if(!isdraweropen)
+                if(! metrichashvalue.trim().isEmpty())
                 {
-                    if(mmetricsitems.size() == 0 && (! selectedmetrices.toString().trim().isEmpty()))
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
-                        selectedmetrices="";
-                    }
-
+                    common.setgraphicalblockchainvalue(config.blockchainid,"",true);
+                    common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
+                    common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
+                    common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
                 }
-
-                common.setgraphicalblockchainvalue(config.blockchainid,"",true);
-                common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
-                common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
-                common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
-
                 myhandler.postDelayed(this, 1000);
             }
         };
