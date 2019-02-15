@@ -836,6 +836,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         String header = "" + cursor.getString(cursor.getColumnIndex("header"));
                         String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
                         String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
+                        String status = "" + cursor.getString(cursor.getColumnIndex("status"));
 
                         if(! isexistinarraay(mediafilepath))
                         {
@@ -850,6 +851,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             videoobject.setMediacolor(color);
                             videoobject.setExtension(common.getvideoextension(location));
                             videoobject.setName(common.getfilename(location));
+                            videoobject.setMediastatus(status);
                             videoobject.setDoenable(false);
 
                             if(mediaduration.trim().isEmpty())
@@ -1050,6 +1052,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 String media_notes = "" + cursor.getString(cursor.getColumnIndex("media_notes"));
                 String color = "" + cursor.getString(cursor.getColumnIndex("color"));
                 String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
+                String status = "" + cursor.getString(cursor.getColumnIndex("status"));
                 //String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
                 String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
 
@@ -1063,6 +1066,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arraymediaitemlist.get(i).setMedianotes(media_notes);
                         arraymediaitemlist.get(i).setMediacolor(color);
                         arraymediaitemlist.get(i).setLocalkey(localkey);
+                        arraymediaitemlist.get(i).setMediastatus(status);
                         if(! mediaduration.trim().isEmpty())
                             arraymediaitemlist.get(i).setDuration(mediaduration);
 

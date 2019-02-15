@@ -1,8 +1,6 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -78,7 +76,6 @@ import com.deeptruth.app.android.models.frame;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.videomodel;
-import com.deeptruth.app.android.models.wavevisualizer;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.utils.NoScrollRecycler;
 import com.deeptruth.app.android.utils.centerlayoutmanager;
@@ -344,7 +341,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private videocontrollerview controller;
     private View rootview = null;
     private long playerposition=0;
-    private Uri selectedvideouri =null;
     private Handler myHandler;
     private Runnable myRunnable;
     private long videoduration =0,maxincreasevideoduration=0;
@@ -357,8 +353,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     boolean runmethod = false;
     public boolean isvideocompleted=false,ismapzoomed=false;
     public int flingactionmindstvac;
-    ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
-    private long currentaudioduration =0;
+    private long currentmediaduration =0;
     private int videostarttime =0, endtime =0;
     int position=0;
     String latency = "";
@@ -1231,6 +1226,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             @Override
                             public void run() {
                                 setseekbarlayoutcolor();
+                                if(metricmainarraylist != null && metricmainarraylist.size() > 0)
+                                {
+                                    arraycontainerformetric = new arraycontainer();
+                                    arraycontainerformetric = metricmainarraylist.get(0);
+                                }
                             }
                         });
                         try
@@ -1424,14 +1424,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
             videoduration=mediaPlayer.getDuration();
             txt_duration.setText( common.gettimestring(mediaPlayer.getDuration()) );
-            if(player!=null)
+            if(player != null)
             {
                 setvideodata();
-                // changeactionbarcolor();
-                // initAudio();
-                // fragmentgraphic.setvisualizerwave();
-                wavevisualizerslist.clear();
-
+                hdlr.postDelayed(updatetimestream, 10);
             }
 
 
@@ -1619,7 +1615,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     if(player != null && controller!= null)
                     {
                         player.seekTo(0);
-                        wavevisualizerslist.clear();
                         controller.setProgress(0,true);
                         playpausebutton.setImageResource(R.drawable.play_btn);
 
@@ -1954,19 +1949,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         isvideocompleted=false;
         if(player != null)
         {
-            if(selectedvideouri!= null){
+            if(mediafilepath!=null)
+            {
                 playpausebutton.setImageResource(R.drawable.pause);
                 player.start();
-                hdlr.postDelayed(UpdateSongTime, 10);
-                //player.setOnCompletionListener(this);
-            }
-            else{
-                if(mediafilepath!=null){
-                    playpausebutton.setImageResource(R.drawable.pause);
-                    player.start();
-                    hdlr.postDelayed(UpdateSongTime, 10);
-                    //player.setOnCompletionListener(this);
-                }
             }
         }
     }
@@ -1977,7 +1963,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    private Runnable UpdateSongTime = new Runnable() {
+    private Runnable updatetimestream = new Runnable() {
         @Override
         public void run() {
             if(player != null ){
@@ -1985,8 +1971,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if(player.getCurrentPosition() > maxincreasevideoduration)
                     maxincreasevideoduration=player.getCurrentPosition();
 
-                if(currentaudioduration == 0 || (player.getCurrentPosition() > currentaudioduration))
-                    currentaudioduration =player.getCurrentPosition();  // suppose its on 4th pos means 4000
+                if(currentmediaduration == 0 || (player.getCurrentPosition() > currentmediaduration))
+                    currentmediaduration =player.getCurrentPosition();  // suppose its on 4th pos means 4000
 
                 videostarttime = player.getCurrentPosition();
                 mediaseekbar.setProgress(player.getCurrentPosition());

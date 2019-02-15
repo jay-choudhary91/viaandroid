@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.video;
@@ -52,7 +53,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
         EditText edtvideoname;
-        public ImageView img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
+        public ImageView img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
 
         public myViewHolder(View view) {
@@ -69,6 +70,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             img_slide_create_dir = (ImageView) view.findViewById(R.id.img_slide_create_dir);
             img_slide_delete = (ImageView) view.findViewById(R.id.img_slide_delete);
             img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
+            img_loader = (ImageView) view.findViewById(R.id.img_loader);
             root_view = (SwipeRevealLayout) view.findViewById(R.id.root_view);
         }
     }
@@ -97,6 +99,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
         if(arrayvideolist.get(position).isDoenable())
         {
+            holder.root_view.setVisibility(View.VISIBLE);
             binderHelper.bind(holder.root_view,""+arrayvideolist.get(position).getMediatitle());
             holder.img_videothumbnail.post(new Runnable() {
                 @Override
@@ -159,14 +162,32 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                                 holder.img_scanover.setBackgroundResource(0);
                                 holder.img_scanover.setVisibility(View.GONE);
                             }
+
                         }
                     });
 
                 }
             });
 
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                if(arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete))
+                {
+                    holder.img_loader.setVisibility(View.GONE);
+                }
+                else
+                {
+                    holder.img_loader.setVisibility(View.VISIBLE);
+                    Glide.with(context).
+                            load(R.drawable.media_loader).
+                            into(holder.img_loader);
+                }
+            }
+            else
+            {
+                holder.img_loader.setVisibility(View.GONE);
+            }
 
-            holder.root_view.setVisibility(View.VISIBLE);
             if(arrayvideolist.get(position).getMediatitle().trim().isEmpty())
             {
                 holder.edtvideoname.setText("NA");
@@ -317,7 +338,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.img_videothumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // if(arrayvideolist.get(position).getmimetype().contains("video"))
+                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                    {
+                        if (! arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete))
+                            return;
+                    }
                     adapter.onItemClicked(arrayvideolist.get(position),4);
                 }
             });
