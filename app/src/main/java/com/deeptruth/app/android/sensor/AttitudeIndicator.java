@@ -134,21 +134,30 @@ public class AttitudeIndicator extends View {
     //canvas.translate(0, translatevalue);
     canvas.translate(0, 15);
 
+    //x=136, y= 150
 
     {
       Paint myPaint = new Paint();
       myPaint.setColor(Color.GRAY);
       myPaint.setStrokeWidth(5);
-      //myPaint.setStyle(Paint.Style.STROKE);
-      canvas.drawRect(100, 70, 170, 200, myPaint);
+      //canvas.drawRect(100, 70, 170, 200, myPaint);
+      float left=centerX-40;
+      float top=centerY-70;
+      float right=centerX+40;
+      float bottom=centerY+60;
+      canvas.drawRect(left, top, right, bottom, myPaint);
     }
 
     {
       Paint myPaint = new Paint();
       myPaint.setColor(Color.WHITE);
       myPaint.setStrokeWidth(5);
-      //myPaint.setStyle(Paint.Style.STROKE);
-      canvas.drawRect(110, 90, 160, 180, myPaint);
+      //canvas.drawRect(110, 90, 160, 180, myPaint);
+      float left=centerX-30;
+      float top=centerY-60;
+      float right=centerX+30;
+      float bottom=centerY+50;
+      canvas.drawRect(left, top, right, bottom, myPaint);
     }
 
     // Return to normal to draw the miniature plane
