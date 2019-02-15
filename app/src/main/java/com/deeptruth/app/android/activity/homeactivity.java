@@ -368,7 +368,7 @@ public void updateactionbar(int showHide, int color) {
             actionbar.setVisibility(View.GONE);
             drawerenabledisable(true);
             updateactionbar(0);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
@@ -413,7 +413,7 @@ public void updateactionbar(int showHide, int color) {
              actionbar.setVisibility(View.GONE);
             imgsettingsicon.setEnabled(true);
             updateactionbar(1);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             fragment_container.setLayoutParams(params);
@@ -425,7 +425,7 @@ public void updateactionbar(int showHide, int color) {
              actionbar.setVisibility(View.GONE);
              imgsettingsicon.setEnabled(true);
              updateactionbar(1);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
@@ -436,7 +436,7 @@ public void updateactionbar(int showHide, int color) {
              actionbar.setVisibility(View.GONE);
              drawerenabledisable(true);
              updateactionbar(0);
-             updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+             updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
@@ -448,7 +448,7 @@ public void updateactionbar(int showHide, int color) {
              actionbar.setVisibility(View.GONE);
              updateactionbar(0);
              drawerenabledisable(true);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
@@ -485,7 +485,7 @@ public void updateactionbar(int showHide, int color) {
              imgshareicon.setVisibility(View.VISIBLE);
              imgsettingsicon.setEnabled(true);
              updateactionbar(1);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
@@ -498,13 +498,13 @@ public void updateactionbar(int showHide, int color) {
              img_backbtn.setVisibility(View.VISIBLE);
              imgsettingsicon.setEnabled(true);
              updateactionbar(1);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
 
              RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                      RelativeLayout.LayoutParams.MATCH_PARENT);
              fragment_container.setLayoutParams(params);
          }else if(fragment instanceof composeoptionspagerfragment){
-             updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
+             updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
 
              actionbar.setVisibility(View.GONE);
          }
