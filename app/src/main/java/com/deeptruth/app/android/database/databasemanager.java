@@ -735,26 +735,19 @@ public class databasemanager {
         return  mitemlist;
     }
 
-    public String[] getlocalkeybylocation(String filename) {
-        String[] localkey ={"","","","","","","",""};
+    public String getlocalkeybylocation(String location) {
+        String localkey ="";
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT  * FROM tblstartmediainfo where location = '"+filename+"'";
+            String sql = "SELECT  * FROM tblstartmediainfo where location = '"+location+"'";
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
                 do{
-                    localkey[0] = "" + cur.getString(cur.getColumnIndex("sync_status"));
-                    localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
-                    localkey[2] = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    localkey[3] = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
-                    localkey[4] = "" + cur.getString(cur.getColumnIndex("media_name"));
-                    localkey[5] = "" + cur.getString(cur.getColumnIndex("media_notes"));
-                    localkey[6] = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
-                    localkey[7] = "" + cur.getString(cur.getColumnIndex("color"));
+                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {
