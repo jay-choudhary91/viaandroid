@@ -620,6 +620,32 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor updatemediaattempt(String location,String totalattempt,String status) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+
+            String color="";
+            if(status.equalsIgnoreCase(config.sync_notfound))
+                color="red";
+
+            mDb.execSQL("update tblstartmediainfo set status = '"+status+
+                    "',media_sync_attempt ='"+totalattempt+
+                    "',color ='"+color+
+                    "' where location='"+location+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
     public Cursor updatesyncvalue(String sync,String selectedid) {
         Cursor mCur=null;
         try {

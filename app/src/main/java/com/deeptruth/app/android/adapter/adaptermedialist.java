@@ -110,9 +110,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                     holder.img_scanover.post(new Runnable() {
                         @Override
                         public void run() {
+
                             int img_scanoverwidth=  holder.img_scanover.getWidth();
                             Log.e("imagewidth:",""+img_scanoverwidth);
-
 
                             totalwidth= imagethumbanail_width + (img_scanoverwidth / 2);
                             Log.e("totalwidth", ""+totalwidth);
@@ -171,7 +171,8 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
-                if(arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete))
+                if(arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete) ||
+                        arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_notfound))
                 {
                     holder.img_loader.setVisibility(View.GONE);
                 }

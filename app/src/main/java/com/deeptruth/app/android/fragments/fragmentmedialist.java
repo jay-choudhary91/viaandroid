@@ -854,7 +854,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             videoobject.setMediastatus(status);
                             videoobject.setDoenable(false);
 
-                            if(mediaduration.trim().isEmpty())
+                            if(mediaduration.trim().isEmpty() && (! type.equalsIgnoreCase("image")))
                             {
                                 try {
                                     String duration = common.getvideotimefromurl(mediafilepath);

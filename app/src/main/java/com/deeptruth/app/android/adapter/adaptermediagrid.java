@@ -148,7 +148,8 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
-                if(arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete))
+                if(arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete) ||
+                        arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_notfound))
                 {
                     holder.img_loader.setVisibility(View.GONE);
                 }
