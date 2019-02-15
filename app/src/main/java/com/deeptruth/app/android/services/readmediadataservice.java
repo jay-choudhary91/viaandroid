@@ -734,39 +734,6 @@ public class readmediadataservice extends Service {
             String hashvalue =  framearraylist.get(xapicounter).getkeyvalue();
             xapigetmediainfo(hashvalue,mediafilepath);
         }
-        else
-        {
-            /*databasemanager dbmanager=null;
-            if (dbmanager == null) {
-                dbmanager = new databasemanager(getApplicationContext());
-                dbmanager.createDatabase();
-            }
-
-            try {
-                dbmanager.open();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-                xdata.getinstance().saveSetting(config.ismediadataservicerunning,"0");
-                String syncdate[] = common.getcurrentdatewithtimezone();
-                dbmanager.updatestartvideoinfo("","",common.getfilename(mediapath),"",
-                        "","","",syncdate[0] , actiontype,
-                        "","","","","",
-                        firsthash,"",config.sync_notfound,"","","","","");
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            try {
-                dbmanager.close();
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }*/
-        }
     }
 
     public void xapipost_sendjson(Context mContext, String Action, HashMap<String,Object> mPairList, apiresponselistener mListener) {

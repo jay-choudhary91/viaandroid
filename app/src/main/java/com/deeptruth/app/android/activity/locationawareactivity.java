@@ -167,7 +167,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     ArrayList<startmediainfo> unsyncedmediaitems=new ArrayList<>();
     int syncupdationcounter=0;
     boolean isdatasyncing=false;
-    int readercallingcounter=0;
+    int downloadmetadataattempt=2;
     ArrayList<video> readerarraymedialist = new ArrayList<video>();
     private BroadcastReceiver coredatabroadcastreceiver;
     Date initialdate ;
@@ -1848,15 +1848,18 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
         {
-            Date currentdate=new Date();
-            String initialdatereaderapi=xdata.getinstance().getSetting("initialdatereaderapi");
-            long olddate=0;
-            if(! initialdatereaderapi.trim().isEmpty())
-                olddate=Long.parseLong(initialdatereaderapi);
+            if(common.isnetworkconnected(getApplicationContext()))
+            {
+                Date currentdate=new Date();
+                String initialdatereaderapi=xdata.getinstance().getSetting("initialdatereaderapi");
+                long olddate=0;
+                if(! initialdatereaderapi.trim().isEmpty())
+                    olddate=Long.parseLong(initialdatereaderapi);
 
-            int seconddifference= (int) (Math.abs(olddate-currentdate.getTime())/1000);
-            if(seconddifference > 15 || olddate == 0)
-                updatesyncedreaderitems();
+                int seconddifference= (int) (Math.abs(olddate-currentdate.getTime())/1000);
+                if(seconddifference > 20 || olddate == 0)
+                    updatesyncedreaderitems();
+            }
         }
     }
 
@@ -1898,13 +1901,37 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                             String type = "" + cursor.getString(cursor.getColumnIndex("type"));
                             String status = "" + cursor.getString(cursor.getColumnIndex("status"));
                             String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
+                            String media_sync_attempt = "" + cursor.getString(cursor.getColumnIndex("media_sync_attempt"));
 
-                            video videoobj = new video();
-                            videoobj.setPath(mediafilepath);
-                            videoobj.setmimetype(type);
-                            videoobj.setMediastatus(status);
                             if(! status.equalsIgnoreCase(config.sync_complete) && (! status.equalsIgnoreCase(config.sync_notfound)))
-                                readerarraymedialist.add(videoobj);
+                            {
+                                int totalattempt=0;
+                                if(media_sync_attempt.trim().isEmpty() || media_sync_attempt.equalsIgnoreCase("null"))
+                                {
+                                    totalattempt=0;
+                                }
+                                else if(status.equalsIgnoreCase(config.sync_pending))
+                                {
+                                    totalattempt=Integer.parseInt(media_sync_attempt);
+                                    totalattempt++;
+                                }
+
+                                if(totalattempt > downloadmetadataattempt)
+                                {
+                                    status=config.sync_notfound;
+                                    updatemediaattempt(location,totalattempt,status);
+                                    sendbroadcastreader();
+                                }
+                                else
+                                {
+                                    updatemediaattempt(location,totalattempt,status);
+                                    video videoobj = new video();
+                                    videoobj.setPath(mediafilepath);
+                                    videoobj.setmimetype(type);
+                                    videoobj.setMediastatus(status);
+                                    readerarraymedialist.add(videoobj);
+                                }
+                            }
 
                         }while(cursor.moveToNext());
                     }
@@ -2395,10 +2422,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         updatecompletehashvalue(localkey,valuehash);
                         updatedatasyncdate(localkey,common.getCurrentDate(),config.sync_complete,color);
 
-                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer)){
-                            Intent i = new Intent(config.composer_service_getencryptionmetadata);
-                            sendBroadcast(i);
-                        }
+                        sendbroadcastreader();
 
                     }catch (Exception e)
                     {
@@ -2408,6 +2432,34 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 triggersyncstatus();
             }
         });
+    }
+
+    //* Broadcast for notify medialist controller to get data from database
+    public void sendbroadcastreader()
+    {
+        Intent i = new Intent(config.composer_service_getencryptionmetadata);
+        sendBroadcast(i);
+    }
+
+    public void updatemediaattempt(String location,int totalattempt,String status)
+    {
+        if (mdbhelper == null) {
+            mdbhelper = new databasemanager(locationawareactivity.this);
+            mdbhelper.createDatabase();
+        }
+        try {
+            mdbhelper.open();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        try {
+            mdbhelper.updatemediaattempt(location,""+totalattempt,status);
+            mdbhelper.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void updatedatasync(String sync,String selectedid)

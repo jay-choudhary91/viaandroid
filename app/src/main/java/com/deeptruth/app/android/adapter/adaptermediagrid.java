@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.video;
@@ -43,7 +44,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
     float totalwidth;
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediaduration;
-        public ImageView img_mediathumbnail,img_scanover;
+        public ImageView img_mediathumbnail,img_scanover,img_loader;
         public RelativeLayout rl_row_media;
         public ShimmerFrameLayout shimmer_view_container;
 
@@ -52,6 +53,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             tv_mediaduration = (TextView) view.findViewById(R.id.tv_mediaduration);
             img_mediathumbnail = (ImageView) view.findViewById(R.id.img_mediathumbnail);
             img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
+            img_loader = (ImageView) view.findViewById(R.id.img_loader);
             rl_row_media = (RelativeLayout) view.findViewById(R.id.rl_row_media);
             shimmer_view_container = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         }
@@ -144,6 +146,26 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             holder.rl_row_media.setVisibility(View.VISIBLE);
             holder.tv_mediaduration.setText(arrayvideolist.get(position).getDuration());
 
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+            {
+                if(arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete) ||
+                        arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_notfound))
+                {
+                    holder.img_loader.setVisibility(View.GONE);
+                }
+                else
+                {
+                    holder.img_loader.setVisibility(View.VISIBLE);
+                    Glide.with(context).
+                            load(R.drawable.media_loader).
+                            into(holder.img_loader);
+                }
+            }
+            else
+            {
+                holder.img_loader.setVisibility(View.GONE);
+            }
+
             if(! arrayvideolist.get(position).getmimetype().contains("audio"))
             {
                 Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getPath()));
@@ -177,8 +199,13 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
 
             holder.img_mediathumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    // if(arrayvideolist.get(position).getmimetype().contains("video"))
+                public void onClick(View view)
+                {
+                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                    {
+                        if (! arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete))
+                            return;
+                    }
                     adapter.onItemClicked(arrayvideolist.get(position),4);
                 }
             });

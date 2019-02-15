@@ -620,6 +620,32 @@ public class databasemanager {
         return  mCur;
     }
 
+    public Cursor updatemediaattempt(String location,String totalattempt,String status) {
+        Cursor mCur=null;
+        try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+
+            String color="";
+            if(status.equalsIgnoreCase(config.sync_notfound))
+                color="red";
+
+            mDb.execSQL("update tblstartmediainfo set status = '"+status+
+                    "',media_sync_attempt ='"+totalattempt+
+                    "',color ='"+color+
+                    "' where location='"+location+"'");
+            if (mCur != null)
+                mCur.moveToNext();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  mCur;
+    }
+
     public Cursor updatesyncvalue(String sync,String selectedid) {
         Cursor mCur=null;
         try {
@@ -709,26 +735,19 @@ public class databasemanager {
         return  mitemlist;
     }
 
-    public String[] getlocalkeybylocation(String filename) {
-        String[] localkey ={"","","","","","","",""};
+    public String getlocalkeybylocation(String location) {
+        String localkey ="";
         Cursor cur=null;
         try {
             lock.lock();
-            String sql = "SELECT  * FROM tblstartmediainfo where location = '"+filename+"'";
+            String sql = "SELECT  * FROM tblstartmediainfo where location = '"+location+"'";
             if(mDb == null)
                 mDb = mDbHelper.getReadableDatabase();
             cur = mDb.rawQuery(sql, null);
             if (cur.moveToFirst())
             {
                 do{
-                    localkey[0] = "" + cur.getString(cur.getColumnIndex("sync_status"));
-                    localkey[1] = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
-                    localkey[2] = "" + cur.getString(cur.getColumnIndex("localkey"));
-                    localkey[3] = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
-                    localkey[4] = "" + cur.getString(cur.getColumnIndex("media_name"));
-                    localkey[5] = "" + cur.getString(cur.getColumnIndex("media_notes"));
-                    localkey[6] = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
-                    localkey[7] = "" + cur.getString(cur.getColumnIndex("color"));
+                    localkey = "" + cur.getString(cur.getColumnIndex("localkey"));
                 }while(cur.moveToNext());
             }
         } catch (Exception e) {

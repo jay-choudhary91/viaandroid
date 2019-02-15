@@ -1278,105 +1278,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         getActivity().registerReceiver(getmetadatabroadcastreceiver, intentFilter);
     }
 
-    public void getmediametadata()
-    {
-        if(audiourl != null && (! audiourl.isEmpty())) {
-            File file = new File(audiourl);
-            if (file.exists()) {
-                databasemanager mdbhelper = null;
-                if (mdbhelper == null) {
-                    mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
-                    mdbhelper.createDatabase();
-                }
-
-                try {
-                    mdbhelper.open();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    Cursor mediainfocursor = mdbhelper.getmediainfobyfilename(common.getfilename(audiourl));
-                    String videoid = "", videotoken = "",audiostatus ="";
-
-                    if (mediainfocursor != null && mediainfocursor.getCount() > 0) {
-                        if (mediainfocursor.moveToFirst()) {
-                            do {
-
-                                audiostatus = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("status"));
-                                videoid = "" + mediainfocursor.getString(mediainfocursor.getColumnIndex("videoid"));
-                            } while (mediainfocursor.moveToNext());
-                        }
-                    }
-
-                    if(audiostatus.equalsIgnoreCase("complete") && metricmainarraylist.size() == 0){
-                        if(! videoid.trim().isEmpty())
-                        {
-                            Cursor metadatacursor = mdbhelper.readallmetabyvideoid(videoid);
-                            if (metadatacursor != null && metadatacursor.getCount() > 0) {
-                                if (metadatacursor.moveToFirst()) {
-                                    do {
-                                        String sequencehash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequencehash"));
-                                        String sequenceno = "" + metadatacursor.getString(metadatacursor.getColumnIndex("sequenceno"));
-                                        String hashmethod = "" + metadatacursor.getString(metadatacursor.getColumnIndex("hashmethod"));
-                                        String metricdata = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metricdata"));
-                                        String videostarttransactionid = "" + metadatacursor.getString(metadatacursor.getColumnIndex("videostarttransactionid"));
-                                        String metahash = "" + metadatacursor.getString(metadatacursor.getColumnIndex("metahash"));
-                                        String color = "" + metadatacursor.getString(metadatacursor.getColumnIndex("color"));
-
-
-                                        //selectedhashes=selectedhashes+"\n"+"Frame "+hashmethod+" "+sequenceno+": "+videoframehashvalue;
-
-                                        try {
-                                            ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-                                            JSONObject object=new JSONObject(metricdata);
-                                            Iterator<String> myIter = object.keys();
-                                            while (myIter.hasNext()) {
-                                                String key = myIter.next();
-                                                String value = object.optString(key);
-                                                metricmodel model=new metricmodel();
-                                                model.setMetricTrackKeyName(key);
-                                                model.setMetricTrackValue(value);
-                                                metricItemArraylist.add(model);
-                                            }
-                                            metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,
-                                                    videostarttransactionid,sequencehash,metahash,color));
-                                        }catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
-                                    } while (metadatacursor.moveToNext());
-                                }
-                            }
-                        }
-                    }
-
-                   /* applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setseekbarlayoutcolor();
-                        }
-                    });*/
-
-                    try {
-                        mdbhelper.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
     public void getmediadata()
     {
         try {
             databasemanager mdbhelper = null;
-            String audiostatus = "";
             if (mdbhelper == null) {
                 mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
                 mdbhelper.createDatabase();
@@ -1392,7 +1297,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
             {
                 do{
-                    //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
                     mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                     medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                     medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
@@ -1403,11 +1307,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }while(cur.moveToNext());
             }
 
-            if (!mediastartdevicedate.isEmpty()){
-
-
+            if (!mediastartdevicedate.isEmpty())
+            {
                 final String finalMediacompleteddate = mediastartdevicedate;
-                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable()
+                {
                     @Override
                     public void run() {
                         try {
@@ -1450,7 +1354,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 });
 
-
                 img_verified.setVisibility(View.VISIBLE);
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
@@ -1479,10 +1382,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                         parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color);
                     }
-
-
-                  //  txt_duration.setText("00:00:02:17.3");
-
 
                     if((!mediastartdevicedate.isEmpty()) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
 
@@ -1515,6 +1414,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     @Override
                     public void run() {
                         setseekbarlayoutcolor();
+                        if(metricmainarraylist != null && metricmainarraylist.size() > 0)
+                        {
+                            arraycontainerformetric = new arraycontainer();
+                            arraycontainerformetric = metricmainarraylist.get(0);
+                        }
                     }
                 });
 
@@ -1622,21 +1526,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         {
             e.printStackTrace();
         }
-    }
-
-    public void getmetadetareader(){
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
-            @Override
-            public void run() {
-
-                if(metricmainarraylist.size() == 0)
-                    getmediametadata();
-
-                myHandler.postDelayed(this, 3000);
-            }
-        };
-        myHandler.post(myRunnable);
     }
 
     public void editabletext(){
