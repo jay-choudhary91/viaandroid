@@ -1910,7 +1910,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                                 {
                                     totalattempt=0;
                                 }
-                                else
+                                else if(status.equalsIgnoreCase(config.sync_pending))
                                 {
                                     totalattempt=Integer.parseInt(media_sync_attempt);
                                     totalattempt++;
