@@ -1393,17 +1393,39 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 Uri selectedvideouri = data.getData();
 
+                String  mediafilepath="";
                 try {
                     //VIDEO_URL=common.getUriRealPath(applicationviavideocomposer.getactivity(),selectedvideouri);
-                    String  video_url = common.getpath(getActivity(), selectedvideouri);
-                    copymediafromgallery(video_url);
+                    mediafilepath = common.getpath(getActivity(), selectedvideouri);
+                    try {
+                        databasemanager mdbhelper = null;
+                        if (mdbhelper == null) {
+                            mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+                            mdbhelper.createDatabase();
+                        }
 
+                        try {
+                            mdbhelper.open();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(mediafilepath));
+                        if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
+                        {
+                            common.showalert(applicationviavideocomposer.getactivity(), getResources().getString(R.string.media_already_exist));
+                            return;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    common.showalert(getActivity(), getResources().getString(R.string.file_uri_parse_error));
+                    common.showalert(applicationviavideocomposer.getactivity(), getResources().getString(R.string.file_uri_parse_error));
                     return;
                 }
-
+                copymediafromgallery(mediafilepath);
             }
         }
     }

@@ -104,6 +104,7 @@
     <string name="file_doesnot_exist">File doesn\'t exist!</string>
     <string name="file_is_empty">File is empty!</string>
     <string name="file_uri_parse_error">Error on URI parse!</string>
+    <string name="media_already_exist">Media already exist in app!</string>
 
     <string name="new_photo">New Photo</string>
     <string name="view_photo">Preview</string>

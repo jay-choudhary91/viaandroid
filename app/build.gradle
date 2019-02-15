@@ -81,9 +81,7 @@ dependencies {
     }
 
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
-    implementation 'com.github.lecho:hellocharts-android:v1.5.8'
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
-    //implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.squareup.okhttp3:okhttp:3.3.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
