@@ -24,12 +24,10 @@
           android:id="@+id/fragment_container"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:background="@color/white"
+          android:background="@color/black"
           android:orientation="vertical">
 
       </FrameLayout>
-
-      <include layout="@layout/action_bar" android:id="@+id/actionbar"></include>
 
          <ImageView
              android:id="@+id/img_lefthandle"

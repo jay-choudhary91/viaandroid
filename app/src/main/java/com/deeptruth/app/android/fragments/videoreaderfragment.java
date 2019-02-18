@@ -413,6 +413,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         edt_medianotes.setFocusableInTouchMode(false);
 
         mediaseekbar.setThumbOffset(0);
+
+        final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mediaseekbar.getLayoutParams();
+        final int leftmargin=lp.leftMargin;
         mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             private int mProgressAtStartTracking=0;
             private final int SENSITIVITY=0;
@@ -435,16 +438,19 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
                     }
 
+
                     layout_progressline.setVisibility(View.VISIBLE);
                     RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
                             RelativeLayout.LayoutParams.WRAP_CONTENT,
                             RelativeLayout.LayoutParams.WRAP_CONTENT);
                     p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                     Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                    p.setMargins(thumbRect.left,0, 0, 0);
+                    //int leftmargin=dpToPx(15);
+                    p.setMargins((int)(thumbRect.centerX()-8),0, 0, 0);
                     layout_progressline.setLayoutParams(p);
                     txt_mediatimethumb.setText(stringForTime(player.getCurrentPosition()));
                     txt_mediatimethumb.setVisibility(View.VISIBLE);
+
                 }
                 else
                 {
@@ -475,6 +481,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 maxincreasevideoduration=player.getCurrentPosition();
             }
         });
+
+
 
         recyview_frames.post(new Runnable() {
             @Override
@@ -646,6 +654,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         });
+    }
+
+
+    public int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     @Override
@@ -897,7 +911,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             if(player != null && (! player.isPlaying()))  // Player is pause
                             {
-                                gethelper().updateactionbar(0);
+                                gethelper().updateactionbar(1);
                                 layout_footer.setVisibility(View.VISIBLE);
                                 img_fullscreen.setVisibility(View.VISIBLE);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
@@ -1546,6 +1560,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                           common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
                                   metricItemArraylist.get(j).getMetricTrackValue(), true);
 
+                          if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
+                              latitude = metricItemArraylist.get(j).getMetricTrackValue();
+                          }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
+                              longitude = metricItemArraylist.get(j).getMetricTrackValue();
+                          }
+
                           if (scrollview_meta.getVisibility() == View.VISIBLE)
                               setmetadatavalue(metricItemArraylist.get(j));
                       }
@@ -1560,6 +1580,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                           if(! ismapzoomed)
                           {
                               populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                              gethelper().updatezoomlevel(Double.parseDouble(latitude),Double.parseDouble(longitude));
                           }
                       }
                   }
@@ -1579,9 +1600,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
                     xdata.getinstance().saveSetting(config.latency,data);
                 }
-                  //setmetricesgraphicaldata();
 
-                myHandler.postDelayed(this, 1500);
+                //setmetricesgraphicaldata();
+                myHandler.postDelayed(this, 1000);
             }
         };
         myHandler.post(myRunnable);

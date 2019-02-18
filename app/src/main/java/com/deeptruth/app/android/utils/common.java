@@ -140,6 +140,7 @@ public class common {
 
     static AlertDialog alertdialog = null;
     static Dialog custompermissiondialog =null;
+    static int systemdialogshowrequestcode =110;
 
     public static boolean isnetworkconnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
@@ -320,7 +321,8 @@ public class common {
             sharingIntent.setType("video/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share video using"));
+            applicationviavideocomposer.getactivity().startActivityForResult
+                    (Intent.createChooser(sharingIntent, "Share video using"),systemdialogshowrequestcode);
 
         }
     }
@@ -336,7 +338,8 @@ public class common {
             sharingIntent.setType("audio/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share audio using"));
+            applicationviavideocomposer.getactivity().startActivityForResult
+                    (Intent.createChooser(sharingIntent, "Share audio using"),systemdialogshowrequestcode);
 
         }
     }
@@ -352,7 +355,8 @@ public class common {
             sharingIntent.setType("image/*");
             sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
-            applicationviavideocomposer.getactivity().startActivity(Intent.createChooser(sharingIntent, "Share photo using"));
+            applicationviavideocomposer.getactivity().startActivityForResult
+                    (Intent.createChooser(sharingIntent, "Share photo using"),systemdialogshowrequestcode);
 
         }
     }

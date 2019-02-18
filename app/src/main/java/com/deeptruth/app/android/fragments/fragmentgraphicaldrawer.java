@@ -284,6 +284,29 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
+    public void zoomgooglemap(double latitude,double longitude)
+    {
+        if (mgooglemap == null)
+            return;
+
+        googlemap.setVisibility(View.VISIBLE);
+
+        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
+        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+        } else {
+            mgooglemap.setMyLocationEnabled(true);
+            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
+            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
+        }
+    }
 
     public void setmetricesdata()
     {
@@ -681,53 +704,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
 
     private void populateUserCurrentLocation(final LatLng location) {
-        // DeviceUser user = DeviceUserManager.getInstance().getUser();
         if (mgooglemap == null)
             return;
 
         googlemap.setVisibility(View.VISIBLE);
 
-
-        //polyline.setPattern(PATTERN_POLYLINE_DOTTED);
-
-        /*Polygon polygon = mgooglemap.addPolygon(new PolygonOptions()
-                .clickable(true)
-                .add(location));
-        polygon.setTag("beta");
-
-
-        String type = "";
-        // Get the data object stored with the polygon.
-        if (polygon.getTag() != null) {
-            type = polygon.getTag().toString();
-        }
-
-        List<PatternItem> pattern = null;
-        int strokeColor = COLOR_BLACK_ARGB;
-        int fillColor = COLOR_WHITE_ARGB;
-
-        switch (type) {
-            // If no type is given, allow the API to use the default.
-            case "alpha":
-                // Apply a stroke pattern to render a dashed line, and define colors.
-                pattern = PATTERN_POLYGON_ALPHA;
-                strokeColor = COLOR_GREEN_ARGB;
-                fillColor = COLOR_PURPLE_ARGB;
-                break;
-            case "beta":
-                // Apply a stroke pattern to render a line of dots and dashes, and define colors.
-                pattern = PATTERN_POLYGON_BETA;
-                strokeColor = COLOR_ORANGE_ARGB;
-                fillColor = COLOR_BLUE_ARGB;
-                break;
-        }
-
-        polygon.setStrokePattern(pattern);
-        polygon.setStrokeWidth(POLYGON_STROKE_WIDTH_PX);
-        polygon.setStrokeColor(strokeColor);
-        polygon.setFillColor(fillColor);*/
-
-        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.latitude, location.longitude), 15));
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling

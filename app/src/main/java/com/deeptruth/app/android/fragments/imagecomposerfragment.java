@@ -493,7 +493,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         rootview = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this, rootview);
         gethelper().drawerenabledisable(true);
-        gethelper().updateactionbar(0);
 
         mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
