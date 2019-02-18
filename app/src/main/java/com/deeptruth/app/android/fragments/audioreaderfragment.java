@@ -1083,6 +1083,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
                                 metricItemArraylist.get(j).getMetricTrackValue(),true);
 
+                        if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
+                            latitude = metricItemArraylist.get(j).getMetricTrackValue();
+                        }else if(metricItemArraylist.get(j).getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
+                            longitude = metricItemArraylist.get(j).getMetricTrackValue();
+                        }
+
                         if(scrollview_meta.getVisibility() == View.VISIBLE)
                             setmetadatavalue(metricItemArraylist.get(j));
                     }
@@ -1098,6 +1104,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(! ismapzoomed)
                     {
                         populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                        gethelper().updatezoomlevel(Double.parseDouble(latitude),Double.parseDouble(longitude));
                     }
                 }
 

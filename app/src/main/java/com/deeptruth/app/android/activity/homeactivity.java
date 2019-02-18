@@ -216,7 +216,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     public void updateactionbar(int fullscreenmode) {
         if(fullscreenmode == 0)   // Enable full screen mode
         {
-            View decorView = getWindow().getDecorView();
+            /*View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_IMMERSIVE
                             // Set the content to appear under the system bars so that the
@@ -233,14 +233,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 public void run() {
                     rootview.setPadding(0,0,0,0);
                 }
-            },100);
+            },100);*/
 
-//            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-  //          getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
         }
         else        // Disable full screen mode
         {
-            View decorView = getWindow().getDecorView();
+            /*View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -252,10 +252,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                     int statusbarheight=Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
                     rootview.setPadding(0,statusbarheight,0,0);
                 }
-            },800);
+            },800);*/
 
-          //  getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-          //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         }
     }
 
@@ -419,16 +419,22 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         myhandler =new Handler();
         myrunnable = new Runnable() {
             @Override
-            public void run() {
+            public void run()
+            {
                 if((graphicaldrawerfragment!= null))
                     graphicaldrawerfragment.setmetricesdata();
 
-                myhandler.postDelayed(this, 5000);
+                myhandler.postDelayed(this, 200);
             }
         };
         myhandler.post(myrunnable);
     }
 
+    @Override
+    public void updatezoomlevel(double latitude, double longitude) {
+        if((graphicaldrawerfragment!= null))
+            graphicaldrawerfragment.zoomgooglemap(latitude,longitude);
+    }
 
     @Override
     protected void onDestroy() {
