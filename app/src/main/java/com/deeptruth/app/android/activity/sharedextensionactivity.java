@@ -34,6 +34,9 @@ public class sharedextensionactivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shared_extension);
 
+        Intent closeDialog = new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        sendBroadcast(closeDialog);
+
         progressdialog.showwaitingdialog(sharedextensionactivity.this);
         new Thread(new Runnable() {
             @Override

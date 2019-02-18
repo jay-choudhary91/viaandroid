@@ -55,31 +55,8 @@ import butterknife.ButterKnife;
 
 public class homeactivity extends locationawareactivity implements View.OnClickListener, View.OnTouchListener {
 
-    @BindView(R.id.txt_title)
-    TextView txt_title;
-    @BindView(R.id.img_add_icon)
-    ImageView imgaddicon;
-    @BindView(R.id.img_setting)
-    ImageView imgsettingsicon;
-    @BindView(R.id.img_back)
-    ImageView img_back;
-    @BindView(R.id.img_upload_icon)
-    ImageView imguploadicon;
-
-    @BindView(R.id.img_share_icon)
-    ImageView imgshareicon;
-    @BindView(R.id.img_cancel)
-    ImageView img_cancel;
-    @BindView(R.id.img_menu)
-    ImageView img_menu;
-    @BindView(R.id.img_help)
-    ImageView img_help;
-    @BindView(R.id.actionbar)
-    RelativeLayout actionbar;
     @BindView(R.id.fragment_container)
     FrameLayout fragment_container;
-    @BindView(R.id.img_backarrow)
-    ImageView img_backbtn;
     @BindView(R.id.img_lefthandle)
     ImageView imglefthandle;
     @BindView(R.id.img_righthandle)
@@ -110,22 +87,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
-
-
         config.selectedmediatype=0;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
-        /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-            fragmedialistreader=new medialistreader();
-            replaceFragment(fragmedialistreader, false, true);
-        }
-        else
-        {
-            fragvideolist=new fragmentmedialist();
-            fragvideolist.shouldlaunchcomposer(true);
-            replaceFragment(fragvideolist, false, true);
-        }*/
-
         fragvideolist=new fragmentmedialist();
         fragvideolist.shouldlaunchcomposer(true);
         replaceFragment(fragvideolist, false, true);
@@ -158,15 +121,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         drawertoggle.syncState();
         navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
 
-        imgaddicon.setOnClickListener(this);
-        imgsettingsicon.setOnClickListener(this);
-        img_back.setOnClickListener(this);
-        imguploadicon.setOnClickListener(this);
-        img_cancel.setOnClickListener(this);
-        imgshareicon.setOnClickListener(this);
-        img_menu.setOnClickListener(this);
-        img_help.setOnClickListener(this);
-        img_backbtn.setOnClickListener(this);
         imglefthandle.setOnClickListener(this);
         imgrighthandle.setOnClickListener(this);
         fragment_container.setOnTouchListener(this);
@@ -179,13 +133,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
             transaction.commit();
         }
-
-        actionbar.post(new Runnable() {
-            @Override
-            public void run() {
-                xdata.getinstance().saveSetting("actionbarheight",""+actionbar.getHeight());
-            }
-        });
 
         callservice mService = new callservice();
         Intent mIntent = new Intent(homeactivity.this, callservice.class);
@@ -245,26 +192,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @Override
     public void updateheader(String txt) {
-        if((getcurrentfragment() instanceof  videocomposerfragment || getcurrentfragment() instanceof  audiocomposerfragment  || getcurrentfragment() instanceof settingfragment))
-        {
-            txt_title.setText(txt);
-        }
-        else if( getcurrentfragment() instanceof framemetricssettings ||
-                getcurrentfragment() instanceof imagecomposerfragment
-                || getcurrentfragment() instanceof videoplayfragment
-                || getcurrentfragment() instanceof videoreaderfragment
-                )
-        {
-            txt_title.setText("");
-        }
-    }
-//(getcurrentfragment() instanceof fragmentmedialist)
-@Override
-public void updateactionbar(int showHide, int color) {
 
-        actionbar.setBackgroundColor(color);
-        getWindow().setStatusBarColor(color);
-}
+    }
+
+    @Override
+    public void updateactionbar(int showHide, int color) {
+    }
 
 
     @Override
@@ -280,45 +213,50 @@ public void updateactionbar(int showHide, int color) {
     }
 
     @Override
-    public void updateactionbar(int showHide) {
-        if(showHide == 0)
+    public void updateactionbar(int fullscreenmode) {
+        if(fullscreenmode == 0)   // Enable full screen mode
         {
-           // hideSystemUI();
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_IMMERSIVE
+                            // Set the content to appear under the system bars so that the
+                            // content doesn't resize when the system bars hide and show.
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            // Hide the nav bar and status bar
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN);
 
-        }else{
-            //showSystemUI();
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    rootview.setPadding(0,0,0,0);
+                }
+            },100);
 
-            }
-    }
+//            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+  //          getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
+        }
+        else        // Disable full screen mode
+        {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-    private void hideSystemUI() {
-        // Set the IMMERSIVE flag.
-        // Set the content to appear under the system bars so that the content
-        // doesn't resize when the system bars hide and show.
-        View decorView = getWindow().getDecorView();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    int statusbarheight=Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                    rootview.setPadding(0,statusbarheight,0,0);
+                }
+            },800);
 
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        );
-    }
-
-
-    private void showSystemUI() {
-
-        //make nav bar transparent
-        Window window = getWindow();
-        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-
-        View decorView = window.getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_VISIBLE);
+          //  getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+          //  getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        }
     }
 
     @Override
@@ -342,16 +280,6 @@ public void updateactionbar(int showHide, int color) {
         super.onfragmentbackstackchanged();
         common.resetgraphicaldata();
         basefragment fragment = getcurrentfragment();
-        img_back.setVisibility(View.GONE);
-        img_cancel.setVisibility(View.GONE);
-        img_menu.setVisibility(View.GONE);
-        img_help.setVisibility(View.GONE);
-        actionbar.setVisibility(View.VISIBLE);
-        imgshareicon.setVisibility(View.GONE);
-        imgaddicon.setVisibility(View.GONE);
-        imguploadicon.setVisibility(View.GONE);
-        imgsettingsicon.setVisibility(View.GONE);
-        img_backbtn.setVisibility(View.GONE);
         imglefthandle.setVisibility(View.GONE);
         imgrighthandle.setVisibility(View.GONE);
         updateheader("");
@@ -363,25 +291,11 @@ public void updateactionbar(int showHide, int color) {
             fragment_container.setLayoutParams(params);
         }
          if (fragment instanceof videocomposerfragment) {
-            img_menu.setVisibility(View.VISIBLE);
-            img_help.setVisibility(View.VISIBLE);
-            actionbar.setVisibility(View.GONE);
-            updateactionbar(0);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT);
-            fragment_container.setLayoutParams(params);
-        }
+             drawerenabledisable(true);
+             updateactionbar(0);
+         }
         else if(fragment instanceof framemetricssettings){
 
-            actionbar.setVisibility(View.GONE);
-        }
-        else if(fragment instanceof videoplayfragment){
-            img_menu.setVisibility(View.VISIBLE);
-            imgshareicon.setVisibility(View.VISIBLE);
-            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT);
-            fragment_container.setLayoutParams(params);
         }
         else if(fragment instanceof videoreaderfragment){
 
@@ -405,57 +319,22 @@ public void updateactionbar(int showHide, int color) {
                 e.printStackTrace();
             }
 
-            imgsettingsicon.setVisibility(View.GONE);
-            img_menu.setVisibility(View.VISIBLE);
-            imgaddicon.setVisibility(View.GONE);
-            imgshareicon.setVisibility(View.VISIBLE);
-             actionbar.setVisibility(View.GONE);
-            imgsettingsicon.setEnabled(true);
-            updateactionbar(1);
-            updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-            RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT);
-            fragment_container.setLayoutParams(params);
-        }
-         else if(fragment instanceof fragmentmedialist){
-             imgaddicon.setVisibility(View.VISIBLE);
-             imgsettingsicon.setVisibility(View.VISIBLE);
-             imguploadicon.setVisibility(View.GONE);
-             actionbar.setVisibility(View.GONE);
-             imgsettingsicon.setEnabled(true);
              updateactionbar(1);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
-         }
-         else if(fragment instanceof imagecomposerfragment){
-             img_menu.setVisibility(View.VISIBLE);
-             img_help.setVisibility(View.VISIBLE);
-             actionbar.setVisibility(View.GONE);
-             updateactionbar(0);
-             updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
 
          }
-         else if(fragment instanceof audiocomposerfragment){
-             img_menu.setVisibility(View.VISIBLE);
-             img_help.setVisibility(View.VISIBLE);
-             actionbar.setVisibility(View.GONE);
+         else if(fragment instanceof fragmentmedialist){
+             updateactionbar(1);
+         }
+         else if(fragment instanceof imagecomposerfragment){
+             drawerenabledisable(true);
              updateactionbar(0);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
-         }else if(fragment instanceof audioreaderfragment){
-             actionbar.setVisibility(View.GONE);
-             imgshareicon.setVisibility(View.VISIBLE);
-             img_menu.setVisibility(View.VISIBLE);
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
+         }
+         else if(fragment instanceof audiocomposerfragment){
+             drawerenabledisable(true);
+             updateactionbar(0);
+         }
+         else if(fragment instanceof audioreaderfragment){
+             updateactionbar(1);
          } else if(fragment instanceof imagereaderfragment){
 
              try
@@ -477,36 +356,20 @@ public void updateactionbar(int showHide, int color) {
              {
                  e.printStackTrace();
              }
-             actionbar.setVisibility(View.GONE);
-             img_menu.setVisibility(View.VISIBLE);
-             imgshareicon.setVisibility(View.VISIBLE);
-             imgsettingsicon.setEnabled(true);
              updateactionbar(1);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
 
-         }else if(fragment instanceof settingfragment){
-             img_menu.setVisibility(View.GONE);
-             actionbar.setVisibility(View.GONE);
-             imgsettingsicon.setVisibility(View.GONE);
-             imguploadicon.setVisibility(View.GONE);
-             img_backbtn.setVisibility(View.VISIBLE);
-             imgsettingsicon.setEnabled(true);
-             updateactionbar(1);
-             updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-
-             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                     RelativeLayout.LayoutParams.MATCH_PARENT);
-             fragment_container.setLayoutParams(params);
-         }else if(fragment instanceof composeoptionspagerfragment){
-             updateactionbar(0,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
-
-             actionbar.setVisibility(View.GONE);
          }
-         else if(fragment instanceof myfolderfragment){
-             actionbar.setVisibility(View.GONE);
+         else if(fragment instanceof settingfragment)
+         {
+             updateactionbar(1);
+         }
+         else if(fragment instanceof composeoptionspagerfragment)
+         {
+
+         }
+         else if(fragment instanceof myfolderfragment)
+         {
+
          }
         else
         {
@@ -517,40 +380,6 @@ public void updateactionbar(int showHide, int color) {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.img_back:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_back);
-                break;
-            case R.id.img_cancel:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_cancel);
-                break;
-            case R.id.img_share_icon:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_share_icon);
-              //  imgshareicon.setEnabled(false);
-                imgshareicon.setClickable(false);
-                new Handler().postDelayed(new Runnable()
-                {
-                    public void run()
-                    {
-                        imgshareicon.setClickable(true);
-                    }
-                }, 150);
-
-                break;
-            case R.id.img_add_icon:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_add_icon);
-                break;
-            case R.id.img_setting:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_setting);
-                break;
-            case R.id.img_upload_icon:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_upload_icon);
-                break;
-            case R.id.img_menu:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_menu);
-                break;
-            case R.id.img_help:
-                getcurrentfragment().onHeaderBtnClick(R.id.img_help);
-                break;
             case R.id.img_backarrow:
                 getcurrentfragment().onHeaderBtnClick(R.id.img_backarrow);
                 break;

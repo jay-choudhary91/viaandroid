@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Rect;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -35,7 +34,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -174,7 +172,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     @Override
     public int getlayoutid() {
-        return R.layout.fragment_videolist;
+        return R.layout.fragment_medialist;
     }
 
     @Override
@@ -266,7 +264,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             listlayout=rootview.findViewById(R.id.listlayout);
            // setheadermargine();
 
-            gethelper().updateactionbar(1);
             gethelper().drawerenabledisable(false);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());

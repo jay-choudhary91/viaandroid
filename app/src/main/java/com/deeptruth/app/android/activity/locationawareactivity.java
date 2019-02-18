@@ -167,7 +167,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     ArrayList<startmediainfo> unsyncedmediaitems=new ArrayList<>();
     int syncupdationcounter=0;
     boolean isdatasyncing=false;
-    int downloadmetadataattempt=2;
+    int downloadmetadataattempt=2,systemdialogshowrequestcode =110;
     ArrayList<video> readerarraymedialist = new ArrayList<video>();
     private BroadcastReceiver coredatabroadcastreceiver;
     Date initialdate ;
@@ -644,6 +644,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GPS_REQUEST_CODE) {
             setNavigateWithLocation();
+        }
+        else if (requestCode == systemdialogshowrequestcode) {
+
         }
     }
 
