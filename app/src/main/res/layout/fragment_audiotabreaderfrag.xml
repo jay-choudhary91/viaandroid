@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/audio_container"
     android:layout_width="match_parent"
+    android:fillViewport="true"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
@@ -11,63 +12,27 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:id="@+id/layout_photoreader"
-        android:layout_height="match_parent"
-        >
-        <RelativeLayout
-            android:id="@+id/layout_footer"
-            android:layout_width="match_parent"
-            android:background="@drawable/bottomborder"
-            android:layout_gravity="bottom|end"
-            android:layout_alignParentBottom="true"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:visibility="visible"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/normal_margin_left"
-                android:layout_marginRight="@dimen/normal_margin_right"
-                android:id="@+id/img_share_media"
-                android:background="@drawable/share"/>
-
-            <ImageView
-                android:id="@+id/img_delete_media"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/normal_margin_left"
-                android:layout_marginRight="@dimen/normal_margin_right"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/garbage"/>
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_alignParentTop="true"
-            android:layout_above="@+id/layout_footer"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:id="@+id/layout_mediatype"
-                android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <include layout="@layout/action_bar_mediadetails"></include>
+        android:layout_height="match_parent">
 
 
-            </RelativeLayout>
-
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/rl_controllerview"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.65"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:visibility="visible"
                 >
+                <RelativeLayout
+                    android:id="@+id/layout_mediatype"
+                    android:layout_width="match_parent"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <include layout="@layout/action_bar_mediadetails"></include>
+
+
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -102,8 +67,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:contentDescription="@string/description"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="10dp"
                         />
 
                     <com.deeptruth.app.android.utils.circularImageview
@@ -184,15 +147,15 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_below="@+id/tab_photoreader"
-                android:layout_weight="0.35"
+                android:layout_below="@+id/rl_controllerview"
                 android:visibility="visible"
-                android:id="@+id/layout_photodetails"
-                android:layout_height="0dp">
+                android:paddingBottom="50dp"
+                android:id="@+id/layout_audiodetails"
+                android:layout_height="wrap_content">
 
                 <include layout="@layout/layout_mediadetails"></include>
 
@@ -256,8 +219,34 @@
 
                 </RelativeLayout>
             </RelativeLayout>
-        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/layout_footer"
+            android:layout_width="match_parent"
+            android:background="@drawable/bottomborder"
+            android:layout_gravity="bottom|end"
+            android:layout_alignParentBottom="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:visibility="visible"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/normal_margin_left"
+                android:layout_marginRight="@dimen/normal_margin_right"
+                android:id="@+id/img_share_media"
+                android:background="@drawable/share"/>
+
+            <ImageView
+                android:id="@+id/img_delete_media"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/normal_margin_left"
+                android:layout_marginRight="@dimen/normal_margin_right"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/garbage"/>
+        </RelativeLayout>
     </RelativeLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -23,10 +23,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -50,6 +52,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -178,7 +181,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.layout_time)
     LinearLayout layout_time;
     @BindView(R.id.photorootview)
-    RelativeLayout photorootview;
+    NestedScrollView photorootview;
     @BindView(R.id.layout_dtls)
     LinearLayout layout_dtls;
     @BindView(R.id.layout_validating)
@@ -218,10 +221,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-    mediatime = "",mediasize="",lastsavedangle="";
+            mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
     ImageView img_compass;
     adapteritemclick mcontrollernavigator;
+    int rootviewheight, devidedheight;
 
     private BroadcastReceiver getmetadatabroadcastreceiver;
 
@@ -238,7 +242,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-        //    setheadermargine();
+            //    setheadermargine();
             loadviewdata();
 
         }
@@ -247,6 +251,22 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void loadviewdata()
     {
+
+        photorootview.post(new Runnable() {
+            @Override
+            public void run() {
+                rootviewheight = photorootview.getHeight();
+                Log.e("rootviewheight",""+rootviewheight);
+                devidedheight= rootviewheight/2 ;
+
+                layout_halfscrn.getLayoutParams().height = devidedheight;
+                layout_halfscrn.requestLayout();
+                layout_photodetails.getLayoutParams().height = devidedheight;
+                layout_photodetails.requestLayout();
+
+                setupimagedata();
+            }
+        });
         gethelper().drawerenabledisable(false);
         img_dotmenu.setOnClickListener(this);
         img_folder.setOnClickListener(this);
@@ -296,7 +316,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         layout_photoreader.post(new Runnable() {
             @Override
             public void run() {
-                targetheight= layout_photoreader.getHeight();
+                targetheight= rootviewheight;
                 Log.e("targetheight",""+targetheight);
             }
         });
@@ -396,11 +416,25 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         });
-
+        edt_medianotes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.edt_medianotes) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
         txt_section_validating_secondary.setText(config.caution);
         txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+
         //detuct keyboard is open or not
-        photorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        /*photorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 int heightDiff = photorootview.getRootView().getHeight() - photorootview.getHeight();
@@ -423,7 +457,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }
             }
-        });
+        });*/
 
       /*  photorootview.post(new Runnable() {
             @Override
@@ -445,7 +479,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
         fetchmetadatafromdb();
         loadmap();
-        setupimagedata();
     }
 
     @Override
@@ -487,14 +520,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
             case R.id.img_edit_name:
-              InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-              imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-              edt_medianame.setSelection(edt_medianame.getText().length());
-              edt_medianame.setClickable(true);
-              edt_medianame.setEnabled(true);
-              edt_medianame.setFocusable(true);
-              edt_medianame.setFocusableInTouchMode(true);
-              edt_medianame.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                edt_medianame.setSelection(edt_medianame.getText().length());
+                edt_medianame.setClickable(true);
+                edt_medianame.setEnabled(true);
+                edt_medianame.setFocusable(true);
+                edt_medianame.setFocusableInTouchMode(true);
+                edt_medianame.requestFocus();
                 break;
             case R.id.img_edit_notes:
                 InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -565,10 +598,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }, 500);
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
                     gethelper().drawerenabledisable(true);
+                    layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                    layout_photodetails.getLayoutParams().height = 0;
+                    expand(tab_photoreader,100,targetheight+ Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
 
-                    expand(tab_photoreader,100,targetheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
                     gethelper().updateactionbar(0);
+
                     layout_photodetails.setVisibility(View.GONE);
+                    layout_photodetails.requestLayout();
                     scrollview_detail.setVisibility(View.GONE);
                     scrollview_meta.setVisibility(View.GONE);
                     scrollView_encyrption.setVisibility(View.GONE);
@@ -579,7 +616,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 } else{
                     gethelper().drawerenabledisable(false);
-
+                    layout_halfscrn.getLayoutParams().height = devidedheight;
+                    layout_photodetails.getLayoutParams().height = devidedheight;
                     collapse(tab_photoreader,100,previousheight);
                     gethelper().updateactionbar(1);
                     layout_photodetails.setVisibility(View.VISIBLE);
@@ -599,6 +637,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 if(layout_photodetails.getVisibility()==View.GONE){
                     if(layout_footer.getVisibility()==(View.GONE)){
+                        layout_halfscrn.getLayoutParams().height = rootviewheight;
                         setbottomimgview();
                         gethelper().updateactionbar(1);
                         img_fullscreen.setVisibility(View.VISIBLE);
@@ -609,6 +648,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                     } else {
                         gethelper().updateactionbar(0);
+                        layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
                         common.slidetoabove(layout_mediatype);
                         img_fullscreen.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
@@ -622,13 +662,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 break;
             case R.id.layout_dtls:
-                 Log.e("ontouch","ontouchscrollview");
-                if(layout_halfscrn.getVisibility() == View.GONE){
+                Log.e("ontouch","ontouchscrollview");
+              //  if(layout_halfscrn.getVisibility() == View.GONE){
                     v.clearFocus();
                     InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     immm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                }
+             //   }
                 break;
         }
 
@@ -825,127 +865,121 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                             String serverdictionaryhash = mitemlist.get(i).getValuehash();
                             String color = mitemlist.get(i).getColor();
                             parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash
-                            ,color);
+                                    ,color);
                         }
 
-                            if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
+                        if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
 
-                                final String finalMediacompleteddate = mediastartdevicedate;
-                                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            SimpleDateFormat formatted = null;
-                                            Date mediadate = null;
-                                            if(finalMediacompleteddate.contains("T"))
-                                            {
-                                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                                mediadate = format.parse(finalMediacompleteddate);
-                                            }
-                                            else
-                                            {
-                                                DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                                                mediadate = format.parse(finalMediacompleteddate);
-                                            }
-                                            SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
-                                            SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss a");
-                                            tvdate.setText(formatteddate.format(mediadate));
-                                            tvtime.setText(formattedtime.format(mediadate));
-                                            txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
-                                            txt_createdtime.setText(formattedtime.format(mediadate));
-                                            edt_medianame.setText(medianame);
-                                            edt_medianotes.setText(medianotes);
-
-                                            if(mediafolder.trim().length() > 0)
-                                                setfolderspinner();
-
-                                            ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
-                                            layout_validating.setVisibility(View.VISIBLE);
-                                            txt_section_validating_secondary.setText(config.verified);
-                                            if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
-                                            {
-                                                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                                        getactivity().getResources().getColor(R.color.green_background));
-                                            }
-                                            else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red))
-                                            {
-                                                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                                        getactivity().getResources().getColor(R.color.red));
-                                            }
-                                            else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow))
-                                            {
-                                                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                                        getactivity().getResources().getColor(R.color.yellow_background));
-                                            }
-                                            else
-                                            {
-                                                txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                                        getactivity().getResources().getColor(R.color.green_background));
-                                            }
-
-                                            common.setgraphicalblockchainvalue(config.blockchainid,metricmainarraylist.get(0).getVideostarttransactionid(),true);
-                                            common.setgraphicalblockchainvalue(config.hashformula,metricmainarraylist.get(0).getHashmethod(),true);
-                                            common.setgraphicalblockchainvalue(config.datahash,metricmainarraylist.get(0).getValuehash(),true);
-                                            common.setgraphicalblockchainvalue(config.matrichash,metricmainarraylist.get(0).getMetahash(),true);
-
-                                            common.setspannable(getResources().getString(R.string.blockchain_id)," "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                                            common.setspannable(getResources().getString(R.string.block_id)," "+metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                                            common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                                            common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
-
-                                            arraycontainer arraycontainerformetric =metricmainarraylist.get(0);
-                                            if(arraycontainerformetric != null)
-                                            {
-                                                String color = "white";
-                                                if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
-                                                    color = arraycontainerformetric.getColor();
-
-                                                switch (color) {
-                                                    case "green":
-                                                        layout_validating.setVisibility(View.VISIBLE);
-                                                        txt_section_validating_secondary.setText(config.verified);
-                                                        txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#600EAE3E"));
-                                                        break;
-                                                    case "white":
-                                                        layout_validating.setVisibility(View.GONE);
-                                                        break;
-                                                    case "red":
-                                                        layout_validating.setVisibility(View.VISIBLE);
-                                                        txt_section_validating_secondary.setText(config.caution);
-                                                        txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FF3B30"));
-                                                        break;
-                                                    case "yellow":
-                                                        layout_validating.setVisibility(View.VISIBLE);
-                                                        txt_section_validating_secondary.setText(config.caution);
-                                                        txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FDD012"));
-                                                        break;
-                                                }
-                                            }
-
-                                            for (int j = 0; j < metricItemArraylist.size(); j++) {
-                                                selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
-                                                        metricItemArraylist.get(j).getMetricTrackValue();
-
-                                                common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
-                                                        metricItemArraylist.get(j).getMetricTrackValue(), true);
-
-                                                setmetadatavalue(metricItemArraylist.get(j));
-
-                                            }
-
-                                            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                                                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                                            {
-                                                gethelper().updatezoomlevel(Double.parseDouble(latitude),Double.parseDouble(longitude));
-                                            }
-
-                                        }catch (Exception e)
+                            final String finalMediacompleteddate = mediastartdevicedate;
+                            applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        SimpleDateFormat formatted = null;
+                                        Date mediadate = null;
+                                        if(finalMediacompleteddate.contains("T"))
                                         {
-                                            e.printStackTrace();
+                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                            mediadate = format.parse(finalMediacompleteddate);
+                                        }
+                                        else
+                                        {
+                                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                                            mediadate = format.parse(finalMediacompleteddate);
+                                        }
+                                        SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
+                                        SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss a");
+                                        tvdate.setText(formatteddate.format(mediadate));
+                                        tvtime.setText(formattedtime.format(mediadate));
+                                        txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
+                                        txt_createdtime.setText(formattedtime.format(mediadate));
+                                        edt_medianame.setText(medianame);
+                                        edt_medianotes.setText(medianotes);
+
+                                        if(mediafolder.trim().length() > 0)
+                                            setfolderspinner();
+
+                                        ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
+                                        layout_validating.setVisibility(View.VISIBLE);
+                                        txt_section_validating_secondary.setText(config.verified);
+                                        if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
+                                        {
+                                            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                                    getactivity().getResources().getColor(R.color.green_background));
+                                        }
+                                        else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red))
+                                        {
+                                            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                                    getactivity().getResources().getColor(R.color.red));
+                                        }
+                                        else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow))
+                                        {
+                                            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                                    getactivity().getResources().getColor(R.color.yellow_background));
+                                        }
+                                        else
+                                        {
+                                            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
+                                                    getactivity().getResources().getColor(R.color.green_background));
                                         }
 
+                                        common.setgraphicalblockchainvalue(config.blockchainid,metricmainarraylist.get(0).getVideostarttransactionid(),true);
+                                        common.setgraphicalblockchainvalue(config.hashformula,metricmainarraylist.get(0).getHashmethod(),true);
+                                        common.setgraphicalblockchainvalue(config.datahash,metricmainarraylist.get(0).getValuehash(),true);
+                                        common.setgraphicalblockchainvalue(config.matrichash,metricmainarraylist.get(0).getMetahash(),true);
+
+                                        common.setspannable(getResources().getString(R.string.blockchain_id)," "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+                                        common.setspannable(getResources().getString(R.string.block_id)," "+metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                                        common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                                        common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
+
+                                        arraycontainer arraycontainerformetric =metricmainarraylist.get(0);
+                                        if(arraycontainerformetric != null)
+                                        {
+                                            String color = "white";
+                                            if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
+                                                color = arraycontainerformetric.getColor();
+
+                                            switch (color) {
+                                                case "green":
+                                                    layout_validating.setVisibility(View.VISIBLE);
+                                                    txt_section_validating_secondary.setText(config.verified);
+                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#600EAE3E"));
+                                                    break;
+                                                case "white":
+                                                    layout_validating.setVisibility(View.GONE);
+                                                    break;
+                                                case "red":
+                                                    layout_validating.setVisibility(View.VISIBLE);
+                                                    txt_section_validating_secondary.setText(config.caution);
+                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FF3B30"));
+                                                    break;
+                                                case "yellow":
+                                                    layout_validating.setVisibility(View.VISIBLE);
+                                                    txt_section_validating_secondary.setText(config.caution);
+                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FDD012"));
+                                                    break;
+                                            }
+                                        }
+
+                                        for (int j = 0; j < metricItemArraylist.size(); j++) {
+                                            selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +
+                                                    metricItemArraylist.get(j).getMetricTrackValue();
+
+                                            common.setgraphicalitems(metricItemArraylist.get(j).getMetricTrackKeyName(),
+                                                    metricItemArraylist.get(j).getMetricTrackValue(), true);
+
+                                            setmetadatavalue(metricItemArraylist.get(j));
+
+                                        }
+
+                                    }catch (Exception e)
+                                    {
+                                        e.printStackTrace();
                                     }
-                                });
+
+                                }
+                            });
                         }
                         try
                         {
@@ -1099,21 +1133,21 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void editabletext(){
         Editable editableText=  edt_medianame.getEditableText();
-                if(editableText!=null) {
-                    edt_medianame.setInputType(InputType.TYPE_CLASS_TEXT);
-                    edt_medianame.setEllipsize(TextUtils.TruncateAt.END);
-                    edt_medianame.setSingleLine();
-                }
-                else
-                {
-                    edt_medianame.setEnabled(false);
-                    edt_medianame.setClickable(false);
-                    edt_medianame.setKeyListener(null);
-                }
+        if(editableText!=null) {
+            edt_medianame.setInputType(InputType.TYPE_CLASS_TEXT);
+            edt_medianame.setEllipsize(TextUtils.TruncateAt.END);
+            edt_medianame.setSingleLine();
+        }
+        else
+        {
+            edt_medianame.setEnabled(false);
+            edt_medianame.setClickable(false);
+            edt_medianame.setKeyListener(null);
+        }
     }
 
     public void expand(final View v, int duration, int targetHeight) {
-
+        Log.e("targetheight", ""+targetHeight);
         int prevHeight  = v.getHeight();
 
         v.setVisibility(View.VISIBLE);
@@ -1185,10 +1219,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
             common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
-           screenwidth = metricItemArraylist.getMetricTrackValue();
+            screenwidth = metricItemArraylist.getMetricTrackValue();
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenheight")){
-           screenheight = metricItemArraylist.getMetricTrackValue();
-           common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
+            screenheight = metricItemArraylist.getMetricTrackValue();
+            common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("country")){
             common.setspannable(getResources().getString(R.string.country),"\n"+metricItemArraylist.getMetricTrackValue(), tvcountry);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("cpuusagesystem")){
@@ -1379,15 +1413,16 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             common.slidetoabove(layout_mediatype);
             layout_footer.setVisibility(View.GONE);
             img_fullscreen.setVisibility(View.GONE);
-          //  layout_validating.setVisibility(View.GONE);
+            //  layout_validating.setVisibility(View.GONE);
         }else{
+            layout_halfscrn.getLayoutParams().height = rootviewheight;
             gethelper().updateactionbar(1);
             common.slidetodown(layout_mediatype);
             layout_footer.setVisibility(View.VISIBLE);
             img_fullscreen.setVisibility(View.VISIBLE);
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             layout_mediatype.setVisibility(View.VISIBLE);
-          //  layout_validating.setVisibility(View.VISIBLE);
+            //  layout_validating.setVisibility(View.VISIBLE);
             layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
             setbottomimgview();
         }

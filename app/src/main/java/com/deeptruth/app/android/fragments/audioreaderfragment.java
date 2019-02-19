@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
@@ -140,8 +141,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     TextView txt_createdtime;
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
-    @BindView(R.id.layout_photodetails)
-    RelativeLayout layout_photodetails;
+    @BindView(R.id.layout_audiodetails)
+    RelativeLayout layout_audiodetails;
     @BindView(R.id.scrollview_detail)
     ScrollView scrollview_detail;
     @BindView(R.id.edt_medianame)
@@ -259,7 +260,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.img_verified)
     ImageView img_verified;
     @BindView(R.id.audio_container)
-     RelativeLayout audiorootview;
+    NestedScrollView audiorootview;
     @BindView(R.id.layout_dtls)
     LinearLayout layout_dtls;
     GoogleMap mgooglemap;
@@ -291,7 +292,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private SeekBar mediaseekbar;
     private int ontime =0, starttime =0, endtime =0, fTime = 5000, bTime = 5000;
     private Handler hdlr = new Handler();
-    RelativeLayout rlcontrollerview;
+    LinearLayout rlcontrollerview;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
@@ -303,6 +304,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     adapteritemclick mcontrollernavigator;
     arraycontainer arraycontainerformetric =null;
     int currentprocessframe=0;
+    int rootviewheight , divideheight;
 
     public audioreaderfragment() {
     }
@@ -333,8 +335,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         mediaseekbar = (SeekBar) rootview.findViewById(R.id.mediacontroller_progress);
         time_current = (TextView) rootview.findViewById(R.id.time_current);
         time = (TextView) rootview.findViewById(R.id.time);
-        rlcontrollerview = (RelativeLayout) rootview.findViewById(R.id.rl_controllerview);
+        rlcontrollerview = (LinearLayout) rootview.findViewById(R.id.rl_controllerview);
 
+        audiorootview.post(new Runnable() {
+            @Override
+            public void run() {
+                rootviewheight = audiorootview.getHeight();
+                Log.e("rootviewaudio",""+((rootviewheight * 60)/100));
+                divideheight = ((rootviewheight * 60)/100);
+                rlcontrollerview.getLayoutParams().height = ((rootviewheight * 60)/100);
+                layout_audiodetails.getLayoutParams().height = (rootviewheight - divideheight);
+                setupaudiodata();
+            }
+        });
+        recenterplaypause();
         mediaseekbar.setPadding(0,0,0,0);
 
         mFormatBuilder = new StringBuilder();
@@ -432,7 +446,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         scrollview_detail.setVisibility(View.VISIBLE);
         tab_layout.setVisibility(View.VISIBLE);
         layout_footer.setVisibility(View.VISIBLE);
-        layout_photodetails.setVisibility(View.VISIBLE);
+        layout_audiodetails.setVisibility(View.VISIBLE);
         layout_mediatype.setVisibility(View.VISIBLE);
         layout_duration.setVisibility(View.VISIBLE);
         layout_endtime.setVisibility(View.VISIBLE);
@@ -484,6 +498,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
         });
+        edt_medianotes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.edt_medianotes) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
 
         layout_dtls.setOnClickListener(this);
         txtslotencyption.setOnClickListener(this);
@@ -491,7 +519,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         txtslotmedia.setOnClickListener(this);
         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
 
-        audiorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        /*audiorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 int heightDiff = audiorootview.getRootView().getHeight() - audiorootview.getHeight();
@@ -513,10 +541,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 }
             }
-        });
+        });*/
         loadmap();
         setmetriceshashesdata();
-        setupaudiodata();
     }
 
     @Override
@@ -631,13 +658,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 break;
             case R.id.layout_dtls:
-                Log.e("ontouch","ontouchscrollview");
-                if(rlcontrollerview.getVisibility() == View.GONE){
                     view.clearFocus();
                     InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     immm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-
-                }
                 break;
 
 
@@ -1812,4 +1835,17 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
         layout_mediatype.setLayoutParams(params);
     }
+    public void recenterplaypause()
+    {
+        rlcontrollerview.post(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.CENTER_IN_PARENT);
+                playpausebutton.setLayoutParams(params);
+            }
+        });
+    }
+
 }
