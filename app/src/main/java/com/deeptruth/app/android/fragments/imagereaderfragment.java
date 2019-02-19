@@ -247,6 +247,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void loadviewdata()
     {
+        gethelper().setdatacomposing(false);
         gethelper().drawerenabledisable(false);
         img_dotmenu.setOnClickListener(this);
         img_folder.setOnClickListener(this);
@@ -931,12 +932,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                                                 setmetadatavalue(metricItemArraylist.get(j));
 
-                                            }
-
-                                            if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                                                    (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-                                            {
-                                                gethelper().updatezoomlevel(Double.parseDouble(latitude),Double.parseDouble(longitude));
                                             }
 
                                         }catch (Exception e)

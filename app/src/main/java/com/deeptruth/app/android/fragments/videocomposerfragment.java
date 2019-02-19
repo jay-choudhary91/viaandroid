@@ -377,6 +377,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         linearLayout=rootview.findViewById(R.id.content);
 
         gethelper().drawerenabledisable(true);
+        gethelper().setdatacomposing(true);
+
         if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
             apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
         flingactionmindstvac=common.getdrawerswipearea();
