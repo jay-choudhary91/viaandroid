@@ -97,13 +97,12 @@
                     style="@style/txt_drawer_graphical_title"
                     android:text="@string/type_of_chart" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="150dp"
                     android:layout_marginTop="10dp"
                     android:paddingRight="5dp"
                     android:paddingLeft="5dp"
-                    android:orientation="horizontal"
                     android:background="@color/white">
 
                     <com.github.mikephil.charting.charts.LineChart
@@ -111,7 +110,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="150dp"/>
 
-                </LinearLayout>
+                    <View
+                        android:id="@+id/view_latencyline"
+                        android:layout_width="5dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/dark_blue_solid_a"
+                        ></View>
+
+                </RelativeLayout>
 
             </LinearLayout>
         </LinearLayout>

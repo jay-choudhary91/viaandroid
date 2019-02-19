@@ -1120,7 +1120,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             data=data+","+metricmainarraylist.get(i).getLatency();
                         }
                     }
-                    xdata.getinstance().saveSetting(config.latency,data);
+                    xdata.getinstance().saveSetting(config.currentlatency,data);
                 }
                 myHandler.postDelayed(this, 1500);
             }
@@ -1803,6 +1803,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             linearseekbarcolorview.addView(view);
         }
         xdata.getinstance().saveSetting(config.latency,latency);
+        gethelper().setdatacomposing(false);
     }
 
     public void setheadermargine(){

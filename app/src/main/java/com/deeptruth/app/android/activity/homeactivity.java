@@ -140,18 +140,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         if (!isMyServiceRunning(mService.getClass()))
             startService(mIntent);
 
-
-        new Handler().postDelayed(new Runnable()
-        {
-            public void run()
-            {
-                setdrawerdata();
-            }
-        }, 100);
-
-
-
-        }
+        setdrawerdata();
+    }
 
         private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -424,7 +414,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 if((graphicaldrawerfragment!= null))
                     graphicaldrawerfragment.setmetricesdata();
 
-                myhandler.postDelayed(this, 200);
+                myhandler.postDelayed(this, 1000);
             }
         };
         myhandler.post(myrunnable);
