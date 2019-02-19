@@ -3,11 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/dark_blue_solid</item>
-        <item name="colorPrimaryDark">@color/dark_blue_solid</item>
-        <item name="colorAccent">@color/dark_blue_solid</item>
+        <item name="colorPrimary">@color/dark_blue_solid_a</item>
+        <item name="colorPrimaryDark">@color/dark_blue_solid_a</item>
+        <item name="colorAccent">@color/dark_blue_solid_a</item>
         <item name="android:windowFullscreen">false</item>
-        <item name="android:statusBarColor">@color/dark_blue_solid</item>
+        <item name="android:statusBarColor">@color/dark_blue_solid_a</item>
+
     </style>
 
     <style name="textview">
