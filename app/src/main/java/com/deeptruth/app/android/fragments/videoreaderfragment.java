@@ -30,6 +30,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -335,7 +336,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private framebitmapadapter adapter;
     private RelativeLayout scurraberverticalbar;
     private String mediafilepath = null;
-    private RelativeLayout showcontrollers;
+    private NestedScrollView showcontrollers;
     private TextureView videotextureview;
     private MediaPlayer player;
     private videocontrollerview controller;
@@ -365,6 +366,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     arraycontainer arraycontainerformetric =null;
     adapteritemclick mcontrollernavigator;
     int currentprocessframe=0;
+    int rootviewheight,dividedheight;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -395,6 +397,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         mFormatBuilder = new StringBuilder();
         mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
         videotextureview.setSurfaceTextureListener(this);
+
+        showcontrollers.post(new Runnable() {
+            @Override
+            public void run() {
+                rootviewheight = showcontrollers.getHeight();
+                dividedheight = ((rootviewheight *60)/100);
+                layout_halfscrnimg.getLayoutParams().height = dividedheight;
+                layout_photodetails.getLayoutParams().height = (rootviewheight -dividedheight);
+
+            }
+        });
 
        viewheight = Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
 
@@ -482,8 +495,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 maxincreasevideoduration=player.getCurrentPosition();
             }
         });
-
-
 
         recyview_frames.post(new Runnable() {
             @Override
@@ -620,7 +631,20 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         });
-
+        edt_medianotes.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (v.getId() == R.id.edt_medianotes) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                        case MotionEvent.ACTION_UP:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+                }
+                return false;
+            }
+        });
         layout_footer.post(new Runnable() {
             @Override
             public void run() {
@@ -634,7 +658,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
-        showcontrollers.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        /*showcontrollers.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 int heightDiff = showcontrollers.getRootView().getHeight() - showcontrollers.getHeight();
@@ -654,7 +678,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
                 }
             }
-        });
+        });*/
     }
 
 
@@ -1013,11 +1037,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                 case R.id.layout_dtls:
                     Log.e("ontouch","ontouchscrollview");
-                    if(layout_halfscrnimg.getVisibility() == View.GONE){
+                   // if(layout_halfscrnimg.getVisibility() == View.GONE){
                         view.clearFocus();
                         InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         immm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                    }
+               //     }
                     break;
             }
         }

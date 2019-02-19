@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:id="@+id/layout_photoreader"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
             <RelativeLayout
@@ -143,8 +143,8 @@
                 android:layout_width="match_parent"
                 android:layout_below="@+id/rl_controllerview"
                 android:visibility="visible"
-                android:paddingBottom="50dp"
                 android:id="@+id/layout_audiodetails"
+                android:paddingBottom="50dp"
                 android:layout_height="wrap_content">
 
                 <include layout="@layout/layout_mediadetails"></include>
