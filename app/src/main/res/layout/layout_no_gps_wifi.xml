@@ -26,7 +26,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/img_warning"
-            android:text="@string/no_gps_wifi"/>
+            android:text="@string/encrypting"/>
 
     </RelativeLayout>
 

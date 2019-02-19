@@ -559,6 +559,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 {
                     JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
                     arrayobject.put("interim_identifying_hashes","");
+                    arrayobject.put("distancetravelled","0");
                 }
                 String metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
                 mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
