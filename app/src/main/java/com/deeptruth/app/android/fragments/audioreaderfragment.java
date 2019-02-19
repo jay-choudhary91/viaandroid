@@ -292,7 +292,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private SeekBar mediaseekbar;
     private int ontime =0, starttime =0, endtime =0, fTime = 5000, bTime = 5000;
     private Handler hdlr = new Handler();
-    LinearLayout rlcontrollerview;
+    RelativeLayout rlcontrollerview;
     public int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
@@ -336,15 +336,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         mediaseekbar = (SeekBar) rootview.findViewById(R.id.mediacontroller_progress);
         time_current = (TextView) rootview.findViewById(R.id.time_current);
         time = (TextView) rootview.findViewById(R.id.time);
-        rlcontrollerview = (LinearLayout) rootview.findViewById(R.id.rl_controllerview);
+        rlcontrollerview = (RelativeLayout) rootview.findViewById(R.id.rl_controllerview);
 
         audiorootview.post(new Runnable() {
             @Override
             public void run() {
                 rootviewheight = audiorootview.getHeight();
+                Log.e("rootviewheight",""+rootviewheight);
+                divideheight = ((rootviewheight *60)/100);
                 Log.e("rootviewaudio",""+((rootviewheight * 60)/100));
-                divideheight = ((rootviewheight * 60)/100);
-                rlcontrollerview.getLayoutParams().height = ((rootviewheight * 60)/100);
+                Log.e("audiodetailsheight",""+((rootviewheight) - (divideheight)));
+
+                rlcontrollerview.getLayoutParams().height = ((rootviewheight *60)/100);
                 layout_audiodetails.getLayoutParams().height = (rootviewheight - divideheight);
                 setupaudiodata();
             }

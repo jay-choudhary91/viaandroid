@@ -840,36 +840,34 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
 
                     Cursor cur = mdbhelper.getstartmediainfo(common.getfilename(imageurl));
-                    String mediastartdevicedate="";
-                    if (cur != null && cur.getCount() > 0 && cur.moveToFirst())
-                    {
-                        do{
+                    String mediastartdevicedate = "";
+                    if (cur != null && cur.getCount() > 0 && cur.moveToFirst()) {
+                        do {
                             //mediacompleteddate = "" + cur.getString(cur.getColumnIndex("videocompletedevicedate"));
                             mediastartdevicedate = "" + cur.getString(cur.getColumnIndex("videostartdevicedate"));
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
-                            medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
-                            mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
+                            medianotes = "" + cur.getString(cur.getColumnIndex("media_notes"));
+                            mediafolder = "" + cur.getString(cur.getColumnIndex("media_folder"));
                             mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
-                        }while(cur.moveToNext());
+                        } while (cur.moveToNext());
                     }
 
-                    if (!mediastartdevicedate.isEmpty()){
+                    if (!mediastartdevicedate.isEmpty()) {
 
-                        ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
+                        ArrayList<metadatahash> mitemlist = mdbhelper.getmediametadatabyfilename(common.getfilename(imageurl));
 
-                        for(int i=0;i<mitemlist.size();i++)
-                        {
-                            String metricdata=mitemlist.get(i).getMetricdata();
+                        for (int i = 0; i < mitemlist.size(); i++) {
+                            String metricdata = mitemlist.get(i).getMetricdata();
                             String sequencehash = mitemlist.get(i).getSequencehash();
                             String hashmethod = mitemlist.get(i).getHashmethod();
                             String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
                             String serverdictionaryhash = mitemlist.get(i).getValuehash();
                             String color = mitemlist.get(i).getColor();
-                            parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash
-                                    ,color);
+                            parsemetadata(metricdata, hashmethod, videostarttransactionid, sequencehash, serverdictionaryhash
+                                    , color);
                         }
 
-                        if((!mediastartdevicedate.isEmpty()&& mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate!= null)){
+                        if ((!mediastartdevicedate.isEmpty() && mediastartdevicedate != null) && (!mediastartdevicedate.isEmpty() && mediastartdevicedate != null)) {
 
                             final String finalMediacompleteddate = mediastartdevicedate;
                             applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
@@ -878,13 +876,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                     try {
                                         SimpleDateFormat formatted = null;
                                         Date mediadate = null;
-                                        if(finalMediacompleteddate.contains("T"))
-                                        {
+                                        if (finalMediacompleteddate.contains("T")) {
                                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
                                             mediadate = format.parse(finalMediacompleteddate);
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                                             mediadate = format.parse(finalMediacompleteddate);
                                         }
@@ -897,46 +892,38 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                         edt_medianame.setText(medianame);
                                         edt_medianotes.setText(medianotes);
 
-                                        if(mediafolder.trim().length() > 0)
+                                        if (mediafolder.trim().length() > 0)
                                             setfolderspinner();
 
                                         ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
                                         layout_validating.setVisibility(View.VISIBLE);
                                         txt_section_validating_secondary.setText(config.verified);
-                                        if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green))
-                                        {
+                                        if (metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green)) {
                                             txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
                                                     getactivity().getResources().getColor(R.color.green_background));
-                                        }
-                                        else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red))
-                                        {
+                                        } else if (metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red)) {
                                             txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
                                                     getactivity().getResources().getColor(R.color.red));
-                                        }
-                                        else if(metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow))
-                                        {
+                                        } else if (metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow)) {
                                             txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
                                                     getactivity().getResources().getColor(R.color.yellow_background));
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
                                                     getactivity().getResources().getColor(R.color.green_background));
                                         }
 
-                                        common.setgraphicalblockchainvalue(config.blockchainid,metricmainarraylist.get(0).getVideostarttransactionid(),true);
-                                        common.setgraphicalblockchainvalue(config.hashformula,metricmainarraylist.get(0).getHashmethod(),true);
-                                        common.setgraphicalblockchainvalue(config.datahash,metricmainarraylist.get(0).getValuehash(),true);
-                                        common.setgraphicalblockchainvalue(config.matrichash,metricmainarraylist.get(0).getMetahash(),true);
+                                        common.setgraphicalblockchainvalue(config.blockchainid, metricmainarraylist.get(0).getVideostarttransactionid(), true);
+                                        common.setgraphicalblockchainvalue(config.hashformula, metricmainarraylist.get(0).getHashmethod(), true);
+                                        common.setgraphicalblockchainvalue(config.datahash, metricmainarraylist.get(0).getValuehash(), true);
+                                        common.setgraphicalblockchainvalue(config.matrichash, metricmainarraylist.get(0).getMetahash(), true);
 
-                                        common.setspannable(getResources().getString(R.string.blockchain_id)," "+metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
-                                        common.setspannable(getResources().getString(R.string.block_id)," "+metricmainarraylist.get(0).getHashmethod(), txt_blockid);
-                                        common.setspannable(getResources().getString(R.string.block_number)," "+metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
-                                        common.setspannable(getResources().getString(R.string.metrichash)," "+metricmainarraylist.get(0).getMetahash(), txt_metahash);
+                                        common.setspannable(getResources().getString(R.string.blockchain_id), " " + metricmainarraylist.get(0).getVideostarttransactionid(), txt_blockchainid);
+                                        common.setspannable(getResources().getString(R.string.block_id), " " + metricmainarraylist.get(0).getHashmethod(), txt_blockid);
+                                        common.setspannable(getResources().getString(R.string.block_number), " " + metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
+                                        common.setspannable(getResources().getString(R.string.metrichash), " " + metricmainarraylist.get(0).getMetahash(), txt_metahash);
 
-                                        arraycontainer arraycontainerformetric =metricmainarraylist.get(0);
-                                        if(arraycontainerformetric != null)
-                                        {
+                                        arraycontainer arraycontainerformetric = metricmainarraylist.get(0);
+                                        if (arraycontainerformetric != null) {
                                             String color = "white";
                                             if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
                                                 color = arraycontainerformetric.getColor();
@@ -974,28 +961,20 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                                         }
 
-                                    }catch (Exception e)
-                                    {
+                                    } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                        }catch (Exception e)
-                                        {
-                                            e.printStackTrace();
-                                        }
 
                                 }
                             });
                         }
-                        try
-                        {
+                        try {
                             mdbhelper.close();
-                        }catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                }catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

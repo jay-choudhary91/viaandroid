@@ -15,24 +15,14 @@
         android:layout_height="match_parent">
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/rl_controllerview"
+                android:layout_below="@+id/layout_mediatype"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible"
-                >
-                <RelativeLayout
-                    android:id="@+id/layout_mediatype"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                android:visibility="visible">
 
-                    <include layout="@layout/action_bar_mediadetails"></include>
-
-
-                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -147,7 +137,7 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -161,69 +151,22 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/layout_mediatype"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:content="@+id/content"
-                    android:handle="@+id/handle"
-                    android:orientation="horizontal"
-                    android:layout_above="@id/layout_bottom"
-                    android:layout_centerVertical="true">
-
-                    <ImageView
-                        android:id="@id/handle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/lefthandle"
-                        />
-
-                    <LinearLayout
-                        android:id="@id/content"
-                        android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:orientation="horizontal"
-                        android:visibility="gone"
-                        android:weightSum="1"
-                        >
-
-                        <LinearLayout
-                            android:id="@+id/layout_drawer"
-                            android:layout_width="0dp"
-                            android:layout_weight="0.9"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:background="@color/whitetransparent"
-                            >
-
-                            <include layout="@layout/layout_drawer_content"></include>
-
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_weight=".1"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/righthandle"
-                            android:visibility="gone"
-                            android:layout_gravity="center_vertical"
-                            android:id="@+id/righthandle"
-                            />
-                    </LinearLayout>
+            <include layout="@layout/action_bar_mediadetails"></include>
 
 
-                </RelativeLayout>
-            </RelativeLayout>
+        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/layout_footer"
             android:layout_width="match_parent"
             android:background="@drawable/bottomborder"
-            android:layout_gravity="bottom|end"
             android:layout_alignParentBottom="true"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
