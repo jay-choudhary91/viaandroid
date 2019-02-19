@@ -492,6 +492,7 @@ public class common {
             xdata.getinstance().saveSetting(config.matrichash,"NA");
             xdata.getinstance().saveSetting(config.distancetravelled,"NA");
             xdata.getinstance().saveSetting(config.latency,"");
+            xdata.getinstance().saveSetting(config.currentlatency,"");
             xdata.getinstance().saveSetting(config.attitude_data,"");
     }
 

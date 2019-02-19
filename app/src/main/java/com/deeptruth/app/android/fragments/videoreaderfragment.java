@@ -1621,7 +1621,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             data=data+","+metricmainarraylist.get(i).getLatency();
                         }
                     }
-                    xdata.getinstance().saveSetting(config.latency,data);
+                    xdata.getinstance().saveSetting(config.currentlatency,data);
                 }
 
                 //setmetricesgraphicaldata();
@@ -2277,16 +2277,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                        latency = latency + "," + metricmainarraylist.get(i).getLatency();
                    }
                 }
-               /* if(i % 2 == 0){
-                    view.setBackgroundResource(R.color.black);
-                }else{
-                    view.setBackgroundResource(R.color.red);
-                    //
-                }*/
-                Log.e("setcolorcount =", ""+ i);
                 linearseekbarcolorview.addView(view);
         }
         xdata.getinstance().saveSetting(config.latency,latency);
+        gethelper().setdatacomposing(false);
     }
 
     @Override

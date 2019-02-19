@@ -1,9 +1,11 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.DashPathEffect;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -21,9 +23,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.BuildConfig;
@@ -48,6 +53,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -154,6 +160,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     LineChart mChart;
     @BindView(R.id.attitude_indicator)
     AttitudeIndicator attitudeindicator;
+    @BindView(R.id.view_latencyline)
+    View view_latencyline;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -223,6 +231,26 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             //setmetadatavalue();
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
+
+            mChart.setOnChartGestureListener(this);
+            mChart.setOnChartValueSelectedListener(this);
+            mChart.setDrawGridBackground(false);
+
+            // no description text
+            mChart.getDescription().setEnabled(false);
+
+            // enable touch gestures
+            mChart.setTouchEnabled(false);
+
+            // enable scaling and dragging
+            mChart.setDragEnabled(false);
+            mChart.setScaleEnabled(false);
+            // mChart.setScaleXEnabled(true);
+            // mChart.setScaleYEnabled(true);
+
+            // if disabled, scaling can be done on x- and y-axis separately
+            mChart.setPinchZoom(false);
+
             loadmap();
             setchartdata();
 
@@ -291,7 +319,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         String longitudedegree = xdata.getinstance().getSetting(config.Longitude);
         String altitude=xdata.getinstance().getSetting(config.Altitude);
         String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
-        Log.e("distancetravelled",xdata.getinstance().getSetting(config.distancetravelled));
 
         if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
         {
@@ -407,44 +434,86 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         }
 
-        latencyvalues.clear();
-        String latency = xdata.getinstance().getSetting(config.latency).toString();
+        String latency = xdata.getinstance().getSetting(config.currentlatency).toString();
         if(latency != null && (! latency.trim().isEmpty()) )
         {
-            layout_datalatency.setVisibility(View.VISIBLE);
-            String[] latencyarray = latency.split(",");
-            for(int i = 0 ;i< latencyarray.length;i++){
-                //float val = (float) (Math.random() * 20) + 3;
-                Entry entry=new Entry();
-                entry.setX(latencyvalues.size());
-                entry.setY(Float.parseFloat(latencyarray[i]));
-                if(latencyvalues.size() <= 10)
+            final String[] currentlatencyarray = latency.split(",");
+            if(latencyvalues.size() > 0)
+            {
+                if(currentlatencyarray.length < latencyvalues.size())
                 {
-                    Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
-                    entry.setIcon(drawable);
-                }
-                else if(latencyvalues.size() <= 20)
-                {
-                    Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.gradient_verify_green);
-                    entry.setIcon(drawable);
-                }
-                else if(latencyvalues.size() <= 30)
-                {
-                    Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.gradient_fade_header_blue);
-                    entry.setIcon(drawable);
-                }
-                else if(latencyvalues.size() <= 40)
-                {
-                    Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.gradient_verify_yellow);
-                    entry.setIcon(drawable);
-                }
+                    layout_datalatency.post(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+                            float currentlatency=currentlatencyarray.length;
+                            float maxlatency=latencyvalues.size();
+                            float latencypercentage=(currentlatency/maxlatency);
+                            latencypercentage=latencypercentage*100;
 
-                latencyvalues.add(entry);
+                            int viewmaxwidth=layout_datalatency.getWidth();
+                            final float viewcurrentwidth=(latencypercentage*viewmaxwidth)/100;
+                            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(5,
+                                    RelativeLayout.LayoutParams.MATCH_PARENT);
+                            p.setMargins((int)viewcurrentwidth,0, 0, 0);
+                            view_latencyline.setLayoutParams(p);
+
+                            /*Animation a = new Animation() {
+
+                                @Override
+                                protected void applyTransformation(float interpolatedTime, Transformation t) {
+                                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view_latencyline.getLayoutParams();
+                                    params.leftMargin = (int)(viewcurrentwidth * interpolatedTime);
+                                    view_latencyline.setLayoutParams(params);
+                                }
+                            };
+                            a.setDuration(700); // in ms
+                            a.setFillAfter(false);
+                            view_latencyline.startAnimation(a);*/
+
+                            /*TranslateAnimation animation = new TranslateAnimation(view_latencyline.getX(), viewcurrentwidth,
+                                    0.0f, 0.0f);
+                            animation.setDuration(700);
+                            animation.setRepeatCount(1);
+                            animation.setFillAfter(false);
+                            view_latencyline.startAnimation(animation);*/
+                        }
+                    });
+
+                }
             }
-            setlatencydata();
-            mChart.animateX(10);
-            Legend l = mChart.getLegend();
-            l.setForm(Legend.LegendForm.LINE);
+        }
+    }
+
+    public void setdatacomposing(boolean isdatacomposing)
+    {
+        this.isdatacomposing=isdatacomposing;
+        if(! isdatacomposing)
+        {
+            latencyvalues.clear();
+            setchartdata();
+            String latency = xdata.getinstance().getSetting(config.latency).toString();
+            if(latency != null && (! latency.trim().isEmpty()) )
+            {
+                layout_datalatency.setVisibility(View.VISIBLE);
+                String[] latencyarray = latency.split(",");
+                for(int i = 0 ;i< latencyarray.length;i++)
+                {
+                    //float val = (float) (Math.random() * 20) + 3;
+                    Entry entry=new Entry();
+                    entry.setX(latencyvalues.size());
+                    entry.setY(Float.parseFloat(latencyarray[i]));
+                    latencyvalues.add(entry);
+                }
+                setlatencydata();
+                mChart.animateX(10);
+                Legend l = mChart.getLegend();
+                l.setForm(Legend.LegendForm.LINE);
+            }
+            else
+            {
+                layout_datalatency.setVisibility(View.GONE);
+            }
         }
         else
         {
@@ -649,10 +718,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
 
-    public void setdatacomposing(boolean isdatacomposing)
-    {
-        this.isdatacomposing=isdatacomposing;
-    }
+
     private void populatelocationonmap(final LatLng location) {
         if (mgooglemap == null)
             return;
@@ -777,25 +843,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     }
     public void setchartdata()
     {
-        mChart.setOnChartGestureListener(this);
-        mChart.setOnChartValueSelectedListener(this);
-        mChart.setDrawGridBackground(false);
-
-        // no description text
-        mChart.getDescription().setEnabled(false);
-
-        // enable touch gestures
-        mChart.setTouchEnabled(false);
-
-        // enable scaling and dragging
-        mChart.setDragEnabled(false);
-        mChart.setScaleEnabled(false);
-        // mChart.setScaleXEnabled(true);
-        // mChart.setScaleYEnabled(true);
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
-
         // set an alternative background color
         // mChart.setBackgroundColor(Color.GRAY);
 
@@ -863,32 +910,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             set1 = (LineDataSet)mChart.getData().getDataSetByIndex(0);
             set1.setValues(latencyvalues);
             set1.setHighlightEnabled(true);
-
-            List<ILineDataSet> dataSets=mChart.getLineData().getDataSets();
-            /*ArrayList<ILineDataSet> newdataSets = new ArrayList<ILineDataSet>();
-            for(int i=0;i<dataSets.size();i++)
-            {
-                ILineDataSet ilineDataSet=dataSets.get(i);
-                int count=ilineDataSet.getEntryCount();
-                count=count/2;
-                for(int j=0;j<count;j++)
-                {
-                    if(j < count)
-                    {
-                        Entry entry=ilineDataSet.getEntryForIndex(j);
-                        Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
-                        entry.setIcon(drawable);
-                    }
-
-                }
-                newdataSets.add(ilineDataSet);
-            }*/
-            LineData data = new LineData(dataSets);
-          //  set1.setColors(new int[] {Color.BLACK, Color.GREEN, Color.GRAY, Color.BLACK, Color.BLUE,Color.RED,Color.BLACK});
-            // set data
+            LineData data = new LineData(set1);
             mChart.setData(data);
             mChart.notifyDataSetChanged();
-            //List<ILineDataSet> dataSets1=mChart.getLineData().getDataSets();
         } else {
             // create a dataset and give it a type
             set1 = new LineDataSet(latencyvalues, "");
@@ -911,18 +935,16 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
             set1.setFormSize(15.f);
 
-        /*if (Utils.getSDKInt() >= 18) {
-            // fill drawable only supported on api level 18 and above
-            Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
-            set1.setFillDrawable(drawable);
-        }*/
+            if (Utils.getSDKInt() >= 18) {
+                // fill drawable only supported on api level 18 and above
+                Drawable drawable = ContextCompat.getDrawable(applicationviavideocomposer.getactivity(), R.drawable.fade_red);
+                set1.setFillDrawable(drawable);
+            }
 
             ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
             dataSets.add(set1); // add the datasets
-
             // create a data object with the datasets
             LineData data = new LineData(dataSets);
-
             // set data
             mChart.setData(data);
         }

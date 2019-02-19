@@ -332,7 +332,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
         }
 
 
-        xdata.getinstance().saveSetting("distancetravelled", "" + "" + ((int) doubleTotalDistance));
+        xdata.getinstance().saveSetting("travelleddistance", "" + "" + ((int) doubleTotalDistance));
         xdata.getinstance().saveSetting("gpsaccuracy", "" + location.getAccuracy());
         xdata.getinstance().saveSetting("strengthofsatellites", "" + location.getAccuracy());
 

@@ -229,12 +229,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void requestpermissions()
     {
-        if (common.getstorageaudiorecorddeniedpermissions().isEmpty()) {
+        if (common.getstoragedeniedpermissions().isEmpty()) {
             // All permissions are granted
             fetchmedialistfromdirectory();
         } else {
-            String[] array = new String[common.getstorageaudiorecorddeniedpermissions().size()];
-            array = common.getstorageaudiorecorddeniedpermissions().toArray(array);
+            String[] array = new String[common.getstoragedeniedpermissions().size()];
+            array = common.getstoragedeniedpermissions().toArray(array);
             ActivityCompat.requestPermissions(applicationviavideocomposer.getactivity(), array, request_permissions);
         }
     }
@@ -391,7 +391,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }
 
             loadffmpeglibrary();
-            if (common.getstorageaudiorecorddeniedpermissions().isEmpty()) {
+            if (common.getstoragedeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 fetchmedialistfromdirectory();
             }
@@ -1387,8 +1387,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             }
             if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED  &&  ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.RECORD_AUDIO) ==
-                    PackageManager.PERMISSION_GRANTED ) {
+                    PackageManager.PERMISSION_GRANTED) {
 
                 uploadmediafromgallery();
             } else {
@@ -1397,7 +1396,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     Toast.makeText(getActivity(), "app needs to be able to save videos", Toast.LENGTH_SHORT).show();
                 }
 
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.RECORD_AUDIO},
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         request_read_external_storage);
             }
         }
