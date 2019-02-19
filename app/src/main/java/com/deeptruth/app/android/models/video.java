@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 
 public class video
 {
+    public int id=0;
     public String path="";
     public String name="";
     public String createdate="";
@@ -45,6 +46,14 @@ public class video
     public  video()
     {
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getMediacolor() {

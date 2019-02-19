@@ -321,6 +321,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
            // setheadermargine();
+            gethelper().setdatacomposing(false);
             loadviewdata();
         }
         return rootview;
@@ -1125,10 +1126,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
                 {
                     if(! ismapzoomed)
-                    {
                         populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-                        gethelper().updatezoomlevel(Double.parseDouble(latitude),Double.parseDouble(longitude));
-                    }
                 }
 
                 if(currentprocessframe > 0 && metricmainarraylist.size() > 0 && currentprocessframe < metricmainarraylist.size())

@@ -232,6 +232,8 @@ public abstract class basefragment extends Fragment {
 
         public void updatezoomlevel(double latitude,double longitude);
 
+        public void setdatacomposing(boolean isdatacomposing);
+
         public void updateactionbar(int showHide, int color);
 
         public void updateactionbar(int showHide);

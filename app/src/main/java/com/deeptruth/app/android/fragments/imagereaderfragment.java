@@ -251,6 +251,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     public void loadviewdata()
     {
+        gethelper().setdatacomposing(false);
 
         photorootview.post(new Runnable() {
             @Override
@@ -977,6 +978,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                     {
                                         e.printStackTrace();
                                     }
+                                        }catch (Exception e)
+                                        {
+                                            e.printStackTrace();
+                                        }
 
                                 }
                             });

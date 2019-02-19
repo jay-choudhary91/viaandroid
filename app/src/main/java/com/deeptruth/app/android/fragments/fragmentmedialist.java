@@ -68,6 +68,8 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -821,6 +823,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     do{
 
                         String location = "" + cursor.getString(cursor.getColumnIndex("location"));
+                        String id = "" + cursor.getString(cursor.getColumnIndex("id"));
                         //String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
                         String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
                         String videostarttransactionid = "" + cursor.getString(cursor.getColumnIndex("videostarttransactionid"));
@@ -835,9 +838,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
                         String status = "" + cursor.getString(cursor.getColumnIndex("status"));
 
+                        if(id.trim().isEmpty() || id.equalsIgnoreCase("null"))
+                            id="0";
+
                         if(! isexistinarraay(mediafilepath))
                         {
                             video videoobject=new video();
+                            videoobject.setId(Integer.parseInt(id));
                             videoobject.setPath(mediafilepath);
                             videoobject.setmimetype(type);
                             videoobject.setLocalkey(localkey);
@@ -905,6 +912,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        Collections.sort( arraymediaitemlist, new Comparator()
+                        {
+                            public int compare(Object o1, Object o2) {
+                                if (((video)o1).getId() > ((video)o2).getId()) {
+                                    return -1;
+                                } else if (((video)o1).getId() < ((video)o2).getId()) {
+                                    return +1;
+                                } else {
+                                    return 0;
+                                }
+                            }
+                        });
+
+
                         setmediaadapter();
                         if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
                         {

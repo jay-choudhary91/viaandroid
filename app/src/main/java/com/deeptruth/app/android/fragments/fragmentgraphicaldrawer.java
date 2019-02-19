@@ -3,16 +3,13 @@ package com.deeptruth.app.android.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.service.autofill.Dataset;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -51,7 +48,6 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -60,7 +56,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,7 +160,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private SensorManager msensormanager;
     private Sensor maccelerometersensormanager;
 
-    private boolean isinbackground=false,ismediaplayer = false,isgraphicopen=false,photocapture=false;
+    private boolean isinbackground=false,ismediaplayer = false,isgraphicopen=false,isdatacomposing=false;
     String latitude = "", longitude = "",screenheight = "",screenwidth = "",lastsavedangle="";
     private float currentDegree = 0f;
     String hashmethod= "",videostarttransactionid = "",valuehash = "",metahash = "";
@@ -254,32 +249,15 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     {
         if(mgooglemap != null)
         {
-                Log.e("GraphicalLatLng",""+latlng.latitude+" "+latlng.longitude);
-                {
-                    /*points.add(latlng);
-                    polylineOptions.addAll(points);
-                    polylineOptions.color(Color.BLUE);
-                    polylineOptions.width(20);
-                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-                    polyline.setStartCap(new RoundCap());
-                    polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.DEFAULT);*/
-
-                    mgooglemap.addMarker(new MarkerOptions()
-                            .position(latlng)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.horizontalline)));
-
-
-                /*{
-                    points.add(latlng);
-                    polylineOptions.addAll(points);
-                    polylineOptions.color(Color.WHITE);
-                    polylineOptions.width(20);
-                    Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-                    polyline.setStartCap(new RoundCap());
-                    polyline.setEndCap(new RoundCap());
-                    polyline.setJointType(JointType.ROUND);
-                }*/
+            if(isdatacomposing)
+            {
+                mgooglemap.clear();
+            }
+            else
+            {
+                mgooglemap.addMarker(new MarkerOptions()
+                .position(latlng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle)));
             }
         }
     }
@@ -291,20 +269,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         googlemap.setVisibility(View.VISIBLE);
 
-        mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
-        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-        } else {
-            mgooglemap.setMyLocationEnabled(true);
-            mgooglemap.getUiSettings().setZoomControlsEnabled(true);
-            mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
+        float zoomlevel = mgooglemap.getCameraPosition().zoom;
+        if(zoomlevel <= 3)
+        {
+            mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 15));
+        }
+        else
+        {
+            mgooglemap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoomlevel));
         }
     }
 
@@ -360,14 +332,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
 
             common.setdrawabledata(getResources().getString(R.string.traveled),"\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
-
             common.setdrawabledata(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
-
             common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
             common.setdrawabledata(getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
             common.setdrawabledata(getResources().getString(R.string.yaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_y), tvyaxis);
             common.setdrawabledata(getResources().getString(R.string.zaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_z), tvzaxis);
-
             common.setdrawabledata(getResources().getString(R.string.phone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)), tvphone);
             common.setdrawabledata(getResources().getString(R.string.network),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)), tvnetwork);
             common.setdrawabledata(getResources().getString(R.string.connection),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)), tvconnection);
@@ -386,28 +355,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
             common.setdrawabledata(getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
             common.setdrawabledata(getResources().getString(R.string.battery),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
-
             common.setdrawabledata(getResources().getString(R.string.blockchain_id)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
             common.setdrawabledata(getResources().getString(R.string.block_id)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
             common.setdrawabledata(getResources().getString(R.string.block_number), " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
             common.setdrawabledata(getResources().getString(R.string.metrichash)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
 
-
-
-        String latitude=xdata.getinstance().getSetting(config.Latitude);
-        String longitude=xdata.getinstance().getSetting(config.Longitude);
-        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader)){
+            String latitude=xdata.getinstance().getSetting(config.Latitude);
+            String longitude=xdata.getinstance().getSetting(config.Longitude);
             if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                     (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-            drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-            Log.e("drawpoints","drawvalues");
-        }
-        /*if(ismediaplayer || photocapture)
-        {*/
+            {
+                populatelocationonmap(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+            }
+
             if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
             {
                 String strdegree=xdata.getinstance().getSetting(config.orientation);
@@ -420,9 +381,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     rotatecompass(degree);
                 }
                 lastsavedangle=strdegree;
-
             }
-      //  }
 
         if(! xdata.getinstance().getSetting(config.attitude_data).trim().isEmpty())
         {
@@ -596,19 +555,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
-    public void setphotocapture(boolean photocapture)
-    {
-        this.photocapture=photocapture;
-    }
-
-    public void getencryptiondata(String hashmethod, String videostarttransactionid, String valuehash, String metahash){
-
-        this.hashmethod = hashmethod;
-        this.videostarttransactionid = videostarttransactionid;
-        this.valuehash = valuehash;
-        this.metahash = metahash;
-    }
-
     public void rotatecompass(int degree)
     {
         RotateAnimation ra = new RotateAnimation(
@@ -703,12 +649,17 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
 
-    private void populateUserCurrentLocation(final LatLng location) {
+    public void setdatacomposing(boolean isdatacomposing)
+    {
+        this.isdatacomposing=isdatacomposing;
+    }
+    private void populatelocationonmap(final LatLng location) {
         if (mgooglemap == null)
             return;
 
         googlemap.setVisibility(View.VISIBLE);
 
+        zoomgooglemap(location.latitude,location.longitude);
         if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -719,11 +670,22 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
         } else {
-            mgooglemap.setMyLocationEnabled(true);
+
+            if(isdatacomposing)
+            {
+                mgooglemap.setMyLocationEnabled(true);
+            }
+            else
+            {
+                mgooglemap.setMyLocationEnabled(false);
+            }
+
             mgooglemap.getUiSettings().setZoomControlsEnabled(true);
             mgooglemap.getUiSettings().setMyLocationButtonEnabled(true);
         }
     }
+
+
 
     @Override
     public void onSensorChanged(SensorEvent event) {
