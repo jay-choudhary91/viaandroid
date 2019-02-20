@@ -723,7 +723,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         if(itemname.size() == 0)
         {
-            Toast.makeText(applicationviavideocomposer.getactivity(),"please create a folder first",Toast.LENGTH_SHORT).show();
+            Toast.makeText(applicationviavideocomposer.getactivity(),"Please create a folder first",Toast.LENGTH_LONG).show();
             return;
         }
 
