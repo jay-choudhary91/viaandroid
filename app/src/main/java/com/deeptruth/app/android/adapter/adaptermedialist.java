@@ -298,6 +298,31 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.edtvideoname.setKeyListener(null);
             }
 
+            if(arrayvideolist.get(position).isSelected){
+                holder.tv_medianotes.setEnabled(true);
+                holder.tv_medianotes.setClickable(true);
+                holder.tv_medianotes.setFocusableInTouchMode(true);
+                holder.tv_medianotes.requestFocus();
+                arrayvideolist.get(position).setSelected(false);
+
+                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                Editable editableText=  holder.tv_medianotes.getEditableText();
+                if(editableText!=null) {
+                    Log.e("position",""+position);
+                    holder.tv_medianotes.setInputType(InputType.TYPE_CLASS_TEXT);
+                    holder.tv_medianotes.setEllipsize(TextUtils.TruncateAt.END);
+                    holder.tv_medianotes.setSingleLine();
+                }
+            }
+            else
+            {
+                arrayvideolist.get(position).setSelected(false);
+                holder.tv_medianotes.setEnabled(false);
+                holder.tv_medianotes.setClickable(false);
+                holder.tv_medianotes.setKeyListener(null);
+            }
+
             holder.img_slide_share.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

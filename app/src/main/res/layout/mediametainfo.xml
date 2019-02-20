@@ -8,6 +8,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:orientation="vertical"
+       android:layout_marginBottom="10dp"
        android:layout_marginTop="@dimen/margin_10dp">
 
        <LinearLayout
@@ -38,6 +39,7 @@
                    android:id="@+id/googlemap"
                    android:layout_width="match_parent"
                    android:visibility="visible"
+                   android:layout_marginTop="10dp"
                    android:layout_height="200dp"/>
 
            </LinearLayout>
@@ -57,13 +59,14 @@
                style="@style/txt_drawer_graphical_title"
                android:text="@string/locationanalytics"
                app:fontType="Comfortaa-Regular"
+               android:layout_marginTop="10dp"
                />
 
            <com.deeptruth.app.android.views.customfonttextview
                android:id="@+id/txt_address"
                app:fontType="Comfortaa-Regular"
                style="@style/txt_normalview"
-               android:layout_marginTop="5dp"
+               android:layout_marginTop="10dp"
                android:text="X-Axis"/>
 
            <LinearLayout
@@ -188,6 +191,7 @@
                    android:id="@+id/txt_orientation"
                    android:text="@string/orientation"
                    app:fontType="Comfortaa-Regular"
+                   android:layout_marginTop="10dp"
                   />
                 <LinearLayout
                android:layout_width="match_parent"
@@ -200,7 +204,7 @@
                    android:layout_weight="0.6"
                    android:layout_height="wrap_content"
                    android:layout_gravity="top"
-                   android:layout_marginTop="10dp"
+                   android:layout_marginTop="5dp"
                    android:gravity="top"
                    android:orientation="horizontal">
 

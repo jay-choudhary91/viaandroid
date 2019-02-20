@@ -621,16 +621,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (!hasFocus) {
                     edt_medianame.setKeyListener(null);
                     v.setFocusable(false);
+                    editabletext();
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     String renamevalue = edt_medianame.getText().toString();
                     if(!mediatransectionid.isEmpty())
                         updatemediainfo(mediatransectionid,renamevalue,edt_medianotes.getText().toString());
-
-                    editabletext();
                 }
             }
         });
+
         edt_medianotes.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -1976,7 +1976,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     public void editabletext(){
         Editable editableText=  edt_medianame.getEditableText();
-        if(editableText!=null) {
+        if(editableText !=null) {
             edt_medianame.setInputType(InputType.TYPE_CLASS_TEXT);
             edt_medianame.setEllipsize(TextUtils.TruncateAt.END);
             edt_medianame.setSingleLine();
