@@ -2,17 +2,13 @@ package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
 import android.animation.Animator;
-import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.media.MediaExtractor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -38,7 +34,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.GenericTransitionOptions;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.locationawareactivity;
@@ -46,19 +41,18 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.permissions;
-import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.droidsonroids.gif.GifDrawable;
 
 /**
  * Created by root on 6/11/18.
@@ -70,7 +64,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_timer;
 
     @BindView(R.id.img_video_capture)
-    ImageView mrecordimagebutton;
+    ImageView recordstartstopbutton;
     @BindView(R.id.img_rotate_camera)
     ImageView imgrotatecamera;
     @BindView(R.id.layout_bottom)
@@ -123,11 +117,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private Runnable myRunnable;
     private boolean showwarningsection=true;
     private CountDownTimer countertimer;
-    @BindView(R.id.base_view)
-    ViewGroup mParent;
 
-    GradientDrawable gradientdrawable;
-    private volatile boolean iscircle = true;
+    GifDrawable gifdrawable;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -147,17 +138,26 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            mrecordimagebutton.setOnClickListener(this);
+            recordstartstopbutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
             txt_mediatype_a.setOnClickListener(this);
             txt_mediatype_b.setOnClickListener(this);
             txt_mediatype_c.setOnClickListener(this);
             shimmer_view_container.startShimmer();
-            gradientdrawable = new GradientDrawable();
-            gradientdrawable.setCornerRadius(360.0f);
-            gradientdrawable.setShape(GradientDrawable.RECTANGLE);
-            mParent.setBackground(gradientdrawable);
+
+            try {
+                gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
+                gifdrawable.setLoopCount(0);
+                gifdrawable.setSpeed(1.0f);
+                recordstartstopbutton.setImageDrawable(gifdrawable);
+                recordstartstopbutton.setAlpha(0f);
+                recordstartstopbutton.animate().alpha(1.0f).setDuration(100).setListener(null);
+                gifdrawable.stop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         return rootview;
     }
@@ -290,36 +290,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             countertimer.cancel();
     }
 
-    private void makecircle() {
-
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientdrawable, "cornerRadius", 30.0f, 200.0f);
-
-        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
-        shiftAnimation.setTarget(mParent);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(800);
-        animatorSet.playTogether(cornerAnimation, shiftAnimation);
-        animatorSet.start();
-        iscircle = !iscircle;
-    }
-
-    private void makesquare() {
-
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientdrawable, "cornerRadius",100f,10.0f);
-
-        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
-        shiftAnimation.setTarget(mParent);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(800);
-        animatorSet.playTogether(cornerAnimation, shiftAnimation);
-        animatorSet.start();
-        iscircle = !iscircle;
-
-    }
     public void showwarningsection(boolean showwarning)
     {
         if(showwarning)
@@ -447,8 +417,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void initviewpager()
     {
-      //  mrecordimagebutton.setImageResource(R.drawable.img_startrecord);
-     //   mrecordimagebutton.setBackgroundResource(R.drawable.shape_recorder_off);
+      //  recordstartstopbutton.setImageResource(R.drawable.img_startrecord);
+     //   recordstartstopbutton.setBackgroundResource(R.drawable.shape_recorder_off);
 
         flingactionmindstvac=common.getcomposerswipearea();
 
@@ -512,23 +482,17 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 break;
 
             case R.id.img_video_capture:
-                mrecordimagebutton.setEnabled(false);
+                recordstartstopbutton.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
                     public void run()
                     {
-                        mrecordimagebutton.setEnabled(true);
+                        recordstartstopbutton.setEnabled(true);
                     }
                 }, 1000);
 
                 if(currentselectedcomposer == 0)
                 {
-                    if (iscircle) {
-                        makesquare();
-                    }
-                    else {
-                        makecircle();
-                    }
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
                 }
@@ -552,12 +516,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
                 else if(currentselectedcomposer == 2)
                 {
-                    if (iscircle) {
-                        makesquare();
-                    }
-                    else {
-                        makecircle();
-                    }
+
                     try {
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();
@@ -757,10 +716,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-               // setimagerecordstop();
                 setimagethumbnail();
-                if(! iscircle)
-                    makecircle();
+
+                if(gifdrawable!= null && gifdrawable.isPlaying())
+                    gifdrawable.stop();
 
                 String mediatype="";
                 switch (currentselectedcomposer)
@@ -802,6 +761,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         public void onItemClicked(Object object, int type) {
             if(type == 1) // for video record start,audio record start and image capture button click
             {
+                if(gifdrawable!= null && (! gifdrawable.isPlaying()))
+                    gifdrawable.start();
+
                 if(currentselectedcomposer == 0)
                 {
                     showhideactionbottombaricon(0);
@@ -815,6 +777,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             else if(type == 2) // for video record stop,audio record stop and image captured button click
             {
+                if(gifdrawable!= null && gifdrawable.isPlaying())
+                    gifdrawable.stop();
+
                 if(currentselectedcomposer == 0)
                 {
                     showhideactionbottombaricon(1);
