@@ -362,7 +362,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
             if(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)).equalsIgnoreCase("NA")) {
                 common.setdrawabledata(getResources().getString(R.string.address),": "+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
-                Log.e("address", common.getxdatavalue(xdata.getinstance().getSetting(config.Address)));
             }else{
                 common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
 

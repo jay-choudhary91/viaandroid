@@ -40,6 +40,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -52,6 +53,7 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -402,7 +404,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run() {
                 rootviewheight = showcontrollers.getHeight();
-                videoviewheight = ((rootviewheight *70)/100);
+                videoviewheight = ((rootviewheight *60)/100);
                 layout_halfscrnimg.getLayoutParams().height = videoviewheight;
                 layout_halfscrnimg.requestLayout();
                 detailviewheight = (rootviewheight -videoviewheight);
@@ -424,7 +426,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         edt_medianame.setFocusable(false);
         edt_medianame.setFocusableInTouchMode(false);
 
-        edt_medianotes.setEnabled(false);
+       // edt_medianotes.setEnabled(false);
         edt_medianotes.setClickable(false);
         edt_medianotes.setFocusable(false);
         edt_medianotes.setFocusableInTouchMode(false);
@@ -618,6 +620,23 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
+        edt_medianame.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
+                    edt_medianame.setEnabled(false);
+                    edt_medianame.setClickable(false);
+                    edt_medianame.setFocusable(false);
+                    edt_medianame.setFocusableInTouchMode(false);
+                    editabletext();
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        });
+
         edt_medianame.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -654,12 +673,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                footerheight = layout_footer.getHeight();
             }
         });
-    }
-
-
-    public int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     @Override
@@ -1091,6 +1104,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void onRestart() {
+        Log.e("onrestart","onrestart");
     }
 
     @Override

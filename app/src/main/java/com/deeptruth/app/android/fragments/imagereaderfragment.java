@@ -373,7 +373,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         edt_medianame.setFocusable(false);
         edt_medianame.setFocusableInTouchMode(false);
 
-        edt_medianotes.setEnabled(false);
+      //  edt_medianotes.setEnabled(false);
         edt_medianotes.setClickable(false);
         edt_medianotes.setFocusable(false);
         edt_medianotes.setFocusableInTouchMode(false);
@@ -417,6 +417,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         });
+
         edt_medianotes.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -434,43 +435,23 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         txt_section_validating_secondary.setText(config.caution);
         txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
 
-        //detuct keyboard is open or not
-        /*photorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        edt_medianame.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onGlobalLayout() {
-                int heightDiff = photorootview.getRootView().getHeight() - photorootview.getHeight();
-                if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
-                    // ... do something here
-                    layout_halfscrn.setVisibility(View.GONE);
-                    layout_footer.setVisibility(View.GONE);
-                    layout_mediatype.setVisibility(View.GONE);
-                    layout_validating.setVisibility(View.GONE);
-
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
+                    edt_medianame.setEnabled(false);
+                    edt_medianame.setClickable(false);
+                    edt_medianame.setFocusable(false);
+                    edt_medianame.setFocusableInTouchMode(false);
+                    edt_medianame.setKeyListener(null);
+                    editabletext();
+                    return true;
                 }else
                 {
-                    if(layout_halfscrn.getVisibility()==View.GONE){
-                        layout_halfscrn.setVisibility(View.VISIBLE);
-                        layout_footer.setVisibility(View.VISIBLE);
-                        layout_mediatype.setVisibility(View.VISIBLE);
-                        layout_validating.setVisibility(View.VISIBLE);
-                        edt_medianame.setFocusable(false);
-                        edt_medianotes.setFocusable(false);
-                    }
+                    return false;
                 }
             }
-        });*/
-
-      /*  photorootview.post(new Runnable() {
-            @Override
-            public void run() {
-                int totalwidth= photorootview.getWidth() + 100;
-                TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth ,0.0f, 0.0f);
-                animation.setDuration(3000);
-                animation.setRepeatCount(Animation.INFINITE);
-                animation.setRepeatMode(ValueAnimator.RESTART);
-                img_scanover.startAnimation(animation);
-            }
-        });*/
+        });
         layout_footer.post(new Runnable() {
             @Override
             public void run() {

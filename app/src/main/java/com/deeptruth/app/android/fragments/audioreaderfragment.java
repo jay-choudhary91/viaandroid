@@ -33,6 +33,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -43,6 +44,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -343,15 +345,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             public void run() {
                 rootviewheight = audiorootview.getHeight();
                 rootviewheight = rootviewheight - layout_mediatype.getHeight();
-                Log.e("rootviewheight",""+rootviewheight);
-             //   rootviewheight = rootviewheight-150;
-
                 divideheight = ((rootviewheight * 60 )/100);
-                Log.e("rootviewaudio",""+((rootviewheight * 60)/100));
-                Log.e("audiodetailsheight",""+((rootviewheight) - (divideheight)));
-
                 rlcontrollerview.getLayoutParams().height = divideheight;
+                rlcontrollerview.requestLayout();
                 layout_audiodetails.getLayoutParams().height = (rootviewheight - divideheight);
+                layout_audiodetails.requestLayout();
                 setupaudiodata();
             }
         });
@@ -465,7 +463,25 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         edt_medianame.setFocusable(false);
         edt_medianame.setFocusableInTouchMode(false);
 
-        edt_medianotes.setEnabled(false);
+        edt_medianame.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
+                    edt_medianame.setEnabled(false);
+                    edt_medianame.setClickable(false);
+                    edt_medianame.setFocusable(false);
+                    edt_medianame.setFocusableInTouchMode(false);
+                    edt_medianame.setKeyListener(null);
+                    editabletext();
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        });
+
+      //  edt_medianotes.setEnabled(false);
         edt_medianotes.setClickable(false);
         edt_medianotes.setFocusable(false);
         edt_medianotes.setFocusableInTouchMode(false);
