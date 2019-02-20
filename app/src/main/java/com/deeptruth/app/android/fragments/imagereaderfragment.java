@@ -963,6 +963,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                                         }
 
+                                        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
+                                                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                                            populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
