@@ -65,6 +65,7 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.arraycontainer;
+import com.deeptruth.app.android.models.customedittext;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
@@ -108,7 +109,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class audioreaderfragment extends basefragment implements SurfaceHolder.Callback, MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener {
+        MediaPlayer.OnCompletionListener, View.OnTouchListener, View.OnClickListener ,customedittext.OnKeyListener{
 
     @BindView(R.id.img_delete_media)
     ImageView img_delete_media;
@@ -148,9 +149,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.scrollview_detail)
     ScrollView scrollview_detail;
     @BindView(R.id.edt_medianame)
-    EditText edt_medianame;
+    customedittext edt_medianame;
     @BindView(R.id.edt_medianotes)
-    EditText edt_medianotes;
+    customedittext edt_medianotes;
     @BindView(R.id.layout_footer)
     RelativeLayout layout_footer;
     @BindView(R.id.tab_layout)
@@ -521,6 +522,26 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
         });
+
+        edt_medianotes.setOnKeyboardHidden(new customedittext.OnKeyboardHidden() {
+            @Override
+            public void onKeyboardHidden() {
+                edt_medianame.setEnabled(false);
+                edt_medianotes.setClickable(false);
+                edt_medianotes.setFocusable(false);
+                edt_medianotes.setFocusableInTouchMode(false);
+            }
+        });
+
+        edt_medianame.setOnKeyboardHidden(new customedittext.OnKeyboardHidden() {
+            @Override
+            public void onKeyboardHidden() {
+
+                edt_medianame.setClickable(false);
+                edt_medianame.setFocusable(false);
+                edt_medianame.setFocusableInTouchMode(false);
+            }
+        });
         edt_medianotes.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -542,29 +563,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         txtslotmedia.setOnClickListener(this);
         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
 
-        /*audiorootview.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = audiorootview.getRootView().getHeight() - audiorootview.getHeight();
-                if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
-                    // ... do something here
-                    rlcontrollerview.setVisibility(View.GONE);
-                    layout_footer.setVisibility(View.GONE);
-                    layout_mediatype.setVisibility(View.GONE);
-
-                }else
-                {
-                    if(rlcontrollerview.getVisibility()==View.GONE){
-                        rlcontrollerview.setVisibility(View.VISIBLE);
-                        layout_footer.setVisibility(View.VISIBLE);
-                        layout_mediatype.setVisibility(View.VISIBLE);
-                        edt_medianame.setFocusable(false);
-                        edt_medianotes.setFocusable(false);
-                    }
-
-                }
-            }
-        });*/
         loadmap();
         setmetriceshashesdata();
     }
@@ -1869,4 +1867,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         });
     }
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        return false;
+    }
 }

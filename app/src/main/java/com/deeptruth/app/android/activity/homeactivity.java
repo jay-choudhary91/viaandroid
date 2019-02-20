@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -366,6 +367,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             finish();
         }
     }
+
 
     @Override
     public void onClick(View view) {

@@ -63,6 +63,7 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.arraycontainer;
+import com.deeptruth.app.android.models.customedittext;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
@@ -101,7 +102,7 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class imagereaderfragment extends basefragment implements View.OnClickListener,
-        ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener {
+        ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener ,customedittext.OnKeyListener {
 
     View rootview;
 
@@ -151,9 +152,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.img_fullscreen)
     ImageView img_fullscreen;
     @BindView(R.id.edt_medianame)
-    EditText edt_medianame;
+    customedittext edt_medianame;
     @BindView(R.id.edt_medianotes)
-    EditText edt_medianotes;
+    customedittext edt_medianotes;
     @BindView(R.id.layout_footer)
     RelativeLayout layout_footer;
     @BindView(R.id.tab_layout)
@@ -415,6 +416,26 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                     editabletext();
                 }
+            }
+        });
+
+        edt_medianotes.setOnKeyboardHidden(new customedittext.OnKeyboardHidden() {
+            @Override
+            public void onKeyboardHidden() {
+                edt_medianame.setEnabled(false);
+                edt_medianotes.setClickable(false);
+                edt_medianotes.setFocusable(false);
+                edt_medianotes.setFocusableInTouchMode(false);
+            }
+        });
+
+        edt_medianame.setOnKeyboardHidden(new customedittext.OnKeyboardHidden() {
+            @Override
+            public void onKeyboardHidden() {
+
+                edt_medianame.setClickable(false);
+                edt_medianame.setFocusable(false);
+                edt_medianame.setFocusableInTouchMode(false);
             }
         });
 
@@ -1416,4 +1437,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     }
 
 
+    @Override
+    public boolean onKey(View v, int keyCode, KeyEvent event) {
+        return false;
+    }
 }
