@@ -14,6 +14,9 @@ public class config {
     public static String media="media";
     public static String audiotempfile="audiotemp.pcm";
 
+
+    public static String settingpageurl="http://console.dev.crypto-servers.com/inapp-settings.php";
+
     public static final String rootdir = ""+ Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator +"Android/data/"+
             BuildConfig.APPLICATION_ID;
 

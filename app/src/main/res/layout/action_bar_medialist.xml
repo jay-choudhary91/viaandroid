@@ -126,7 +126,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:textColor="@color/white"
-            android:text="PHOTOS"
+            android:text="VIDEO"
             />
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -140,7 +140,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/txt_mediatype_b"
             android:textColor="@color/white"
-            android:text="VIDEO"
+            android:text="AUDIO"
             />
 
 
@@ -155,7 +155,7 @@
             android:layout_toRightOf="@id/txt_mediatype_b"
             android:textSize="13sp"
             android:textColor="@color/white"
-            android:text="AUDIO"
+            android:text="PHOTO"
             />
 
         <ImageView

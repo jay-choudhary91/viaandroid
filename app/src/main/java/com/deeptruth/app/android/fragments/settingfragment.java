@@ -1,20 +1,19 @@
 package com.deeptruth.app.android.fragments;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.utils.xdata;
+import com.deeptruth.app.android.utils.config;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,42 +24,29 @@ import butterknife.ButterKnife;
 public class settingfragment extends basefragment implements View.OnClickListener{
 
     View rootview;
-    public settingfragment() {
-        // Required empty public constructor
-    }
-
-    TextView txt_upgrade,txt_privacy,txt_help;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
-
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
     @BindView(R.id.setting_webview)
     WebView webview;
-    String url = "http://console.dev.crypto-servers.com/inapp-settings.php";
-    LinearLayout layout_upgrade,layout_privacy,layout_help;
+
+    public settingfragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        if (rootview == null) {
-            rootview = super.onCreateView(inflater, container, savedInstanceState);
-            ButterKnife.bind(this, rootview);
-           // setheadermargine();
-
-
-          txt_help=rootview.findViewById(R.id.txt_help);
-          txt_privacy=rootview.findViewById(R.id.txt_privacy);
-          txt_upgrade=rootview.findViewById(R.id.txt_upgrade);
-
-          txt_upgrade.setText(getResources().getString(R.string.upgrade));
-          txt_privacy.setText(getResources().getString(R.string.privacy));
-          txt_help.setText(getResources().getString(R.string.faq));
-            img_arrow_back.setOnClickListener(this);
-
-            webview.loadUrl(url);
-
-         //   gethelper().updateheader("Settings");
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        if (rootview == null)
+        {
+          rootview = super.onCreateView(inflater, container, savedInstanceState);
+          ButterKnife.bind(this, rootview);
+          img_arrow_back.setOnClickListener(this);
+          webview.getSettings().setJavaScriptEnabled(true);
+          webview.getSettings().setSupportZoom(true);       //Zoom Control on web (You don't need this
+          webview.getSettings().setBuiltInZoomControls(true); //Enable Multitouch if supported by ROM
+          webview.loadUrl(config.settingpageurl);
+          webview.setWebViewClient(new mywebview());
         }
         return rootview;
     }
@@ -77,23 +63,41 @@ public class settingfragment extends basefragment implements View.OnClickListene
             gethelper().onBack();
             break;
         }
-
     }
+
     @Override
     public void onHeaderBtnClick(int btnid) {
         super.onHeaderBtnClick(btnid);
-        switch (btnid){
-
+        switch (btnid)
+        {
             case R.id.img_backarrow:
                 gethelper().onBack();
                 break;
         }
     }
 
-    public void setheadermargine(){
-        LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
-        layout_mediatype.setLayoutParams(params);
-    }
+    public class mywebview extends WebViewClient
+    {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            // TODO Auto-generated method stub
+            super.onPageStarted(view, url, favicon);
+        }
 
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            // TODO Auto-generated method stub
+
+            view.loadUrl(url);
+            return true;
+
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            // TODO Auto-generated method stub
+            super.onPageFinished(view, url);
+        }
+
+    }
 }
