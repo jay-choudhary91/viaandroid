@@ -453,7 +453,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                             int viewmaxwidth=layout_datalatency.getWidth();
                             final float viewcurrentwidth=(latencypercentage*viewmaxwidth)/100;
-                            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(5,
+                            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(2,
                                     RelativeLayout.LayoutParams.MATCH_PARENT);
                             p.setMargins((int)viewcurrentwidth,0, 0, 0);
                             view_latencyline.setLayoutParams(p);
