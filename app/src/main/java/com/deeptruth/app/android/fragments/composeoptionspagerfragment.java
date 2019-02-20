@@ -511,14 +511,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         if(fragimgcapture.isbrustmodeenabled())
                         {
                             startbrustcameratimer();
-                            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.image_click));
                         }
                         else
                         {
                             if(fragimgcapture != null)
                                 fragimgcapture.takePicture();
-
-                            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.image_click));
                         }
                     }
                 }
