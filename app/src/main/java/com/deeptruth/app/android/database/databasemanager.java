@@ -631,10 +631,21 @@ public class databasemanager {
             if(status.equalsIgnoreCase(config.sync_notfound))
                 color="red";
 
-            mDb.execSQL("update tblstartmediainfo set status = '"+status+
-                    "',media_sync_attempt ='"+totalattempt+
-                    "',color ='"+color+
-                    "' where location='"+location+"'");
+            if(color.trim().isEmpty())
+            {
+                mDb.execSQL("update tblstartmediainfo set status = '"+status+
+                        "',media_sync_attempt ='"+totalattempt+
+                        "' where location='"+location+"'");
+            }
+            else
+            {
+                mDb.execSQL("update tblstartmediainfo set status = '"+status+
+                        "',media_sync_attempt ='"+totalattempt+
+                        "',color ='"+color+
+                        "' where location='"+location+"'");
+            }
+
+
             if (mCur != null)
                 mCur.moveToNext();
         } catch (Exception e) {
