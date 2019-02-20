@@ -965,7 +965,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                                         if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                                                 (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+                                        {
                                             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                                            drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+                                        }
+
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -1296,16 +1300,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private void setMap(GoogleMap googleMap) {
         this.mgooglemap = googleMap;
         this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-        if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
-                (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
-            drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
-
         selectedmetrices = selectedmetrices + "\n";
 
         if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                 (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
+        {
             populateUserCurrentLocation(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+            drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
+        }
     }
 
     //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
