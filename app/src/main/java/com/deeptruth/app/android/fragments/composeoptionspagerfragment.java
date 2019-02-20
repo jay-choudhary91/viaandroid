@@ -153,13 +153,21 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 recordstartstopbutton.setImageDrawable(gifdrawable);
                 recordstartstopbutton.setAlpha(0f);
                 recordstartstopbutton.animate().alpha(1.0f).setDuration(100).setListener(null);
-                gifdrawable.stop();
+                gifdrawable.pause();
+                gifdrawable.seekTo(0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
         return rootview;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(gifdrawable!= null && gifdrawable.isPlaying())
+            gifdrawable.stop();
     }
 
     @Override
@@ -503,14 +511,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         if(fragimgcapture.isbrustmodeenabled())
                         {
                             startbrustcameratimer();
-                            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.image_click));
                         }
                         else
                         {
                             if(fragimgcapture != null)
                                 fragimgcapture.takePicture();
-
-                            view.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.image_click));
                         }
                     }
                 }
@@ -719,7 +724,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 setimagethumbnail();
 
                 if(gifdrawable!= null && gifdrawable.isPlaying())
-                    gifdrawable.stop();
+                {
+                    gifdrawable.pause();
+                    gifdrawable.seekTo(0);
+                }
 
                 String mediatype="";
                 switch (currentselectedcomposer)
@@ -762,7 +770,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(type == 1) // for video record start,audio record start and image capture button click
             {
                 if(gifdrawable!= null && (! gifdrawable.isPlaying()))
-                    gifdrawable.start();
+                    gifdrawable.reset();
 
                 if(currentselectedcomposer == 0)
                 {
@@ -778,7 +786,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 2) // for video record stop,audio record stop and image captured button click
             {
                 if(gifdrawable!= null && gifdrawable.isPlaying())
-                    gifdrawable.stop();
+                {
+                    gifdrawable.pause();
+                    gifdrawable.seekTo(0);
+                }
 
                 if(currentselectedcomposer == 0)
                 {

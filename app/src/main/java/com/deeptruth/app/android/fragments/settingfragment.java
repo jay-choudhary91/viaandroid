@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.progressdialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,13 +83,13 @@ public class settingfragment extends basefragment implements View.OnClickListene
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             // TODO Auto-generated method stub
+            progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
             super.onPageStarted(view, url, favicon);
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             // TODO Auto-generated method stub
-
             view.loadUrl(url);
             return true;
 
@@ -97,6 +99,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
         public void onPageFinished(WebView view, String url) {
             // TODO Auto-generated method stub
             super.onPageFinished(view, url);
+            progressdialog.dismisswaitdialog();
         }
 
     }
