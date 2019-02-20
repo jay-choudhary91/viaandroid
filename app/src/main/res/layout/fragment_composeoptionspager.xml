@@ -154,6 +154,14 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
+        <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="OpenSans_Regular"
+            style="@style/txt_no_gps_wifi"
+            android:gravity="left|center_vertical"
+            android:text="@string/encrypting"
+            android:padding="5dp"
+            android:textColor="@color/white"/>
+
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"
             android:layout_width="match_parent"
