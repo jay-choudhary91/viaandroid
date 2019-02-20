@@ -291,7 +291,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
             try
             {
-                View view=((videoreaderfragment) getcurrentfragment()).layout_photodetails;
+                View view=((videoreaderfragment) getcurrentfragment()).layout_videodetails;
                 if(view != null)
                 {
                     if(view.getVisibility() == View.VISIBLE)

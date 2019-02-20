@@ -166,7 +166,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.layout_mediatype)
     LinearLayout layout_mediatype;
     @BindView(R.id.layout_videodetails)
-    public RelativeLayout layout_photodetails;
+    public RelativeLayout layout_videodetails;
     @BindView(R.id.scrollview_detail)
     ScrollView scrollview_detail;
     @BindView(R.id.img_fullscreen)
@@ -366,7 +366,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     arraycontainer arraycontainerformetric =null;
     adapteritemclick mcontrollernavigator;
     int currentprocessframe=0;
-    int rootviewheight,dividedheight;
+    int rootviewheight,videoviewheight,detailviewheight;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -402,9 +402,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run() {
                 rootviewheight = showcontrollers.getHeight();
-                dividedheight = ((rootviewheight *60)/100);
-                layout_halfscrnimg.getLayoutParams().height = dividedheight;
-                layout_photodetails.getLayoutParams().height = (rootviewheight -dividedheight);
+                videoviewheight = ((rootviewheight *70)/100);
+                layout_halfscrnimg.getLayoutParams().height = videoviewheight;
+                layout_halfscrnimg.requestLayout();
+                detailviewheight = (rootviewheight -videoviewheight);
+                layout_videodetails.getLayoutParams().height = detailviewheight;
+                layout_videodetails.requestLayout();
 
             }
         });
@@ -543,7 +546,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         tab_layout.setVisibility(View.VISIBLE);
         layout_footer.setVisibility(View.VISIBLE);
         img_fullscreen.setVisibility(View.VISIBLE);
-        layout_photodetails.setVisibility(View.VISIBLE);
+        layout_videodetails.setVisibility(View.VISIBLE);
         layout_mediatype.setVisibility(View.VISIBLE);
         layout_date.setVisibility(View.GONE);
         layout_time.setVisibility(View.GONE);
@@ -649,36 +652,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run() {
                footerheight = layout_footer.getHeight();
-                /*RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0,0,0,footerheight);
-                layout_photodetails.setLayoutParams(params);
-                layout_photodetails.requestLayout();
-               Log.e("footermargin",""+footerheight);*/
             }
         });
-
-        /*showcontrollers.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = showcontrollers.getRootView().getHeight() - showcontrollers.getHeight();
-                if (heightDiff > dpToPx(applicationviavideocomposer.getactivity().getApplication(), 200)) { // if more than 200 dp, it's probably a keyboard...
-                    layout_halfscrnimg.setVisibility(View.GONE);
-                    layout_mediatype.setVisibility(View.GONE);
-                    layout_footer.setVisibility(View.GONE);
-
-                }else
-                {
-                    if(layout_halfscrnimg.getVisibility()==View.GONE){
-                        layout_mediatype.setVisibility(View.VISIBLE);
-                        layout_halfscrnimg.setVisibility(View.VISIBLE);
-                        layout_footer.setVisibility(View.VISIBLE);
-                        edt_medianame.setFocusable(false);
-                        edt_medianotes.setFocusable(false);
-                    }
-                }
-            }
-        });*/
     }
 
 
@@ -873,11 +848,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     gethelper().onBack();
                     break;
                 case R.id.img_fullscreen:
-                    if(layout_photodetails.getVisibility()==View.VISIBLE){
+                    if(layout_videodetails.getVisibility()==View.VISIBLE){
+                        layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                        layout_videodetails.getLayoutParams().height = 0;
                         gethelper().drawerenabledisable(true);
                         expand(videotextureview,targetheight+Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
                         gethelper().updateactionbar(0);
-                        layout_photodetails.setVisibility(View.GONE);
+                        layout_videodetails.setVisibility(View.GONE);
                         scrollview_detail.setVisibility(View.GONE);
                         scrollview_meta.setVisibility(View.GONE);
                         scrollView_encyrption.setVisibility(View.GONE);
@@ -891,10 +868,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         img_fullscreen.setVisibility(View.GONE);
                         recenterplaypause();
                     } else{
+                        layout_halfscrnimg.getLayoutParams().height = videoviewheight;
+                        layout_videodetails.getLayoutParams().height = detailviewheight;
                         gethelper().drawerenabledisable(false);
                         collapse(videotextureview,previousheight);
                         gethelper().updateactionbar(1);
-                        layout_photodetails.setVisibility(View.VISIBLE);
+                        layout_videodetails.setVisibility(View.VISIBLE);
                         tab_layout.setVisibility(View.VISIBLE);
                         scrollview_detail.setVisibility(View.VISIBLE);
                         layout_mediatype.setVisibility(View.VISIBLE);
@@ -920,10 +899,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 case R.id.videotextureview:
                     Log.e("ontouch","ontouch");
 
-                    if(layout_photodetails.getVisibility()==View.GONE)  // Full screen view
+                    if(layout_videodetails.getVisibility()==View.GONE)  // Full screen view
                     {
                         if(layout_mediatype.getVisibility()==View.GONE)  // Action bar is hidden
                         {
+                            layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                             setbottomimgview();
                             gethelper().updateactionbar(1);
                             recenterplaypause();
@@ -936,6 +916,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             if(player != null && (! player.isPlaying()))  // Player is pause
                             {
+                                layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                                 gethelper().updateactionbar(1);
                                 layout_footer.setVisibility(View.VISIBLE);
                                 img_fullscreen.setVisibility(View.VISIBLE);
@@ -945,6 +926,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }
                             else   // Player is playing
                             {
+                                layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                                 gethelper().updateactionbar(1);
                                 layout_footer.setVisibility(View.GONE);
                                 img_fullscreen.setVisibility(View.GONE);
@@ -960,6 +942,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                         else  // Action bar is showing
                         {
+                            layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
@@ -967,6 +950,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             if(player != null && (! player.isPlaying()))
                             {
+                                layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));;
                                 gethelper().updateactionbar(0);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
                                 layout_footer.setVisibility(View.GONE);
@@ -976,6 +960,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }
                             else
                             {
+                                layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                                 gethelper().updateactionbar(1);
                                 layoutpause.setVisibility(View.VISIBLE);
                                 layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
@@ -997,7 +982,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     if(player.isPlaying()){
                         pause();
                     }else{
-                        if(layout_photodetails.getVisibility()==View.GONE){
+                        if(layout_videodetails.getVisibility()==View.GONE){
                             layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layoutpause.setVisibility(View.VISIBLE);
                             layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
@@ -1020,7 +1005,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 case R.id.img_pause:
                     if(player.isPlaying()){
                         pause();
-                        if(layout_photodetails.getVisibility()==View.GONE){
+                        if(layout_videodetails.getVisibility()==View.GONE){
                             playpausebutton.setImageResource(R.drawable.play_btn);
                             img_share_media.setVisibility(View.VISIBLE);
                             img_delete_media.setVisibility(View.VISIBLE);
@@ -1643,7 +1628,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             playpausebutton.setVisibility(View.VISIBLE);*/
             mediaseekbar.setProgress(player.getCurrentPosition());
 
-            if(layout_photodetails.getVisibility()==View.GONE){
+            if(layout_videodetails.getVisibility()==View.GONE){
                 Log.e("fullscreen..","oncomplete");
                 fullscreen_showcontrollers();
                 layoutbackgroundcontroller.setVisibility(View.GONE);
@@ -2289,6 +2274,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         if(drawershown)
         {
+            layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
             gethelper().updateactionbar(0);
             common.slidetoabove(layout_mediatype);
             layoutbackgroundcontroller.setVisibility(View.GONE);
@@ -2299,6 +2285,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
         else
         {
+            layout_halfscrnimg.getLayoutParams().height = rootviewheight;
+
             gethelper().updateactionbar(1);
             common.slidetodown(layout_mediatype);
 
