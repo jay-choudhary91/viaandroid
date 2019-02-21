@@ -85,8 +85,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_section_validating_secondary;
     @BindView(R.id.shimmer_view_container)
     ShimmerFrameLayout shimmer_view_container;
-    @BindView(R.id.layout_recorder)
-    RelativeLayout layoutrecorder;
     @BindView(R.id.txt_mediatype_a)
     TextView txt_mediatype_a;
     @BindView(R.id.txt_mediatype_b)

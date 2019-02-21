@@ -192,7 +192,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         loadffmpeglibrary();
         startnoise();
-        txt_title_actionbarcomposer.setText("deeptruth");
+        txt_title_actionbarcomposer.setText("00:00:00");
         setmetriceshashesdata();
         try {
             int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
@@ -283,7 +283,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             stoptimer();
             resettimer();
             img_dotmenu.setVisibility(View.VISIBLE);
-            txt_title_actionbarcomposer.setText("deeptruth");
+            txt_title_actionbarcomposer.setText("00:00:00");
 
             try {
                 if(common.getstorageaudiorecorddeniedpermissions().isEmpty() && (recordedmediafile != null )
@@ -417,7 +417,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         Minutes = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        txt_title_actionbarcomposer.setText("deeptruth");
+        txt_title_actionbarcomposer.setText("00:00:00");
     }
 
     public Runnable runnable = new Runnable() {
