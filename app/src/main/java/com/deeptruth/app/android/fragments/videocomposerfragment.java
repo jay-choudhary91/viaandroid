@@ -480,7 +480,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void stopblinkanimation()
     {
-        blinkanimation.cancel();
+        if(blinkanimation != null)
+            blinkanimation.cancel();
+
         img_roundblink.setVisibility(View.GONE);
     }
 
