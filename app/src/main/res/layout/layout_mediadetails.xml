@@ -412,6 +412,7 @@
                         android:nestedScrollingEnabled="true"
                         android:scrollbars="vertical"
                         android:maxHeight="70dp"
+                        android:longClickable="false"
                         android:visibility="visible"
                         />
 

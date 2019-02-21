@@ -26,7 +26,7 @@
             android:gravity="center"
             android:layout_marginLeft="2dp"
             android:textSize="18sp"
-            android:text="@string/mymedia"
+            android:text=""
             android:layout_centerVertical="true"
             android:textColor="@color/white"
             app:fontType="OpenSans_Regular"/>
@@ -88,6 +88,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <View

@@ -1389,7 +1389,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             txt_starttime.setText(startformatteddate);
                             txt_endtime.setText(endformatteddate);
 
-                            txt_title_actionbarcomposer.setText(filecreateddate);
+                          //  txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(createdtime);
 
                             if(mediafolder.trim().length() > 0)
