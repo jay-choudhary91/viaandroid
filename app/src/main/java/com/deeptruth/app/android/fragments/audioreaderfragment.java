@@ -1381,7 +1381,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             int increaseseconds=player.getDuration()/1000;
                             calendar.add(Calendar.SECOND, increaseseconds);
                             Date enddate = calendar.getTime();
-                            formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+                            formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa",Locale.ENGLISH);
                             String startformatteddate=formatted.format(startdate);
                             String endformatteddate=formatted.format(enddate);
                             final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);

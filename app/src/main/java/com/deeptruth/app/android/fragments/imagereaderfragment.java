@@ -887,7 +887,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                             mediadate = format.parse(finalMediacompleteddate);
                                         }
                                         SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
-                                        SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss a");
+                                        SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH);
                                         tvdate.setText(formatteddate.format(mediadate));
                                         tvtime.setText(formattedtime.format(mediadate));
                                        // txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
