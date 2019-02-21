@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -155,6 +157,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     adapteritemclick popupclicksub;
     FFmpeg ffmpeg;
     RelativeLayout layoutbottom;
+    @BindView(R.id.img_roundblink)
+    ImageView img_roundblink;
+    Animation blinkanimation;
 
     @Override
     public int getlayoutid() {
@@ -312,6 +317,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }catch (Exception e){
                 e.printStackTrace();
             }
+
+            stopblinkanimation();
         }
         super.onPause();
     }
@@ -322,6 +329,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             try {
                 startrecording();
+                startblinkanimation();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -332,7 +340,28 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         else
         {
             stoprecording();
+            stopblinkanimation();
         }
+    }
+
+
+    public void startblinkanimation()
+    {
+        img_roundblink.setVisibility(View.VISIBLE);
+        blinkanimation = new AlphaAnimation(0.0f, 1.0f);
+        blinkanimation.setDuration(200); //You can manage the time of the blink with this parameter
+        blinkanimation.setStartOffset(50);
+        blinkanimation.setRepeatMode(Animation.REVERSE);
+        blinkanimation.setRepeatCount(Animation.INFINITE);
+        img_roundblink.startAnimation(blinkanimation);
+    }
+
+    public void stopblinkanimation()
+    {
+        if(blinkanimation != null)
+            blinkanimation.cancel();
+
+        img_roundblink.setVisibility(View.GONE);
     }
 
     @Override
