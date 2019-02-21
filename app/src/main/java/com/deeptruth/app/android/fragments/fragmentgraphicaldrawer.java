@@ -11,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
@@ -271,6 +272,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             float roll = orientation[2] * -57;
             attitudeindicator.setAttitude(pitch, roll);
         }
+        //Log.e("Pitch roll ",""+pitch+" "+roll);
     }
 
     public void drawmappoints(LatLng latlng)
@@ -394,6 +396,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             String latitude=xdata.getinstance().getSetting(config.Latitude);
             String longitude=xdata.getinstance().getSetting(config.Longitude);
+
+
+            if(isdatacomposing)
+            {
+                latitude=xdata.getinstance().getSetting("lat");
+                longitude=xdata.getinstance().getSetting("lng");
+            }
+
             if(((! latitude.trim().isEmpty()) && (! latitude.equalsIgnoreCase("NA"))) &&
                     (! longitude.trim().isEmpty()) && (! longitude.equalsIgnoreCase("NA")))
             {
@@ -559,9 +569,6 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         common.setspannable(getResources().getString(R.string.battery),"\n"+"N/A", tvbattery);
 
     }
-
-
-
 
     public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
                                              final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {

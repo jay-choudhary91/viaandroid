@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -18,13 +19,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +45,7 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.permissions;
+import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
@@ -58,7 +63,7 @@ import pl.droidsonroids.gif.GifDrawable;
  * Created by root on 6/11/18.
  */
 
-public class composeoptionspagerfragment extends basefragment implements View.OnClickListener {
+public class composeoptionspagerfragment extends basefragment implements View.OnClickListener, Orientation.Listener {
 
     @BindView(R.id.txt_timer)
     TextView txt_timer;
@@ -85,8 +90,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_section_validating_secondary;
     @BindView(R.id.shimmer_view_container)
     ShimmerFrameLayout shimmer_view_container;
-    @BindView(R.id.layout_recorder)
-    RelativeLayout layoutrecorder;
     @BindView(R.id.txt_mediatype_a)
     TextView txt_mediatype_a;
     @BindView(R.id.txt_mediatype_b)
@@ -119,6 +122,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private CountDownTimer countertimer;
 
     GifDrawable gifdrawable;
+    private Orientation mOrientation;
+    private static final int ORIENTATION_0 = 0;
+    private static final int ORIENTATION_90 = 3;
+    private static final int ORIENTATION_270 = 1;
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -159,6 +167,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 e.printStackTrace();
             }
 
+            mOrientation = new Orientation(applicationviavideocomposer.getactivity());
         }
         return rootview;
     }
@@ -168,11 +177,18 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         super.onStop();
         if(gifdrawable!= null && gifdrawable.isPlaying())
             gifdrawable.stop();
+
+        if(mOrientation != null)
+            mOrientation.stopListening();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        if(mOrientation != null)
+            mOrientation.startListening(this);
+
         if (doafterallpermissionsgranted != null) {
             doafterallpermissionsgranted.run();
             doafterallpermissionsgranted = null;
@@ -413,6 +429,30 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                                 visiblewarningcontrollers();
                         }
                     }*/
+
+                    /*int rotation = applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay().getRotation();
+                    Display display = ((WindowManager)applicationviavideocomposer.getactivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                    int screenOrientation = display.getRotation();
+                    float rotationangle = 0;
+
+                    switch (screenOrientation)
+                    {
+                        default:
+                        case ORIENTATION_0: // Portrait
+                            rotationangle=0;
+                            // do smth.
+                            break;
+                        case ORIENTATION_90: // Landscape right
+                            rotationangle=-90;
+                            // do smth.
+                            break;
+                        case ORIENTATION_270: // Landscape left
+                            // do smth.
+                            rotationangle=90;
+                            break;
+                    }*/
+
+
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -982,4 +1022,50 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     }
 
+    @Override
+    public void onOrientationChanged(float pitch, float roll) {
+
+    }
+
+    @Override
+    public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
+        float roll = orientation[2] * -57;
+        float rotateangle=3600;
+        if(roll < -45 && roll >= -120)
+        {
+            rotateangle=-90;
+        }
+        else if(roll >= -40 && roll <= 45)
+        {
+            rotateangle=0;
+        }
+        else if(roll > 45 && roll <= 120)
+        {
+            rotateangle=90;
+        }
+
+        if(rotateangle != 3600)
+        {
+            if(imgrotatecamera != null)
+                imgrotatecamera.setRotation(rotateangle);
+
+            if(img_mediathumbnail != null)
+                img_mediathumbnail.setRotation(rotateangle);
+
+            if(fragvideocomposer != null)
+                fragvideocomposer.changeiconsorientation(rotateangle);
+
+            if(fragimgcapture != null)
+                fragimgcapture.changeiconsorientation(rotateangle);
+
+            if(fragaudiocomposer != null)
+                fragaudiocomposer.changeiconsorientation(rotateangle);
+
+        }
+            /*if(imgrotatecamera != null)
+                imgrotatecamera.setRotation(roll);
+
+            if(img_mediathumbnail != null)
+                img_mediathumbnail.setRotation(roll);*/
+    }
 }

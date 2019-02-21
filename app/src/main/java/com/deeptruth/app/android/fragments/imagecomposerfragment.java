@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraCaptureSession;
@@ -45,6 +47,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
@@ -62,6 +65,9 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.xdata;
 import com.google.gson.Gson;
+import com.warkiz.widget.IndicatorSeekBar;
+import com.warkiz.widget.OnSeekChangeListener;
+import com.warkiz.widget.SeekParams;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -92,6 +98,11 @@ import butterknife.ButterKnife;
 public class imagecomposerfragment extends basefragment  implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener{
 
 
+
+    @BindView(R.id.layout_seekbarzoom)
+    RelativeLayout layout_seekbarzoom;
+    @BindView(R.id.seekbarzoom)
+    IndicatorSeekBar seekbarzoom;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -142,9 +153,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private static final int MAX_PREVIEW_HEIGHT = 1080;
 
 
-    private CaptureRequest.Builder mPreviewBuilder;
-
-
     /**
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
      * {@link TextureView}.
@@ -182,6 +190,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private String cameraid = CAMERA_BACK;
     private boolean isflashsupported=false,isvisibletouser=false;;
     private boolean isflashon = false;
+    protected float fingerSpacing = 0;
+    protected float zoomLevel = 1f;
+    protected float maximumZoomLevel;
+    protected Rect zoom;
+
     /**
      * An {@link AutoFitTextureView} for camera preview.
      */
@@ -203,7 +216,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private Size mPreviewSize;
 
     private static final int request_permissions = 1;
-
+    private CameraCharacteristics characteristics;
     /**
      * {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state.
      */
@@ -301,6 +314,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private int mSensorOrientation;
 
     LinearLayout linearLayout;
+    TextView txt_title_actionbarcomposer;
 
     ImageView imgflashon,img_dotmenu,img_warning,img_close,img_stop_watch;
 
@@ -313,7 +327,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     String selectedvideofile ="",selectedmetrices="", selectedhashes ="",mediakey="";
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
-
+    private Date zoomcontrollertimeout=new Date();
     private boolean isdraweropen=false;
     private Handler myhandler;
     private Runnable myrunnable;
@@ -331,8 +345,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     adapteritemclick popupclicksub;
     String hashvalue = "",metrichashvalue = "";
     RelativeLayout layoutbottom;
-
-
 
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
@@ -501,6 +513,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
         img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
         img_close = (ImageView) rootview.findViewById(R.id.img_close);
+        txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
 
         timerhandler = new Handler() ;
@@ -520,7 +533,53 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         brustmodeenabled=false;
         img_stop_watch.setImageResource(R.drawable.stopwatch);
 
+        txt_title_actionbarcomposer.setText("");
+
+        seekbarzoom.setOnSeekChangeListener(new OnSeekChangeListener() {
+            @Override
+            public void onSeeking(SeekParams seekParams) {
+                zoomcontrollertimeout=new Date();
+                if(seekParams.fromUser)
+                {
+                    zoomLevel=seekParams.progressFloat;
+                    setupcamerazoom();
+                    fadeinzoomcontrollers();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(IndicatorSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
+
+            }
+        });
+
+        setmetriceshashesdata();
+        layout_seekbarzoom.setVisibility(View.GONE);
         return rootview;
+    }
+
+
+    public void changeiconsorientation(float rotateangle)
+    {
+        if(imgflashon != null)
+            imgflashon.setRotation(rotateangle);
+
+        if(img_dotmenu != null)
+            img_dotmenu.setRotation(rotateangle);
+
+        if(img_warning != null)
+            img_warning.setRotation(rotateangle);
+
+        if(img_close != null)
+            img_close.setRotation(rotateangle);
+
+        if(img_stop_watch != null)
+            img_stop_watch.setRotation(rotateangle);
     }
 
 
@@ -738,6 +797,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void onPause() {
         closeCamera();
         stopBackgroundThread();
+        if(layout_seekbarzoom != null)
+            layout_seekbarzoom.setVisibility(View.GONE);
         super.onPause();
     }
 
@@ -844,6 +905,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         configureTransform(width, height);
         Activity activity = getActivity();
         CameraManager  manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+        // cameraId = manager.getCameraIdList()[0];
+        // Choose the sizes for camera preview and video recording
+        try {
+            characteristics = manager.getCameraCharacteristics(cameraid);
+            maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         try {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
@@ -1076,8 +1147,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-
-                    setmetriceshashesdata();
                 }
             };
 
@@ -1280,6 +1349,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             @Override
             public void run() {
 
+                Date currentdate=new Date();
+                int seconddifference= (int) (Math.abs(zoomcontrollertimeout.getTime()-currentdate.getTime())/1000);
+                if(seconddifference > 5 && layout_seekbarzoom.getVisibility() == View.VISIBLE)
+                    fadeoutzoomcontrollers();
+
                 if(! metrichashvalue.trim().isEmpty())
                 {
                     common.setgraphicalblockchainvalue(config.blockchainid,"",true);
@@ -1293,17 +1367,113 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         myhandler.post(myrunnable);
     }
 
+    private float getFingerSpacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
         switch (view.getId())
         {
             case  R.id.texture:
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(motionEvent,3);
+                /*if(madapterclick != null)
+                    madapterclick.onItemClicked(motionEvent,3);*/
+                try {
+                    Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+                    if (rect == null) return false;
+                    float currentFingerSpacing;
+
+                    if (motionEvent.getPointerCount() == 2) { //Multi touch.
+                        currentFingerSpacing = getFingerSpacing(motionEvent);
+                        float delta = 0.05f;
+                        if (fingerSpacing != 0) {
+                            if (currentFingerSpacing > fingerSpacing) {
+                                if ((maximumZoomLevel - zoomLevel) <= delta) {
+                                    delta = maximumZoomLevel - zoomLevel;
+                                }
+                                zoomLevel = zoomLevel + delta;
+                            } else if (currentFingerSpacing < fingerSpacing){
+                                if ((zoomLevel - delta) < 1f) {
+                                    delta = zoomLevel - 1f;
+                                }
+                                zoomLevel = zoomLevel - delta;
+                            }
+                            setupcamerazoom();
+                            seekbarzoom.setProgress(zoomLevel);
+                            fadeinzoomcontrollers();
+
+                        }
+                        fingerSpacing = currentFingerSpacing;
+                    }
+                    else
+                    {
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(motionEvent,3);
+                    }
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
         return true;
+    }
+
+    public void setupcamerazoom()
+    {
+        Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+        float ratio = (float) 1 / zoomLevel;
+        int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
+        int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
+        zoom = new Rect(croppedWidth/2, croppedHeight/2,
+                rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
+        Log.e("zoom level ",""+zoom+" "+zoomLevel+" "+maximumZoomLevel);
+        mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+        try {
+            mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void fadeinzoomcontrollers()
+    {
+        if(layout_seekbarzoom.getVisibility() == View.GONE)
+        {
+            layout_seekbarzoom.setAlpha(layout_seekbarzoom.getAlpha());
+            layout_seekbarzoom.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.animate().alpha(1.0f).setDuration(500).setListener(null);
+        }
+    }
+
+    public void fadeoutzoomcontrollers()
+    {
+        layout_seekbarzoom.setAlpha(layout_seekbarzoom.getAlpha());
+        layout_seekbarzoom.animate().alpha(0f).setDuration(800).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                layout_seekbarzoom.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
     }
 
     /**

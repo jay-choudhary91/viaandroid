@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -40,6 +41,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -66,6 +68,7 @@ import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.permissions;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.models.wavevisualizer;
+import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.services.insertmediadataservice;
 import com.deeptruth.app.android.utils.camerautil;
 import com.deeptruth.app.android.utils.common;
@@ -74,6 +77,10 @@ import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.xdata;
 import com.google.gson.Gson;
+import com.warkiz.widget.IndicatorSeekBar;
+import com.warkiz.widget.OnSeekChangeListener;
+import com.warkiz.widget.SeekParams;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -93,7 +100,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
+public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener, Orientation.Listener {
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "videocomposerfragment";
@@ -295,7 +302,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     That is, the preview size is the size before it is rotated. */
     // Output video size
     private Runnable doafterallpermissionsgranted;
-
+    private Date zoomcontrollertimeout=new Date();
     RecyclerView recyview_hashes;
     RecyclerView recyview_metrices;
     LinearLayout linearLayout;
@@ -344,9 +351,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
 
+    private Orientation mOrientation;
     private ActionBarDrawerToggle drawertoggle;
     @BindView(R.id.linear_header)
     LinearLayout linearheader;
+    @BindView(R.id.layout_seekbarzoom)
+    RelativeLayout layout_seekbarzoom;
+    @BindView(R.id.seekbarzoom)
+    IndicatorSeekBar seekbarzoom;
 
     @Override
     public int getlayoutid() {
@@ -390,7 +402,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality.setText("420p");
 
         timerhandler = new Handler() ;
-        txt_title_actionbarcomposer.setText("deeptruth");
+        txt_title_actionbarcomposer.setText("00:00:00");
         if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
             frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
@@ -412,6 +424,28 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             keytype=config.prefs_sha_salt;
         }
 
+        seekbarzoom.setOnSeekChangeListener(new OnSeekChangeListener() {
+            @Override
+            public void onSeeking(SeekParams seekParams) {
+                zoomcontrollertimeout=new Date();
+                if(seekParams.fromUser)
+                {
+                    zoomLevel=seekParams.progressFloat;
+                    setupcamerazoom();
+                    fadeinzoomcontrollers();
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(IndicatorSeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
+
+            }
+        });
         img_dotmenu.setVisibility(View.VISIBLE);
         mTextureView.setOnTouchListener(this);
 
@@ -421,17 +455,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         img_close.setOnClickListener(this);
 
         setmetriceshashesdata();
+        mOrientation = new Orientation(applicationviavideocomposer.getactivity());
+        layout_seekbarzoom.setVisibility(View.GONE);
         return rootview;
     }
 
-
-    public boolean isvideorecording()
+    public void changeiconsorientation(float rotateangle)
     {
-        return isvideorecording;
+        if(imgflashon != null)
+            imgflashon.setRotation(rotateangle);
+
+        if(img_dotmenu != null)
+            img_dotmenu.setRotation(rotateangle);
+
+        if(img_warning != null)
+            img_warning.setRotation(rotateangle);
+
+        if(img_close != null)
+            img_close.setRotation(rotateangle);
+
+        if(txt_media_quality != null)
+            txt_media_quality.setRotation(rotateangle);
     }
 
-
-
+    public boolean isvideorecording() {
+        return isvideorecording;
+    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -459,20 +508,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 }
                                 zoomLevel = zoomLevel - delta;
                             }
-                            float ratio = (float) 1 / zoomLevel;
-                            int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
-                            int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
-                            zoom = new Rect(croppedWidth/2, croppedHeight/2,
-                                    rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
-                            mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+                            setupcamerazoom();
+                            seekbarzoom.setProgress(zoomLevel);
+                            fadeinzoomcontrollers();
+
                         }
                         fingerSpacing = currentFingerSpacing;
-                        try {
-                            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
                     }
                     else
                     {
@@ -490,6 +531,60 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
         }
         return true;
+    }
+
+    public void fadeinzoomcontrollers()
+    {
+        if(layout_seekbarzoom.getVisibility() == View.GONE)
+        {
+            layout_seekbarzoom.setAlpha(layout_seekbarzoom.getAlpha());
+            layout_seekbarzoom.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.animate().alpha(1.0f).setDuration(500).setListener(null);
+        }
+    }
+
+    public void fadeoutzoomcontrollers()
+    {
+        layout_seekbarzoom.setAlpha(layout_seekbarzoom.getAlpha());
+        layout_seekbarzoom.animate().alpha(0f).setDuration(800).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                layout_seekbarzoom.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+    }
+
+    public void setupcamerazoom()
+    {
+        Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+        float ratio = (float) 1 / zoomLevel;
+        int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
+        int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
+        zoom = new Rect(croppedWidth/2, croppedHeight/2,
+                rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
+        Log.e("zoom level ",""+zoom+" "+zoomLevel+" "+maximumZoomLevel);
+        mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+        try {
+            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
@@ -1056,6 +1151,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return new videocomposerfragment();
     }
 
+    @Override
+    public void onOrientationChanged(float pitch, float roll) {
+
+    }
+
+    @Override
+    public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
+        float pitch = orientation[1] * -57;
+        float roll = orientation[2] * -57;
+    }
+
     /**
      * Compares two {@code Size}s based on their areas.
      */
@@ -1084,8 +1190,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if(mOrientation != null)
+            mOrientation.stopListening();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        if(mOrientation != null)
+            mOrientation.startListening(this);
 
         common.dismisscustompermissiondialog();
         stopvideotimer();
@@ -1153,7 +1269,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 },finalArray[0]);
             }
         }
-        txt_title_actionbarcomposer.setText("deeptruth");
+        txt_title_actionbarcomposer.setText("00:00:00");
     }
 
     @Override
@@ -1204,6 +1320,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         Log.e("onpause","onpause");
         closemediawithtimer();
         showhideactionbaricon(1);
+        if(layout_seekbarzoom != null)
+            layout_seekbarzoom.setVisibility(View.GONE);
         super.onPause();
     }
 
@@ -1394,6 +1512,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         myRunnable = new Runnable() {
             @Override
             public void run() {
+
+
+                Date currentdate=new Date();
+                int seconddifference= (int) (Math.abs(zoomcontrollertimeout.getTime()-currentdate.getTime())/1000);
+                if(seconddifference > 5 && layout_seekbarzoom.getVisibility() == View.VISIBLE)
+                    fadeoutzoomcontrollers();
 
                 boolean graphicopen=false;
                 if(isvideorecording)
@@ -1657,7 +1781,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality.setVisibility(View.INVISIBLE);
 
         }else{
-            txt_title_actionbarcomposer.setText("deeptuth");
+            txt_title_actionbarcomposer.setText("00:00:00");
             img_dotmenu.setVisibility(View.VISIBLE);
             txt_media_quality.setVisibility(View.VISIBLE);
         }
