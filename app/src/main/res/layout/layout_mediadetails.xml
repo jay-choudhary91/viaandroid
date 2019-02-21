@@ -472,6 +472,7 @@
         android:layout_below="@+id/tab_layout"
         android:scrollbars="none"
         android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true"
         android:visibility="gone">
 
 
