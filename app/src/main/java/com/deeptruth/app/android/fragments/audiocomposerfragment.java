@@ -205,6 +205,18 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         return rootview;
     }
 
+    public void changeiconsorientation(float rotateangle)
+    {
+        if(img_dotmenu != null)
+            img_dotmenu.setRotation(rotateangle);
+
+        if(img_warning != null)
+            img_warning.setRotation(rotateangle);
+
+        if(img_close != null)
+            img_close.setRotation(rotateangle);
+    }
+
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
 

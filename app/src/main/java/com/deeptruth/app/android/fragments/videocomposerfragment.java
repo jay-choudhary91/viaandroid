@@ -41,6 +41,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -67,6 +68,7 @@ import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.permissions;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.models.wavevisualizer;
+import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.services.insertmediadataservice;
 import com.deeptruth.app.android.utils.camerautil;
 import com.deeptruth.app.android.utils.common;
@@ -98,7 +100,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener {
+public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener, Orientation.Listener {
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "videocomposerfragment";
@@ -349,6 +351,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private int flingactionmindstvac;
     private  final int flingactionmindspdvac = 10;
 
+    private Orientation mOrientation;
     private ActionBarDrawerToggle drawertoggle;
     @BindView(R.id.linear_header)
     LinearLayout linearheader;
@@ -429,8 +432,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     zoomLevel=seekParams.progressFloat;
                     setupcamerazoom();
+                    fadeinzoomcontrollers();
                 }
-                fadeinzoomcontrollers();
             }
 
             @Override
@@ -452,17 +455,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         img_close.setOnClickListener(this);
 
         setmetriceshashesdata();
+        mOrientation = new Orientation(applicationviavideocomposer.getactivity());
+        layout_seekbarzoom.setVisibility(View.GONE);
         return rootview;
     }
 
-
-    public boolean isvideorecording()
+    public void changeiconsorientation(float rotateangle)
     {
-        return isvideorecording;
+        if(imgflashon != null)
+            imgflashon.setRotation(rotateangle);
+
+        if(img_dotmenu != null)
+            img_dotmenu.setRotation(rotateangle);
+
+        if(img_warning != null)
+            img_warning.setRotation(rotateangle);
+
+        if(img_close != null)
+            img_close.setRotation(rotateangle);
+
+        if(txt_media_quality != null)
+            txt_media_quality.setRotation(rotateangle);
     }
 
-
-
+    public boolean isvideorecording() {
+        return isvideorecording;
+    }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -492,6 +510,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             }
                             setupcamerazoom();
                             seekbarzoom.setProgress(zoomLevel);
+                            fadeinzoomcontrollers();
 
                         }
                         fingerSpacing = currentFingerSpacing;
@@ -1132,6 +1151,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return new videocomposerfragment();
     }
 
+    @Override
+    public void onOrientationChanged(float pitch, float roll) {
+
+    }
+
+    @Override
+    public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
+        float pitch = orientation[1] * -57;
+        float roll = orientation[2] * -57;
+    }
+
     /**
      * Compares two {@code Size}s based on their areas.
      */
@@ -1160,8 +1190,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if(mOrientation != null)
+            mOrientation.stopListening();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+
+        if(mOrientation != null)
+            mOrientation.startListening(this);
 
         common.dismisscustompermissiondialog();
         stopvideotimer();

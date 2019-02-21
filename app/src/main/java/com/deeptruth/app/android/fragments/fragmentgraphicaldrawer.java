@@ -272,6 +272,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             float roll = orientation[2] * -57;
             attitudeindicator.setAttitude(pitch, roll);
         }
+        //Log.e("Pitch roll ",""+pitch+" "+roll);
     }
 
     public void drawmappoints(LatLng latlng)

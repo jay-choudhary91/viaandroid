@@ -543,8 +543,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 {
                     zoomLevel=seekParams.progressFloat;
                     setupcamerazoom();
+                    fadeinzoomcontrollers();
                 }
-                fadeinzoomcontrollers();
             }
 
             @Override
@@ -559,8 +559,27 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         });
 
         setmetriceshashesdata();
-
+        layout_seekbarzoom.setVisibility(View.GONE);
         return rootview;
+    }
+
+
+    public void changeiconsorientation(float rotateangle)
+    {
+        if(imgflashon != null)
+            imgflashon.setRotation(rotateangle);
+
+        if(img_dotmenu != null)
+            img_dotmenu.setRotation(rotateangle);
+
+        if(img_warning != null)
+            img_warning.setRotation(rotateangle);
+
+        if(img_close != null)
+            img_close.setRotation(rotateangle);
+
+        if(img_stop_watch != null)
+            img_stop_watch.setRotation(rotateangle);
     }
 
 
@@ -1384,6 +1403,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             }
                             setupcamerazoom();
                             seekbarzoom.setProgress(zoomLevel);
+                            fadeinzoomcontrollers();
 
                         }
                         fingerSpacing = currentFingerSpacing;

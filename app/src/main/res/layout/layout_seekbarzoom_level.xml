@@ -19,7 +19,7 @@
             app:isb_thumb_color="@color/dark_blue_solid_a"
             app:isb_thumb_size="25dp"
             app:isb_track_background_color="@color/grey_x"
-            app:isb_track_progress_color="@color/grey_x"
+            app:isb_track_progress_color="@color/dark_blue_solid_a"
             app:isb_track_progress_size="4dp"
             app:isb_only_thumb_draggable="false"
             app:isb_show_indicator="none"

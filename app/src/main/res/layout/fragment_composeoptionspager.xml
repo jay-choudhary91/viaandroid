@@ -90,11 +90,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_below="@+id/layout_mediatype"
+        android:clipToPadding="true"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/img_mediathumbnail"
-            android:layout_width="75dp"
+            android:layout_width="65dp"
             android:layout_height="65dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
@@ -117,6 +118,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="10dp"
+            android:scaleType="matrix"
             android:src="@drawable/ic_camera_flip_icon"/>
 
     </RelativeLayout>
