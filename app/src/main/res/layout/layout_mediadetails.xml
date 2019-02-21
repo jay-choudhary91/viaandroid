@@ -156,19 +156,28 @@
                     android:gravity="center_vertical"
                     android:text="@string/start_time"
                     />
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_starttime"
+
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="0.70"
-                    app:fontType="OpenSans_Regular"
-                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:textColor="@color/black"
-                    android:gravity="left"
-                    android:text=""
-                    />
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_starttime"
+                        android:layout_width="match_parent"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:gravity="left"
+                        android:text=""
+                        />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -188,19 +197,27 @@
                     android:gravity="center_vertical"
                     android:text="@string/end_time"
                     />
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_endtime"
+
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="0.70"
-                    app:fontType="OpenSans_Regular"
-                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:textColor="@color/black"
-                    android:gravity="left"
-                    android:text=""
-                    />
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_endtime"
+                        android:layout_width="match_parent"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:gravity="left"
+                        android:text=""
+                        />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -220,19 +237,28 @@
                     android:gravity="center_vertical"
                     android:text="@string/duration"
                     />
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_duration"
+
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="0.70"
-                    app:fontType="OpenSans_Regular"
-                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:textColor="@color/black"
-                    android:gravity="left"
-                    android:text=""
-                    />
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_duration"
+                        android:layout_width="wrap_content"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:gravity="left"
+                        android:text=""
+                        />
+                </RelativeLayout>
+
 
             </LinearLayout>
 
@@ -253,19 +279,27 @@
                     android:gravity="center_vertical"
                     android:text="@string/date"
                     />
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_date"
+
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="0.70"
-                    app:fontType="OpenSans_Regular"
-                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:textColor="@color/black"
-                    android:gravity="left"
-                    android:text=""
-                    />
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_date"
+                        android:layout_width="match_parent"
+                        app:fontType="OpenSans_Regular"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:gravity="left"
+                        android:text=""
+                        />
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -286,19 +320,27 @@
                     android:gravity="center_vertical"
                     android:text="@string/time"
                     />
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_time"
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="0.70"
-                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:gravity="left"
-                    android:textColor="@color/black"
-                    app:fontType="OpenSans_Regular"
-                    android:text=""
-                    />
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:textColor="@color/black"
+                        app:fontType="OpenSans_Regular"
+                        android:text=""
+                        />
+                </RelativeLayout>
+
 
             </LinearLayout>
             <LinearLayout
@@ -311,25 +353,36 @@
                     android:layout_width="0dp"
                     android:layout_weight="0.30"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="@dimen/margin_5dp"
-                    android:paddingTop="@dimen/margin_5dp"
+                    android:paddingLeft="4dp"
+                    android:paddingTop="4dp"
                     android:paddingBottom="@dimen/margin_5dp"
                     app:fontType="OpenSans_Regular"
                     android:text="@string/size"
                     />
-                <com.deeptruth.app.android.views.customfonttextview
-                    android:id="@+id/txt_size"
+
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="0.70"
-                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:paddingRight="5dp"
+                    android:paddingEnd="5dp"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:textColor="@color/black"
-                    android:gravity="left"
-                    app:fontType="OpenSans_Regular"
-                    android:text=""
-                    />
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+
+                    <com.deeptruth.app.android.views.customfonttextview
+                        android:id="@+id/txt_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:gravity="left"
+
+                        app:fontType="OpenSans_Regular"
+                        android:text=""
+                        />
+
+                </RelativeLayout>
+
 
             </LinearLayout>
 
