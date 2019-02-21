@@ -892,7 +892,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     }
 
                                     final String filecreateddate = new SimpleDateFormat("MM/dd/yyyy",Locale.ENGLISH).format(mediadatetime);
-                                    final String endtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH).format(mediadatetime);
+                                    final String endtime = new SimpleDateFormat("hh:mm:ss.SS aa",Locale.ENGLISH).format(mediadatetime);
                                     videoobject.setCreatedate(filecreateddate);
                                     videoobject.setCreatetime(endtime);
                                 }
@@ -1105,7 +1105,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 }
 
                                 final String filecreateddate = new SimpleDateFormat("MM/dd/yyyy",Locale.ENGLISH).format(mediadatetime);
-                                final String endtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH).format(mediadatetime);
+                                final String endtime = new SimpleDateFormat("hh:mm:ss.SS aa",Locale.ENGLISH).format(mediadatetime);
                                 arraymediaitemlist.get(i).setCreatedate(filecreateddate);
                                 arraymediaitemlist.get(i).setCreatetime(endtime);
                             }
