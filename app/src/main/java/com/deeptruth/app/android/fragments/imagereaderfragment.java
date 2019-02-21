@@ -880,16 +880,17 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                         Date mediadate = null;
                                         if (finalMediacompleteddate.contains("T")) {
                                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
+                                            Log.e("timezone",""+format);
                                             mediadate = format.parse(finalMediacompleteddate);
                                         } else {
                                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                                             mediadate = format.parse(finalMediacompleteddate);
                                         }
                                         SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
-                                        SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss a");
+                                        SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH);
                                         tvdate.setText(formatteddate.format(mediadate));
                                         tvtime.setText(formattedtime.format(mediadate));
-                                        txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
+                                       // txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
                                         txt_createdtime.setText(formattedtime.format(mediadate));
                                         edt_medianame.setText(medianame);
                                         edt_medianotes.setText(medianotes);

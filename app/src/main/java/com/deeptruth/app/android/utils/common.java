@@ -1855,13 +1855,13 @@ public class common {
         DecimalFormat dec = new DecimalFormat("0.00");
 
         if (t > 1) {
-            img_size = t + "tb";
+            img_size = t + "Tb";
         } else if (g > 1) {
-            img_size = g + "gb";
+            img_size = g + "Gb";
         } else if (m > 1) {
-            img_size = m + "mb";
+            img_size = m + "Mb";
         } else if (k > 1) {
-            img_size = k +"kb";
+            img_size = k +"Kb";
         } else {
             img_size =dec.format(b);
         }

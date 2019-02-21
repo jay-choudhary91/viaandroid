@@ -99,8 +99,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
         if(arrayvideolist.get(position).isDoenable())
         {
-            holder.root_view.setVisibility(View.VISIBLE);
-            binderHelper.bind(holder.root_view,""+arrayvideolist.get(position).getMediatitle());
             holder.img_videothumbnail.post(new Runnable() {
                 @Override
                 public void run() {
@@ -110,18 +108,20 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                     holder.img_scanover.post(new Runnable() {
                         @Override
                         public void run() {
-
                             int img_scanoverwidth=  holder.img_scanover.getWidth();
                             Log.e("imagewidth:",""+img_scanoverwidth);
+
 
                             totalwidth= imagethumbanail_width + (img_scanoverwidth / 2);
                             Log.e("totalwidth", ""+totalwidth);
 
-                            TranslateAnimation animation = new TranslateAnimation(50.0f, -totalwidth ,
+                            TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth ,
                                     0.0f, 0.0f);
                             animation.setDuration(3000);
+                            //animation.setStartOffset(position*100);
                             animation.setRepeatCount(Animation.INFINITE);
                             animation.setRepeatMode(ValueAnimator.RESTART);
+                            //animation.setFillAfter(true);
                             holder.img_scanover.startAnimation(animation);
 
                             Animation.AnimationListener listener =new Animation.AnimationListener() {
@@ -162,7 +162,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                                 holder.img_scanover.setBackgroundResource(0);
                                 holder.img_scanover.setVisibility(View.GONE);
                             }
-
                         }
                     });
 

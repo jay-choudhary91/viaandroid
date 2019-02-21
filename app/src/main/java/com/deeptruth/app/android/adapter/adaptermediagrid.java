@@ -88,15 +88,19 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                     holder.img_scanover.post(new Runnable() {
                         @Override
                         public void run() {
-                         imagescanover_width = holder.img_scanover.getWidth();
-                         totalwidth = imagescanover_width + imagethumbnail_width;
+                            imagescanover_width = holder.img_scanover.getWidth();
+                            totalwidth = imagescanover_width + imagethumbnail_width;
 
-                            TranslateAnimation animation = new TranslateAnimation(50.0f, -totalwidth,
+                            TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth,
                                     0.0f, 0.0f);
                             animation.setDuration(3000);
+                            //animation.setStartOffset(position*100);
                             animation.setRepeatCount(Animation.INFINITE);
                             animation.setRepeatMode(ValueAnimator.RESTART);
+                            //animation.setFillAfter(true);
                             holder.img_scanover.startAnimation(animation);
+
+           /**/
 
                             Animation.AnimationListener listener=new Animation.AnimationListener() {
                                 @Override

@@ -1238,7 +1238,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mediaseekbar.setProgress(player.getCurrentPosition());
 
                 if (time_current != null)
-                    time_current.setText(stringForTime(starttime));
+                    time_current.setText(common.gettimestring(starttime));
 
                 hdlr.postDelayed(this, 10);
             }
@@ -1268,9 +1268,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
        audioduration  = endtime;
 
        if (time != null)
-           time.setText(stringForTime(endtime));
+           time.setText(common.gettimestring(endtime));
        if (time_current != null)
-           time_current.setText(stringForTime(starttime));
+           time_current.setText(common.gettimestring(starttime));
 
        mediaseekbar.setMax(endtime);
        mediaseekbar.setProgress(starttime);
@@ -1381,7 +1381,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             int increaseseconds=player.getDuration()/1000;
                             calendar.add(Calendar.SECOND, increaseseconds);
                             Date enddate = calendar.getTime();
-                            formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+                            formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa",Locale.ENGLISH);
                             String startformatteddate=formatted.format(startdate);
                             String endformatteddate=formatted.format(enddate);
                             final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
@@ -1389,7 +1389,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             txt_starttime.setText(startformatteddate);
                             txt_endtime.setText(endformatteddate);
 
-                            txt_title_actionbarcomposer.setText(filecreateddate);
+                          //  txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(createdtime);
 
                             if(mediafolder.trim().length() > 0)
