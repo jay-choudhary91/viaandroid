@@ -140,7 +140,8 @@
                             android:layout_alignParentRight="true"
                             android:layout_alignParentBottom="true"
                             android:textSize="13sp"
-                            android:padding="3dp"
+                            android:paddingBottom="8dp"
+                            android:paddingRight="10dp"
                             android:textColor="@color/white"
                             android:maxLines="1"
                             />
