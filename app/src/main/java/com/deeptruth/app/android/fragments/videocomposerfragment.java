@@ -50,6 +50,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -359,7 +361,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     RelativeLayout layout_seekbarzoom;
     @BindView(R.id.seekbarzoom)
     IndicatorSeekBar seekbarzoom;
-
+    @BindView(R.id.img_roundblink)
+    ImageView img_roundblink;
+    Animation blinkanimation;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -457,7 +461,27 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         setmetriceshashesdata();
         mOrientation = new Orientation(applicationviavideocomposer.getactivity());
         layout_seekbarzoom.setVisibility(View.GONE);
+
+
+
         return rootview;
+    }
+
+    public void startblinkanimation()
+    {
+        img_roundblink.setVisibility(View.VISIBLE);
+        blinkanimation = new AlphaAnimation(0.0f, 1.0f);
+        blinkanimation.setDuration(200); //You can manage the time of the blink with this parameter
+        blinkanimation.setStartOffset(50);
+        blinkanimation.setRepeatMode(Animation.REVERSE);
+        blinkanimation.setRepeatCount(Animation.INFINITE);
+        img_roundblink.startAnimation(blinkanimation);
+    }
+
+    public void stopblinkanimation()
+    {
+        blinkanimation.cancel();
+        img_roundblink.setVisibility(View.GONE);
     }
 
     public void changeiconsorientation(float rotateangle)
@@ -1108,7 +1132,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal));
             stopRecordingVideo();
-
+            stopblinkanimation();
         } else {
             selectedhashes="";
             selectedmetrices="";
@@ -1128,6 +1152,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
             startRecordingVideo();
 
+            startblinkanimation();
             if(madapterclick != null)
                 madapterclick.onItemClicked(null,1);
             showhideactionbaricon(0);
@@ -1322,6 +1347,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         showhideactionbaricon(1);
         if(layout_seekbarzoom != null)
             layout_seekbarzoom.setVisibility(View.GONE);
+
+        stopblinkanimation();
         super.onPause();
     }
 

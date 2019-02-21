@@ -19,7 +19,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_title_actionbarcomposer"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="18sp"
@@ -28,6 +28,16 @@
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"
             app:fontType="OpenSans_Regular"/>
+
+        <ImageView
+            android:id="@+id/img_roundblink"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:visibility="gone"
+            android:layout_toLeftOf="@id/txt_title_actionbarcomposer"
+            android:background="@drawable/round_corner_recorder_blink"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:layout_marginLeft="10dp"
                 android:textColor="@color/white"
                 app:fontType="Comfortaa-Regular"/>
