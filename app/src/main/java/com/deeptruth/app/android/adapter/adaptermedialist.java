@@ -51,7 +51,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     ViewBinderHelper binderHelper;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes;
+        public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration;
         EditText edtvideoname;
         public ImageView img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
@@ -71,6 +71,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             img_slide_delete = (ImageView) view.findViewById(R.id.img_slide_delete);
             img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
             img_loader = (ImageView) view.findViewById(R.id.img_loader);
+            tv_mediaduration = (TextView) view.findViewById(R.id.tv_mediaduration);
             root_view = (SwipeRevealLayout) view.findViewById(R.id.root_view);
         }
     }
@@ -190,11 +191,22 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if(arrayvideolist.get(position).getMediatitle().trim().isEmpty())
             {
-                holder.edtvideoname.setText("NA");
+                holder.edtvideoname.setText("No Title");
             }
             else
             {
                 holder.edtvideoname.setText(arrayvideolist.get(position).getMediatitle());
+            }
+
+            if(arrayvideolist.get(position).getDuration().trim().isEmpty())
+            {
+             //   holder.tv_mediaduration.setText("NA");
+                holder.tv_mediaduration.setVisibility(View.GONE);
+            }
+            else
+            {
+                holder.tv_mediaduration.setText(arrayvideolist.get(position).getDuration());
+                holder.tv_mediaduration.setVisibility(View.VISIBLE);
             }
 
             if(arrayvideolist.get(position).getCreatedate().trim().isEmpty())

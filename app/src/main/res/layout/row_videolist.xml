@@ -132,6 +132,19 @@
                             android:alpha="0.4"
                             android:background="@drawable/gradient_verify_yellow"/>
 
+                        <com.deeptruth.app.android.views.customfonttextview
+                            app:fontType="OpenSans_Regular"
+                            android:id="@+id/tv_mediaduration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"
+                            android:textSize="13sp"
+                            android:padding="3dp"
+                            android:textColor="@color/white"
+                            android:maxLines="1"
+                            />
+
                     </RelativeLayout>
 
 
@@ -219,6 +232,7 @@
                             android:maxLines="1"
                             android:text=""
                             />
+
 
                         <com.deeptruth.app.android.views.customfonttextview
                             app:fontType="OpenSans_Regular"
