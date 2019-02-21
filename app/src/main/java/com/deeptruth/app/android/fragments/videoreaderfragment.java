@@ -220,7 +220,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     customseekbar mediaseekbar;
     @BindView(R.id.time_current)
     TextView time_current;
-    @BindView(R.id.time)
+    @BindView(R.id.video_endtime)
     TextView totalduration;
     @BindView(R.id.layout_customcontroller)
     LinearLayout layoutcustomcontroller;
@@ -2046,7 +2046,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 mediaseekbar.setProgress(player.getCurrentPosition());
 
                 if (time_current != null)
-                    time_current.setText(stringForTime(videostarttime));
+                    time_current.setText(common.gettimestring(videostarttime));
 
                 if(arraycontainerformetric != null && layout_mediatype.getVisibility() == View.VISIBLE)
                 {
@@ -2113,9 +2113,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 Log.e("videostarttime",""+videostarttime);
 
                 if (totalduration != null)
-                    totalduration.setText(stringForTime(endtime));
+                    totalduration.setText(common.gettimestring(endtime));
                 if  (time_current != null)
-                    time_current.setText(stringForTime(videostarttime));
+                    time_current.setText(common.gettimestring(videostarttime));
 
                 mediaseekbar.setMax(endtime);
                 mediaseekbar.setProgress(videostarttime);
