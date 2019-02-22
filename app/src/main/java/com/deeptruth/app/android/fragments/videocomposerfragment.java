@@ -1399,7 +1399,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         Minutes = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        txt_title_actionbarcomposer.setText("00:00:00");
+        txt_title_actionbarcomposer.setText("00:00.00");
     }
 
     public Runnable runnable = new Runnable() {
@@ -1421,7 +1421,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             if(isvideorecording)
                             {
                                 txt_title_actionbarcomposer.setText("" + String.format("%02d", Minutes) + ":"
-                                        + String.format("%02d", Seconds) + ":"
+                                        + String.format("%02d", Seconds) + "."
                                         + String.format("%02d", (MilliSeconds/10)));
                             }
 
@@ -1805,12 +1805,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     public void showhideactionbaricon(int i){
         if(i == 0){
-            txt_title_actionbarcomposer.setText("00:00:00");
+            txt_title_actionbarcomposer.setText("00:00.00");
             img_dotmenu.setVisibility(View.INVISIBLE);
             txt_media_quality.setVisibility(View.INVISIBLE);
 
         }else{
-            txt_title_actionbarcomposer.setText("00:00:00");
+            txt_title_actionbarcomposer.setText("00:00.00");
             img_dotmenu.setVisibility(View.VISIBLE);
             txt_media_quality.setVisibility(View.VISIBLE);
         }

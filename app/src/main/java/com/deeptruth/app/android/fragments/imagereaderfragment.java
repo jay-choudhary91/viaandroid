@@ -90,10 +90,12 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -880,16 +882,20 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                         Date mediadate = null;
                                         if (finalMediacompleteddate.contains("T")) {
                                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.ENGLISH);
-                                            Log.e("timezone",""+format);
                                             mediadate = format.parse(finalMediacompleteddate);
                                         } else {
                                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                                             mediadate = format.parse(finalMediacompleteddate);
                                         }
+
+                                        DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                                        String localTime = datee.format(mediadate);
+
                                         SimpleDateFormat formatteddate = new SimpleDateFormat("MM/dd/yyyy");
                                         SimpleDateFormat formattedtime = new SimpleDateFormat("hh:mm:ss aa",Locale.ENGLISH);
+
                                         tvdate.setText(formatteddate.format(mediadate));
-                                        tvtime.setText(formattedtime.format(mediadate));
+                                        tvtime.setText(formattedtime.format(mediadate) + " "+localTime);
                                        // txt_title_actionbarcomposer.setText(formatteddate.format(mediadate));
                                         txt_createdtime.setText(formattedtime.format(mediadate));
                                         edt_medianame.setText(medianame);

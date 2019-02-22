@@ -116,6 +116,7 @@ import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -1226,13 +1227,18 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                     int increaseseconds=player.getDuration()/1000;
                                     calendar.add(Calendar.SECOND, increaseseconds);
                                     Date enddate = calendar.getTime();
-                                    formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a",Locale.ENGLISH);
+                                    formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a ",Locale.ENGLISH);
+
+                                    DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                                    String localTime = datee.format(enddate);
+                                    Log.e("localtime",localTime);
+
                                     String startformatteddate=formatted.format(startdate);
                                     String endformatteddate=formatted.format(enddate);
                                     final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
                                     final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                                    txt_starttime.setText(startformatteddate);
-                                    txt_endtime.setText(endformatteddate);
+                                    txt_starttime.setText(startformatteddate +" " +  localTime);
+                                    txt_endtime.setText(endformatteddate +" " +  localTime);
 
                                   //  txt_title_actionbarcomposer.setText(filecreateddate);
                                     txt_createdtime.setText(createdtime);

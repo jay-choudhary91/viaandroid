@@ -318,6 +318,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     arraycontainer arraycontainerformetric =null;
     int currentprocessframe=0;
     int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight;
+    int footerheight;
 
     public audioreaderfragment() {
     }
@@ -445,6 +446,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 linearseekbarcolorview.setLayoutParams(parms);
 
                 Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
+            }
+        });
+
+        layout_footer.post(new Runnable() {
+            @Override
+            public void run() {
+                 footerheight = layout_footer.getHeight();
             }
         });
 
@@ -675,6 +683,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                       layout_audiodetails.setVisibility(View.GONE);
                       layout_footer.setVisibility(View.GONE);
                       layout_mediatype.setVisibility(View.GONE);
+                      playpausebutton.setVisibility(View.GONE);
                       gethelper().updateactionbar(0);
                       layout_scrubberview.setVisibility(View.GONE);
                       gethelper().drawerenabledisable(true);
@@ -768,7 +777,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) +mediatypeheight ;
                         playpausebutton.setVisibility(View.GONE);
                         audio_downwordarrow.setVisibility(View.GONE);
-                        audio_downwordarrow.setImageResource(R.drawable.handle_down_arrow);
+                        audio_downwordarrow.setImageResource(R.drawable.handle_up_arrow);
                         layout_footer.setVisibility(View.GONE);
                         layout_mediatype.setVisibility(View.GONE);
 
@@ -1538,13 +1547,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             int increaseseconds=player.getDuration()/1000;
                             calendar.add(Calendar.SECOND, increaseseconds);
                             Date enddate = calendar.getTime();
+                            DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                            String localTime = datee.format(enddate);
                             formatted = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa",Locale.ENGLISH);
                             String startformatteddate=formatted.format(startdate);
                             String endformatteddate=formatted.format(enddate);
                             final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
                             final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
-                            txt_starttime.setText(startformatteddate);
-                            txt_endtime.setText(endformatteddate);
+                            txt_starttime.setText(startformatteddate +" " + localTime);
+                            txt_endtime.setText(endformatteddate +" " +  localTime);
 
                           //  txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(createdtime);
@@ -2039,5 +2050,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0,0,0,10);
         layout_audiowave.setLayoutParams(params);
+    }
+
+    public void setbottomimgview(){
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,footerheight);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        audio_downwordarrow.setLayoutParams(params);
     }
 }

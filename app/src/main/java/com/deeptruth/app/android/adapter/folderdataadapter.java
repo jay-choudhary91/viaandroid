@@ -46,7 +46,7 @@ public class folderdataadapter extends RecyclerView.Adapter<folderdataadapter.Vi
         holder.tv_foldername.setText(myfolder.getFoldername());
         holder.tv_mediacount.setText(""+myfolder.getFilecount());
 
-        holder.layout_image_container.setBackgroundColor(mContext.getResources().getColor(R.color.grey_x));
+        holder.layout_image_container.setBackground(mContext.getResources().getDrawable(R.drawable.add_folder));
 
         if(! myfolder.isIsplus())
         {

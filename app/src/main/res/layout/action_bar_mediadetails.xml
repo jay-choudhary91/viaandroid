@@ -49,7 +49,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:visibility="visible"
-            android:src="@drawable/ic_camera_icon"/>
+            android:src="@drawable/ic_whitecamera"/>
 
         <ImageView
             android:id="@+id/img_folder"
@@ -59,7 +59,7 @@
             android:layout_marginLeft="14dp"
             android:visibility="visible"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_folder_icon"/>
+            android:src="@drawable/ic_whitefolder"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_media_quality"

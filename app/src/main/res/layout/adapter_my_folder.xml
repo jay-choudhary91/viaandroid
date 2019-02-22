@@ -23,6 +23,7 @@
                 android:id="@+id/layout_image_container"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:background="@drawable/add_folder"
                 android:orientation="vertical"
                 android:gravity="center"
                 >

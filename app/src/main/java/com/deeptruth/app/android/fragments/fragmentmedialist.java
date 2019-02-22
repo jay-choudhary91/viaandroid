@@ -890,11 +890,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                         DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
                                         mediadatetime = format.parse(mediastartdevicedate);
                                     }
+                                    DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                                    String localTime = datee.format(mediadatetime);
 
                                     final String filecreateddate = new SimpleDateFormat("MM/dd/yyyy",Locale.ENGLISH).format(mediadatetime);
                                     final String endtime = new SimpleDateFormat("hh:mm:ss.SS aa",Locale.ENGLISH).format(mediadatetime);
                                     videoobject.setCreatedate(filecreateddate);
-                                    videoobject.setCreatetime(endtime);
+                                    videoobject.setCreatetime((endtime)+ " "+localTime );
                                 }
 
                             }catch (Exception e)
@@ -1103,11 +1105,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.ENGLISH);
                                     mediadatetime = format.parse(mediastartdevicedate);
                                 }
+                                DateFormat datee = new SimpleDateFormat("z",Locale.getDefault());
+                                String localTime = datee.format(mediadatetime);
 
                                 final String filecreateddate = new SimpleDateFormat("MM/dd/yyyy",Locale.ENGLISH).format(mediadatetime);
                                 final String endtime = new SimpleDateFormat("hh:mm:ss.SS aa",Locale.ENGLISH).format(mediadatetime);
                                 arraymediaitemlist.get(i).setCreatedate(filecreateddate);
-                                arraymediaitemlist.get(i).setCreatetime(endtime);
+                                arraymediaitemlist.get(i).setCreatetime((endtime)+ " "+localTime);
                             }
 
                         }catch (Exception e)
