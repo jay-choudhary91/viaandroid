@@ -686,7 +686,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                       playpausebutton.setVisibility(View.GONE);
                       gethelper().updateactionbar(0);
                       layout_scrubberview.setVisibility(View.GONE);
-                      gethelper().drawerenabledisable(true);
+                      gethelper().drawerenabledisable(false);
 
                   }else{
                       addbottommargin();
