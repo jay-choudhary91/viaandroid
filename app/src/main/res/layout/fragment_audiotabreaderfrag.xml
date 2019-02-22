@@ -28,6 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
+                    android:id="@+id/layout_audiowave"
                     android:layout_marginBottom="10dp"
                     android:background="@color/audio_composer_bg"
                     android:layout_above="@+id/layout_scrubberview"
@@ -71,7 +72,6 @@
                         />
 
                 </RelativeLayout>
-
                 <RelativeLayout
                     android:id="@+id/layout_scrubberview"
                     android:layout_width="match_parent"
@@ -135,6 +135,42 @@
                             android:textColor="@color/black"
                             android:paddingLeft="4dip" />
                     </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_below="@+id/layout_seekbartiming"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:id="@+id/audio_downwordarrow"
+                            android:src="@drawable/handle_down_arrow"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/layoutpause"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/layout_seekbartiming"
+                        android:padding="5dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/img_pause"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center"
+                            android:layout_margin="5dp"
+                            android:src="@drawable/ic_pause"
+                            android:paddingBottom="@dimen/margin_10dp"
+                            android:paddingLeft="@dimen/margin_15dp"
+                            android:paddingRight="@dimen/margin_15dp"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
                 </RelativeLayout>
 
             </RelativeLayout>
