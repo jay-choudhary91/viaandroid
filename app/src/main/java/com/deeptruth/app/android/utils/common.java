@@ -1880,7 +1880,7 @@ public class common {
                 .append(String.format("%02d", hours))
                 .append(":")
                 .append(String.format("%02d", minutes))
-                .append(":")
+                .append(".")
                 .append(String.format("%02d", seconds));
 
         return buf.toString();

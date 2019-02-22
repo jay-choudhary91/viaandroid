@@ -197,7 +197,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         loadffmpeglibrary();
         startnoise();
-        txt_title_actionbarcomposer.setText("00:00:00");
+        txt_title_actionbarcomposer.setText("00:00.00");
         setmetriceshashesdata();
         try {
             int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,

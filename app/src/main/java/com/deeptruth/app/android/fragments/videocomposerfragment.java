@@ -1296,7 +1296,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 },finalArray[0]);
             }
         }
-        txt_title_actionbarcomposer.setText("00:00:00");
+        txt_title_actionbarcomposer.setText("00:00.00");
     }
 
     @Override
