@@ -441,6 +441,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         arraycontainerformetric = new arraycontainer();
                         arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
                     }
+
+                    if(encryptionadapter != null && recycler_encryption!= null)
+                        recycler_encryption.smoothScrollToPosition(currentprocessframe);
                 }
             }
 
