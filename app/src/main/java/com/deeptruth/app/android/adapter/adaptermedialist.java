@@ -21,6 +21,7 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,6 +56,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         EditText edtvideoname;
         public ImageView img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
+        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide;
 
         public myViewHolder(View view) {
             super(view);
@@ -71,6 +73,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             img_slide_delete = (ImageView) view.findViewById(R.id.img_slide_delete);
             img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
             img_loader = (ImageView) view.findViewById(R.id.img_loader);
+            layout_folder_slide = view.findViewById(R.id.layout_folder_slide);
+            layout_delete_slide = view.findViewById(R.id.layout_delete_slide);
+            layout_share_slide = view.findViewById(R.id.layout_share_slide);
             tv_mediaduration = (TextView) view.findViewById(R.id.tv_mediaduration);
             root_view = (SwipeRevealLayout) view.findViewById(R.id.root_view);
         }
@@ -334,37 +339,37 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.tv_medianotes.setKeyListener(null);
             }
 
-            holder.img_slide_share.setOnClickListener(new View.OnClickListener() {
+            holder.layout_share_slide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    holder.img_slide_share.setEnabled(false);
+                    holder.layout_share_slide.setEnabled(false);
                     new Handler().postDelayed(new Runnable()
                     {
                         public void run()
                         {
-                            holder.img_slide_share.setEnabled(true);
+                            holder.layout_share_slide.setEnabled(true);
                         }
                     }, 1000);
                     adapter.onItemClicked(mediaobject,1);
                 }
             });
 
-            holder.img_slide_delete.setOnClickListener(new View.OnClickListener() {
+            holder.layout_delete_slide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    holder.img_slide_delete.setEnabled(false);
+                    holder.layout_delete_slide.setEnabled(false);
                     new Handler().postDelayed(new Runnable()
                     {
                         public void run()
                         {
-                            holder.img_slide_delete.setEnabled(true);
+                            holder.layout_delete_slide.setEnabled(true);
                         }
                     }, 1000);
                     adapter.onItemClicked(mediaobject,2);
                 }
             });
 
-            holder.img_slide_create_dir.setOnClickListener(new View.OnClickListener() {
+            holder.layout_folder_slide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     adapter.onItemClicked(mediaobject,6);

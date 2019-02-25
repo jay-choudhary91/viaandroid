@@ -136,17 +136,13 @@
                             android:paddingLeft="4dip" />
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_below="@+id/layout_seekbartiming"
-                        android:layout_height="wrap_content">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/layout_seekbartiming"
                             android:layout_centerInParent="true"
                             android:id="@+id/audio_downwordarrow"
                             android:src="@drawable/handle_down_arrow"/>
-                    </RelativeLayout>
 
                     <RelativeLayout
                         android:id="@+id/layoutpause"
