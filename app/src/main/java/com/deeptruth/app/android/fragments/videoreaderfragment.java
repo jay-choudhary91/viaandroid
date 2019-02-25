@@ -413,6 +413,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 layout_videodetails.getLayoutParams().height = detailviewheight;
                 layout_videodetails.requestLayout();
 
+                videotextureview.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        previousheight = videotextureview.getHeight();
+                        previouswidth = videotextureview.getWidth();
+                        previouswidthpercentage = (previouswidth*20)/100;
+                        playpausebutton.setVisibility(View.VISIBLE);
+                        recenterplaypause();
+                    }
+                });
+
             }
         });
 
@@ -590,16 +601,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
-        videotextureview.post(new Runnable() {
-            @Override
-            public void run() {
-                previousheight = videotextureview.getHeight();
-                previouswidth = videotextureview.getWidth();
-                previouswidthpercentage = (previouswidth*20)/100;
-                playpausebutton.setVisibility(View.VISIBLE);
-                recenterplaypause();
-            }
-        });
 
         txtslotencyption.setOnClickListener(new setonClick());
         txtslotmeta.setOnClickListener(new setonClick());
@@ -1017,7 +1018,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     } else {
                         img_fullscreen.setVisibility(View.VISIBLE);
-                        gethelper().drawerenabledisable(true);
+                        gethelper().drawerenabledisable(false);
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                         playpausebutton.setVisibility(View.VISIBLE);
                         imgpause.setVisibility(View.GONE);
@@ -1030,20 +1031,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         pause();
                     }else{
                         if(layout_videodetails.getVisibility()==View.GONE){
-                            layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                            layoutpause.setVisibility(View.VISIBLE);
-                            layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                            layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
-                            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                            layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                            gethelper().updateactionbar(0);
+                            common.slidetoabove(layout_mediatype);
+                            layoutpause.setVisibility(View.GONE);
                             layoutcustomcontroller.requestLayout();
                             layout_footer.setVisibility(View.GONE);
-                            totalduration.setVisibility(View.VISIBLE);
-                            time_current.setVisibility(View.VISIBLE);
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
-                            layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                            imgpause.setVisibility(View.VISIBLE);
-                            dividerline.setVisibility(View.GONE);
+                            gethelper().drawerenabledisable(false);
+                            layoutbackgroundcontroller.setVisibility(View.GONE);
+                            imgpause.setVisibility(View.GONE);
                         }
                         start();
                     }
@@ -2244,7 +2242,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void fullscreen_showcontrollers() {
+        layout_halfscrnimg.getLayoutParams().height = rootviewheight;
+        gethelper().drawerenabledisable(true);
         videotextureview.setClickable(true);
+        common.slidetodown(layout_mediatype);
         layout_mediatype.setVisibility(View.VISIBLE);
         playpausebutton.setImageResource(R.drawable.play_btn);
         playpausebutton.setVisibility(View.VISIBLE);
