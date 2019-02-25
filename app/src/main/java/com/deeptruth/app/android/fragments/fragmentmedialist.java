@@ -958,7 +958,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             @Override
             public void run() {
                 listviewheight=recyclerviewgrid.getHeight();
-                adaptermedialist = new adaptermedialist(applicationviavideocomposer.getactivity(), arraymediaitemlist, new adapteritemclick() {
+                adaptermedialist = new adaptermedialist(getActivity(), arraymediaitemlist, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
                     }
@@ -971,7 +971,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 },listviewheight);
                 recyclerviewlist.setAdapter(adaptermedialist);
 
-                adaptermediagrid = new adaptermediagrid(applicationviavideocomposer.getactivity(), arraymediaitemlist, new adapteritemclick() {
+                adaptermediagrid = new adaptermediagrid(getActivity(), arraymediaitemlist, new adapteritemclick() {
                     @Override
                     public void onItemClicked(Object object) {
                     }
@@ -1323,7 +1323,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             break;
                         }
                     }
-                    showselectedmediatypeitems();
                 }
             }
             else if(type == 3)    // Calling from media details screen where user is going to change media directory.
