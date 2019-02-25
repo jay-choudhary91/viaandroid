@@ -41,7 +41,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -240,7 +239,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     /**
      * Camera preview.
      */
-    private CaptureRequest.Builder mPreviewBuilder;
+    private CaptureRequest.Builder mpreviewbuilder;
     /**
      * MediaRecorder
      */
@@ -604,9 +603,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         zoom = new Rect(croppedWidth/2, croppedHeight/2,
                 rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
         Log.e("zoom level ",""+zoom+" "+zoomLevel+" "+maximumZoomLevel);
-        mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+
+        mpreviewbuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
         try {
-            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+            mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -760,6 +760,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             characteristics = manager.getCameraCharacteristics(cameraId);
 
             maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+            seekbarzoom.setMax(maximumZoomLevel);
+            seekbarzoom.setMin(1);
             StreamConfigurationMap map = characteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
@@ -826,14 +828,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             SurfaceTexture texture = mTextureView.getSurfaceTexture();
             assert texture != null;
             texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mPreviewBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            mpreviewbuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
             List<Surface> surfaces = new ArrayList<Surface>();
             Surface previewSurface = new Surface(texture);
             surfaces.add(previewSurface);
-            mPreviewBuilder.addTarget(previewSurface);
+            mpreviewbuilder.addTarget(previewSurface);
             Surface recorderSurface = mediarecorder.getSurface();
             surfaces.add(recorderSurface);
-            mPreviewBuilder.addTarget(recorderSurface);
+            mpreviewbuilder.addTarget(recorderSurface);
             mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(CameraCaptureSession cameraCaptureSession) {
@@ -862,10 +864,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             return;
         }
         try {
-            setUpCaptureRequestBuilder(mPreviewBuilder);
+            setUpCaptureRequestBuilder(mpreviewbuilder);
             HandlerThread thread = new HandlerThread("CameraPreview");
             thread.start();
-            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
+            mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, mBackgroundHandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1773,13 +1775,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         try {
             if(isflashon) {
                 imgflashon.setImageResource(R.drawable.ic_no_flash_icon);
-                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
-                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                mpreviewbuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
+                mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
                 isflashon = false;
             } else {
                 imgflashon.setImageResource(R.drawable.flash_on);
-                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
-                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                mpreviewbuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+                mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
                 isflashon = true;
             }
         } catch (Exception e) {

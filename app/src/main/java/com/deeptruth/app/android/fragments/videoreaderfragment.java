@@ -329,7 +329,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     Surface surfacetexture = null;
 
     boolean ismediaplayer = false;
-    String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
+    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             lastsavedangle="";
     private float currentDegree = 0f;
     private BroadcastReceiver getmetadatabroadcastreceiver;
@@ -1197,6 +1197,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                             medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                             mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
+                            mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
                             mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
 
                         }while(cur.moveToNext());
@@ -1238,6 +1239,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                     final String filecreateddate = new SimpleDateFormat("MM-dd-yyyy").format(startdate);
                                     final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
                                     txt_starttime.setText(startformatteddate +" " +  localTime);
+                                    txt_duration.setText(mediaduration);
                                     txt_endtime.setText(endformatteddate +" " +  localTime);
 
                                   //  txt_title_actionbarcomposer.setText(filecreateddate);
@@ -1492,7 +1494,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             //controller.setMediaPlayer(new setonmediacontroller());
             controller.setAnchorView((FrameLayout) findViewById(R.id.videoSurfaceContainer));
             videoduration=mediaPlayer.getDuration();
-            txt_duration.setText( common.gettimestring(mediaPlayer.getDuration()) );
             if(player != null)
             {
                 setvideodata();
@@ -2120,6 +2121,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                 if (totalduration != null)
                     totalduration.setText(common.gettimestring(endtime));
+
                 if  (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));
 

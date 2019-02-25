@@ -312,7 +312,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private BroadcastReceiver getmetadatabroadcastreceiver;
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
-    String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
+    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
     adapteritemclick mcontrollernavigator;
     arraycontainer arraycontainerformetric =null;
@@ -1099,7 +1099,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         maxincreasevideoduration=0;
 
         audioduration =mp.getDuration();
-        txt_duration.setText( common.gettimestring(mp.getDuration()));
 
         try {
 
@@ -1515,6 +1514,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                     medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                     mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
+                    mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
                     mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                     thumbnailurl = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
 
@@ -1556,7 +1556,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
                             txt_starttime.setText(startformatteddate +" " + localTime);
                             txt_endtime.setText(endformatteddate +" " +  localTime);
-
+                            txt_duration.setText(mediaduration);
                           //  txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(createdtime);
 
