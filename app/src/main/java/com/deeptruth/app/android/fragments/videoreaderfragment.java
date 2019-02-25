@@ -413,17 +413,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 layout_videodetails.getLayoutParams().height = detailviewheight;
                 layout_videodetails.requestLayout();
 
-                videotextureview.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        previousheight = videotextureview.getHeight();
-                        previouswidth = videotextureview.getWidth();
-                        previouswidthpercentage = (previouswidth*20)/100;
-                        playpausebutton.setVisibility(View.VISIBLE);
-                        recenterplaypause();
-                    }
-                });
-
             }
         });
 
@@ -431,6 +420,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         mediaseekbar.setPadding(0,0,0,0);
         mheightview = getContext().getResources().getDimensionPixelOffset(R.dimen.frames_video_height);
+
+        videotextureview.post(new Runnable() {
+            @Override
+            public void run() {
+                previousheight = videotextureview.getHeight();
+                previouswidth = videotextureview.getWidth();
+                previouswidthpercentage = (previouswidth*20)/100;
+                playpausebutton.setVisibility(View.VISIBLE);
+                recenterplaypause();
+            }
+        });
 
         playpausebutton.setImageResource(R.drawable.play_btn);
 
@@ -480,7 +480,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     //int leftmargin=dpToPx(15);
                     p.setMargins((int)(thumbRect.centerX()-8),0, 0, 0);
                     layout_progressline.setLayoutParams(p);
-                    txt_mediatimethumb.setText(stringForTime(player.getCurrentPosition()));
+                    txt_mediatimethumb.setText(common.gettimestring(player.getCurrentPosition()));
                     txt_mediatimethumb.setVisibility(View.VISIBLE);
 
                 }
