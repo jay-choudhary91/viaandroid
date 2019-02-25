@@ -38,6 +38,7 @@ public class config {
     public static final String location_elevationapi_baseurl = "https://maps.googleapis.com/maps/api/elevation/json?";
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";
+    public static final String date_format = "MM/dd/yyyy";
     public static final String date_time_format = "MM-dd-yyyy hh:mm:ss";
     public static final String build_flavor_videocreater = "creater";
     public static final String build_flavor_videoviewer = "viewer";

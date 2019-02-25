@@ -12,6 +12,7 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.graphicalmodel;
+import com.deeptruth.app.android.models.metricmodel;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,20 @@ public class encryptiondataadapter extends RecyclerView.Adapter<encryptiondataad
         holder.txt_metahash.setText(modeldata.getMetahash());
         holder.txt_mediahash.setText(modeldata.getValuehash());
         holder.txt_blockchainid.setText(modeldata.getVideostarttransactionid());
+        holder.txt_hashformula.setText(modeldata.getHashmethod());
+        ArrayList<metricmodel> metalist=modeldata.getMetricItemArraylist();
+        for(int i=0;i<metalist.size();i++)
+        {
+            if(metalist.get(i).getMetricTrackKeyName().equalsIgnoreCase("devicedate"))
+            {
+                holder.txt_date.setText(metalist.get(i).getMetricTrackValue());
+            }
 
+            if(metalist.get(i).getMetricTrackKeyName().equalsIgnoreCase("devicetime"))
+            {
+                holder.txt_time.setText(metalist.get(i).getMetricTrackValue());
+            }
+        }
     }
 
     @Override

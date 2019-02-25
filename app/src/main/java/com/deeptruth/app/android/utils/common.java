@@ -611,6 +611,8 @@ public class common {
             metricItemName = "osversion";
         } else if (key.equalsIgnoreCase("devicetime")) {
             metricItemName = "devicetime";
+        }else if (key.equalsIgnoreCase("devicedate")) {
+            metricItemName = "devicedate";
         } else if (key.equalsIgnoreCase("softwareversion")) {
             metricItemName = "softwareversion";
         } else if (key.equalsIgnoreCase("networkcountry")) {
@@ -761,6 +763,8 @@ public class common {
             metricItemName = "currentcalldecibel";
         } else if (key.equalsIgnoreCase("devicetime")) {
             metricItemName = "devicetime";
+        }else if (key.equalsIgnoreCase("devicedate")) {
+            metricItemName = "devicedate";
         } else if (key.equalsIgnoreCase("airplanemode")) {
             metricItemName = "airplanemode";
         } else if (key.equalsIgnoreCase("gpsonoff")) {
@@ -1518,7 +1522,7 @@ public class common {
     {
         String[] items={"battery","phonetype","imeinumber","simserialnumber","version","osversion","softwareversion","model",
                 "manufacturer","brightness","gpslatitude","gpslongitude",config.gpslatitudedegree,config.gpslongitudedegree,config.gpsaltitude,"gpsquality","carrier","screenwidth",
-                "screenheight","systemuptime","multitaskingenabled","proximitysensorenabled","pluggedin","devicetime",
+                "screenheight","systemuptime","multitaskingenabled","proximitysensorenabled","pluggedin","devicedate","devicetime",
                 "deviceregion","devicelanguage","devicecurrency","timezone","headphonesattached","accessoriesattached",
                 "nameattachedaccessories","attachedaccessoriescount","totalspace","usedspace","memoryusage","freespace",
                 "orientation","deviceorientation","rammemory","usedram","freeram","wificonnect","cellnetworkconnect","internalip",
@@ -1528,7 +1532,7 @@ public class common {
                 config.cpuusageirq,config.compass,config.decibel,config.barometer,config.acceleration_x,config.acceleration_y,
                 config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
-                "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
+                "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","syncphonetime","country",
                 "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
                 "satelliteangle","satelliteid","strengthofsatellites","attitude"};
 
