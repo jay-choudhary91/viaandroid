@@ -34,6 +34,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -68,6 +69,8 @@ import android.widget.TextView;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.adaptermediagrid;
+import com.deeptruth.app.android.adapter.encryptiondataadapter;
 import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.adapter.framebitmapadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -79,6 +82,7 @@ import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.frame;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
+import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.utils.NoScrollRecycler;
@@ -87,6 +91,7 @@ import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.simpledivideritemdecoration;
 import com.deeptruth.app.android.utils.videocontrollerview;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.videotrimmer.utils.backgroundexecutor;
@@ -311,6 +316,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     TextView txt_section_validating_secondary;
     @BindView(R.id.layout_dtls)
     LinearLayout layout_dtls;
+    @BindView(R.id.layout_item_encryption)
+    LinearLayout layout_item_encryption;
+    @BindView(R.id.recycler_encryption)
+    RecyclerView recycler_encryption;
 
     @BindView(R.id.layout_seekbartiming)
     RelativeLayout layout_seekbartiming;
@@ -371,6 +380,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     adapteritemclick mcontrollernavigator;
     int currentprocessframe=0;
     int rootviewheight,videoviewheight,detailviewheight;
+    encryptiondataadapter encryptionadapter;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -401,6 +411,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         mFormatBuilder = new StringBuilder();
         mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
         videotextureview.setSurfaceTextureListener(this);
+
+        layout_item_encryption.setVisibility(View.GONE);
+        recycler_encryption.setVisibility(View.VISIBLE);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recycler_encryption.setLayoutManager(layoutManager);
+        recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
+
+        encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
+        recycler_encryption.setAdapter(encryptionadapter);
 
         showcontrollers.post(new Runnable() {
             @Override
@@ -1302,6 +1323,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                     arraycontainerformetric = new arraycontainer();
                                     arraycontainerformetric = metricmainarraylist.get(0);
                                 }
+
+                                encryptionadapter.notifyDataSetChanged();
                             }
                         });
                         try

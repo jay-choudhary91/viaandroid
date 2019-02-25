@@ -10,20 +10,19 @@ import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
+import com.deeptruth.app.android.models.arraycontainer;
 import com.deeptruth.app.android.models.graphicalmodel;
 
 import java.util.ArrayList;
 
 public class encryptiondataadapter extends RecyclerView.Adapter<encryptiondataadapter.ViewHolder> {
 
-    ArrayList<graphicalmodel> graphicaldataArrayList;
+    ArrayList<arraycontainer> arrayitemlist;
     private Context mContext;
-    adapteritemclick mItemClick;
 
-    public encryptiondataadapter(ArrayList<graphicalmodel> graphicaldataArrayList, Context mContext) {
-        this.graphicaldataArrayList = graphicaldataArrayList;
+    public encryptiondataadapter(ArrayList<arraycontainer> arrayitemlist, Context mContext) {
+        this.arrayitemlist = arrayitemlist;
         this.mContext = mContext;
-       // this.mItemClick = mItemClick;
     }
 
     @NonNull
@@ -37,22 +36,28 @@ public class encryptiondataadapter extends RecyclerView.Adapter<encryptiondataad
 
     @Override
     public void onBindViewHolder(@NonNull encryptiondataadapter.ViewHolder holder, int position) {
-        final graphicalmodel graphicalmodeldata = graphicaldataArrayList.get(position);
-        holder.txt_data_hash.setText(graphicalmodeldata.getGraphicalvalue());
-
+        final arraycontainer modeldata = arrayitemlist.get(position);
+        holder.txt_metahash.setText(modeldata.getMetahash());
+        holder.txt_mediahash.setText(modeldata.getValuehash());
+        holder.txt_blockchainid.setText(modeldata.getVideostarttransactionid());
 
     }
 
     @Override
     public int getItemCount() {
-        return graphicaldataArrayList.size();
+        return arrayitemlist.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txt_data_hash;
+        TextView txt_date,txt_time,txt_blockchainid,txt_hashformula,txt_mediahash,txt_metahash;
         public ViewHolder(View itemView) {
             super(itemView);
-            txt_data_hash = (TextView) itemView.findViewById(R.id.txt_data_hash);
+            txt_date = (TextView) itemView.findViewById(R.id.txt_date);
+            txt_time = (TextView) itemView.findViewById(R.id.txt_time);
+            txt_blockchainid = (TextView) itemView.findViewById(R.id.txt_blockchainid);
+            txt_hashformula = (TextView) itemView.findViewById(R.id.txt_hashformula);
+            txt_mediahash = (TextView) itemView.findViewById(R.id.txt_mediahash);
+            txt_metahash = (TextView) itemView.findViewById(R.id.txt_metahash);
         }
     }
 }
