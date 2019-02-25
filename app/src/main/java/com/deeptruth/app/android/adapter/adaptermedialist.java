@@ -104,6 +104,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
         final video mediaobject=arrayvideolist.get(position);
+        binderHelper.closeLayout(""+position);
         binderHelper.bind(holder.root_view,""+position);
         if(mediaobject.isDoenable())
         {
