@@ -262,6 +262,8 @@ public abstract class basefragment extends Fragment {
 
         public void drawerenabledisable(boolean enable);
 
+        public void hidedrawerbutton(boolean enable);
+
         public ArrayList<metricmodel> getmetricarraylist();
         public void setrecordingrunning(boolean toggle);
         public boolean getrecordingrunning();

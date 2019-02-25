@@ -523,30 +523,60 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(txt_media_quality != null)
             txt_media_quality.setRotation(rotateangle);
 */
-        if(!isvideorecording){
+
             if(headercontainer !=null){
 
-                if(rotateangle == -90){
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
-                    lp.setMargins(0,layout_bottom.getHeight(),0,layout_bottom.getHeight()+50);
-                    headercontainer.setLayoutParams(lp);
-                    headercontainer.setAngle(90);
-
+                if(rotateangle == -90)
+                {
+                    if(!isvideorecording)
+                    {
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                        lp.setMargins(0, layout_bottom.getHeight(), 0, layout_bottom.getHeight() + 50);
+                        headercontainer.setLayoutParams(lp);
+                        headercontainer.setAngle(90);
+                    }
+                    gethelper().hidedrawerbutton(true);  // hidden
                 }else if(rotateangle == 90){
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
-                    lp.setMargins(0,layout_bottom.getHeight(),0,layout_bottom.getHeight()+50);
-                    headercontainer.setLayoutParams(lp);
-                    headercontainer.setAngle(270);
-                }else{
-                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    headercontainer.setLayoutParams(lp);
-                    headercontainer.setAngle((int)rotateangle);
+
+                    if(!isvideorecording)
+                    {
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                        lp.setMargins(0, layout_bottom.getHeight(), 0, layout_bottom.getHeight() + 50);
+                        headercontainer.setLayoutParams(lp);
+                        headercontainer.setAngle(270);
+                    }
+
+                    if(headercontainer.getAngle() == 90)
+                    {
+                        gethelper().hidedrawerbutton(true);  // hidden
+                    }
+                    else
+                    {
+                        gethelper().hidedrawerbutton(false);  // shown
+                    }
+                }
+                else
+                {
+                    if(!isvideorecording)
+                    {
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        headercontainer.setLayoutParams(lp);
+                        headercontainer.setAngle((int)rotateangle);
+                    }
+
+                    if(headercontainer.getAngle() == 90)
+                    {
+                        gethelper().hidedrawerbutton(true);  // hidden
+                    }
+                    else
+                    {
+                        gethelper().hidedrawerbutton(false);  // shown
+                    }
                 }
             }
         }
-    }
 
     public boolean isvideorecording() {
         return isvideorecording;
