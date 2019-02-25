@@ -50,6 +50,7 @@ import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.github.rongi.rotate_layout.layout.RotateLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,9 +80,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @BindView(R.id.img_mediathumbnail)
     ImageView img_mediathumbnail;
     @BindView(R.id.layout_no_gps_wifi)
-    LinearLayout layout_no_gps_wifi;
+    RotateLayout layout_no_gps_wifi;
     @BindView(R.id.layout_validating)
-    LinearLayout layout_validating;
+    RotateLayout layout_validating;
     @BindView(R.id.layout_section_heading)
     RelativeLayout layout_section_heading;
     @BindView(R.id.txt_section_validating)
@@ -98,6 +99,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_mediatype_c;
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
+
+    boolean isvideoplaying = true;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -815,10 +818,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(currentselectedcomposer == 0)
                 {
                     showhideactionbottombaricon(0);
+                    isvideoplaying = false;
                 }
                 else if(currentselectedcomposer == 2)
                 {
                    showhideactionbottombaricon(2);
+                    isvideoplaying = false;
                 }
 
               // setimagerecordstart();
@@ -834,10 +839,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(currentselectedcomposer == 0)
                 {
                     showhideactionbottombaricon(1);
+                    isvideoplaying = true;
                 }
                 else if(currentselectedcomposer == 2)
                 {
                     showhideactionbottombaricon(3);
+                    isvideoplaying = true;
                 }
             }
             else if(type == 3) // For swipe gesture to change fragment
@@ -849,6 +856,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             {
                 try {
                     config.selectedmediatype=currentselectedcomposer;
+                    isvideoplaying = true;
                 }catch (Exception e)
                 {
                     e.printStackTrace();
@@ -861,10 +869,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             else if(type == 5) // For swipe gesture to change fragment
             {
                 showwarningsection(true);
+                isvideoplaying = true;
             }
             else if(type == 6) // For swipe gesture to change fragment
             {
                 showwarningsection(false);
+                isvideoplaying = true;
             }
             else if(type == 9)
             {
@@ -1046,6 +1056,50 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         if(rotateangle != 3600)
         {
+            if(fragvideocomposer != null && !fragvideocomposer.isvideorecording) {
+               if(layout_validating != null && layout_no_gps_wifi != null){
+                   if(rotateangle == -90){
+
+                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+                       lp.setMargins(0,0,0,layoutbottom.getHeight());
+                       layout_validating.setLayoutParams(lp);
+                       layout_validating.setAngle(90);
+
+                       RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+                       lpwifi.setMargins(0,0,0,layoutbottom.getHeight());
+                       layout_no_gps_wifi.setLayoutParams(lpwifi);
+                       layout_no_gps_wifi.setAngle(90);
+
+                   }else if(rotateangle == 90){
+
+                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+                       lp.setMargins(0,0,0,layoutbottom.getHeight());
+                       layout_validating.setLayoutParams(lp);
+                       layout_validating.setAngle(270);
+
+                       RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       lpwifi.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+                       lpwifi.setMargins(0,0,0,layoutbottom.getHeight());
+                       layout_no_gps_wifi.setLayoutParams(lpwifi);
+                       layout_no_gps_wifi.setAngle(270);
+
+                   }else{
+                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       layout_validating.setLayoutParams(lp);
+                       lp.setMargins(0,100,0,0);
+                       layout_validating.setAngle(0);
+
+                       RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       layout_no_gps_wifi.setLayoutParams(lpwifi);
+                       lpwifi.setMargins(0,100,0,0);
+                       layout_no_gps_wifi.setAngle(0);
+                   }
+               }
+           }
+
             if(imgrotatecamera != null)
                 imgrotatecamera.setRotation(rotateangle);
 

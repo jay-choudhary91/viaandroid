@@ -78,6 +78,7 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.xdata;
+import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.gson.Gson;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
@@ -355,8 +356,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     private Orientation mOrientation;
     private ActionBarDrawerToggle drawertoggle;
-    @BindView(R.id.linear_header)
-    LinearLayout linearheader;
+    @BindView(R.id.header_container)
+    RotateLayout headercontainer;
     @BindView(R.id.layout_seekbarzoom)
     RelativeLayout layout_seekbarzoom;
     @BindView(R.id.seekbarzoom)
@@ -364,6 +365,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     @BindView(R.id.img_roundblink)
     ImageView img_roundblink;
     Animation blinkanimation;
+
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -486,9 +489,27 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         img_roundblink.setVisibility(View.GONE);
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+
+        }
+    }
+
+
+
+
+
+
     public void changeiconsorientation(float rotateangle)
     {
-        if(imgflashon != null)
+        /*if(imgflashon != null)
             imgflashon.setRotation(rotateangle);
 
         if(img_dotmenu != null)
@@ -502,6 +523,30 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         if(txt_media_quality != null)
             txt_media_quality.setRotation(rotateangle);
+*/
+        if(!isvideorecording){
+            if(headercontainer !=null){
+
+                if(rotateangle == -90){
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+                    lp.setMargins(0,layout_bottom.getHeight(),0,layout_bottom.getHeight()+50);
+                    headercontainer.setLayoutParams(lp);
+                    headercontainer.setAngle(90);
+
+                }else if(rotateangle == 90){
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+                    lp.setMargins(0,layout_bottom.getHeight(),0,layout_bottom.getHeight()+50);
+                    headercontainer.setLayoutParams(lp);
+                    headercontainer.setAngle(270);
+                }else{
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    headercontainer.setLayoutParams(lp);
+                    headercontainer.setAngle((int)rotateangle);
+                }
+            }
+        }
     }
 
     public boolean isvideorecording() {
@@ -1823,10 +1868,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         if(isshow){
             layout_bottom.setVisibility(View.GONE);
-            linearheader.setVisibility(View.GONE);
+            headercontainer.setVisibility(View.GONE);
         }else{
             layout_bottom.setVisibility(View.VISIBLE);
-            linearheader.setVisibility(View.VISIBLE);
+            headercontainer.setVisibility(View.VISIBLE);
         }
     }
 }

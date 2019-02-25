@@ -47,14 +47,16 @@
 
             </FrameLayout>
 
-            <LinearLayout
-                android:id="@+id/linear_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <com.github.rongi.rotate_layout.layout.RotateLayout
+            android:id="@+id/header_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            app:angle="0">
 
                 <include layout="@layout/action_bar_composer"></include>
-            </LinearLayout>
+
+        </com.github.rongi.rotate_layout.layout.RotateLayout>
 
         <RelativeLayout
             android:id="@+id/layout_seekbarzoom"
