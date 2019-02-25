@@ -321,7 +321,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     View rootview = null;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
-    int Seconds, Minutes, MilliSeconds,framepersecond=30,videobitrate=2000000 ; // 2000000 is equals to 2 MB. It means quality is exisiting around 420P. It also depands on frame rate.
+    int Hours,Seconds, Minutes, MilliSeconds,framepersecond=30,videobitrate=2000000 ; // 2000000 is equals to 2 MB. It means quality is exisiting around 420P. It also depands on frame rate.
     String keytype =config.prefs_md5,currenthashvalue="";
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
@@ -406,7 +406,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality.setText("420p");
 
         timerhandler = new Handler() ;
-        txt_title_actionbarcomposer.setText("00:00:00");
+        txt_title_actionbarcomposer.setText("0:00:00.0");
         if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
             frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
@@ -1296,7 +1296,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 },finalArray[0]);
             }
         }
-        txt_title_actionbarcomposer.setText("00:00.00");
+        txt_title_actionbarcomposer.setText("0:00:00.0");
     }
 
     @Override
@@ -1397,9 +1397,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         UpdateTime = 0L ;
         Seconds = 0 ;
         Minutes = 0 ;
+        Hours = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        txt_title_actionbarcomposer.setText("00:00.00");
+        txt_title_actionbarcomposer.setText("0:00:00.0");
     }
 
     public Runnable runnable = new Runnable() {
@@ -1412,6 +1413,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     UpdateTime = TimeBuff + MillisecondTime;
                     Seconds = (int) (UpdateTime / 1000);
                     Minutes = Seconds / 60;
+                    Hours = Minutes/60;
                     Seconds = Seconds % 60;
                     MilliSeconds = (int) (UpdateTime % 1000);
 
@@ -1420,9 +1422,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         public void run() {
                             if(isvideorecording)
                             {
-                                txt_title_actionbarcomposer.setText("" + String.format("%02d", Minutes) + ":"
+                                txt_title_actionbarcomposer.setText("" + String.format("%01d", Hours) + ":"+
+                                        "" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + "."
-                                        + String.format("%02d", (MilliSeconds/10)));
+                                        + String.format("%01d", (MilliSeconds/100)));
                             }
 
                         }
@@ -1805,12 +1808,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     public void showhideactionbaricon(int i){
         if(i == 0){
-            txt_title_actionbarcomposer.setText("00:00.00");
+            txt_title_actionbarcomposer.setText("0:00:00.0");
             img_dotmenu.setVisibility(View.INVISIBLE);
             txt_media_quality.setVisibility(View.INVISIBLE);
 
         }else{
-            txt_title_actionbarcomposer.setText("00:00.00");
+            txt_title_actionbarcomposer.setText("0:00:00.0");
             img_dotmenu.setVisibility(View.VISIBLE);
             txt_media_quality.setVisibility(View.VISIBLE);
         }

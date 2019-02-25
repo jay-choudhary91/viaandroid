@@ -1627,10 +1627,17 @@ public class common {
                         long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
                         long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
                         long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                        long millis = TimeUnit.SECONDS.toMillis(seconds) - (TimeUnit.SECONDS.toSeconds(seconds) *60);
+
+                        String milliseconds="0";
+                        char[] chararray=String.valueOf(millis).toCharArray();
+                        if(chararray != null && chararray.length > 0)
+                            milliseconds=""+chararray[0];
+
                         if(second == 0)
                             second=1;
 
-                        duration=(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                        duration=(""+hours+":"+common.appendzero(minute)+":"+common.appendzero(second)+"."+milliseconds);
                         break;
                     }
                 }
