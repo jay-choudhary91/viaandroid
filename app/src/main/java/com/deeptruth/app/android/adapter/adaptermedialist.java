@@ -98,6 +98,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     @Override
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
+        binderHelper.bind(holder.root_view,""+position);
         if(arrayvideolist.get(position).isDoenable())
         {
             holder.img_videothumbnail.post(new Runnable() {
