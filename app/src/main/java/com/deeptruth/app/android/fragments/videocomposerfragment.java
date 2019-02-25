@@ -406,7 +406,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality.setText("420p");
 
         timerhandler = new Handler() ;
-        txt_title_actionbarcomposer.setText("0:00:00.0");
+        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
         if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
             frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
@@ -1296,7 +1296,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 },finalArray[0]);
             }
         }
-        txt_title_actionbarcomposer.setText("0:00:00.0");
+        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
     }
 
     @Override
@@ -1400,7 +1400,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         Hours = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        txt_title_actionbarcomposer.setText("0:00:00.0");
+        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
     }
 
     public Runnable runnable = new Runnable() {
@@ -1808,12 +1808,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     public void showhideactionbaricon(int i){
         if(i == 0){
-            txt_title_actionbarcomposer.setText("0:00:00.0");
+            txt_title_actionbarcomposer.setText(config.mediarecorderformat);
             img_dotmenu.setVisibility(View.INVISIBLE);
             txt_media_quality.setVisibility(View.INVISIBLE);
 
         }else{
-            txt_title_actionbarcomposer.setText("0:00:00.0");
+            txt_title_actionbarcomposer.setText(config.mediarecorderformat);
             img_dotmenu.setVisibility(View.VISIBLE);
             txt_media_quality.setVisibility(View.VISIBLE);
         }
