@@ -204,6 +204,16 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     }
 
     @Override
+    public void hidedrawerbutton(boolean enable) {
+        if(enable){
+            imglefthandle.setVisibility(View.GONE);
+        }else{
+            imglefthandle.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
     public void updateactionbar(int fullscreenmode) {
         if(fullscreenmode == 0)   // Enable full screen mode
         {
