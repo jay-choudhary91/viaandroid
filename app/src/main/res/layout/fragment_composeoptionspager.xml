@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:padding="15dp"
+        android:visibility="visible"
         android:background="@drawable/gradient_fade_dark_blue"
         android:animateLayoutChanges="true"
         >
@@ -126,14 +127,20 @@
     </RelativeLayout>
 
 
-
-    <LinearLayout
+    <com.github.rongi.rotate_layout.layout.RotateLayout
         android:id="@+id/layout_no_gps_wifi"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="60dp"
         android:visibility="gone"
+        android:orientation="vertical"
+        app:angle="0">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:orientation="vertical">
 
         <include layout="@layout/layout_no_gps_wifi"></include>
@@ -141,16 +148,22 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    </com.github.rongi.rotate_layout.layout.RotateLayout>
+
+
+    <com.github.rongi.rotate_layout.layout.RotateLayout
         android:id="@+id/layout_validating"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:visibility="gone"
         android:layout_alignParentTop="true"
+        app:angle="0">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-
-
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_view_container"
@@ -188,6 +201,8 @@
         </com.facebook.shimmer.ShimmerFrameLayout>
 
     </LinearLayout>
+
+    </com.github.rongi.rotate_layout.layout.RotateLayout>
 
 
 

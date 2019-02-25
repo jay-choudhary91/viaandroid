@@ -234,7 +234,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
                 if(file.exists())
                 {
                     folderitemlist.remove(folderitemlist.size()-1);
-                    folderitemlist.add(new folder(file.getName(),file.getAbsolutePath(),"","0",false,false));
+                    folderitemlist.add(new folder(file.getName(),file.getAbsolutePath(),"","",false,false));
                     folderitemlist.add(new folder("",false,true));
                     adapter.notifyDataSetChanged();
                 }
@@ -316,7 +316,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
     public String[] getfolderthumbnailpath(String directorypath)
     {
         String thumbnailurl="";
-        String[] filedirectoryinfo ={"","0"};
+        String[] filedirectoryinfo ={"",""};
         databasemanager mdbhelper=null;
         if (mdbhelper == null) {
             mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
@@ -331,22 +331,34 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
         }
 
         Cursor cursor = mdbhelper.getallmediabyfolder(directorypath);
-        int filecount=0;
+        int videocount=0,audiocount=0,imagecount=0;
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
         {
             do{
-                filecount++;
                 String mediafilepath = "" + cursor.getString(cursor.getColumnIndex("mediafilepath"));
                 String localkey = "" + cursor.getString(cursor.getColumnIndex("localkey"));
+                String type = "" + cursor.getString(cursor.getColumnIndex("type"));
 
                 if(! new File(mediafilepath).exists())
                 {
-                    filecount--;
                     mdbhelper.deletefromstartvideoinfobylocalkey(localkey);
                     mdbhelper.deletefrommetadatabylocalkey(localkey);
                 }
                 else
                 {
+                    if(type.equalsIgnoreCase(config.item_video))
+                    {
+                        videocount++;
+                    }
+                    else if(type.equalsIgnoreCase(config.item_image))
+                    {
+                        imagecount++;
+                    }
+                    else if(type.equalsIgnoreCase(config.item_audio))
+                    {
+                        audiocount++;
+                    }
+
                     if(thumbnailurl.trim().isEmpty())
                         thumbnailurl= "" + cursor.getString(cursor.getColumnIndex("thumbnailurl"));
                 }
@@ -354,7 +366,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             }while(cursor.moveToNext());
 
             filedirectoryinfo[0] = thumbnailurl;
-            filedirectoryinfo[1]=""+filecount;
+            filedirectoryinfo[1]="Video("+videocount+")"+", Photo("+imagecount+"), "+"Audio("+audiocount+")";
         }
 
         try

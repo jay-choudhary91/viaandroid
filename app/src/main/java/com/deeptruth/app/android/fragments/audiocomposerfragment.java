@@ -122,7 +122,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     boolean isaudiorecording=false,isvisibletouser=false;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
-    int Seconds, Minutes, MilliSeconds ;
+    int Hours, Seconds, Minutes, MilliSeconds ;
     public Dialog maindialogshare,subdialogshare;
     private LinearLayoutManager mLayoutManager;
     private Handler wavehandler;
@@ -197,7 +197,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         loadffmpeglibrary();
         startnoise();
-        txt_title_actionbarcomposer.setText("00:00.00");
+        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
         setmetriceshashesdata();
         try {
             int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
@@ -300,7 +300,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             stoptimer();
             resettimer();
             img_dotmenu.setVisibility(View.VISIBLE);
-            txt_title_actionbarcomposer.setText("00:00.00");
+            txt_title_actionbarcomposer.setText(config.mediarecorderformat);
 
             try {
                 if(common.getstorageaudiorecorddeniedpermissions().isEmpty() && (recordedmediafile != null )
@@ -456,9 +456,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         UpdateTime = 0L ;
         Seconds = 0 ;
         Minutes = 0 ;
+        Hours = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        txt_title_actionbarcomposer.setText("00:00.00");
+        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
     }
 
     public Runnable runnable = new Runnable() {
@@ -471,6 +472,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     UpdateTime = TimeBuff + MillisecondTime;
                     Seconds = (int) (UpdateTime / 1000);
                     Minutes = Seconds / 60;
+                    Hours = Minutes/60;
                     Seconds = Seconds % 60;
                     MilliSeconds = (int) (UpdateTime % 1000);
 
@@ -479,9 +481,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         public void run() {
                             if(isaudiorecording)
                             {
-                                txt_title_actionbarcomposer.setText("" + String.format("%02d", Minutes) + ":"
+                                txt_title_actionbarcomposer.setText("" + String.format("%01d", Hours) + ":"+
+                                        "" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + "."
-                                        + String.format("%02d", (MilliSeconds / 10)));
+                                        + String.format("%01d", (MilliSeconds/100)));
                             }
 
                         }

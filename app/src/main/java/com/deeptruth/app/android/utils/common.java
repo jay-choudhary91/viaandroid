@@ -611,6 +611,8 @@ public class common {
             metricItemName = "osversion";
         } else if (key.equalsIgnoreCase("devicetime")) {
             metricItemName = "devicetime";
+        }else if (key.equalsIgnoreCase("devicedate")) {
+            metricItemName = "devicedate";
         } else if (key.equalsIgnoreCase("softwareversion")) {
             metricItemName = "softwareversion";
         } else if (key.equalsIgnoreCase("networkcountry")) {
@@ -761,6 +763,8 @@ public class common {
             metricItemName = "currentcalldecibel";
         } else if (key.equalsIgnoreCase("devicetime")) {
             metricItemName = "devicetime";
+        }else if (key.equalsIgnoreCase("devicedate")) {
+            metricItemName = "devicedate";
         } else if (key.equalsIgnoreCase("airplanemode")) {
             metricItemName = "airplanemode";
         } else if (key.equalsIgnoreCase("gpsonoff")) {
@@ -1518,7 +1522,7 @@ public class common {
     {
         String[] items={"battery","phonetype","imeinumber","simserialnumber","version","osversion","softwareversion","model",
                 "manufacturer","brightness","gpslatitude","gpslongitude",config.gpslatitudedegree,config.gpslongitudedegree,config.gpsaltitude,"gpsquality","carrier","screenwidth",
-                "screenheight","systemuptime","multitaskingenabled","proximitysensorenabled","pluggedin","devicetime",
+                "screenheight","systemuptime","multitaskingenabled","proximitysensorenabled","pluggedin","devicedate","devicetime",
                 "deviceregion","devicelanguage","devicecurrency","timezone","headphonesattached","accessoriesattached",
                 "nameattachedaccessories","attachedaccessoriescount","totalspace","usedspace","memoryusage","freespace",
                 "orientation","deviceorientation","rammemory","usedram","freeram","wificonnect","cellnetworkconnect","internalip",
@@ -1528,7 +1532,7 @@ public class common {
                 config.cpuusageirq,config.compass,config.decibel,config.barometer,config.acceleration_x,config.acceleration_y,
                 config.acceleration_z,config.distancetravelled,config.currentcallinprogress,config.currentcalldurationseconds,
                 config.currentcallremotenumber,config.currentcalldecibel,config.airplanemode,
-                "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","devicetime","syncphonetime","country",
+                "isaccelerometeravailable","dataconnection","currentcallvolume","gpsonoff","syncphonetime","country",
                 "connectionspeed","gpsaccuracy","speed","heading","address","celltowersignalstrength","celltowerid","numberoftowers","numberofsatellites",
                 "satelliteangle","satelliteid","strengthofsatellites","attitude"};
 
@@ -1627,10 +1631,17 @@ public class common {
                         long hours = TimeUnit.SECONDS.toHours(seconds) - (day *24);
                         long minute = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds)* 60);
                         long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
+                        long millis = TimeUnit.SECONDS.toMillis(seconds) - (TimeUnit.SECONDS.toSeconds(seconds) *60);
+
+                        String milliseconds="0";
+                        char[] chararray=String.valueOf(millis).toCharArray();
+                        if(chararray != null && chararray.length > 0)
+                            milliseconds=""+chararray[0];
+
                         if(second == 0)
                             second=1;
 
-                        duration=(""+common.appendzero(hours)+":"+common.appendzero(minute)+":"+common.appendzero(second)+"");
+                        duration=(""+hours+":"+common.appendzero(minute)+":"+common.appendzero(second)+"."+milliseconds);
                         break;
                     }
                 }
@@ -1876,12 +1887,11 @@ public class common {
         int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
         int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
 
-        buf
-                .append(String.format("%02d", hours))
-                .append(":")
-                .append(String.format("%02d", minutes))
-                .append(".")
-                .append(String.format("%02d", seconds));
+        buf.append(String.format("%02d", hours))
+        .append(":")
+        .append(String.format("%02d", minutes))
+        .append(".")
+        .append(String.format("%02d", seconds));
 
         return buf.toString();
     }

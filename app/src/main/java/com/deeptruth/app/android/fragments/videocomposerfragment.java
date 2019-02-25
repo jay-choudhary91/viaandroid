@@ -41,7 +41,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -78,6 +77,7 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.xdata;
+import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.gson.Gson;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
@@ -240,7 +240,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     /**
      * Camera preview.
      */
-    private CaptureRequest.Builder mPreviewBuilder;
+    private CaptureRequest.Builder mpreviewbuilder;
     /**
      * MediaRecorder
      */
@@ -321,7 +321,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     View rootview = null;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
-    int Seconds, Minutes, MilliSeconds,framepersecond=30,videobitrate=2000000 ; // 2000000 is equals to 2 MB. It means quality is exisiting around 420P. It also depands on frame rate.
+    int Hours,Seconds, Minutes, MilliSeconds,framepersecond=30,videobitrate=2000000 ; // 2000000 is equals to 2 MB. It means quality is exisiting around 420P. It also depands on frame rate.
     String keytype =config.prefs_md5,currenthashvalue="";
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
@@ -355,8 +355,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     private Orientation mOrientation;
     private ActionBarDrawerToggle drawertoggle;
-    @BindView(R.id.linear_header)
-    LinearLayout linearheader;
+    @BindView(R.id.header_container)
+    RotateLayout headercontainer;
     @BindView(R.id.layout_seekbarzoom)
     RelativeLayout layout_seekbarzoom;
     @BindView(R.id.seekbarzoom)
@@ -364,6 +364,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     @BindView(R.id.img_roundblink)
     ImageView img_roundblink;
     Animation blinkanimation;
+
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_videocomposer;
@@ -406,7 +408,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             txt_media_quality.setText("420p");
 
         timerhandler = new Handler() ;
-        txt_title_actionbarcomposer.setText("00:00:00");
+        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
         if(! xdata.getinstance().getSetting(config.framecount).trim().isEmpty())
             frameduration=Integer.parseInt(xdata.getinstance().getSetting(config.framecount));
 
@@ -486,9 +488,27 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         img_roundblink.setVisibility(View.GONE);
     }
 
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+
+        }
+    }
+
+
+
+
+
+
     public void changeiconsorientation(float rotateangle)
     {
-        if(imgflashon != null)
+        /*if(imgflashon != null)
             imgflashon.setRotation(rotateangle);
 
         if(img_dotmenu != null)
@@ -502,6 +522,30 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         if(txt_media_quality != null)
             txt_media_quality.setRotation(rotateangle);
+*/
+        if(!isvideorecording){
+            if(headercontainer !=null){
+
+                if(rotateangle == -90){
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams( RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+                    lp.setMargins(0,layout_bottom.getHeight(),0,layout_bottom.getHeight()+50);
+                    headercontainer.setLayoutParams(lp);
+                    headercontainer.setAngle(90);
+
+                }else if(rotateangle == 90){
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
+                    lp.setMargins(0,layout_bottom.getHeight(),0,layout_bottom.getHeight()+50);
+                    headercontainer.setLayoutParams(lp);
+                    headercontainer.setAngle(270);
+                }else{
+                    RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    headercontainer.setLayoutParams(lp);
+                    headercontainer.setAngle((int)rotateangle);
+                }
+            }
+        }
     }
 
     public boolean isvideorecording() {
@@ -604,9 +648,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         zoom = new Rect(croppedWidth/2, croppedHeight/2,
                 rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
         Log.e("zoom level ",""+zoom+" "+zoomLevel+" "+maximumZoomLevel);
-        mPreviewBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+
+        mpreviewbuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
         try {
-            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+            mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -760,6 +805,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             characteristics = manager.getCameraCharacteristics(cameraId);
 
             maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+            seekbarzoom.setMax(maximumZoomLevel);
+            seekbarzoom.setMin(1);
             StreamConfigurationMap map = characteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
@@ -826,14 +873,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             SurfaceTexture texture = mTextureView.getSurfaceTexture();
             assert texture != null;
             texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-            mPreviewBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
+            mpreviewbuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD);
             List<Surface> surfaces = new ArrayList<Surface>();
             Surface previewSurface = new Surface(texture);
             surfaces.add(previewSurface);
-            mPreviewBuilder.addTarget(previewSurface);
+            mpreviewbuilder.addTarget(previewSurface);
             Surface recorderSurface = mediarecorder.getSurface();
             surfaces.add(recorderSurface);
-            mPreviewBuilder.addTarget(recorderSurface);
+            mpreviewbuilder.addTarget(recorderSurface);
             mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(CameraCaptureSession cameraCaptureSession) {
@@ -862,10 +909,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             return;
         }
         try {
-            setUpCaptureRequestBuilder(mPreviewBuilder);
+            setUpCaptureRequestBuilder(mpreviewbuilder);
             HandlerThread thread = new HandlerThread("CameraPreview");
             thread.start();
-            mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, mBackgroundHandler);
+            mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, mBackgroundHandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1296,7 +1343,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 },finalArray[0]);
             }
         }
-        txt_title_actionbarcomposer.setText("00:00.00");
+        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
     }
 
     @Override
@@ -1397,9 +1444,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         UpdateTime = 0L ;
         Seconds = 0 ;
         Minutes = 0 ;
+        Hours = 0 ;
         MilliSeconds = 0 ;
         //timer.setText("00:00:00");
-        txt_title_actionbarcomposer.setText("00:00.00");
+        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
     }
 
     public Runnable runnable = new Runnable() {
@@ -1412,6 +1460,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     UpdateTime = TimeBuff + MillisecondTime;
                     Seconds = (int) (UpdateTime / 1000);
                     Minutes = Seconds / 60;
+                    Hours = Minutes/60;
                     Seconds = Seconds % 60;
                     MilliSeconds = (int) (UpdateTime % 1000);
 
@@ -1420,9 +1469,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         public void run() {
                             if(isvideorecording)
                             {
-                                txt_title_actionbarcomposer.setText("" + String.format("%02d", Minutes) + ":"
+                                txt_title_actionbarcomposer.setText("" + String.format("%01d", Hours) + ":"+
+                                        "" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + "."
-                                        + String.format("%02d", (MilliSeconds/10)));
+                                        + String.format("%01d", (MilliSeconds/100)));
                             }
 
                         }
@@ -1770,13 +1820,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         try {
             if(isflashon) {
                 imgflashon.setImageResource(R.drawable.ic_no_flash_icon);
-                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
-                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                mpreviewbuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
+                mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
                 isflashon = false;
             } else {
                 imgflashon.setImageResource(R.drawable.flash_on);
-                mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
-                mPreviewSession.setRepeatingRequest(mPreviewBuilder.build(), null, null);
+                mpreviewbuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
+                mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
                 isflashon = true;
             }
         } catch (Exception e) {
@@ -1805,12 +1855,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     public void showhideactionbaricon(int i){
         if(i == 0){
-            txt_title_actionbarcomposer.setText("00:00.00");
+            txt_title_actionbarcomposer.setText(config.mediarecorderformat);
             img_dotmenu.setVisibility(View.INVISIBLE);
             txt_media_quality.setVisibility(View.INVISIBLE);
 
         }else{
-            txt_title_actionbarcomposer.setText("00:00.00");
+            txt_title_actionbarcomposer.setText(config.mediarecorderformat);
             img_dotmenu.setVisibility(View.VISIBLE);
             txt_media_quality.setVisibility(View.VISIBLE);
         }
@@ -1823,10 +1873,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         if(isshow){
             layout_bottom.setVisibility(View.GONE);
-            linearheader.setVisibility(View.GONE);
+            headercontainer.setVisibility(View.GONE);
         }else{
             layout_bottom.setVisibility(View.VISIBLE);
-            linearheader.setVisibility(View.VISIBLE);
+            headercontainer.setVisibility(View.VISIBLE);
         }
     }
 }

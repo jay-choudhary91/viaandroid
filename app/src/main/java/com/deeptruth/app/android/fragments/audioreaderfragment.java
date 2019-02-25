@@ -26,6 +26,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -60,6 +62,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.encryptiondataadapter;
 import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
@@ -75,6 +78,7 @@ import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.simpledivideritemdecoration;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.github.mikephil.charting.utils.Utils;
@@ -279,6 +283,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView img_pause;
     @BindView(R.id.layout_seekbartiming)
     RelativeLayout layout_seekbartiming;
+    @BindView(R.id.layout_item_encryption)
+    LinearLayout layout_item_encryption;
+    @BindView(R.id.recycler_encryption)
+    RecyclerView recycler_encryption;
     @BindView(R.id.img_handleup)
     ImageView img_handleup;
 
@@ -314,13 +322,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private BroadcastReceiver getmetadatabroadcastreceiver;
     private float currentDegree = 0f;
     boolean ismediaplayer = false;
-    String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
+    String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediatime = "",mediasize="",lastsavedangle="",thumbnailurl="";
     adapteritemclick mcontrollernavigator;
     arraycontainer arraycontainerformetric =null;
     int currentprocessframe=0;
     int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight;
     int footerheight;
+    encryptiondataadapter encryptionadapter;
 
     public audioreaderfragment() {
     }
@@ -346,6 +355,18 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     public void loadviewdata()
     {
         gethelper().setrecordingrunning(false);
+
+        layout_item_encryption.setVisibility(View.GONE);
+        recycler_encryption.setVisibility(View.VISIBLE);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recycler_encryption.setLayoutManager(layoutManager);
+        recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
+
+        encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
+        recycler_encryption.setAdapter(encryptionadapter);
+
         linearLayout=rootview.findViewById(R.id.content);
         //   righthandle=rootview.findViewById(R.id.righthandle);
         playpausebutton = (circularImageview)rootview.findViewById(R.id.btn_playpause);
@@ -422,6 +443,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         arraycontainerformetric = new arraycontainer();
                         arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
                     }
+
+                    if(encryptionadapter != null && recycler_encryption!= null)
+                        recycler_encryption.smoothScrollToPosition(currentprocessframe);
                 }
             }
 
@@ -1116,7 +1140,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         maxincreasevideoduration=0;
 
         audioduration =mp.getDuration();
-        txt_duration.setText( common.gettimestring(mp.getDuration()));
 
         try {
 
@@ -1531,6 +1554,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     medianame = "" + cur.getString(cur.getColumnIndex("media_name"));
                     medianotes =  "" + cur.getString(cur.getColumnIndex("media_notes"));
                     mediafolder =  "" + cur.getString(cur.getColumnIndex("media_folder"));
+                    mediaduration =  "" + cur.getString(cur.getColumnIndex("mediaduration"));
                     mediatransectionid = "" + cur.getString(cur.getColumnIndex("videostarttransactionid"));
                     thumbnailurl = "" + cur.getString(cur.getColumnIndex("thumbnailurl"));
 
@@ -1572,7 +1596,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             final String createdtime = new SimpleDateFormat("hh:mm:ss aa").format(startdate);
                             txt_starttime.setText(startformatteddate +" " + localTime);
                             txt_endtime.setText(endformatteddate +" " +  localTime);
-
+                            txt_duration.setText(mediaduration);
                           //  txt_title_actionbarcomposer.setText(filecreateddate);
                             txt_createdtime.setText(createdtime);
 
@@ -1638,6 +1662,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         public void run() {
                             edt_medianame.setText(medianame);
                             edt_medianotes.setText(medianotes);
+
+                            encryptionadapter.notifyDataSetChanged();
                         }
                     });
                 }

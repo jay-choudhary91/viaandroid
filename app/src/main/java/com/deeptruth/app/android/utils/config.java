@@ -38,6 +38,7 @@ public class config {
     public static final String location_elevationapi_baseurl = "https://maps.googleapis.com/maps/api/elevation/json?";
     public static final String prefs_name = "main_prefs";
     public static final String time_format = "hh:mm a";
+    public static final String date_format = "MM/dd/yyyy";
     public static final String date_time_format = "MM-dd-yyyy hh:mm:ss";
     public static final String build_flavor_videocreater = "creater";
     public static final String build_flavor_videoviewer = "viewer";
@@ -47,6 +48,8 @@ public class config {
     public static final String composer_service_getencryptionmetadata = "composer_service_getencryptionmetadata";
     public static final String ismediadataservicerunning = "ismediadataservicerunning";
     public static final String broadcast_medialistnewitem = "broadcast_medialistnewitem";
+
+    public static final String mediarecorderformat = "0:00:00:0";
 
     public static final String build_flavor_reader = "reader";
     public static final String build_flavor_composer = "composer";
@@ -160,6 +163,7 @@ public class config {
     public static final String item_photo="PHOTO";
     public static final String item_video="VIDEO";
     public static final String item_audio="AUDIO";
+    public static final String item_image="IMAGE";
 
     public static final String color_red="red";
     public static final String color_yellow="yellow";

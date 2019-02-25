@@ -813,11 +813,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             metricItemValue = "" + Build.VERSION.SDK_INT;
         } else if (key.equalsIgnoreCase("osversion")) {
             metricItemValue = Build.VERSION.RELEASE;
-        } else if (key.equalsIgnoreCase("devicetime")) {
+        } else if (key.equalsIgnoreCase("devicedate")) {
             Calendar calander = Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.time_format);
-            String time = simpleDateFormat.format(calander.getTime());
-            metricItemValue = time;
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(config.date_format);
+            String date = simpleDateFormat.format(calander.getTime());
+            metricItemValue = date;
         } else if (key.equalsIgnoreCase("softwareversion")) {
             metricItemValue = "" + telephonymanager.getDeviceSoftwareVersion();
         } else if (key.equalsIgnoreCase("deviceregion") || (key.equalsIgnoreCase("country"))) {

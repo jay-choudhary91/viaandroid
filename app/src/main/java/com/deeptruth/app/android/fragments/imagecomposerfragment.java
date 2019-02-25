@@ -910,6 +910,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         try {
             characteristics = manager.getCameraCharacteristics(cameraid);
             maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+            seekbarzoom.setMax(maximumZoomLevel);
+            seekbarzoom.setMin(1);
         } catch (Exception e) {
             e.printStackTrace();
         }

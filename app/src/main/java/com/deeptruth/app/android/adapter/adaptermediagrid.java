@@ -78,7 +78,8 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
     @Override
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
-        if(arrayvideolist.get(position).isDoenable())
+        final video mediaobject=arrayvideolist.get(position);
+        if(mediaobject.isDoenable())
         {
             holder.img_mediathumbnail.post(new Runnable() {
                 @Override
@@ -94,13 +95,10 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                             TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth,
                                     0.0f, 0.0f);
                             animation.setDuration(3000);
-                            //animation.setStartOffset(position*100);
+                            animation.setStartOffset(mediaobject.getGriditemheight()*10);
                             animation.setRepeatCount(Animation.INFINITE);
                             animation.setRepeatMode(ValueAnimator.RESTART);
-                            //animation.setFillAfter(true);
                             holder.img_scanover.startAnimation(animation);
-
-           /**/
 
                             Animation.AnimationListener listener=new Animation.AnimationListener() {
                                 @Override
@@ -117,29 +115,33 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                                 }
                             };
 
-                            if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_green))
+                            if(mediaobject != null)
                             {
-                                animation.setAnimationListener(listener);
-                                holder.img_scanover.setVisibility(View.VISIBLE);
-                                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
+                                if(mediaobject.getMediacolor().equalsIgnoreCase(config.color_green))
+                                {
+                                    animation.setAnimationListener(listener);
+                                    holder.img_scanover.setVisibility(View.VISIBLE);
+                                    holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
+                                }
+                                else if(mediaobject.getMediacolor().equalsIgnoreCase(config.color_yellow))
+                                {
+                                    animation.setAnimationListener(listener);
+                                    holder.img_scanover.setVisibility(View.VISIBLE);
+                                    holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
+                                }
+                                else if(mediaobject.getMediacolor().equalsIgnoreCase(config.color_red))
+                                {
+                                    animation.setAnimationListener(listener);
+                                    holder.img_scanover.setVisibility(View.VISIBLE);
+                                    holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
+                                }
+                                else
+                                {
+                                    holder.img_scanover.setBackgroundResource(0);
+                                    holder.img_scanover.setVisibility(View.GONE);
+                                }
                             }
-                            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_yellow))
-                            {
-                                animation.setAnimationListener(listener);
-                                holder.img_scanover.setVisibility(View.VISIBLE);
-                                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
-                            }
-                            else if(arrayvideolist.get(position).getMediacolor().equalsIgnoreCase(config.color_red))
-                            {
-                                animation.setAnimationListener(listener);
-                                holder.img_scanover.setVisibility(View.VISIBLE);
-                                holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
-                            }
-                            else
-                            {
-                                holder.img_scanover.setBackgroundResource(0);
-                                holder.img_scanover.setVisibility(View.GONE);
-                            }
+
 
                         }
                     });
@@ -148,12 +150,12 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
 
 
             holder.rl_row_media.setVisibility(View.VISIBLE);
-            holder.tv_mediaduration.setText(arrayvideolist.get(position).getDuration());
+            holder.tv_mediaduration.setText(mediaobject.getDuration());
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
-                if(arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete) ||
-                        arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_notfound))
+                if(mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete) ||
+                        mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
                 {
                     holder.img_loader.setVisibility(View.GONE);
                 }
@@ -170,9 +172,9 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 holder.img_loader.setVisibility(View.GONE);
             }
 
-            if(! arrayvideolist.get(position).getmimetype().contains("audio"))
+            if(! mediaobject.getmimetype().contains("audio"))
             {
-                Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getPath()));
+                Uri uri = Uri.fromFile(new File(mediaobject.getPath()));
                 Glide.with(context).
                         load(uri).
                         thumbnail(0.1f).
@@ -180,11 +182,11 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             }
             else
             {
-                if(! arrayvideolist.get(position).getThumbnailpath().trim().isEmpty())
+                if(! mediaobject.getThumbnailpath().trim().isEmpty())
                 {
-                    if(new File(arrayvideolist.get(position).getThumbnailpath()).exists())
+                    if(new File(mediaobject.getThumbnailpath()).exists())
                     {
-                        Uri uri = Uri.fromFile(new File(arrayvideolist.get(position).getThumbnailpath()));
+                        Uri uri = Uri.fromFile(new File(mediaobject.getThumbnailpath()));
                         Glide.with(context).
                                 load(uri).
                                 thumbnail(0.1f).
@@ -207,14 +209,14 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 {
                     if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
                     {
-                        if (! arrayvideolist.get(position).getMediastatus().equalsIgnoreCase(config.sync_complete))
+                        if (! mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete))
                             return;
                     }
-                    adapter.onItemClicked(arrayvideolist.get(position),4);
+                    adapter.onItemClicked(mediaobject,4);
                 }
             });
-            holder.img_mediathumbnail.getLayoutParams().height = arrayvideolist.get(position).getGriditemheight();
-            holder.img_scanover.getLayoutParams().height = arrayvideolist.get(position).getGriditemheight();
+            holder.img_mediathumbnail.getLayoutParams().height = mediaobject.getGriditemheight();
+            holder.img_scanover.getLayoutParams().height = mediaobject.getGriditemheight();
         }
         else
         {
