@@ -160,6 +160,7 @@ public class config {
     public static final String item_photo="PHOTO";
     public static final String item_video="VIDEO";
     public static final String item_audio="AUDIO";
+    public static final String item_image="IMAGE";
 
     public static final String color_red="red";
     public static final String color_yellow="yellow";
