@@ -923,7 +923,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         tab_layout.setVisibility(View.GONE);
                         updatetextureviewsize(targetwidth,targetheight);
                         layout_footer.setVisibility(View.GONE);
-                        layout_mediatype.setVisibility(View.INVISIBLE);
+                        layout_mediatype.setVisibility(View.GONE);
                         layoutbackgroundcontroller.setVisibility(View.GONE);
                         playpausebutton.setVisibility(View.GONE);
                         imgpause.setVisibility(View.GONE);
