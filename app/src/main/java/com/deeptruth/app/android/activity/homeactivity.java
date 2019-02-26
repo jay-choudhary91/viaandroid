@@ -203,14 +203,16 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
     }
 
+
     @Override
     public void hidedrawerbutton(boolean enable) {
         if(enable){
             imglefthandle.setVisibility(View.GONE);
-        }else{
+        }else if((getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof audiocomposerfragment) &&
+                !navigationdrawer.isDrawerOpen(GravityCompat.START)){
+
             imglefthandle.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override

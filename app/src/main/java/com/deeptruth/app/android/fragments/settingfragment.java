@@ -43,6 +43,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
         {
           rootview = super.onCreateView(inflater, container, savedInstanceState);
           ButterKnife.bind(this, rootview);
+          gethelper().drawerenabledisable(false);
           img_arrow_back.setOnClickListener(this);
           webview.getSettings().setJavaScriptEnabled(true);
           webview.getSettings().setSupportZoom(true);       //Zoom Control on web (You don't need this
