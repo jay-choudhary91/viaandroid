@@ -499,6 +499,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         }
                         else
                         {
+                            if(countertimer != null)
+                                countertimer.cancel();
+
+                            txt_timer.setText("");
+                            txt_timer.setVisibility(View.GONE);
+                            enableDisableView(parentview,true);
+
                             if(fragimgcapture != null)
                                 fragimgcapture.takePicture();
                         }
@@ -557,9 +564,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             countertimer.cancel();
 
         txt_timer.setVisibility(View.VISIBLE);
-
         enableDisableView(parentview,false);
-
         countertimer=new CountDownTimer(21000, 1000)
         {
             public void onTick(long millisUntilFinished) {
@@ -573,6 +578,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     if(countertimer != null)
                         countertimer.cancel();
 
+                    txt_timer.setText("");
+                    txt_timer.setVisibility(View.GONE);
                     cameracaptureeffect();
                 }
                 else
