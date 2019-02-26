@@ -499,6 +499,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         }
                         else
                         {
+                            if(countertimer != null)
+                                countertimer.cancel();
+
+                            txt_timer.setText("");
+                            txt_timer.setVisibility(View.GONE);
+                            enableDisableView(parentview,true);
+
                             if(fragimgcapture != null)
                                 fragimgcapture.takePicture();
                         }
@@ -557,9 +564,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             countertimer.cancel();
 
         txt_timer.setVisibility(View.VISIBLE);
-
         enableDisableView(parentview,false);
-
         countertimer=new CountDownTimer(21000, 1000)
         {
             public void onTick(long millisUntilFinished) {
@@ -573,6 +578,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     if(countertimer != null)
                         countertimer.cancel();
 
+                    txt_timer.setText("");
+                    txt_timer.setVisibility(View.GONE);
                     cameracaptureeffect();
                 }
                 else
@@ -590,31 +597,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     }
 
     private void cameracaptureeffect() {
-        ObjectAnimator animation = ObjectAnimator.ofInt(txt_timer, "backgroundColor", Color.WHITE);
-        animation.setDuration(50);
-        animation.setEvaluator(new ArgbEvaluator());
-        animation.setRepeatCount(Animation.RELATIVE_TO_SELF);
-        animation.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                super.onAnimationCancel(animation);
-            }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                txt_timer.setVisibility(View.GONE);
+        txt_timer.setVisibility(View.GONE);
 
-                if(fragimgcapture != null)
-                    fragimgcapture.takePicture();
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation, boolean isReverse) {
-
-            }
-        });
-        animation.start();
+        if(fragimgcapture != null)
+            fragimgcapture.takePicture();
     }
 
     public void medialistitemaddbroadcast()
