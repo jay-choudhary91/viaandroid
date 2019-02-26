@@ -38,9 +38,9 @@ public class splashactivity extends AppCompatActivity {
             img_imagedeep.setImageDrawable(gifDrawable);
          //   img_imagedeep.setAlpha(0f);
             img_imagedeep.setVisibility(View.VISIBLE);
-            img_imagedeep.animate()    // .alpha(1.0f)
-                    .setDuration(100)
-                    .setListener(null);
+            img_imagedeep.animate()    // .alpha(1.0f)   .setListener(null);
+                    .setDuration(100);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
