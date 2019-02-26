@@ -980,24 +980,24 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             if(player != null && (! player.isPlaying()))  // Player is pause
                             {
                                 layout_halfscrnimg.getLayoutParams().height = rootviewheight;
-                           //     gethelper().updateactionbar(1);
+                                gethelper().updateactionbar(1);
                                 layout_footer.setVisibility(View.VISIBLE);
                                 img_fullscreen.setVisibility(View.VISIBLE);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
-                                layout_mediatype.setVisibility(View.VISIBLE);
                                 layoutpause.setVisibility(View.GONE);
+                                common.slidetodown(layout_mediatype);
                             }
                             else   // Player is playing
                             {
                                 layout_halfscrnimg.getLayoutParams().height = rootviewheight;
-                              //  gethelper().updateactionbar(1);
-                                layout_mediatype.setVisibility(View.INVISIBLE);
+                                gethelper().updateactionbar(1);
                                 layout_footer.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(true);
                                 img_fullscreen.setVisibility(View.GONE);
                                 layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                                 imgpause.setVisibility(View.VISIBLE);
                                 layoutpause.setVisibility(View.VISIBLE);
+                                common.slidetodown(layout_mediatype);
                                 playpausebutton.setVisibility(View.GONE);
                                 layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
@@ -1017,21 +1017,21 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             if(player != null && (! player.isPlaying()))
                             {
                                 layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));;
-                        //        gethelper().updateactionbar(0);
+                                gethelper().updateactionbar(0);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
                                 layout_footer.setVisibility(View.GONE);
                                 img_fullscreen.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(false);
-                                layout_mediatype.setVisibility(View.GONE);
+                                common.slidetoabove(layout_mediatype);
                                 layoutpause.setVisibility(View.GONE);
                             }
                             else
                             {
                                 layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-                          //      gethelper().updateactionbar(0);
+                                gethelper().updateactionbar(0);
                                 gethelper().drawerenabledisable(false);
                                 layoutpause.setVisibility(View.VISIBLE);
-                                layout_mediatype.setVisibility(View.VISIBLE);
+                                common.slidetoabove(layout_mediatype);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
                                 layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
@@ -1055,7 +1055,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }else{
                         if(layout_videodetails.getVisibility()==View.GONE){
                             layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-                         //   gethelper().updateactionbar(0);
+                            gethelper().updateactionbar(0);
                             layout_mediatype.setVisibility(View.GONE);
                             layoutpause.setVisibility(View.GONE);
                             layoutcustomcontroller.requestLayout();
@@ -1083,7 +1083,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layoutbackgroundcontroller.setVisibility(View.GONE);
                             totalduration.setVisibility(View.VISIBLE);
                             time_current.setVisibility(View.VISIBLE);
-                      //      gethelper().updateactionbar(1);
+                            gethelper().updateactionbar(1);
                             imgpause.setVisibility(View.GONE);
                         }
                     }
