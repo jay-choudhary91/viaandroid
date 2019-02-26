@@ -76,6 +76,7 @@
                     android:id="@+id/layout_scrubberview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="false"
                     android:background="@color/white"
                     android:layout_alignParentBottom="true"
                     android:orientation="vertical">
@@ -221,6 +222,14 @@
                 android:layout_marginRight="@dimen/normal_margin_right"
                 android:layout_alignParentRight="true"
                 android:background="@drawable/garbage"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:id="@+id/img_handleup"
+                android:visibility="gone"
+                android:src="@drawable/handle_down_arrow"/>
         </RelativeLayout>
     </RelativeLayout>
 

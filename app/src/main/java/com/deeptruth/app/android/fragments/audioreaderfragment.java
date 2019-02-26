@@ -287,6 +287,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     LinearLayout layout_item_encryption;
     @BindView(R.id.recycler_encryption)
     RecyclerView recycler_encryption;
+    @BindView(R.id.img_handleup)
+    ImageView img_handleup;
 
     private String audiourl = null,latency="";
 
@@ -503,6 +505,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         layout_duration.setVisibility(View.VISIBLE);
         layout_endtime.setVisibility(View.VISIBLE);
         layout_starttime.setVisibility(View.VISIBLE);
+        img_handleup.setOnClickListener(this);
 
 
         edt_medianame.setEnabled(false);
@@ -713,21 +716,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                       layout_scrubberview.setVisibility(View.GONE);
                       gethelper().drawerenabledisable(false);
 
-                  }else{
-                      addbottommargin();
-                      rlcontrollerview.getLayoutParams().height = audioviewheight;
-                      layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
-                      layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.white));
-                      layout_audiodetails.setVisibility(View.VISIBLE);
-                      layout_footer.setVisibility(View.VISIBLE);
-                      layout_mediatype.setVisibility(View.VISIBLE);
-                      layout_scrubberview.setVisibility(View.VISIBLE);
-                      layoutpause.setVisibility(View.GONE);
-                      linearseekbarcolorview.setVisibility(View.VISIBLE);
-                      mediaseekbar.setVisibility(View.VISIBLE);
-                      layout_seekbartiming.setVisibility(View.VISIBLE);
-                      gethelper().drawerenabledisable(false);
-                      gethelper().updateactionbar(1);
                   }
                 break;
             case R.id.img_pause:
@@ -737,11 +725,30 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         playpausebutton.setImageResource(R.drawable.play_btn);
                         playpausebutton.setVisibility(View.VISIBLE);
                         layout_footer.setVisibility(View.VISIBLE);
+                        img_handleup.setVisibility(View.VISIBLE);
                         gethelper().updateactionbar(1);
                         layout_scrubberview.setVisibility(View.GONE);
                         img_pause.setVisibility(View.GONE);
                     }
                 }
+                break;
+            case R.id.img_handleup:
+                addbottommargin();
+                rlcontrollerview.getLayoutParams().height = audioviewheight;
+                layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
+                layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.white));
+                layout_audiodetails.setVisibility(View.VISIBLE);
+                layout_footer.setVisibility(View.VISIBLE);
+                layout_mediatype.setVisibility(View.VISIBLE);
+                layout_scrubberview.setVisibility(View.VISIBLE);
+                layoutpause.setVisibility(View.GONE);
+                audio_downwordarrow.setVisibility(View.VISIBLE);
+                linearseekbarcolorview.setVisibility(View.VISIBLE);
+                mediaseekbar.setVisibility(View.VISIBLE);
+                layout_seekbartiming.setVisibility(View.VISIBLE);
+                img_handleup.setVisibility(View.GONE);
+                gethelper().drawerenabledisable(false);
+                gethelper().updateactionbar(1);
                 break;
 
             case R.id.img_delete_media:
@@ -766,12 +773,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         removebottommargin();
                         gethelper().updateactionbar(1);
                         recenterplaypause();
-                        audio_downwordarrow.setVisibility(View.VISIBLE);
-                        audio_downwordarrow.setImageResource(R.drawable.handle_down_arrow);
                         layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         layout_mediatype.setVisibility(View.VISIBLE);
-
                         playpausebutton.setVisibility(View.VISIBLE);
 
                         if(player != null && (! player.isPlaying()))  // Player is pause
@@ -780,10 +784,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             gethelper().updateactionbar(1);
                             layout_footer.setVisibility(View.VISIBLE);
                             layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                            audio_downwordarrow.setVisibility(View.VISIBLE);
                             gethelper().drawerenabledisable(true);
-                            layout_scrubberview.setVisibility(View.VISIBLE);
-
+                            layout_scrubberview.setVisibility(View.GONE);
+                            img_handleup.setVisibility(View.VISIBLE);
                             linearseekbarcolorview.setVisibility(View.GONE);
                             mediaseekbar.setVisibility(View.GONE);
                             layout_seekbartiming.setVisibility(View.GONE);
@@ -796,6 +799,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             gethelper().updateactionbar(1);
                             layout_mediatype.setVisibility(View.VISIBLE);
                             layout_footer.setVisibility(View.GONE);
+                            img_handleup.setVisibility(View.GONE);
                             audio_downwordarrow.setVisibility(View.GONE);
                             playpausebutton.setVisibility(View.GONE);
                             layoutpause.setVisibility(View.VISIBLE);
@@ -813,8 +817,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) +mediatypeheight ;
                         playpausebutton.setVisibility(View.GONE);
                         audio_downwordarrow.setVisibility(View.GONE);
-                        audio_downwordarrow.setImageResource(R.drawable.handle_up_arrow);
                         layout_footer.setVisibility(View.GONE);
+                        img_handleup.setVisibility(View.GONE);
                         layout_mediatype.setVisibility(View.GONE);
 
                         if(player != null && (! player.isPlaying()))
@@ -823,6 +827,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             gethelper().updateactionbar(0);
                             layout_audiodetails.setVisibility(View.GONE);
                             layout_footer.setVisibility(View.GONE);
+                            img_handleup.setVisibility(View.GONE);
                             audio_downwordarrow.setVisibility(View.GONE);
                             layout_scrubberview.setVisibility(View.GONE);
                             gethelper().drawerenabledisable(false);
@@ -1391,7 +1396,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             linearseekbarcolorview.setVisibility(View.GONE);
             mediaseekbar.setVisibility(View.GONE);
             layout_seekbartiming.setVisibility(View.GONE);
-            layout_audiodetails.setVisibility(View.VISIBLE);
+            layout_audiodetails.setVisibility(View.GONE);
+            img_handleup.setVisibility(View.VISIBLE);
             layoutpause.setVisibility(View.GONE);
             layout_footer.setVisibility(View.VISIBLE);
             playpausebutton.setImageResource(R.drawable.play_btn);
