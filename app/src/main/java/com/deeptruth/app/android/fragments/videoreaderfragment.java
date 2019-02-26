@@ -33,6 +33,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -336,6 +337,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     ImageView img_scanover;
     @BindView(R.id.attitude_indicator)
     AttitudeIndicator attitudeindicator;
+    @BindView(R.id.img_phone_orientation)
+            ImageView img_phone_orientation;
 
     int footerheight;
 
@@ -565,7 +568,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 maxincreasevideoduration=player.getCurrentPosition();
             }
         });
-
+        try {
+            DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         recyview_frames.post(new Runnable() {
             @Override
             public void run()
