@@ -590,31 +590,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     }
 
     private void cameracaptureeffect() {
-        ObjectAnimator animation = ObjectAnimator.ofInt(txt_timer, "backgroundColor", Color.WHITE);
-        animation.setDuration(50);
-        animation.setEvaluator(new ArgbEvaluator());
-        animation.setRepeatCount(Animation.RELATIVE_TO_SELF);
-        animation.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                super.onAnimationCancel(animation);
-            }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                txt_timer.setVisibility(View.GONE);
+        txt_timer.setVisibility(View.GONE);
 
-                if(fragimgcapture != null)
-                    fragimgcapture.takePicture();
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation, boolean isReverse) {
-
-            }
-        });
-        animation.start();
+        if(fragimgcapture != null)
+            fragimgcapture.takePicture();
     }
 
     public void medialistitemaddbroadcast()
