@@ -35,8 +35,8 @@
         android:layout_alignParentBottom="true"
         android:padding="15dp"
         android:visibility="visible"
-        android:background="@drawable/gradient_fade_dark_blue"
         android:animateLayoutChanges="true"
+        android:background="@drawable/gradient_fade_dark_blue"
         >
         <RelativeLayout
             android:id="@+id/layout_mediatype"
@@ -44,48 +44,72 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="Comfortaa-Bold"
-                android:id="@+id/txt_mediatype_b"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:textSize="13sp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/wave_blue"
-                android:text="PHOTO"
-                />
+                android:weightSum="5"
+                android:orientation="horizontal">
 
-            <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="Comfortaa-Regular"
-                android:id="@+id/txt_mediatype_a"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:textSize="13sp"
-                android:padding="8dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/txt_mediatype_b"
-                android:textColor="@color/white"
-                android:text="VIDEO"
-                />
+                <com.deeptruth.app.android.views.customfonttextview
+                    app:fontType="Comfortaa-Regular"
+                    android:id="@+id/txt_space_a"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    />
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    app:fontType="Comfortaa-Regular"
+                    android:id="@+id/txt_space_b"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    />
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    app:fontType="Comfortaa-Regular"
+                    android:id="@+id/txt_mediatype_a"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textColor="@color/white"
+                    android:text="VIDEO"
+                    />
 
 
-            <com.deeptruth.app.android.views.customfonttextview
-                app:fontType="Comfortaa-Regular"
-                android:id="@+id/txt_mediatype_c"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:padding="8dp"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/txt_mediatype_b"
-                android:textSize="13sp"
-                android:textColor="@color/white"
-                android:text="AUDIO"
-                />
+                <com.deeptruth.app.android.views.customfonttextview
+                    app:fontType="Comfortaa-Bold"
+                    android:id="@+id/txt_mediatype_b"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:text="PHOTO"
+                    />
+
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    app:fontType="Comfortaa-Regular"
+                    android:id="@+id/txt_mediatype_c"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:padding="8dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:text="AUDIO"
+                    />
+
+            </LinearLayout>
+
+
 
         </RelativeLayout>
 

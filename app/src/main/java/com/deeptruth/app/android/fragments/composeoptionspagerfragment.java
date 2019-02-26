@@ -64,7 +64,7 @@ import pl.droidsonroids.gif.GifDrawable;
  * Created by root on 6/11/18.
  */
 
-public class composeoptionspagerfragment extends basefragment implements View.OnClickListener, Orientation.Listener {
+public class composeoptionspagerfragment extends basefragment implements View.OnClickListener, Orientation.Listener, View.OnTouchListener {
 
     @BindView(R.id.txt_timer)
     TextView txt_timer;
@@ -101,6 +101,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     RelativeLayout layout_mediatype;
     @BindView(R.id.parentview)
     RelativeLayout parentview;
+    @BindView(R.id.txt_space_a)
+    TextView txt_space_a;
+    @BindView(R.id.txt_space_b)
+    TextView txt_space_b;
 
     boolean isvideoplaying = true;
 
@@ -157,6 +161,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             txt_mediatype_a.setOnClickListener(this);
             txt_mediatype_b.setOnClickListener(this);
             txt_mediatype_c.setOnClickListener(this);
+            layoutbottom.setOnTouchListener(this);
+            layout_mediatype.setOnTouchListener(this);
             shimmer_view_container.startShimmer();
 
             try {
@@ -259,6 +265,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 },finalArray[0]);
             }
         }
+    }
+
+    public void resetbuttonviews(TextView textView1,TextView textView2,TextView textView3)
+    {
+        textView1.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.wave_blue));
+        textView2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+        textView3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
     }
 
     @Override
@@ -426,38 +439,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                         txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
                         validatingcontrollers();
                     }
-                    /*else if(! locationawareactivity.checkPermission(applicationviavideocomposer.getactivity()))
-                    {
-                        if(permissionslist.size() >= 2)
-                        {
-                            if(permissionslist.get(0).isIspermissionskiped() || permissionslist.get(1).isIspermissionskiped())
-                                visiblewarningcontrollers();
-                        }
-                    }*/
-
-                    /*int rotation = applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay().getRotation();
-                    Display display = ((WindowManager)applicationviavideocomposer.getactivity().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-                    int screenOrientation = display.getRotation();
-                    float rotationangle = 0;
-
-                    switch (screenOrientation)
-                    {
-                        default:
-                        case ORIENTATION_0: // Portrait
-                            rotationangle=0;
-                            // do smth.
-                            break;
-                        case ORIENTATION_90: // Landscape right
-                            rotationangle=-90;
-                            // do smth.
-                            break;
-                        case ORIENTATION_270: // Landscape left
-                            // do smth.
-                            rotationangle=90;
-                            break;
-                    }*/
-
-
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -470,52 +451,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void initviewpager()
     {
-      //  recordstartstopbutton.setImageResource(R.drawable.img_startrecord);
-     //   recordstartstopbutton.setBackgroundResource(R.drawable.shape_recorder_off);
-
         flingactionmindstvac=common.getcomposerswipearea();
-
         currentselectedcomposer=config.selectedmediatype;
-        if(currentselectedcomposer == 0)
-        {
-            showselecteditemincenter(txt_mediatype_a,1);
-        }
-        else if(currentselectedcomposer == 2)
-        {
-            showselecteditemincenter(txt_mediatype_c,3);
-        }
-
         showselectedfragment();
         getlatestthumbnailfromdirectory();
-    }
-
-    public void showselecteditemincenter(TextView textView,int sectionnumber)
-    {
-        String selectedvalue=textView.getText().toString();
-        if(textView.getText().toString().startsWith(config.item_video))
-        {
-            currentselectedcomposer=0;
-        }
-        else if(textView.getText().toString().startsWith(config.item_photo))
-        {
-            currentselectedcomposer=1;
-        }
-        else if(textView.getText().toString().startsWith(config.item_audio))
-        {
-            currentselectedcomposer=2;
-        }
-
-        if(sectionnumber == 1)
-        {
-            textView.setText(txt_mediatype_c.getText().toString());
-            txt_mediatype_c.setText(txt_mediatype_b.getText().toString());
-        }
-        else if(sectionnumber == 3)
-        {
-            textView.setText(txt_mediatype_a.getText().toString());
-            txt_mediatype_a.setText(txt_mediatype_b.getText().toString());
-        }
-        txt_mediatype_b.setText(selectedvalue);
     }
 
     @Override
@@ -523,14 +462,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (view.getId())
         {
             case R.id.txt_mediatype_a:
-                showselecteditemincenter(txt_mediatype_a,1);
+                currentselectedcomposer=0;
                 showselectedfragment();
                 break;
             case R.id.txt_mediatype_b:
-
+                currentselectedcomposer=1;
+                showselectedfragment();
                 break;
             case R.id.txt_mediatype_c:
-                showselecteditemincenter(txt_mediatype_c,3);
+                currentselectedcomposer=2;
                 showselectedfragment();
                 break;
 
@@ -747,7 +687,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (currentselectedcomposer)
         {
             case 0:
+                txt_space_a.setVisibility(View.VISIBLE);
+                txt_space_b.setVisibility(View.VISIBLE);
                 imgrotatecamera.setVisibility(View.VISIBLE);
+                resetbuttonviews(txt_mediatype_a,txt_mediatype_b,txt_mediatype_c);
                 showhideactionbottombaricon(1);
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
@@ -757,7 +700,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             break;
 
             case 1:
+                txt_space_a.setVisibility(View.GONE);
+                txt_space_b.setVisibility(View.VISIBLE);
                 imgrotatecamera.setVisibility(View.VISIBLE);
+                resetbuttonviews(txt_mediatype_b,txt_mediatype_a,txt_mediatype_c);
                 showhideactionbottombaricon(1);
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
@@ -768,7 +714,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             break;
 
             case 2:
+                txt_space_a.setVisibility(View.GONE);
+                txt_space_b.setVisibility(View.GONE);
                 imgrotatecamera.setVisibility(View.GONE);
+                resetbuttonviews(txt_mediatype_c,txt_mediatype_a,txt_mediatype_b);
                 showhideactionbottombaricon(3);
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
@@ -787,30 +736,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 {
                     gifdrawable.pause();
                     gifdrawable.seekTo(0);
-                }
-
-                String mediatype="";
-                switch (currentselectedcomposer)
-                {
-                    case 0:
-                        mediatype=config.item_video;
-                        break;
-
-                    case 1:
-                        mediatype=config.item_photo;
-                        break;
-
-                    case 2:
-                        mediatype=config.item_audio;
-                        break;
-                }
-                if(txt_mediatype_a.getText().toString().startsWith(mediatype))
-                {
-                    showselecteditemincenter(txt_mediatype_a,1);
-                }
-                else if(txt_mediatype_c.getText().toString().startsWith(mediatype))
-                {
-                    showselecteditemincenter(txt_mediatype_c,3);
                 }
 
             }
@@ -878,17 +803,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 {
                     e.printStackTrace();
                 }
-
-                /*currentselectedcomposer=config.selectedmediatype;
-                showselectedfragment();*/
                 getlatestthumbnailfromdirectory();
             }
-            else if(type == 5) // For swipe gesture to change fragment
+            else if(type == 5)
             {
                 showwarningsection(true);
                 isvideoplaying = true;
             }
-            else if(type == 6) // For swipe gesture to change fragment
+            else if(type == 6)
             {
                 showwarningsection(false);
                 isvideoplaying = true;
@@ -1131,12 +1053,38 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             if(fragaudiocomposer != null)
                 fragaudiocomposer.changeiconsorientation(rotateangle);
-
         }
-            /*if(imgrotatecamera != null)
-                imgrotatecamera.setRotation(roll);
+    }
 
-            if(img_mediathumbnail != null)
-                img_mediathumbnail.setRotation(roll);*/
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        switch (view.getId())
+        {
+            case  R.id.layout_bottom:
+                try
+                {
+                    if (motionEvent.getPointerCount() == 1)
+                        mitemclick.onItemClicked(motionEvent,3);
+
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case  R.id.layout_mediatype:
+                try
+                {
+                    if (motionEvent.getPointerCount() == 1)
+                        mitemclick.onItemClicked(motionEvent,3);
+
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+        return true;
     }
 }

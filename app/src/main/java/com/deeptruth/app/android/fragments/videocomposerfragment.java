@@ -658,43 +658,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
-    GestureDetector flingswipe = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
-    {
-        @Override
-        public boolean onFling(MotionEvent fstMsnEvtPsgVal, MotionEvent lstMsnEvtPsgVal, float flingActionXcoSpdPsgVal,
-                               float flingActionYcoSpdPsgVal)
-        {
-            if(fstMsnEvtPsgVal.getX() - lstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Right to Left fling
-                return false;
-            }
-            else if (lstMsnEvtPsgVal.getX() - fstMsnEvtPsgVal.getX() > flingactionmindstvac && Math.abs(flingActionXcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Left to Right fling
-                return false;
-            }
-
-            if(fstMsnEvtPsgVal.getY() - lstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Bottom to Top fling
-
-                return false;
-            }
-            else if (lstMsnEvtPsgVal.getY() - fstMsnEvtPsgVal.getY() > flingactionmindstvac && Math.abs(flingActionYcoSpdPsgVal) >
-                    flingactionmindspdvac)
-            {
-                // TskTdo :=> On Top to Bottom fling
-
-                return false;
-            }
-            return false;
-        }
-    });
-
 
     /**
      * In this sample, we choose a video size with 3x4 aspect ratio. Also, we don't use sizes larger

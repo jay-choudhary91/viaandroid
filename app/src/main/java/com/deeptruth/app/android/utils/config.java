@@ -49,7 +49,7 @@ public class config {
     public static final String ismediadataservicerunning = "ismediadataservicerunning";
     public static final String broadcast_medialistnewitem = "broadcast_medialistnewitem";
 
-    public static final String mediarecorderformat = "0:00:00:0";
+    public static final String mediarecorderformat = "0:00:00.0";
 
     public static final String build_flavor_reader = "reader";
     public static final String build_flavor_composer = "composer";
