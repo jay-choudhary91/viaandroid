@@ -224,6 +224,8 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center_horizontal"
                                     android:maxLines="1"
+                                    android:paddingRight="2dp"
+                                    android:paddingLeft="2dp"
                                     android:background="@drawable/timebubble"
                                     android:layout_marginTop="2dp"
                                     android:singleLine="true"

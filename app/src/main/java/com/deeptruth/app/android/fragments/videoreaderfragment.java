@@ -491,6 +491,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
                     }
 
+                    if(encryptionadapter != null && recycler_encryption!= null)
+                        recycler_encryption.smoothScrollToPosition(currentprocessframe);
 
                     layout_progressline.setVisibility(View.VISIBLE);
                     RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
