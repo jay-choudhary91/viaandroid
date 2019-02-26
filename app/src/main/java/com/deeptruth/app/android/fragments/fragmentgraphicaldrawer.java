@@ -163,6 +163,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     AttitudeIndicator attitudeindicator;
     @BindView(R.id.view_latencyline)
     View view_latencyline;
+    @BindView(R.id.img_phone_orientation)
+    ImageView img_phone_orientation;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -270,7 +272,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         {
             float pitch = orientation[1] * -57;
             float roll = orientation[2] * -57;
-            attitudeindicator.setAttitude(pitch, roll);
+           // attitudeindicator.setAttitude(pitch, roll);
+
+            if(img_phone_orientation != null)
+                img_phone_orientation.setRotation(roll);
         }
         //Log.e("Pitch roll ",""+pitch+" "+roll);
     }
@@ -441,7 +446,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                 float pitch = orientation[1] * -57;
                 float roll = orientation[2] * -57;
-                attitudeindicator.setAttitude(pitch, roll);
+
+                if(img_phone_orientation != null)
+                    img_phone_orientation.setRotation(roll);
+
             }catch (Exception e)
             {
                 e.printStackTrace();

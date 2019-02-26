@@ -89,7 +89,8 @@
             android:name="io.fabric.ApiKey"
             android:value="42d19fb0e2e5d57caf4b1257310ca64e6f19cade" />
 
-        <activity android:name="com.deeptruth.app.android.activity.splashactivity">
+        <activity android:name="com.deeptruth.app.android.activity.splashactivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
@@ -101,7 +102,8 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
-        <activity android:name="com.deeptruth.app.android.activity.introscreenactivity" />
+        <activity android:name="com.deeptruth.app.android.activity.introscreenactivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

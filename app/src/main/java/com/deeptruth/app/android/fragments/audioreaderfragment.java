@@ -74,6 +74,7 @@ import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.wavevisualizer;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
+import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -359,9 +360,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         layout_item_encryption.setVisibility(View.GONE);
         recycler_encryption.setVisibility(View.VISIBLE);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler_encryption.setLayoutManager(layoutManager);
+        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
         encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());

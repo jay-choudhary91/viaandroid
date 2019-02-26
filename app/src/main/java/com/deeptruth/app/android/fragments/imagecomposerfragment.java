@@ -1088,6 +1088,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         getImageFile(getActivity());
         capturestillpicture();
+
+        brustmodeenabled=false;
+        img_stop_watch.setImageResource(R.drawable.stopwatch);
     }
 
     private void runPrecaptureSequence() {

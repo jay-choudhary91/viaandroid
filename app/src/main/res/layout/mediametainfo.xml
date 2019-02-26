@@ -243,8 +243,17 @@
                        android:id="@+id/attitude_indicator"
                        android:layout_width="150dp"
                        android:layout_height="150dp"
+                       android:visibility="gone"
                        android:layout_centerInParent="true"
                        android:layout_gravity="center"/>
+
+                   <ImageView
+                       android:id="@+id/img_phone_orientation"
+                       android:layout_width="55dp"
+                       android:layout_height="55dp"
+                       android:layout_centerInParent="true"
+                       android:src="@drawable/orientation_animation"/>
+
 
                    <ImageView
                        android:layout_width="150dp"
