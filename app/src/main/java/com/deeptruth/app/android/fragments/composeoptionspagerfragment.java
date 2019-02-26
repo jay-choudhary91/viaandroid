@@ -99,6 +99,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_mediatype_c;
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
+    @BindView(R.id.parentview)
+    RelativeLayout parentview;
 
     boolean isvideoplaying = true;
 
@@ -598,6 +600,17 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
+    public static void enableDisableView(View view, boolean enabled) {
+        view.setEnabled(enabled);
+        if ( view instanceof ViewGroup ) {
+            ViewGroup group = (ViewGroup)view;
+
+            for ( int idx = 0 ; idx < group.getChildCount() ; idx++ ) {
+                enableDisableView(group.getChildAt(idx), enabled);
+            }
+        }
+    }
+
     public void startbrustcameratimer()
     {
         if(countertimer != null)
@@ -605,14 +618,18 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         txt_timer.setVisibility(View.VISIBLE);
 
-        countertimer=new CountDownTimer(21000, 1000) {
+        enableDisableView(parentview,false);
 
+        countertimer=new CountDownTimer(21000, 1000)
+        {
             public void onTick(long millisUntilFinished) {
                 Log.e("Timer running", " Tick");
                 millisUntilFinished=millisUntilFinished-10000;
                 int lefttime=(int)(millisUntilFinished/1000);
                 if(lefttime == 0)
                 {
+                    enableDisableView(parentview,true);
+
                     if(countertimer != null)
                         countertimer.cancel();
 
@@ -625,6 +642,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
 
             public void onFinish() {
+                enableDisableView(parentview,true);
                 if(countertimer != null)
                     countertimer.cancel();
             }
@@ -726,7 +744,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void showselectedfragment()
     {
-
         switch (currentselectedcomposer)
         {
             case 0:

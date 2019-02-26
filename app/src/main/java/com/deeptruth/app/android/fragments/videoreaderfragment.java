@@ -1,6 +1,9 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,6 +37,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
@@ -85,6 +89,7 @@ import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
+import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.NoScrollRecycler;
 import com.deeptruth.app.android.utils.centerlayoutmanager;
 import com.deeptruth.app.android.utils.circularImageview;
@@ -415,9 +420,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_item_encryption.setVisibility(View.GONE);
         recycler_encryption.setVisibility(View.VISIBLE);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler_encryption.setLayoutManager(layoutManager);
+        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
         encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
@@ -490,6 +495,30 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         arraycontainerformetric = new arraycontainer();
                         arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
                     }
+
+                    /*ValueAnimator fader = ObjectAnimator.ofFloat(recycler_encryption, "alpha", 1, 0);
+                    AnimatorSet animation = new AnimatorSet();
+                    animation.addListener(new Animator.AnimatorListener()
+                    {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+                        }
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+
+                        }
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                        }
+                    });
+
+                    ((AnimatorSet) animation).play(fader);
+                    animation.setDuration(500);
+                    animation.start();*/
 
                     if(encryptionadapter != null && recycler_encryption!= null)
                         recycler_encryption.smoothScrollToPosition(currentprocessframe);
