@@ -217,7 +217,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     public void updateactionbar(int fullscreenmode) {
         if(fullscreenmode == 0)   // Enable full screen mode
         {
-            /*View decorView = getWindow().getDecorView();
+           /* View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_IMMERSIVE
                             // Set the content to appear under the system bars so that the
@@ -237,6 +237,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             },100);*/
 
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
         }
         else        // Disable full screen mode
@@ -256,6 +257,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             },800);*/
 
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         }
     }

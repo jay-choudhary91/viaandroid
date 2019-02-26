@@ -2091,7 +2091,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void addbottommargin(){
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,0,0,10);
+        params.setMargins(0,0,0,80);
         layout_audiowave.setLayoutParams(params);
         layout_audiowave.requestLayout();
     }

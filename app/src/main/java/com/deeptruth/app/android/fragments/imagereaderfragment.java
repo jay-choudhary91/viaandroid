@@ -606,9 +606,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
                     layout_photodetails.getLayoutParams().height = 0;
                     expand(tab_photoreader,100,targetheight+ Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
-
+                    gethelper().drawerenabledisable(false);
                     gethelper().updateactionbar(0);
-
                     layout_photodetails.setVisibility(View.GONE);
                     layout_photodetails.requestLayout();
                     scrollview_detail.setVisibility(View.GONE);
@@ -648,13 +647,16 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         img_fullscreen.setVisibility(View.VISIBLE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_mediatype.setVisibility(View.VISIBLE);
-                        common.slidetodown(layout_mediatype);
+                      //  common.slidetodown(layout_mediatype);
+                        gethelper().drawerenabledisable(true);
                         layout_footer.setVisibility(View.VISIBLE);
                         layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                     } else {
                         gethelper().updateactionbar(0);
                         layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-                        common.slidetoabove(layout_mediatype);
+                   //     common.slidetoabove(layout_mediatype);
+                        gethelper().drawerenabledisable(false);
+                        layout_mediatype.setVisibility(View.GONE);
                         img_fullscreen.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         layout_footer.setVisibility(View.GONE);
@@ -662,6 +664,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 } else {
                     img_fullscreen.setVisibility(View.VISIBLE);
+                    gethelper().drawerenabledisable(false);
                     img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                 }
 
