@@ -83,6 +83,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,6 +124,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     TextView txt_media_high;
     @BindView(R.id.txt_media_quality)
     TextView txt_media_quality;
+    @BindView(R.id.txt_zoomlevel)
+    TextView txt_zoomlevel;
 
     mediaqualityadapter qualityadapter;
     List<String> qualityitemslist=new ArrayList<>();
@@ -550,6 +553,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         txt_media_low.setOnClickListener(this);
         txt_media_medium.setOnClickListener(this);
         txt_media_high.setOnClickListener(this);
+        txt_zoomlevel.setOnClickListener(this);
 
         img_dotmenu.setVisibility(View.VISIBLE);
         imgflashon.setVisibility(View.VISIBLE);
@@ -1426,6 +1430,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 camraflashonoff();
                 break;
 
+            case R.id.txt_zoomlevel:
+                zoomLevel++;
+                if(zoomLevel > maximumZoomLevel)
+                    zoomLevel=1f;
+
+                setupcamerazoom();
+                break;
+
             case R.id.img_warning:
 
                 img_warning.setVisibility(View.GONE);
@@ -1578,7 +1590,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                                 zoomLevel = zoomLevel - delta;
                             }
                             setupcamerazoom();
-                            seekbarzoom.setProgress(zoomLevel);
+                            //seekbarzoom.setProgress(zoomLevel);
                             fadeinzoomcontrollers();
 
                         }
@@ -1600,6 +1612,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void setupcamerazoom()
     {
+        DecimalFormat precision=new DecimalFormat("0.0");
+        zoomcontrollertimeout=new Date();
+        txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
+
         Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
         float ratio = (float) 1 / zoomLevel;
         int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);

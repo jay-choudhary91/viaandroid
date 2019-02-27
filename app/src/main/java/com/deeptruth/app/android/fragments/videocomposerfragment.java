@@ -93,6 +93,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -379,6 +380,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_media_medium;
     @BindView(R.id.txt_media_high)
     TextView txt_media_high;
+    @BindView(R.id.txt_zoomlevel)
+    TextView txt_zoomlevel;
 
     Animation blinkanimation;
     mediaqualityadapter qualityadapter;
@@ -478,6 +481,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_low.setOnClickListener(this);
         txt_media_medium.setOnClickListener(this);
         txt_media_high.setOnClickListener(this);
+        txt_zoomlevel.setOnClickListener(this);
 
         txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
         expandable_layout.setVisibility(View.VISIBLE);
@@ -698,9 +702,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 zoomLevel = zoomLevel - delta;
                             }
                             setupcamerazoom();
-                            seekbarzoom.setProgress(zoomLevel);
+                            //seekbarzoom.setProgress(zoomLevel);
                             fadeinzoomcontrollers();
-
                         }
                         fingerSpacing = currentFingerSpacing;
                     }
@@ -760,6 +763,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void setupcamerazoom()
     {
+        DecimalFormat precision=new DecimalFormat("0.0");
+        zoomcontrollertimeout=new Date();
+        txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
+
         Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
         float ratio = (float) 1 / zoomLevel;
         int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
@@ -1222,6 +1229,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             case R.id.img_flash:
                 navigateflash();
+                break;
+
+            case R.id.txt_zoomlevel:
+
+                zoomLevel++;
+
+                if(zoomLevel > maximumZoomLevel)
+                    zoomLevel=1f;
+
+                setupcamerazoom();
+
                 break;
 
             case R.id.txt_media_low:
