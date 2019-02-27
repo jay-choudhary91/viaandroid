@@ -46,9 +46,16 @@ public class splashactivity extends AppCompatActivity {
 
         try {
 
+            RequestOptions requestOptions = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE) // because file name is always same
+                    .skipMemoryCache(true);
+
+
             Glide.with(this)
                     .load(R.drawable.intro_thumb)
+                    .apply(requestOptions)
                     .into( new gifdrawableimagetarget(img_imagedeep,1));
+
 
            // img_imagedeep.lo
            /* gifDrawable.setLoopCount(1);
