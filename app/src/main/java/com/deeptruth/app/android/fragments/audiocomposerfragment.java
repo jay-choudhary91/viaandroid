@@ -198,7 +198,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         loadffmpeglibrary();
         startnoise();
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
-        setmetriceshashesdata();
+
         try {
             int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
                     RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
@@ -289,6 +289,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void doafterallpermissionsgranted()
     {
+        setmetriceshashesdata();
     }
 
     @Override
@@ -320,6 +321,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
             stopblinkanimation();
         }
+        if(myHandler != null && myHandler != null)
+            myHandler.removeCallbacks(myRunnable);
         super.onPause();
     }
 
@@ -1065,8 +1068,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(myHandler != null && myHandler != null)
-            myHandler.removeCallbacks(myRunnable);
     }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
@@ -1136,13 +1137,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 }
 
+                if(! isaudiorecording)
+                {
+                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                    getselectedmetrics(mlocalarraylist);
+                }
+
                 common.setgraphicalblockchainvalue(config.blockchainid,"",true);
                 common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
                 common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
-
-
-
 
                 myHandler.postDelayed(this, 1000);
             }

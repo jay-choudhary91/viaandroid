@@ -281,7 +281,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @Override
     public void onfragmentbackstackchanged() {
         super.onfragmentbackstackchanged();
-        common.resetgraphicaldata();
+
         basefragment fragment = getcurrentfragment();
         imglefthandle.setVisibility(View.GONE);
         imgrighthandle.setVisibility(View.GONE);
@@ -302,6 +302,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
         else if(fragment instanceof videoreaderfragment){
 
+             common.resetgraphicaldata();
             try
             {
                 View view=((videoreaderfragment) getcurrentfragment()).layout_videodetails;
@@ -338,8 +339,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }
          else if(fragment instanceof audioreaderfragment){
              updateactionbar(1);
+             common.resetgraphicaldata();
          } else if(fragment instanceof imagereaderfragment){
-
+             common.resetgraphicaldata();
              try
              {
                  View view=((imagereaderfragment) getcurrentfragment()).layout_photodetails;
@@ -368,7 +370,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }
          else if(fragment instanceof composeoptionspagerfragment)
          {
-
+             common.resetgraphicaldata();
          }
          else if(fragment instanceof myfolderfragment)
          {

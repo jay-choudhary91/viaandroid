@@ -24,6 +24,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.location.Location;
+import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,7 +42,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -54,10 +54,12 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.mediaqualityadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -83,12 +85,15 @@ import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -322,7 +327,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
     int Hours,Seconds, Minutes, MilliSeconds,framepersecond=30,videobitrate=2000000 ; // 2000000 is equals to 2 MB. It means quality is exisiting around 420P. It also depands on frame rate.
-    String keytype =config.prefs_md5,currenthashvalue="";
+    String keytype =config.prefs_md5,currenthashvalue="",selectedvideoquality="720P";
     ArrayList<videomodel> mvideoframes =new ArrayList<>();
     ArrayList<frameinfo> muploadframelist =new ArrayList<>();
     long currentframenumber =0;
@@ -363,8 +368,24 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     IndicatorSeekBar seekbarzoom;
     @BindView(R.id.img_roundblink)
     ImageView img_roundblink;
-    Animation blinkanimation;
+    @BindView(R.id.spinner_mediaquality)
+    Spinner spinner_mediaquality;
+    @BindView(R.id.expandable_layout)
+    ExpandableLayout expandable_layout;
+    @BindView(R.id.actionbarcomposer)
+    RelativeLayout actionbarcomposer;
+    @BindView(R.id.txt_media_low)
+    TextView txt_media_low;
+    @BindView(R.id.txt_media_medium)
+    TextView txt_media_medium;
+    @BindView(R.id.txt_media_high)
+    TextView txt_media_high;
+    @BindView(R.id.txt_zoomlevel)
+    TextView txt_zoomlevel;
 
+    Animation blinkanimation;
+    mediaqualityadapter qualityadapter;
+    List<String> qualityitemslist=new ArrayList<>();
 
     @Override
     public int getlayoutid() {
@@ -403,9 +424,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         imgflashon.setVisibility(View.VISIBLE);
         txt_media_quality.setVisibility(View.VISIBLE);
-
-        if(videobitrate == 2000000)
-            txt_media_quality.setText("420p");
 
         timerhandler = new Handler() ;
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
@@ -459,14 +477,89 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         img_dotmenu.setOnClickListener(this);
         img_warning.setOnClickListener(this);
         img_close.setOnClickListener(this);
+        txt_media_quality.setOnClickListener(this);
+        txt_media_low.setOnClickListener(this);
+        txt_media_medium.setOnClickListener(this);
+        txt_media_high.setOnClickListener(this);
+        txt_zoomlevel.setOnClickListener(this);
 
-        setmetriceshashesdata();
+        txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+        expandable_layout.setVisibility(View.VISIBLE);
+        txt_media_quality.setVisibility(View.VISIBLE);
+        /*spinner_mediaquality.setVisibility(View.VISIBLE);
+        qualityadapter = new mediaqualityadapter(applicationviavideocomposer.getactivity(),
+                R.layout.row_mediaqualityadapter,qualityitemslist);
+        spinner_mediaquality.setAdapter(qualityadapter);
+        spinner_mediaquality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
+            {
+                if(! selectedvideoquality.equalsIgnoreCase(qualityitemslist.get(position)))
+                {
+                    selectedvideoquality=qualityitemslist.get(position);
+                    if(mediarecorder != null)
+                    {
+                        mediarecorder.reset();
+                        startPreview();
+                    }
+                }
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });*/
+
+        /*setqualitydropdown();
+
+        if(qualityitemslist.size() > 1)
+            spinner_mediaquality.setSelection(1,true);*/
+
+        txt_media_quality.setText(config.mediaquality720);
+        txt_media_low.setText(config.mediaquality480);
+        txt_media_medium.setText(config.mediaquality720);
+        txt_media_high.setText(config.mediaquality1080);
+        txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+
+        expandable_layout.setOnExpansionUpdateListener(new ExpandableLayout.OnExpansionUpdateListener() {
+            @Override
+            public void onExpansionUpdate(float expansionFraction, int state) {
+                // 0 closed, 3 opened
+                if(state == 0)
+                {
+                    expandable_layout.setVisibility(View.GONE);
+                    actionbarcomposer.setVisibility(View.VISIBLE);
+                }
+                else if(state == 3)
+                {
+                    txt_media_low.setVisibility(View.VISIBLE);
+                    txt_media_medium.setVisibility(View.VISIBLE);
+                    txt_media_high.setVisibility(View.VISIBLE);
+                }
+
+                Log.d("ExpandableLayout", "State: " + state);
+            }
+        });
+
         mOrientation = new Orientation(applicationviavideocomposer.getactivity());
         layout_seekbarzoom.setVisibility(View.GONE);
-
-
-
         return rootview;
+    }
+
+    public void setqualitydropdown()
+    {
+        qualityitemslist.clear();
+        qualityadapter.notifyDataSetChanged();
+
+        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P))
+            qualityitemslist.add(config.mediaquality480);
+
+        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P))
+            qualityitemslist.add(config.mediaquality720);
+
+        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_1080P))
+            qualityitemslist.add(config.mediaquality1080);
+
+        qualityadapter.notifyDataSetChanged();
+
     }
 
     public void startblinkanimation()
@@ -609,9 +702,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 zoomLevel = zoomLevel - delta;
                             }
                             setupcamerazoom();
-                            seekbarzoom.setProgress(zoomLevel);
+                            //seekbarzoom.setProgress(zoomLevel);
                             fadeinzoomcontrollers();
-
                         }
                         fingerSpacing = currentFingerSpacing;
                     }
@@ -671,6 +763,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void setupcamerazoom()
     {
+        DecimalFormat precision=new DecimalFormat("0.0");
+        zoomcontrollertimeout=new Date();
+        txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
+
         Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
         float ratio = (float) 1 / zoomLevel;
         int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
@@ -957,17 +1053,55 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mediarecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mediarecorder.setOutputFile(getVideoFile(activity).getAbsolutePath());
-        mediarecorder.setVideoEncodingBitRate(videobitrate);
+
+        CamcorderProfile profile=null;
+        if(selectedvideoquality.equalsIgnoreCase(config.mediaquality480))
+        {
+            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
+        }
+        else if(selectedvideoquality.equalsIgnoreCase(config.mediaquality720))
+        {
+            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
+        }
+        else if(selectedvideoquality.equalsIgnoreCase(config.mediaquality1080))
+        {
+            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_1080P);
+        }
+        else
+        {
+            profile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
+        }
+
+        // In sample code
+        mediarecorder.setVideoFrameRate(profile.videoFrameRate);
+        //mediarecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
+        mediarecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
+        mediarecorder.setVideoEncodingBitRate(profile.videoBitRate);
+        mediarecorder.setAudioEncodingBitRate(profile.audioBitRate);
+        mediarecorder.setAudioSamplingRate(profile.audioSampleRate);
+        mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+        mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        // edited
+        /*
+        mMediaRecorder.setVideoFrameRate(profile.videoFrameRate);
+        mMediaRecorder.setVideoSize(profile.videoFrameWidth, profile.videoFrameHeight);
+        mMediaRecorder.setVideoEncodingBitRate(profile.videoBitRate);
+        mMediaRecorder.setAudioEncodingBitRate(profile.audioBitRate);
+        mMediaRecorder.setAudioSamplingRate(profile.audioSampleRate);*/
+
+        // my code
+        /*mediarecorder.setVideoEncodingBitRate(profile.videoBitRate);
         mediarecorder.setVideoFrameRate(framepersecond);
         mediarecorder.setVideoSize(mVideoSize.getWidth(), mVideoSize.getHeight());
         mediarecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);*/
+
+
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
        // int orientation = ORIENTATIONS.get(rotation);
         int orientation =  camerautil.getOrientation(rotation, upsideDown);
 
         mediarecorder.setOrientationHint(orientation);
-
         mediarecorder.prepare();
     }
     private File getVideoFile(Context context) {
@@ -1097,6 +1231,56 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 navigateflash();
                 break;
 
+            case R.id.txt_zoomlevel:
+
+                zoomLevel++;
+
+                if(zoomLevel > maximumZoomLevel)
+                    zoomLevel=1f;
+
+                setupcamerazoom();
+
+                break;
+
+            case R.id.txt_media_low:
+                setmediaquility(config.mediaquality480);
+                txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+                txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                break;
+
+            case R.id.txt_media_medium:
+                setmediaquility(config.mediaquality720);
+                txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+                txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                break;
+
+            case R.id.txt_media_high:
+                setmediaquility(config.mediaquality1080);
+                txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+                txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                break;
+
+            case R.id.txt_media_quality:
+                if(expandable_layout.isExpanded())
+                {
+                    expandable_layout.collapse();
+                    expandable_layout.setVisibility(View.GONE);
+                    actionbarcomposer.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    /*txt_media_low.setVisibility(View.INVISIBLE);
+                    txt_media_medium.setVisibility(View.INVISIBLE);
+                    txt_media_high.setVisibility(View.INVISIBLE);*/
+                    expandable_layout.expand();
+                    expandable_layout.setVisibility(View.VISIBLE);
+                    actionbarcomposer.setVisibility(View.GONE);
+                }
+                break;
+
 
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
@@ -1120,6 +1304,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     madapterclick.onItemClicked(null,6);
                 break;
         }
+    }
+
+    public void setmediaquility(String quality)
+    {
+        if(mediarecorder != null && (! selectedvideoquality.equalsIgnoreCase(quality)))
+        {
+            txt_media_quality.setText(quality);
+            selectedvideoquality=quality;
+            mediarecorder.reset();
+            startPreview();
+        }
+        expandable_layout.collapse();
     }
 
     public void showwarningorclosebutton()
@@ -1371,6 +1567,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     private void doafterallpermissionsgranted() {
 
+        setmetriceshashesdata();
         if(! camerastatusok)
         {
             camerastatusok=true;
@@ -1391,6 +1588,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             layout_seekbarzoom.setVisibility(View.GONE);
 
         stopblinkanimation();
+
+        if(myHandler != null && myRunnable != null)
+            myHandler.removeCallbacks(myRunnable);
+
         super.onPause();
     }
 
@@ -1611,6 +1812,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                 }
 
+
+                if(! isvideorecording)
+                {
+                    ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
+                    getselectedmetrics(mlocalarraylist);
+                }
                 common.setgraphicalblockchainvalue(config.blockchainid,"",true);
                 common.setgraphicalblockchainvalue(config.hashformula,keytype,true);
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
@@ -1626,9 +1833,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
     }
 
     // Calling after 1 by 1 frame duration.
