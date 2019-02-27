@@ -23,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -193,6 +194,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     TextView txt_section_validating_secondary;
     @BindView(R.id.img_scanover)
     ImageView img_scanover;
+    @BindView(R.id.img_phone_orientation)
+    ImageView img_phone_orientation;
 
 
     private String imageurl = null;
@@ -299,6 +302,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
 
         tab_photoreader.setOnClickListener(this);
+
+        try {
+            DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         //tabs_detail
         txtslotmedia.setText(getResources().getString(R.string.photo));

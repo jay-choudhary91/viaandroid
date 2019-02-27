@@ -24,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -331,6 +332,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight;
     int footerheight;
     encryptiondataadapter encryptionadapter;
+    @BindView(R.id.img_phone_orientation)
+    ImageView img_phone_orientation;
 
     public audioreaderfragment() {
     }
@@ -424,6 +427,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             img_camera.setVisibility(View.VISIBLE);
         }
 
+        try {
+            DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         mediaseekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             private int mProgressAtStartTracking=0;
             private final int SENSITIVITY=0;
