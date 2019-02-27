@@ -203,11 +203,23 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }
     }
 
+
+    @Override
+    public void hidedrawerbutton(boolean enable) {
+        if(enable){
+            imglefthandle.setVisibility(View.GONE);
+        }else if((getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof audiocomposerfragment) &&
+                !navigationdrawer.isDrawerOpen(GravityCompat.START)){
+
+            imglefthandle.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public void updateactionbar(int fullscreenmode) {
         if(fullscreenmode == 0)   // Enable full screen mode
         {
-            /*View decorView = getWindow().getDecorView();
+           /* View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_IMMERSIVE
                             // Set the content to appear under the system bars so that the
