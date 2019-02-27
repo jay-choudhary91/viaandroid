@@ -1224,9 +1224,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
                 else
                 {
-                    txt_media_low.setVisibility(View.INVISIBLE);
+                    /*txt_media_low.setVisibility(View.INVISIBLE);
                     txt_media_medium.setVisibility(View.INVISIBLE);
-                    txt_media_high.setVisibility(View.INVISIBLE);
+                    txt_media_high.setVisibility(View.INVISIBLE);*/
                     expandable_layout.expand();
                     expandable_layout.setVisibility(View.VISIBLE);
                     actionbarcomposer.setVisibility(View.GONE);
