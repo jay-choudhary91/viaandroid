@@ -47,4 +47,5 @@
     <dimen name="margin_20dp">20dp</dimen>
 
     <dimen name="padding_10dp">10dp</dimen>
+    <dimen name="thumbmargin">4dip</dimen>
 </resources>
