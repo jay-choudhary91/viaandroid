@@ -1859,7 +1859,7 @@ public class common {
         long photosize= file.length();
         int b = (int) photosize;
         int k = (int) photosize / 1024;
-        int m = (int) ((photosize / 1024) / 10240);
+        int m = (int) ((photosize / 1024) / 1024);
         int g = (int) (((photosize / 1024) / 1024) / 1024);
         int t = (int) ((((photosize / 1024) / 1024) / 1024) / 1024);
 

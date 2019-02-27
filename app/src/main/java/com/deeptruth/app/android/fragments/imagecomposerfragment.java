@@ -23,6 +23,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.CamcorderProfile;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Bundle;
@@ -44,13 +45,16 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.mediaqualityadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -68,6 +72,8 @@ import com.google.gson.Gson;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
+
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -103,6 +109,23 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     RelativeLayout layout_seekbarzoom;
     @BindView(R.id.seekbarzoom)
     IndicatorSeekBar seekbarzoom;
+    @BindView(R.id.spinner_mediaquality)
+    Spinner spinner_mediaquality;
+    @BindView(R.id.expandable_layout)
+    ExpandableLayout expandable_layout;
+    @BindView(R.id.actionbarcomposer)
+    RelativeLayout actionbarcomposer;
+    @BindView(R.id.txt_media_low)
+    TextView txt_media_low;
+    @BindView(R.id.txt_media_medium)
+    TextView txt_media_medium;
+    @BindView(R.id.txt_media_high)
+    TextView txt_media_high;
+    @BindView(R.id.txt_media_quality)
+    TextView txt_media_quality;
+
+    mediaqualityadapter qualityadapter;
+    List<String> qualityitemslist=new ArrayList<>();
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -187,7 +210,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public static final String CAMERA_FRONT = "1";
     public static final String CAMERA_BACK = "0";
 
-    private String cameraid = CAMERA_BACK;
+    private String cameraid = CAMERA_BACK,selectedmediaquality="";
     private boolean isflashsupported=false,isvisibletouser=false;;
     private boolean isflashon = false;
     protected float fingerSpacing = 0;
@@ -523,6 +546,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         img_stop_watch.setOnClickListener(this);
         img_warning.setOnClickListener(this);
         img_close.setOnClickListener(this);
+        txt_media_quality.setOnClickListener(this);
+        txt_media_low.setOnClickListener(this);
+        txt_media_medium.setOnClickListener(this);
+        txt_media_high.setOnClickListener(this);
 
         img_dotmenu.setVisibility(View.VISIBLE);
         imgflashon.setVisibility(View.VISIBLE);
@@ -558,11 +585,80 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
         });
 
+        expandable_layout.setVisibility(View.VISIBLE);
+        txt_media_quality.setVisibility(View.VISIBLE);
+
+        /*spinner_mediaquality.setVisibility(View.VISIBLE);
+        qualityadapter = new mediaqualityadapter(applicationviavideocomposer.getactivity(),
+                R.layout.row_mediaqualityadapter,qualityitemslist);
+        spinner_mediaquality.setAdapter(qualityadapter);
+        spinner_mediaquality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
+            {
+                if(! selectedmediaquality.equalsIgnoreCase(qualityitemslist.get(position)))
+                {
+                    selectedmediaquality=qualityitemslist.get(position);
+                }
+            }
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });*/
+
         setmetriceshashesdata();
+        /*setqualitydropdown();
+
+        if(qualityitemslist.size() > 1)
+            spinner_mediaquality.setSelection(1,true);*/
+
+        txt_media_quality.setText(config.mediaquality720);
+        txt_media_low.setText(config.mediaquality480);
+        txt_media_medium.setText(config.mediaquality720);
+        txt_media_high.setText(config.mediaquality1080);
+        txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+
+        expandable_layout.setOnExpansionUpdateListener(new ExpandableLayout.OnExpansionUpdateListener() {
+            @Override
+            public void onExpansionUpdate(float expansionFraction, int state) {
+                // 0 closed, 3 opened
+                if(state == 0)
+                {
+                    expandable_layout.setVisibility(View.GONE);
+                    actionbarcomposer.setVisibility(View.VISIBLE);
+                }
+                else if(state == 3)
+                {
+                    txt_media_low.setVisibility(View.VISIBLE);
+                    txt_media_medium.setVisibility(View.VISIBLE);
+                    txt_media_high.setVisibility(View.VISIBLE);
+                }
+
+                Log.d("ExpandableLayout", "State: " + state);
+            }
+        });
+
         layout_seekbarzoom.setVisibility(View.GONE);
         return rootview;
     }
 
+
+    public void setqualitydropdown()
+    {
+        qualityitemslist.clear();
+        qualityadapter.notifyDataSetChanged();
+
+        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P))
+            qualityitemslist.add(config.mediaquality480);
+
+        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P))
+            qualityitemslist.add(config.mediaquality720);
+
+        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_1080P))
+            qualityitemslist.add(config.mediaquality1080);
+
+        qualityadapter.notifyDataSetChanged();
+
+    }
 
     public void changeiconsorientation(float rotateangle)
     {
@@ -1127,6 +1223,27 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             // Use the same AE and AF modes as the preview.
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+
+            int qualityvalue=100;
+            if(selectedmediaquality.equalsIgnoreCase(config.mediaquality480))
+            {
+                qualityvalue=60;
+            }
+            else if(selectedmediaquality.equalsIgnoreCase(config.mediaquality720))
+            {
+                qualityvalue=80;
+            }
+            else if(selectedmediaquality.equalsIgnoreCase(config.mediaquality1080))
+            {
+                qualityvalue=100;
+            }
+            try {
+                captureBuilder.set(CaptureRequest.JPEG_QUALITY, (byte) qualityvalue);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
            // setAutoFlash(captureBuilder);
 
             // Orientation
@@ -1217,9 +1334,63 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         return false;
     }
 
+    public void setmediaquility(String quality)
+    {
+        selectedmediaquality=quality;
+        txt_media_quality.setText(quality);
+        expandable_layout.collapse();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                expandable_layout.setVisibility(View.GONE);
+                actionbarcomposer.setVisibility(View.VISIBLE);
+            }
+        },600);
+
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+
+            case R.id.txt_media_low:
+                setmediaquility(config.mediaquality480);
+                txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+                txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                break;
+
+            case R.id.txt_media_medium:
+                setmediaquility(config.mediaquality720);
+                txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+                txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                break;
+
+            case R.id.txt_media_high:
+                setmediaquility(config.mediaquality1080);
+                txt_media_high.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+                txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                txt_media_low.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+                break;
+
+            case R.id.txt_media_quality:
+                if(expandable_layout.isExpanded())
+                {
+                    expandable_layout.collapse();
+                    expandable_layout.setVisibility(View.GONE);
+                    actionbarcomposer.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    txt_media_low.setVisibility(View.INVISIBLE);
+                    txt_media_medium.setVisibility(View.INVISIBLE);
+                    txt_media_high.setVisibility(View.INVISIBLE);
+                    expandable_layout.expand();
+                    expandable_layout.setVisibility(View.VISIBLE);
+                    actionbarcomposer.setVisibility(View.GONE);
+                }
+                break;
 
             case R.id.img_stop_watch:
                 if(brustmodeenabled)

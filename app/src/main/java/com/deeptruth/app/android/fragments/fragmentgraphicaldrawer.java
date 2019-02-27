@@ -268,7 +268,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     @Override
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
-        if(xdata.getinstance().getSetting(config.latency).trim().isEmpty() && gethelper().getrecordingrunning())
+        if(isdatacomposing)
         {
             float pitch = orientation[1] * -57;
             float roll = orientation[2] * -57;
@@ -797,7 +797,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
         else
         {
-            if(gethelper().getrecordingrunning())
+            if(isdatacomposing)
             {
                 int degree = Math.round(event.values[0]);
                 //  Log.e("degree ",""+degree);
