@@ -366,7 +366,33 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             }while(cursor.moveToNext());
 
             filedirectoryinfo[0] = thumbnailurl;
-            filedirectoryinfo[1]="Video("+videocount+")"+", Photo("+imagecount+"), "+"Audio("+audiocount+")";
+            String strcounter="";
+            if(videocount > 0)
+                strcounter="Video("+videocount+")";
+            
+            if(imagecount > 0)
+            {
+                if(strcounter.trim().isEmpty())
+                {
+                    strcounter="Photo("+imagecount+")";
+                }
+                else
+                {
+                    strcounter=strcounter+", "+"Photo("+imagecount+")";
+                }
+            }
+            if(audiocount > 0)
+            {
+                if(strcounter.trim().isEmpty())
+                {
+                    strcounter="Audio("+audiocount+")";
+                }
+                else
+                {
+                    strcounter=strcounter+", "+"Audio("+audiocount+")";
+                }
+            }
+            filedirectoryinfo[1]=strcounter;
         }
 
         try
