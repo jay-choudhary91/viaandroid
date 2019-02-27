@@ -539,10 +539,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     txt_mediatimethumb.setVisibility(View.VISIBLE);
 
                 }
-                else
-                {
-                    layout_progressline.setVisibility(View.GONE);
-                }
 
             }
 
