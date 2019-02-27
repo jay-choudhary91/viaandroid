@@ -369,7 +369,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             String strcounter="";
             if(videocount > 0)
                 strcounter="Video("+videocount+")";
-            
+
             if(imagecount > 0)
             {
                 if(strcounter.trim().isEmpty())

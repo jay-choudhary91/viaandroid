@@ -47,8 +47,6 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
-            android:singleLine="true"
-            android:maxLines="1"
             android:text=""/>
 
     </LinearLayout>
@@ -70,8 +68,6 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
-            android:singleLine="true"
-            android:maxLines="1"
             android:text=""/>
 
     </LinearLayout>
@@ -93,8 +89,6 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
-            android:singleLine="true"
-            android:maxLines="1"
             android:text=""/>
 
     </LinearLayout>
@@ -115,8 +109,6 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
-            android:singleLine="true"
-            android:maxLines="1"
             android:text=""/>
 
     </LinearLayout>
@@ -137,8 +129,6 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.7"
-            android:singleLine="true"
-            android:maxLines="1"
             android:text=""/>
 
     </LinearLayout>
