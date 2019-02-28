@@ -96,6 +96,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -121,7 +122,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     mediacompletiondialogmain mediacompletionpopupmain;
     mediacompletiondialogsub mediacompletionpopupsub;
     FragmentManager fm ;
-
+    Calendar sequencestarttime,sequenceendtime;
     public static final String CAMERA_FRONT = "1";
     public static final String CAMERA_BACK = "0";
 
@@ -204,21 +205,29 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                                   if(mediakey.trim().isEmpty())
                                   {
+                                      sequencestarttime = Calendar.getInstance();
                                       String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                                       //randomstring gen = new randomstring(20, ThreadLocalRandom.current());
                                       mediakey=currenttimestamp;
-                                      Log.e("localkey ",mediakey);
                                       String keyvalue= getkeyvalue(byteArray);
-
                                       savestartmediainfo();
                                   }
 
                                   if(mframetorecordcount == currentframenumber)
                                   {
+                                      sequenceendtime = Calendar.getInstance();
                                       updatelistitemnotify(byteArray,currentframenumber,"Frame");
                                       currentframenumber = currentframenumber + frameduration;
                                   }
                                   //bitmap.recycle();
+                              }
+                              else
+                              {
+                                  long checkremain=mframetorecordcount;
+                                  long decreaseamount=currentframenumber-frameduration;
+                                  if(checkremain-decreaseamount == 1)
+                                      sequencestarttime = Calendar.getInstance();
+
                               }
 
                               mframetorecordcount++;
@@ -630,8 +639,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         headercontainer.setAngle(90);
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
-                }else if(rotateangle == 90){
-
+                }
+                else if(rotateangle == 90)
+                {
                     if(!isvideorecording)
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -773,11 +783,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
         zoom = new Rect(croppedWidth/2, croppedHeight/2,
                 rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
-        Log.e("zoom level ",""+zoom+" "+zoomLevel+" "+maximumZoomLevel);
+        Log.e("rectzoom level ",""+zoom+" "+zoomLevel+" "+maximumZoomLevel);
 
         mpreviewbuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
         try {
-            mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
+            mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, mBackgroundHandler);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1733,6 +1743,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 if(array == null || array.length == 0)
                     return;
                 final String keyvalue= getkeyvalue(array);
@@ -1758,7 +1769,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 JSONArray metricesarray=new JSONArray();
                 if(metadatametricesjson.length() > 0)
                 {
-                    try {
+                    try
+                    {
                         metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
                         metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
                         muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
@@ -1838,7 +1850,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     // Calling after 1 by 1 frame duration.
     public void savemediaupdate(JSONArray metricesjsonarray)
     {
-        JSONArray metricesarray=new JSONArray();
         String currentdate[] = common.getcurrentdatewithtimezone();
         String sequenceno = "",sequencehash = "", metrichash = "" ;
 
@@ -1857,9 +1868,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         try {
 
-            metrichash = md5.calculatestringtomd5(metricesjsonarray.get(0).toString());
-            Log.e("Metric hash",""+metrichash);
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss aa");
+            String starttime = sdf.format(sequencestarttime.getTime());
+            String endtime = sdf.format(sequenceendtime.getTime());
+            String devicedate = devicetimeformat.format(sequenceendtime.getTime());
+            if(metricesjsonarray != null && metricesjsonarray.length() > 0)
+            {
+                JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
+                arrayobject.put("sequencestarttime",starttime);
+                arrayobject.put("sequenceendtime",endtime);
+                arrayobject.put("devicetime",devicedate);
+            }
 
+            metrichash = md5.calculatestringtomd5(metricesjsonarray.get(0).toString());
             mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"","",""));
         } catch (Exception e) {
@@ -2018,12 +2040,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(isflashon) {
                 imgflashon.setImageResource(R.drawable.ic_no_flash_icon);
                 mpreviewbuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
-                mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
+                mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, mBackgroundHandler);
                 isflashon = false;
             } else {
                 imgflashon.setImageResource(R.drawable.flash_on);
                 mpreviewbuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
-                mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, null);
+                mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, mBackgroundHandler);
                 isflashon = true;
             }
         } catch (Exception e) {

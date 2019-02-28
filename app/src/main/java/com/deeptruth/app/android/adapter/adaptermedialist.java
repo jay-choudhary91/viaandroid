@@ -117,7 +117,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                         public void run() {
                             imagethumbanail_width  = holder.img_videothumbnail.getWidth();
                             int img_scanoverwidth=  holder.img_scanover.getWidth();
-                            totalwidth= imagethumbanail_width + (img_scanoverwidth / 2);
+                            totalwidth= imagethumbanail_width + (img_scanoverwidth);
                             if(totalwidth > 0)
                             {
                                 TranslateAnimation animation = new TranslateAnimation(-50.0f,totalwidth,0.0f, 0.0f);

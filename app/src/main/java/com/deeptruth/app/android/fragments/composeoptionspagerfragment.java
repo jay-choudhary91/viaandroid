@@ -979,6 +979,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             rotateangle=90;
         }
+        else if(roll < 45 && roll < -120)
+        {
+            rotateangle=180;
+        }
+
+        Log.e("rotateangle",""+roll);
 
         if(rotateangle != 3600)
         {
@@ -1032,14 +1038,17 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(img_mediathumbnail != null)
                 img_mediathumbnail.setRotation(rotateangle);
 
-            if(fragvideocomposer != null)
-                fragvideocomposer.changeiconsorientation(rotateangle);
-
             if(fragimgcapture != null)
                 fragimgcapture.changeiconsorientation(rotateangle);
 
             if(fragaudiocomposer != null)
                 fragaudiocomposer.changeiconsorientation(rotateangle);
+
+            if(rotateangle == 180)
+                rotateangle=0;
+
+            if(fragvideocomposer != null)
+                fragvideocomposer.changeiconsorientation(rotateangle);
         }
     }
 

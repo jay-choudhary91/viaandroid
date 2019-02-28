@@ -72,6 +72,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -160,7 +161,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     @BindView(R.id.img_roundblink)
     ImageView img_roundblink;
     Animation blinkanimation;
-
+    Calendar sequencestarttime,sequenceendtime;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_audiocomposer;
@@ -587,17 +588,22 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     {
                         if(mediakey.trim().isEmpty())
                         {
+                            sequencestarttime = Calendar.getInstance();
                             String currenttimestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                            //randomstring gen = new randomstring(20, ThreadLocalRandom.current());
                             mediakey=currenttimestamp;
                             Log.e("localkey ",mediakey);
                             String keyvalue= getkeyvalue(data);
                             savestartmediainfo();
                         }
+                        else
+                        {
+                            sequenceendtime = Calendar.getInstance();
+                        }
 
                         framegap=0;
                         updatelistitemnotify(data,currentframenumber,"Frame");
                         currentframenumber = currentframenumber + frameduration;
+                        sequencestarttime = Calendar.getInstance();
                     }
                     framegap++;
                     mframetorecordcount++;
@@ -954,6 +960,19 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         muploadframelist.clear();
 
         try {
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss aa");
+            String starttime = sdf.format(sequencestarttime.getTime());
+            String endtime = sdf.format(sequenceendtime.getTime());
+            String devicedate = devicetimeformat.format(sequenceendtime.getTime());
+            if(metricesjsonarray != null && metricesjsonarray.length() > 0)
+            {
+                JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
+                arrayobject.put("sequencestarttime",starttime);
+                arrayobject.put("sequenceendtime",endtime);
+                arrayobject.put("devicetime",devicedate);
+            }
+
             metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
             mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));

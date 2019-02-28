@@ -38,14 +38,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -219,7 +217,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
     protected float maximumZoomLevel;
-    protected Rect zoom;
+    protected Rect rectzoom;
 
     /**
      * An {@link AutoFitTextureView} for camera preview.
@@ -1228,6 +1226,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                     CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
 
+            if(rectzoom != null)
+                captureBuilder.set(CaptureRequest.SCALER_CROP_REGION, rectzoom);
+
             int qualityvalue=100;
             if(selectedmediaquality.equalsIgnoreCase(config.mediaquality480))
             {
@@ -1268,8 +1269,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         if(madapterclick != null)
                             madapterclick.onItemClicked(null,4);
 
-                        unlockfocus();
+                        zoomLevel=1.0f;
+                        txt_zoomlevel.setText(zoomLevel+" x");
 
+                        unlockfocus();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -1311,10 +1314,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      */
     private void unlockfocus() {
         try {
+            if(rectzoom != null)
+                mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, rectzoom);
+
             // Reset the auto-focus trigger
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                     CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
-
            // setAutoFlash(mPreviewRequestBuilder);
 
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
@@ -1620,12 +1625,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         float ratio = (float) 1 / zoomLevel;
         int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
         int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
-        zoom = new Rect(croppedWidth/2, croppedHeight/2,
+        rectzoom = new Rect(croppedWidth/2, croppedHeight/2,
                 rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
-        Log.e("zoom level ",""+zoom+" "+zoomLevel+" "+maximumZoomLevel);
-        mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+        Log.e("rectzoom level ",""+ rectzoom +" "+zoomLevel+" "+maximumZoomLevel);
+        mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, rectzoom);
         try {
-            mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
+            mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), mCaptureCallback,
+                    mBackgroundHandler);
         }catch (Exception e)
         {
             e.printStackTrace();
