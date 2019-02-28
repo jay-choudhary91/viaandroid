@@ -1269,6 +1269,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         if(madapterclick != null)
                             madapterclick.onItemClicked(null,4);
 
+                        zoomLevel=1.0f;
+                        txt_zoomlevel.setText(zoomLevel+" x");
+
                         unlockfocus();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
