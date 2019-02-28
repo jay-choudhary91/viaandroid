@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +40,10 @@ public class splashactivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
+       // requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
 
          img_imagedeep= (ImageView) findViewById(R.id.img_imagedeep);
@@ -76,7 +80,6 @@ public class splashactivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getstatusbarheight();
                 if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
                 {
                     Intent in=new Intent(splashactivity.this,homeactivity.class);
@@ -92,15 +95,13 @@ public class splashactivity extends AppCompatActivity {
             }
         },1600);
     }
-
-
-    public void getstatusbarheight(){
+    public void getstatusbarheight() {
         Rect rectangle = new Rect();
         Window window = getWindow();
         window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
         int statusBarHeight = rectangle.top;
-
-        xdata.getinstance().saveSetting("statusbarheight", ""+statusBarHeight);
-
+        if (statusBarHeight != 0) {
+            xdata.getinstance().saveSetting("statusbarheight", "" + statusBarHeight);
+        }
     }
 }
