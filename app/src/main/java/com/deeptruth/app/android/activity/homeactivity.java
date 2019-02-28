@@ -301,7 +301,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
         }
         else if(fragment instanceof videoreaderfragment){
-
+             getstatusbarheight();
              common.resetgraphicaldata();
             try
             {
@@ -338,9 +338,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              updateactionbar(0);
          }
          else if(fragment instanceof audioreaderfragment){
-             updateactionbar(1);
              common.resetgraphicaldata();
+             updateactionbar(1);
+             getstatusbarheight();
          } else if(fragment instanceof imagereaderfragment){
+             getstatusbarheight();
              common.resetgraphicaldata();
              try
              {
@@ -473,5 +475,15 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 break;
         }
         return false;
+    }
+
+    public void getstatusbarheight() {
+        Rect rectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        int statusBarHeight = rectangle.top;
+        if (statusBarHeight != 0) {
+            xdata.getinstance().saveSetting("statusbarheight", "" + statusBarHeight);
+        }
     }
 }

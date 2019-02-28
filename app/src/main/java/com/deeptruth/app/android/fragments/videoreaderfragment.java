@@ -445,7 +445,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
-       viewheight = Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+    //   viewheight = Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
 
         mediaseekbar.setPadding(0,0,0,0);
         mheightview = getContext().getResources().getDimensionPixelOffset(R.dimen.frames_video_height);
@@ -473,7 +473,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         edt_medianotes.setFocusable(false);
         edt_medianotes.setFocusableInTouchMode(false);
 
-        mediaseekbar.setThumbOffset(0);
+        mediaseekbar.setThumbOffset(-1);
 
         final RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mediaseekbar.getLayoutParams();
         final int leftmargin=lp.leftMargin;
@@ -481,23 +481,25 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             private int mProgressAtStartTracking=0;
             private final int SENSITIVITY=0;
             @Override
-            public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser)
-            {
-                if(progress > 0)
+            public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
+               /* if(progress > 0)
                 {
-                    //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
-                    int progresspercentage = (progress*100)/mediaseekbar.getMax();
-                    if(progresspercentage > 0)
-                        currentprocessframe =(int) (metricmainarraylist.size()*progresspercentage)/100;
 
-                    if(isvideocompleted)
-                        currentprocessframe=metricmainarraylist.size()-1;
 
-                    if(currentprocessframe < metricmainarraylist.size())
-                    {
-                        arraycontainerformetric = new arraycontainer();
-                        arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
-                    }
+            }*/
+                //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
+                int progresspercentage = (progress*100)/mediaseekbar.getMax();
+                if(progresspercentage > 0)
+                    currentprocessframe =(int) (metricmainarraylist.size()*progresspercentage)/100;
+
+                if(isvideocompleted)
+                    currentprocessframe=metricmainarraylist.size()-1;
+
+                if(currentprocessframe < metricmainarraylist.size())
+                {
+                    arraycontainerformetric = new arraycontainer();
+                    arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
+                }
 
                     /*ValueAnimator fader = ObjectAnimator.ofFloat(recycler_encryption, "alpha", 1, 0);
                     AnimatorSet animation = new AnimatorSet();
@@ -523,28 +525,28 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     animation.setDuration(500);
                     animation.start();*/
 
-                    if(encryptionadapter != null && recycler_encryption!= null)
-                        recycler_encryption.smoothScrollToPosition(currentprocessframe);
+                if(encryptionadapter != null && recycler_encryption!= null)
+                    recycler_encryption.smoothScrollToPosition(currentprocessframe);
 
-                    layout_progressline.setVisibility(View.VISIBLE);
-                    RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
-                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-                            RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    p.addRule(RelativeLayout.ABOVE, seekBar.getId());
-                    Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                    //int leftmargin=dpToPx(15);
-                    p.setMargins((int)(thumbRect.centerX()-getResources().getDimension(R.dimen.thumbmargin)),0, 0, 0);
-                    layout_progressline.setLayoutParams(p);
-                    txt_mediatimethumb.setText(common.gettimestring(player.getCurrentPosition()));
-                    txt_mediatimethumb.setVisibility(View.VISIBLE);
 
-                }
-                else
-                {
-                    layout_progressline.setVisibility(View.GONE);
-                }
+                layout_progressline.setVisibility(View.VISIBLE);
+                RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                p.addRule(RelativeLayout.ABOVE, seekBar.getId());
+                Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
+                dpToPx(getActivity(),4);
+                p.setMargins((int)(thumbRect.centerX()- dpToPx(getActivity(),1)),0, 0, 0);
+                layout_progressline.setLayoutParams(p);
+                txt_mediatimethumb.setText(common.gettimestring(player.getCurrentPosition()));
+                txt_mediatimethumb.setVisibility(View.VISIBLE);
 
-            }
+              /*  else
+            {
+                layout_progressline.setVisibility(View.GONE);
+            }*/
+
+        }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -2345,6 +2347,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     public static float dpToPx(Context context, float valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,valueInDp, context.getResources().getDisplayMetrics());
+        Log.e("height",""+height);
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 
