@@ -639,8 +639,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         headercontainer.setAngle(90);
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
-                }else if(rotateangle == 90){
-
+                }
+                else if(rotateangle == 90)
+                {
                     if(!isvideorecording)
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
