@@ -679,6 +679,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         if(img_stop_watch != null)
             img_stop_watch.setRotation(rotateangle);
+
+        if(txt_media_quality != null)
+            txt_media_quality.setRotation(rotateangle);
     }
 
 
