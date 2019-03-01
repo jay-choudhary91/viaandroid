@@ -357,16 +357,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
         }
 
-        if((! value.equalsIgnoreCase("NA")) && (! value.equalsIgnoreCase("NA")))
-        {
-            double heading=Double.parseDouble(value);
-            int headingg=(int)heading;
-            common.setdrawabledata(getResources().getString(R.string.heading),"\n"+headingg, tvheading);
-        }
-        else
-        {
-            common.setdrawabledata(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
-        }
+            /**/
 
             common.setdrawabledata(getResources().getString(R.string.traveled),"\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
             common.setdrawabledata(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
@@ -419,16 +410,29 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
             }
 
-        if(!isdatacomposing){
-            if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
+        if(! isdatacomposing)
+        {
+            if(xdata.getinstance().getSetting(config.Heading).toString().trim().length() > 0)
             {
-
                 String strdegree=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
-                int degree = Math.abs((int)Double.parseDouble(strdegree));
-                rotatecompass(degree);
-                String direction= common.getcompassdirection(degree);
 
-                common.setdrawabledata("","\n"+strdegree +"° " + direction , txtdegree);
+                if((! strdegree.equalsIgnoreCase("NA")) && (! strdegree.equalsIgnoreCase("NA")))
+                {
+                    int degree = Math.abs((int)Double.parseDouble(strdegree));
+                    rotatecompass(degree);
+                    String direction= common.getcompassdirection(degree);
+
+                    common.setdrawabledata("","\n"+strdegree +"° " + direction , txtdegree);
+
+                    double heading=Double.parseDouble(strdegree);
+                    int headingg=(int)heading;
+                    common.setdrawabledata(getResources().getString(R.string.heading),"\n"+headingg, tvheading);
+                }
+                else
+                {
+                    common.setdrawabledata(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
+                }
+
             }
         }
 
@@ -801,7 +805,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     @Override
                     public void run() {
                         int heading = Math.round(event.values[0]);
-
+                        common.setdrawabledata(getResources().getString(R.string.heading),"\n"+heading, tvheading);
                         common.setdrawabledata("","\n"+heading +"° " +common.getcompassdirection(heading) , txtdegree);
 
                     }
