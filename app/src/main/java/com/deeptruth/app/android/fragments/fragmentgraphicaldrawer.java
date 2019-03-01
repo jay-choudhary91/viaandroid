@@ -789,32 +789,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     public void run() {
                         int heading = Math.round(event.values[0]);
 
-                        int heading1 = Math.round(event.values[0]);
-                        int heading2 = Math.round(event.values[1]);
-                        int heading3 = Math.round(event.values[2]);
-                        // Log.e("Heading ",""+heading);
-
-                        String strdirection = "E"; //East
-                        if (heading > 23 && heading <= 67) {
-                            strdirection = "NE";//North East
-                        } else if (heading > 68 && heading <= 112) {
-                            strdirection = "E"; //East
-                        } else if (heading > 113 && heading <= 167) {
-                            strdirection = "SE"; //South East
-                        } else if (heading > 168 && heading <= 202) {
-                            strdirection = "S"; //South
-                        } else if (heading > 203 && heading <= 247) {
-                            strdirection = "SW"; //South West
-                        } else if (heading > 248 && heading <= 293) {
-                            strdirection = "W"; //West
-                        } else if (heading > 294 && heading <= 337) {
-                            strdirection = "NW"; //North West
-                        } else if (heading >= 338 || heading <= 22) {
-                            strdirection = "N"; //North
-                        }
-                        int degree = Math.round(event.values[0]);
-                        common.setdrawabledata("","\n"+degree +"° " +strdirection , txtdegree);
-
+                        common.setdrawabledata("","\n"+heading +"° " +common.getcompassdirection(heading) , txtdegree);
 
                     }
                 });
