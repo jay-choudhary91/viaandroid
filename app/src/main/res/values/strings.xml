@@ -168,6 +168,7 @@
     <string name="longitude">Longitude</string>
     <string name="altitude">Altitude</string>
     <string name="speed">Speed</string>
+    <string name="degree">Degree</string>
     <string name="heading">Heading</string>
     <string name="traveled">Travelled</string>
     <string name="xaxis">X-Axis</string>

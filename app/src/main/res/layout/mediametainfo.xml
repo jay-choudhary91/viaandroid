@@ -77,13 +77,30 @@
                android:visibility="visible"
                android:weightSum="1">
 
-               <ImageView
+               <RelativeLayout
                    android:layout_width="0dp"
-                   android:layout_height="150dp"
-                   android:layout_gravity="center"
                    android:layout_weight="0.4"
-                   android:id="@+id/img_compass"
-                   android:src="@drawable/compass" />
+                   android:layout_height="150dp">
+
+                       <ImageView
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:layout_gravity="center"
+                           android:src="@drawable/transparent_compass"
+                           android:layout_weight="0.4">
+                       </ImageView>
+
+                       <ImageView
+                           android:id="@+id/img_compass"
+                           android:layout_width="wrap_content"
+                           android:layout_height="128dp"
+                           android:layout_centerVertical="true"
+                           android:layout_centerHorizontal="true"
+                           android:layout_gravity="center"
+                           android:src="@drawable/niddle_withshadow" />
+
+
+               </RelativeLayout>
 
                <LinearLayout
                    android:layout_width="0dp"
@@ -174,6 +191,14 @@
                    </LinearLayout>
 
                    </LinearLayout>
+            <com.deeptruth.app.android.views.customfonttextview
+                      android:id="@+id/txt_degree"
+                      app:fontType="Comfortaa-Regular"
+                      android:layout_centerHorizontal="true"
+                      android:layout_below="@+id/layout_compassview"
+                      style="@style/txt_normalview"
+                      android:text="Degree"/>
+
 
           </LinearLayout>
 
