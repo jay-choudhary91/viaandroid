@@ -243,6 +243,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
+    @BindView(R.id.txt_degree)
+    customfonttextview tvdegree;
     @BindView(R.id.txt_latitude)
     customfonttextview tvlatitude;
     @BindView(R.id.txt_longitude)
@@ -1867,6 +1869,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
             common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
+            common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
+
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
             common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.address))){
