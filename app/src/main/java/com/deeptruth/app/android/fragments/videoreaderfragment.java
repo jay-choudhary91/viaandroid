@@ -484,43 +484,41 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             private final int SENSITIVITY=0;
             @Override
             public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
-               /* if(progress > 0)
-                {
-                    //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
-                    int processframe=0;
-                    int progresspercentage = (progress*100)/mediaseekbar.getMax();
-                    if(progresspercentage > 0)
-                        processframe =(int) (metricmainarraylist.size()*progresspercentage)/100;
+               if(progress > 0)
+               {
+                   //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
+                   int processframe = 0;
+                   int progresspercentage = (progress * 100) / mediaseekbar.getMax();
+                   if (progresspercentage > 0)
+                       processframe = (int) (metricmainarraylist.size() * progresspercentage) / 100;
 
-                    if(isvideocompleted)
-                        processframe=metricmainarraylist.size()-1;
+                   if (isvideocompleted)
+                       processframe = metricmainarraylist.size() - 1;
 
-                    if(currentprocessframe != processframe)
-                    {
-                        currentprocessframe=processframe;
-                        if(processframe < metricmainarraylist.size())
-                        {
-                            arraycontainerformetric = new arraycontainer();
-                            arraycontainerformetric = metricmainarraylist.get(processframe);
-                        }
+                   if (currentprocessframe != processframe) {
+                       currentprocessframe = processframe;
+                       if (processframe < metricmainarraylist.size()) {
+                           arraycontainerformetric = new arraycontainer();
+                           arraycontainerformetric = metricmainarraylist.get(processframe);
+                       }
 
-                        if(encryptionadapter != null && recycler_encryption!= null)
-                            recycler_encryption.smoothScrollToPosition(processframe);
-                    }
+                       if (encryptionadapter != null && recycler_encryption != null)
+                           recycler_encryption.smoothScrollToPosition(processframe);
+                   }
 
 
-                layout_progressline.setVisibility(View.VISIBLE);
-                RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT);
-                p.addRule(RelativeLayout.ABOVE, seekBar.getId());
-                Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                dpToPx(getActivity(),4);
-                p.setMargins((int)(thumbRect.centerX()- dpToPx(getActivity(),1)),0, 0, 0);
-                layout_progressline.setLayoutParams(p);
-                txt_mediatimethumb.setText(common.gettimestring(player.getCurrentPosition()));
-                txt_mediatimethumb.setVisibility(View.VISIBLE);
-
+                   layout_progressline.setVisibility(View.VISIBLE);
+                   RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
+                           RelativeLayout.LayoutParams.WRAP_CONTENT,
+                           RelativeLayout.LayoutParams.WRAP_CONTENT);
+                   p.addRule(RelativeLayout.ABOVE, seekBar.getId());
+                   Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
+                   dpToPx(getActivity(), 4);
+                   p.setMargins((int) (thumbRect.centerX() - dpToPx(getActivity(), 1)), 0, 0, 0);
+                   layout_progressline.setLayoutParams(p);
+                   txt_mediatimethumb.setText(common.gettimestring(player.getCurrentPosition()));
+                   txt_mediatimethumb.setVisibility(View.VISIBLE);
+               }
               /*  else
             {
                 layout_progressline.setVisibility(View.GONE);
