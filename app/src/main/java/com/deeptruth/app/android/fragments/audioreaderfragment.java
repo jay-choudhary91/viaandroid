@@ -444,21 +444,25 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 if(progress > 0)
                 {
                     //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
+                    int processframe=0;
                     int progresspercentage = (progress*100)/mediaseekbar.getMax();
                     if(progresspercentage > 0)
-                        currentprocessframe =(int) (metricmainarraylist.size()*progresspercentage)/100;
+                        processframe =(int) (metricmainarraylist.size()*progresspercentage)/100;
 
                     if(ismediacompleted)
-                        currentprocessframe=metricmainarraylist.size()-1;
+                        processframe=metricmainarraylist.size()-1;
 
-                    if(currentprocessframe < metricmainarraylist.size())
+                    if(currentprocessframe != processframe)
                     {
-                        arraycontainerformetric = new arraycontainer();
-                        arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
+                        currentprocessframe=processframe;
+                        if(processframe < metricmainarraylist.size())
+                        {
+                            arraycontainerformetric = new arraycontainer();
+                            arraycontainerformetric = metricmainarraylist.get(processframe);
+                        }
+                        if(encryptionadapter != null && recycler_encryption!= null)
+                            recycler_encryption.smoothScrollToPosition(currentprocessframe);
                     }
-
-                    if(encryptionadapter != null && recycler_encryption!= null)
-                        recycler_encryption.smoothScrollToPosition(currentprocessframe);
                 }
             }
 
