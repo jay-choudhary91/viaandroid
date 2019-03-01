@@ -44,6 +44,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -1207,6 +1208,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     private void capturestillpicture() {
         try {
+
+            if(expandable_layout != null && expandable_layout.isExpanded())
+                expendcollpaseview();
+
             final Activity activity = getActivity();
             metadatametricesjson=new JSONObject();
             if (null == activity || null == mCameraDevice) {
@@ -1343,6 +1348,36 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         return false;
     }
 
+    public void expendcollpaseview()
+    {
+        if(expandable_layout.isExpanded())
+        {
+            qualityoptionanimations(1.0f,0f);
+            expandable_layout.setDuration(100);
+            expandable_layout.collapse();
+            expandable_layout.setVisibility(View.GONE);
+            actionbarcomposer.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            qualityoptionanimations(0f,1.0f);
+            expandable_layout.setDuration(100);
+            expandable_layout.expand();
+            expandable_layout.setVisibility(View.VISIBLE);
+            actionbarcomposer.setVisibility(View.GONE);
+        }
+    }
+
+    public void qualityoptionanimations(float fromalpha,float toalpha)
+    {
+        AlphaAnimation animation1 = new AlphaAnimation(fromalpha, toalpha);
+        animation1.setDuration(500);
+        animation1.setFillAfter(false);
+        txt_media_low.startAnimation(animation1);
+        txt_media_high.startAnimation(animation1);
+        txt_media_medium.startAnimation(animation1);
+    }
+
     public void setmediaquility(String quality)
     {
         selectedmediaquality=quality;
@@ -1384,21 +1419,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 break;
 
             case R.id.txt_media_quality:
-                if(expandable_layout.isExpanded())
-                {
-                    expandable_layout.collapse();
-                    expandable_layout.setVisibility(View.GONE);
-                    actionbarcomposer.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    /*txt_media_low.setVisibility(View.INVISIBLE);
-                    txt_media_medium.setVisibility(View.INVISIBLE);
-                    txt_media_high.setVisibility(View.INVISIBLE);*/
-                    expandable_layout.expand();
-                    expandable_layout.setVisibility(View.VISIBLE);
-                    actionbarcomposer.setVisibility(View.GONE);
-                }
+                expendcollpaseview();
                 break;
 
             case R.id.img_stop_watch:
