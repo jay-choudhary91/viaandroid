@@ -1936,7 +1936,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         if(lastrecordedvideo != null)
         {
-            String duration = common.getvideotimefromurl(lastrecordedvideo.getAbsolutePath());
+            String duration = common.getvideotimefromurl(getActivity(),lastrecordedvideo.getAbsolutePath());
 
             String medianame=common.getfilename(lastrecordedvideo.getAbsolutePath());
             String[] split=medianame.split("\\.");

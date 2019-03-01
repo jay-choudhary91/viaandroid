@@ -861,7 +861,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             if(mediaduration.trim().isEmpty() && (! type.equalsIgnoreCase("image")))
                             {
                                 try {
-                                    String duration = common.getvideotimefromurl(mediafilepath);
+                                    String duration = common.getvideotimefromurl(getActivity(),mediafilepath);
                                     videoobject.setDuration(duration);
                                 }catch (Exception e)
                                 {
