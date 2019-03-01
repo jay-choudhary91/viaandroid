@@ -42,6 +42,7 @@ import android.media.AudioManager;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -93,8 +94,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -1880,7 +1884,7 @@ public class common {
     }
 
 
-    public static String gettimestring(long millis) {
+   /* public static String gettimestring(long millis) {
         StringBuffer buf = new StringBuffer();
 
         int hours = (int) (millis / (1000 * 60 * 60));
@@ -1894,7 +1898,71 @@ public class common {
         .append(String.format("%02d", seconds));
 
         return buf.toString();
+    }*/
+
+    public static String getvideotimefromurl(Context context,String url){
+
+        MediaPlayer mpl = null;
+        mpl = MediaPlayer.create(context, Uri.parse(url));
+        int millis = mpl.getDuration();
+
+        int hours = (int) (millis / (1000 * 60 * 60));
+        int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
+        int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
+        //   convent into milisec and then minus from millis
+        int milisec = (int) (seconds * 1000);
+        Log.e("milisec", ""+milisec);
+        int milisecond = (int) ( millis - milisec );
+        String milliseconds="0";
+        char[] chararray=String.valueOf(milisecond).toCharArray();
+        if(chararray != null && chararray.length > 0)
+            milliseconds=""+chararray[0];
+        int milise= Integer.parseInt(milliseconds=""+chararray[0]);
+        Log.e("milliseconds", ""+milliseconds);
+
+        String duration=(""+hours+":"+common.appendzero(minutes)+":"+common.appendzero(seconds)+"."+milise);
+        Log.e("duration",""+duration);
+
+        return duration;
+
     }
+
+    public static String gettimestring(long millis) {
+        StringBuffer buf = new StringBuffer();        int hours = (int) (millis / (1000 * 60 * 60));
+        int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
+        int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
+        //   convent into milisec and then minus from millis
+        int milisec = (int) (seconds * 1000);
+        Log.e("milisec", ""+milisec);
+        int milisecond = (int) ( millis - milisec );
+        String milliseconds="0";
+        char[] chararray=String.valueOf(milisecond).toCharArray();
+        if(chararray != null && chararray.length > 0)
+            milliseconds=""+chararray[0];
+        int milise= Integer.parseInt(milliseconds=""+chararray[0]);
+        Log.e("milliseconds", ""+milliseconds);
+
+        if(hours == 0){
+            buf.append(String.format("%02d",minutes))
+                    .append(":")
+                    .append(String.format("%02d", seconds))
+                    .append(".")
+                    .append(String.format("%d", milise));
+
+        }else{
+            buf.append(String.format("%02d", hours))
+                .append(":")
+                .append(String.format("%02d", minutes))
+                .append(":")
+                .append(String.format("%02d", seconds))
+                .append(".")
+                .append(String.format("%d", milise));
+
+        }        return buf.toString();
+    }
+
+
+
 
     public static void slidetoabove(final LinearLayout layout_mediatype) {
         layout_mediatype.animate()

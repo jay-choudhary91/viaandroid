@@ -1135,6 +1135,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void startRecordingVideo() {
         try {
             // UI
+
+            if(expandable_layout != null && expandable_layout.isExpanded())
+                expendcollpaseview();
+
             metadatametricesjson=new JSONArray();
             mediakey ="";
             issavedtofolder=false;
@@ -1274,23 +1278,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 break;
 
             case R.id.txt_media_quality:
-                if(expandable_layout.isExpanded())
-                {
-                    expandable_layout.collapse();
-                    expandable_layout.setVisibility(View.GONE);
-                    actionbarcomposer.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    /*txt_media_low.setVisibility(View.INVISIBLE);
-                    txt_media_medium.setVisibility(View.INVISIBLE);
-                    txt_media_high.setVisibility(View.INVISIBLE);*/
-                    expandable_layout.expand();
-                    expandable_layout.setVisibility(View.VISIBLE);
-                    actionbarcomposer.setVisibility(View.GONE);
-                }
+                expendcollpaseview();
                 break;
-
 
             case R.id.img_dotmenu:
                 settingfragment settingfrag=new settingfragment();
@@ -1316,8 +1305,41 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
+    public void expendcollpaseview()
+    {
+        if(expandable_layout.isExpanded())
+        {
+            qualityoptionanimations(1.0f,0f);
+            expandable_layout.setDuration(100);
+            expandable_layout.collapse();
+            expandable_layout.setVisibility(View.GONE);
+            actionbarcomposer.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            qualityoptionanimations(0f,1.0f);
+            expandable_layout.setDuration(100);
+            expandable_layout.expand();
+            expandable_layout.setVisibility(View.VISIBLE);
+            actionbarcomposer.setVisibility(View.GONE);
+        }
+    }
+
+    public void qualityoptionanimations(float fromalpha,float toalpha)
+    {
+        AlphaAnimation animation1 = new AlphaAnimation(fromalpha, toalpha);
+        animation1.setDuration(500);
+        animation1.setFillAfter(false);
+        txt_media_low.startAnimation(animation1);
+        txt_media_high.startAnimation(animation1);
+        txt_media_medium.startAnimation(animation1);
+    }
+
     public void setmediaquility(String quality)
     {
+        expandable_layout.setDuration(100);
+        qualityoptionanimations(1.0f,0f);
+        expandable_layout.collapse();
         if(mediarecorder != null && (! selectedvideoquality.equalsIgnoreCase(quality)))
         {
             txt_media_quality.setText(quality);
@@ -1325,7 +1347,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mediarecorder.reset();
             startPreview();
         }
-        expandable_layout.collapse();
     }
 
     public void showwarningorclosebutton()
@@ -1915,7 +1936,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         if(lastrecordedvideo != null)
         {
-            String duration = common.getvideotimefromurl(lastrecordedvideo.getAbsolutePath());
+            String duration = common.getvideotimefromurl(getActivity(),lastrecordedvideo.getAbsolutePath());
 
             String medianame=common.getfilename(lastrecordedvideo.getAbsolutePath());
             String[] split=medianame.split("\\.");

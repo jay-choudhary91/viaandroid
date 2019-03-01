@@ -216,8 +216,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
             tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
-            tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery;
-
+            tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery,tvdegree;
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
     @BindView(R.id.googlemap)
@@ -344,6 +343,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         });
 
         tvaddress=rootview.findViewById(R.id.txt_address);
+        tvdegree=rootview.findViewById(R.id.txt_degree);
         tvlatitude=rootview.findViewById(R.id.txt_latitude);
         tvlongitude=rootview.findViewById(R.id.txt_longitude);
         tvaltitude=rootview.findViewById(R.id.txt_altitude);
@@ -1211,6 +1211,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
             common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
+            common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
             common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.address))){

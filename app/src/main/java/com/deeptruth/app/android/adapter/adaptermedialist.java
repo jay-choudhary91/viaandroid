@@ -416,6 +416,12 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         notifyDataSetChanged();
     }
 
+    public void notifysingleitem(int itemposition)
+    {
+        if(itemposition < arrayvideolist.size())
+            notifyItemChanged(itemposition);
+    }
+
     public void filterlist(ArrayList<video> arrayvideolist) {
         this.arrayvideolist = arrayvideolist;
         notifyDataSetChanged();

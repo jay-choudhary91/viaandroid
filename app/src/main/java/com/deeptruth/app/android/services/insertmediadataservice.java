@@ -425,7 +425,7 @@ public class insertmediadataservice extends Service {
     {
         String duration = "";
         if(!videourl.isEmpty())
-            duration = common.getvideotimefromurl(videourl);
+            duration = common.getvideotimefromurl(applicationviavideocomposer.getactivity(),videourl);
 
         String medianame = common.getfilename(videourl);
         String[] split=medianame.split("\\.");

@@ -838,7 +838,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     {
         if(recordedmediafile != null)
         {
-            String duration = common.getvideotimefromurl(recordedmediafile);
+            String duration = common.getvideotimefromurl(getActivity(),recordedmediafile);
 
             String medianame=common.getfilename(recordedmediafile);
             String[] split=medianame.split("\\.");

@@ -965,6 +965,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     @Override
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
+        float pitch = orientation[1] * -57;
+
+        if(pitch <= -50)
+            return;
+
         float roll = orientation[2] * -57;
         float rotateangle=3600;
         if(roll < -45 && roll >= -120)
@@ -984,7 +989,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             rotateangle=180;
         }
 
-        Log.e("rotateangle",""+roll);
+        Log.e("rotateangle",""+roll+" "+pitch);
 
         if(rotateangle != 3600)
         {
@@ -992,39 +997,41 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                if(layout_validating != null && layout_no_gps_wifi != null){
                    if(rotateangle == -90){
 
-                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                       lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
-                       lp.setMargins(0,0,0,layoutbottom.getHeight());
+                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                       lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
+                       lp.setMargins(100,layoutbottom.getHeight(),0,layoutbottom.getHeight()+50);
                        layout_validating.setLayoutParams(lp);
                        layout_validating.setAngle(90);
 
-                       RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                       lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
-                       lpwifi.setMargins(0,0,0,layoutbottom.getHeight());
+                       RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                       lpwifi.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
+                       lpwifi.setMargins(100,layoutbottom.getHeight(),0,layoutbottom.getHeight()+50);
                        layout_no_gps_wifi.setLayoutParams(lpwifi);
                        layout_no_gps_wifi.setAngle(90);
 
                    }else if(rotateangle == 90){
 
-                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                       lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
-                       lp.setMargins(0,0,0,layoutbottom.getHeight());
+                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                       lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+                       lp.setMargins(0,layoutbottom.getHeight(),100,layoutbottom.getHeight()+50);
                        layout_validating.setLayoutParams(lp);
                        layout_validating.setAngle(270);
 
-                       RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                       lpwifi.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,0);
-                       lpwifi.setMargins(0,0,0,layoutbottom.getHeight());
+                       RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                       lpwifi.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+                       lpwifi.setMargins(0,layoutbottom.getHeight(),100,layoutbottom.getHeight()+50);
                        layout_no_gps_wifi.setLayoutParams(lpwifi);
                        layout_no_gps_wifi.setAngle(270);
 
                    }else{
                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       lp.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
                        layout_validating.setLayoutParams(lp);
                        lp.setMargins(0,100,0,0);
                        layout_validating.setAngle(0);
 
                        RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       lpwifi.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
                        layout_no_gps_wifi.setLayoutParams(lpwifi);
                        lpwifi.setMargins(0,100,0,0);
                        layout_no_gps_wifi.setAngle(0);
