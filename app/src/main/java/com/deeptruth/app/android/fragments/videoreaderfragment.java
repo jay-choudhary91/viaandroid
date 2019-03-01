@@ -486,45 +486,26 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if(progress > 0)
                 {
                     //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
+                    int processframe=0;
                     int progresspercentage = (progress*100)/mediaseekbar.getMax();
                     if(progresspercentage > 0)
-                        currentprocessframe =(int) (metricmainarraylist.size()*progresspercentage)/100;
+                        processframe =(int) (metricmainarraylist.size()*progresspercentage)/100;
 
                     if(isvideocompleted)
-                        currentprocessframe=metricmainarraylist.size()-1;
+                        processframe=metricmainarraylist.size()-1;
 
-                    if(currentprocessframe < metricmainarraylist.size())
+                    if(currentprocessframe != processframe)
                     {
-                        arraycontainerformetric = new arraycontainer();
-                        arraycontainerformetric = metricmainarraylist.get(currentprocessframe);
+                        currentprocessframe=processframe;
+                        if(processframe < metricmainarraylist.size())
+                        {
+                            arraycontainerformetric = new arraycontainer();
+                            arraycontainerformetric = metricmainarraylist.get(processframe);
+                        }
+
+                        if(encryptionadapter != null && recycler_encryption!= null)
+                            recycler_encryption.smoothScrollToPosition(processframe);
                     }
-
-                    /*ValueAnimator fader = ObjectAnimator.ofFloat(recycler_encryption, "alpha", 1, 0);
-                    AnimatorSet animation = new AnimatorSet();
-                    animation.addListener(new Animator.AnimatorListener()
-                    {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-
-                        }
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-                        }
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-
-                        }
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-                        }
-                    });
-
-                    ((AnimatorSet) animation).play(fader);
-                    animation.setDuration(500);
-                    animation.start();*/
-
-                    if(encryptionadapter != null && recycler_encryption!= null)
-                        recycler_encryption.smoothScrollToPosition(currentprocessframe);
 
                     layout_progressline.setVisibility(View.VISIBLE);
                     RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(
