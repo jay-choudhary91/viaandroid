@@ -93,7 +93,7 @@
                        <ImageView
                            android:id="@+id/img_compass"
                            android:layout_width="wrap_content"
-                           android:layout_height="128dp"
+                           android:layout_height="120dp"
                            android:layout_centerVertical="true"
                            android:layout_centerHorizontal="true"
                            android:layout_gravity="center"
