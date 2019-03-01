@@ -340,7 +340,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.attitude_indicator)
     AttitudeIndicator attitudeindicator;
     @BindView(R.id.img_phone_orientation)
-            ImageView img_phone_orientation;
+    ImageView img_phone_orientation;
 
     int footerheight;
 
@@ -484,8 +484,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             private final int SENSITIVITY=0;
             @Override
             public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
-               if(progress > 0)
-               {
                    //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
                    int processframe = 0;
                    int progresspercentage = (progress * 100) / mediaseekbar.getMax();
@@ -518,11 +516,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    layout_progressline.setLayoutParams(p);
                    txt_mediatimethumb.setText(common.gettimestring(player.getCurrentPosition()));
                    txt_mediatimethumb.setVisibility(View.VISIBLE);
-               }
-              /*  else
-            {
-                layout_progressline.setVisibility(View.GONE);
-            }*/
 
         }
 
@@ -1927,7 +1920,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                     float pitch = orientation[1] * -57;
                     float roll = orientation[2] * -57;
-                    attitudeindicator.setAttitude(pitch, roll);
+                    if(img_phone_orientation != null)
+                        img_phone_orientation.setRotation(roll);
                 }catch (Exception e)
                 {
                     e.printStackTrace();

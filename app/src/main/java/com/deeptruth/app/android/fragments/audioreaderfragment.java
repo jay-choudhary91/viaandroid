@@ -1913,7 +1913,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                     float pitch = orientation[1] * -57;
                     float roll = orientation[2] * -57;
-                    attitudeindicator.setAttitude(pitch, roll);
+                    if(img_phone_orientation != null)
+                        img_phone_orientation.setRotation(roll);
                 }catch (Exception e)
                 {
                     e.printStackTrace();
