@@ -81,11 +81,11 @@
                    android:layout_width="0dp"
                    android:layout_weight="0.4"
                    android:layout_height="150dp">
-
                        <ImageView
                            android:layout_width="wrap_content"
                            android:layout_height="wrap_content"
                            android:layout_gravity="center"
+                           android:id="@+id/layoutcompass"
                            android:src="@drawable/transparent_compass"
                            android:layout_weight="0.4">
                        </ImageView>
@@ -98,7 +98,6 @@
                            android:layout_centerHorizontal="true"
                            android:layout_gravity="center"
                            android:src="@drawable/niddle_withshadow" />
-
 
                </RelativeLayout>
 
@@ -191,15 +190,14 @@
                    </LinearLayout>
 
                    </LinearLayout>
-            <com.deeptruth.app.android.views.customfonttextview
-                      android:id="@+id/txt_degree"
-                      app:fontType="Comfortaa-Regular"
-                      android:layout_centerHorizontal="true"
-                      android:layout_below="@+id/layout_compassview"
-                      style="@style/txt_normalview"
-                      android:text="Degree"/>
-
-
+           <com.deeptruth.app.android.views.customfonttextview
+               android:id="@+id/txt_degree"
+               app:fontType="Comfortaa-Regular"
+               android:layout_centerHorizontal="true"
+               style="@style/txt_degreeview"
+               android:layout_below="@+id/layoutcompass"
+               android:gravity="left"
+               android:text="Degree"/>
           </LinearLayout>
 
 
@@ -277,7 +275,7 @@
                        android:layout_width="55dp"
                        android:layout_height="55dp"
                        android:layout_centerInParent="true"
-                       android:src="@drawable/orientation_animation"/>
+                       android:src="@drawable/phoneorentation"/>
 
 
                    <ImageView
