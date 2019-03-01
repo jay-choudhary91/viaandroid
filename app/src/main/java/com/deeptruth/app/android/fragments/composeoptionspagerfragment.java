@@ -106,7 +106,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @BindView(R.id.txt_space_b)
     TextView txt_space_b;
 
-    boolean isvideoplaying = true;
+    boolean isvideoplaying = true,isvideocomposer = true;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -682,6 +682,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
+                isvideocomposer = true;
                 fragvideocomposer.setData(false, mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
             break;
@@ -695,6 +696,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
+                isvideocomposer = false;
                 fragimgcapture.setData(mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
 
@@ -709,6 +711,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
+                isvideocomposer = false;
                 fragaudiocomposer.setData(mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragaudiocomposer,false,true);
             break;
@@ -993,7 +996,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         if(rotateangle != 3600)
         {
-            if(fragvideocomposer != null && !fragvideocomposer.isvideorecording) {
+            if(fragvideocomposer != null && !fragvideocomposer.isvideorecording && isvideocomposer) {
                if(layout_validating != null && layout_no_gps_wifi != null){
                    if(rotateangle == -90){
 
