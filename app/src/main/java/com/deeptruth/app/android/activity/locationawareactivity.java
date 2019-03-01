@@ -1538,8 +1538,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     if (getcurrentfragment() != null) {
                         int heading = Math.round(event.values[0]);
                        // Log.e("Heading ",""+heading);;
-
-                        updatearrayitem(config.compass, common.getcompassdirection(heading));
+                        String compassdirection = common.getcompassdirection(heading);
+                        updatearrayitem(config.compass, compassdirection);
                         updatearrayitem(config.orientation, "" + heading);
                         updatearrayitem(config.heading, "" + heading);
                     }

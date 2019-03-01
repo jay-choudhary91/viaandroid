@@ -419,6 +419,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
             }
 
+        if(!isdatacomposing){
+            if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
+            {
+
+                String strdegree = xdata.getinstance().getSetting(config.Orientation);
+               /* if(! strdegree.equals(lastsavedangle))
+                {
+                    if(strdegree.equalsIgnoreCase("NA"))
+                        strdegree="0.0";
+
+                    int degree = Math.abs((int)Double.parseDouble(strdegree));
+                    //   rotatecompass(degree);
+                }
+                lastsavedangle=strdegree;*/
+
+                common.setdrawabledata("","\n"+ (strdegree  + "" +xdata.getinstance().getSetting(config.compass)) , txtdegree);
+            }
+        }
+
             if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
             {
                 String strdegree=xdata.getinstance().getSetting(config.orientation);
