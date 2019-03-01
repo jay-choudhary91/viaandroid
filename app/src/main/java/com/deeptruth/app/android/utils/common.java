@@ -1998,5 +1998,27 @@ public class common {
         return true;
     }
 
+    public static String getcompassdirection(int heading){
+
+        String strdirection = "E";
+        if (heading > 23 && heading <= 67) {
+            strdirection = "NE";
+        } else if (heading > 68 && heading <= 112) {
+            strdirection = "E";
+        } else if (heading > 113 && heading <= 167) {
+            strdirection = "SE";
+        } else if (heading > 168 && heading <= 202) {
+            strdirection = "S";
+        } else if (heading > 203 && heading <= 247) {
+            strdirection = "SW";
+        } else if (heading > 248 && heading <= 293) {
+            strdirection = "W";
+        } else if (heading > 294 && heading <= 337) {
+            strdirection = "NW";
+        } else if (heading >= 338 || heading <= 22) {
+            strdirection = "N";
+        }
+        return strdirection;
+    }
 
 }

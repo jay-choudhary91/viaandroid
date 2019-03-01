@@ -148,6 +148,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     customfonttextview tvencryption;
     @BindView(R.id.text_dataletency)
     customfonttextview tvdataletency;
+    @BindView(R.id.txt_degree)
+    customfonttextview txtdegree;
 
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
@@ -231,6 +233,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvPhoneanalytics.setTextColor(getResources().getColor(R.color.white));
           tvencryption.setTextColor(getResources().getColor(R.color.white));
           tvdataletency.setTextColor(getResources().getColor(R.color.white));
+          txtdegree.setTextColor(getResources().getColor(R.color.white));
 
             //setmetadatavalue();
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
@@ -416,6 +419,25 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 drawmappoints(new LatLng(Double.parseDouble(latitude),Double.parseDouble(longitude)));
             }
 
+        if(!isdatacomposing){
+            if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
+            {
+
+                String strdegree = xdata.getinstance().getSetting(config.Orientation);
+               /* if(! strdegree.equals(lastsavedangle))
+                {
+                    if(strdegree.equalsIgnoreCase("NA"))
+                        strdegree="0.0";
+
+                    int degree = Math.abs((int)Double.parseDouble(strdegree));
+                    //   rotatecompass(degree);
+                }
+                lastsavedangle=strdegree;*/
+
+                common.setdrawabledata("","\n"+ (strdegree  + "" +xdata.getinstance().getSetting(config.compass)) , txtdegree);
+            }
+        }
+
             if(xdata.getinstance().getSetting(config.orientation).toString().trim().length() > 0)
             {
                 String strdegree=xdata.getinstance().getSetting(config.orientation);
@@ -425,7 +447,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                         strdegree="0.0";
 
                     int degree = Math.abs((int)Double.parseDouble(strdegree));
-                    rotatecompass(degree);
+                 //   rotatecompass(degree);
                 }
                 lastsavedangle=strdegree;
             }
@@ -654,7 +676,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 0.5f);
 
         // how long the animation will take place
-        ra.setDuration(210);
+        ra.setDuration(250);
         ra.setFillAfter(true);
         img_compass.startAnimation(ra);
         currentDegree = -degree;
@@ -774,31 +796,22 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(final SensorEvent event) {
         if (event.sensor == maccelerometersensormanager) {
-            double deltaX = event.values[0];
-            double deltaY = event.values[1];
-            double deltaZ = event.values[2];
-
-            /*txt_xaxis.setText("X-Axis \n"+deltaX);
-            txt_yaxis.setText("Y-Axis \n"+deltaY);
-            txt_zaxis.setText("Z-Axis \n"+deltaZ);*/
-
-            /*if(isgraphicopen && (gethelper().getrecordingrunning() || ismediaplayer))
-            {
-                String x = String.valueOf(new DecimalFormat("#.#").format(deltaX));
-                String y = String.valueOf(new DecimalFormat("#.#").format(deltaY));
-                String z = String.valueOf(new DecimalFormat("#.#").format(deltaZ));
-
-                txt_xaxis.setText("X-Axis \n"+x);
-                txt_yaxis.setText("Y-Axis \n"+y);
-                txt_zaxis.setText("Z-Axis \n"+z);
-            }*/
         }
         else
         {
             if(isdatacomposing)
             {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int heading = Math.round(event.values[0]);
+
+                        common.setdrawabledata("","\n"+heading +"° " +common.getcompassdirection(heading) , txtdegree);
+
+                    }
+                });
                 int degree = Math.round(event.values[0]);
                 //  Log.e("degree ",""+degree);
                 rotatecompass(degree);

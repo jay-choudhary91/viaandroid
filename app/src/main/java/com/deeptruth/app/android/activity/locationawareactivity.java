@@ -1537,32 +1537,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 public void run() {
                     if (getcurrentfragment() != null) {
                         int heading = Math.round(event.values[0]);
-
-                        int heading1 = Math.round(event.values[0]);
-                        int heading2 = Math.round(event.values[1]);
-                        int heading3 = Math.round(event.values[2]);
-                       // Log.e("Heading ",""+heading);
-
-                        String strdirection = "East";
-                        if (heading > 23 && heading <= 67) {
-                            strdirection = "North East";
-                        } else if (heading > 68 && heading <= 112) {
-                            strdirection = "East";
-                        } else if (heading > 113 && heading <= 167) {
-                            strdirection = "South East";
-                        } else if (heading > 168 && heading <= 202) {
-                            strdirection = "South";
-                        } else if (heading > 203 && heading <= 247) {
-                            strdirection = "South West";
-                        } else if (heading > 248 && heading <= 293) {
-                            strdirection = "West";
-                        } else if (heading > 294 && heading <= 337) {
-                            strdirection = "North West";
-                        } else if (heading >= 338 || heading <= 22) {
-                            strdirection = "North";
-                        }
-
-                        updatearrayitem(config.compass, strdirection);
+                       // Log.e("Heading ",""+heading);;
+                        String compassdirection = common.getcompassdirection(heading);
+                        updatearrayitem(config.compass, compassdirection);
                         updatearrayitem(config.orientation, "" + heading);
                         updatearrayitem(config.heading, "" + heading);
                     }
