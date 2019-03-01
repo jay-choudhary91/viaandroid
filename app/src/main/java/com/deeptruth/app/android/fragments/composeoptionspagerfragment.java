@@ -965,6 +965,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     @Override
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
+        float pitch = orientation[1] * -57;
+
+        if(pitch <= -50)
+            return;
+
         float roll = orientation[2] * -57;
         float rotateangle=3600;
         if(roll < -45 && roll >= -120)
@@ -984,7 +989,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             rotateangle=180;
         }
 
-        Log.e("rotateangle",""+roll);
+        Log.e("rotateangle",""+roll+" "+pitch);
 
         if(rotateangle != 3600)
         {
