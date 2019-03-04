@@ -132,6 +132,8 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.widget.RelativeLayout.TRUE;
+
 /**
  * Created by devesh on 21/8/18.
  */
@@ -473,13 +475,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         mediaseekbar.setPadding(0,0,0,0);
         mheightview = getContext().getResources().getDimensionPixelOffset(R.dimen.frames_video_height);
 
-        videotextureview.post(new Runnable() {
+        videoSurfaceContainer.post(new Runnable() {
             @Override
             public void run() {
-                previousheight = videotextureview.getHeight();
-                previouswidth = videotextureview.getWidth();
+                previousheight = videoSurfaceContainer.getHeight();
+                previouswidth = videoSurfaceContainer.getWidth();
                 previouswidthpercentage = (previouswidth*20)/100;
-                playpausebutton.setVisibility(View.VISIBLE);
+               // playpausebutton.setVisibility(View.VISIBLE);
                // recenterplaypause();
             }
         });
@@ -835,15 +837,21 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
     }
 
-    public void recenterplaypause()
+    public void recenterplaypause(final int topheight, final int setvisiblety)
     {
         videotextureview.post(new Runnable() {
             @Override
             public void run() {
                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.CENTER_IN_PARENT);
+                params.addRule(RelativeLayout.CENTER_HORIZONTAL,TRUE);
+                params.setMargins(0,topheight,0,0);
                 playpausebutton.setLayoutParams(params);
+
+                if(setvisiblety == 0)
+                    playpausebutton.setVisibility(View.VISIBLE);
+
+
             }
         });
     }
@@ -974,6 +982,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         gethelper().drawerenabledisable(false);
                         //collapse(videotextureview,previousheight);
                         gethelper().updateactionbar(1);
+                        playpausebutton.setVisibility(View.GONE);
                         layout_videodetails.setVisibility(View.VISIBLE);
                         tab_layout.setVisibility(View.VISIBLE);
                         scrollview_detail.setVisibility(View.VISIBLE);
@@ -988,7 +997,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                         layout_seekbartiming.getResources().getColor(R.color.white);
                         dividerline.setVisibility(View.GONE);
-                        playpausebutton.setVisibility(View.VISIBLE);
+
                         imgpause.setVisibility(View.GONE);
                         collapseimg_view();
                         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
@@ -2234,6 +2243,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
 
         videotextureview.setLayoutParams(layoutParams);
+
+        int previewheight = videoSurfaceContainer.getHeight()/2;
+        int centerheight = surfaceView_Height/2;
+        int diffrenceheight = (previewheight - centerheight);
+
+        recenterplaypause(centerheight + (diffrenceheight/2) - (headerheight/2),0);
     }
 
     public void updatesurfaceviewsizefullscreen(){
@@ -2246,6 +2261,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layoutParams.height = surfaceView_Height;
 
         videotextureview.setLayoutParams(layoutParams);
+        int previewheight = videoSurfaceContainer.getHeight()/2;
+        int centerheight = surfaceView_Height/2;
+        int diffrenceheight = (previewheight - centerheight);
+
+        recenterplaypause(centerheight + (diffrenceheight/2) - (scrubberheight/2),1);
     }
 
     private void updatetextureviewsize(int viewWidth, int viewHeight) {
@@ -2492,27 +2512,26 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void setheadermargine(int headerheight,int scrubberheight){
 
         if(headerheight == 0 && scrubberheight == 0){
-            RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(targetwidth,targetheight+Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
-            params.setMargins(0,headerheight,0,scrubberheight);
-            videotextureview.setLayoutParams(params);
+            RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,targetheight+Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
+            paramsvideotextureview.setMargins(0,headerheight,0,scrubberheight);
+            videotextureview.setLayoutParams(paramsvideotextureview);
 
             videotextureview.post(new Runnable() {
                 @Override
                 public void run() {
                     updatesurfaceviewsizefullscreen();
-                    recenterplaypause();
                 }
             });
         }else{
-            RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
-            params.setMargins(0,headerheight-1,0,scrubberheight-40);
-            videotextureview.setLayoutParams(params);
-            videotextureview.post(new Runnable() {
+
+            RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+            paramsvideotextureview.setMargins(0,headerheight-1,0,scrubberheight-30);
+            videotextureview.setLayoutParams(paramsvideotextureview);
+
+           videotextureview.post(new Runnable() {
                 @Override
                 public void run() {
-
                     updatesurfaceviewsize();
-                    recenterplaypause();
                 }
             });
         }
