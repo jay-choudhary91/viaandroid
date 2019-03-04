@@ -1912,6 +1912,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 try {
                     float[] adjustedRotationMatrix = new float[9];
                     String attitude = metricItemArraylist.getMetricTrackValue().toString();
+                    Log.e("attitude ",attitude);
                     String[] attitudearray = attitude.split(",");
                     for(int i = 0 ;i< attitudearray.length;i++){
                         //float val = (float) (Math.random() * 20) + 3;
