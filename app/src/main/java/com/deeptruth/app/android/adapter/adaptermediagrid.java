@@ -174,6 +174,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
 
             if(! mediaobject.getmimetype().contains(config.item_audio.toLowerCase()))
             {
+                holder.img_mediathumbnail.setBackgroundColor(context.getResources().getColor(R.color.transparent));
                 RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
 
                 Uri uri = Uri.fromFile(new File(mediaobject.getPath()));
@@ -181,6 +182,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             }
             else
             {
+                holder.img_mediathumbnail.setBackgroundColor(context.getResources().getColor(R.color.dark_blue_solid_a));
                 if(! mediaobject.getThumbnailpath().trim().isEmpty())
                 {
                     if(new File(mediaobject.getThumbnailpath()).exists())

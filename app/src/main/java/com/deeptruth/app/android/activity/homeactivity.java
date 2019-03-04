@@ -116,6 +116,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         imgrighthandle.setOnClickListener(this);
         fragment_container.setOnTouchListener(this);
 
+        drawerenabledisable(false);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

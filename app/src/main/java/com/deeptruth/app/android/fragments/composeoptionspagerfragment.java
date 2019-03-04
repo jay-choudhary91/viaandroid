@@ -717,21 +717,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             break;
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                setimagethumbnail();
-
-                if(gifdrawable!= null && gifdrawable.isPlaying())
-                {
-                    gifdrawable.pause();
-                    gifdrawable.seekTo(0);
-                }
-
-            }
-        },50);
-
-
+        setimagethumbnail();
+        if(gifdrawable!= null && gifdrawable.isPlaying())
+        {
+            gifdrawable.pause();
+            gifdrawable.seekTo(0);
+        }
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
