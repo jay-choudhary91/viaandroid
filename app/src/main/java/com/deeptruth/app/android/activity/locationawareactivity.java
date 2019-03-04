@@ -401,8 +401,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     private void doafterallpermissionsgranted() {
         enableGPS(locationawareactivity.this);
-     //   registerallbroadcast();
         preparemetricesdata();
+
+        if(mOrientation != null)
+            mOrientation.startListening(this);
     }
 
     @Override
@@ -1767,9 +1769,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     protected void onStop() {
         super.onStop();
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
             applicationviavideocomposer.getactivity().unregisterReceiver(coredatabroadcastreceiver);
-        }
+
         if(mOrientation != null)
             mOrientation.stopListening();
     }

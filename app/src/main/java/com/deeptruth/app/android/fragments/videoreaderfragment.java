@@ -484,7 +484,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             private final int SENSITIVITY=0;
             @Override
             public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
-                   //Log.e("Max current",""+mediaseekbar.getMax()+" "+mediaseekbar.getProgress());
                    int processframe = 0;
                    int progresspercentage = (progress * 100) / mediaseekbar.getMax();
                    if (progresspercentage > 0)
@@ -511,10 +510,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                            RelativeLayout.LayoutParams.WRAP_CONTENT);
                    p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                    Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                   dpToPx(getActivity(), 4);
                    p.setMargins((int) (thumbRect.centerX() - dpToPx(getActivity(), 1)), 0, 0, 0);
                    layout_progressline.setLayoutParams(p);
-                   txt_mediatimethumb.setText(common.gettimestring(player.getCurrentPosition()));
+                   txt_mediatimethumb.setText(common.gettimestring(seekBar.getProgress()));
                    txt_mediatimethumb.setVisibility(View.VISIBLE);
 
         }
@@ -522,21 +520,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 mProgressAtStartTracking = seekBar.getProgress();
-                /*if(Math.abs(mProgressAtStartTracking - seekBar.getProgress()) <= SENSITIVITY){
-                    if(layout_validating.getVisibility() == View.VISIBLE)
-                    {
-                        layout_validating.setVisibility(View.GONE);
-                    }
-                    else
-                    {
-                        layout_validating.setVisibility(View.VISIBLE);
-                    }
-                }*/
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
                 player.seekTo(seekBar.getProgress());
                 maxincreasevideoduration=player.getCurrentPosition();
             }
@@ -2326,7 +2313,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public static float dpToPx(Context context, float valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,valueInDp, context.getResources().getDisplayMetrics());
-        Log.e("height",""+height);
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 

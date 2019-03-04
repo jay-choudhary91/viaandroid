@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -162,9 +164,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 else
                 {
                     holder.img_loader.setVisibility(View.VISIBLE);
-                    Glide.with(context).
-                            load(R.drawable.media_loader).
-                            into(holder.img_loader);
+                    Glide.with(context).load(R.drawable.media_loader).into(holder.img_loader);
                 }
             }
             else
@@ -172,13 +172,12 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 holder.img_loader.setVisibility(View.GONE);
             }
 
-            if(! mediaobject.getmimetype().contains("audio"))
+            if(! mediaobject.getmimetype().contains(config.item_audio.toLowerCase()))
             {
+                RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
+
                 Uri uri = Uri.fromFile(new File(mediaobject.getPath()));
-                Glide.with(context).
-                        load(uri).
-                        thumbnail(0.1f).
-                        into(holder.img_mediathumbnail);
+                Glide.with(context).load(uri).apply(requestOptions).thumbnail(0.1f).into(holder.img_mediathumbnail);
             }
             else
             {
@@ -187,19 +186,12 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                     if(new File(mediaobject.getThumbnailpath()).exists())
                     {
                         Uri uri = Uri.fromFile(new File(mediaobject.getThumbnailpath()));
-                        Glide.with(context).
-                                load(uri).
-                                thumbnail(0.1f).
-                                into(holder.img_mediathumbnail);
+                        Glide.with(context).load(uri).thumbnail(0.1f).into(holder.img_mediathumbnail);
                     }
-
                 }
                 else
                 {
-                    Glide.with(context).
-                            load(R.drawable.audiothum).
-                            thumbnail(0.1f).
-                            into(holder.img_mediathumbnail);
+                    Glide.with(context).load(R.drawable.audiothum).thumbnail(0.1f).into(holder.img_mediathumbnail);
                 }
             }
 
