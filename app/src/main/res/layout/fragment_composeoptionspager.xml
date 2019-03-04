@@ -156,8 +156,7 @@
         android:id="@+id/layout_no_gps_wifi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="100dp"
         android:visibility="gone"
         android:orientation="vertical"
         app:angle="0">
@@ -174,8 +173,5 @@
     </LinearLayout>
 
     </com.github.rongi.rotate_layout.layout.RotateLayout>
-
-
-
 
 </RelativeLayout>
