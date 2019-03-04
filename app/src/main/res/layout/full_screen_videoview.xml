@@ -93,12 +93,11 @@
                                         android:layout_marginRight="@dimen/margin_18dp"
                                         android:visibility="visible">
 
-                                        <com.deeptruth.app.android.utils.NoScrollRecycler
+                                        <android.support.v7.widget.RecyclerView
                                             android:id="@+id/recyview_frames"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center_horizontal"
-                                            android:overScrollMode="never"
                                             android:visibility="visible" />
 
                                         <RelativeLayout

@@ -9,7 +9,7 @@
         android:id="@+id/layout_section_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="12dp"
 
         android:orientation="horizontal">
 
@@ -47,8 +47,6 @@
             android:background="@color/yellow_background"/>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
-
-
 
 
 </LinearLayout>
