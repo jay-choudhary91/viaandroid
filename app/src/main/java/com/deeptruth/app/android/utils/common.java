@@ -1911,7 +1911,6 @@ public class common {
         int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
         //   convent into milisec and then minus from millis
         int milisec = (int) (seconds * 1000);
-        Log.e("milisec", ""+milisec);
         int milisecond = (int) ( millis - milisec );
         String milliseconds="0";
         char[] chararray=String.valueOf(milisecond).toCharArray();
@@ -1921,8 +1920,6 @@ public class common {
         Log.e("milliseconds", ""+milliseconds);
 
         String duration=(""+hours+":"+common.appendzero(minutes)+":"+common.appendzero(seconds)+"."+milise);
-        Log.e("duration",""+duration);
-
         return duration;
 
     }
@@ -1933,14 +1930,12 @@ public class common {
         int seconds = (int) (((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000);
         //   convent into milisec and then minus from millis
         int milisec = (int) (seconds * 1000);
-        Log.e("milisec", ""+milisec);
         int milisecond = (int) ( millis - milisec );
         String milliseconds="0";
         char[] chararray=String.valueOf(milisecond).toCharArray();
         if(chararray != null && chararray.length > 0)
             milliseconds=""+chararray[0];
         int milise= Integer.parseInt(milliseconds=""+chararray[0]);
-        Log.e("milliseconds", ""+milliseconds);
 
         if(hours == 0){
             buf.append(String.format("%02d",minutes))

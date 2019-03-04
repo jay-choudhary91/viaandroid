@@ -358,6 +358,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             });
 
             recyclerviewgrid.setVisibility(View.VISIBLE);
+            recyclerviewgrid.setNestedScrollingEnabled(false);
+            recyclerviewlist.setNestedScrollingEnabled(false);
             RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
 
             recyclerviewgrid.setLayoutManager(mLayoutManager);
@@ -391,10 +393,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }
 
             loadffmpeglibrary();
-            if (common.getstoragedeniedpermissions().isEmpty()) {
-                // All permissions are granted
+            if (common.getstoragedeniedpermissions().isEmpty())
                 fetchmedialistfromdirectory();
-            }
 
             resetmedialist();
         }

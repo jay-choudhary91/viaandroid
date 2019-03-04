@@ -156,6 +156,7 @@
         android:id="@+id/layout_no_gps_wifi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="100dp"
         android:visibility="gone"
         android:orientation="vertical"

@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -15,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -24,7 +21,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -41,9 +37,7 @@ import com.deeptruth.app.android.fragments.myfolderfragment;
 import com.deeptruth.app.android.fragments.settingfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
-import com.deeptruth.app.android.fragments.videoplayfragment;
 import com.deeptruth.app.android.services.callservice;
-import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -80,8 +74,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     ImageView img_fullscreen;
     Date lastdateselection=null;
     boolean isviewtouched=false;
-
-    private fragmentmedialist fragvideolist;
+    callservice phonecallservice;
+    private fragmentmedialist fragmedialist;
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,12 +84,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         applicationviavideocomposer.setActivity(homeactivity.this);
         config.selectedmediatype=0;
         xdata.getinstance().saveSetting(config.selected_folder,config.dirallmedia);
-        fragvideolist=new fragmentmedialist();
-        fragvideolist.shouldlaunchcomposer(true);
-        replaceFragment(fragvideolist, false, true);
 
-        drawertoggle = new ActionBarDrawerToggle(
-                this, navigationdrawer, R.string.drawer_open, R.string.drawer_close){
+        drawertoggle = new ActionBarDrawerToggle(this, navigationdrawer, R.string.drawer_open, R.string.drawer_close){
 
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
@@ -126,34 +116,48 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         imgrighthandle.setOnClickListener(this);
         fragment_container.setOnTouchListener(this);
 
-        if(graphicaldrawerfragment == null)
-        {
-            //fragmentgraphic  = new graphicalfragment();
-            graphicaldrawerfragment =new fragmentgraphicaldrawer();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-            transaction.commit();
-        }
+        drawerenabledisable(false);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fragmedialist =new fragmentmedialist();
+                fragmedialist.shouldlaunchcomposer(true);
+                replaceFragment(fragmedialist, false, true);
 
-        callservice mService = new callservice();
-        Intent mIntent = new Intent(homeactivity.this, callservice.class);
+                if(graphicaldrawerfragment == null)
+                {
+                    graphicaldrawerfragment =new fragmentgraphicaldrawer();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
+                    transaction.commit();
+                }
 
-        if (!isMyServiceRunning(mService.getClass()))
-            startService(mIntent);
-
-        setdrawerdata();
+                detectphonecallservice();
+                setdrawerdata();
+            }
+        },100);
     }
 
-        private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
-                return true;
-            }
+    public void detectphonecallservice()
+    {
+        phonecallservice = new callservice();
+        Intent intent = new Intent(homeactivity.this, callservice.class);
+
+        if (!isMyServiceRunning(phonecallservice.getClass()))
+            startService(intent);
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass)
+    {
+    ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+        if (serviceClass.getName().equals(service.service.getClassName())) {
+            Log.i ("isMyServiceRunning?", true+"");
+            return true;
         }
-        Log.i ("isMyServiceRunning?", false+"");
-        return false;
+    }
+    Log.i ("isMyServiceRunning?", false+"");
+    return false;
     }
 
     @Override
@@ -168,6 +172,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             navigationdrawer.closeDrawers();
             imgrighthandle.setVisibility(View.GONE);
             imglefthandle.setVisibility(View.GONE);
+        }
+
+        if(phonecallservice != null)
+        {
+            Intent intent = new Intent(homeactivity.this, callservice.class);
+            if (isMyServiceRunning(phonecallservice.getClass()))
+                stopService(intent);
         }
     }
 
