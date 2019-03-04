@@ -81,14 +81,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ImageView img_mediathumbnail;
     @BindView(R.id.layout_no_gps_wifi)
     RotateLayout layout_no_gps_wifi;
-    @BindView(R.id.layout_validating)
-    RotateLayout layout_validating;
     @BindView(R.id.layout_section_heading)
     RelativeLayout layout_section_heading;
     @BindView(R.id.txt_section_validating)
     TextView txt_section_validating;
-    @BindView(R.id.txt_section_validating_secondary)
-    TextView txt_section_validating_secondary;
     @BindView(R.id.shimmer_view_container)
     ShimmerFrameLayout shimmer_view_container;
     @BindView(R.id.txt_mediatype_a)
@@ -105,6 +101,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_space_a;
     @BindView(R.id.txt_space_b)
     TextView txt_space_b;
+    @BindView(R.id.img_warning)
+    ImageView img_warning;
 
     boolean isvideoplaying = true,isvideocomposer = true;
 
@@ -350,7 +348,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         if(fragvideocomposer != null && fragvideocomposer.isvideorecording)
         {
-            layout_validating.setVisibility(View.GONE);
+            layout_no_gps_wifi.setVisibility(View.GONE);
             fragvideocomposer.showwarningorclosebutton();
             fragvideocomposer.showwarningsection(showwarningsection);
             if(layout_no_gps_wifi != null)
@@ -358,7 +356,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(fragaudiocomposer != null && fragaudiocomposer.isaudiorecording)
         {
-            layout_validating.setVisibility(View.GONE);
+            layout_no_gps_wifi.setVisibility(View.GONE);
             fragaudiocomposer.showwarningorclosebutton();
             fragaudiocomposer.showwarningsection(showwarningsection);
             if(layout_no_gps_wifi != null)
@@ -366,7 +364,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else
         {
-            layout_validating.setVisibility(View.GONE);
+            layout_no_gps_wifi.setVisibility(View.GONE);
             hidewarningsection();
         }
 
@@ -397,17 +395,19 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(fragvideocomposer != null && fragvideocomposer.isvideorecording)
         {
             hidewarningsection();
-            layout_validating.setVisibility(View.VISIBLE);
+            layout_no_gps_wifi.setVisibility(View.VISIBLE);
+            img_warning.setVisibility(View.GONE);
         }
         else if(fragaudiocomposer != null && fragaudiocomposer.isaudiorecording)
         {
             hidewarningsection();
-            layout_validating.setVisibility(View.VISIBLE);
+            layout_no_gps_wifi.setVisibility(View.VISIBLE);
+            img_warning.setVisibility(View.GONE);
         }
         else
         {
             hidewarningsection();
-            layout_validating.setVisibility(View.GONE);
+            layout_no_gps_wifi.setVisibility(View.GONE);
         }
 
         /*if(fragimgcapture != null)
@@ -432,11 +432,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
                         txt_section_validating.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+                        img_warning.setVisibility(View.VISIBLE);
                         visiblewarningcontrollers();
                     }
                     else
                     {
-                        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+                        txt_section_validating.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
                         validatingcontrollers();
                     }
 
@@ -997,14 +998,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(rotateangle != 3600)
         {
             if(fragvideocomposer != null && !fragvideocomposer.isvideorecording && isvideocomposer) {
-               if(layout_validating != null && layout_no_gps_wifi != null){
+               if(layout_no_gps_wifi != null){
                    if(rotateangle == -90){
-
-                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                       lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
-                       lp.setMargins(100,layoutbottom.getHeight(),0,layoutbottom.getHeight()+50);
-                       layout_validating.setLayoutParams(lp);
-                       layout_validating.setAngle(90);
 
                        RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                        lpwifi.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
@@ -1014,12 +1009,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                    }else if(rotateangle == 90){
 
-                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                       lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-                       lp.setMargins(0,layoutbottom.getHeight(),100,layoutbottom.getHeight()+50);
-                       layout_validating.setLayoutParams(lp);
-                       layout_validating.setAngle(270);
-
                        RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                        lpwifi.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
                        lpwifi.setMargins(0,layoutbottom.getHeight(),100,layoutbottom.getHeight()+50);
@@ -1027,11 +1016,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                        layout_no_gps_wifi.setAngle(270);
 
                    }else{
-                       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                       lp.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
-                       layout_validating.setLayoutParams(lp);
-                       lp.setMargins(0,100,0,0);
-                       layout_validating.setAngle(0);
 
                        RelativeLayout.LayoutParams lpwifi = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                        lpwifi.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
