@@ -152,7 +152,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     ImageView img_delete_media;
 
     @BindView(R.id.recyview_frames)
-    NoScrollRecycler recyview_frames;
+    RecyclerView recyview_frames;
     @BindView(R.id.layout_scrubberview)
     RelativeLayout layout_scrubberview;
 
@@ -501,7 +501,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                        }
 
                        if (encryptionadapter != null && recycler_encryption != null)
-                           recycler_encryption.smoothScrollToPosition(processframe);
+                        recycler_encryption.smoothScrollToPosition(processframe);
                    }
 
 
@@ -2239,7 +2239,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
 
                    final long interval = videoLengthInMs / numThumbs;
-
                    for (int i = 0; i < numThumbs; ++i) {
                        Bitmap bitmap = mediametadataretriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
                        // TODO: bitmap might be null here, hence throwing NullPointerException. You were right
