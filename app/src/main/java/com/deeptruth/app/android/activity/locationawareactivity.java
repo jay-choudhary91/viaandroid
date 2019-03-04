@@ -1674,7 +1674,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue("" + degree);
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
-                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance"));
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance") +" "+ "feet");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsaccuracy"));
@@ -1684,14 +1684,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
 
-                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("speed"));
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("speed") +" "+ "mps");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
                 String altitude=xdata.getinstance().getSetting(config.gpsaltitude);
                 if(altitude.trim().isEmpty())
                     altitude="0";
 
-                metricitemarraylist.get(i).setMetricTrackValue("" + altitude + " ft");
+                metricitemarraylist.get(i).setMetricTrackValue("" + altitude + " feet");
             }
             oldlocation = location;
         }
