@@ -93,6 +93,7 @@ import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.NoScrollRecycler;
+import com.deeptruth.app.android.utils.ScrubberLinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.centerlayoutmanager;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
@@ -350,6 +351,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     int footerheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0;
     boolean flag = true;
+    boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
 
     GoogleMap mgooglemap;
     Surface surfacetexture = null;
@@ -434,8 +436,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
+
+        //recyview_frames.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
+        //recyview_frames.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
         encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
@@ -474,6 +480,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     //   viewheight = Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
 
         mediaseekbar.setPadding(0,0,0,0);
+
         mheightview = getContext().getResources().getDimensionPixelOffset(R.dimen.frames_video_height);
 
         videoSurfaceContainer.post(new Runnable() {
@@ -508,23 +515,33 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             private final int SENSITIVITY=0;
             @Override
             public void onProgressChanged(final SeekBar seekBar, int progress, boolean fromUser) {
-                   int processframe = 0;
+                   int processframe = 0,scrubberprogress = 0;
                    int progresspercentage = (progress * 100) / mediaseekbar.getMax();
+
                    if (progresspercentage > 0)
                        processframe = (int) (metricmainarraylist.size() * progresspercentage) / 100;
 
-                   if (isvideocompleted)
+                   if (progresspercentage > 0)
+                       scrubberprogress = (int) (mbitmaplist.size() * progresspercentage) / 100;
+
+                   if (isvideocompleted){
                        processframe = metricmainarraylist.size() - 1;
+                       scrubberprogress = mbitmaplist.size() - 1;
+                   }
 
                    if (currentprocessframe != processframe) {
                        currentprocessframe = processframe;
+
                        if (processframe < metricmainarraylist.size()) {
                            arraycontainerformetric = new arraycontainer();
                            arraycontainerformetric = metricmainarraylist.get(processframe);
                        }
 
                        if (encryptionadapter != null && recycler_encryption != null)
-                        recycler_encryption.smoothScrollToPosition(processframe);
+                               recycler_encryption.smoothScrollToPosition(processframe);
+
+                       if (recyview_frames != null && recyview_frames != null)
+                               recyview_frames.smoothScrollToPosition(scrubberprogress);
                    }
 
 
@@ -559,6 +576,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
+
         recyview_frames.post(new Runnable() {
             @Override
             public void run()
@@ -575,12 +593,19 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                     }
                  });
-                LinearLayoutManager mlinearlayoutmanager = new centerlayoutmanager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                recyview_frames.setLayoutManager(mlinearlayoutmanager);
+
+                final LinearLayoutManager mlinearlayoutmanager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+                mlinearlayoutmanager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                recyview_frames.setLayoutManager(new ScrubberLinearLayoutManagerWithSmoothScroller(getActivity(),LinearLayoutManager.HORIZONTAL,false
+                ));
+                // LinearLayoutManager mlinearlayoutmanager = new centerlayoutmanager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                //recyview_frames.setLayoutManager(mlinearlayoutmanager);
                 recyview_frames.setItemAnimator(new DefaultItemAnimator());
                 recyview_frames.setAdapter(adapter);
-                }
-           });
+
+            }
+        });
+
 
         flingactionmindstvac = common.getdrawerswipearea();
         img_dotmenu.setOnClickListener(new setonClick());
@@ -1746,6 +1771,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             playpausebutton.setVisibility(View.VISIBLE);*/
             mediaseekbar.setProgress(player.getCurrentPosition());
 
+
             if(layout_videodetails.getVisibility()==View.GONE){
                 Log.e("fullscreen..","oncomplete");
                 fullscreen_showcontrollers();
@@ -1764,6 +1790,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         player.seekTo(0);
                         controller.setProgress(0,true);
                         playpausebutton.setImageResource(R.drawable.play_btn);
+                        recyview_frames.scrollToPosition(0);
 
                        /* RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         relativeParams.setMargins(0, 0,0, 0);
@@ -2303,16 +2330,25 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    // Retrieve media data
                    long videoLengthInMs = Integer.parseInt(mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
 
-                   // Set thumbnail properties (Thumbs are squares)
+                   String time = mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                   long timeInmillisec = Long.parseLong( time );
+                   long duration = timeInmillisec / 1000;
+                   long hours = duration / 3600;
+                   long minutes = (duration - hours * 3600) / 60;
+                   long seconds = duration - (hours * 3600 + minutes * 60);
 
-                  /* if (mheightview == 50)
-                       mheightview = mheightview * 2;*/
+                   // Set thumbnail properties (Thumbs are squares)
 
                    final int thumbWidth = mheightview;
                    final int thumbHeight = mheightview;
 
                    int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
 
+                    if(seconds <= 3){
+                        numThumbs = 10;
+                    }else{
+                        numThumbs = 15;
+                   }
                    final long interval = videoLengthInMs / numThumbs;
                    for (int i = 0; i < numThumbs; ++i) {
                        Bitmap bitmap = mediametadataretriever.getFrameAtTime(i * interval, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
@@ -2338,7 +2374,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    }
 
                    if (mediametadataretriever != null)
-                       mediametadataretriever.release();
+                          mediametadataretriever.release();
 
                } catch (final Throwable e) {
                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
@@ -2522,6 +2558,19 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
 
     }
+
+    public void disabletouchedevents()
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                islisttouched = false;
+                islistdragging = false;
+            }
+        },500);
+    }
+
+
 }
 
 
