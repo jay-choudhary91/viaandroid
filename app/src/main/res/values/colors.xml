@@ -53,6 +53,9 @@
     <color name="dark_blue_solid_a">#0a4c60</color>
     <color name="audio_composer_bg">#01303d</color>
     <color name="wave_blue">#0076a6</color>
+    <color name="drawer_bg">#0E6479</color>
+    <color name="drawer_seekbar_min">#007FE1</color>
+    <color name="drawer_seekbar_max">#ABB0B1</color>
 
 
 

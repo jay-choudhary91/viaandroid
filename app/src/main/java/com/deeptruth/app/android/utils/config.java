@@ -49,6 +49,8 @@ public class config {
     public static final String ismediadataservicerunning = "ismediadataservicerunning";
     public static final String broadcast_medialistnewitem = "broadcast_medialistnewitem";
 
+    public static final String drawer_transparency = "drawer_transparency";
+
     public static final String mediaquality480 = "480P";
     public static final String mediaquality720 = "720P";
     public static final String mediaquality1080 = "1080P";

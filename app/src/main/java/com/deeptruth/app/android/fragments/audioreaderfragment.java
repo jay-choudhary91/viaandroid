@@ -281,8 +281,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView audio_downwordarrow;
     @BindView(R.id.layout_audiowave)
     RelativeLayout layout_audiowave;
-    @BindView(R.id.layoutpause)
-    RelativeLayout layoutpause;
     @BindView(R.id.img_pause)
     ImageView img_pause;
     @BindView(R.id.layout_seekbartiming)
@@ -758,7 +756,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 layout_footer.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.VISIBLE);
                 layout_scrubberview.setVisibility(View.VISIBLE);
-                layoutpause.setVisibility(View.GONE);
                 audio_downwordarrow.setVisibility(View.VISIBLE);
                 linearseekbarcolorview.setVisibility(View.VISIBLE);
                 mediaseekbar.setVisibility(View.VISIBLE);
@@ -807,8 +804,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             linearseekbarcolorview.setVisibility(View.GONE);
                             mediaseekbar.setVisibility(View.GONE);
                             layout_seekbartiming.setVisibility(View.GONE);
-                            //common.slidetodown();
-                             layoutpause.setVisibility(View.GONE);
                         }
                         else   // Player is playing
                         {
@@ -819,7 +814,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             img_handleup.setVisibility(View.GONE);
                             audio_downwordarrow.setVisibility(View.GONE);
                             playpausebutton.setVisibility(View.GONE);
-                            layoutpause.setVisibility(View.VISIBLE);
                             img_pause.setVisibility(View.VISIBLE);
                             gethelper().drawerenabledisable(true);
                             layout_scrubberview.setVisibility(View.VISIBLE);
@@ -848,7 +842,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             audio_downwordarrow.setVisibility(View.GONE);
                             layout_scrubberview.setVisibility(View.GONE);
                             gethelper().drawerenabledisable(false);
-                            layoutpause.setVisibility(View.GONE);
                         }
                         else
                         {
@@ -1415,13 +1408,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             layout_seekbartiming.setVisibility(View.GONE);
             layout_audiodetails.setVisibility(View.GONE);
             img_handleup.setVisibility(View.VISIBLE);
-            layoutpause.setVisibility(View.GONE);
             layout_footer.setVisibility(View.VISIBLE);
             playpausebutton.setImageResource(R.drawable.play_btn);
         }else{
             player.seekTo(0);
             wavevisualizerslist.clear();
-            layoutpause.setVisibility(View.GONE);
             playpausebutton.setVisibility(View.VISIBLE);
             playpausebutton.setImageResource(R.drawable.play_btn);
         }
@@ -2083,11 +2074,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         gethelper().setdatacomposing(false);
     }
 
-    public void setheadermargine(){
-        LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
-        layout_mediatype.setLayoutParams(params);
-    }
     public void recenterplaypause()
     {
         rlcontrollerview.post(new Runnable() {

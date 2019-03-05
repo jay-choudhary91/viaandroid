@@ -27,29 +27,40 @@ import java.util.Date;
 public class introscreenactivity extends AppCompatActivity {
 
     int currentselected;
-    pagercustomduration viewpagerfooter;
+    pagercustomduration viewpagerheader, viewpagerfooter;
+    int touchstate=0,currentselectedduration=3;
+    boolean touched =false;
+    boolean isinbackground=false;
+    boolean slidebytime=false;
     Date initialdate;
+    private Handler myhandler;
+    private Runnable myrunnable;
     footerpageradapter footerpageradapter;
     RadioGroup radiogroup;
 
     @Override
     public void onStop() {
         super.onStop();
+        isinbackground=true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        isinbackground=false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        isinbackground=false;
     }
 
     @Override
@@ -58,6 +69,7 @@ public class introscreenactivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
+        //  requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_introactivity2);
 
         initialdate =new Date();
@@ -67,22 +79,86 @@ public class introscreenactivity extends AppCompatActivity {
         footerpageradapter = new footerpageradapter(getSupportFragmentManager());
         viewpagerfooter.setAdapter(footerpageradapter);
         viewpagerfooter.setOffscreenPageLimit(4);
+
+        viewpagerfooter.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                initialdate = new Date();
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        touched = true;
+                        Log.e("user touch","on touch" + touched);
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        touched = false;
+                        Log.e("on touch end ","on touch end" + touched);
+                        break;
+                }
+                return false;
+            }
+        });
+
+
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                if(! isinbackground && (! touched))
+                {
+                    Date currentdate=new Date();
+                    int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
+                    if(seconddifference > currentselectedduration)
+                    {
+                        initialdate = new Date();
+
+                        if(currentselected < viewpagerfooter.getAdapter().getCount())
+                        {
+                            if(currentselected == 0)
+                                currentselected++;
+
+                            slidebytime=true;
+                            setviewpager(currentselected);
+                            currentselected++;
+                        }
+                    }
+                }
+                myhandler.postDelayed(this, 200);
+            }
+        };
+        myhandler.post(myrunnable);
+
         viewpagerfooter.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // Log.e("Position Off pix", position+" "+positionOffset+" "+positionOffsetPixels) ;
 
             }
 
             @Override
             public void onPageSelected(int position) {
                 currentselected=position;
+                //   viewpagerheader.setCurrentItem(position, true);
                 radiogroup.check(radiogroup.getChildAt(position%4).getId());
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                touchstate=state;
             }
         });
+
+    }
+
+    public void setviewpager(int position)
+    {
+        Log.e("Positions ", position+" ") ;
+        initialdate = new Date();
+        viewpagerfooter.setCurrentItem(position, true);
+        radiogroup.check(radiogroup.getChildAt(position%4).getId());
+        Log.e("position",""+position%4);
+
     }
 
     private class footerpageradapter extends FragmentStatePagerAdapter{

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -13,6 +14,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -62,8 +64,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.warkiz.widget.IndicatorSeekBar;
+import com.warkiz.widget.OnSeekChangeListener;
+import com.warkiz.widget.SeekParams;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -167,6 +174,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     View view_latencyline;
     @BindView(R.id.img_phone_orientation)
     ImageView img_phone_orientation;
+    @BindView(R.id.seekbar_transparency)
+    IndicatorSeekBar seekbartransparency;
+    @BindView(R.id.layout_constraint)
+    ConstraintLayout layout_constraint;
+    @BindView(R.id.layout_transparency_meter)
+    LinearLayout layout_transparency_meter;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -179,6 +192,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     String hashmethod= "",videostarttransactionid = "",valuehash = "",metahash = "";
     ArrayList<Entry> latencyvalues = new ArrayList<Entry>();
     private Orientation mOrientation;
+    private String[] transparentarray=common.gettransparencyvalues();
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -187,13 +201,13 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (rootview == null) {
+        if (rootview == null)
+        {
 
-            rootview = super.onCreateView(inflater, container, savedInstanceState);
-            ButterKnife.bind(this, rootview);
-            applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
+          rootview = super.onCreateView(inflater, container, savedInstanceState);
+          ButterKnife.bind(this, rootview);
+          applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+          msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
 
           tvaddress.setTextColor(getResources().getColor(R.color.white));
           tvlatitude.setTextColor(getResources().getColor(R.color.white));
@@ -235,6 +249,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvdataletency.setTextColor(getResources().getColor(R.color.white));
           txtdegree.setTextColor(getResources().getColor(R.color.white));
 
+            layout_transparency_meter.setVisibility(View.VISIBLE);
             //setmetadatavalue();
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
 
@@ -257,11 +272,45 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // if disabled, scaling can be done on x- and y-axis separately
             mChart.setPinchZoom(false);
 
+            seekbartransparency.setOnSeekChangeListener(new OnSeekChangeListener() {
+                @Override
+                public void onSeeking(SeekParams seekParams) {
+                    setlayouttransparency(seekParams.progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(IndicatorSeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
+
+                }
+            });
+
+            if(! xdata.getinstance().getSetting(config.drawer_transparency).trim().isEmpty())
+            {
+                seekbartransparency.setProgress(Float.parseFloat(xdata.getinstance().getSetting(config.drawer_transparency)));
+            }
+            else
+            {
+                seekbartransparency.setProgress(50f);
+            }
+
             loadmap();
             setchartdata();
 
         }
         return rootview;
+    }
+
+    public void setlayouttransparency(int progress)
+    {
+        xdata.getinstance().saveSetting(config.drawer_transparency,""+progress);
+        progress= transparentarray.length-progress;
+        String colorString="#"+transparentarray[progress]+"0E6479";
+        layout_constraint.setBackgroundColor(Color.parseColor(colorString));
     }
 
     @Override

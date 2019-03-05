@@ -76,6 +76,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     boolean isviewtouched=false;
     callservice phonecallservice;
     private fragmentmedialist fragmedialist;
+    boolean isdraweropen=false;
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
 
+                setdraweropen(false);
                 getcurrentfragment().showhideviewondrawer(false);
 
               if(getcurrentfragment() instanceof fragmentmedialist){
@@ -103,7 +105,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 super.onDrawerOpened(drawerView);
                 imglefthandle.setVisibility(View.GONE);
                 imgrighthandle.setVisibility(View.VISIBLE);
-
+                setdraweropen(true);
                 getcurrentfragment().showhideviewondrawer(true);
 
             }
@@ -271,6 +273,16 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         }
+    }
+
+    @Override
+    public void setdraweropen(boolean isdraweropen) {
+        this.isdraweropen=isdraweropen;
+    }
+
+    @Override
+    public boolean isdraweropened() {
+        return isdraweropen;
     }
 
     @Override

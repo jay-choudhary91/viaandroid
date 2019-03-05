@@ -80,6 +80,7 @@ dependencies {
         transitive = true
     }
 
+    implementation 'com.github.pedrovgs:draggablepanel:1.9'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'
     implementation 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.1'
