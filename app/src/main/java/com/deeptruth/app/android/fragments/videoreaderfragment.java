@@ -34,6 +34,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -831,14 +832,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             public void run() {
                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.CENTER_HORIZONTAL,TRUE);
-                params.setMargins(0,topheight,0,0);
-                playpausebutton.setLayoutParams(params);
 
-                if(setvisiblety == 0)
-                    playpausebutton.setVisibility(View.VISIBLE);
+               if(setvisiblety == 0){
+                   params.addRule(RelativeLayout.CENTER_HORIZONTAL,TRUE);
+                   params.setMargins(0,topheight,0,0);
+                   playpausebutton.setLayoutParams(params);
 
-
+                       playpausebutton.setVisibility(View.VISIBLE);
+               }else{
+                   params.addRule(RelativeLayout.CENTER_IN_PARENT,TRUE);
+                   playpausebutton.setLayoutParams(params);
+               }
             }
         });
     }
@@ -2248,11 +2252,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layoutParams.height = surfaceView_Height;
 
         videotextureview.setLayoutParams(layoutParams);
-        int previewheight = videoSurfaceContainer.getHeight()/2;
-        int centerheight = surfaceView_Height/2;
-        int diffrenceheight = (previewheight - centerheight);
 
-        recenterplaypause(centerheight + (diffrenceheight/2) - (scrubberheight/2),1);
+        recenterplaypause(0,1);
     }
 
     private void updatetextureviewsize(int viewWidth, int viewHeight) {
@@ -2500,7 +2501,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,targetheight+Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
             paramsvideotextureview.setMargins(0,headerheight,0,scrubberheight);
             videotextureview.setLayoutParams(paramsvideotextureview);
-
             videotextureview.post(new Runnable() {
                 @Override
                 public void run() {
@@ -2509,8 +2509,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             });
         }else{
 
-            RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
-            paramsvideotextureview.setMargins(0,headerheight-1,0,scrubberheight-30);
+            RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            paramsvideotextureview.setMargins(0,headerheight-1,0,scrubberheight-50);
             videotextureview.setLayoutParams(paramsvideotextureview);
 
            videotextureview.post(new Runnable() {
