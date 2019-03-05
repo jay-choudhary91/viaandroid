@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.constraint.ConstraintLayout android:id="@+id/layout_constraint"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="@dimen/margin_10dp"
         android:paddingRight="@dimen/margin_10dp"
+        android:orientation="vertical"
         >
+
+        <LinearLayout
+            android:id="@+id/layout_transparency_meter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:visibility="invisible"
+            android:orientation="vertical">
+
+            <com.warkiz.widget.IndicatorSeekBar
+                android:id="@+id/seekbar_transparency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:isb_max="100"
+                app:isb_min="1"
+                app:isb_seek_smoothly="true"
+                app:isb_thumb_color="@color/white"
+                app:isb_thumb_size="25dp"
+                android:layout_marginTop="5dp"
+                app:isb_track_background_color="@color/drawer_seekbar_max"
+                app:isb_track_progress_color="@color/drawer_seekbar_min"
+                app:isb_track_progress_size="4dp"
+                app:isb_only_thumb_draggable="false"
+                app:isb_show_indicator="none"
+                />
+
+        </LinearLayout>
 
         <ScrollView
             android:id="@+id/scrollview_meta"
@@ -25,7 +54,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="40dp"
                 android:layout_marginBottom="20dp"
                 android:orientation="vertical">
 
@@ -36,6 +64,6 @@
             </LinearLayout>
 
         </ScrollView>
-    </RelativeLayout>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

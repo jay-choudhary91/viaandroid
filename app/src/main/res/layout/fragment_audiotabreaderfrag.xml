@@ -14,72 +14,60 @@
         android:id="@+id/layout_photoreader"
         android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:id="@+id/rl_controllerview"
+            android:layout_below="@+id/layout_mediatype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
 
             <RelativeLayout
-                android:id="@+id/rl_controllerview"
-                android:layout_below="@+id/layout_mediatype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="visible"
+                android:id="@+id/layout_audiowave"
+                android:layout_marginBottom="10dp"
+                android:background="@color/audio_composer_bg"
+                android:layout_above="@+id/layout_scrubberview">
 
-
-                <RelativeLayout
+                <ImageView
+                    android:id="@+id/img_audiowave"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    />
+
+                <com.deeptruth.app.android.utils.circularImageview
+                    android:id="@+id/btn_playpause"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    android:id="@+id/layout_audiowave"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/audio_composer_bg"
-                    android:layout_above="@+id/layout_scrubberview"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/description"
+                    />
 
-                    >
-
-                    <ImageView
-                        android:id="@+id/img_audiowave"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerVertical="true"
-                        android:scaleType="centerCrop"
-                        />
-
-                    <com.deeptruth.app.android.utils.visualizeraudiorecorder
-                        android:id="@+id/myvisualizerviewmedia"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        android:layout_marginTop="50dp"
-                        android:layout_marginBottom="50dp"
-                        android:visibility="gone"
-                        />
-                    <com.deeptruth.app.android.utils.circularImageview
-                        android:id="@+id/btn_playpause"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/description"
-                        />
-
-                    <com.deeptruth.app.android.utils.circularImageview
-                        android:id="@+id/img_verified"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_margin="10dp"
-                        android:visibility="gone"
-                        android:background="@drawable/audiochecked"
-                        />
-
-                </RelativeLayout>
-                <RelativeLayout
-                    android:id="@+id/layout_scrubberview"
-                    android:layout_width="match_parent"
+                <com.deeptruth.app.android.utils.circularImageview
+                    android:id="@+id/img_verified"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:clickable="false"
-                    android:background="@color/white"
-                    android:layout_alignParentBottom="true"
-                    android:orientation="vertical">
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    android:background="@drawable/audiochecked"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_scrubberview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:background="@color/white"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/linear_seekbarcolorview"
@@ -137,36 +125,27 @@
                             android:paddingLeft="4dip" />
                     </RelativeLayout>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/layout_seekbartiming"
-                            android:layout_centerInParent="true"
-                            android:id="@+id/audio_downwordarrow"
-                            android:src="@drawable/handle_down_arrow"/>
-
-                    <RelativeLayout
-                        android:id="@+id/layoutpause"
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/layout_seekbartiming"
-                        android:padding="5dp"
-                        android:visibility="gone">
+                        android:layout_centerInParent="true"
+                        android:id="@+id/audio_downwordarrow"
+                        android:src="@drawable/handle_down_arrow"/>
 
-                        <ImageView
-                            android:id="@+id/img_pause"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerInParent="true"
-                            android:layout_gravity="center"
-                            android:layout_margin="5dp"
-                            android:src="@drawable/ic_pause"
-                            android:paddingBottom="@dimen/margin_10dp"
-                            android:paddingLeft="@dimen/margin_15dp"
-                            android:paddingRight="@dimen/margin_15dp"
-                            android:visibility="gone" />
-                    </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/img_pause"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/layout_seekbartiming"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:src="@drawable/ic_pause"
+                        android:visibility="gone"
+                        android:paddingBottom="@dimen/margin_10dp"
+                        android:paddingLeft="@dimen/margin_15dp"
+                        android:paddingRight="@dimen/margin_15dp"/>
 
                 </RelativeLayout>
 
@@ -194,8 +173,8 @@
 
             <include layout="@layout/action_bar_mediadetails"></include>
 
-
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/layout_footer"
             android:layout_width="match_parent"
@@ -230,7 +209,9 @@
                 android:id="@+id/img_handleup"
                 android:visibility="gone"
                 android:src="@drawable/handle_down_arrow"/>
+
         </RelativeLayout>
+
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -77,6 +77,7 @@ public abstract class basefragment extends Fragment {
     int gps_request_code =111;
     noise noise;
     LocationManager manager;
+    boolean isdraweropen=false;
     private static final int PERMISSION_RECORD_AUDIO= 92;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,16 @@ public abstract class basefragment extends Fragment {
 
     public void updateheader() {
 
+    }
+
+    public void setdraweropen(boolean isdraweropen)
+    {
+        this.isdraweropen=isdraweropen;
+    }
+
+    public boolean isdraweropened()
+    {
+        return isdraweropen;
     }
 
     public void oncurrentlocationchanged(Location location) {
@@ -239,6 +250,10 @@ public abstract class basefragment extends Fragment {
         public void updateactionbar(int showHide);
 
         public void showPermissionDialog();
+
+        public void setdraweropen(boolean isdraweropen);
+
+        public boolean isdraweropened();
 
         public void registerAccelerometerSensor();
 

@@ -128,6 +128,7 @@
     <string name="data_latency">Data Latency</string>
     <string name="type_of_chart">Type of Chart:</string>
     <string name="encryption_information">Encryption Information</string>
+    <string name="transparency_meter">Transparency Meter</string>
 
     <string name="developermode_description">App entered in developer mode</string>
     <string name="title_activity_bottombaractivity">bottombaractivity</string>

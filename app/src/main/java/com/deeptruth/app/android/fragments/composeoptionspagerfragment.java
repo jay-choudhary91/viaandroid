@@ -111,7 +111,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     imagecomposerfragment fragimgcapture=null;
 
     View rootview=null;
-    int currentselectedcomposer=0;
+    int currentselectedcomposer=0,layoutbottomheight=0;
 
     private int flingactionmindstvac;
     private  final int flingactionmindspdvac = 100;
@@ -175,6 +175,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            layoutbottom.post(new Runnable() {
+                @Override
+                public void run() {
+                    layoutbottomheight=layoutbottom.getHeight();
+                }
+            });
 
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
         }
@@ -422,6 +429,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             public void run() {
 
                 try {
+                    if(gethelper().isdraweropened())
+                    {
+                        layout_no_gps_wifi.setVisibility(View.GONE);
+                        myHandler.postDelayed(this, 1000);
+                        return;
+                    }
+
                     if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
@@ -1006,7 +1020,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
                        layoutparams.setMargins(0,layoutbottom.getHeight(),0,0);
                        layout_no_gps_wifi.setLayoutParams(layoutparams);
-                       layoutparams.setMargins(0,100,0,0);
+                       layoutparams.setMargins(0,layoutbottomheight/2,0,0);
                        layout_no_gps_wifi.setAngle(0);
                    }
                }
