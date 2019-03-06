@@ -1373,9 +1373,13 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         float deltaZ = Math.abs(sensorEvent.values[2]);
                         Math.sin(deltaX);
 
-                        String x = String.valueOf(new DecimalFormat("#.#").format(deltaX));
-                        String y = String.valueOf(new DecimalFormat("#.#").format(deltaY));
-                        String z = String.valueOf(new DecimalFormat("#.#").format(deltaZ));
+                        double X=deltaX * 180/Math.PI;
+                        double Y=deltaY * 180/Math.PI;
+                        double Z=deltaZ * 180/Math.PI;
+
+                        String x = String.valueOf(new DecimalFormat("#.#").format(X));
+                        String y = String.valueOf(new DecimalFormat("#.#").format(Y));
+                        String z = String.valueOf(new DecimalFormat("#.#").format(Z));
 
                         updatearrayitem(config.acceleration_x, "" + x);
                         updatearrayitem(config.acceleration_y, "" + y);

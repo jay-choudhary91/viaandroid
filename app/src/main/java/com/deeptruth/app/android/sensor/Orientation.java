@@ -113,9 +113,11 @@ public class Orientation implements SensorEventListener {
     float[] orientation = new float[3];
     SensorManager.getOrientation(adjustedRotationMatrix, orientation);
 
+      //orientation[0]: Azimuth - (the compass bearing east of magnetic north)
+
     // Convert radians to degrees
-    float pitch = orientation[1] * -57;
-    float roll = orientation[2] * -57;
+    float pitch = orientation[1] * -57;  // rotation around x-axis (is the phone leaning forward or back)
+    float roll = orientation[2] * -57;   // rotation around y-axis (is the phone leaning over on its left or right side)
 
     //Log.e("Pitch roll ",""+pitch+" "+roll);
 
