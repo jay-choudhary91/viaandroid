@@ -104,7 +104,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @BindView(R.id.img_warning)
     ImageView img_warning;
 
-    boolean isvideoplaying = true,isvideocomposer = true;
+    boolean isvideoplaying = true;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -691,7 +691,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
-                isvideocomposer = true;
                 fragvideocomposer.setData(false, mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
             break;
@@ -705,7 +704,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
-                isvideocomposer = false;
                 fragimgcapture.setData(mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
 
@@ -720,7 +718,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
 
-                isvideocomposer = false;
                 fragaudiocomposer.setData(mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragaudiocomposer,false,true);
             break;
@@ -994,7 +991,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         if(rotateangle != 3600)
         {
-            if(fragvideocomposer != null && !fragvideocomposer.isvideorecording && isvideocomposer) {
+            if(fragvideocomposer != null && (! fragvideocomposer.isvideorecording)) {
                if(layout_no_gps_wifi != null)
                {
                    RelativeLayout.LayoutParams layoutparams=null;
@@ -1018,10 +1015,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                    {
                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
-                       layoutparams.setMargins(0,layoutbottom.getHeight(),0,0);
-
-                       layout_no_gps_wifi.setLayoutParams(layoutparams);
                        layoutparams.setMargins(0,layoutbottomheight/2,0,0);
+                       layout_no_gps_wifi.setLayoutParams(layoutparams);
                        layout_no_gps_wifi.setAngle(0);
                    }
                }
