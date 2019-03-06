@@ -242,11 +242,11 @@ public class locationservice extends Service implements LocationListener, GpsSta
             try {
                 Criteria criteria = new Criteria();
                 criteria.setAccuracy(Criteria.ACCURACY_FINE); //setAccuracyは内部では、https://stackoverflow.com/a/17874592/1709287の用にHorizontalAccuracyの設定に変換されている。
-                    criteria.setPowerRequirement(Criteria.POWER_HIGH);
-                criteria.setAltitudeRequired(false);
+                criteria.setPowerRequirement(Criteria.POWER_HIGH);
+                criteria.setAltitudeRequired(true);
                 criteria.setSpeedRequired(true);
                 criteria.setCostAllowed(true);
-                criteria.setBearingRequired(false);
+                criteria.setBearingRequired(true);
 
                 //API level 9 and up
                 criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
@@ -362,9 +362,15 @@ public class locationservice extends Service implements LocationListener, GpsSta
 
         } else {
             int outValue = (int) altitude;
-            xdata.getinstance().saveSetting(config.gpsaltitude, "" + outValue);
+            if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
+            {
+                xdata.getinstance().saveSetting(config.gpsaltitude, "" + xdata.getinstance().getSetting(config.gpsaltitude));
+            }
+            else
+            {
+                xdata.getinstance().saveSetting(config.gpsaltitude, ""+outValue);
+            }
         }
-
         oldlocation = location;
     }
 }
