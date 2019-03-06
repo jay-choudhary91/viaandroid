@@ -32,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.deeptruth.app.android.BuildConfig;
@@ -78,6 +79,8 @@ import butterknife.ButterKnife;
 
 public class fragmentgraphicaldrawer extends basefragment implements OnChartValueSelectedListener,
         OnChartGestureListener,SensorEventListener, Orientation.Listener {
+
+
 
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
@@ -185,6 +188,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     GoogleMap mgooglemap;
     private SensorManager msensormanager;
     private Sensor maccelerometersensormanager;
+    public ScrollView scrollview_meta;
 
     private boolean isinbackground=false,ismediaplayer = false,isgraphicopen=false,isdatacomposing=false;
     String latitude = "", longitude = "",screenheight = "",screenwidth = "",lastsavedangle="";
@@ -208,6 +212,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           ButterKnife.bind(this, rootview);
           applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
           msensormanager = (SensorManager) applicationviavideocomposer.getactivity().getSystemService(Context.SENSOR_SERVICE);
+
+            scrollview_meta = (ScrollView) findViewById(R.id.scrollview_meta);
 
           tvaddress.setTextColor(getResources().getColor(R.color.white));
           tvlatitude.setTextColor(getResources().getColor(R.color.white));
