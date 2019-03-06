@@ -1381,9 +1381,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                         String y = String.valueOf(new DecimalFormat("#.#").format(Y));
                         String z = String.valueOf(new DecimalFormat("#.#").format(Z));
 
-                        updatearrayitem(config.acceleration_x, "" + x);
-                        updatearrayitem(config.acceleration_y, "" + y);
-                        updatearrayitem(config.acceleration_z, "" + z);
+                        updatearrayitem(config.acceleration_x, "" + x+"° ");
+                        updatearrayitem(config.acceleration_y, "" + y+"° ");
+                        updatearrayitem(config.acceleration_z, "" + z+"° ");
                     }
                 }
             });
