@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -93,7 +94,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
                 setdraweropen(false);
                 getcurrentfragment().showhideviewondrawer(false);
-
+                graphicaldrawerfragment.scrollview_meta.fullScroll(ScrollView.FOCUS_UP);
               if(getcurrentfragment() instanceof fragmentmedialist){
                   imglefthandle.setVisibility(View.GONE);
               }else{
@@ -226,6 +227,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
             imglefthandle.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void setwindowfitxy(boolean isfullscreen) {
+
     }
 
     @Override
