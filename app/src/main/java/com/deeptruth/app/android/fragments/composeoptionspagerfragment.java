@@ -998,7 +998,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                if(layout_no_gps_wifi != null)
                {
                    RelativeLayout.LayoutParams layoutparams=null;
-                   if(rotateangle == -90)
+                   if(rotateangle == -90 && currentselectedcomposer == 0)
                    {
                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
@@ -1006,7 +1006,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                        layout_no_gps_wifi.setLayoutParams(layoutparams);
                        layout_no_gps_wifi.setAngle(90);
                    }
-                   else if(rotateangle == 90)
+                   else if(rotateangle == 90 && currentselectedcomposer == 0)
                    {
                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
