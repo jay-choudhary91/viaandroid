@@ -2026,4 +2026,20 @@ public class common {
         Log.e("array size"," "+values.length);
         return values;
     }
+
+    public static String get24hourformat(){
+        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
+        Log.e("dataformat",""+ is24HourFormat); // format() Returns a string according to the user's preferences (12-hr vs 24-hr) and locale
+        Calendar currenttime ;
+        currenttime = Calendar.getInstance();
+        String devicedate ;
+        if(is24HourFormat ==true){
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm:ss aa");
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        }else{
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss aa");
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        }
+        return devicedate;
+    }
 }
