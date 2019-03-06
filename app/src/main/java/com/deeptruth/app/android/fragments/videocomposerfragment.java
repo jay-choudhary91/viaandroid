@@ -1889,7 +1889,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         muploadframelist.clear();
 
         try {
-            String devicedate = common.get24hourformat();
+            String devicetime = common.get24hourformat();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
             String starttime = sdf.format(sequencestarttime.getTime());
             String endtime = sdf.format(sequenceendtime.getTime());
@@ -1899,7 +1899,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
                 arrayobject.put("sequencestarttime",starttime);
                 arrayobject.put("sequenceendtime",endtime);
-                arrayobject.put("devicetime",devicedate);
+                arrayobject.put("devicetime",devicetime);
             }
 
             metrichash = md5.calculatestringtomd5(metricesjsonarray.get(0).toString());
