@@ -57,6 +57,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
@@ -347,6 +348,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     AttitudeIndicator attitudeindicator;
     @BindView(R.id.img_phone_orientation)
     ImageView img_phone_orientation;
+    @BindView(R.id.videotextureview)
+    TextureView videotextureview;
+    @BindView(R.id.video_container)
+    NestedScrollView showcontrollers;
+    @BindView(R.id.scrubberverticalbar)
+    RelativeLayout scurraberverticalbar;
 
     int footerheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0;
@@ -366,10 +373,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
     private framebitmapadapter adapter;
-    private RelativeLayout scurraberverticalbar;
     private String mediafilepath = null;
-    private NestedScrollView showcontrollers;
-    private TextureView videotextureview;
     private MediaPlayer player;
     private videocontrollerview controller;
     private View rootview = null;
@@ -413,6 +417,24 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             ButterKnife.bind(this, rootview);
          //   setheadermargine();
             gethelper().setdatacomposing(false);
+            /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
+        showcontrollers.startAnimation(startAnimation);*/
+            showcontrollers.post(new Runnable() {
+                @Override
+                public void run() {
+                    rootviewheight = showcontrollers.getHeight();
+                    videoviewheight = ((rootviewheight *60)/100);
+                    layout_halfscrnimg.getLayoutParams().height = videoviewheight;
+                    layout_halfscrnimg.setVisibility(View.VISIBLE);
+                    layout_halfscrnimg.requestLayout();
+
+                    detailviewheight = (rootviewheight -videoviewheight);
+                    layout_videodetails.getLayoutParams().height = detailviewheight;
+                    layout_videodetails.setVisibility(View.VISIBLE);
+                    layout_videodetails.requestLayout();
+
+                }
+            });
             loadviewdata();
             loadmap();
         }
@@ -424,9 +446,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         gethelper().setrecordingrunning(false);
         gethelper().drawerenabledisable(false);
 
-        videotextureview = (TextureView) findViewById(R.id.videotextureview);
-        showcontrollers=rootview.findViewById(R.id.video_container);
-        scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
         mFormatBuilder = new StringBuilder();
         mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
         videotextureview.setSurfaceTextureListener(this);
@@ -445,20 +464,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
-
-        showcontrollers.post(new Runnable() {
-            @Override
-            public void run() {
-                rootviewheight = showcontrollers.getHeight();
-                videoviewheight = ((rootviewheight *60)/100);
-                layout_halfscrnimg.getLayoutParams().height = videoviewheight;
-                layout_halfscrnimg.requestLayout();
-                detailviewheight = (rootviewheight -videoviewheight);
-                layout_videodetails.getLayoutParams().height = detailviewheight;
-                layout_videodetails.requestLayout();
-
-            }
-        });
 
         layout_mediatype.post(new Runnable() {
             @Override

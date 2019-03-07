@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:content="@+id/content"
         android:fitsSystemWindows="true"
         android:handle="@+id/handle"
@@ -26,11 +26,13 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:visibility="gone"
                         android:id="@+id/layout_halfscrnimg">
 
                         <FrameLayout
                             android:id="@+id/videoSurfaceContainer"
+                            android:background="@color/black"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" >
 
@@ -282,9 +284,9 @@
                         android:layout_width="match_parent"
                         android:layout_below="@+id/layout_halfscrnimg"
                         android:paddingBottom="50dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:id="@+id/layout_videodetails"
-                        android:layout_height="wrap_content">
+                        android:layout_height="0dp">
                         <include layout="@layout/layout_mediadetails"></include>
                     </RelativeLayout>
 
