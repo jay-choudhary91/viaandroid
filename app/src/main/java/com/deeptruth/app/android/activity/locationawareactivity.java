@@ -1368,7 +1368,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 @Override
                 public void run() {
                     if (getcurrentfragment() != null) {
-                        float deltaX = Math.abs(sensorEvent.values[0]);
+                        /*float deltaX = Math.abs(sensorEvent.values[0]);
                         float deltaY = Math.abs(sensorEvent.values[1]);
                         float deltaZ = Math.abs(sensorEvent.values[2]);
                         Math.sin(deltaX);
@@ -1379,11 +1379,25 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                         String x = String.valueOf(new DecimalFormat("#.#").format(X));
                         String y = String.valueOf(new DecimalFormat("#.#").format(Y));
-                        String z = String.valueOf(new DecimalFormat("#.#").format(Z));
+                        String z = String.valueOf(new DecimalFormat("#.#").format(Z));*/
 
-                        updatearrayitem(config.acceleration_x, "" + x+"° ");
-                        updatearrayitem(config.acceleration_y, "" + y+"° ");
-                        updatearrayitem(config.acceleration_z, "" + z+"° ");
+                        double ax, ay, az;
+
+                        ax = sensorEvent.values[0];
+                        ay = sensorEvent.values[1];
+                        az = sensorEvent.values[2];
+                        double xAngle = Math.atan( ax / (Math.sqrt(Math.pow(ay,2) + Math.pow(az,2))));
+                        double yAngle = Math.atan( ay / (Math.sqrt(Math.pow(ax,2) + Math.pow(az,2))));
+                        double zAngle = Math.atan( Math.sqrt(Math.pow(ax,2) + Math.pow(ay,2)) / az);
+
+                        xAngle *= 180.00;   yAngle *= 180.00;   zAngle *= 180.00;
+                        xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;
+
+                        updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle))+"° ");
+                        updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle))+"° ");
+                        updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle))+"° ");
+
+                        // Source link of degree conversion http://wizmoz.blogspot.com/2013/01/simple-accelerometer-data-conversion-to.html
                     }
                 }
             });

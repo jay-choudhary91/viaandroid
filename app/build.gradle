@@ -80,6 +80,7 @@ dependencies {
         transitive = true
     }
 
+    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.pedrovgs:draggablepanel:1.9'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'com.github.warkiz.widget:indicatorseekbar:2.1.2'

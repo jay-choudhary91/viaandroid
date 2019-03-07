@@ -237,6 +237,8 @@ public abstract class basefragment extends Fragment {
 
         public void onBack();
 
+        public void switchtomedialist();
+
         public void launchHome();
 
         public void updateheader(String txt);

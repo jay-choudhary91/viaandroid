@@ -548,10 +548,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             case R.id.img_mediathumbnail:
                 config.selectedmediatype=currentselectedcomposer;
                 medialistitemaddbroadcast();
-                //gethelper().onBack();
-                fragmentmedialist fragmatriclist=new fragmentmedialist();
-                fragmatriclist.shouldlaunchcomposer(false);
-                gethelper().replaceFragment(fragmatriclist, true, false);
+                gethelper().switchtomedialist();
                 break;
         }
     }

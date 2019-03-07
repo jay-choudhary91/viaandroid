@@ -252,6 +252,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }
             if (permissionsallgranted) {
                 arraymediaitemlist.clear();
+                if(adaptermediagrid != null)
+                    adaptermediagrid.notifyDataSetChanged();
+
+                if(adaptermedialist != null)
+                    adaptermedialist.notifyDataSetChanged();
+
                 showselectedmediatypeitems();
                 fetchmedialistfromdirectory();
             }
