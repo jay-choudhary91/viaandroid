@@ -378,8 +378,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mediatypeheight = layout_mediatype.getHeight();
                 rootviewheight = rootviewheight - layout_mediatype.getHeight();
                 audioviewheight = ((rootviewheight * 60 )/100);
+
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
                 rlcontrollerview.requestLayout();
+
                 audiodetailviewheight = (rootviewheight - audioviewheight);
                 layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
                 layout_audiodetails.requestLayout();
@@ -1416,6 +1418,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             img_handleup.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
             img_pause.setVisibility(View.GONE);
+            layout_mediatype.setVisibility(View.VISIBLE);
+            gethelper().updateactionbar(1);
+            gethelper().drawerenabledisable(true);
             playpausebutton.setImageResource(R.drawable.play_btn);
         }else{
             player.seekTo(0);
@@ -2120,5 +2125,54 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         params.addRule(RelativeLayout.ABOVE,R.id.layout_footer);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         audio_downwordarrow.requestLayout();
+    }
+    @Override
+    public void showhideviewondrawer(boolean drawershown) {
+        super.showhideviewondrawer(drawershown);
+
+        if(drawershown)
+        {
+            rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) + mediatypeheight;
+            gethelper().updateactionbar(0);
+            layout_mediatype.setVisibility(View.GONE);
+           // common.slidetoabove(layout_mediatype); //gone mediatype
+            layout_scrubberview.setVisibility(View.VISIBLE);
+            linearseekbarcolorview.setVisibility(View.GONE);
+            mediaseekbar.setVisibility(View.GONE);
+            layout_seekbartiming.setVisibility(View.GONE);
+            layout_audiodetails.setVisibility(View.GONE);
+            layout_footer.setVisibility(View.GONE);
+            playpausebutton.setVisibility(View.GONE);
+            img_pause.setVisibility(View.GONE);
+        }
+        else
+        {
+            rlcontrollerview.getLayoutParams().height = rootviewheight;
+
+            gethelper().updateactionbar(1);
+            // common.slidetodown(layout_mediatype);//visible
+            layout_mediatype.setVisibility(View.VISIBLE);
+
+            if(player != null && player.isPlaying())
+            {
+                layout_footer.setVisibility(View.GONE);
+                layout_scrubberview.setVisibility(View.VISIBLE);
+                mediaseekbar.setVisibility(View.VISIBLE);
+                layout_seekbartiming.setVisibility(View.VISIBLE);
+                layout_mediatype.setVisibility(View.VISIBLE);
+                img_pause.setVisibility(View.VISIBLE);
+          //      layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+            }
+            else
+            {
+                layout_scrubberview.setVisibility(View.GONE);
+                layout_footer.setVisibility(View.VISIBLE);
+                layout_mediatype.setVisibility(View.VISIBLE);
+                playpausebutton.setVisibility(View.VISIBLE);
+                setbottomimgview();
+                layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+            }
+        }
+
     }
 }
