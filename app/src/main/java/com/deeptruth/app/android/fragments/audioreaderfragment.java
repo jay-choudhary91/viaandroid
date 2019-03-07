@@ -358,19 +358,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void loadviewdata()
     {
-        gethelper().setrecordingrunning(false);
-
-        layout_item_encryption.setVisibility(View.GONE);
-        recycler_encryption.setVisibility(View.VISIBLE);
-
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
-        recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
-
-        encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
-        recycler_encryption.setAdapter(encryptionadapter);
-
         linearLayout=rootview.findViewById(R.id.content);
         //   righthandle=rootview.findViewById(R.id.righthandle);
         playpausebutton = (circularImageview)rootview.findViewById(R.id.btn_playpause);
@@ -378,6 +365,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         time_current = (TextView) rootview.findViewById(R.id.time_current);
         time = (TextView) rootview.findViewById(R.id.time);
         rlcontrollerview = (RelativeLayout) rootview.findViewById(R.id.rl_controllerview);
+
+        gethelper().setrecordingrunning(false);
+
+        Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
+        audiorootview.startAnimation(startAnimation);
 
         audiorootview.post(new Runnable() {
             @Override
@@ -394,6 +386,19 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 setupaudiodata();
             }
         });
+
+
+        layout_item_encryption.setVisibility(View.GONE);
+        recycler_encryption.setVisibility(View.VISIBLE);
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
+        recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
+
+        encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
+        recycler_encryption.setAdapter(encryptionadapter);
+
         recenterplaypause();
         mediaseekbar.setPadding(0,0,0,0);
 

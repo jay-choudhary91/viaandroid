@@ -417,8 +417,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             ButterKnife.bind(this, rootview);
          //   setheadermargine();
             gethelper().setdatacomposing(false);
-            /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
-        showcontrollers.startAnimation(startAnimation);*/
+
+            Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
+            showcontrollers.startAnimation(startAnimation);
+
             showcontrollers.post(new Runnable() {
                 @Override
                 public void run() {
@@ -432,10 +434,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     layout_videodetails.getLayoutParams().height = detailviewheight;
                     layout_videodetails.setVisibility(View.VISIBLE);
                     layout_videodetails.requestLayout();
-
+                    loadviewdata();
                 }
             });
-            loadviewdata();
+
             loadmap();
         }
         return rootview;

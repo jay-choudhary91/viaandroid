@@ -70,7 +70,7 @@
         android:id="@+id/scrollview_detail"
         android:scrollbars="none"
         android:nestedScrollingEnabled="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_height="match_parent">
 
 

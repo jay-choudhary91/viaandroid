@@ -41,6 +41,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
@@ -257,6 +258,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void loadviewdata()
     {
         gethelper().setdatacomposing(false);
+
+        Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
+        photorootview.startAnimation(startAnimation);
 
         photorootview.post(new Runnable() {
             @Override
