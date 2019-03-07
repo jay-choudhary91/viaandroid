@@ -16,7 +16,6 @@
 
         <RelativeLayout
             android:id="@+id/rl_controllerview"
-            android:layout_below="@+id/layout_mediatype"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -48,15 +47,7 @@
                     android:contentDescription="@string/description"
                     />
 
-                <com.deeptruth.app.android.utils.circularImageview
-                    android:id="@+id/img_verified"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="10dp"
-                    android:visibility="gone"
-                    android:background="@drawable/audiochecked"/>
+
 
             </RelativeLayout>
 
@@ -169,11 +160,23 @@
             android:visibility="gone"
             android:layout_alignParentTop="true"
             android:layout_height="wrap_content"
+            android:paddingTop="18dp"
+            android:background="@color/dark_blue_solid_a"
             android:orientation="horizontal">
 
             <include layout="@layout/action_bar_mediadetails"></include>
 
         </RelativeLayout>
+
+        <com.deeptruth.app.android.utils.circularImageview
+            android:id="@+id/img_verified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/layout_mediatype"
+            android:layout_margin="10dp"
+            android:visibility="gone"
+            android:background="@drawable/audiochecked"/>
 
         <RelativeLayout
             android:id="@+id/layout_footer"
