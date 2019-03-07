@@ -1434,13 +1434,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.showhideviewondrawer(isshow);
 
         if(isshow){
+            layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
             gethelper().updateactionbar(0);
             common.slidetoabove(layout_mediatype);
             layout_footer.setVisibility(View.GONE);
             img_fullscreen.setVisibility(View.GONE);
             //  layout_validating.setVisibility(View.GONE);
         }else{
-            layout_halfscrn.getLayoutParams().height = rootviewheight;
+            layout_halfscrn.getLayoutParams().height = rootviewheight ;
             gethelper().updateactionbar(1);
             common.slidetodown(layout_mediatype);
             layout_footer.setVisibility(View.VISIBLE);

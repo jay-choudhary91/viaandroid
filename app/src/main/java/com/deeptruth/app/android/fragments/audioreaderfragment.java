@@ -765,6 +765,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 linearseekbarcolorview.setVisibility(View.VISIBLE);
                 mediaseekbar.setVisibility(View.VISIBLE);
                 layout_seekbartiming.setVisibility(View.VISIBLE);
+                img_pause.setVisibility(View.GONE);
                 img_handleup.setVisibility(View.GONE);
                 gethelper().drawerenabledisable(false);
                 gethelper().updateactionbar(1);
@@ -1414,6 +1415,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             layout_audiodetails.setVisibility(View.GONE);
             img_handleup.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
+            img_pause.setVisibility(View.GONE);
             playpausebutton.setImageResource(R.drawable.play_btn);
         }else{
             player.seekTo(0);
