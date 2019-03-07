@@ -5,12 +5,14 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.widget.RelativeLayout.TRUE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,6 +70,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
     ArrayList<folder> folderitemlist =new ArrayList<>();
     private final int request_permissions = 101;
     private Runnable doafterallpermissionsgranted;
+    boolean isfullscreen = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
@@ -81,6 +86,10 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             img_arrow_back.setOnClickListener(this);
             img_camera.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
+            setheaderpadding();
+            //gethelper().setwindowfitxy(true);
+           // layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
@@ -408,9 +417,33 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
     public void setdata(adapteritemclick mitemclick) {
         this.mitemclick = mitemclick;
     }
+
+    public void setheader(boolean isfullscreen){
+        this.isfullscreen = isfullscreen;
+    }
     public void setheadermargine(){
         LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
         layout_mediatype.setLayoutParams(params);
     }
+
+    public void setheaderpadding(){
+       /* if(isfullscreen){
+            layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+
+        }else{
+            layout_mediatype.setPadding(0,0,0,0);
+
+        }*/
+    }
+
+    public void setfooterlayout(boolean isfottermarginset){
+
+        if(isfottermarginset){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,Integer.parseInt(xdata.getinstance().getSetting("headerheight")));
+            params.addRule(RelativeLayout.ALIGN_PARENT_TOP,TRUE);
+            layout_mediatype.setLayoutParams(params);
+        }
+    }
+
 }

@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -55,6 +56,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -155,6 +157,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     ImageView img_arrow_back;
     @BindView(R.id.img_delete_media)
     ImageView img_delete_media;
+    @BindView(R.id.rl_videotextureview)
+    RelativeLayout rl_videotextureview;
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
@@ -354,11 +358,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     NestedScrollView showcontrollers;
     @BindView(R.id.scrubberverticalbar)
     RelativeLayout scurraberverticalbar;
+    boolean istrue = false ;
 
     int footerheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0;
     boolean flag = true;
     boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
+
 
     GoogleMap mgooglemap;
     Surface surfacetexture = null;
@@ -396,6 +402,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     String latency = "";
     int mheightview = 0;
     int viewheight = 0;
+    View view = null;
+    int navigationbarheight = 0;
 
     private float videoheight, videowidth;
 
@@ -415,7 +423,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-         //   setheadermargine();
+
+            //setheadermargine();
+            navigationbarheight =  common.getnavigationbarheight();
             gethelper().setdatacomposing(false);
 
             /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
@@ -438,6 +448,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             });
 
+            gethelper().setwindowfitxy(true);
+            //layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
+            loadviewdata();
             loadmap();
         }
         return rootview;
@@ -466,6 +479,21 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
+
+        showcontrollers.post(new Runnable() {
+            @Override
+            public void run() {
+                rootviewheight = showcontrollers.getHeight();
+                videoviewheight = ((rootviewheight *60)/100);
+                layout_halfscrnimg.getLayoutParams().height = videoviewheight;
+                layout_halfscrnimg.requestLayout();
+                detailviewheight = (rootviewheight - (videoviewheight+navigationbarheight));
+                layout_videodetails.getLayoutParams().height = detailviewheight;
+                layout_videodetails.requestLayout();
+                setfooterlayout(false);
+
+            }
+        });
 
         layout_mediatype.post(new Runnable() {
             @Override
@@ -689,6 +717,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     v.setFocusable(false);
+                    gethelper().setwindowfitxy(true);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     // if (arraymediaitemlist.size() > 0) {
@@ -724,6 +753,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setKeyListener(null);
                     v.setFocusable(false);
                     editabletext();
+                    gethelper().setwindowfitxy(true);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     String renamevalue = edt_medianame.getText().toString();
@@ -911,6 +941,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     scrollview_meta.setVisibility(View.INVISIBLE);
                     break;
                 case R.id.img_edit_name:
+                    gethelper().setwindowfitxy(false);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     edt_medianame.setClickable(true);
@@ -921,6 +952,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.requestFocus();
                     break;
                 case R.id.img_edit_notes:
+                    gethelper().setwindowfitxy(false);
                     InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     edt_medianotes.setClickable(true);
@@ -932,11 +964,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                     break;
                 case R.id.img_share_media:
-                    img_share_media.setEnabled(false);
-                    new Handler().postDelayed(new Runnable()
-                    {
-                        public void run()
-                        {
+                            img_share_media.setEnabled(false);
+                            new Handler().postDelayed(new Runnable()
+                            {
+                                public void run()
+                                {
                             img_share_media.setEnabled(true);
                         }
                     }, 1500);
@@ -980,53 +1012,59 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
                 case R.id.img_fullscreen:
                         if(layout_videodetails.getVisibility()==View.VISIBLE){
-                        layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-                        layout_videodetails.getLayoutParams().height = 0;
-                        gethelper().drawerenabledisable(false);
-                       // expand(videotextureview,targetheight+Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
-                        gethelper().updateactionbar(0);
-                        setheadermargine(0,0);
-                        layout_videodetails.setVisibility(View.GONE);
-                        scrollview_detail.setVisibility(View.GONE);
-                        scrollview_meta.setVisibility(View.GONE);
-                        scrollView_encyrption.setVisibility(View.GONE);
-                        tab_layout.setVisibility(View.GONE);
-                        //updatetextureviewsize(targetwidth,targetheight);
-                        layout_footer.setVisibility(View.GONE);
-                        layout_mediatype.setVisibility(View.GONE);
-                        layoutbackgroundcontroller.setVisibility(View.GONE);
-                        playpausebutton.setVisibility(View.GONE);
-                        imgpause.setVisibility(View.GONE);
-                        img_fullscreen.setVisibility(View.GONE);
-                       // recenterplaypause();
-                    } else{
-                        layout_halfscrnimg.getLayoutParams().height = videoviewheight;
-                        layout_videodetails.getLayoutParams().height = detailviewheight;
-                        gethelper().drawerenabledisable(false);
-                        //collapse(videotextureview,previousheight);
-                        gethelper().updateactionbar(1);
-                        playpausebutton.setVisibility(View.GONE);
-                        layout_videodetails.setVisibility(View.VISIBLE);
-                        tab_layout.setVisibility(View.VISIBLE);
-                        scrollview_detail.setVisibility(View.VISIBLE);
-                        layout_mediatype.setVisibility(View.VISIBLE);
-                        totalduration.setVisibility(View.VISIBLE);
-                        time_current.setVisibility(View.VISIBLE);
-                        layout_footer.setVisibility(View.VISIBLE);
-                        layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
-                        layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
-                        //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
-                        setheadermargine(headerheight,scrubberheight);
-                        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                        layout_seekbartiming.getResources().getColor(R.color.white);
-                        dividerline.setVisibility(View.GONE);
+                            xdata.getinstance().saveSetting("fullscreen", "" + "fullscreen");
+                            layout_halfscrnimg.getLayoutParams().height = (rootviewheight-navigationbarheight);
+                            setfooterlayout(true);
 
-                        imgpause.setVisibility(View.GONE);
-                        collapseimg_view();
-                        img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
-                        img_fullscreen.setVisibility(View.VISIBLE);
-                        resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-                        //recenterplaypause();
+                           layout_videodetails.getLayoutParams().height = 0;
+                           gethelper().drawerenabledisable(false);
+                            gethelper().updateactionbar(0);
+                            setheadermargine(0,0);
+                            layout_videodetails.setVisibility(View.GONE);
+                            scrollview_detail.setVisibility(View.GONE);
+                            scrollview_meta.setVisibility(View.GONE);
+                            scrollView_encyrption.setVisibility(View.GONE);
+                            tab_layout.setVisibility(View.GONE);
+                            //updatetextureviewsize(targetwidth,targetheight);
+                            layout_footer.setVisibility(View.GONE);
+                            layout_mediatype.setVisibility(View.GONE);
+                            layoutbackgroundcontroller.setVisibility(View.GONE);
+                            playpausebutton.setVisibility(View.GONE);
+                            imgpause.setVisibility(View.GONE);
+                            img_fullscreen.setVisibility(View.GONE);
+
+                            // recenterplaypause();
+                    } else{
+                            //setheaderlayout(false);
+                                xdata.getinstance().saveSetting("fullscreen", "" + "halfscreen");
+                                layout_halfscrnimg.getLayoutParams().height = videoviewheight;
+                                layout_videodetails.getLayoutParams().height = detailviewheight;
+                                setfooterlayout(false);
+                                gethelper().drawerenabledisable(false);
+                                gethelper().updateactionbar(1);
+                                playpausebutton.setVisibility(View.GONE);
+                                layout_videodetails.setVisibility(View.VISIBLE);
+                                tab_layout.setVisibility(View.VISIBLE);
+                                scrollview_detail.setVisibility(View.VISIBLE);
+                                layout_mediatype.setVisibility(View.VISIBLE);
+                                totalduration.setVisibility(View.VISIBLE);
+                                time_current.setVisibility(View.VISIBLE);
+                                layout_footer.setVisibility(View.VISIBLE);
+                                layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
+                                layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
+                                //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
+                                setheadermargine(headerheight,scrubberheight);
+                                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                                layout_seekbartiming.getResources().getColor(R.color.white);
+                                dividerline.setVisibility(View.GONE);
+
+                                imgpause.setVisibility(View.GONE);
+                                collapseimg_view();
+                                img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+                                img_fullscreen.setVisibility(View.VISIBLE);
+                                resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+
+                                 //recenterplaypause();
                     }
                     break;
 
@@ -1037,7 +1075,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     {
                         if(layout_mediatype.getVisibility()==View.GONE)  // Action bar is hidden
                         {
-                            layout_halfscrnimg.getLayoutParams().height = rootviewheight;
+                            //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                             setbottomimgview();
                             gethelper().updateactionbar(1);
                             //recenterplaypause();
@@ -1051,7 +1089,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             if(player != null && (! player.isPlaying()))  // Player is pause
                             {
-                                layout_halfscrnimg.getLayoutParams().height = rootviewheight;
+                                //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                                 gethelper().updateactionbar(1);
                                 layout_footer.setVisibility(View.VISIBLE);
                                 img_fullscreen.setVisibility(View.VISIBLE);
@@ -1061,7 +1099,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }
                             else   // Player is playing
                             {
-                                layout_halfscrnimg.getLayoutParams().height = rootviewheight;
+                                //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                                 gethelper().updateactionbar(1);
                                 layout_footer.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(true);
@@ -1080,7 +1118,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                         else  // Action bar is showing
                         {
-                            layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                            //layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
@@ -1088,7 +1126,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             if(player != null && (! player.isPlaying()))
                             {
-                                layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));;
+                                //layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));;
                                 gethelper().updateactionbar(0);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
                                 layout_footer.setVisibility(View.GONE);
@@ -1099,7 +1137,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }
                             else
                             {
-                                layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                                //layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
                                 gethelper().updateactionbar(0);
                                 gethelper().drawerenabledisable(false);
                                 layoutpause.setVisibility(View.VISIBLE);
@@ -1126,7 +1164,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         pause();
                     }else{
                         if(layout_videodetails.getVisibility()==View.GONE){
-                            layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                            //layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
                             gethelper().updateactionbar(0);
                             layout_mediatype.setVisibility(View.GONE);
                             layoutpause.setVisibility(View.GONE);
@@ -2281,6 +2319,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         int surfaceView_Width = videotextureview.getWidth();
         int surfaceView_Height = videotextureview.getHeight();
 
+      /*  if(surfaceView_Height == 0)
+             surfaceView_Height = rl_videotextureview.getHeight();*/
+
         ViewGroup.LayoutParams layoutParams = videotextureview.getLayoutParams();
         layoutParams.width = surfaceView_Width;
         layoutParams.height = surfaceView_Height;
@@ -2404,7 +2445,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void fullscreen_showcontrollers() {
-        layout_halfscrnimg.getLayoutParams().height = rootviewheight;
+        //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
         gethelper().drawerenabledisable(true);
         videotextureview.setClickable(true);
         common.slidetodown(layout_mediatype);
@@ -2492,7 +2533,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         if(drawershown)
         {
-            layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+            //layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
             gethelper().updateactionbar(0);
             common.slidetoabove(layout_mediatype);
             layoutbackgroundcontroller.setVisibility(View.GONE);
@@ -2503,7 +2544,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
         else
         {
-            layout_halfscrnimg.getLayoutParams().height = rootviewheight;
+            //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
 
             gethelper().updateactionbar(1);
             common.slidetodown(layout_mediatype);
@@ -2541,7 +2582,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void setheadermargine(int headerheight,int scrubberheight){
 
         if(headerheight == 0 && scrubberheight == 0){
-            RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,targetheight+Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
+            RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,(rootviewheight-navigationbarheight));
             paramsvideotextureview.setMargins(0,headerheight,0,scrubberheight);
             videotextureview.setLayoutParams(paramsvideotextureview);
             videotextureview.post(new Runnable() {
@@ -2552,7 +2593,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             });
         }else{
 
-            RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
             paramsvideotextureview.setMargins(0,headerheight-1,0,scrubberheight-50);
             videotextureview.setLayoutParams(paramsvideotextureview);
 
@@ -2578,6 +2619,20 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
 
+    public void setfooterlayout(boolean isfottermarginset){
+
+        if(isfottermarginset){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
+            params.setMargins(0,0,0,navigationbarheight);
+            layout_footer.setLayoutParams(params);
+        }else{
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
+            params.setMargins(0,0,0,navigationbarheight);
+            layout_footer.setLayoutParams(params);
+        }
+    }
 }
 
 

@@ -10,12 +10,12 @@
     android:fillViewport="true"
     android:background="@android:color/white">
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:content="@+id/content"
         android:fitsSystemWindows="true"
-        android:handle="@+id/handle"
+        android:handle="@+id/rl_video_container"
         android:layout_centerVertical="true">
 
             <RelativeLayout
@@ -37,6 +37,7 @@
                             android:layout_height="match_parent" >
 
                             <RelativeLayout
+                                android:id="@+id/rl_videotextureview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
@@ -44,10 +45,9 @@
 
                             <TextureView
                                 android:id="@+id/videotextureview"
-                                android:layout_centerVertical="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:scaleType="centerCrop"/>
+                                />
 
                             </RelativeLayout>
                         </FrameLayout>
@@ -296,6 +296,8 @@
                     android:visibility="gone"
                     android:layout_alignParentTop="true"
                     android:layout_height="wrap_content"
+                    android:paddingTop="18dp"
+                    android:background="@color/dark_blue_solid_a"
                     android:orientation="horizontal">
 
                     <include layout="@layout/action_bar_mediadetails"></include>
@@ -347,5 +349,5 @@
 
             </RelativeLayout>
 
-    </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </android.support.v4.widget.NestedScrollView>

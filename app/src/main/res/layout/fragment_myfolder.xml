@@ -4,27 +4,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="@drawable/backgroundintro">
 
 
-    <LinearLayout
-        android:id="@+id/layout_mediatype"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:content="@+id/content"
+        android:fitsSystemWindows="true"
+        android:handle="@+id/rl_video_container"
+        >
 
-        <include layout="@layout/action_bar_myfolder"></include>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/layout_videoreader"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/layout_mediatype"
+                android:layout_width="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_height="wrap_content"
+                android:paddingTop="18dp"
+                android:background="@color/dark_blue_solid_a"
+                android:orientation="horizontal">
+
+                <include layout="@layout/action_bar_myfolder"></include>
+
+            </LinearLayout>
 
 
-    </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_list"
-        android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_list"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/layout_mediatype">
+
+                </android.support.v7.widget.RecyclerView>
+
+
+        </RelativeLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
 
 </LinearLayout>

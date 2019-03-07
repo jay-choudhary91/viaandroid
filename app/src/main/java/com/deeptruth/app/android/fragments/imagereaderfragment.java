@@ -102,6 +102,8 @@ import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.widget.RelativeLayout.TRUE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -212,6 +214,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private final int flingactionmindspdvac = 10;
     int targetheight=0,previousheight=0;
     int footerheight;
+    int navigationbarheight = 0;
 
     GoogleMap mgooglemap;
 
@@ -248,6 +251,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+            gethelper().setwindowfitxy(true);
+            navigationbarheight =  common.getnavigationbarheight();
             //    setheadermargine();
             loadviewdata();
 
@@ -259,9 +264,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     {
         gethelper().setdatacomposing(false);
 
-        /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
-        photorootview.startAnimation(startAnimation);*/
-
         photorootview.post(new Runnable() {
             @Override
             public void run() {
@@ -271,8 +273,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 layout_halfscrn.getLayoutParams().height = devidedheight;
                 layout_halfscrn.requestLayout();
-                layout_photodetails.getLayoutParams().height = devidedheight;
+                layout_photodetails.getLayoutParams().height = (devidedheight-navigationbarheight);
                 layout_photodetails.requestLayout();
+                setfooterlayout(false);
 
                 setupimagedata();
             }
@@ -407,6 +410,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     v.setFocusable(false);
+                    gethelper().setwindowfitxy(true);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     // if (arraymediaitemlist.size() > 0) {
@@ -424,6 +428,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 if (!hasFocus) {
                     edt_medianame.setKeyListener(null);
                     v.setFocusable(false);
+                    gethelper().setwindowfitxy(true);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     // if (arraymediaitemlist.size() > 0) {
@@ -540,6 +545,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
             case R.id.img_edit_name:
+                gethelper().setwindowfitxy(false);
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 edt_medianame.setSelection(edt_medianame.getText().length());
@@ -550,6 +556,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 edt_medianame.requestFocus();
                 break;
             case R.id.img_edit_notes:
+                gethelper().setwindowfitxy(false);
                 InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 edt_medianotes.setSelection(edt_medianotes.getText().length());
@@ -587,6 +594,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
 
             case R.id.img_delete_media:
+
                 img_delete_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
@@ -617,10 +625,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }, 500);
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
+                    setfooterlayout(true);
                     gethelper().drawerenabledisable(true);
-                    layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                    layout_halfscrn.getLayoutParams().height = (rootviewheight -navigationbarheight);
                     layout_photodetails.getLayoutParams().height = 0;
-                    expand(tab_photoreader,100,targetheight+ Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")));
                     gethelper().drawerenabledisable(false);
                     gethelper().updateactionbar(0);
                     layout_photodetails.setVisibility(View.GONE);
@@ -634,10 +642,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     img_fullscreen.setVisibility(View.INVISIBLE);
 
                 } else{
+
+                    setfooterlayout(false);
+
                     gethelper().drawerenabledisable(false);
                     layout_halfscrn.getLayoutParams().height = devidedheight;
-                    layout_photodetails.getLayoutParams().height = devidedheight;
-                    collapse(tab_photoreader,100,previousheight);
+                    layout_photodetails.getLayoutParams().height = (devidedheight-navigationbarheight);
                     gethelper().updateactionbar(1);
                     layout_photodetails.setVisibility(View.VISIBLE);
                     tab_layout.setVisibility(View.VISIBLE);
@@ -656,7 +666,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 if(layout_photodetails.getVisibility()==View.GONE){
                     if(layout_footer.getVisibility()==(View.GONE)){
-                        layout_halfscrn.getLayoutParams().height = rootviewheight;
+                       // layout_halfscrn.getLayoutParams().height = rootviewheight;
                         setbottomimgview();
                         gethelper().updateactionbar(1);
                         img_fullscreen.setVisibility(View.VISIBLE);
@@ -668,7 +678,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                     } else {
                         gethelper().updateactionbar(0);
-                        layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                        //layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
                    //     common.slidetoabove(layout_mediatype);
                         gethelper().drawerenabledisable(false);
                         layout_mediatype.setVisibility(View.GONE);
@@ -1441,7 +1451,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_fullscreen.setVisibility(View.GONE);
             //  layout_validating.setVisibility(View.GONE);
         }else{
-            layout_halfscrn.getLayoutParams().height = rootviewheight ;
+           // layout_halfscrn.getLayoutParams().height = rootviewheight;
             gethelper().updateactionbar(1);
             common.slidetodown(layout_mediatype);
             layout_footer.setVisibility(View.VISIBLE);
@@ -1468,6 +1478,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         img_fullscreen.setLayoutParams(params);
     }
+
     public void collapseimg_view(){
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -1480,5 +1491,21 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         return false;
+    }
+
+
+    public void setfooterlayout(boolean isfottermarginset){
+
+        if(isfottermarginset){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
+            params.setMargins(0,0,0,navigationbarheight);
+            layout_footer.setLayoutParams(params);
+        }else{
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
+            params.setMargins(0,0,0,navigationbarheight);
+            layout_footer.setLayoutParams(params);
+        }
     }
 }
