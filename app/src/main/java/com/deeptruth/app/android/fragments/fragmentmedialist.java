@@ -1095,12 +1095,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             mediatype=config.item_audio;
                         break;
                     }
-                    showselectedmediatypeitems(selectedmediatype);
+                    LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
+                    layoutManager.scrollToPositionWithOffset(selectedmediatype,0);
                 }
-                else
-                {
-                    showselectedmediatypeitems(selectedmediatype);
-                }
+                showselectedmediatypeitems(selectedmediatype);
             }
         });
     }
