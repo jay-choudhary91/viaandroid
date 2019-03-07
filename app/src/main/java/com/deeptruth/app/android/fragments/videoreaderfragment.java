@@ -418,8 +418,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
          //   setheadermargine();
             gethelper().setdatacomposing(false);
 
-            Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
-            showcontrollers.startAnimation(startAnimation);
+            /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
+            showcontrollers.startAnimation(startAnimation);*/
 
             showcontrollers.post(new Runnable() {
                 @Override

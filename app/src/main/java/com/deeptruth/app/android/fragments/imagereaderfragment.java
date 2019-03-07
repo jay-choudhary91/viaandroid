@@ -259,8 +259,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     {
         gethelper().setdatacomposing(false);
 
-        Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
-        photorootview.startAnimation(startAnimation);
+        /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
+        photorootview.startAnimation(startAnimation);*/
 
         photorootview.post(new Runnable() {
             @Override

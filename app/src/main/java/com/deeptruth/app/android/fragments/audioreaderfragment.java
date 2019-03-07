@@ -368,8 +368,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         gethelper().setrecordingrunning(false);
 
-        Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
-        audiorootview.startAnimation(startAnimation);
+        /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
+        audiorootview.startAnimation(startAnimation);*/
 
         audiorootview.post(new Runnable() {
             @Override
