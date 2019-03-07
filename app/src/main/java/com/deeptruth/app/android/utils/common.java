@@ -190,6 +190,14 @@ public class common {
         drawable.setColor(solidcolor);
     }
 
+    public static int getScreenWidth(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
+    }
+
     public static int[] getScreenWidthHeight(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         Point size = new Point();

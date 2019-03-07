@@ -44,10 +44,12 @@ import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.adapter.adaptermediagrid;
 import com.deeptruth.app.android.adapter.adaptermedialist;
+import com.deeptruth.app.android.adapter.adaptermediatype;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
+import com.deeptruth.app.android.models.mediatype;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
@@ -84,6 +86,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class fragmentmedialist extends basefragment implements View.OnClickListener, View.OnTouchListener {
 
+    @BindView(R.id.recycler_mediatype)
+    RecyclerView recycler_mediatype;
     @BindView(R.id.rv_medialist_list)
     RecyclerView recyclerviewlist;
     @BindView(R.id.rv_medialist_grid)
@@ -139,9 +143,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     View rootview = null;
     private static final int request_permissions = 1;
+    ArrayList<mediatype> mediatypeitemarray=new ArrayList<>();
     ArrayList<video> arraymediaitemlist = new ArrayList<>();
     adaptermedialist adaptermedialist;
     adaptermediagrid adaptermediagrid;
+    adaptermediatype adaptermediatype;
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
@@ -258,7 +264,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if(adaptermedialist != null)
                     adaptermedialist.notifyDataSetChanged();
 
-                showselectedmediatypeitems();
+                showselectedmediatypeitems(selectedmediatype);
                 fetchmedialistfromdirectory();
             }
         }
@@ -367,11 +373,107 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             recyclerviewgrid.setNestedScrollingEnabled(false);
             recyclerviewlist.setNestedScrollingEnabled(false);
             RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
-            layout_mediatype.setOnTouchListener(this);
 
+            final int parentwidth=common.getScreenWidth(applicationviavideocomposer.getactivity());
+
+            mediatypeitemarray.clear();
+            mediatypeitemarray.add(new mediatype("",""));
+            mediatypeitemarray.add(new mediatype("",""));
+            mediatypeitemarray.add(new mediatype(config.item_video,""));
+            mediatypeitemarray.add(new mediatype(config.item_photo,""));
+            mediatypeitemarray.add(new mediatype(config.item_audio,""));
+            mediatypeitemarray.add(new mediatype("",""));
+            mediatypeitemarray.add(new mediatype("",""));
+
+            recycler_mediatype.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+            adaptermediatype =new adaptermediatype(getActivity(), mediatypeitemarray, parentwidth,
+                    new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+
+                        }
+
+                        @Override
+                        public void onItemClicked(Object object, int position) {
+                            if(position == 2)
+                            {
+                                position=0;
+                            }
+                            else if(position == 3)
+                            {
+                                position=1;
+                            }
+                            else if(position == 4)
+                            {
+                                position=2;
+                            }
+                            showselecteditemincenter(position);
+                        }
+                    });
+            recycler_mediatype.setAdapter(adaptermediatype);
+
+            recycler_mediatype.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    switch (newState) {
+                        case RecyclerView.SCROLL_STATE_IDLE:
+                            int center = recycler_mediatype.getWidth()/2;
+                            View centerView = recycler_mediatype.findChildViewUnder(center, recycler_mediatype.getTop());
+                            int centerPos = recycler_mediatype.getChildAdapterPosition(centerView);
+                            if(centerPos == 2)
+                            {
+                                centerPos=0;
+                            }
+                            else if(centerPos == 3)
+                            {
+                                centerPos=1;
+                            }
+                            else if(centerPos == 4)
+                            {
+                                centerPos=2;
+                            }
+
+                            showselecteditemincenter(centerPos);
+                            //int passeditem=centerPos-1;
+                            //recyclerView.scrollBy(eachitemwidth, 0);
+                            //recycler_mediatype.smoothScrollToPosition(centerPos);
+                            break;
+                        case RecyclerView.SCROLL_STATE_DRAGGING:
+
+                            break;
+                        case RecyclerView.SCROLL_STATE_SETTLING:
+
+                            break;
+
+                    }
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                            /*int center = recycler_mediatype.getWidth()/2;
+                            View centerView = recycler_mediatype.findChildViewUnder(center, recycler_mediatype.getTop());
+                            int centerPos = recycler_mediatype.getChildAdapterPosition(centerView);*/
+
+
+                           /* LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
+                            int last=layoutManager.findLastVisibleItemPosition();
+                            int first=layoutManager.findFirstVisibleItemPosition();
+                            int totalVisibleItems = last - first;
+                            int centeredItemPosition = totalVisibleItems / 2;*/
+                    //  Log.e("center item ",""+centerPos);
+                    //recycler_mediatype.smoothScrollToPosition(centeredItemPosition);
+                    //recycler_mediatype.setScrollY(centeredItemPosition);
+                }
+            });
+
+
+
+            layout_mediatype.setOnTouchListener(this);
             IntentFilter intentFilter = new IntentFilter(config.broadcast_medialistnewitem);
             medialistitemaddreceiver = new BroadcastReceiver() {
                 @Override
@@ -380,7 +482,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             };
             applicationviavideocomposer.getactivity().registerReceiver(medialistitemaddreceiver, intentFilter);
-
             selectedstyletype=1;
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
@@ -405,6 +506,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             resetmedialist();
         }
         return rootview;
+    }
+
+    public void showselecteditemincenter(int selectedpos)
+    {
+        if(selectedpos != selectedmediatype)
+        {
+            LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
+            layoutManager.scrollToPositionWithOffset(selectedpos,0);
+            showselectedmediatypeitems(selectedpos);
+        }
     }
 
     private void filter(String text) {
@@ -529,13 +640,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
                 break;
             case R.id.txt_mediatype_a:
-                showselecteditemincenter(txt_mediatype_a,1);
+
                 break;
             case R.id.txt_mediatype_b:
 
                 break;
             case R.id.txt_mediatype_c:
-                showselecteditemincenter(txt_mediatype_c,3);
+
                 break;
             case R.id.img_camera:
                 launchbottombarfragment();
@@ -604,42 +715,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     }
 
-    public void showselecteditemincenter(TextView textView,int sectionnumber)
+    public void showselectedmediatypeitems(int mediatype)
     {
-        String selectedvalue=textView.getText().toString();
-        if(textView.getText().toString().startsWith(config.item_video))
-        {
-            selectedmediatype=0;
-        }
-        else if(textView.getText().toString().startsWith(config.item_photo))
-        {
-            selectedmediatype=1;
-        }
-        else if(textView.getText().toString().startsWith(config.item_audio))
-        {
-            selectedmediatype=2;
-        }
-
+        selectedmediatype=mediatype;
         config.selectedmediatype=selectedmediatype;
-        if(sectionnumber == 1)
-        {
-            textView.setText(txt_mediatype_c.getText().toString());
-            txt_mediatype_c.setText(txt_mediatype_b.getText().toString());
-        }
-        else if(sectionnumber == 3)
-        {
-            textView.setText(txt_mediatype_a.getText().toString());
-            txt_mediatype_a.setText(txt_mediatype_b.getText().toString());
-        }
-        txt_mediatype_b.setText(selectedvalue);
-        showselectedmediatypeitems();
-        /*updatecounter(txt_mediatype_a);
-        updatecounter(txt_mediatype_b);
-        updatecounter(txt_mediatype_c);*/
-    }
 
-    public void showselectedmediatypeitems()
-    {
         String checkitem="";
         if(selectedmediatype == 0)
         {
@@ -672,6 +752,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             if(arraymediaitemlist.get(i).getmimetype().contains(checkitem))
                 arraymediaitemlist.get(i).setDoenable(true);
 
+        }
+
+        if(mediatypeitemarray != null && mediatypeitemarray.size() > 5)
+        {
+            mediatypeitemarray.set(2,new mediatype(config.item_video," ("+videocount+")"));
+            mediatypeitemarray.set(3,new mediatype(config.item_photo," ("+imagecount+")"));
+            mediatypeitemarray.set(4,new mediatype(config.item_audio," ("+audiocount+")"));
+            adaptermediatype.notifyDataSetChanged();
         }
 
         if(adaptermedialist != null && adaptermediagrid != null)
@@ -1007,22 +1095,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             mediatype=config.item_audio;
                         break;
                     }
-                    if(txt_mediatype_a.getText().toString().startsWith(mediatype))
-                    {
-                        showselecteditemincenter(txt_mediatype_a,1);
-                    }
-                    else if(txt_mediatype_c.getText().toString().startsWith(mediatype))
-                    {
-                        showselecteditemincenter(txt_mediatype_c,3);
-                    }
-                    else
-                    {
-                        showselectedmediatypeitems();
-                    }
+                    showselectedmediatypeitems(selectedmediatype);
                 }
                 else
                 {
-                    showselectedmediatypeitems();
+                    showselectedmediatypeitems(selectedmediatype);
                 }
             }
         });
@@ -1247,7 +1324,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showselectedmediatypeitems();
+                    showselectedmediatypeitems(selectedmediatype);
                     if(! videoobj.getVideostarttransactionid().isEmpty())
                         updatemedialocation(videoobj.getVideostarttransactionid(),videoobj.getPath());
                 }
@@ -1377,7 +1454,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 System.out.println("file not Deleted :" + videoobj.getPath());
                             }
                         }
-                        showselectedmediatypeitems();
+                        showselectedmediatypeitems(selectedmediatype);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
