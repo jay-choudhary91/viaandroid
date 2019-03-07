@@ -157,8 +157,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     ImageView img_arrow_back;
     @BindView(R.id.img_delete_media)
     ImageView img_delete_media;
-    @BindView(R.id.rl_videotextureview)
-    RelativeLayout rl_videotextureview;
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
@@ -2319,8 +2317,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         int surfaceView_Width = videotextureview.getWidth();
         int surfaceView_Height = videotextureview.getHeight();
 
-      /*  if(surfaceView_Height == 0)
-             surfaceView_Height = rl_videotextureview.getHeight();*/
 
         ViewGroup.LayoutParams layoutParams = videotextureview.getLayoutParams();
         layoutParams.width = surfaceView_Width;
