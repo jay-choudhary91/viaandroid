@@ -10,6 +10,8 @@
         android:id="@+id/layout_mediatype"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:background="@color/dark_blue_solid_a"
         android:orientation="horizontal">
 
         <include layout="@layout/action_bar_medialist"></include>
