@@ -397,6 +397,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 audiodetailviewheight = (rootviewheight - (audioviewheight+navigationbarheight));
                 layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
                 layout_audiodetails.requestLayout();
+                addbottommargin(mediatypeheight);
                 setfooterlayout(false);
                 setupaudiodata();
             }
@@ -760,7 +761,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
                 break;
             case R.id.img_handleup:
-                addbottommargin();
+                addbottommargin(mediatypeheight);
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
                 layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
                 setfooterlayout(false);
@@ -896,6 +897,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                           playpausebutton.setVisibility(View.GONE);
                           layout_footer.setVisibility(View.GONE);
                            gethelper().drawerenabledisable(false);
+
                     }
                     ismediacompleted =false;
                     start();
@@ -2116,10 +2118,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         layout_audiowave.requestLayout();
     }
 
-    public void addbottommargin(){
+    public void addbottommargin(int headerheight){
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ABOVE,R.id.layout_scrubberview);
-        params.setMargins(0,0,0,20);
+        params.setMargins(0,headerheight,0,20);
         layout_audiowave.setLayoutParams(params);
         layout_audiowave.requestLayout();
     }

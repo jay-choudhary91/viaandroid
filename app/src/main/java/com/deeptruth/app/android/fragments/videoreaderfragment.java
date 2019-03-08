@@ -2308,8 +2308,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         int previewheight = videoSurfaceContainer.getHeight()/2;
         int centerheight = surfaceView_Height/2;
         int diffrenceheight = (previewheight - centerheight);
+        int buttonheight = playpausebutton.getHeight();
 
-        recenterplaypause(centerheight + (diffrenceheight/2) - (headerheight/2),0);
+        int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;
+
+        recenterplaypause(lastvalue ,0);
     }
 
     public void updatesurfaceviewsizefullscreen(){
