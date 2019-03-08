@@ -2442,7 +2442,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     public void fullscreen_showcontrollers() {
         //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
-        gethelper().drawerenabledisable(true);
         videotextureview.setClickable(true);
         common.slidetodown(layout_mediatype);
         layout_mediatype.setVisibility(View.VISIBLE);
