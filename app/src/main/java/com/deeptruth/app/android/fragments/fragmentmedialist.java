@@ -413,7 +413,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             {
                                 position=2;
                             }*/
-                            showselecteditemincenter(position);
+                            showselecteditemincenter(position,true);
                         }
                     });
             recycler_mediatype.setAdapter(adaptermediatype);
@@ -427,7 +427,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             int center = recycler_mediatype.getWidth()/2;
                             View centerView = recycler_mediatype.findChildViewUnder(center, recycler_mediatype.getTop());
                             int centerPos = recycler_mediatype.getChildAdapterPosition(centerView);
-                            showselecteditemincenter(centerPos);
+                            showselecteditemincenter(centerPos,true);
                             //int passeditem=centerPos-1;
                             //recyclerView.scrollBy(eachitemwidth, 0);
                             //recycler_mediatype.smoothScrollToPosition(centerPos);
@@ -499,7 +499,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         return rootview;
     }
 
-    public void showselecteditemincenter(int selectedpos)
+    public void showselecteditemincenter(int selectedpos,boolean showselectedlist)
     {
         double width=devicewidth;
         width=width/4.5;
@@ -525,7 +525,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         int offset=(int)width;
         LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
         layoutManager.scrollToPositionWithOffset(selectedpos,-offset);
-        if(selectedpos != selectedmediatype)
+        if(selectedpos != selectedmediatype && showselectedlist)
             showselectedmediatypeitems(selectedpos);
     }
 
@@ -1088,7 +1088,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 });
                 recyclerviewgrid.setAdapter(adaptermediagrid);
-                showselecteditemincenter(common.sortmediatype(config.selectedmediatype));
+
+                showselectedmediatypeitems(config.selectedmediatype);
+                //showselecteditemincenter(common.sortmediatype(config.selectedmediatype),false);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showselecteditemincenter(common.sortmediatype(config.selectedmediatype),false);
+                    }
+                },500);
             }
         });
     }

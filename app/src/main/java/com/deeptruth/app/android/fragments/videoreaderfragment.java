@@ -1158,7 +1158,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
 
                 case R.id.btn_playpause:
-                    if(player.isPlaying()){
+                    if(player != null && player.isPlaying()){
                         pause();
                     }else{
                         if(layout_videodetails.getVisibility()==View.GONE){
@@ -2181,7 +2181,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
     }
     public void pause() {
-        if(player != null){
+        if(player != null && player.isPlaying()){
             playpausebutton.setImageResource(R.drawable.play_btn);
             player.pause();
         }
