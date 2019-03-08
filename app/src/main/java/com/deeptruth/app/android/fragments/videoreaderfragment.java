@@ -1015,7 +1015,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             setfooterlayout(true);
 
                            layout_videodetails.getLayoutParams().height = 0;
-                           gethelper().drawerenabledisable(false);
+                            gethelper().drawerenabledisable(false);
                             gethelper().updateactionbar(0);
                             setheadermargine(0,0);
                             layout_videodetails.setVisibility(View.GONE);
@@ -2204,7 +2204,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));
 
-                if(arraycontainerformetric != null && layout_mediatype.getVisibility() == View.VISIBLE)
+                if(arraycontainerformetric != null)
                 {
                     String color = "white";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
