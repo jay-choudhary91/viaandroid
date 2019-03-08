@@ -1015,7 +1015,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             setfooterlayout(true);
 
                            layout_videodetails.getLayoutParams().height = 0;
-                           gethelper().drawerenabledisable(false);
+                            gethelper().drawerenabledisable(false);
                             gethelper().updateactionbar(0);
                             setheadermargine(0,0);
                             layout_videodetails.setVisibility(View.GONE);
@@ -1936,7 +1936,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
             common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
-            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
+            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue()+"° ", tvheading);
             if(!metricItemArraylist.getMetricTrackValue().equalsIgnoreCase("NA")){
                 common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
             }else{
@@ -2204,7 +2204,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));
 
-                if(arraycontainerformetric != null && layout_mediatype.getVisibility() == View.VISIBLE)
+                if(arraycontainerformetric != null)
                 {
                     String color = "white";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
@@ -2308,8 +2308,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         int previewheight = videoSurfaceContainer.getHeight()/2;
         int centerheight = surfaceView_Height/2;
         int diffrenceheight = (previewheight - centerheight);
+        int buttonheight = playpausebutton.getHeight();
 
-        recenterplaypause(centerheight + (diffrenceheight/2) - (headerheight/2),0);
+        int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;
+
+        recenterplaypause(lastvalue ,0);
     }
 
     public void updatesurfaceviewsizefullscreen(){
@@ -2442,7 +2445,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     public void fullscreen_showcontrollers() {
         //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
-        gethelper().drawerenabledisable(true);
         videotextureview.setClickable(true);
         common.slidetodown(layout_mediatype);
         layout_mediatype.setVisibility(View.VISIBLE);
