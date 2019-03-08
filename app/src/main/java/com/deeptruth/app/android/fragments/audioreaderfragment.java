@@ -1415,13 +1415,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             wavevisualizerslist.clear();
             playpausebutton.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
-            layout_scrubberview.setVisibility(View.VISIBLE);
+            layout_scrubberview.setVisibility(View.GONE);
             linearseekbarcolorview.setVisibility(View.GONE);
             mediaseekbar.setVisibility(View.GONE);
             layout_seekbartiming.setVisibility(View.GONE);
             layout_audiodetails.setVisibility(View.GONE);
             img_handleup.setVisibility(View.VISIBLE);
             layout_footer.setVisibility(View.VISIBLE);
+            gethelper().updateactionbar(1);
+            layout_mediatype.setVisibility(View.VISIBLE);
             img_pause.setVisibility(View.GONE);
             playpausebutton.setImageResource(R.drawable.play_btn);
         }else{
@@ -2144,13 +2146,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
     }
 
-    /*@Override
+    @Override
     public void showhideviewondrawer(boolean drawershown) {
         super.showhideviewondrawer(drawershown);
 
         if(drawershown)
         {
-            rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) + mediatypeheight;
+           // rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) + mediatypeheight;
+            rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
             gethelper().updateactionbar(0);
             layout_mediatype.setVisibility(View.GONE);
             // common.slidetoabove(layout_mediatype); //gone mediatype
@@ -2165,7 +2168,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
         else
         {
-            rlcontrollerview.getLayoutParams().height = rootviewheight;
+            rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
 
             gethelper().updateactionbar(1);
             // common.slidetodown(layout_mediatype);//visible
@@ -2192,5 +2195,5 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             }
         }
 
-    }*/
+    }
 }
