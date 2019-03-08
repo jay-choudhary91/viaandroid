@@ -77,6 +77,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
+import static android.widget.RelativeLayout.TRUE;
 
 /**
  * Created by ${matraex} on 6/8/18.
@@ -148,6 +149,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private BroadcastReceiver broadcastmediauploaded;
     private int REQUESTCODE_PICK=201,audiocount=0,videocount=0,imagecount=0;
     private FFmpeg ffmpeg;
+    int navigationbarheight = 0;
 
     Handler handler = new Handler();
     int numberOfTaps = 0;
@@ -172,6 +174,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         applicationviavideocomposer.getactivity().registerReceiver(broadcastmediauploaded, intentFilter);
     }
 
+
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_medialist;
@@ -182,8 +186,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         super.initviews(parent, savedInstanceState);
         applicationviavideocomposer.getactivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         ButterKnife.bind(this,parent);
-    }
 
+    }
 
     @Override
     public void onStart() {
@@ -303,6 +307,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             File folder = new File(xdata.getinstance().getSetting(config.selected_folder));
             txt_title_actionbarcomposer.setText(folder.getName());
+            navigationbarheight =  common.getnavigationbarheight();
 
             try {
                 DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
@@ -335,6 +340,20 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             {
                 e.printStackTrace();
             }
+
+            recyclerviewgrid.post(new Runnable() {
+                @Override
+                public void run() {
+                    setfooterlayout(true);
+                }
+            });
+
+            recyclerviewlist.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                setfooterlayout(false);
+                            }
+                        });
 
 
             onTouchListener = new RecyclerTouchListener(applicationviavideocomposer.getactivity(), recyclerviewlist);
@@ -1737,6 +1756,22 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
         layout_mediatype.setLayoutParams(params);
+    }
+
+
+    public void setfooterlayout(boolean isfottermarginset){
+
+        if(isfottermarginset){
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.BELOW,R.id.lay_grid_list_type);
+            params.setMargins(0,0,0,navigationbarheight);
+            recyclerviewgrid.setLayoutParams(params);
+        }else{
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.BELOW,R.id.lay_grid_list_type);
+            params.setMargins(0,0,0,navigationbarheight);
+            recyclerviewlist.setLayoutParams(params);
+        }
     }
 
 }
