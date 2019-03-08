@@ -2161,7 +2161,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             gethelper().updateactionbar(0);
             layout_mediatype.setVisibility(View.GONE);
             // common.slidetoabove(layout_mediatype); //gone mediatype
-            layout_scrubberview.setVisibility(View.VISIBLE);
+            layout_scrubberview.setVisibility(View.GONE);
             linearseekbarcolorview.setVisibility(View.GONE);
             mediaseekbar.setVisibility(View.GONE);
             layout_seekbartiming.setVisibility(View.GONE);
