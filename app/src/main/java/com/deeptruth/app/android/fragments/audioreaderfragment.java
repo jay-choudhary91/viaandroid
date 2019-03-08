@@ -356,6 +356,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             navigationbarheight =  common.getnavigationbarheight();
             gethelper().setdatacomposing(false);
             gethelper().setwindowfitxy(true);
+
+
             loadviewdata();
         }
         return rootview;
@@ -401,7 +403,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 setupaudiodata();
             }
         });
-        recenterplaypause();
+        recenterplaypause(0);
         mediaseekbar.setPadding(0,0,0,0);
 
         mFormatBuilder = new StringBuilder();
@@ -732,6 +734,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             case R.id.audio_downwordarrow:
                   if(layout_audiodetails.getVisibility() == View.VISIBLE){
                       removebottommargin();
+                      recenterplaypause(1);
                       rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
                       setfooterlayout(true);
                       layout_audiodetails.getLayoutParams().height = 0;
@@ -760,6 +763,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
                 break;
             case R.id.img_handleup:
+                recenterplaypause(0);
                 addbottommargin(mediatypeheight);
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
                 layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
@@ -800,7 +804,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                       //  rlcontrollerview.getLayoutParams().height = rootviewheight;
                         removebottommargin();
                         gethelper().updateactionbar(1);
-                        recenterplaypause();
+
                         layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         layout_mediatype.setVisibility(View.VISIBLE);
@@ -2196,4 +2200,35 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
 
     }*/
+
+    public void recenterplaypause(final int setvisiblety)
+    {
+        img_audiowave.post(new Runnable() {
+            @Override
+            public void run() {
+
+                RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                params.addRule(RelativeLayout.CENTER_HORIZONTAL,TRUE);
+
+                if(setvisiblety == 0){
+                    params.addRule(RelativeLayout.CENTER_IN_PARENT,TRUE);
+                    playpausebutton.setLayoutParams(params);
+                    playpausebutton.setVisibility(View.VISIBLE);
+
+                }else{
+
+                    int imageviewheight = img_audiowave.getHeight();
+                    int buttonheight = playpausebutton.getHeight();
+                    int centerheight = (imageviewheight + navigationbarheight)/2;
+                    int finalmargin = centerheight -  buttonheight/2;
+                    params.addRule(RelativeLayout.CENTER_HORIZONTAL,TRUE);
+                    params.setMargins(0,finalmargin,0,0);
+                    playpausebutton.setLayoutParams(params);
+
+                }
+            }
+        });
+    }
 }
