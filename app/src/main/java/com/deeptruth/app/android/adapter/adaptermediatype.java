@@ -66,7 +66,7 @@ public class adaptermediatype extends RecyclerView.Adapter<adaptermediatype.myVi
         float width=parentwidth;
         if(position == 2 || position == 3 || position == 4)
         {
-            double newwidth=width/4.5;
+            double newwidth=width/4.3;
             param=new LinearLayout.LayoutParams((int)newwidth, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         else
