@@ -394,10 +394,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 audioviewheight = ((rootviewheight * 60 )/100);
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
                 rlcontrollerview.requestLayout();
+                addbottommargin(mediatypeheight);
+
                 audiodetailviewheight = (rootviewheight - (audioviewheight+navigationbarheight));
                 layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
                 layout_audiodetails.requestLayout();
-                addbottommargin(mediatypeheight);
+
                 setfooterlayout(false);
                 setupaudiodata();
             }

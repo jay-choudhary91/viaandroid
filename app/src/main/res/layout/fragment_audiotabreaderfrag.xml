@@ -159,7 +159,7 @@
             android:layout_width="match_parent"
             android:visibility="gone"
             android:layout_alignParentTop="true"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:paddingTop="18dp"
             android:background="@color/dark_blue_solid_a"
             android:orientation="horizontal">
