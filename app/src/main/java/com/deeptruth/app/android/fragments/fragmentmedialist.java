@@ -1839,7 +1839,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         if(isfottermarginset){
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.BELOW,R.id.lay_grid_list_type);
-            params.setMargins(0,0,0,navigationbarheight);
+            params.setMargins(-4,-4,-4,navigationbarheight);
             recyclerviewgrid.setLayoutParams(params);
         }else{
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
