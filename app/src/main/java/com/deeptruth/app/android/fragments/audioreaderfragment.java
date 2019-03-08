@@ -2193,19 +2193,4 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
 
     }*/
-
-    public void setfooterlayout(boolean isfottermarginset){
-
-        if(isfottermarginset){
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
-            params.setMargins(0,0,0,navigationbarheight);
-            layout_footer.setLayoutParams(params);
-        }else{
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
-            params.setMargins(0,0,0,navigationbarheight);
-            layout_footer.setLayoutParams(params);
-        }
-    }
 }
