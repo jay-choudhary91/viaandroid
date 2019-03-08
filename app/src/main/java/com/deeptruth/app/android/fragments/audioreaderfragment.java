@@ -111,6 +111,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.widget.RelativeLayout.ABOVE;
 import static android.widget.RelativeLayout.TRUE;
 
 /**
@@ -2117,7 +2118,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void addbottommargin(){
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,0,0,80);
+        params.addRule(RelativeLayout.ABOVE,R.id.layout_scrubberview);
+        params.setMargins(0,0,0,20);
         layout_audiowave.setLayoutParams(params);
         layout_audiowave.requestLayout();
     }
