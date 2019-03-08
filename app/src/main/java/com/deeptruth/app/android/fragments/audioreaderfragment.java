@@ -153,7 +153,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
     @BindView(R.id.layout_audiodetails)
-    RelativeLayout layout_audiodetails;
+    public RelativeLayout layout_audiodetails;
     @BindView(R.id.scrollview_detail)
     ScrollView scrollview_detail;
     @BindView(R.id.edt_medianame)
