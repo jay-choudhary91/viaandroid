@@ -1224,7 +1224,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
             common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
-            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
+            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue()+"° ", tvheading);
             if(!metricItemArraylist.getMetricTrackValue().equalsIgnoreCase("NA")){
                 common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
 
