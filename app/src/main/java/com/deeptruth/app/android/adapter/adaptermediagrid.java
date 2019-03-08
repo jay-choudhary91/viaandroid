@@ -28,6 +28,7 @@ import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.config;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -172,13 +173,15 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 holder.img_loader.setVisibility(View.GONE);
             }
 
+            RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
+            requestOptions.override(200,mediaobject.getGriditemheight());
             if(! mediaobject.getmimetype().contains(config.item_audio.toLowerCase()))
             {
                 holder.img_mediathumbnail.setBackgroundColor(context.getResources().getColor(R.color.transparent));
-                RequestOptions requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
-
                 Uri uri = Uri.fromFile(new File(mediaobject.getPath()));
                 Glide.with(context).load(uri).apply(requestOptions).thumbnail(0.1f).into(holder.img_mediathumbnail);
+                /*Picasso.get().load(new File(mediaobject.getPath())).resize(50, 50)
+                    .centerCrop().into(holder.img_mediathumbnail);*/
             }
             else
             {
@@ -188,12 +191,12 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                     if(new File(mediaobject.getThumbnailpath()).exists())
                     {
                         Uri uri = Uri.fromFile(new File(mediaobject.getThumbnailpath()));
-                        Glide.with(context).load(uri).thumbnail(0.1f).into(holder.img_mediathumbnail);
+                        Glide.with(context).load(uri).apply(requestOptions).thumbnail(0.1f).into(holder.img_mediathumbnail);
                     }
                 }
                 else
                 {
-                    Glide.with(context).load(R.drawable.audiothum).thumbnail(0.1f).into(holder.img_mediathumbnail);
+                    Glide.with(context).load(R.drawable.audiothum).apply(requestOptions).thumbnail(0.1f).into(holder.img_mediathumbnail);
                 }
             }
 

@@ -21,6 +21,7 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
+import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
@@ -199,6 +200,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     @Override
+    public void switchtomedialist()
+    {
+        if(getcurrentfragment() instanceof fragmentmedialist)
+        {
+
+        }
+        else
+        {
+            backtolastfragment();
+            switchtomedialist();
+        }
+    }
+
+    @Override
     public void onBack() {
 
         int a=getSupportFragmentManager().getBackStackEntryCount();
@@ -212,23 +227,23 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         if(getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof audiocomposerfragment
                 || getcurrentfragment() instanceof imagecomposerfragment)
         {
-            setbackpress();
+            backtolastfragment();
             onBack();
         }
 
         else if(getcurrentfragment() instanceof audioreaderfragment
                 || getcurrentfragment() instanceof videoreaderfragment || getcurrentfragment() instanceof imagereaderfragment)
         {
-            setbackpress();
+            backtolastfragment();
 
         }
         else
         {
-            setbackpress();
+            backtolastfragment();
         }
     }
 
-    public void setbackpress()
+    public void backtolastfragment()
     {
         getSupportFragmentManager().popBackStack();
         if(mfragments.size() > 0)

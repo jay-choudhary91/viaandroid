@@ -1150,9 +1150,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
 
         } else if (key.equalsIgnoreCase("devicetime")) {
-            Calendar c = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");
-            String time = sdf.format(c.getTime());
+            /*Calendar c = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");*/
+            String time = common.get24hourformat();
             metricItemValue = time;
         } else if (key.equalsIgnoreCase("gpsonoff")) {
             //  LocationManager manager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE );
@@ -1368,18 +1368,36 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 @Override
                 public void run() {
                     if (getcurrentfragment() != null) {
-                        float deltaX = Math.abs(sensorEvent.values[0]);
+                        /*float deltaX = Math.abs(sensorEvent.values[0]);
                         float deltaY = Math.abs(sensorEvent.values[1]);
                         float deltaZ = Math.abs(sensorEvent.values[2]);
                         Math.sin(deltaX);
 
-                        String x = String.valueOf(new DecimalFormat("#.#").format(deltaX));
-                        String y = String.valueOf(new DecimalFormat("#.#").format(deltaY));
-                        String z = String.valueOf(new DecimalFormat("#.#").format(deltaZ));
+                        double X=deltaX * 180/Math.PI;
+                        double Y=deltaY * 180/Math.PI;
+                        double Z=deltaZ * 180/Math.PI;
 
-                        updatearrayitem(config.acceleration_x, "" + x);
-                        updatearrayitem(config.acceleration_y, "" + y);
-                        updatearrayitem(config.acceleration_z, "" + z);
+                        String x = String.valueOf(new DecimalFormat("#.#").format(X));
+                        String y = String.valueOf(new DecimalFormat("#.#").format(Y));
+                        String z = String.valueOf(new DecimalFormat("#.#").format(Z));*/
+
+                        double ax, ay, az;
+
+                        ax = sensorEvent.values[0];
+                        ay = sensorEvent.values[1];
+                        az = sensorEvent.values[2];
+                        double xAngle = Math.atan( ax / (Math.sqrt(Math.pow(ay,2) + Math.pow(az,2))));
+                        double yAngle = Math.atan( ay / (Math.sqrt(Math.pow(ax,2) + Math.pow(az,2))));
+                        double zAngle = Math.atan( Math.sqrt(Math.pow(ax,2) + Math.pow(ay,2)) / az);
+
+                        xAngle *= 180.00;   yAngle *= 180.00;   zAngle *= 180.00;
+                        xAngle /= 3.141592; yAngle /= 3.141592; zAngle /= 3.141592;
+
+                        updatearrayitem(config.acceleration_x, "" + new DecimalFormat("#.#").format(Math.abs(xAngle))+"° ");
+                        updatearrayitem(config.acceleration_y, "" + new DecimalFormat("#.#").format(Math.abs(yAngle))+"° ");
+                        updatearrayitem(config.acceleration_z, "" + new DecimalFormat("#.#").format(Math.abs(zAngle))+"° ");
+
+                        // Source link of degree conversion http://wizmoz.blogspot.com/2013/01/simple-accelerometer-data-conversion-to.html
                     }
                 }
             });

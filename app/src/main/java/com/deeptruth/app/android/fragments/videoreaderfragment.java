@@ -59,6 +59,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
@@ -156,8 +157,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     ImageView img_arrow_back;
     @BindView(R.id.img_delete_media)
     ImageView img_delete_media;
-    @BindView(R.id.rl_videotextureview)
-    RelativeLayout rl_videotextureview;
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
@@ -351,6 +350,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     AttitudeIndicator attitudeindicator;
     @BindView(R.id.img_phone_orientation)
     ImageView img_phone_orientation;
+    @BindView(R.id.videotextureview)
+    TextureView videotextureview;
+    @BindView(R.id.video_container)
+    NestedScrollView showcontrollers;
+    @BindView(R.id.scrubberverticalbar)
+    RelativeLayout scurraberverticalbar;
     boolean istrue = false ;
 
     int footerheight;
@@ -372,10 +377,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     StringBuilder mFormatBuilder;
     Formatter mFormatter;
     private framebitmapadapter adapter;
-    private RelativeLayout scurraberverticalbar;
     private String mediafilepath = null;
-    private NestedScrollView showcontrollers;
-    private TextureView videotextureview;
     private MediaPlayer player;
     private videocontrollerview controller;
     private View rootview = null;
@@ -423,6 +425,27 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             //setheadermargine();
             navigationbarheight =  common.getnavigationbarheight();
             gethelper().setdatacomposing(false);
+
+            /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
+            showcontrollers.startAnimation(startAnimation);*/
+
+            showcontrollers.post(new Runnable() {
+                @Override
+                public void run() {
+                    rootviewheight = showcontrollers.getHeight();
+                    videoviewheight = ((rootviewheight *60)/100);
+                    layout_halfscrnimg.getLayoutParams().height = videoviewheight;
+                    layout_halfscrnimg.setVisibility(View.VISIBLE);
+                    layout_halfscrnimg.requestLayout();
+
+                    detailviewheight = (rootviewheight -videoviewheight);
+                    layout_videodetails.getLayoutParams().height = detailviewheight;
+                    layout_videodetails.setVisibility(View.VISIBLE);
+                    layout_videodetails.requestLayout();
+                    loadviewdata();
+                }
+            });
+
             gethelper().setwindowfitxy(true);
             //layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
             loadviewdata();
@@ -436,9 +459,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         gethelper().setrecordingrunning(false);
         gethelper().drawerenabledisable(false);
 
-        videotextureview = (TextureView) findViewById(R.id.videotextureview);
-        showcontrollers=rootview.findViewById(R.id.video_container);
-        scurraberverticalbar=rootview.findViewById(R.id.scrubberverticalbar);
         mFormatBuilder = new StringBuilder();
         mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
         videotextureview.setSurfaceTextureListener(this);
@@ -995,7 +1015,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             setfooterlayout(true);
 
                            layout_videodetails.getLayoutParams().height = 0;
-                           gethelper().drawerenabledisable(false);
+                            gethelper().drawerenabledisable(false);
                             gethelper().updateactionbar(0);
                             setheadermargine(0,0);
                             layout_videodetails.setVisibility(View.GONE);
@@ -2184,7 +2204,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));
 
-                if(arraycontainerformetric != null && layout_mediatype.getVisibility() == View.VISIBLE)
+                if(arraycontainerformetric != null)
                 {
                     String color = "white";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
@@ -2297,8 +2317,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         int surfaceView_Width = videotextureview.getWidth();
         int surfaceView_Height = videotextureview.getHeight();
 
-      /*  if(surfaceView_Height == 0)
-             surfaceView_Height = rl_videotextureview.getHeight();*/
 
         ViewGroup.LayoutParams layoutParams = videotextureview.getLayoutParams();
         layoutParams.width = surfaceView_Width;

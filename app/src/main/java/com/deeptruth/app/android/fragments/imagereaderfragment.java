@@ -41,6 +41,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
@@ -1443,6 +1444,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         super.showhideviewondrawer(isshow);
 
         if(isshow){
+            layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
             gethelper().updateactionbar(0);
             common.slidetoabove(layout_mediatype);
             layout_footer.setVisibility(View.GONE);

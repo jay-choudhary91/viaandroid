@@ -481,7 +481,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                     double heading=Double.parseDouble(strdegree);
                     int headingg=(int)heading;
-                    common.setdrawabledata(getResources().getString(R.string.heading),"\n"+headingg, tvheading);
+                    common.setdrawabledata(getResources().getString(R.string.heading),"\n"+headingg + "°" , tvheading);
                 }
                 else
                 {
@@ -860,7 +860,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     @Override
                     public void run() {
                         int heading = Math.round(event.values[0]);
-                        common.setdrawabledata(getResources().getString(R.string.heading),"\n"+heading, tvheading);
+                        if(!common.getxdatavalue(xdata.getinstance().getSetting(config.heading)).equalsIgnoreCase("NA")){
+                            common.setdrawabledata(getResources().getString(R.string.heading),"\n"+heading + "°", tvheading);
+
+                        }
                         common.setdrawabledata("","\n"+heading +"° " +common.getcompassdirection(heading) , txtdegree);
 
                     }

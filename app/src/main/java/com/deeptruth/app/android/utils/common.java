@@ -40,6 +40,7 @@ import android.hardware.usb.UsbManager;
 import android.location.Location;
 import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
+import android.media.ExifInterface;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMetadataRetriever;
@@ -2052,5 +2053,58 @@ public class common {
     {
         int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
         return id > 0 && resources.getBoolean(id);
+    }
+
+    public static String get24hourformat(){
+        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
+        Log.e("dataformat",""+ is24HourFormat); // format() Returns a string according to the user's preferences (12-hr vs 24-hr) and locale
+        Calendar currenttime ;
+        currenttime = Calendar.getInstance();
+        String devicedate ;
+        if(is24HourFormat ==true){
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm:ss aa");
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        }else{
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss aa");
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        }
+        return devicedate;
+    }
+
+    public static int getmediaorientation(Context context, String mediapath){
+        int rotate = 0;
+        try {
+            File mediafile = new File(mediapath);
+            Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
+                    BuildConfig.APPLICATION_ID + ".provider", mediafile);
+
+            context.getContentResolver().notifyChange(uri, null);
+            ExifInterface exifInterface = new ExifInterface(mediafile.getAbsolutePath());
+            int orientation = Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION));
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
+
+            /*String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+            Cursor cur = context.getContentResolver().query(uri, orientationColumn, null, null, null);
+            int orientation = -1;
+            if (cur != null && cur.getCount() > 0 && cur.moveToFirst()) {
+                orientation = cur.getInt(cur.getColumnIndex(orientationColumn[0]));
+            }*/
+
+            Log.i("RotateImage", "Exif orientation: " + orientation);
+            Log.i("RotateImage", "Rotate value: " + rotate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rotate;
     }
 }
