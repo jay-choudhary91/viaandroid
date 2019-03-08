@@ -969,7 +969,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                                 case "green":
                                                     layout_validating.setVisibility(View.VISIBLE);
                                                     txt_section_validating_secondary.setText(config.verified);
-                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#600EAE3E"));
+                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
                                                     break;
                                                 case "white":
                                                     layout_validating.setVisibility(View.GONE);
@@ -977,12 +977,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                                 case "red":
                                                     layout_validating.setVisibility(View.VISIBLE);
                                                     txt_section_validating_secondary.setText(config.caution);
-                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FF3B30"));
+                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
                                                     break;
                                                 case "yellow":
                                                     layout_validating.setVisibility(View.VISIBLE);
                                                     txt_section_validating_secondary.setText(config.caution);
-                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#60FDD012"));
+                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
                                                     break;
                                             }
                                         }
