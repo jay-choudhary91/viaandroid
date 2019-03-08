@@ -372,6 +372,25 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }
          else if(fragment instanceof audioreaderfragment){
              common.resetgraphicaldata();
+             try
+             {
+                 View view=((audioreaderfragment) getcurrentfragment()).layout_audiodetails;
+                 if(view != null)
+                 {
+                     if(view.getVisibility() == View.VISIBLE)
+                     {
+                         Log.e("viewgone","gone");
+                     }
+                     else
+                     {
+                         imglefthandle.setVisibility(View.VISIBLE);
+                         Log.e("visiblity","visiblity");
+                     }
+                 }
+             }catch (Exception e)
+             {
+                 e.printStackTrace();
+             }
              updateactionbar(1);
              getstatusbarheight();
          } else if(fragment instanceof imagereaderfragment){

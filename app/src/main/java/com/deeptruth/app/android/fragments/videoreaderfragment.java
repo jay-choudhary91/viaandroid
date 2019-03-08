@@ -1154,7 +1154,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
 
                 case R.id.btn_playpause:
-                    if(player.isPlaying()){
+                    if(player != null && player.isPlaying()){
                         pause();
                     }else{
                         if(layout_videodetails.getVisibility()==View.GONE){
@@ -1932,7 +1932,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
             common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
-            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue(), tvheading);
+            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue()+"° ", tvheading);
             if(!metricItemArraylist.getMetricTrackValue().equalsIgnoreCase("NA")){
                 common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
             }else{
@@ -2177,7 +2177,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
     }
     public void pause() {
-        if(player != null){
+        if(player != null && player.isPlaying()){
             playpausebutton.setImageResource(R.drawable.play_btn);
             player.pause();
         }
@@ -2443,7 +2443,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
     public void fullscreen_showcontrollers() {
         //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
-        gethelper().drawerenabledisable(true);
         videotextureview.setClickable(true);
         common.slidetodown(layout_mediatype);
         layout_mediatype.setVisibility(View.VISIBLE);

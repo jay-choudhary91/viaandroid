@@ -191,6 +191,14 @@ public class common {
         drawable.setColor(solidcolor);
     }
 
+    public static int getScreenWidth(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
+    }
+
     public static int[] getScreenWidthHeight(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
@@ -2106,5 +2114,22 @@ public class common {
             e.printStackTrace();
         }
         return rotate;
+    }
+
+    public static int sortmediatype(int type)
+    {
+        if(type == 0)
+        {
+            return 2;
+        }
+        else if(type == 1)
+        {
+            return 3;
+        }
+        else if(type == 2)
+        {
+            return 4;
+        }
+        return 2;
     }
 }
