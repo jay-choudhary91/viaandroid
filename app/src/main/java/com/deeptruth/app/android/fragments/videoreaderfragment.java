@@ -893,16 +893,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
 
-               if(setvisiblety == 0){
                    params.addRule(RelativeLayout.CENTER_HORIZONTAL,TRUE);
                    params.setMargins(0,topheight,0,0);
                    playpausebutton.setLayoutParams(params);
 
-                       playpausebutton.setVisibility(View.VISIBLE);
-               }else{
-                   params.addRule(RelativeLayout.CENTER_IN_PARENT,TRUE);
-                   playpausebutton.setLayoutParams(params);
-               }
+                   if(setvisiblety == 0)
+                        playpausebutton.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -2305,9 +2301,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         videotextureview.setLayoutParams(layoutParams);
 
-        int previewheight = videoSurfaceContainer.getHeight()/2;
         int centerheight = surfaceView_Height/2;
-        int diffrenceheight = (previewheight - centerheight);
         int buttonheight = playpausebutton.getHeight();
 
         int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;
@@ -2326,8 +2320,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layoutParams.height = surfaceView_Height;
 
         videotextureview.setLayoutParams(layoutParams);
+        int buttonheight = playpausebutton.getHeight();
 
-        recenterplaypause(0,1);
+        int centerheight = (surfaceView_Height + navigationbarheight)/2;
+        int finalmargin = centerheight -  buttonheight/2;
+
+        recenterplaypause(finalmargin,1);
     }
 
     private void updatetextureviewsize(int viewWidth, int viewHeight) {
