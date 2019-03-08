@@ -1150,9 +1150,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
 
         } else if (key.equalsIgnoreCase("devicetime")) {
-            Calendar c = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");
-            String time = sdf.format(c.getTime());
+            /*Calendar c = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss aa");*/
+            String time = common.get24hourformat();
             metricItemValue = time;
         } else if (key.equalsIgnoreCase("gpsonoff")) {
             //  LocationManager manager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE );

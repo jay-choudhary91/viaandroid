@@ -20,6 +20,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -2034,6 +2035,48 @@ public class common {
                 "1A","17","14","12","0F","0D","0A","08","05","03","00"};
         Log.e("array size"," "+values.length);
         return values;
+    }
+
+
+    public static int getnavigationbarheight(){
+        Resources resources = applicationviavideocomposer.getactivity().getResources();
+
+        boolean value  = hasNavBar(resources);
+
+        Log.e("anvegationbar done",""+value);
+
+
+        if (value){
+            int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+            return resources.getDimensionPixelSize(resourceId);
+
+        }else{
+            return 0;
+        }
+
+
+    }
+
+    public static boolean hasNavBar (Resources resources)
+    {
+        int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+        return id > 0 && resources.getBoolean(id);
+    }
+
+    public static String get24hourformat(){
+        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
+        Log.e("dataformat",""+ is24HourFormat); // format() Returns a string according to the user's preferences (12-hr vs 24-hr) and locale
+        Calendar currenttime ;
+        currenttime = Calendar.getInstance();
+        String devicedate ;
+        if(is24HourFormat ==true){
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("HH:mm:ss aa");
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        }else{
+            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss aa");
+            devicedate = devicetimeformat.format(currenttime.getTime());
+        }
+        return devicedate;
     }
 
     public static int getmediaorientation(Context context, String mediapath){

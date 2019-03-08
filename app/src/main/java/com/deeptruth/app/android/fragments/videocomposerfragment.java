@@ -93,6 +93,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1888,18 +1889,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         muploadframelist.clear();
 
         try {
-
+            String devicetime = common.get24hourformat();
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
-            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss aa");
             String starttime = sdf.format(sequencestarttime.getTime());
             String endtime = sdf.format(sequenceendtime.getTime());
-            String devicedate = devicetimeformat.format(sequenceendtime.getTime());
+
             if(metricesjsonarray != null && metricesjsonarray.length() > 0)
             {
                 JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
                 arrayobject.put("sequencestarttime",starttime);
                 arrayobject.put("sequenceendtime",endtime);
-                arrayobject.put("devicetime",devicedate);
+                arrayobject.put("devicetime",devicetime);
             }
 
             metrichash = md5.calculatestringtomd5(metricesjsonarray.get(0).toString());

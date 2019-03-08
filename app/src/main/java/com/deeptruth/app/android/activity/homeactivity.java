@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
@@ -93,7 +94,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
                 setdraweropen(false);
                 getcurrentfragment().showhideviewondrawer(false);
-
+                graphicaldrawerfragment.scrollview_meta.fullScroll(ScrollView.FOCUS_UP);
               if(getcurrentfragment() instanceof fragmentmedialist){
                   imglefthandle.setVisibility(View.GONE);
               }else{
@@ -103,6 +104,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             }
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+
+                //graphicaldrawerfragment.scrollview_meta.pageScroll(ScrollView.FOCUS_UP);
                 imglefthandle.setVisibility(View.GONE);
                 imgrighthandle.setVisibility(View.VISIBLE);
                 setdraweropen(true);
@@ -329,6 +332,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             try
             {
                 View view=((videoreaderfragment) getcurrentfragment()).layout_videodetails;
+
                 if(view != null)
                 {
                     if(view.getVisibility() == View.VISIBLE)
@@ -338,7 +342,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                     else
                     {
                         imglefthandle.setVisibility(View.VISIBLE);
-                     Log.e("visiblity","visiblity");
+
+                        Log.e("visiblity","visiblity");
                     }
                 }
             }catch (Exception e)
@@ -351,14 +356,19 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          }
          else if(fragment instanceof fragmentmedialist){
              updateactionbar(1);
+             setwindowfitxy(true);
+
          }
          else if(fragment instanceof imagecomposerfragment){
              drawerenabledisable(true);
              updateactionbar(0);
+             setwindowfitxy(false);
          }
          else if(fragment instanceof audiocomposerfragment){
              drawerenabledisable(true);
              updateactionbar(0);
+             setwindowfitxy(false);
+
          }
          else if(fragment instanceof audioreaderfragment){
              common.resetgraphicaldata();
@@ -396,17 +406,16 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          else if(fragment instanceof composeoptionspagerfragment)
          {
              common.resetgraphicaldata();
+             setwindowfitxy(false);
          }
          else if(fragment instanceof myfolderfragment)
          {
-
          }
         else
         {
             finish();
         }
     }
-
 
     @Override
     public void onClick(View view) {
@@ -482,7 +491,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     }
 
-
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         switch (event.getAction()){
@@ -507,6 +515,20 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         int statusBarHeight = rectangle.top;
         if (statusBarHeight != 0) {
             xdata.getinstance().saveSetting("statusbarheight", "" + statusBarHeight);
+        }
+    }
+
+    @Override
+    public void setwindowfitxy(boolean isfullscreen) {
+        if(isfullscreen){
+            getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            );
+            // transparent
+        }else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         }
     }
 }

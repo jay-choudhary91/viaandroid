@@ -961,16 +961,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
-            SimpleDateFormat devicetimeformat = new SimpleDateFormat("hh:mm:ss aa");
             String starttime = sdf.format(sequencestarttime.getTime());
             String endtime = sdf.format(sequenceendtime.getTime());
-            String devicedate = devicetimeformat.format(sequenceendtime.getTime());
+            String devicedate = common.get24hourformat();
             if(metricesjsonarray != null && metricesjsonarray.length() > 0)
             {
                 JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
                 arrayobject.put("sequencestarttime",starttime);
                 arrayobject.put("sequenceendtime",endtime);
                 arrayobject.put("devicetime",devicedate);
+                Log.e("devicedate",devicedate);
             }
 
             metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());

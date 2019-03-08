@@ -10,12 +10,12 @@
     android:fillViewport="true"
     android:background="@android:color/white">
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:content="@+id/content"
         android:fitsSystemWindows="true"
-        android:handle="@+id/handle"
+        android:handle="@+id/rl_video_container"
         android:layout_centerVertical="true">
 
             <RelativeLayout
@@ -26,15 +26,18 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:visibility="gone"
                         android:id="@+id/layout_halfscrnimg">
 
                         <FrameLayout
                             android:id="@+id/videoSurfaceContainer"
+                            android:background="@color/black"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" >
 
                             <RelativeLayout
+                                android:id="@+id/rl_videotextureview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
@@ -42,10 +45,9 @@
 
                             <TextureView
                                 android:id="@+id/videotextureview"
-                                android:layout_centerVertical="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:scaleType="centerCrop"/>
+                                />
 
                             </RelativeLayout>
                         </FrameLayout>
@@ -282,9 +284,9 @@
                         android:layout_width="match_parent"
                         android:layout_below="@+id/layout_halfscrnimg"
                         android:paddingBottom="50dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:id="@+id/layout_videodetails"
-                        android:layout_height="wrap_content">
+                        android:layout_height="0dp">
                         <include layout="@layout/layout_mediadetails"></include>
                     </RelativeLayout>
 
@@ -294,6 +296,8 @@
                     android:visibility="gone"
                     android:layout_alignParentTop="true"
                     android:layout_height="wrap_content"
+                    android:paddingTop="18dp"
+                    android:background="@color/dark_blue_solid_a"
                     android:orientation="horizontal">
 
                     <include layout="@layout/action_bar_mediadetails"></include>
@@ -345,5 +349,5 @@
 
             </RelativeLayout>
 
-    </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </android.support.v4.widget.NestedScrollView>
