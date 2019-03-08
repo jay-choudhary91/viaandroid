@@ -1491,12 +1491,6 @@ public class common {
     public static String convertlatitude(double latitude) {
         StringBuilder builder = new StringBuilder();
 
-        if (latitude < 0) {
-            builder.append("S ");
-        } else {
-            builder.append("N ");
-        }
-
         String latitudeDegrees = Location.convert(Math.abs(latitude), Location.FORMAT_SECONDS);
         String[] latitudeSplit = latitudeDegrees.split(":");
         builder.append(latitudeSplit[0]);
@@ -1507,6 +1501,11 @@ public class common {
         builder.append("\"");
 
         builder.append(" ");
+        if (latitude < 0) {
+            builder.append(" S");
+        } else {
+            builder.append(" N");
+        }
         return builder.toString();
     }
 
@@ -1514,11 +1513,7 @@ public class common {
 
     public static String convertlongitude(double longitude){
         StringBuilder builder = new StringBuilder();
-        if (longitude < 0) {
-            builder.append("W ");
-        } else {
-            builder.append("E ");
-        }
+
 
         String longitudeDegrees = Location.convert(Math.abs(longitude), Location.FORMAT_SECONDS);
         String[] longitudeSplit = longitudeDegrees.split(":");
@@ -1528,6 +1523,11 @@ public class common {
         builder.append("'");
         builder.append(longitudeSplit[2]);
         builder.append("\"");
+        if (longitude < 0) {
+            builder.append(" W");
+        } else {
+            builder.append(" E");
+        }
         Log.e("locationcordinate",builder.toString());
         return builder.toString();
     }

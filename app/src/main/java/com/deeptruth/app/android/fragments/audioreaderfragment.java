@@ -1834,10 +1834,10 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
             latitude = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.latitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlatitude);
+            common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
             longitude = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.longitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvlongitude);
+            common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
             common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){

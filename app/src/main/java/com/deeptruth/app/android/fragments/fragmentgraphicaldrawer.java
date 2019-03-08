@@ -387,7 +387,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
         {
-            common.setdrawabledata(getResources().getString(R.string.latitude),"\n"+latitudedegree, tvlatitude);
+            String latitude = common.convertlatitude(Double.parseDouble(latitudedegree));
+            common.setdrawabledata(getResources().getString(R.string.latitude),"\n"+latitude, tvlatitude);
         }
         else
         {
@@ -396,7 +397,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
         if(! longitudedegree.isEmpty() && (! longitudedegree.equalsIgnoreCase("NA")))
         {
-            common.setdrawabledata(getResources().getString(R.string.longitude),"\n"+longitudedegree, tvlongitude);
+            String longitude = common.convertlongitude(Double.parseDouble(longitudedegree));
+            common.setdrawabledata(getResources().getString(R.string.longitude),"\n"+longitude, tvlongitude);
         }
         else
         {
