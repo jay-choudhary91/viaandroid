@@ -515,7 +515,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                             txt_timer.setVisibility(View.GONE);
                             enableDisableView(parentview,true);
 
-                            if(fragimgcapture != null)
+                            if(fragimgcapture != null && (! fragimgcapture.isimagecaptureprocessing))
                                 fragimgcapture.takePicture();
                         }
                     }

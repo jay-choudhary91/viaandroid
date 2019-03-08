@@ -786,9 +786,19 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
         if(mediatypeitemarray != null && mediatypeitemarray.size() > 5)
         {
-            mediatypeitemarray.set(2,new mediatype(config.item_video," ("+videocount+")"));
-            mediatypeitemarray.set(3,new mediatype(config.item_photo," ("+imagecount+")"));
-            mediatypeitemarray.set(4,new mediatype(config.item_audio," ("+audiocount+")"));
+            mediatypeitemarray.set(2,new mediatype(config.item_video,""));
+            mediatypeitemarray.set(3,new mediatype(config.item_photo,""));
+            mediatypeitemarray.set(4,new mediatype(config.item_audio,""));
+
+            if(videocount > 0)
+                mediatypeitemarray.set(2,new mediatype(config.item_video," ("+videocount+")"));
+
+            if(imagecount > 0)
+                mediatypeitemarray.set(3,new mediatype(config.item_photo," ("+imagecount+")"));
+
+            if(audiocount > 0)
+                mediatypeitemarray.set(4,new mediatype(config.item_audio," ("+audiocount+")"));
+
             adaptermediatype.notifyDataSetChanged();
         }
 

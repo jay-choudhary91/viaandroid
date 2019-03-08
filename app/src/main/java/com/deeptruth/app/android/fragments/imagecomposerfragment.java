@@ -332,6 +332,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * Whether the current camera device supports Flash or not.
      */
     private boolean mFlashSupported,brustmodeenabled=false;
+    public boolean isimagecaptureprocessing=false;
 
     /**
      * Orientation of the camera sensor
@@ -1192,6 +1193,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         capturestillpicture();
 
         brustmodeenabled=false;
+        isimagecaptureprocessing=true;
         img_stop_watch.setImageResource(R.drawable.stopwatch);
     }
 
@@ -1284,6 +1286,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+                    isimagecaptureprocessing=false;
                 }
             };
 
