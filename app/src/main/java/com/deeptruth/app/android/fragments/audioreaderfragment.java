@@ -491,7 +491,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void run() {
 
-                RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbar.getHeight());
+                RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, mediaseekbar.getHeight());
                 parms.setMargins(20,0,20,0);
                 linearseekbarcolorview.setLayoutParams(parms);
 
@@ -2089,6 +2089,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
             Log.e("setcolorcount =", ""+ i);
+
+
+            int layoutheight =linearseekbarcolorview.getHeight();
+
+            if(layoutheight == 0)
+                setcolorseekbar();
+
             linearseekbarcolorview.addView(view);
         }
         xdata.getinstance().saveSetting(config.latency,latency);
@@ -2233,5 +2240,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
             }
         });
+    }
+
+    public void setcolorseekbar(){
+
+        int mediaseekbarheight = mediaseekbar.getHeight();
+
+        RelativeLayout.LayoutParams parms = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,mediaseekbarheight);
+        parms.setMargins(20,0,20,0);
+        linearseekbarcolorview.setLayoutParams(parms);
+
+        Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
     }
 }
