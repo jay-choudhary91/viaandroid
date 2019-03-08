@@ -51,10 +51,12 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.mediatype;
 import com.deeptruth.app.android.models.video;
+import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.recyclerviewsmoothscroller;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
@@ -156,7 +158,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private FFmpeg ffmpeg;
 
     Handler handler = new Handler();
-    int numberOfTaps = 0;
+    int numberOfTaps = 0, devicewidth = 0;
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
     // Called just after any media uploaded
@@ -376,7 +378,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
 
-            final int parentwidth=common.getScreenWidth(applicationviavideocomposer.getactivity());
+            devicewidth=common.getScreenWidth(applicationviavideocomposer.getactivity());
 
             mediatypeitemarray.clear();
             mediatypeitemarray.add(new mediatype("",""));
@@ -387,8 +389,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             mediatypeitemarray.add(new mediatype("",""));
             mediatypeitemarray.add(new mediatype("",""));
 
-            recycler_mediatype.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-            adaptermediatype =new adaptermediatype(getActivity(), mediatypeitemarray, parentwidth,
+            recycler_mediatype.setLayoutManager(new recyclerviewsmoothscroller(getActivity(),LinearLayoutManager.HORIZONTAL,
+                    false));
+            //recycler_mediatype.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+            adaptermediatype =new adaptermediatype(getActivity(), mediatypeitemarray, devicewidth,
                     new adapteritemclick() {
                         @Override
                         public void onItemClicked(Object object) {
@@ -397,7 +401,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                         @Override
                         public void onItemClicked(Object object, int position) {
-                            if(position == 2)
+                            /*if(position == 2)
                             {
                                 position=0;
                             }
@@ -408,7 +412,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             else if(position == 4)
                             {
                                 position=2;
-                            }
+                            }*/
                             showselecteditemincenter(position);
                         }
                     });
@@ -423,19 +427,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             int center = recycler_mediatype.getWidth()/2;
                             View centerView = recycler_mediatype.findChildViewUnder(center, recycler_mediatype.getTop());
                             int centerPos = recycler_mediatype.getChildAdapterPosition(centerView);
-                            if(centerPos == 2)
-                            {
-                                centerPos=0;
-                            }
-                            else if(centerPos == 3)
-                            {
-                                centerPos=1;
-                            }
-                            else if(centerPos == 4)
-                            {
-                                centerPos=2;
-                            }
-
                             showselecteditemincenter(centerPos);
                             //int passeditem=centerPos-1;
                             //recyclerView.scrollBy(eachitemwidth, 0);
@@ -465,9 +456,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             int first=layoutManager.findFirstVisibleItemPosition();
                             int totalVisibleItems = last - first;
                             int centeredItemPosition = totalVisibleItems / 2;*/
-                    //  Log.e("center item ",""+centerPos);
-                    //recycler_mediatype.smoothScrollToPosition(centeredItemPosition);
-                    //recycler_mediatype.setScrollY(centeredItemPosition);
+                            //  Log.e("center item ",""+centerPos);
+                            //recycler_mediatype.smoothScrollToPosition(centeredItemPosition);
+                            //recycler_mediatype.setScrollY(centeredItemPosition);
                 }
             });
 
@@ -510,12 +501,32 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void showselecteditemincenter(int selectedpos)
     {
-        if(selectedpos != selectedmediatype)
+        double width=devicewidth;
+        width=width/4.5;
+        if(selectedpos == 2)
         {
-            LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
-            layoutManager.scrollToPositionWithOffset(selectedpos,0);
-            showselectedmediatypeitems(selectedpos);
+            selectedpos=0;
+            width=width/5;
         }
+        else if(selectedpos == 3)
+        {
+            selectedpos=1;
+            width=width/4;
+        }
+        else if(selectedpos == 4)
+        {
+            selectedpos=2;
+            width=width/3;
+        }
+        else
+        {
+            width=0;
+        }
+        int offset=(int)width;
+        LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
+        layoutManager.scrollToPositionWithOffset(selectedpos,-offset);
+        if(selectedpos != selectedmediatype)
+            showselectedmediatypeitems(selectedpos);
     }
 
     private void filter(String text) {
@@ -1077,28 +1088,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 });
                 recyclerviewgrid.setAdapter(adaptermediagrid);
-                if(selectedmediatype != config.selectedmediatype)
-                {
-                    selectedmediatype=config.selectedmediatype;
-                    String mediatype="";
-                    switch (selectedmediatype)
-                    {
-                        case 0:
-                            mediatype=config.item_video;
-                        break;
-
-                        case 1:
-                            mediatype=config.item_photo;
-                        break;
-
-                        case 2:
-                            mediatype=config.item_audio;
-                        break;
-                    }
-                    LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
-                    layoutManager.scrollToPositionWithOffset(selectedmediatype,0);
-                }
-                showselectedmediatypeitems(selectedmediatype);
+                showselecteditemincenter(common.sortmediatype(config.selectedmediatype));
             }
         });
     }
@@ -1110,7 +1100,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             @Override
             public void run() {
 
-                dataupdator++;
+               dataupdator++;
                if(dataupdator >= 5)
                {
                    if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)

@@ -2115,4 +2115,21 @@ public class common {
         }
         return rotate;
     }
+
+    public static int sortmediatype(int type)
+    {
+        if(type == 0)
+        {
+            return 2;
+        }
+        else if(type == 1)
+        {
+            return 3;
+        }
+        else if(type == 2)
+        {
+            return 4;
+        }
+        return 2;
+    }
 }

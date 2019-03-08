@@ -63,16 +63,19 @@ public class adaptermediatype extends RecyclerView.Adapter<adaptermediatype.myVi
     public void onBindViewHolder(final myViewHolder holder, final int position) {
 
         LinearLayout.LayoutParams param=null;
-        /*if(position == 0 || position == 4)
+        float width=parentwidth;
+        if(position == 2 || position == 3 || position == 4)
         {
-            param=new LinearLayout.LayoutParams(270, LinearLayout.LayoutParams.WRAP_CONTENT);
+            double newwidth=width/4.5;
+            param=new LinearLayout.LayoutParams((int)newwidth, LinearLayout.LayoutParams.WRAP_CONTENT);
         }
         else
         {
-            param=new LinearLayout.LayoutParams(150, LinearLayout.LayoutParams.WRAP_CONTENT);
-        }*/
+            double newwidth=width/5;
+            param=new LinearLayout.LayoutParams((int)newwidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
 
-        param=new LinearLayout.LayoutParams(parentwidth/5, LinearLayout.LayoutParams.WRAP_CONTENT);
+       // param=new LinearLayout.LayoutParams(parentwidth/5, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         holder.txt_mediatype.setLayoutParams(param);
         holder.txt_mediatype.setText(mitemlist.get(position).getMedianame()+" "+mitemlist.get(position).getMediacount());
@@ -80,8 +83,11 @@ public class adaptermediatype extends RecyclerView.Adapter<adaptermediatype.myVi
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mitemclick != null)
-                    mitemclick.onItemClicked(null,position);
+                if(position == 2 || position == 3 || position == 4)
+                {
+                    if(mitemclick != null)
+                        mitemclick.onItemClicked(null,position);
+                }
             }
         });
     }
