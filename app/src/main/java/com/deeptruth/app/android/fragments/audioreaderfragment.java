@@ -393,10 +393,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 //rootviewheight = rootviewheight - layout_mediatype.getHeight();
                 audioviewheight = ((rootviewheight * 60 )/100);
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
+                rlcontrollerview.setVisibility(View.VISIBLE);
                 rlcontrollerview.requestLayout();
+
                 addbottommargin(mediatypeheight);
                 audiodetailviewheight = (rootviewheight - (audioviewheight+navigationbarheight));
                 layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
+                layout_audiodetails.setVisibility(View.VISIBLE);
                 layout_audiodetails.requestLayout();
 
                 setfooterlayout(false);
@@ -2196,6 +2199,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 layout_seekbartiming.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.VISIBLE);
                 img_pause.setVisibility(View.VISIBLE);
+                setseekbarlayoutcolor();
                 //      layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
             }
             else
