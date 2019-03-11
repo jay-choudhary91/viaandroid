@@ -320,6 +320,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
         }
          if (fragment instanceof videocomposerfragment) {
+
+             setwindowfitxy(false);
              updateactionbar(0);
              drawerenabledisable(true);
 
