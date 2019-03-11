@@ -236,6 +236,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         super.onResume();
       //  setheadermargine();
         gethelper().drawerenabledisable(false);
+        gethelper().setwindowfitxy(true);
+        gethelper().updateactionbar(1);
         isinbackground=false;
     }
 
