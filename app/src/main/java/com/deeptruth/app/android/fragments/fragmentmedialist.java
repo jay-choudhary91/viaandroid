@@ -270,7 +270,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if(adaptermedialist != null)
                     adaptermedialist.notifyDataSetChanged();
 
-                showselectedmediatypeitems(selectedmediatype);
+                showselectedmediatypeitems(selectedmediatype,true);
                 fetchmedialistfromdirectory();
             }
         }
@@ -545,7 +545,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
         layoutManager.scrollToPositionWithOffset(selectedpos,-offset);
         if(selectedpos != selectedmediatype && showselectedlist)
-            showselectedmediatypeitems(selectedpos);
+            showselectedmediatypeitems(selectedpos,false);
     }
 
     private void filter(String text) {
@@ -745,7 +745,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     }
 
-    public void showselectedmediatypeitems(int mediatype)
+    public void showselectedmediatypeitems(int mediatype,boolean scrolllisttotop)
     {
         selectedmediatype=mediatype;
         config.selectedmediatype=selectedmediatype;
@@ -807,7 +807,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             adaptermedialist.notifyitems(arraymediaitemlist);
             adaptermediagrid.notifyDataSetChanged();
             recyclerviewlist.smoothScrollToPosition(0);
-            recyclerviewgrid.smoothScrollToPosition(0);
+
+            if(scrolllisttotop)
+                recyclerviewgrid.smoothScrollToPosition(0);
         }
 
         updatecounter(txt_mediatype_a);
@@ -1118,7 +1120,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 });
                 recyclerviewgrid.setAdapter(adaptermediagrid);
 
-                showselectedmediatypeitems(config.selectedmediatype);
+                showselectedmediatypeitems(config.selectedmediatype,true);
                 //showselecteditemincenter(common.sortmediatype(config.selectedmediatype),false);
 
                 new Handler().postDelayed(new Runnable() {
@@ -1350,7 +1352,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showselectedmediatypeitems(selectedmediatype);
+                    showselectedmediatypeitems(selectedmediatype,false);
                     if(! videoobj.getVideostarttransactionid().isEmpty())
                         updatemedialocation(videoobj.getVideostarttransactionid(),videoobj.getPath());
                 }
@@ -1480,7 +1482,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 System.out.println("file not Deleted :" + videoobj.getPath());
                             }
                         }
-                        showselectedmediatypeitems(selectedmediatype);
+                        showselectedmediatypeitems(selectedmediatype,false);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

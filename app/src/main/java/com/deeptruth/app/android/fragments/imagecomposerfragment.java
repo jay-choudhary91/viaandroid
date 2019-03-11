@@ -107,8 +107,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     @BindView(R.id.layout_seekbarzoom)
     RelativeLayout layout_seekbarzoom;
-    @BindView(R.id.seekbarzoom)
-    IndicatorSeekBar seekbarzoom;
     @BindView(R.id.spinner_mediaquality)
     Spinner spinner_mediaquality;
     @BindView(R.id.expandable_layout)
@@ -130,7 +128,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     List<String> qualityitemslist=new ArrayList<>();
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
+    private int REQUEST_CAMERA_PERMISSION = 1,rotationangle=90;
     private static final String FRAGMENT_DIALOG = "dialog";
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -566,29 +564,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         txt_title_actionbarcomposer.setText("");
 
-        seekbarzoom.setOnSeekChangeListener(new OnSeekChangeListener() {
-            @Override
-            public void onSeeking(SeekParams seekParams) {
-                zoomcontrollertimeout=new Date();
-                if(seekParams.fromUser)
-                {
-                    zoomLevel=seekParams.progressFloat;
-                    setupcamerazoom();
-                    fadeinzoomcontrollers();
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(IndicatorSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
-
-            }
-        });
-
         expandable_layout.setVisibility(View.VISIBLE);
         txt_media_quality.setVisibility(View.VISIBLE);
 
@@ -664,25 +639,26 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     }
 
-    public void changeiconsorientation(float rotateangle)
+    public void changeiconsorientation(float angle)
     {
+        rotationangle=(int)angle;
         if(imgflashon != null)
-            imgflashon.setRotation(rotateangle);
+            imgflashon.setRotation(angle);
 
         if(img_dotmenu != null)
-            img_dotmenu.setRotation(rotateangle);
+            img_dotmenu.setRotation(angle);
 
         if(img_warning != null)
-            img_warning.setRotation(rotateangle);
+            img_warning.setRotation(angle);
 
         if(img_close != null)
-            img_close.setRotation(rotateangle);
+            img_close.setRotation(angle);
 
         if(img_stop_watch != null)
-            img_stop_watch.setRotation(rotateangle);
+            img_stop_watch.setRotation(angle);
 
         if(txt_media_quality != null)
-            txt_media_quality.setRotation(rotateangle);
+            txt_media_quality.setRotation(angle);
     }
 
 
@@ -1013,8 +989,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         try {
             characteristics = manager.getCameraCharacteristics(cameraid);
             maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
-            seekbarzoom.setMax(maximumZoomLevel);
-            seekbarzoom.setMin(1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1263,7 +1237,24 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             // Orientation
             int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));
+            Toast.makeText(getActivity(),""+rotationangle,Toast.LENGTH_SHORT).show();
+            if(rotationangle == 90)  // Landscape left side
+            {
+                captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(90));
+            }
+            else if(rotationangle == 0)   // Portrait 90
+            {
+                captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(0));
+            }
+            else if(rotationangle == -90)     // Landscape right side
+            {
+                captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(270));
+            }
+            else if(rotationangle == 180)     // Portrait 270
+            {
+                captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(90));
+            }
+
 
             CameraCaptureSession.CaptureCallback CaptureCallback
                     = new CameraCaptureSession.CaptureCallback() {

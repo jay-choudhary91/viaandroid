@@ -336,6 +336,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
         xdata.getinstance().saveSetting("gpsaccuracy", "" + location.getAccuracy());
         xdata.getinstance().saveSetting("strengthofsatellites", "" + location.getAccuracy());
 
+        // Speed calulcation is followed by this -> https://stackoverflow.com/questions/4811920/why-getspeed-always-return-0-on-android
         if (location.hasSpeed()) {
             xdata.getinstance().saveSetting("speed", "" + location.getSpeed());
         } else {

@@ -114,7 +114,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "videocomposerfragment";
 
-    public int selectedsection=1;
+    public int selectedsection=1,rotationangle=90;
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
     protected float maximumZoomLevel;
@@ -148,6 +148,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
      * A refernce to the opened {@link android.hardware.camera2.CameraDevice}.
      */
     private CameraDevice mCameraDevice;
+
     /**
      * A reference to the current {@link android.hardware.camera2.CameraCaptureSession} for preview.
      */
@@ -283,7 +284,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         @Override
         public void onOpened(CameraDevice cameraDevice) {
             mCameraDevice = cameraDevice;
-            startPreview();
+            startPreview(false);
             mCameraOpenCloseLock.release();
             if (null != mTextureView) {
                 configureTransform(mTextureView.getWidth(), mTextureView.getHeight());
@@ -374,8 +375,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     RotateLayout headercontainer;
     @BindView(R.id.layout_seekbarzoom)
     RelativeLayout layout_seekbarzoom;
-    @BindView(R.id.seekbarzoom)
-    IndicatorSeekBar seekbarzoom;
     @BindView(R.id.img_roundblink)
     ImageView img_roundblink;
     @BindView(R.id.spinner_mediaquality)
@@ -458,28 +457,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             keytype=config.prefs_sha_salt;
         }
 
-        seekbarzoom.setOnSeekChangeListener(new OnSeekChangeListener() {
-            @Override
-            public void onSeeking(SeekParams seekParams) {
-                zoomcontrollertimeout=new Date();
-                if(seekParams.fromUser)
-                {
-                    zoomLevel=seekParams.progressFloat;
-                    setupcamerazoom();
-                    fadeinzoomcontrollers();
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(IndicatorSeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(IndicatorSeekBar seekBar) {
-
-            }
-        });
         img_dotmenu.setVisibility(View.VISIBLE);
         mTextureView.setOnTouchListener(this);
 
@@ -611,21 +588,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void changeiconsorientation(float rotateangle)
     {
-        /*if(imgflashon != null)
-            imgflashon.setRotation(rotateangle);
+        rotationangle=(int)rotateangle;
+        Log.e("rotateangle ",""+rotateangle);
 
-        if(img_dotmenu != null)
-            img_dotmenu.setRotation(rotateangle);
-
-        if(img_warning != null)
-            img_warning.setRotation(rotateangle);
-
-        if(img_close != null)
-            img_close.setRotation(rotateangle);
-
-        if(txt_media_quality != null)
-            txt_media_quality.setRotation(rotateangle);
-*/
+        if(rotateangle == 180)
+            rotateangle=0;
 
             if(headercontainer !=null){
 
@@ -905,8 +872,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             characteristics = manager.getCameraCharacteristics(cameraId);
 
             maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
-            seekbarzoom.setMax(maximumZoomLevel);
-            seekbarzoom.setMin(1);
             StreamConfigurationMap map = characteristics
                     .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             mVideoSize = chooseVideoSize(map.getOutputSizes(MediaRecorder.class));
@@ -964,12 +929,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     /**
      * Start the camera preview.
      */
-    private void startPreview() {
+    private void startPreview(boolean shouldrecorderstart) {
         if (null == mCameraDevice || !mTextureView.isAvailable() || null == mPreviewSize) {
             return;
         }
         try {
-            setUpMediaRecorder();
+            if(shouldrecorderstart)
+                setUpMediaRecorder();
+
             SurfaceTexture texture = mTextureView.getSurfaceTexture();
             assert texture != null;
             texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
@@ -978,9 +945,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             Surface previewSurface = new Surface(texture);
             surfaces.add(previewSurface);
             mpreviewbuilder.addTarget(previewSurface);
-            Surface recorderSurface = mediarecorder.getSurface();
-            surfaces.add(recorderSurface);
-            mpreviewbuilder.addTarget(recorderSurface);
+            if(shouldrecorderstart)
+            {
+                Surface recorderSurface = mediarecorder.getSurface();
+                surfaces.add(recorderSurface);
+                mpreviewbuilder.addTarget(recorderSurface);
+            }
+
             mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(CameraCaptureSession cameraCaptureSession) {
@@ -997,12 +968,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
     /**
-     * Update the camera preview. {@link #startPreview()} needs to be called in advance.
+     * Update the camera preview. {@link #startPreview(boolean)} ()} needs to be called in advance.
      */
     private void updatePreview() {
         if (null == mCameraDevice) {
@@ -1111,8 +1084,41 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
        // int orientation = ORIENTATIONS.get(rotation);
         int orientation =  camerautil.getOrientation(rotation, upsideDown);
+        int sensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+        //Log.e("cameraangle ",""+orientation);
+        //Toast.makeText(getActivity(),""+orientation+" "+sensorOrientation,Toast.LENGTH_SHORT).show();
 
-        mediarecorder.setOrientationHint(orientation);
+        if(rotationangle == 90)  // Landscape left side
+        {
+            mediarecorder.setOrientationHint(0);
+        }
+        else if(rotationangle == 0)   // Portrait 90
+        {
+            if (cameraId.equals(CAMERA_FRONT))
+            {
+                mediarecorder.setOrientationHint(270);
+            }
+            else
+            {
+                mediarecorder.setOrientationHint(90);
+            }
+        }
+        else if(rotationangle == -90)     // Landscape right side
+        {
+            mediarecorder.setOrientationHint(180);
+        }
+        else if(rotationangle == 180)     // Portrait 270
+        {
+            if (cameraId.equals(CAMERA_FRONT))
+            {
+                mediarecorder.setOrientationHint(90);
+            }
+            else
+            {
+                mediarecorder.setOrientationHint(270);
+            }
+        }
+
         mediarecorder.prepare();
     }
     private File getVideoFile(Context context) {
@@ -1144,6 +1150,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mediakey ="";
             issavedtofolder=false;
             isvideorecording = true;
+            startPreview(true);
             if(mediarecorder != null)
             {
                 // Start recording
@@ -1184,7 +1191,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
         mediarecorder.reset();
 
-        startPreview();
+        startPreview(false);
         stopvideotimer();
 
         resetvideotimer();
@@ -1341,12 +1348,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         expandable_layout.setDuration(100);
         qualityoptionanimations(1.0f,0f);
         expandable_layout.collapse();
-        if(mediarecorder != null && (! selectedvideoquality.equalsIgnoreCase(quality)))
+        if(! selectedvideoquality.equalsIgnoreCase(quality))
         {
             txt_media_quality.setText(quality);
             selectedvideoquality=quality;
-            mediarecorder.reset();
-            startPreview();
         }
     }
 

@@ -1031,9 +1031,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(fragaudiocomposer != null)
                 fragaudiocomposer.changeiconsorientation(rotateangle);
 
-            if(rotateangle == 180)
-                rotateangle=0;
-
             if(fragvideocomposer != null)
                 fragvideocomposer.changeiconsorientation(rotateangle);
         }
