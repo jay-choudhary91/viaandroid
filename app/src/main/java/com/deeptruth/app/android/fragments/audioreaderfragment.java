@@ -2197,6 +2197,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 layout_scrubberview.setVisibility(View.VISIBLE);
                 mediaseekbar.setVisibility(View.VISIBLE);
                 layout_seekbartiming.setVisibility(View.VISIBLE);
+                linearseekbarcolorview.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.VISIBLE);
                 img_pause.setVisibility(View.VISIBLE);
                 setseekbarlayoutcolor();
