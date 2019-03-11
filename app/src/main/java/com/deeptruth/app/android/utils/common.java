@@ -1528,7 +1528,6 @@ public class common {
         } else {
             builder.append(" E");
         }
-        Log.e("locationcordinate",builder.toString());
         return builder.toString();
     }
 
@@ -2065,7 +2064,6 @@ public class common {
 
     public static String get24hourformat(){
         boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(applicationviavideocomposer.getactivity().getApplicationContext());
-        Log.e("dataformat",""+ is24HourFormat); // format() Returns a string according to the user's preferences (12-hr vs 24-hr) and locale
         Calendar currenttime ;
         currenttime = Calendar.getInstance();
         String devicedate ;

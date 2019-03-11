@@ -223,6 +223,20 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
         }
     }
 
+    public void notifyitems(ArrayList<video> arrayvideolist)
+    {
+        ArrayList<video> localarray=new ArrayList<>();
+        for(int i=0;i<arrayvideolist.size();i++)
+        {
+            if(arrayvideolist.get(i).isDoenable())
+            {
+                localarray.add(arrayvideolist.get(i));
+            }
+        }
+        this.arrayvideolist=localarray;
+        notifyDataSetChanged();
+    }
+
     public void filterlist(ArrayList<video> arrayvideolist) {
         this.arrayvideolist = arrayvideolist;
         notifyDataSetChanged();
