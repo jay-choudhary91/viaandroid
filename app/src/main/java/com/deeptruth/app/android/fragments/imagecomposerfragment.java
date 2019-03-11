@@ -1237,7 +1237,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             // Orientation
             int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-            Toast.makeText(getActivity(),""+rotationangle,Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(getActivity(),""+rotationangle,Toast.LENGTH_SHORT).show();
             if(rotationangle == 90)  // Landscape left side
             {
                 captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(90));
