@@ -1250,7 +1250,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             {
                 captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(270));
             }
-            else if(rotationangle == 180)     // Portrait 270
+            else if(rotationangle == 180)     // Portrait 180
             {
                 captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(90));
             }

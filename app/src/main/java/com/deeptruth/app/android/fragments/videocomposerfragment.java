@@ -1107,7 +1107,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         {
             mediarecorder.setOrientationHint(180);
         }
-        else if(rotationangle == 180)     // Portrait 270
+        else if(rotationangle == 180)     // Portrait 180
         {
             if (cameraId.equals(CAMERA_FRONT))
             {
