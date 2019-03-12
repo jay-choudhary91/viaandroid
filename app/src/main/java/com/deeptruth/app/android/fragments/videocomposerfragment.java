@@ -114,14 +114,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "videocomposerfragment";
 
-    public int selectedsection=1,rotationangle=90;
+    public int rotationangle=90;
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
     protected float maximumZoomLevel;
     protected Rect zoom;
     boolean firsthashvalue = true;
-    mediacompletiondialogmain mediacompletionpopupmain;
-    mediacompletiondialogsub mediacompletionpopupsub;
     FragmentManager fm ;
     Calendar sequencestarttime,sequenceendtime;
     public static final String CAMERA_FRONT = "1";
@@ -320,9 +318,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     That is, the preview size is the size before it is rotated. */
     // Output video size
     private Runnable doafterallpermissionsgranted;
-    private Date zoomcontrollertimeout=new Date();
-    RecyclerView recyview_hashes;
-    RecyclerView recyview_metrices;
     LinearLayout linearLayout;
     boolean isflashon = false,inPreview = true;
     adapteritemclick popupclickmain;
@@ -332,8 +327,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     ImageView imgflashon,img_dotmenu,img_warning,img_close,handle;
 
-
-    public Dialog maindialogshare,subdialogshare;
     View rootview = null;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
     Handler timerhandler;
@@ -348,7 +341,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     RelativeLayout layout_bottom;
     File lastrecordedvideo=null;
     String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
-    int metriceslastupdatedposition=0;
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
@@ -360,14 +352,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private boolean isdraweropen=false,isgraphicalshown=false;
     private Handler myHandler;
     private Runnable myRunnable;
-    private int lastmetricescount=0;
     private boolean issavedtofolder=false;
     JSONArray metadatametricesjson=new JSONArray();
 
-    private LinearLayoutManager mLayoutManager;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private int flingactionmindstvac;
-    private  final int flingactionmindspdvac = 10;
 
     private Orientation mOrientation;
     private ActionBarDrawerToggle drawertoggle;
@@ -413,6 +400,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         rootview = super.onCreateView(inflater, container, savedInstanceState);
         ButterKnife.bind(this,rootview);
 
+        zoomLevel=1f;
         applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
@@ -429,7 +417,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         if(! xdata.getinstance().getSetting(config.frameupdateevery).trim().isEmpty())
             apicallduration=Long.parseLong(xdata.getinstance().getSetting(config.frameupdateevery));
-        flingactionmindstvac=common.getdrawerswipearea();
 
         imgflashon.setVisibility(View.VISIBLE);
         txt_media_quality.setVisibility(View.VISIBLE);
@@ -527,7 +514,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         });
 
         mOrientation = new Orientation(applicationviavideocomposer.getactivity());
-        layout_seekbarzoom.setVisibility(View.GONE);
         return rootview;
     }
 
@@ -680,8 +666,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 zoomLevel = zoomLevel - delta;
                             }
                             setupcamerazoom();
-                            //seekbarzoom.setProgress(zoomLevel);
-                            fadeinzoomcontrollers();
                         }
                         fingerSpacing = currentFingerSpacing;
                     }
@@ -703,46 +687,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return true;
     }
 
-    public void fadeinzoomcontrollers()
-    {
-        if(layout_seekbarzoom.getVisibility() == View.GONE)
-        {
-            layout_seekbarzoom.setAlpha(layout_seekbarzoom.getAlpha());
-            layout_seekbarzoom.setVisibility(View.VISIBLE);
-            layout_seekbarzoom.animate().alpha(1.0f).setDuration(500).setListener(null);
-        }
-    }
-
-    public void fadeoutzoomcontrollers()
-    {
-        layout_seekbarzoom.setAlpha(layout_seekbarzoom.getAlpha());
-        layout_seekbarzoom.animate().alpha(0f).setDuration(800).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-                layout_seekbarzoom.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
-    }
-
     public void setupcamerazoom()
     {
         DecimalFormat precision=new DecimalFormat("0.0");
-        zoomcontrollertimeout=new Date();
         txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
 
         Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
@@ -1621,11 +1568,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         Log.e("onpause","onpause");
         closemediawithtimer();
         showhideactionbaricon(1);
-        if(layout_seekbarzoom != null)
-            layout_seekbarzoom.setVisibility(View.GONE);
-
         stopblinkanimation();
-
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
 
@@ -1825,13 +1768,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             @Override
             public void run() {
 
-
-                Date currentdate=new Date();
-                int seconddifference= (int) (Math.abs(zoomcontrollertimeout.getTime()-currentdate.getTime())/1000);
-                if(seconddifference > 5 && layout_seekbarzoom.getVisibility() == View.VISIBLE)
-                    fadeoutzoomcontrollers();
-
-                boolean graphicopen=false;
                 if(isvideorecording)
                 {
                     if((! selectedmetrices.toString().trim().isEmpty()))

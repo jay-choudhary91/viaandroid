@@ -56,6 +56,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration;
         EditText edtvideoname;
+        RelativeLayout relative_child;
         public ImageView img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
         LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide;
@@ -80,6 +81,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             layout_share_slide = view.findViewById(R.id.layout_share_slide);
             tv_mediaduration = (TextView) view.findViewById(R.id.tv_mediaduration);
             root_view = (SwipeRevealLayout) view.findViewById(R.id.root_view);
+            relative_child = (RelativeLayout) view.findViewById(R.id.relative_child);
         }
     }
 
@@ -371,7 +373,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             });
 
 
-            holder.img_videothumbnail.setOnClickListener(new View.OnClickListener() {
+            holder.relative_child.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
