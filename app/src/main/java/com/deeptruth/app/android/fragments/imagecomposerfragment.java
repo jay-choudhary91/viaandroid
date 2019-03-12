@@ -1847,9 +1847,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         if(isshow){
             layoutbottom.setVisibility(View.GONE);
             linearheader.setVisibility(View.GONE);
+            layout_seekbarzoom.setVisibility(View.GONE);
         }else{
             layoutbottom.setVisibility(View.VISIBLE);
             linearheader.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.setVisibility(View.VISIBLE);
         }
     }
 }

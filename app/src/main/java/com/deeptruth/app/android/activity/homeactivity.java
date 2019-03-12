@@ -320,8 +320,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
         }
          if (fragment instanceof videocomposerfragment) {
-             drawerenabledisable(true);
+
+             setwindowfitxy(false);
              updateactionbar(0);
+             drawerenabledisable(true);
+
          }
         else if(fragment instanceof framemetricssettings){
 
@@ -355,19 +358,22 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
          }
          else if(fragment instanceof fragmentmedialist){
-             updateactionbar(1);
-             setwindowfitxy(true);
 
-         }
+             //setwindowfitxy(true);
+             //updateactionbar(1);
+
+        }
          else if(fragment instanceof imagecomposerfragment){
              drawerenabledisable(true);
-             updateactionbar(0);
              setwindowfitxy(false);
+             updateactionbar(0);
+            // setwindowfitxy(false);
          }
          else if(fragment instanceof audiocomposerfragment){
              drawerenabledisable(true);
-             updateactionbar(0);
              setwindowfitxy(false);
+             updateactionbar(0);
+            // setwindowfitxy(false);
 
          }
          else if(fragment instanceof audioreaderfragment){

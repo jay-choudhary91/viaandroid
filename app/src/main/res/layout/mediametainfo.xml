@@ -86,12 +86,12 @@
                            android:layout_height="wrap_content"
                            android:layout_gravity="center"
                            android:id="@+id/layoutcompass"
-                           android:src="@drawable/transparent_compass"
+                           android:src="@drawable/img_compass"
                            android:layout_weight="0.4">
                        </ImageView>
 
                        <ImageView
-                           android:id="@+id/img_compass"
+                           android:id="@+id/img_niddle"
                            android:layout_width="wrap_content"
                            android:layout_height="120dp"
                            android:layout_centerVertical="true"

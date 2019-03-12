@@ -1,5 +1,6 @@
 package com.deeptruth.app.android.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -33,7 +34,7 @@ import java.io.IOException;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
-public class splashactivity extends AppCompatActivity {
+public class splashactivity extends Activity {
 
     ImageView img_imagedeep;
     GifDrawable gifDrawable;
