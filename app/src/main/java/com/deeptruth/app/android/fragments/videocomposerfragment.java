@@ -602,7 +602,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        lp.setMargins(0, layout_bottom.getHeight(), 0, layout_bottom.getHeight() + 50);
+                        lp.setMargins(0, 0, 0, (layout_bottom.getHeight()-30));
                         headercontainer.setLayoutParams(lp);
                         headercontainer.setAngle(90);
                     }
@@ -614,7 +614,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        lp.setMargins(0, layout_bottom.getHeight(), 0, layout_bottom.getHeight() + 50);
+                        lp.setMargins(0, 0, 0,  (layout_bottom.getHeight()-30));
                         headercontainer.setLayoutParams(lp);
                         headercontainer.setAngle(270);
                     }
