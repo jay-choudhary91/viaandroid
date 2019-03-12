@@ -2055,9 +2055,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(isshow){
             layout_bottom.setVisibility(View.GONE);
             headercontainer.setVisibility(View.GONE);
+            layout_seekbarzoom.setVisibility(View.GONE);
         }else{
             layout_bottom.setVisibility(View.VISIBLE);
             headercontainer.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.setVisibility(View.VISIBLE);
         }
     }
 }
