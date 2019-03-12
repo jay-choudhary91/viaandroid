@@ -351,7 +351,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     String selectedvideofile ="",selectedmetrices="", selectedhashes ="",mediakey="";
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
-    private Date zoomcontrollertimeout=new Date();
     private boolean isdraweropen=false;
     private Handler myhandler;
     private Runnable myrunnable;
@@ -531,6 +530,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         gethelper().drawerenabledisable(true);
         gethelper().setdatacomposing(true);
 
+        zoomLevel=1f;
         mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
         img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
@@ -616,7 +616,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             }
         });
 
-        layout_seekbarzoom.setVisibility(View.GONE);
         return rootview;
     }
 
@@ -876,8 +875,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void onPause() {
         closeCamera();
         stopBackgroundThread();
-        if(layout_seekbarzoom != null)
-            layout_seekbarzoom.setVisibility(View.GONE);
         super.onPause();
     }
 
@@ -1560,11 +1557,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             @Override
             public void run() {
 
-                Date currentdate=new Date();
-                int seconddifference= (int) (Math.abs(zoomcontrollertimeout.getTime()-currentdate.getTime())/1000);
-                if(seconddifference > 5 && layout_seekbarzoom.getVisibility() == View.VISIBLE)
-                    fadeoutzoomcontrollers();
-
                 if(! metrichashvalue.trim().isEmpty())
                 {
                     common.setgraphicalblockchainvalue(config.blockchainid,"",true);
@@ -1636,7 +1628,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void setupcamerazoom()
     {
         DecimalFormat precision=new DecimalFormat("0.0");
-        zoomcontrollertimeout=new Date();
         txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
 
         Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
@@ -1677,7 +1668,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                layout_seekbarzoom.setVisibility(View.GONE);
+
             }
 
             @Override
