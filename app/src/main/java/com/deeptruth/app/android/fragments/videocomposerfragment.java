@@ -504,6 +504,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
                 else if(state == 3)
                 {
+
+                    if(rotationangle == -90){
+
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        lpexpandable.setMargins(layout_bottom.getHeight(), 0, 0,  0);
+                        expandable_layout.setLayoutParams(lpexpandable);
+
+                    }else if(rotationangle == 90){
+
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        lpexpandable.setMargins(layout_bottom.getHeight(), 0, 0,  0);
+                        expandable_layout.setLayoutParams(lpexpandable);
+
+
+                    }else{
+
+                        RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                        lpexpandable.setMargins(20, 0, 0,  0);
+                        expandable_layout.setLayoutParams(lpexpandable);
+                    }
+
+
+
                     txt_media_low.setVisibility(View.VISIBLE);
                     txt_media_medium.setVisibility(View.VISIBLE);
                     txt_media_high.setVisibility(View.VISIBLE);
@@ -567,11 +593,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
 
-
-
-
-
-
     public void changeiconsorientation(float rotateangle)
     {
         rotationangle=(int)rotateangle;
@@ -588,8 +609,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        lp.setMargins(0, layout_bottom.getHeight(), 0, layout_bottom.getHeight() + 50);
+                        lp.setMargins(0, 0, 0, 0);
                         headercontainer.setLayoutParams(lp);
+
+                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
+                        img_dotmenu.setLayoutParams(lpimg_dotmenu);
+                        img_dotmenu.setPadding(10,0,10,0);
+
+                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
+                        imgflashon.setLayoutParams(lpimgflashon);
+
                         headercontainer.setAngle(90);
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
@@ -600,8 +632,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        lp.setMargins(0, layout_bottom.getHeight(), 0, layout_bottom.getHeight() + 50);
+                        lp.setMargins(0, 0, 0,  0);
                         headercontainer.setLayoutParams(lp);
+
+                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
+                        img_dotmenu.setLayoutParams(lpimg_dotmenu);
+                        img_dotmenu.setPadding(10,0,10,0);
+
+                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
+                        imgflashon.setLayoutParams(lpimgflashon);
+
                         headercontainer.setAngle(270);
                     }
 
@@ -621,6 +664,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         headercontainer.setLayoutParams(lp);
                         headercontainer.setAngle((int)rotateangle);
+
+                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        lpimg_dotmenu.setMargins(0, 0, 20,  0);
+                        img_dotmenu.setLayoutParams(lpimg_dotmenu);
+                        img_dotmenu.setPadding(10,0,10,0);
+
+                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpimgflashon.setMargins(20, 0, 0,  0);
+                        imgflashon.setLayoutParams(lpimgflashon);
+
                     }
 
                     if(headercontainer.getAngle() == 90)

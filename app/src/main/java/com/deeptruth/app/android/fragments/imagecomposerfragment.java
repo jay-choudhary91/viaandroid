@@ -555,7 +555,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         img_dotmenu.setVisibility(View.VISIBLE);
         imgflashon.setVisibility(View.VISIBLE);
-        img_stop_watch.setVisibility(View.VISIBLE);
+        img_stop_watch.setVisibility(View.GONE);
 
         flingactionmindstvac=common.getdrawerswipearea();
         keytype=common.checkkey();

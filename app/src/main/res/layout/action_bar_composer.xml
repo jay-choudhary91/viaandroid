@@ -6,13 +6,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="40dp"
         android:background="@drawable/gradient_fade_header_blue"
         >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
         android:id="@+id/actionbarcomposer">
 
@@ -49,8 +49,8 @@
 
             <ImageView
                 android:id="@+id/img_flash"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:src="@drawable/ic_no_flash_icon"/>
 
@@ -94,7 +94,7 @@
             android:layout_width="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="1dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -130,7 +130,6 @@
             app:el_duration="500"
             android:visibility="gone"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
             android:background="@color/transparent"
             app:el_expanded="false">
 

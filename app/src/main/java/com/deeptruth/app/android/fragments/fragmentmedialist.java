@@ -351,7 +351,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 e.printStackTrace();
             }
 
-            recyclerviewgrid.post(new Runnable() {
+            setfooterlayout(true);
+
+          /*  recyclerviewgrid.post(new Runnable() {
                 @Override
                 public void run() {
                     setfooterlayout(true);
@@ -363,7 +365,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             public void run() {
                                 setfooterlayout(false);
                             }
-                        });
+                        });*/
 
 
             onTouchListener = new RecyclerTouchListener(applicationviavideocomposer.getactivity(), recyclerviewlist);
@@ -1853,12 +1855,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.BELOW,R.id.lay_grid_list_type);
             params.setMargins(-4,-4,-4,navigationbarheight);
-            recyclerviewgrid.setLayoutParams(params);
+            listlayout.setLayoutParams(params);
         }else{
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.BELOW,R.id.lay_grid_list_type);
             params.setMargins(0,0,0,navigationbarheight);
-            recyclerviewlist.setLayoutParams(params);
+            listlayout.setLayoutParams(params);
         }
     }
 
