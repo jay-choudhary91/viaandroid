@@ -9,24 +9,35 @@
         android:id="@+id/layout_section_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/img_warning"
             android:layout_width="45dp"
             android:layout_height="40dp"
+            android:layout_margin="5dp"
             android:layout_centerVertical="true"
             android:src="@drawable/warning_icon"/>
 
-        <com.deeptruth.app.android.views.customfonttextview
-            app:fontType="OpenSans_Regular"
-            style="@style/txt_no_gps_wifi"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/img_warning"
-            android:text="@string/encrypting"/>
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/encrypting_shimmerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/img_warning"
+            app:shimmer_duration="2000"
+            >
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                style="@style/txt_no_gps_wifi"
+                android:id="@+id/txt_section_encrypting"
+                android:layout_centerVertical="true"
+                android:paddingRight="10dp"
+                android:gravity="right|center_vertical"
+                android:layout_toRightOf="@id/img_warning"
+                android:text="@string/encrypting"/>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
     </RelativeLayout>
 

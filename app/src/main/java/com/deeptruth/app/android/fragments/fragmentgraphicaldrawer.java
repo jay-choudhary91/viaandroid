@@ -167,8 +167,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     LinearLayout layout_datalatency;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
-    @BindView(R.id.img_compass)
-    ImageView img_compass;
+    @BindView(R.id.img_niddle)
+    ImageView img_niddle;
     @BindView(R.id.linechart)
     LineChart mChart;
     @BindView(R.id.attitude_indicator)
@@ -733,7 +733,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         // how long the animation will take place
         ra.setDuration(250);
         ra.setFillAfter(true);
-        img_compass.startAnimation(ra);
+        img_niddle.startAnimation(ra);
         currentDegree = -degree;
     }
 

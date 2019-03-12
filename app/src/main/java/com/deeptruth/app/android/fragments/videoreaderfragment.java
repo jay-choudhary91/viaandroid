@@ -321,8 +321,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     LinearLayout layout_googlemap;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
-    @BindView(R.id.img_compass)
-    ImageView img_compass;
+    @BindView(R.id.img_niddle)
+    ImageView img_niddle;
     @BindView(R.id.img_pause)
     ImageView imgpause;
     @BindView(R.id.scrub_layout)
@@ -357,6 +357,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.scrubberverticalbar)
     RelativeLayout scurraberverticalbar;
     boolean istrue = false ;
+    @BindView(R.id.layoutcompass)
+    ImageView layoutcompass;
 
     int footerheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0;
@@ -604,6 +606,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         });
         try {
             DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try {
+            DrawableCompat.setTint(layoutcompass.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                     , R.color.uvv_gray));
         }catch (Exception e)
         {
@@ -1927,10 +1937,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
             latitude = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
+            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA"))){
+                common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
+            }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
             longitude = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
+            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA"))){
+                common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
+            }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
             common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
@@ -2126,7 +2140,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         // how long the animation will take place
         ra.setDuration(210);
         ra.setFillAfter(true);
-        img_compass.startAnimation(ra);
+        img_niddle.startAnimation(ra);
         currentDegree = -degree;
     }
 

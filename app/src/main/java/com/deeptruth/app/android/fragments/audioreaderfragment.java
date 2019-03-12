@@ -267,8 +267,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     LinearLayout layout_googlemap;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
-    @BindView(R.id.img_compass)
-    ImageView img_compass;
+    @BindView(R.id.img_niddle)
+    ImageView img_niddle;
     @BindView(R.id.img_audiowave)
     ImageView img_audiowave;
     @BindView(R.id.img_verified)
@@ -294,6 +294,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     RecyclerView recycler_encryption;
     @BindView(R.id.img_handleup)
     ImageView img_handleup;
+    @BindView(R.id.layoutcompass)
+    ImageView layoutcompass;
 
     private String audiourl = null,latency="";
 
@@ -441,6 +443,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         try {
             DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try {
+            DrawableCompat.setTint(layoutcompass.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                     , R.color.uvv_gray));
         }catch (Exception e)
         {
@@ -1838,10 +1848,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
             latitude = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
+            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA"))){
+                common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
+            }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
             longitude = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
+            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA"))){
+                common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
+            }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
             common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
@@ -2019,7 +2033,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         // how long the animation will take place
         ra.setDuration(210);
         ra.setFillAfter(true);
-        img_compass.startAnimation(ra);
+        img_niddle.startAnimation(ra);
         currentDegree = -degree;
     }
 

@@ -199,6 +199,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ImageView img_scanover;
     @BindView(R.id.img_phone_orientation)
     ImageView img_phone_orientation;
+    @BindView(R.id.layoutcompass)
+    ImageView layoutcompass;
 
 
     private String imageurl = null;
@@ -232,7 +234,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             mediatime = "",mediasize="",lastsavedangle="";
     private float currentDegree = 0f;
-    ImageView img_compass;
+    ImageView img_niddle;
     adapteritemclick mcontrollernavigator;
     int rootviewheight, devidedheight;
 
@@ -316,6 +318,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
+        try {
+            DrawableCompat.setTint(layoutcompass.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
 
         //tabs_detail
         txtslotmedia.setText(getResources().getString(R.string.photo));
@@ -380,7 +390,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         tvbattery=rootview.findViewById(R.id.txt_battery);
         layout_googlemap= rootview.findViewById(R.id.layout_googlemap);
         googlemap= rootview.findViewById(R.id.googlemap);
-        img_compass= rootview.findViewById(R.id.img_compass);
+        img_niddle= rootview.findViewById(R.id.img_niddle);
 
 
         String blockchainid = " ";
@@ -1215,10 +1225,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
         if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslatitude)){
             latitude = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
+            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA"))){
+                common.setspannable(getResources().getString(R.string.latitude),"\n"+common.convertlatitude(Double.parseDouble(latitude)), tvlatitude);
+            }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpslongitude)){
             longitude = metricItemArraylist.getMetricTrackValue();
-            common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
+            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA"))){
+                common.setspannable(getResources().getString(R.string.longitude),"\n"+common.convertlongitude(Double.parseDouble(longitude)), tvlongitude);
+            }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)){
             common.setspannable(getResources().getString(R.string.altitude),"\n"+metricItemArraylist.getMetricTrackValue(), tvaltitude);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
@@ -1400,7 +1414,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         // how long the animation will take place
         ra.setDuration(210);
         ra.setFillAfter(true);
-        img_compass.startAnimation(ra);
+        img_niddle.startAnimation(ra);
         currentDegree = -degree;
     }
 
