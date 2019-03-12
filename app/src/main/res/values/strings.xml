@@ -161,7 +161,7 @@
     <string name="allow">ALLOW</string>
     <string name="skip_for_now">Skip for Now</string>
     <string name="no_gps_wifi">No GPS/Wifi connection.</string>
-    <string name="encrypting">Encrypting</string>
+    <string name="encrypting">ENCRYPTING</string>
     <string name="validating">VALIDATING</string>
 
     <string name="address">Address</string>

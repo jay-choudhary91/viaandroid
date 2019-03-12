@@ -9,6 +9,7 @@
         android:id="@+id/layout_section_heading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <ImageView
@@ -16,28 +17,20 @@
             android:layout_width="45dp"
             android:layout_height="40dp"
             android:layout_margin="5dp"
+            android:visibility="gone"
             android:layout_centerVertical="true"
             android:src="@drawable/warning_icon"/>
-
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/encrypting_shimmerview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/img_warning"
-            app:shimmer_duration="2000"
-            >
 
             <com.deeptruth.app.android.views.customfonttextview
                 app:fontType="OpenSans_Regular"
                 style="@style/txt_no_gps_wifi"
-                android:id="@+id/txt_section_encrypting"
+                android:id="@+id/txt_encrypting"
                 android:layout_centerVertical="true"
                 android:paddingRight="10dp"
-                android:gravity="right|center_vertical"
+                android:visibility="gone"
+                android:gravity="left|center_vertical"
                 android:layout_toRightOf="@id/img_warning"
                 android:text="@string/encrypting"/>
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
 
     </RelativeLayout>
 
@@ -47,17 +40,36 @@
         android:layout_height="wrap_content"
         app:shimmer_duration="2000"
         >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/layout_textsection"
+            android:background="@color/yellow_background"
+            android:layout_height="wrap_content">
 
-        <com.deeptruth.app.android.views.customfonttextview
-            android:id="@+id/txt_section_validating"
-            app:fontType="OpenSans_Regular"
-            style="@style/txt_no_gps_wifi"
-            android:gravity="right|center_vertical"
-            android:text="@string/validating"
-            android:paddingRight="10dp"
-            android:background="@color/yellow_background"/>
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                style="@style/txt_no_gps_wifi"
+                android:id="@+id/txt_section_encrypting"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:paddingBottom="5dp"
+                android:visibility="visible"
+                android:layout_alignParentLeft="true"
+                android:gravity="left|center_vertical"
+                android:text="@string/encrypting"/>
+
+            <com.deeptruth.app.android.views.customfonttextview
+                android:id="@+id/txt_section_validating"
+                app:fontType="OpenSans_Regular"
+                style="@style/txt_no_gps_wifi"
+                android:gravity="right|center_vertical"
+                android:text="@string/validating"
+                android:layout_centerVertical="true"
+                android:paddingRight="10dp"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
 
     </com.facebook.shimmer.ShimmerFrameLayout>
-
 
 </LinearLayout>

@@ -103,11 +103,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_space_b;
     @BindView(R.id.img_warning)
     ImageView img_warning;
-    @BindView(R.id.encrypting_shimmerview)
-    ShimmerFrameLayout encrypting_shimmerview;
     @BindView(R.id.txt_section_encrypting)
     TextView txt_section_encrypting;
-
+    @BindView(R.id.layout_textsection)
+    RelativeLayout layout_textsection;
+    @BindView(R.id.txt_encrypting)
+    TextView txt_encrypting;
 
 
     boolean isvideoplaying = true;
@@ -168,7 +169,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             layoutbottom.setOnTouchListener(this);
             layout_mediatype.setOnTouchListener(this);
             shimmer_view_container.startShimmer();
-            encrypting_shimmerview.startShimmer();
 
             try {
                 gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
@@ -337,9 +337,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(shimmer_view_container != null)
             shimmer_view_container.stopShimmer();
 
-        if(encrypting_shimmerview != null)
-            encrypting_shimmerview.stopShimmer();
-
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
 
@@ -352,12 +349,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(showwarning)
         {
             layout_section_heading.setVisibility(View.VISIBLE);
+           // img_warning.setVisibility(View.VISIBLE);
             showwarningsection=true;
+         //   txt_encrypting.setVisibility(View.VISIBLE);
         }
         else
         {
             layout_section_heading.setVisibility(View.GONE);
             showwarningsection=false;
+         //   txt_encrypting.setVisibility(View.GONE);
+          //  layout_section_heading.setVisibility(View.GONE);
         }
     }
 
@@ -449,15 +450,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
-                        txt_section_validating.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
-                        txt_section_encrypting.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
-                        img_warning.setVisibility(View.VISIBLE);
+                        layout_textsection.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
+                   //     txt_section_encrypting.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
                         visiblewarningcontrollers();
                     }
                     else
                     {
-                        txt_section_validating.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
-                        txt_section_encrypting.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+                        layout_textsection.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
+                        //txt_section_encrypting.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid_a));
                         validatingcontrollers();
                     }
 
