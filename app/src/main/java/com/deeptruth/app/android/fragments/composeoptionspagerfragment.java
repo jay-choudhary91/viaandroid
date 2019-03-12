@@ -349,16 +349,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(showwarning)
         {
             layout_section_heading.setVisibility(View.VISIBLE);
-           // img_warning.setVisibility(View.VISIBLE);
+            img_warning.setVisibility(View.VISIBLE);
             showwarningsection=true;
-         //   txt_encrypting.setVisibility(View.VISIBLE);
         }
         else
         {
             layout_section_heading.setVisibility(View.GONE);
+            img_warning.setVisibility(View.GONE);
             showwarningsection=false;
-         //   txt_encrypting.setVisibility(View.GONE);
-          //  layout_section_heading.setVisibility(View.GONE);
         }
     }
 
