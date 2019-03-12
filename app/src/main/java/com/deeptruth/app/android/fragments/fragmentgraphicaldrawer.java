@@ -77,6 +77,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.widget.RelativeLayout.TRUE;
+
 public class fragmentgraphicaldrawer extends basefragment implements OnChartValueSelectedListener,
         OnChartGestureListener,SensorEventListener, Orientation.Listener {
 
@@ -180,7 +182,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     @BindView(R.id.seekbar_transparency)
     IndicatorSeekBar seekbartransparency;
     @BindView(R.id.layout_constraint)
-    ConstraintLayout layout_constraint;
+    RelativeLayout layout_constraint;
     @BindView(R.id.layout_transparency_meter)
     LinearLayout layout_transparency_meter;
 
@@ -197,6 +199,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     ArrayList<Entry> latencyvalues = new ArrayList<Entry>();
     private Orientation mOrientation;
     private String[] transparentarray=common.gettransparencyvalues();
+    int navigationbarheight = 0;
     @Override
     public int getlayoutid() {
         return R.layout.frag_graphicaldrawer;
@@ -303,7 +306,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
                 seekbartransparency.setProgress(50f);
             }
-
+            navigationbarheight =  common.getnavigationbarheight();
             loadmap();
             setchartdata();
 
@@ -609,14 +612,29 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 mChart.animateX(10);
                 Legend l = mChart.getLegend();
                 l.setForm(Legend.LegendForm.LINE);
+
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0,0,0,navigationbarheight);
+                layout_constraint.setLayoutParams(params);
+                layout_constraint.requestLayout();
+
             }
             else
             {
                 layout_datalatency.setVisibility(View.GONE);
+
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0,0,0,navigationbarheight);
+                layout_constraint.setLayoutParams(params);
+                layout_constraint.requestLayout();
             }
         }
         else
         {
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0,0,0,0);
+            layout_constraint.setLayoutParams(params);
+            layout_constraint.requestLayout();
             layout_datalatency.setVisibility(View.GONE);
         }
     }

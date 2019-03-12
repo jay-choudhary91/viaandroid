@@ -52,13 +52,11 @@
           android:fitsSystemWindows="true"
           android:layout_gravity="start"
           >
-
-         <include
-             layout="@layout/layout_graphical_drawer_content"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
-
-         </include>
+            <include
+                layout="@layout/layout_graphical_drawer_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </include>
       </android.support.design.widget.NavigationView>
    </com.deeptruth.app.android.utils.FullDrawerLayout>
 
