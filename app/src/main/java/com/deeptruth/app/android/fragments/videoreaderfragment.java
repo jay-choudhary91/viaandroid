@@ -1095,6 +1095,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                                 gethelper().updateactionbar(1);
+                                setbottomimgview();
                                 layout_footer.setVisibility(View.VISIBLE);
                                 img_fullscreen.setVisibility(View.VISIBLE);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
@@ -1103,6 +1104,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 playpausebutton.setVisibility(View.VISIBLE);
                                 layout_mediatype.setVisibility(View.VISIBLE);
+                                img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                                 //common.slidetodown(layout_mediatype); //visbile actionbar
                             }
                             /*else   // Player is playing
