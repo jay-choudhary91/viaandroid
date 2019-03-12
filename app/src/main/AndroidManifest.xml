@@ -90,7 +90,8 @@
             android:value="42d19fb0e2e5d57caf4b1257310ca64e6f19cade" />
 
         <activity android:name="com.deeptruth.app.android.activity.splashactivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
