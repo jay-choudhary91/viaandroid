@@ -37,7 +37,7 @@
     <application
         android:name="com.deeptruth.app.android.applicationviavideocomposer"
         android:allowBackup="true"
-        android:icon="@mipmap/app_icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
