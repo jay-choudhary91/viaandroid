@@ -1727,10 +1727,25 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     if (addresses != null) {
                         Address returnedAddress = addresses.get(0);
 
-                        StringBuilder strReturnedAddress = new StringBuilder("");
+                        ArrayList<String> addressitems=new ArrayList<>();
+                        addressitems.add(returnedAddress.getFeatureName());  // Mansarovar Plaza
+                        //addressitems.add(returnedAddress.getLocality());   // Jaipur
+                        addressitems.add(returnedAddress.getSubAdminArea()); // Jaipur
+                        addressitems.add(returnedAddress.getAdminArea());    // Rajasthan
+                        addressitems.add(returnedAddress.getCountryCode());  // IN
 
-                        for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
-                            strReturnedAddress.append(returnedAddress.getAddressLine(i));
+                        StringBuilder strReturnedAddress = new StringBuilder("");
+                        for (int i = 0; i < addressitems.size(); i++)
+                        {
+                            if((! addressitems.get(i).trim().isEmpty()) || addressitems.get(i).equalsIgnoreCase("null"))
+                                if(strReturnedAddress.toString().trim().isEmpty())
+                                {
+                                    strReturnedAddress.append(addressitems.get(i));
+                                }
+                                else
+                                {
+                                    strReturnedAddress.append(", "+addressitems.get(i));
+                                }
                         }
                         currentaddress = strReturnedAddress.toString();
                     }
