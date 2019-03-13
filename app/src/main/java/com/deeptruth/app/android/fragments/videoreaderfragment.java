@@ -1319,6 +1319,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onPause() {
         super.onPause();
+        pause();
         progressdialog.dismisswaitdialog();
         Log.e("onpause","onpause");
     }

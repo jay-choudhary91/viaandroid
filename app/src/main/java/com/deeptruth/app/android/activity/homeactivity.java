@@ -424,6 +424,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          else if(fragment instanceof composeoptionspagerfragment)
          {
              common.resetgraphicaldata();
+             updateactionbar(0);
          }
          else if(fragment instanceof myfolderfragment)
          {
