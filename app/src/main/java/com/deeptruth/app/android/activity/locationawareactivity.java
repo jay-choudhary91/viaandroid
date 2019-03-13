@@ -138,7 +138,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     private IntentFilter intentFilter;
     private BroadcastReceiver phonecallbroadcast;
-    String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", currentaddress = "", connectionspeed = "";
+    String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "";
     MyPhoneStateListener mPhoneStatelistener;
     int mSignalStrength = 0, dbtoxapiupdatecounter = 0;
 
@@ -568,14 +568,13 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
             googleutils.saveUserCurrentLocation(location);
 
-            if (location.getLatitude() == 0.0)
+            if (location == null || location.getLatitude() == 0.0)
                 return;
 
             mcurrentlocation = location;
             if (getcurrentfragment() != null) {
                 getcurrentfragment().oncurrentlocationchanged(location);
                 updatelocationsparams(location);
-                fetchcompleteaddress(location);
             }
         }
     }
@@ -1170,7 +1169,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("connectionspeed")) {
             metricItemValue = "" + connectionspeed;
         } else if (key.equalsIgnoreCase("address")) {
-            metricItemValue = "" + currentaddress;
+            metricItemValue = xdata.getinstance().getSetting("currentaddress");
         }
         else if (key.equalsIgnoreCase("celltowersignalstrength") || key.equalsIgnoreCase("celltowerid")) {
 
@@ -1238,7 +1237,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else if (key.equalsIgnoreCase("connectionspeed")) {
             metricItemValue = "" + connectionspeed;
         } else if (key.equalsIgnoreCase("address")) {
-            metricItemValue = "" + currentaddress;
+            metricItemValue = xdata.getinstance().getSetting("currentaddress");
         } else if (key.equalsIgnoreCase("numberofsatellites")) {
             // metricItemValue = "" + numberofsatellites;
             metricItemValue = xdata.getinstance().getSetting("gpsnumberofsatelites");
@@ -1698,7 +1697,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsaccuracy"));
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("address")) {
-                metricitemarraylist.get(i).setMetricTrackValue("" + currentaddress);
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("currentaddress"));
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
 
@@ -1713,48 +1712,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
             oldlocation = location;
         }
-    }
-
-    //get complete address
-    private void fetchcompleteaddress(final Location location) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String strAdd = "";
-                Geocoder geocoder = new Geocoder(locationawareactivity.this, Locale.getDefault());
-                try {
-                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                    if (addresses != null) {
-                        Address returnedAddress = addresses.get(0);
-
-                        ArrayList<String> addressitems=new ArrayList<>();
-                        addressitems.add(returnedAddress.getFeatureName());  // Mansarovar Plaza
-                        //addressitems.add(returnedAddress.getLocality());   // Jaipur
-                        addressitems.add(returnedAddress.getSubAdminArea()); // Jaipur
-                        addressitems.add(returnedAddress.getAdminArea());    // Rajasthan
-                        addressitems.add(returnedAddress.getCountryCode());  // IN
-
-                        StringBuilder strReturnedAddress = new StringBuilder("");
-                        for (int i = 0; i < addressitems.size(); i++)
-                        {
-                            if((! addressitems.get(i).trim().isEmpty()) || addressitems.get(i).equalsIgnoreCase("null"))
-                                if(strReturnedAddress.toString().trim().isEmpty())
-                                {
-                                    strReturnedAddress.append(addressitems.get(i));
-                                }
-                                else
-                                {
-                                    strReturnedAddress.append(", "+addressitems.get(i));
-                                }
-                        }
-                        currentaddress = strReturnedAddress.toString();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
     }
 
     public List<CellInfo> gettowerinfo() {
