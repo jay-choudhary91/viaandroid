@@ -1107,17 +1107,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                                 //common.slidetodown(layout_mediatype); //visbile actionbar
                             }
-                            /*else   // Player is playing
+                            else   // Player is playing
                             {
                                 //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
-                                gethelper().updateactionbar(1);
+                                gethelper().updateactionbar(0);
                                 layout_footer.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(true);
                                 img_fullscreen.setVisibility(View.GONE);
                                 layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                                 imgpause.setVisibility(View.VISIBLE);
                                 layoutpause.setVisibility(View.VISIBLE);
-                                layout_mediatype.setVisibility(View.VISIBLE);
+                                layout_mediatype.setVisibility(View.GONE);
                                // common.slidetodown(layout_mediatype); // visible actionbar
                                 playpausebutton.setVisibility(View.GONE);
                                 layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
@@ -1125,7 +1125,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
                                 layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 // layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                            }*/
+                            }
                         }
                         else  // Action bar is showing
                         {
