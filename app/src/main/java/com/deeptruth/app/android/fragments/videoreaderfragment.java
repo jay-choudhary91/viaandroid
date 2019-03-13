@@ -395,7 +395,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     boolean runmethod = false;
-    public boolean isvideocompleted=false,ismapzoomed=false;
+    public boolean isvideocompleted=false,ismapzoomed=false,isfragmentstopped=false;
     public int flingactionmindstvac;
     private long currentmediaduration =0;
     private int videostarttime =0, endtime =0;
@@ -1314,6 +1314,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
+        isfragmentstopped=false;
         Log.e("onresume","onresume");
     }
 
@@ -1629,6 +1630,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void onStop() {
         super.onStop();
         try {
+            isfragmentstopped=true;
             applicationviavideocomposer.getactivity().unregisterReceiver(getmetadatabroadcastreceiver);
         }catch (Exception e)
         {
@@ -1840,7 +1842,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(player != null && controller!= null)
+                    if(player != null && controller!= null && (! isfragmentstopped))
                     {
                         player.seekTo(0);
                         controller.setProgress(0,true);
