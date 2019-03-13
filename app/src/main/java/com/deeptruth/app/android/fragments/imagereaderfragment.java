@@ -188,7 +188,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.layout_time)
     LinearLayout layout_time;
     @BindView(R.id.photorootview)
-    NestedScrollView photorootview;
+    RelativeLayout photorootview;
     @BindView(R.id.layout_dtls)
     LinearLayout layout_dtls;
     @BindView(R.id.layout_validating)
@@ -229,6 +229,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     FrameLayout googlemap;
     @BindView(R.id.attitude_indicator)
     AttitudeIndicator attitudeindicator;
+    int bottompadding;
 
     boolean ismediaplayer = false;
     String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
@@ -236,7 +237,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     private float currentDegree = 0f;
     ImageView img_niddle;
     adapteritemclick mcontrollernavigator;
-    int rootviewheight, devidedheight;
+    int rootviewheight, devidedheight,actionbarheight;
 
     private BroadcastReceiver getmetadatabroadcastreceiver;
 
@@ -450,23 +451,25 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
+        layout_mediatype.post(new Runnable() {
+            @Override
+            public void run() {
+                actionbarheight = layout_mediatype.getHeight();
+                bottompadding = layout_photodetails.getPaddingBottom();
+            }
+        });
+
         edt_medianotes.setOnKeyboardHidden(new customedittext.OnKeyboardHidden() {
             @Override
             public void onKeyboardHidden() {
-                edt_medianame.setEnabled(false);
-                edt_medianotes.setClickable(false);
-                edt_medianotes.setFocusable(false);
-                edt_medianotes.setFocusableInTouchMode(false);
+                hidefocus(edt_medianotes);
             }
         });
 
         edt_medianame.setOnKeyboardHidden(new customedittext.OnKeyboardHidden() {
             @Override
             public void onKeyboardHidden() {
-
-                edt_medianame.setClickable(false);
-                edt_medianame.setFocusable(false);
-                edt_medianame.setFocusableInTouchMode(false);
+                hidefocus(edt_medianame);
             }
         });
 
@@ -496,6 +499,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setFocusable(false);
                     edt_medianame.setFocusableInTouchMode(false);
                     edt_medianame.setKeyListener(null);
+                    removeheadermargin();
+                    layout_halfscrn.setVisibility(View.VISIBLE);
                     editabletext();
                     return true;
                 }else
@@ -554,26 +559,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
             case R.id.img_edit_name:
-               // gethelper().setwindowfitxy(false);
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                edt_medianame.setSelection(edt_medianame.getText().length());
-                edt_medianame.setClickable(true);
-                edt_medianame.setEnabled(true);
-                edt_medianame.setFocusable(true);
-                edt_medianame.setFocusableInTouchMode(true);
-                edt_medianame.requestFocus();
+                visiblefocus(edt_medianame);
                 break;
             case R.id.img_edit_notes:
-               // gethelper().setwindowfitxy(false);
-                InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                edt_medianotes.setSelection(edt_medianotes.getText().length());
-                edt_medianotes.setClickable(true);
-                edt_medianotes.setEnabled(true);
-                edt_medianotes.setFocusable(true);
-                edt_medianotes.setFocusableInTouchMode(true);
-                edt_medianotes.requestFocus();
+
+                visiblefocus(edt_medianotes);
 
                 break;
             case R.id.img_share_media:
@@ -651,9 +641,8 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     img_fullscreen.setVisibility(View.INVISIBLE);
 
                 } else{
-
+                    removeheaderpadding();
                     setfooterlayout(false);
-
                     gethelper().drawerenabledisable(false);
                     layout_halfscrn.getLayoutParams().height = devidedheight;
                     layout_photodetails.getLayoutParams().height = (devidedheight-navigationbarheight);
@@ -705,12 +694,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
             case R.id.layout_dtls:
                 Log.e("ontouch","ontouchscrollview");
-              //  if(layout_halfscrn.getVisibility() == View.GONE){
+                if(layout_halfscrn.getVisibility() == View.GONE){
+                    removeheadermargin();
+                    layout_halfscrn.setVisibility(View.VISIBLE);
                     v.clearFocus();
                     InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     immm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-             //   }
+               }
                 break;
         }
 
@@ -1477,10 +1468,30 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void setheadermargine(){
+    public void setheadermargin(){
         RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
-        layout_mediatype.setLayoutParams(params);
+        params.setMargins(0,actionbarheight,0,0);
+        layout_photodetails.setLayoutParams(params);
+        layout_photodetails.requestLayout();
+    }
+
+    public void removeheadermargin(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW,R.id.layout_halfscrn);
+        params.setMargins(0,0,0,0);
+         Log.e("bottompadding",""+bottompadding);
+
+        layout_photodetails.setPadding(0,0,0,(bottompadding*2));
+        layout_photodetails.setLayoutParams(params);
+        layout_photodetails.requestLayout();
+    }
+
+    public void removeheaderpadding(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW,R.id.layout_halfscrn);
+        layout_photodetails.setPadding(0,0,0,footerheight);
+        layout_photodetails.setLayoutParams(params);
+        layout_photodetails.requestLayout();
     }
 
     public void setbottomimgview(){
@@ -1520,5 +1531,32 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             params.setMargins(0,0,0,navigationbarheight);
             layout_footer.setLayoutParams(params);
         }
+    }
+
+    public void hidefocus(EditText edittext){
+
+        edittext.setEnabled(false);
+        edittext.setClickable(false);
+        edittext.setFocusable(false);
+        edittext.setFocusableInTouchMode(false);
+        layout_halfscrn.setVisibility(View.VISIBLE);
+        removeheadermargin();
+        layout_validating.setVisibility(View.VISIBLE);
+    }
+
+    public void visiblefocus(EditText edittext){
+
+        layout_halfscrn.setVisibility(View.GONE);
+        layout_validating.setVisibility(View.GONE);
+        setheadermargin();
+        // gethelper().setwindowfitxy(false);
+        InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        edittext.setSelection(edittext.getText().length());
+        edittext.setClickable(true);
+        edittext.setEnabled(true);
+        edittext.setFocusable(true);
+        edittext.setFocusableInTouchMode(true);
+        edittext.requestFocus();
     }
 }
