@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -23,13 +25,17 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.googleutils;
 import com.deeptruth.app.android.utils.xdata;
 
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 
@@ -50,7 +56,7 @@ public class locationservice extends Service implements LocationListener, GpsSta
     private Location oldlocation;
 
 
-    String satelliteid = "", satelliteangle = "",currentaddress = "";
+    String satelliteid = "", satelliteangle = "";
 
 
     boolean isLogging;
@@ -324,6 +330,10 @@ public class locationservice extends Service implements LocationListener, GpsSta
         double travelleddistance = 0.0;
         double altitude = 0.0;
 
+        if(location == null)
+            return;
+
+        fetchcompleteaddress(location);
         // Speed calulcation is followed by this -> https://stackoverflow.com/questions/4811920/why-getspeed-always-return-0-on-android
         /*if (location.hasSpeed())
         {
@@ -382,6 +392,49 @@ public class locationservice extends Service implements LocationListener, GpsSta
         xdata.getinstance().saveSetting("strengthofsatellites", "" + location.getAccuracy());
 
         oldlocation = location;
+    }
+
+    //get complete address
+    private void fetchcompleteaddress(final Location location) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String strAdd = "";
+                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                try {
+                    List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    if (addresses != null) {
+                        Address returnedAddress = addresses.get(0);
+
+                        ArrayList<String> addressitems=new ArrayList<>();
+                        addressitems.add(returnedAddress.getFeatureName());  // Mansarovar Plaza
+                        //addressitems.add(returnedAddress.getLocality());   // Jaipur
+                        addressitems.add(returnedAddress.getSubAdminArea()); // Jaipur
+                        addressitems.add(returnedAddress.getAdminArea());    // Rajasthan
+                        addressitems.add(returnedAddress.getCountryCode());  // IN
+
+                        StringBuilder strReturnedAddress = new StringBuilder("");
+                        for (int i = 0; i < addressitems.size(); i++)
+                        {
+                            if((! addressitems.get(i).trim().isEmpty()) || addressitems.get(i).equalsIgnoreCase("null"))
+                                if(strReturnedAddress.toString().trim().isEmpty())
+                                {
+                                    strReturnedAddress.append(addressitems.get(i));
+                                }
+                                else
+                                {
+                                    strReturnedAddress.append(", "+addressitems.get(i));
+                                }
+                        }
+                        String currentaddress = strReturnedAddress.toString();
+                        xdata.getinstance().saveSetting("currentaddress", "" + currentaddress);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     public void convertmpstomph(float distance,float time)
