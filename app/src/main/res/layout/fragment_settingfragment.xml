@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/ll_rootlayout"
     android:background="@drawable/backgroundintro"
     android:layout_height="match_parent">
 
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">
@@ -27,12 +28,14 @@
         <WebView
             android:layout_width="match_parent"
             android:id="@+id/setting_webview"
-            android:layout_height="match_parent">
+            android:layout_below="@+id/layout_mediatype"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true">
 
         </WebView>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 

@@ -258,6 +258,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
           tvdataletency.setTextColor(getResources().getColor(R.color.white));
           txtdegree.setTextColor(getResources().getColor(R.color.white));
 
+            navigationbarheight =  common.getnavigationbarheight();
+            setlayoutmargin();
+
             layout_transparency_meter.setVisibility(View.VISIBLE);
             //setmetadatavalue();
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
@@ -306,7 +309,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
                 seekbartransparency.setProgress(50f);
             }
-            navigationbarheight =  common.getnavigationbarheight();
+
             loadmap();
             setchartdata();
 
@@ -612,30 +615,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 mChart.animateX(10);
                 Legend l = mChart.getLegend();
                 l.setForm(Legend.LegendForm.LINE);
-
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0,0,0,navigationbarheight);
-                layout_constraint.setLayoutParams(params);
-                layout_constraint.requestLayout();
-
             }
             else
             {
                 layout_datalatency.setVisibility(View.GONE);
-
-                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0,0,0,navigationbarheight);
-                layout_constraint.setLayoutParams(params);
-                layout_constraint.requestLayout();
             }
-        }
-        else
-        {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0,0,0,0);
-            layout_constraint.setLayoutParams(params);
-            layout_constraint.requestLayout();
-            layout_datalatency.setVisibility(View.GONE);
         }
     }
 
@@ -1057,5 +1041,12 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             // set data
             mChart.setData(data);
         }
+    }
+
+    public void setlayoutmargin(){
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,navigationbarheight);
+        layout_constraint.setLayoutParams(params);
+        layout_constraint.requestLayout();
     }
 }

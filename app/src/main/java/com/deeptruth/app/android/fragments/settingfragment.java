@@ -9,11 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 
@@ -32,6 +35,9 @@ public class settingfragment extends basefragment implements View.OnClickListene
     RelativeLayout layout_mediatype;
     @BindView(R.id.setting_webview)
     WebView webview;
+    @BindView(R.id.ll_rootlayout)
+    LinearLayout llrootlayout;
+    int navigationbarheight = 0;
 
     public settingfragment() {
         // Required empty public constructor
@@ -44,6 +50,10 @@ public class settingfragment extends basefragment implements View.OnClickListene
           rootview = super.onCreateView(inflater, container, savedInstanceState);
           ButterKnife.bind(this, rootview);
           gethelper().drawerenabledisable(false);
+
+          navigationbarheight =  common.getnavigationbarheight();
+          setlayoutmargin();
+
           img_arrow_back.setOnClickListener(this);
           webview.getSettings().setJavaScriptEnabled(true);
           webview.getSettings().setSupportZoom(true);       //Zoom Control on web (You don't need this
@@ -103,5 +113,12 @@ public class settingfragment extends basefragment implements View.OnClickListene
             progressdialog.dismisswaitdialog();
         }
 
+    }
+
+    public void setlayoutmargin(){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,navigationbarheight);
+        llrootlayout.setLayoutParams(params);
+        llrootlayout.requestLayout();
     }
 }
