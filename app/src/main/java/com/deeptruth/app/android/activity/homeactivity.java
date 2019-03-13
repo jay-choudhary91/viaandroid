@@ -82,6 +82,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        );
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
         config.selectedmediatype=0;
@@ -320,11 +324,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             fragment_container.setLayoutParams(params);
         }
          if (fragment instanceof videocomposerfragment) {
-
-             setwindowfitxy(false);
              updateactionbar(0);
              drawerenabledisable(true);
-
          }
         else if(fragment instanceof framemetricssettings){
 
@@ -353,27 +354,19 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             {
                 e.printStackTrace();
             }
-
              updateactionbar(1);
-
          }
          else if(fragment instanceof fragmentmedialist){
 
-             //setwindowfitxy(true);
-             //updateactionbar(1);
 
         }
          else if(fragment instanceof imagecomposerfragment){
              drawerenabledisable(true);
-             setwindowfitxy(false);
              updateactionbar(0);
-            // setwindowfitxy(false);
          }
          else if(fragment instanceof audiocomposerfragment){
              drawerenabledisable(true);
-             setwindowfitxy(false);
              updateactionbar(0);
-            // setwindowfitxy(false);
 
          }
          else if(fragment instanceof audioreaderfragment){
@@ -431,7 +424,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
          else if(fragment instanceof composeoptionspagerfragment)
          {
              common.resetgraphicaldata();
-             setwindowfitxy(false);
          }
          else if(fragment instanceof myfolderfragment)
          {

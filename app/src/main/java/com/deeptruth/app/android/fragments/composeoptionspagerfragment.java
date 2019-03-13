@@ -60,6 +60,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.droidsonroids.gif.GifDrawable;
 
+import static android.widget.RelativeLayout.TRUE;
+
 /**
  * Created by root on 6/11/18.
  */
@@ -140,6 +142,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private static final int ORIENTATION_0 = 0;
     private static final int ORIENTATION_90 = 3;
     private static final int ORIENTATION_270 = 1;
+    int navigationbarheight = 0;
 
     @Override
     public int getlayoutid() {
@@ -169,6 +172,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             layoutbottom.setOnTouchListener(this);
             layout_mediatype.setOnTouchListener(this);
             shimmer_view_container.startShimmer();
+
+            navigationbarheight =  common.getnavigationbarheight();
+            setfooterlayout();
 
             try {
                 gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
@@ -1076,5 +1082,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 break;
         }
         return true;
+    }
+
+    public void setfooterlayout(){
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
+            params.setMargins(0,0,0,navigationbarheight);
+            parentview.setLayoutParams(params);
     }
 }
