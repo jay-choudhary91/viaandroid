@@ -353,14 +353,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @BindView(R.id.videotextureview)
     TextureView videotextureview;
     @BindView(R.id.video_container)
-    NestedScrollView showcontrollers;
+    RelativeLayout showcontrollers;
     @BindView(R.id.scrubberverticalbar)
     RelativeLayout scurraberverticalbar;
     boolean istrue = false ;
     @BindView(R.id.layoutcompass)
     ImageView layoutcompass;
 
-    int footerheight;
+    int footerheight ,bottompadding ,actionbarheight;
     int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0;
     boolean flag = true;
     boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
@@ -500,6 +500,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             public void run() {
                 headerheight = layout_mediatype.getHeight();
                 headerwidth = layout_mediatype.getWidth();
+                bottompadding = layout_videodetails.getPaddingBottom();
             }
         });
 
@@ -746,6 +747,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     edt_medianame.setFocusable(false);
                     edt_medianame.setFocusableInTouchMode(false);
                     editabletext();
+                    showvideoplayer();
                     return true;
                 }
                 else {
@@ -775,9 +777,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void onKeyboardHidden() {
                 edt_medianame.setEnabled(false);
-                edt_medianotes.setClickable(false);
-                edt_medianotes.setFocusable(false);
-                edt_medianotes.setFocusableInTouchMode(false);
+                hidefocus(edt_medianotes);
             }
         });
 
@@ -785,9 +785,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void onKeyboardHidden() {
 
-                edt_medianame.setClickable(false);
-                edt_medianame.setFocusable(false);
-                edt_medianame.setFocusableInTouchMode(false);
+                hidefocus(edt_medianame);
             }
         });
         edt_medianotes.setOnTouchListener(new View.OnTouchListener() {
@@ -933,38 +931,24 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
 
                 case R.id.txt_slot5:
+                    showvideoplayer();
                     resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
                     scrollview_meta.setVisibility(View.VISIBLE);
                     scrollView_encyrption.setVisibility(View.INVISIBLE);
                     scrollview_detail.setVisibility(View.INVISIBLE);
                     break;
                 case R.id.txt_slot6:
+                    showvideoplayer();
                     resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
                     scrollView_encyrption.setVisibility(View.VISIBLE);
                     scrollview_detail.setVisibility(View.INVISIBLE);
                     scrollview_meta.setVisibility(View.INVISIBLE);
                     break;
                 case R.id.img_edit_name:
-                    gethelper().setwindowfitxy(false);
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                    edt_medianame.setClickable(true);
-                    edt_medianame.setEnabled(true);
-                    edt_medianame.setFocusable(true);
-                    edt_medianame.setFocusableInTouchMode(true);
-                    edt_medianame.setSelection(edt_medianame.getText().length());
-                    edt_medianame.requestFocus();
+                    visiblefocus(edt_medianame);
                     break;
                 case R.id.img_edit_notes:
-                    gethelper().setwindowfitxy(false);
-                    InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                    edt_medianotes.setClickable(true);
-                    edt_medianotes.setEnabled(true);
-                    edt_medianotes.setFocusable(true);
-                    edt_medianotes.setFocusableInTouchMode(true);
-                    edt_medianotes.setSelection(edt_medianotes.getText().length());
-                    edt_medianotes.requestFocus();
+                    visiblefocus(edt_medianotes);
 
                     break;
                 case R.id.img_share_media:
@@ -1040,6 +1024,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             // recenterplaypause();
                     } else{
                             //setheaderlayout(false);
+                                removeheaderpadding();
                                 xdata.getinstance().saveSetting("fullscreen", "" + "halfscreen");
                                 layout_halfscrnimg.getLayoutParams().height = videoviewheight;
                                 layout_videodetails.getLayoutParams().height = detailviewheight;
@@ -1223,11 +1208,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                 case R.id.layout_dtls:
                     Log.e("ontouch","ontouchscrollview");
-                   // if(layout_halfscrnimg.getVisibility() == View.GONE){
+                    if(layout_halfscrnimg.getVisibility() == View.GONE){
+                        layout_halfscrnimg.setVisibility(View.VISIBLE);
+                        removeheadermargin();
                         view.clearFocus();
                         InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         immm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-               //     }
+                    }
                     break;
             }
         }
@@ -2561,31 +2548,25 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void showhideviewondrawer(boolean drawershown) {
         super.showhideviewondrawer(drawershown);
 
-        if(drawershown)
-        {
+        if (drawershown) {
             //layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
             gethelper().updateactionbar(0);
             layout_mediatype.setVisibility(View.GONE);
-          //  common.slidetoabove(layout_mediatype);
+            //  common.slidetoabove(layout_mediatype);
             layoutbackgroundcontroller.setVisibility(View.GONE);
             layout_footer.setVisibility(View.GONE);
             playpausebutton.setVisibility(View.GONE);
             img_fullscreen.setVisibility(View.GONE);
             imgpause.setVisibility(View.GONE);
-        }
-        else
-        {
-            if(player != null && player.isPlaying())
-            {
+        } else {
+            if (player != null && player.isPlaying()) {
                 layout_footer.setVisibility(View.GONE);
                 layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.GONE);
                 imgpause.setVisibility(View.VISIBLE);
                 gethelper().updateactionbar(0);
                 layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-            }
-            else
-            {
+            } else {
                 layoutbackgroundcontroller.setVisibility(View.GONE);
                 layout_footer.setVisibility(View.VISIBLE);
                 layout_mediatype.setVisibility(View.VISIBLE);
@@ -2598,12 +2579,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         }
 
-    }
-
-    public void setheadermargine(){
-        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
-        layout_mediatype.setLayoutParams(params);
     }
 
     public void setheadermargine(int headerheight,int scrubberheight){
@@ -2658,6 +2633,67 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
             params.setMargins(0,0,0,navigationbarheight);
             layout_footer.setLayoutParams(params);
+        }
+    }
+
+    public void hidefocus(EditText edittext){
+        edittext.setClickable(false);
+        edittext.setFocusable(false);
+        edittext.setFocusableInTouchMode(false);
+        layout_halfscrnimg.setVisibility(View.VISIBLE);
+        layout_validating.setVisibility(View.VISIBLE);
+        removeheadermargin();
+    }
+
+    public void removeheaderpadding(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW,R.id.layout_halfscrnimg);
+        layout_videodetails.setPadding(0,0,0,footerheight);
+        layout_videodetails.setLayoutParams(params);
+        layout_videodetails.requestLayout();
+    }
+    public void setheadermargin(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,detailviewheight+headerheight);
+        params.setMargins(0,headerheight,0,0);
+        layout_videodetails.setPadding(0,0,0,0);
+        layout_videodetails.setLayoutParams(params);
+        layout_videodetails.requestLayout();
+    }
+
+    public void removeheadermargin(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW,R.id.layout_halfscrnimg);
+        params.setMargins(0,0,0,0);
+        Log.e("bottompadding",""+bottompadding);
+
+        layout_videodetails.setPadding(0,0,0,(bottompadding*2));
+        layout_videodetails.setLayoutParams(params);
+        layout_videodetails.requestLayout();
+    }
+
+    public void visiblefocus(EditText edittext){
+        layout_halfscrnimg.setVisibility(View.GONE);
+        layout_validating.setVisibility(View.GONE);
+
+        setheadermargin();
+       // gethelper().setwindowfitxy(false);
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        edittext.setClickable(true);
+        edittext.setEnabled(true);
+        edittext.setFocusable(true);
+        edittext.setFocusableInTouchMode(true);
+        edittext.setSelection(edittext.getText().length());
+        edittext.requestFocus();
+
+    }
+
+    public void showvideoplayer(){
+        if(layout_halfscrnimg.getVisibility() == View.GONE){
+            hidekeyboard();
+            layout_halfscrnimg.setVisibility(View.VISIBLE);
+            layout_validating.setVisibility(View.VISIBLE);
+            removeheadermargin();
         }
     }
 }

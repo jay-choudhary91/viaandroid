@@ -274,7 +274,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @BindView(R.id.img_verified)
     ImageView img_verified;
     @BindView(R.id.audio_container)
-    NestedScrollView audiorootview;
+    RelativeLayout audiorootview;
     @BindView(R.id.layout_dtls)
     LinearLayout layout_dtls;
     GoogleMap mgooglemap;
@@ -334,7 +334,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     adapteritemclick mcontrollernavigator;
     arraycontainer arraycontainerformetric =null;
     int currentprocessframe=0;
-    int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight;
+    int rootviewheight , audioviewheight,audiodetailviewheight ,mediatypeheight ,bottompadding;
     int footerheight;
     encryptiondataadapter encryptionadapter;
     @BindView(R.id.img_phone_orientation)
@@ -392,6 +392,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             public void run() {
                 rootviewheight = audiorootview.getHeight();
                 mediatypeheight = layout_mediatype.getHeight();
+                bottompadding = layout_audiodetails.getPaddingBottom();
                 //rootviewheight = rootviewheight - layout_mediatype.getHeight();
                 audioviewheight = ((rootviewheight * 60 )/100);
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
@@ -560,6 +561,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     edt_medianame.setFocusableInTouchMode(false);
                     edt_medianame.setKeyListener(null);
                     editabletext();
+                    showaudioplayer();
                     return true;
                 }
                 else {
@@ -615,9 +617,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void onKeyboardHidden() {
                 edt_medianame.setEnabled(false);
-                edt_medianotes.setClickable(false);
-                edt_medianotes.setFocusable(false);
-                edt_medianotes.setFocusableInTouchMode(false);
+                hidefocus(edt_medianotes);
             }
         });
 
@@ -625,9 +625,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             @Override
             public void onKeyboardHidden() {
 
-                edt_medianame.setClickable(false);
-                edt_medianame.setFocusable(false);
-                edt_medianame.setFocusableInTouchMode(false);
+                hidefocus(edt_medianame);
             }
         });
         edt_medianotes.setOnTouchListener(new View.OnTouchListener() {
@@ -674,39 +672,25 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 break;
 
             case R.id.txt_slot5:
+                showaudioplayer();
                 resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
                 scrollview_meta.setVisibility(View.VISIBLE);
                 scrollView_encyrption.setVisibility(View.INVISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
                 break;
             case R.id.txt_slot6:
+                showaudioplayer();
                 resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
                 scrollView_encyrption.setVisibility(View.VISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
                 scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
             case R.id.img_edit_name:
-                gethelper().setwindowfitxy(false);
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                edt_medianame.setClickable(true);
-                edt_medianame.setEnabled(true);
-                edt_medianame.setFocusable(true);
-                edt_medianame.setFocusableInTouchMode(true);
-                edt_medianame.setSelection(edt_medianame.getText().length());
-                edt_medianame.requestFocus();
+                visiblefocus(edt_medianame);
 
                 break;
             case R.id.img_edit_notes:
-                gethelper().setwindowfitxy(false);
-                InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                edt_medianotes.setClickable(true);
-                edt_medianotes.setEnabled(true);
-                edt_medianotes.setFocusable(true);
-                edt_medianotes.setFocusableInTouchMode(true);
-                edt_medianotes.setSelection(edt_medianotes.getText().length());
-                edt_medianotes.requestFocus();
+                visiblefocus(edt_medianotes);
 
                 break;
             case R.id.img_share_media:
@@ -776,6 +760,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }
                 break;
             case R.id.img_handleup:
+                removeheaderpadding();
                 recenterplaypause(0);
                 addbottommargin(mediatypeheight);
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
@@ -894,9 +879,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 break;
             case R.id.layout_dtls:
+                if(rlcontrollerview.getVisibility() == View.GONE){
+                    rlcontrollerview.setVisibility(View.VISIBLE);
+                    removeheadermargin();
                     view.clearFocus();
                     InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     immm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 break;
 
 
@@ -2271,5 +2260,65 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         linearseekbarcolorview.setLayoutParams(parms);
 
         Log.e("linearseekbarcolorview",""+mediaseekbar.getHeight());
+    }
+
+    public void hidefocus(EditText edittext){
+        edittext.setClickable(false);
+        edittext.setFocusable(false);
+        edittext.setFocusableInTouchMode(false);
+        rlcontrollerview.setVisibility(View.VISIBLE);
+        removeheadermargin();
+    }
+
+    public void removeheaderpadding(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW,R.id.rl_controllerview);
+        layout_audiodetails.setPadding(0,0,0,footerheight);
+        layout_audiodetails.setLayoutParams(params);
+        layout_audiodetails.requestLayout();
+    }
+    public void setheadermargin(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, audiodetailviewheight + mediatypeheight);
+        params.setMargins(0,mediatypeheight,0,0);
+        layout_audiodetails.setPadding(0,0,0,0);
+        layout_audiodetails.setLayoutParams(params);
+        layout_audiodetails.requestLayout();
+    }
+
+    public void removeheadermargin(){
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.BELOW,R.id.rl_controllerview);
+        params.setMargins(0,0,0,0);
+        Log.e("bottompadding",""+bottompadding);
+
+        layout_audiodetails.setPadding(0,0,0,(bottompadding*2));
+        layout_audiodetails.setLayoutParams(params);
+        layout_audiodetails.requestLayout();
+    }
+
+    public void visiblefocus(EditText edittext){
+        rlcontrollerview.setVisibility(View.GONE);
+
+
+        setheadermargin();
+        // gethelper().setwindowfitxy(false);
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        edittext.setClickable(true);
+        edittext.setEnabled(true);
+        edittext.setFocusable(true);
+        edittext.setFocusableInTouchMode(true);
+        edittext.setSelection(edittext.getText().length());
+        edittext.requestFocus();
+
+    }
+
+    public void showaudioplayer(){
+        if(rlcontrollerview.getVisibility() == View.GONE){
+            hidekeyboard();
+            rlcontrollerview.setVisibility(View.VISIBLE);
+
+            removeheadermargin();
+        }
     }
 }
