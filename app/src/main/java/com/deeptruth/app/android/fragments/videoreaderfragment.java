@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -426,6 +427,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
             //setheadermargine();
             navigationbarheight =  common.getnavigationbarheight();
+            setfooterlayout();
             gethelper().setdatacomposing(false);
 
             /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
@@ -490,7 +492,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 detailviewheight = (rootviewheight - (videoviewheight+navigationbarheight));
                 layout_videodetails.getLayoutParams().height = detailviewheight;
                 layout_videodetails.requestLayout();
-                setfooterlayout(false);
+
 
             }
         });
@@ -1018,7 +1020,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         if(layout_videodetails.getVisibility()==View.VISIBLE){
                             xdata.getinstance().saveSetting("fullscreen", "" + "fullscreen");
                             layout_halfscrnimg.getLayoutParams().height = (rootviewheight-navigationbarheight);
-                            setfooterlayout(true);
 
                            layout_videodetails.getLayoutParams().height = 0;
                             gethelper().drawerenabledisable(false);
@@ -1043,7 +1044,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 xdata.getinstance().saveSetting("fullscreen", "" + "halfscreen");
                                 layout_halfscrnimg.getLayoutParams().height = videoviewheight;
                                 layout_videodetails.getLayoutParams().height = detailviewheight;
-                                setfooterlayout(false);
                                 gethelper().drawerenabledisable(false);
                                 gethelper().updateactionbar(1);
                                 playpausebutton.setVisibility(View.GONE);
@@ -2646,19 +2646,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
 
-    public void setfooterlayout(boolean isfottermarginset){
+    public void setfooterlayout(){
 
-        if(isfottermarginset){
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
+            CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.MATCH_PARENT, CoordinatorLayout.LayoutParams.MATCH_PARENT);
             params.setMargins(0,0,0,navigationbarheight);
-            layout_footer.setLayoutParams(params);
-        }else{
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
-            params.setMargins(0,0,0,navigationbarheight);
-            layout_footer.setLayoutParams(params);
-        }
+            layout_videoreader.setLayoutParams(params);
     }
 }
 
