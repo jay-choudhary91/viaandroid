@@ -2282,7 +2282,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         params.setMargins(0,0,0,0);
         Log.e("bottompadding",""+bottompadding);
 
-        layout_audiodetails.setPadding(0,0,0,(bottompadding*2));
+        layout_audiodetails.setPadding(0,0,0,(footerheight));
         layout_audiodetails.setLayoutParams(params);
         layout_audiodetails.requestLayout();
     }

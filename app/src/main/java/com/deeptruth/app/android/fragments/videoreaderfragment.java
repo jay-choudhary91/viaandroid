@@ -2220,7 +2220,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));
 
-                if(arraycontainerformetric != null)
+                if(arraycontainerformetric != null && layout_halfscrnimg.getVisibility() == View.VISIBLE)
                 {
                     String color = "white";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
@@ -2658,7 +2658,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         params.setMargins(0,0,0,0);
         Log.e("bottompadding",""+bottompadding);
 
-        layout_videodetails.setPadding(0,0,0,(bottompadding*2));
+        layout_videodetails.setPadding(0,0,0,(footerheight));
         layout_videodetails.setLayoutParams(params);
         layout_videodetails.requestLayout();
     }

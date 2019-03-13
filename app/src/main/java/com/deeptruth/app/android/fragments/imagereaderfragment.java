@@ -547,12 +547,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 break;
 
             case R.id.txt_slot5:
+                showimageview();
                 resetButtonViews(txtslotmeta, txtslotmedia, txtslotencyption);
                 scrollview_meta.setVisibility(View.VISIBLE);
                 scrollView_encyrption.setVisibility(View.INVISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
                 break;
             case R.id.txt_slot6:
+                showimageview();
                 resetButtonViews(txtslotencyption, txtslotmedia, txtslotmeta);
                 scrollView_encyrption.setVisibility(View.VISIBLE);
                 scrollview_detail.setVisibility(View.INVISIBLE);
@@ -1479,7 +1481,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         params.setMargins(0,0,0,0);
          Log.e("bottompadding",""+bottompadding);
 
-        layout_photodetails.setPadding(0,0,0,(bottompadding*2));
+        layout_photodetails.setPadding(0,0,0,(footerheight));
         layout_photodetails.setLayoutParams(params);
         layout_photodetails.requestLayout();
     }
@@ -1549,5 +1551,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         edittext.setFocusable(true);
         edittext.setFocusableInTouchMode(true);
         edittext.requestFocus();
+    }
+
+    public void showimageview(){
+        if(layout_halfscrn.getVisibility() == View.GONE){
+            hidekeyboard();
+            layout_halfscrn.setVisibility(View.VISIBLE);
+            layout_validating.setVisibility(View.VISIBLE);
+            removeheadermargin();
+        }
     }
 }
