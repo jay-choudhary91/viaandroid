@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "311325935925",
+    "firebase_url": "https://deeptruth-829de.firebaseio.com",
+    "project_id": "deeptruth-829de",
+    "storage_bucket": "deeptruth-829de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311325935925:android:06a0f823bc16f3fd",
+        "android_client_info": {
+          "package_name": "com.deeptruth.app.composer.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311325935925-amprdnklvqsjncih9n2gomjogcdqg8l7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4dKOOYMMobafO7I_knJ2ujzXZpvdZ0hQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311325935925:android:7fe2bf1d62e1d295",
+        "android_client_info": {
+          "package_name": "com.deeptruth.app.reader.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311325935925-amprdnklvqsjncih9n2gomjogcdqg8l7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4dKOOYMMobafO7I_knJ2ujzXZpvdZ0hQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
