@@ -255,9 +255,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
             navigationbarheight =  common.getnavigationbarheight();
+            setfooterlayout();
             //    setheadermargine();
             loadviewdata();
-
         }
         return rootview;
     }
@@ -277,7 +277,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 layout_halfscrn.requestLayout();
                 layout_photodetails.getLayoutParams().height = (devidedheight-navigationbarheight);
                 layout_photodetails.requestLayout();
-                setfooterlayout(false);
+
 
                 setupimagedata();
             }
@@ -624,7 +624,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     }
                 }, 500);
                 if(layout_photodetails.getVisibility()==View.VISIBLE){
-                    setfooterlayout(true);
                     gethelper().drawerenabledisable(true);
                     layout_halfscrn.getLayoutParams().height = (rootviewheight -navigationbarheight);
                     layout_photodetails.getLayoutParams().height = 0;
@@ -642,7 +641,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 } else{
                     removeheaderpadding();
-                    setfooterlayout(false);
                     gethelper().drawerenabledisable(false);
                     layout_halfscrn.getLayoutParams().height = devidedheight;
                     layout_photodetails.getLayoutParams().height = (devidedheight-navigationbarheight);
@@ -1518,19 +1516,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     }
 
 
-    public void setfooterlayout(boolean isfottermarginset){
+    public void setfooterlayout(){
 
-        if(isfottermarginset){
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
             params.setMargins(0,0,0,navigationbarheight);
-            layout_footer.setLayoutParams(params);
-        }else{
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
-            params.setMargins(0,0,0,navigationbarheight);
-            layout_footer.setLayoutParams(params);
-        }
+            layout_photoreader.setLayoutParams(params);
     }
 
     public void hidefocus(EditText edittext){

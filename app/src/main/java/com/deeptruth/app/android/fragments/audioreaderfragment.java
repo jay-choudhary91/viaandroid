@@ -357,6 +357,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             ButterKnife.bind(this, rootview);
            // setheadermargine();
             navigationbarheight =  common.getnavigationbarheight();
+            setfooterlayout();
             gethelper().setdatacomposing(false);
             gethelper().setwindowfitxy(true);
             loadviewdata();
@@ -405,7 +406,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 layout_audiodetails.setVisibility(View.VISIBLE);
                 layout_audiodetails.requestLayout();
 
-                setfooterlayout(false);
+
                 setupaudiodata();
             }
         });
@@ -733,7 +734,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                       removebottommargin();
                       recenterplaypause(1);
                       rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
-                      setfooterlayout(true);
                       layout_audiodetails.getLayoutParams().height = 0;
                       layout_audiodetails.setVisibility(View.GONE);
                       layout_footer.setVisibility(View.GONE);
@@ -765,7 +765,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 addbottommargin(mediatypeheight);
                 rlcontrollerview.getLayoutParams().height = audioviewheight;
                 layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
-                setfooterlayout(false);
                 layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.white));
                 layout_audiodetails.setVisibility(View.VISIBLE);
                 layout_footer.setVisibility(View.VISIBLE);
@@ -2151,19 +2150,11 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         audio_downwordarrow.requestLayout();
     }
 
-    public void setfooterlayout(boolean isfottermarginset){
+    public void setfooterlayout(){
 
-        if(isfottermarginset){
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
             params.setMargins(0,0,0,navigationbarheight);
-            layout_footer.setLayoutParams(params);
-        }else{
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
-            params.setMargins(0,0,0,navigationbarheight);
-            layout_footer.setLayoutParams(params);
-        }
+            layout_photoreader.setLayoutParams(params);
     }
 
     @Override
