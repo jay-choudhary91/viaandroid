@@ -253,7 +253,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-            gethelper().setwindowfitxy(true);
             navigationbarheight =  common.getnavigationbarheight();
             //    setheadermargine();
             loadviewdata();
@@ -420,7 +419,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     v.setFocusable(false);
-                    gethelper().setwindowfitxy(true);
+                    //gethelper().setwindowfitxy(true);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     // if (arraymediaitemlist.size() > 0) {
@@ -438,7 +437,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 if (!hasFocus) {
                     edt_medianame.setKeyListener(null);
                     v.setFocusable(false);
-                    gethelper().setwindowfitxy(true);
+                    //gethelper().setwindowfitxy(true);
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(edt_medianame.getWindowToken(), 0);
                     // if (arraymediaitemlist.size() > 0) {
@@ -555,7 +554,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 scrollview_meta.setVisibility(View.INVISIBLE);
                 break;
             case R.id.img_edit_name:
-                gethelper().setwindowfitxy(false);
+               // gethelper().setwindowfitxy(false);
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 edt_medianame.setSelection(edt_medianame.getText().length());
@@ -566,7 +565,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 edt_medianame.requestFocus();
                 break;
             case R.id.img_edit_notes:
-                gethelper().setwindowfitxy(false);
+               // gethelper().setwindowfitxy(false);
                 InputMethodManager immn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 immn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 edt_medianotes.setSelection(edt_medianotes.getText().length());
