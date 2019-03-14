@@ -426,8 +426,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
             if(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)).equalsIgnoreCase("NA")) {
                 common.setdrawabledata(getResources().getString(R.string.address),": "+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
-            }else{
-                common.setdrawabledata("","\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
+            }else{ // remove "/n" from address
+                common.setdrawabledata("",common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
 
             }
             common.setdrawabledata(getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
@@ -620,6 +620,10 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
                 layout_datalatency.setVisibility(View.GONE);
             }
+        }
+        else
+        {
+            layout_datalatency.setVisibility(View.GONE);
         }
     }
 
@@ -868,7 +872,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                             common.setdrawabledata(getResources().getString(R.string.heading),"\n"+heading + "°", tvheading);
 
                         }
-                        common.setdrawabledata("","\n"+heading +"° " +common.getcompassdirection(heading) , txtdegree);
+                        common.setdrawabledata("",+heading +"° " +common.getcompassdirection(heading) , txtdegree);
 
                     }
                 });

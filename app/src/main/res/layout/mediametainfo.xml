@@ -66,7 +66,7 @@
                android:id="@+id/txt_address"
                app:fontType="Comfortaa-Regular"
                style="@style/txt_normalview"
-               android:layout_marginTop="10dp"
+               android:layout_marginTop="5dp"
                android:text="X-Axis"/>
 
            <LinearLayout
@@ -80,26 +80,42 @@
                <RelativeLayout
                    android:layout_width="0dp"
                    android:layout_weight="0.4"
-                   android:layout_height="150dp">
+                   android:layout_height="180dp">
+                   <RelativeLayout
+                       android:layout_width="match_parent"
+                       android:id="@+id/layout_compass"
+                       android:layout_above="@+id/txt_degree"
+                       android:layout_height="150dp">
                        <ImageView
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
+                           android:layout_width="match_parent"
+                           android:layout_height="150dp"
                            android:layout_gravity="center"
                            android:id="@+id/layoutcompass"
-                           android:src="@drawable/img_compass"
-                           android:layout_weight="0.4">
+                           android:layout_centerVertical="true"
+                           android:layout_centerHorizontal="true"
+                           android:src="@drawable/img_compass">
                        </ImageView>
 
                        <ImageView
                            android:id="@+id/img_niddle"
-                           android:layout_width="wrap_content"
+                           android:layout_width="match_parent"
                            android:layout_height="120dp"
                            android:layout_centerVertical="true"
                            android:layout_centerHorizontal="true"
                            android:layout_gravity="center"
                            android:src="@drawable/niddle_withshadow" />
 
+                   </RelativeLayout>
+                   <com.deeptruth.app.android.views.customfonttextview
+                       android:id="@+id/txt_degree"
+                       app:fontType="Comfortaa-Regular"
+                       style="@style/txt_degreeview"
+                       android:layout_alignParentBottom="true"
+                       android:text="Degree"/>
+
                </RelativeLayout>
+
+
 
                <LinearLayout
                    android:layout_width="0dp"
@@ -190,14 +206,6 @@
                    </LinearLayout>
 
                    </LinearLayout>
-           <com.deeptruth.app.android.views.customfonttextview
-               android:id="@+id/txt_degree"
-               app:fontType="Comfortaa-Regular"
-               android:layout_centerHorizontal="true"
-               style="@style/txt_degreeview"
-               android:layout_below="@+id/layoutcompass"
-               android:gravity="left"
-               android:text="Degree"/>
           </LinearLayout>
 
 

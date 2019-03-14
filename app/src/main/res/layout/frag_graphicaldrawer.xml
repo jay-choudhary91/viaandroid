@@ -51,7 +51,7 @@
             android:layout_alignParentTop="true"
             android:isScrollContainer="false"
             android:scrollbars="none"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="5dp"
             android:layout_above="@+id/layout_transparency_meter"
             android:visibility="visible">
 
