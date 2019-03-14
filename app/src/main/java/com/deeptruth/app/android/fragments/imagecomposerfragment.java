@@ -1789,12 +1789,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     if (isflashon) {
                         mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
                         mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
-                        imgflashon.setImageResource(R.drawable.ic_no_flash_icon);
+                        imgflashon.setImageResource(R.drawable.icon_flashoff);
                         isflashon = false;
                     } else {
                         mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
                         mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
-                        imgflashon.setImageResource(R.drawable.flash_on);
+                        imgflashon.setImageResource(R.drawable.icon_flashon);
                         isflashon = true;
                     }
                 }
