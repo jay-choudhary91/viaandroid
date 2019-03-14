@@ -357,8 +357,9 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         tab_photoreader.setOnClickListener(this);
 
         try {
-            DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));
+            img_phone_orientation.setImageResource(R.drawable.img_phoneorientation);
+            /*DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));*/
         }catch (Exception e)
         {
             e.printStackTrace();
