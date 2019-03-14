@@ -552,12 +552,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(currentselectedcomposer == 0)
                 {
                     if(fragvideocomposer != null)
-                        fragvideocomposer.switchCamera();
+                        fragvideocomposer.switchCamera(imgrotatecamera);
                 }
                 else if(currentselectedcomposer == 1)
                 {
                     if(fragimgcapture != null)
-                        fragimgcapture.switchCamera();
+                        fragimgcapture.switchCamera(imgrotatecamera);
                 }
                 break;
 

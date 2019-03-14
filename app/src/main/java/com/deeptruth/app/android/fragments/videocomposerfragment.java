@@ -2070,14 +2070,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
 
-    public void switchCamera() {
+    public void switchCamera(ImageView imageView) {
         if (cameraId.equals(CAMERA_FRONT)) {
+            imageView.setImageResource(R.drawable.icon_cameraflip);
             cameraId = CAMERA_BACK;
             closeCamera();
             reopenCamera();
 
         } else if (cameraId.equals(CAMERA_BACK)) {
             cameraId = CAMERA_FRONT;
+            imageView.setImageResource(R.drawable.icon_reversecamera);
             closeCamera();
             reopenCamera();
         }

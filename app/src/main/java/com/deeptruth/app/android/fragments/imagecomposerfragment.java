@@ -1814,14 +1814,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void switchCamera() {
+    public void switchCamera(ImageView imageview) {
         if (cameraid.equals(CAMERA_FRONT)) {
+            imageview.setImageResource(R.drawable.icon_cameraflip);
             cameraid = CAMERA_BACK;
             closeCamera();
             reopenCamera();
 
         } else if (cameraid.equals(CAMERA_BACK)) {
             cameraid = CAMERA_FRONT;
+            imageview.setImageResource(R.drawable.icon_reversecamera);
             closeCamera();
             reopenCamera();
         }
