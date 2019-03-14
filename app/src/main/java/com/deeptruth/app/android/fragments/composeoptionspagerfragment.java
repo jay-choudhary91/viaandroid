@@ -111,6 +111,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_encrypting;
     @BindView(R.id.txt_section_validating_secondary)
     TextView txt_section_validating_secondary;
+    @BindView(R.id.layout_encryption)
+    RelativeLayout layout_encryption;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -1044,19 +1046,23 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             imgrotatecamera.setVisibility(View.INVISIBLE);
             layout_mediatype.setVisibility(View.INVISIBLE);
             txt_encrypting.setVisibility(View.VISIBLE);
+            layout_encryption.setVisibility(View.VISIBLE);
         } else if(i == 1){
             img_mediathumbnail.setVisibility(View.VISIBLE);
             txt_encrypting.setVisibility(View.INVISIBLE);
+            layout_encryption.setVisibility(View.INVISIBLE);
             imgrotatecamera.setVisibility(View.VISIBLE);
             layout_mediatype.setVisibility(View.VISIBLE);
         } else if( i == 2){
             layout_mediatype.setVisibility(View.INVISIBLE);
             img_mediathumbnail.setVisibility(View.INVISIBLE);
             txt_encrypting.setVisibility(View.VISIBLE);
+            layout_encryption.setVisibility(View.VISIBLE);
         }
         else if( i == 3){
             layout_mediatype.setVisibility(View.VISIBLE);
             txt_encrypting.setVisibility(View.INVISIBLE);
+            layout_encryption.setVisibility(View.INVISIBLE);
             img_mediathumbnail.setVisibility(View.VISIBLE);
         }
 
