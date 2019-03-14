@@ -812,7 +812,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         ,mdbstartitemcontainer.get(0).getItem6(),mdbstartitemcontainer.get(0).getItem7(),mdbstartitemcontainer.get(0).getItem8(),
                         mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
                         ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
-                        ,"0","sync_pending","","","0","inprogress",medianame,"",
+                        ,"0","sync_pending","","","0","inprogress","","",
                         mdbstartitemcontainer.get(0).getItem16(),"");
 
                 try {

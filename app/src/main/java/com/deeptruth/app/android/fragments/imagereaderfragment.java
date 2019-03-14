@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
@@ -240,7 +241,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     int rootviewheight, devidedheight,actionbarheight;
 
     private BroadcastReceiver getmetadatabroadcastreceiver;
-
+    private TranslateAnimation validationbaranimation;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_phototabreaderfrag;
@@ -255,6 +256,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
             navigationbarheight =  common.getnavigationbarheight();
+            txt_section_validating_secondary.setVisibility(View.INVISIBLE);
             setfooterlayout();
             //    setheadermargine();
             loadviewdata();
@@ -270,6 +272,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run() {
                 rootviewheight = photorootview.getHeight();
+                int rootviewwidth = photorootview.getWidth();
                 Log.e("rootviewheight",""+rootviewheight);
                 devidedheight= rootviewheight/2 ;
 
@@ -278,6 +281,48 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 layout_photodetails.getLayoutParams().height = (devidedheight-navigationbarheight);
                 layout_photodetails.requestLayout();
 
+
+                final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+                alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
+                alphanimation.setStartOffset(1000);
+                alphanimation.setRepeatMode(1);
+
+                Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        //fadeoutcontrollers();
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                };
+                alphanimation.setAnimationListener(alphalistener);
+
+                validationbaranimation = new TranslateAnimation(-rootviewwidth, rootviewwidth ,0.0f, 0.0f);
+                validationbaranimation.setDuration(3000);
+                validationbaranimation.setRepeatCount(Animation.INFINITE);
+                validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
+                img_scanover.startAnimation(validationbaranimation);
+
+                Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(alphanimation);
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(alphanimation);
+                    }
+                };
+                validationbaranimation.setAnimationListener(translatelistener);
 
                 setupimagedata();
             }
@@ -487,8 +532,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 return false;
             }
         });
-        txt_section_validating_secondary.setText(config.caution);
-        txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
 
         edt_medianame.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -823,11 +866,19 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     public void onPause() {
         super.onPause();
         progressdialog.dismisswaitdialog();
+        if(validationbaranimation != null)
+        {
+            validationbaranimation.cancel();
+            validationbaranimation.reset();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        if(validationbaranimation != null)
+            img_scanover.startAnimation(validationbaranimation);
     }
 
     @Override
@@ -936,21 +987,60 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                             setfolderspinner();
 
                                         ArrayList<metricmodel> metricItemArraylist = metricmainarraylist.get(metricmainarraylist.size() - 1).getMetricItemArraylist();
-                                        layout_validating.setVisibility(View.VISIBLE);
-                                        txt_section_validating_secondary.setText(config.verified);
-                                        if (metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_green)) {
-                                            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                                    getactivity().getResources().getColor(R.color.green_background));
-                                        } else if (metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_red)) {
-                                            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                                    getactivity().getResources().getColor(R.color.red));
-                                        } else if (metricmainarraylist.get(0).getColor().equalsIgnoreCase(config.color_yellow)) {
-                                            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                                    getactivity().getResources().getColor(R.color.yellow_background));
-                                        } else {
-                                            txt_section_validating_secondary.setBackgroundColor(applicationviavideocomposer.
-                                                    getactivity().getResources().getColor(R.color.green_background));
+
+                                        if(metricmainarraylist.get(0) != null)
+                                        {
+                                            String color = "white";
+                                            if (metricmainarraylist.get(0).getColor() != null && (!metricmainarraylist.get(0).getColor().isEmpty()))
+                                                color = metricmainarraylist.get(0).getColor();
+
+                                            switch (color) {
+                                                case "green":
+                                                    txt_section_validating_secondary.setText(config.validating);
+                                                    try {
+                                                        DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                                                , R.color.scanover_green));
+                                                    }catch (Exception e)
+                                                    {
+                                                        e.printStackTrace();
+                                                    }
+                                                    layout_validating.setVisibility(View.VISIBLE);
+                                                    //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
+                                                    break;
+                                                case "white":
+                                                    layout_validating.setVisibility(View.GONE);
+                                                    break;
+                                                case "red":
+                                                    txt_section_validating_secondary.setText(config.invalid);
+                                                    try {
+                                                        DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                                                , R.color.scanover_red));
+                                                    }catch (Exception e)
+                                                    {
+                                                        e.printStackTrace();
+                                                    }
+                                                    layout_validating.setVisibility(View.VISIBLE);
+                                                    //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
+                                                    break;
+                                                case "yellow":
+                                                    txt_section_validating_secondary.setText(config.caution);
+                                                    try {
+                                                        DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                                                , R.color.scanover_yellow));
+                                                    }catch (Exception e)
+                                                    {
+                                                        e.printStackTrace();
+                                                    }
+                                                    layout_validating.setVisibility(View.VISIBLE);
+                                                    //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
+                                                    break;
+                                            }
                                         }
+                                        else
+                                        {
+                                            layout_validating.setVisibility(View.GONE);
+                                        }
+
 
                                         common.setgraphicalblockchainvalue(config.blockchainid, metricmainarraylist.get(0).getVideostarttransactionid(), true);
                                         common.setgraphicalblockchainvalue(config.hashformula, metricmainarraylist.get(0).getHashmethod(), true);
@@ -961,34 +1051,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                         common.setspannable(getResources().getString(R.string.block_id), " " + metricmainarraylist.get(0).getHashmethod(), txt_blockid);
                                         common.setspannable(getResources().getString(R.string.block_number), " " + metricmainarraylist.get(0).getValuehash(), txt_blocknumber);
                                         common.setspannable(getResources().getString(R.string.metrichash), " " + metricmainarraylist.get(0).getMetahash(), txt_metahash);
-
-                                        arraycontainer arraycontainerformetric = metricmainarraylist.get(0);
-                                        if (arraycontainerformetric != null) {
-                                            String color = "white";
-                                            if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
-                                                color = arraycontainerformetric.getColor();
-
-                                            switch (color) {
-                                                case "green":
-                                                    layout_validating.setVisibility(View.VISIBLE);
-                                                    txt_section_validating_secondary.setText(config.verified);
-                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
-                                                    break;
-                                                case "white":
-                                                    layout_validating.setVisibility(View.GONE);
-                                                    break;
-                                                case "red":
-                                                    layout_validating.setVisibility(View.VISIBLE);
-                                                    txt_section_validating_secondary.setText(config.caution);
-                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
-                                                    break;
-                                                case "yellow":
-                                                    layout_validating.setVisibility(View.VISIBLE);
-                                                    txt_section_validating_secondary.setText(config.caution);
-                                                    txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
-                                                    break;
-                                            }
-                                        }
 
                                         for (int j = 0; j < metricItemArraylist.size(); j++) {
                                             selectedmetrices = selectedmetrices + "\n" + metricItemArraylist.get(j).getMetricTrackKeyName() + " - " +

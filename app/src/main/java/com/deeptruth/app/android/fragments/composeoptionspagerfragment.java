@@ -109,6 +109,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ImageView img_scanover;
     @BindView(R.id.txt_encrypting)
     TextView txt_encrypting;
+    @BindView(R.id.txt_section_validating_secondary)
+    TextView txt_section_validating_secondary;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -159,6 +161,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
+            txt_section_validating_secondary.setVisibility(View.INVISIBLE);
             recordstartstopbutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
@@ -187,24 +190,50 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             parentview.post(new Runnable() {
                 @Override
                 public void run() {
+
+                    final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+                    alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
+                    alphanimation.setStartOffset(1000);
+                    alphanimation.setRepeatMode(1);
+
+                    Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            //fadeoutcontrollers();
+                        }
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    };
+                    alphanimation.setAnimationListener(alphalistener);
+
                     validationbaranimation = new TranslateAnimation(-parentview.getWidth(), parentview.getWidth()+100 ,0.0f, 0.0f);
                     validationbaranimation.setDuration(3000);
                     validationbaranimation.setRepeatCount(Animation.INFINITE);
                     validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
                     img_scanover.startAnimation(validationbaranimation);
-                    Animation.AnimationListener listener=new Animation.AnimationListener() {
+
+                    Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
+                            txt_section_validating_secondary.startAnimation(alphanimation);
+                            txt_encrypting.startAnimation(alphanimation);
                         }
                         @Override
                         public void onAnimationEnd(Animation animation) {
                         }
                         @Override
                         public void onAnimationRepeat(Animation animation) {
-                            animation.setStartOffset(1000);
+                            txt_section_validating_secondary.startAnimation(alphanimation);
+                            txt_encrypting.startAnimation(alphanimation);
                         }
                     };
-                    validationbaranimation.setAnimationListener(listener);
+                    validationbaranimation.setAnimationListener(translatelistener);
                 }
             });
 
@@ -791,7 +820,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             if(currentselectedcomposer == 0)
             {
-                startblinkencryption();
                 if(validationbaranimation != null)
                     img_scanover.startAnimation(validationbaranimation);
 
@@ -799,7 +827,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             else if(currentselectedcomposer == 2)
             {
-                startblinkencryption();
                 if(validationbaranimation != null)
                     img_scanover.startAnimation(validationbaranimation);
 
@@ -810,7 +837,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(type == 2) // for video record stop,audio record stop and image captured button click
         {
-            stopblinkencryption();
             if(validationbaranimation != null)
             {
                 validationbaranimation.cancel();

@@ -59,7 +59,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
@@ -426,6 +428,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
+            txt_section_validating_secondary.setVisibility(View.INVISIBLE);
             //setheadermargine();
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
@@ -710,24 +713,48 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 targetheight= layout_videoreader.getHeight();
                 targetwidth = layout_videoreader.getWidth();
                 int totalwidth= targetwidth + 100;
+
+                final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+                alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
+                alphanimation.setStartOffset(1000);
+                alphanimation.setRepeatMode(1);
+
+                Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        //fadeoutcontrollers();
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                };
+                alphanimation.setAnimationListener(alphalistener);
+
                 validationbaranimation = new TranslateAnimation(-totalwidth, totalwidth ,0.0f, 0.0f);
-                validationbaranimation.setDuration(4000);
+                validationbaranimation.setDuration(3000);
                 validationbaranimation.setRepeatCount(Animation.INFINITE);
                 validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
                 img_scanover.startAnimation(validationbaranimation);
-                Animation.AnimationListener listener=new Animation.AnimationListener() {
+
+                Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(alphanimation);
                     }
                     @Override
                     public void onAnimationEnd(Animation animation) {
                     }
                     @Override
                     public void onAnimationRepeat(Animation animation) {
-                        animation.setStartOffset(1000);
+                        txt_section_validating_secondary.startAnimation(alphanimation);
                     }
                 };
-                validationbaranimation.setAnimationListener(listener);
+                validationbaranimation.setAnimationListener(translatelistener);
             }
         });
 
@@ -822,6 +849,33 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run() {
                footerheight = layout_footer.getHeight();
+            }
+        });
+    }
+
+
+    public void fadeoutcontrollers()
+    {
+        txt_section_validating_secondary.setAlpha(1f);
+        txt_section_validating_secondary.animate().alpha(0f).setDuration(1000).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
             }
         });
     }
