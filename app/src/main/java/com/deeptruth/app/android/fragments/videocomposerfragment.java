@@ -616,7 +616,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,0,10,0);
+                        img_dotmenu.setPadding(10,20,10,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
@@ -639,7 +639,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,0,10,0);
+                        img_dotmenu.setPadding(10,20,10,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
@@ -669,7 +669,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, 20,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,0,10,0);
+                        img_dotmenu.setPadding(10,20,10,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(20, 0, 0,  0);
