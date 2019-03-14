@@ -688,10 +688,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 break;
             case R.id.img_edit_name:
                 visiblefocus(edt_medianame);
-
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                 break;
             case R.id.img_edit_notes:
                 visiblefocus(edt_medianotes);
+                InputMethodManager imn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
 
                 break;
             case R.id.img_share_media:
@@ -2293,8 +2296,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
         setheadermargin();
         // gethelper().setwindowfitxy(false);
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         edittext.setClickable(true);
         edittext.setEnabled(true);
         edittext.setFocusable(true);
