@@ -116,6 +116,26 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 getcurrentfragment().showhideviewondrawer(true);
 
             }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                if(slideOffset > 0.0)  // Moving to right
+                {
+                    imgrighthandle.setVisibility(View.VISIBLE);
+                    imglefthandle.setVisibility(View.GONE);
+                }
+                else  // Moving to left
+                {
+                    imgrighthandle.setVisibility(View.GONE);
+                    imglefthandle.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+            }
         };
         navigationdrawer.addDrawerListener(drawertoggle);
         drawertoggle.syncState();
