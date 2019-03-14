@@ -120,7 +120,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                Log.e("offset ",""+slideOffset);
                 if(slideOffset > 0.0)  // Moving to right
                 {
                     imgrighthandle.setVisibility(View.VISIBLE);
