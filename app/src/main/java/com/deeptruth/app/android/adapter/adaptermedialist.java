@@ -201,7 +201,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             if(mediaobject.getMediatitle().trim().isEmpty())
             {
-                holder.edtvideoname.setText("No Title");
+                holder.edtvideoname.setText(config.no_title);
             }
             else
             {

@@ -126,25 +126,27 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         fragment_container.setOnTouchListener(this);
 
         drawerenabledisable(false);
-        new Handler().postDelayed(new Runnable() {
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                fragmedialist =new fragmentmedialist();
-                fragmedialist.shouldlaunchcomposer(true);
-                replaceFragment(fragmedialist, false, true);
 
-                if(graphicaldrawerfragment == null)
-                {
-                    graphicaldrawerfragment =new fragmentgraphicaldrawer();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-                    transaction.commit();
-                }
-
-                detectphonecallservice();
-                setdrawerdata();
             }
-        },100);
+        },100);*/
+
+        fragmedialist =new fragmentmedialist();
+        fragmedialist.shouldlaunchcomposer(true);
+        replaceFragment(fragmedialist, false, true);
+
+        if(graphicaldrawerfragment == null)
+        {
+            graphicaldrawerfragment =new fragmentgraphicaldrawer();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
+            transaction.commit();
+        }
+
+        detectphonecallservice();
+        setdrawerdata();
     }
 
     public void detectphonecallservice()

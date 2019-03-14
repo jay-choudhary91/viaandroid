@@ -119,6 +119,19 @@
         android:clipToPadding="true"
         android:layout_height="wrap_content">
 
+        <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="OpenSans_Regular"
+            android:id="@+id/txt_encrypting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:text="@string/encrypting"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:paddingRight="10dp"/>
+
         <ImageView
             android:id="@+id/img_mediathumbnail"
             android:layout_width="50dp"
