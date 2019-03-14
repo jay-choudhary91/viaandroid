@@ -49,7 +49,6 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
         public TextView tv_mediaduration;
         public ImageView img_mediathumbnail,img_scanover,img_loader;
         public RelativeLayout rl_row_media;
-        public ShimmerFrameLayout shimmer_view_container;
 
         public myViewHolder(View view) {
             super(view);
@@ -58,7 +57,6 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             img_scanover = (ImageView) view.findViewById(R.id.img_scanover);
             img_loader = (ImageView) view.findViewById(R.id.img_loader);
             rl_row_media = (RelativeLayout) view.findViewById(R.id.rl_row_media);
-            shimmer_view_container = (ShimmerFrameLayout) view.findViewById(R.id.shimmer_view_container);
         }
     }
 
