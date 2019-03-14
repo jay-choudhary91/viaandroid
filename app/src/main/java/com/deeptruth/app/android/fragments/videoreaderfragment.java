@@ -396,6 +396,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private ArrayList<frame> mbitmaplist =new ArrayList<>();
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
+    private ArrayList<arraycontainer> encryptionarraylist = new ArrayList<>();
     boolean runmethod = false;
     public boolean isvideocompleted=false,ismapzoomed=false,isfragmentstopped=false;
     public int flingactionmindstvac;
@@ -483,7 +484,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         //recyview_frames.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         //recyview_frames.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
-        encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
+        encryptionadapter = new encryptiondataadapter(encryptionarraylist,applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
 
         showcontrollers.post(new Runnable() {
@@ -579,8 +580,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                            arraycontainerformetric = metricmainarraylist.get(processframe);
                        }
 
-                       if (encryptionadapter != null && recycler_encryption != null)
-                               recycler_encryption.smoothScrollToPosition(processframe);
+                       if(encryptionarraylist.size() == 0)
+                           encryptionarraylist.add(arraycontainerformetric);
+
+                       if(encryptionarraylist.size() > 0)
+                       {
+                           encryptionarraylist.set(0,arraycontainerformetric);
+                           encryptionadapter.notifyDataSetChanged();
+                       }
+
+                       /*if (encryptionadapter != null && recycler_encryption != null)
+                               recycler_encryption.smoothScrollToPosition(processframe);*/
 
                        if (recyview_frames != null && recyview_frames != null)
                                recyview_frames.smoothScrollToPosition(scrubberprogress);

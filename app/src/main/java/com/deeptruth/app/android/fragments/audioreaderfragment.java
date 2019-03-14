@@ -314,6 +314,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0, currentaudiodurationseconds =0;
     private boolean isdraweropen=false;
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
+    private ArrayList<arraycontainer> encryptionarraylist = new ArrayList<>();
     public boolean ismediacompleted =false,ismapzoomed=false;
     circularImageview playpausebutton;
     private TextView songName, time_current, time;
@@ -377,7 +378,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
-        encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
+        encryptionadapter = new encryptiondataadapter(encryptionarraylist,applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
 
         linearLayout=rootview.findViewById(R.id.content);
@@ -482,6 +483,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             arraycontainerformetric = new arraycontainer();
                             arraycontainerformetric = metricmainarraylist.get(processframe);
                         }
+
+                        if(encryptionarraylist.size() == 0)
+                            encryptionarraylist.add(arraycontainerformetric);
+
+                        if(encryptionarraylist.size() > 0)
+                        {
+                            encryptionarraylist.set(0,arraycontainerformetric);
+                            encryptionadapter.notifyDataSetChanged();
+                        }
+
                         if(encryptionadapter != null && recycler_encryption!= null)
                             recycler_encryption.smoothScrollToPosition(currentprocessframe);
                     }
