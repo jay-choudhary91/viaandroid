@@ -1670,6 +1670,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 serverdictionaryhash,color));
                     }
 
+                    if(encryptionarraylist.size() == 0)
+                        encryptionarraylist.add(metricmainarraylist.get(0));
+
+                    if(encryptionarraylist.size() > 0)
+                    {
+                        encryptionarraylist.set(0,metricmainarraylist.get(0));
+                        encryptionadapter.notifyDataSetChanged();
+                    }
+
                 }else{
 
                     for(int i=0;i<mitemlist.size();i++)
