@@ -883,6 +883,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             case R.id.layout_dtls:
                 if(rlcontrollerview.getVisibility() == View.GONE){
                     rlcontrollerview.setVisibility(View.VISIBLE);
+                    img_verified.setVisibility(View.VISIBLE);
                     removeheadermargin();
                     view.clearFocus();
                     InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -2261,6 +2262,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         edittext.setFocusable(false);
         edittext.setFocusableInTouchMode(false);
         rlcontrollerview.setVisibility(View.VISIBLE);
+        img_verified.setVisibility(View.VISIBLE);
         removeheadermargin();
     }
 
@@ -2292,8 +2294,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void visiblefocus(EditText edittext){
         rlcontrollerview.setVisibility(View.GONE);
-
-
         setheadermargin();
         // gethelper().setwindowfitxy(false);
         edittext.setClickable(true);
@@ -2302,6 +2302,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         edittext.setFocusableInTouchMode(true);
         edittext.setSelection(edittext.getText().length());
         edittext.requestFocus();
+        img_verified.setVisibility(View.GONE);
 
     }
 
@@ -2309,7 +2310,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         if(rlcontrollerview.getVisibility() == View.GONE){
             hidekeyboard();
             rlcontrollerview.setVisibility(View.VISIBLE);
-
+            img_verified.setVisibility(View.GONE);
             removeheadermargin();
         }
     }
