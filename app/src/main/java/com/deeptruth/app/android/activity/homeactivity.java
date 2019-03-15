@@ -99,12 +99,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 setdraweropen(false);
                 getcurrentfragment().showhideviewondrawer(false);
                 graphicaldrawerfragment.scrollview_meta.fullScroll(ScrollView.FOCUS_UP);
-              if(getcurrentfragment() instanceof fragmentmedialist){
-                  imglefthandle.setVisibility(View.GONE);
-              }else{
-                  imglefthandle.setVisibility(View.VISIBLE);
-                  imgrighthandle.setVisibility(View.GONE);
-              }
+                if(getcurrentfragment() instanceof fragmentmedialist){
+                    imglefthandle.setVisibility(View.GONE);
+                }else{
+                    // imglefthandle.setVisibility(View.VISIBLE);
+                    imgrighthandle.setVisibility(View.VISIBLE);
+                    imgrighthandle.setImageResource(R.drawable.handle_left_arrow);
+                }
             }
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -112,8 +113,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 //graphicaldrawerfragment.scrollview_meta.pageScroll(ScrollView.FOCUS_UP);
                 imglefthandle.setVisibility(View.GONE);
                 imgrighthandle.setVisibility(View.VISIBLE);
-                setdraweropen(true);
+                setdraweropen(false);
                 getcurrentfragment().showhideviewondrawer(true);
+                imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
 
             }
 
@@ -130,11 +132,29 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                     imgrighthandle.setVisibility(View.GONE);
                     imglefthandle.setVisibility(View.VISIBLE);
                 }
+                super.onDrawerSlide(drawerView, slideOffset);
             }
 
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
+                if (newState == DrawerLayout.STATE_SETTLING) {
+                    if ( isdraweropen ==false) {
+                        // starts opening
+                        imglefthandle.setVisibility(View.GONE);
+                        imgrighthandle.setVisibility(View.VISIBLE);
+                        imgrighthandle.setImageResource(R.drawable.handle_left_arrow);
+                        invalidateOptionsMenu();
+
+                    } else {
+                        imglefthandle.setVisibility(View.GONE);
+                        imgrighthandle.setVisibility(View.VISIBLE);
+                        imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
+                        invalidateOptionsMenu();
+
+                        // closing drawer
+                    }
+                }
             }
         };
         navigationdrawer.addDrawerListener(drawertoggle);
