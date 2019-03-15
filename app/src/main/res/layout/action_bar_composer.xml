@@ -10,119 +10,115 @@
         android:background="@drawable/gradient_fade_header_blue"
         >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/actionbarcomposer">
-
-
-        <com.deeptruth.app.android.views.customfonttextview
-            android:id="@+id/txt_title_actionbarcomposer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="18sp"
-            android:text="@string/deeptruth_small"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/white"
-            app:fontType="OpenSans_Regular"/>
-
-        <ImageView
-            android:id="@+id/img_roundblink"
-            android:layout_width="5dp"
-            android:layout_height="5dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="6dp"
-            android:visibility="gone"
-            android:layout_toLeftOf="@id/txt_title_actionbarcomposer"
-            android:background="@drawable/round_corner_recorder_blink"/>
-
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:id="@+id/actionbarcomposer">
 
-            <ImageView
-                android:id="@+id/img_flash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/icon_flashoff"/>
-
-            <Spinner
-                android:id="@+id/spinner_mediaquality"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:visibility="gone"
-                android:popupBackground="@color/bluetransparent"
-                android:spinnerMode="dropdown" />
 
             <com.deeptruth.app.android.views.customfonttextview
-                android:id="@+id/txt_media_quality"
+                android:id="@+id/txt_title_actionbarcomposer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="12sp"
-                android:visibility="gone"
-                android:padding="5dp"
-                android:layout_marginLeft="15dp"
+                android:textSize="18sp"
+                android:text="@string/deeptruth_small"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
                 android:textColor="@color/white"
-                app:fontType="Comfortaa-Regular"/>
+                app:fontType="OpenSans_Regular"/>
 
             <ImageView
-                android:id="@+id/img_stop_watch"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:id="@+id/img_roundblink"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="6dp"
                 android:visibility="gone"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/stopwatch"/>
+                android:layout_toLeftOf="@id/txt_title_actionbarcomposer"
+                android:background="@drawable/round_corner_recorder_blink"/>
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_flash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/icon_flashoff"/>
+
+                <Spinner
+                    android:id="@+id/spinner_mediaquality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:visibility="gone"
+                    android:popupBackground="@color/bluetransparent"
+                    android:spinnerMode="dropdown" />
+
+                <com.deeptruth.app.android.views.customfonttextview
+                    android:id="@+id/txt_media_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    android:padding="5dp"
+                    android:layout_marginLeft="15dp"
+                    android:textColor="@color/white"
+                    app:fontType="Comfortaa-Regular"/>
+
+                <ImageView
+                    android:id="@+id/img_stop_watch"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:visibility="gone"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/stopwatch"/>
+
+            </LinearLayout>
 
 
 
-        <ImageView
-            android:id="@+id/img_dotmenu"
-            android:layout_width="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginRight="1dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_settings"/>
+            <ImageView
+                android:id="@+id/img_dotmenu"
+                android:layout_width="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginRight="1dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_settings"/>
 
-        <ImageView
-            android:id="@+id/img_warning"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentRight="true"
-            android:visibility="gone"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/warning_icon"/>
+            <ImageView
+                android:id="@+id/img_warning"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                android:layout_toLeftOf="@id/img_dotmenu"
+                android:layout_centerVertical="true"
+                android:src="@drawable/warning_icon"/>
 
-        <ImageView
-            android:id="@+id/img_close"
-            android:layout_width="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginRight="1dp"
-            android:visibility="gone"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_close"/>
+            <ImageView
+                android:id="@+id/img_close"
+                android:layout_width="20dp"
+                android:visibility="gone"
+                android:layout_height="20dp"
+                android:layout_toLeftOf="@id/img_dotmenu"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_close"/>
 
-    </RelativeLayout>
+        </RelativeLayout>
 
         <net.cachapa.expandablelayout.ExpandableLayout
             android:id="@+id/expandable_layout"
