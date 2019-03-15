@@ -7,10 +7,13 @@ import android.graphics.DashPathEffect;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.PathDashPathEffect;
+import android.graphics.PathEffect;
 import android.graphics.Point;
 import android.graphics.Shader;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.deeptruth.app.android.R;
@@ -24,13 +27,13 @@ import java.util.List;
 
 public class visualizeraudiorecorder extends View {
 
-    private static final int LINE_WIDTH = 7; // width of visualizer lines
-    private static final int LINE_SCALE = 75; // scales visualizer lines
+    private static final int LINE_WIDTH = 10; // width of visualizer lines
+    private static float LINE_SCALE = 8; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
     private int width; // width of this View
     private int height; // height of this View
     private Paint linePaint; // specifies line drawing characteristics
-    private Context context; // specifies line drawing characteristics
+    private Context context;
 
     // constructor
     public visualizeraudiorecorder(Context context, AttributeSet attrs) {
@@ -38,7 +41,15 @@ public class visualizeraudiorecorder extends View {
         this.context=context;
         linePaint = new Paint(); // create Paint for lines
         linePaint.setColor(getResources().getColor(R.color.wave_color)); // set color to green
+        LINE_SCALE=common.convertDpToPixel(LINE_SCALE,context);
+        linePaint.setAlpha(255);
         linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
+        linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        linePaint.setPathEffect(new DashPathEffect(new float[]{LINE_WIDTH,5},5));
+        // If we don't render in software mode, the dotted line becomes a solid line.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
     }
 
     // called when the dimensions of the View change
@@ -46,7 +57,9 @@ public class visualizeraudiorecorder extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         width = w; // new width of this View
         height = h; // new height of this View
+        LINE_SCALE=common.convertDpToPixel(LINE_SCALE,context);
         amplitudes = new ArrayList<Float>(width / LINE_WIDTH);
+        Log.e("onSizeChanged ",""+width+" "+height);
     }
 
     // clear all amplitudes to prepare for a new visualization
@@ -70,11 +83,15 @@ public class visualizeraudiorecorder extends View {
     public void onDraw(Canvas canvas) {
         int middle = height / 2; // get the middle of the View
         float curX = 0; // start curX at zero
-
         // for each item in the amplitudes ArrayList
         for (float power : amplitudes) {
             float scaledHeight = power / LINE_SCALE; // scale the power
             curX += LINE_WIDTH+2; // increase X by LINE_WIDTH
+
+            float a=middle - scaledHeight / 1;
+            Log.e("curX ",""+curX);
+            //Log.e("x,y ",""+curX+" "+middle+" "+curX+" "+a);
+         //   Log.e("x,y ",""+curX+" "+middle + scaledHeight / 1+" "+curX+" "+a);
 
             Shader shader = new LinearGradient(curX, middle + scaledHeight / 1, curX, middle
                     - scaledHeight / 1, new int[]{
@@ -84,7 +101,6 @@ public class visualizeraudiorecorder extends View {
                     ContextCompat.getColor(context, R.color.wave_pink),
                     ContextCompat.getColor(context, R.color.dark_blue_solid)},new float[]{0.2f,0.4f,0.5f,0.6f,0.8f}, Shader.TileMode.MIRROR /*or REPEAT*/);
             linePaint.setShader(shader);
-
             //linePaint.setPathEffect(new DashPathEffect(new float[] {5,5}, 5));
             // draw a line representing this item in the amplitudes ArrayList
             canvas.drawLine(curX, middle + scaledHeight / 1, curX, middle
