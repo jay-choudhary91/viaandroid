@@ -243,6 +243,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 @Override
                 public void run() {
                     footerlayoutheight=layoutbottom.getHeight();
+                    layoutbottomheight=layoutbottom.getHeight();
                     layout_mediatype.post(new Runnable() {
                         @Override
                         public void run() {
