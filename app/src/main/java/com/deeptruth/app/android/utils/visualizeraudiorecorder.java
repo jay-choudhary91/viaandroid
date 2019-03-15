@@ -2,7 +2,14 @@ package com.deeptruth.app.android.utils;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.PathDashPathEffect;
+import android.graphics.Point;
+import android.graphics.Shader;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -23,10 +30,12 @@ public class visualizeraudiorecorder extends View {
     private int width; // width of this View
     private int height; // height of this View
     private Paint linePaint; // specifies line drawing characteristics
+    private Context context; // specifies line drawing characteristics
 
     // constructor
     public visualizeraudiorecorder(Context context, AttributeSet attrs) {
         super(context, attrs); // call superclass constructor
+        this.context=context;
         linePaint = new Paint(); // create Paint for lines
         linePaint.setColor(getResources().getColor(R.color.wave_color)); // set color to green
         linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
@@ -67,9 +76,20 @@ public class visualizeraudiorecorder extends View {
             float scaledHeight = power / LINE_SCALE; // scale the power
             curX += LINE_WIDTH+2; // increase X by LINE_WIDTH
 
+            Shader shader = new LinearGradient(curX, middle + scaledHeight / 1, curX, middle
+                    - scaledHeight / 1, new int[]{
+                    ContextCompat.getColor(context, R.color.dark_blue_solid),
+                    ContextCompat.getColor(context, R.color.wave_pink),
+                    ContextCompat.getColor(context, R.color.white),
+                    ContextCompat.getColor(context, R.color.wave_pink),
+                    ContextCompat.getColor(context, R.color.dark_blue_solid)},new float[]{0.2f,0.4f,0.5f,0.6f,0.8f}, Shader.TileMode.MIRROR /*or REPEAT*/);
+            linePaint.setShader(shader);
+
+            //linePaint.setPathEffect(new DashPathEffect(new float[] {5,5}, 5));
             // draw a line representing this item in the amplitudes ArrayList
             canvas.drawLine(curX, middle + scaledHeight / 1, curX, middle
                     - scaledHeight / 1, linePaint);
+
         }
     }
 }

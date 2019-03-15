@@ -58,6 +58,7 @@ public class encryptiondataadapter extends RecyclerView.Adapter<encryptiondataad
 
     @Override
     public int getItemCount() {
+        //return arrayitemlist.size();
         return arrayitemlist.size();
     }
 

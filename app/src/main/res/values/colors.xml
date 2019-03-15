@@ -21,7 +21,7 @@
     <color name="blue_button">#007BFF</color>
     <color name="share_a">#007CFF</color>
     <color name="share_b">#F7A923</color>
-    <color name="share_c"> 	#11AE3C</color>
+    <color name="share_c">#11AE3C</color>
     <color name="uvv_green">#ff50b100</color>
     <color name="uvv_black">#ff000000</color>
     <color name="uvv_light_gray">#ffF0F0F0</color>
@@ -71,4 +71,9 @@
     <color name="actionbar_solid">#524a4a</color>
     <color name="actionbar_solid_normal">#a9a9a9</color>
     <color name="actionbar_solid_normal_transparent">#50a9a9a9</color>
+    <color name="scanover_green">#4D7921</color>
+    <color name="scanover_yellow">#FDD012</color>
+    <color name="scanover_red">#FF3B30</color>
+
+    <color name="wave_pink">#9c3776</color>
 </resources>

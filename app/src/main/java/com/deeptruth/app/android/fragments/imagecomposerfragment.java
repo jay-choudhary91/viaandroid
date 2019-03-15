@@ -812,7 +812,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         ,mdbstartitemcontainer.get(0).getItem6(),mdbstartitemcontainer.get(0).getItem7(),mdbstartitemcontainer.get(0).getItem8(),
                         mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
                         ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
-                        ,"0","sync_pending","","","0","inprogress",medianame,"",
+                        ,"0","sync_pending","","","0","inprogress","","",
                         mdbstartitemcontainer.get(0).getItem16(),"");
 
                 try {
@@ -1789,12 +1789,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     if (isflashon) {
                         mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
                         mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
-                        imgflashon.setImageResource(R.drawable.ic_no_flash_icon);
+                        imgflashon.setImageResource(R.drawable.icon_flashoff);
                         isflashon = false;
                     } else {
                         mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
                         mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
-                        imgflashon.setImageResource(R.drawable.flash_on);
+                        imgflashon.setImageResource(R.drawable.icon_flashon);
                         isflashon = true;
                     }
                 }
@@ -1814,14 +1814,16 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void switchCamera() {
+    public void switchCamera(ImageView imageview) {
         if (cameraid.equals(CAMERA_FRONT)) {
+            imageview.setImageResource(R.drawable.icon_cameraflip);
             cameraid = CAMERA_BACK;
             closeCamera();
             reopenCamera();
 
         } else if (cameraid.equals(CAMERA_BACK)) {
             cameraid = CAMERA_FRONT;
+            imageview.setImageResource(R.drawable.icon_reversecamera);
             closeCamera();
             reopenCamera();
         }

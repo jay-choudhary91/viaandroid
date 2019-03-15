@@ -616,7 +616,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,0,10,0);
+                        img_dotmenu.setPadding(10,20,10,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
@@ -639,7 +639,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,0,10,0);
+                        img_dotmenu.setPadding(10,20,10,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
@@ -669,7 +669,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, 20,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,0,10,0);
+                        img_dotmenu.setPadding(10,20,10,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(20, 0, 0,  0);
@@ -1977,7 +1977,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 ,mdbstartitemcontainer.get(0).getItem6(),mdbstartitemcontainer.get(0).getItem7(),mdbstartitemcontainer.get(0).getItem8(),
                 mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
                 ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
-                ,"0","sync_pending","","","0","inprogress",medianame,"",
+                ,"0","sync_pending","","","0","inprogress","","",
                 mdbstartitemcontainer.get(0).getItem16(),duration);
 
                 try {
@@ -2054,12 +2054,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private void navigateflash() {
         try {
             if(isflashon) {
-                imgflashon.setImageResource(R.drawable.ic_no_flash_icon);
+                imgflashon.setImageResource(R.drawable.icon_flashoff);
                 mpreviewbuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_OFF);
                 mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, mBackgroundHandler);
                 isflashon = false;
             } else {
-                imgflashon.setImageResource(R.drawable.flash_on);
+                imgflashon.setImageResource(R.drawable.icon_flashon);
                 mpreviewbuilder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
                 mPreviewSession.setRepeatingRequest(mpreviewbuilder.build(), null, mBackgroundHandler);
                 isflashon = true;
@@ -2070,14 +2070,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
 
 
-    public void switchCamera() {
+    public void switchCamera(ImageView imageView) {
         if (cameraId.equals(CAMERA_FRONT)) {
+            imageView.setImageResource(R.drawable.icon_cameraflip);
             cameraId = CAMERA_BACK;
             closeCamera();
             reopenCamera();
 
         } else if (cameraId.equals(CAMERA_BACK)) {
             cameraId = CAMERA_FRONT;
+            imageView.setImageResource(R.drawable.icon_reversecamera);
             closeCamera();
             reopenCamera();
         }

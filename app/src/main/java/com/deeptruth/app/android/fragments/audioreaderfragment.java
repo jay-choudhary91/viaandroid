@@ -314,6 +314,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     private long audioduration =0,maxincreasevideoduration=0, currentaudioduration =0, currentaudiodurationseconds =0;
     private boolean isdraweropen=false;
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
+    private ArrayList<arraycontainer> encryptionarraylist = new ArrayList<>();
     public boolean ismediacompleted =false,ismapzoomed=false;
     circularImageview playpausebutton;
     private TextView songName, time_current, time;
@@ -377,7 +378,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
-        encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
+        encryptionadapter = new encryptiondataadapter(encryptionarraylist,applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
 
         linearLayout=rootview.findViewById(R.id.content);
@@ -444,8 +445,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }
 
         try {
-            DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));
+            img_phone_orientation.setImageResource(R.drawable.img_phoneorientation);
+            /*DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));*/
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -482,6 +484,16 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             arraycontainerformetric = new arraycontainer();
                             arraycontainerformetric = metricmainarraylist.get(processframe);
                         }
+
+                        if(encryptionarraylist.size() == 0)
+                            encryptionarraylist.add(arraycontainerformetric);
+
+                        if(encryptionarraylist.size() > 0)
+                        {
+                            encryptionarraylist.set(0,arraycontainerformetric);
+                            encryptionadapter.notifyDataSetChanged();
+                        }
+
                         if(encryptionadapter != null && recycler_encryption!= null)
                             recycler_encryption.smoothScrollToPosition(currentprocessframe);
                     }
@@ -688,10 +700,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 break;
             case R.id.img_edit_name:
                 visiblefocus(edt_medianame);
-
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                 break;
             case R.id.img_edit_notes:
                 visiblefocus(edt_medianotes);
+                InputMethodManager imn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
 
                 break;
             case R.id.img_share_media:
@@ -880,6 +895,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             case R.id.layout_dtls:
                 if(rlcontrollerview.getVisibility() == View.GONE){
                     rlcontrollerview.setVisibility(View.VISIBLE);
+                    img_verified.setVisibility(View.VISIBLE);
                     removeheadermargin();
                     view.clearFocus();
                     InputMethodManager immm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -1707,6 +1723,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                         {
                             arraycontainerformetric = new arraycontainer();
                             arraycontainerformetric = metricmainarraylist.get(0);
+
+                            if(encryptionarraylist.size() == 0)
+                                encryptionarraylist.add(metricmainarraylist.get(0));
+
+                            if(encryptionarraylist.size() > 0)
+                            {
+                                encryptionarraylist.set(0,metricmainarraylist.get(0));
+                                encryptionadapter.notifyDataSetChanged();
+                            }
                         }
                     }
                 });
@@ -2258,6 +2283,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         edittext.setFocusable(false);
         edittext.setFocusableInTouchMode(false);
         rlcontrollerview.setVisibility(View.VISIBLE);
+        img_verified.setVisibility(View.VISIBLE);
         removeheadermargin();
     }
 
@@ -2289,18 +2315,15 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
     public void visiblefocus(EditText edittext){
         rlcontrollerview.setVisibility(View.GONE);
-
-
         setheadermargin();
         // gethelper().setwindowfitxy(false);
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         edittext.setClickable(true);
         edittext.setEnabled(true);
         edittext.setFocusable(true);
         edittext.setFocusableInTouchMode(true);
         edittext.setSelection(edittext.getText().length());
         edittext.requestFocus();
+        img_verified.setVisibility(View.GONE);
 
     }
 
@@ -2308,7 +2331,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         if(rlcontrollerview.getVisibility() == View.GONE){
             hidekeyboard();
             rlcontrollerview.setVisibility(View.VISIBLE);
-
+            img_verified.setVisibility(View.GONE);
             removeheadermargin();
         }
     }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Deep Truth</string>
+    <string name="app_name">VideoLock</string>
     <string name="save_media">Save to gallery</string>
     <!--  <string name="simply_secure">Simply Secure</string>
     <string name="modern_security">Modern security methods to keep your data safe and secure.</string>

@@ -176,6 +176,10 @@ public class config {
 
     public static final String caution="CAUTION";
     public static final String verified="VERIFIED";
+    public static final String validating="VALIDATING";
+    public static final String invalid="INVALID";
+    public static final String encrypting="ENCRYPTING";
+    public static final String no_title="No Title";
 
     public static final String selected_folder="selected_folder";
 

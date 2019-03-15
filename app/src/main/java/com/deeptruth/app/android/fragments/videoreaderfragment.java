@@ -59,7 +59,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
@@ -394,6 +396,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     private ArrayList<frame> mbitmaplist =new ArrayList<>();
     private ArrayList<videomodel> mhashesitems =new ArrayList<>();
     private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
+    private ArrayList<arraycontainer> encryptionarraylist = new ArrayList<>();
     boolean runmethod = false;
     public boolean isvideocompleted=false,ismapzoomed=false,isfragmentstopped=false;
     public int flingactionmindstvac;
@@ -413,6 +416,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     int currentprocessframe=0;
     int rootviewheight,videoviewheight,detailviewheight;
     encryptiondataadapter encryptionadapter;
+    private TranslateAnimation validationbaranimation;
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -425,6 +429,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
+            txt_section_validating_secondary.setVisibility(View.INVISIBLE);
             //setheadermargine();
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
@@ -479,7 +484,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         //recyview_frames.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
         //recyview_frames.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
 
-        encryptionadapter = new encryptiondataadapter(metricmainarraylist,applicationviavideocomposer.getactivity());
+        encryptionadapter = new encryptiondataadapter(encryptionarraylist,applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
 
         showcontrollers.post(new Runnable() {
@@ -575,8 +580,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                            arraycontainerformetric = metricmainarraylist.get(processframe);
                        }
 
-                       if (encryptionadapter != null && recycler_encryption != null)
-                               recycler_encryption.smoothScrollToPosition(processframe);
+                       if(encryptionarraylist.size() == 0)
+                           encryptionarraylist.add(arraycontainerformetric);
+
+                       if(encryptionarraylist.size() > 0)
+                       {
+                           encryptionarraylist.set(0,arraycontainerformetric);
+                           encryptionadapter.notifyDataSetChanged();
+                       }
+
+                       /*if (encryptionadapter != null && recycler_encryption != null)
+                               recycler_encryption.smoothScrollToPosition(processframe);*/
 
                        if (recyview_frames != null && recyview_frames != null)
                                recyview_frames.smoothScrollToPosition(scrubberprogress);
@@ -607,9 +621,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 maxincreasevideoduration=player.getCurrentPosition();
             }
         });
+
         try {
-            DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                    , R.color.uvv_gray));
+            img_phone_orientation.setImageResource(R.drawable.img_phoneorientation);
+            /*DrawableCompat.setTint(img_phone_orientation.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                    , R.color.uvv_gray));*/
+
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -709,11 +726,48 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 targetheight= layout_videoreader.getHeight();
                 targetwidth = layout_videoreader.getWidth();
                 int totalwidth= targetwidth + 100;
-                TranslateAnimation animation = new TranslateAnimation(-50.0f, totalwidth ,0.0f, 0.0f);
-                animation.setDuration(3000);
-                animation.setRepeatCount(Animation.INFINITE);
-                animation.setRepeatMode(ValueAnimator.RESTART);
-                img_scanover.startAnimation(animation);
+
+                final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+                alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
+                alphanimation.setStartOffset(1000);
+                alphanimation.setRepeatMode(1);
+
+                Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        //fadeoutcontrollers();
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                };
+                alphanimation.setAnimationListener(alphalistener);
+
+                validationbaranimation = new TranslateAnimation(-totalwidth, totalwidth ,0.0f, 0.0f);
+                validationbaranimation.setDuration(3000);
+                validationbaranimation.setRepeatCount(Animation.INFINITE);
+                validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
+                img_scanover.startAnimation(validationbaranimation);
+
+                Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(alphanimation);
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(alphanimation);
+                    }
+                };
+                validationbaranimation.setAnimationListener(translatelistener);
             }
         });
 
@@ -808,6 +862,33 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run() {
                footerheight = layout_footer.getHeight();
+            }
+        });
+    }
+
+
+    public void fadeoutcontrollers()
+    {
+        txt_section_validating_secondary.setAlpha(1f);
+        txt_section_validating_secondary.animate().alpha(0f).setDuration(1000).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
             }
         });
     }
@@ -948,10 +1029,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
                 case R.id.img_edit_name:
                     visiblefocus(edt_medianame);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                     break;
                 case R.id.img_edit_notes:
                     visiblefocus(edt_medianotes);
-
+                    InputMethodManager imn = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                     break;
                 case R.id.img_share_media:
                             img_share_media.setEnabled(false);
@@ -1308,7 +1392,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         super.onPause();
         pause();
         progressdialog.dismisswaitdialog();
-        Log.e("onpause","onpause");
+        if(validationbaranimation != null)
+        {
+            validationbaranimation.cancel();
+            validationbaranimation.reset();
+        }
     }
 
     @Override
@@ -1316,6 +1404,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         super.onResume();
         isfragmentstopped=false;
         Log.e("onresume","onresume");
+
+        if(validationbaranimation != null)
+            img_scanover.startAnimation(validationbaranimation);
     }
 
     @Override
@@ -1421,6 +1512,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 metricmainarraylist.set(i,new arraycontainer(hashmethod,videostarttransactionid,
                                         sequencehash,serverdictionaryhash,color,latency));
                             }
+
                         }else{
 
                             for(int i=0;i<mitemlist.size();i++)
@@ -1452,6 +1544,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 {
                                     arraycontainerformetric = new arraycontainer();
                                     arraycontainerformetric = metricmainarraylist.get(0);
+
+                                    if(encryptionarraylist.size() == 0)
+                                        encryptionarraylist.add(metricmainarraylist.get(0));
+
+                                    if(encryptionarraylist.size() > 0)
+                                    {
+                                        encryptionarraylist.set(0,metricmainarraylist.get(0));
+                                        encryptionadapter.notifyDataSetChanged();
+                                    }
                                 }
 
                                 encryptionadapter.notifyDataSetChanged();
@@ -2230,22 +2331,43 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                     switch (color) {
                         case "green":
+                            txt_section_validating_secondary.setText(config.validating);
+                            try {
+                                DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                        , R.color.scanover_green));
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
                             layout_validating.setVisibility(View.VISIBLE);
-                            txt_section_validating_secondary.setText(config.verified);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
+                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
                             break;
                         case "white":
                             layout_validating.setVisibility(View.GONE);
                             break;
                         case "red":
+                            txt_section_validating_secondary.setText(config.invalid);
+                            try {
+                                DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                        , R.color.scanover_red));
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
                             layout_validating.setVisibility(View.VISIBLE);
-                            txt_section_validating_secondary.setText(config.caution);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
+                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
                             break;
                         case "yellow":
-                            layout_validating.setVisibility(View.VISIBLE);
                             txt_section_validating_secondary.setText(config.caution);
-                            txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
+                            try {
+                                DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                        , R.color.scanover_yellow));
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+                            layout_validating.setVisibility(View.VISIBLE);
+                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
                             break;
                     }
                 }
@@ -2671,8 +2793,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         setheadermargin();
        // gethelper().setwindowfitxy(false);
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         edittext.setClickable(true);
         edittext.setEnabled(true);
         edittext.setFocusable(true);

@@ -116,6 +116,26 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 getcurrentfragment().showhideviewondrawer(true);
 
             }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                if(slideOffset > 0.0)  // Moving to right
+                {
+                    imgrighthandle.setVisibility(View.VISIBLE);
+                    imglefthandle.setVisibility(View.GONE);
+                }
+                else  // Moving to left
+                {
+                    imgrighthandle.setVisibility(View.GONE);
+                    imglefthandle.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+            }
         };
         navigationdrawer.addDrawerListener(drawertoggle);
         drawertoggle.syncState();
@@ -126,25 +146,27 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         fragment_container.setOnTouchListener(this);
 
         drawerenabledisable(false);
-        new Handler().postDelayed(new Runnable() {
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                fragmedialist =new fragmentmedialist();
-                fragmedialist.shouldlaunchcomposer(true);
-                replaceFragment(fragmedialist, false, true);
 
-                if(graphicaldrawerfragment == null)
-                {
-                    graphicaldrawerfragment =new fragmentgraphicaldrawer();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-                    transaction.commit();
-                }
-
-                detectphonecallservice();
-                setdrawerdata();
             }
-        },100);
+        },100);*/
+
+        fragmedialist =new fragmentmedialist();
+        fragmedialist.shouldlaunchcomposer(true);
+        replaceFragment(fragmedialist, false, true);
+
+        if(graphicaldrawerfragment == null)
+        {
+            graphicaldrawerfragment =new fragmentgraphicaldrawer();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
+            transaction.commit();
+        }
+
+        detectphonecallservice();
+        setdrawerdata();
     }
 
     public void detectphonecallservice()

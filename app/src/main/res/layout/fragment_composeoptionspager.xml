@@ -119,6 +119,28 @@
         android:clipToPadding="true"
         android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:id="@+id/layout_encryption"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true">
+
+            <com.deeptruth.app.android.views.customfonttextview
+                app:fontType="OpenSans_Regular"
+                android:id="@+id/txt_encrypting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:text="@string/encrypting"/>
+
+        </RelativeLayout>
+
+
+
         <ImageView
             android:id="@+id/img_mediathumbnail"
             android:layout_width="50dp"
