@@ -119,9 +119,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     imagecomposerfragment fragimgcapture=null;
 
     View rootview=null;
-    int currentselectedcomposer=0,layoutbottomheight=0;
+    int currentselectedcomposer=0,layoutbottomheight=0,layoutmediatypeheight=0;
 
-    private int flingactionmindstvac;
+    private int flingactionmindstvac,footerlayoutheight=0;
     private  final int flingactionmindspdvac = 100;
 
     private Runnable doafterallpermissionsgranted;
@@ -242,7 +242,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             layoutbottom.post(new Runnable() {
                 @Override
                 public void run() {
-                    layoutbottomheight=layoutbottom.getHeight();
+                    footerlayoutheight=layoutbottom.getHeight();
+                    layout_mediatype.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            layoutmediatypeheight=layout_mediatype.getHeight();
+                        }
+                    });
                 }
             });
 
@@ -763,6 +769,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 fragvideocomposer.setData(false, mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
+                changezoomcontrollerposition(1000);
+
             break;
 
             case 1:
@@ -776,6 +784,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 fragimgcapture.setData(mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
+                changezoomcontrollerposition(1000);
 
             break;
 
@@ -813,6 +822,32 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     };
 
+    public void changezoomcontrollerposition(long timemillis)
+    {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int newheight=0;
+                if(layout_mediatype.getVisibility() == View.VISIBLE)
+                {
+                    newheight=footerlayoutheight;
+                }
+                else
+                {
+                    newheight=footerlayoutheight-layoutmediatypeheight;
+                }
+
+                if(fragvideocomposer != null)
+                    fragvideocomposer.setzoomcontrollermargin(newheight);
+
+
+                if(fragimgcapture != null)
+                    fragimgcapture.setzoomcontrollermargin(newheight);
+            }
+        },timemillis);
+
+    }
+
     public void composecallback(Object object,int type)
     {
         if(type == 1) // for video record start,audio record start and image capture button click
@@ -822,10 +857,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             if(currentselectedcomposer == 0)
             {
+
                 if(validationbaranimation != null)
                     img_scanover.startAnimation(validationbaranimation);
 
                 showhideactionbottombaricon(0);
+                changezoomcontrollerposition(0);
             }
             else if(currentselectedcomposer == 2)
             {
@@ -859,6 +896,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             {
                 showhideactionbottombaricon(3);
             }
+
+            changezoomcontrollerposition(0);
         }
         else if(type == 3) // For swipe gesture to change fragment
         {
@@ -890,7 +929,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         else if(type == 9)
         {
             layoutbottom.setVisibility(View.INVISIBLE);
-            layout_mediatype.setVisibility(View.INVISIBLE);
+            layout_mediatype.setVisibility(View.GONE);
         }
         else if(type == 10)
         {
@@ -1044,7 +1083,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(i == 0){
             img_mediathumbnail.setVisibility(View.INVISIBLE);
             imgrotatecamera.setVisibility(View.INVISIBLE);
-            layout_mediatype.setVisibility(View.INVISIBLE);
+            layout_mediatype.setVisibility(View.GONE);
             txt_encrypting.setVisibility(View.VISIBLE);
             layout_encryption.setVisibility(View.VISIBLE);
         } else if(i == 1){
@@ -1054,7 +1093,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             imgrotatecamera.setVisibility(View.VISIBLE);
             layout_mediatype.setVisibility(View.VISIBLE);
         } else if( i == 2){
-            layout_mediatype.setVisibility(View.INVISIBLE);
+            layout_mediatype.setVisibility(View.GONE);
             img_mediathumbnail.setVisibility(View.INVISIBLE);
             txt_encrypting.setVisibility(View.VISIBLE);
             layout_encryption.setVisibility(View.VISIBLE);
