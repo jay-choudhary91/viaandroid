@@ -531,6 +531,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     RECORDER_SAMPLERATE, RECORDER_CHANNELS,
                     RECORDER_AUDIO_ENCODING, BufferElements2Rec * BytesPerElement);
 
+            if (audiorecorder.getState() != AudioRecord.STATE_INITIALIZED) {
+                Log.e("AudioRecord","AudioRecord init failed");
+                return;
+            }
+
             audiorecorder.startRecording();
             recordingThread = new Thread(new Runnable() {
                 public void run() {

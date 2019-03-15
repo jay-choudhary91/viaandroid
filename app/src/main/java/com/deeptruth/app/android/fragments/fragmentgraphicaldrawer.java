@@ -513,7 +513,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 lastsavedangle=strdegree;
             }
 
-        if(! xdata.getinstance().getSetting(config.attitude_data).trim().isEmpty())
+        if(! xdata.getinstance().getSetting(config.attitude_data).trim().isEmpty() && (! xdata.getinstance().getSetting(config.attitude_data).equalsIgnoreCase("NA")))
         {
             try {
                 float[] adjustedRotationMatrix = new float[9];

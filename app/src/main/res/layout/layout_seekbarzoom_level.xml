@@ -18,7 +18,7 @@
             android:gravity="center"
             android:textSize="12sp"
             android:padding="5dp"
-            android:text="1 x"
+            android:text="1.0 x"
             android:layout_centerInParent="true"
             android:textColor="@color/white"
             app:fontType="Comfortaa-Bold"/>
