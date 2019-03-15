@@ -104,20 +104,22 @@
             android:id="@+id/img_warning"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_alignParentRight="true"
             android:visibility="gone"
-            android:layout_toLeftOf="@id/img_dotmenu"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:src="@drawable/warning_icon"/>
 
         <ImageView
             android:id="@+id/img_close"
-            android:layout_width="20dp"
+            android:layout_width="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginRight="1dp"
             android:visibility="gone"
-            android:layout_height="20dp"
-            android:layout_toLeftOf="@id/img_dotmenu"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
             android:src="@drawable/ic_close"/>
 
     </RelativeLayout>
