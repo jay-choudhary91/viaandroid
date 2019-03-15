@@ -366,15 +366,44 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             gethelper().setwindowfitxy(true);
             loadviewdata();
 
+            audio_downwordarrow.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    switch (view.getId())
+                    {
+                        case  R.id.audio_downwordarrow:
+
+                            detector.onTouchEvent(event);
+                            break;
+                    }
+
+                    return false;
+                }
+            });
+
+            audio_downwordarrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(rootviewheight > rlcontrollerview.getLayoutParams().height){
+                        rlcontrollerview.getLayoutParams().height = rootviewheight;
+                        rlcontrollerview.requestLayout();
+                        rlcontrollerview.animate().setDuration(500);
+                        layout_footer.setVisibility(View.GONE);
+
+                        audio_downwordarrow.setImageResource(R.drawable.handle_up_arrow);
+                    }else{
+                        rlcontrollerview.getLayoutParams().height = audioviewheight;
+                        layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
+                        audio_downwordarrow.setImageResource(R.drawable.handle_down_arrow);
+                        layout_footer.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
             detector = new GestureDetector(applicationviavideocomposer.getactivity(),new GestureDetector.SimpleOnGestureListener(){
                 @Override
                 public boolean onScroll(MotionEvent e1, MotionEvent e2,
                                         float distanceX, float distanceY) {
-                    // Scrolling uses math based on the viewport (as opposed to math using pixels).
-
-                    // Pixel offset is the offset in screen pixels, while viewport offset is the
-                    // offset within the current viewport.
-
                     if(e2.getY() > 0)
                     {
                         int lovermovementlimit = rootviewheight - footerheight;
@@ -434,27 +463,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                         }
                     }
-
-                   /* float height = firstviewheight - distanceY;
-                    //float heightbottom = bottomlayoutheight - distanceY;
-                    firstviewheight = (int)height;
-                    //bottomlayoutheight =(int)heightbottom;
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,firstviewheight);
-                    rlcontrollerview.setLayoutParams(params);
-*/
-                  /*  LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,bottomlayoutheight);
-                    layoutbottom.setLayoutParams(params1);*/
-
-                /*float viewportOffsetX = distanceX * mCurrentViewport.width()
-                        / mContentRect.width();
-                float viewportOffsetY = -distanceY * mCurrentViewport.height()
-                        / mContentRect.height();
-                // Updates the viewport, refreshes the display.
-                setViewportBottomLeft(
-                        mCurrentViewport.left + viewportOffsetX,
-                        mCurrentViewport.bottom + viewportOffsetY);*/
-
-
                     return false;
                 }
 
@@ -465,10 +473,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
             }
             );
-
-
-
-
         }
         return rootview;
     }
@@ -536,7 +540,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         img_arrow_back.setOnClickListener(this);
         img_delete_media.setOnClickListener(this);
         img_fullscreen.setOnClickListener(this);
-        audio_downwordarrow.setOnTouchListener(this);
         img_pause.setOnClickListener(this);
 
         img_dotmenu.setVisibility(View.VISIBLE);
@@ -882,7 +885,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                       layout_footer.setVisibility(View.VISIBLE);
                       layout_mediatype.setVisibility(View.VISIBLE);
                       layout_scrubberview.setVisibility(View.VISIBLE);
-                      audio_downwordarrow.setVisibility(View.VISIBLE);
                       linearseekbarcolorview.setVisibility(View.VISIBLE);
                       mediaseekbar.setVisibility(View.VISIBLE);
                       layout_seekbartiming.setVisibility(View.VISIBLE);
@@ -908,25 +910,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 }
                 break;
-            case R.id.img_handleup:
-                removeheaderpadding();
-                recenterplaypause(0);
-                addbottommargin(mediatypeheight);
-                rlcontrollerview.getLayoutParams().height = audioviewheight;
-                layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
-                layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.white));
-                layout_audiodetails.setVisibility(View.VISIBLE);
-                layout_footer.setVisibility(View.VISIBLE);
-                layout_mediatype.setVisibility(View.VISIBLE);
-                layout_scrubberview.setVisibility(View.VISIBLE);
-                audio_downwordarrow.setVisibility(View.VISIBLE);
-                linearseekbarcolorview.setVisibility(View.VISIBLE);
-                mediaseekbar.setVisibility(View.VISIBLE);
-                layout_seekbartiming.setVisibility(View.VISIBLE);
-                img_handleup.setVisibility(View.GONE);
-                img_pause.setVisibility(View.GONE);
-                gethelper().drawerenabledisable(false);
-                gethelper().updateactionbar(1);
+            case R.id.audio_downwordarrow:
+
                 break;
 
             case R.id.img_delete_media:
@@ -1123,6 +1108,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         switch (view.getId())
         {
              case  R.id.audio_downwordarrow:
+
                 detector.onTouchEvent(motionEvent);
                 break;
         }
