@@ -62,6 +62,17 @@
                     android:id="@+id/audio_downwordarrow"
                     android:src="@drawable/handle_down_arrow"/>
 
+                <ImageView
+                    android:id="@+id/img_fullscreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_full_screen_mode"
+                    android:padding="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"/>
+
             </RelativeLayout>
 
             <RelativeLayout
