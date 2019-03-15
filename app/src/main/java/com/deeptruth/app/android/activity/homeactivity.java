@@ -113,7 +113,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 //graphicaldrawerfragment.scrollview_meta.pageScroll(ScrollView.FOCUS_UP);
                 imglefthandle.setVisibility(View.GONE);
                 imgrighthandle.setVisibility(View.VISIBLE);
-                setdraweropen(false);
+                setdraweropen(true);
                 getcurrentfragment().showhideviewondrawer(true);
                 imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
 
