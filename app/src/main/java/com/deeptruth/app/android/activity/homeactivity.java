@@ -104,7 +104,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 }else{
                     // imglefthandle.setVisibility(View.VISIBLE);
                     imgrighthandle.setVisibility(View.VISIBLE);
-                    imgrighthandle.setImageResource(R.drawable.handle_left_arrow);
+                    imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
                 }
             }
             public void onDrawerOpened(View drawerView) {
@@ -115,7 +115,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 imgrighthandle.setVisibility(View.VISIBLE);
                 setdraweropen(true);
                 getcurrentfragment().showhideviewondrawer(true);
-                imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
+                imgrighthandle.setImageResource(R.drawable.handle_left_arrow);
 
             }
 
@@ -143,13 +143,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                         // starts opening
                         imglefthandle.setVisibility(View.GONE);
                         imgrighthandle.setVisibility(View.VISIBLE);
-                        imgrighthandle.setImageResource(R.drawable.handle_left_arrow);
+                        imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
                         invalidateOptionsMenu();
 
                     } else {
                         imglefthandle.setVisibility(View.GONE);
                         imgrighthandle.setVisibility(View.VISIBLE);
-                        imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
+                        imgrighthandle.setImageResource(R.drawable.handle_left_arrow);
                         invalidateOptionsMenu();
 
                         // closing drawer

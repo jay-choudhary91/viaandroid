@@ -23,7 +23,7 @@
         android:padding="5dp"
         android:visibility="visible"
         android:layout_marginRight="10dp"
-        android:src="@drawable/handle_left_arrow"
+        android:src="@drawable/handle_right_arrow"
         />
 
 </RelativeLayout>
