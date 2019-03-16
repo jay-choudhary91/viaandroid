@@ -1053,6 +1053,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                          layout_mediatype.setVisibility(View.GONE);
                           layout_scrubberview.setVisibility(View.GONE);
                           playpausebutton.setVisibility(View.GONE);
+                          img_fullscreen.setVisibility(View.GONE);
                           layout_footer.setVisibility(View.GONE);
                            gethelper().drawerenabledisable(false);
 
