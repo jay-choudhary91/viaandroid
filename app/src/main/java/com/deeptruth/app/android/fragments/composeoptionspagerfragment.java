@@ -126,8 +126,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
-    ArrayList<permissions> permissionslist =new ArrayList<>();
-
     ArrayList<String> imagearraylist =new ArrayList<>();
     ArrayList<String> videoarraylist =new ArrayList<>();
     ArrayList<String> audioarraylist =new ArrayList<>();
@@ -281,65 +279,35 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             doafterallpermissionsgranted.run();
             doafterallpermissionsgranted = null;
         } else {
-            if(permissionslist.size() == 0)
-            {
-                permissionslist.add(new permissions(Manifest.permission.ACCESS_COARSE_LOCATION,false,false));
-                permissionslist.add(new permissions(Manifest.permission.ACCESS_FINE_LOCATION,false,false));
-            }
-            List<String> deniedpermissions = new ArrayList<>();
-            for(int i=0;i<permissionslist.size();i++)
-            {
-                permissionslist.get(i).setIspermissionallowed(true);
-                if (ContextCompat.checkSelfPermission(getActivity(), permissionslist.get(i).getPermissionname()) != PackageManager.PERMISSION_GRANTED)
-                {
-                    if(! permissionslist.get(i).isIspermissionskiped())
-                    {
-                        deniedpermissions.add(permissionslist.get(i).getPermissionname());
-                        permissionslist.get(i).setIspermissionallowed(false);
-                        break;
-                    }
-                }
-            }
-
-            if (deniedpermissions.isEmpty()) {
+            if (common.getlocationdeniedpermissions().isEmpty()) {
                 // All permissions are granted
                 doafterpermissionsgranteddenied();
             } else {
                 //String[] array = new String[deniedpermissions.size()];
 
-                String[] array = new String[1];
-                array = deniedpermissions.toArray(array);
-                final String[] finalArray = array;
+                String[] array = new String[common.getlocationdeniedpermissions().size()];
+                array = common.getlocationdeniedpermissions().toArray(array);
+                if(array.length > 0)
+                {
+                    final String[] finalArray = array;
+                    common.showcustompermissiondialog(applicationviavideocomposer.getactivity(), new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                        }
 
-                common.showcustompermissiondialog(applicationviavideocomposer.getactivity(), new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-                        if(type == 0)
-                        {
-                            if(finalArray.length > 0)
+                        @Override
+                        public void onItemClicked(Object object, int type) {
+                            if(type == 0)
                             {
-                                for(int i=0;i<permissionslist.size();i++)
-                                {
-                                    if(finalArray[0].equalsIgnoreCase(permissionslist.get(i).getPermissionname()))
-                                    {
-                                        permissionslist.get(i).setIspermissionskiped(true);
-                                        break;
-                                    }
-                                }
+                                doafterpermissionsgranteddenied();
                             }
-                            doafterpermissionsgranteddenied();
-                        }
-                        else if(type == 1)
-                        {
-                            if(finalArray.length > 0)
+                            else if(type == 1)
+                            {
                                 ActivityCompat.requestPermissions(getActivity(), finalArray, request_permissions);
+                            }
                         }
-                    }
-                },finalArray[0]);
+                    },array[0]);
+                }
             }
         }
     }

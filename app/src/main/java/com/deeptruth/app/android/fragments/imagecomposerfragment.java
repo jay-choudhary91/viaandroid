@@ -86,6 +86,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -707,11 +708,20 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         String currentdate[] = common.getcurrentdatewithtimezone();
         try {
             try {
+                Calendar sequencetime = Calendar.getInstance();
+                String devicetime = common.get24hourformat();
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
+                String starttime = sdf.format(sequencetime.getTime());
+                String endtime = sdf.format(sequencetime.getTime());
+
                 if(metricesjsonarray != null && metricesjsonarray.length() > 0)
                 {
                     JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
                     arrayobject.put("interim_identifying_hashes","");
                     arrayobject.put("distancetravelled","0");
+                    arrayobject.put("sequencestarttime",starttime);
+                    arrayobject.put("sequenceendtime",endtime);
+                    arrayobject.put("devicetime",devicetime);
                 }
                 String metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
                 mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
