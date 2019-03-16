@@ -2055,11 +2055,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
             common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
-            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue()+"° ", tvheading);
-            if(!metricItemArraylist.getMetricTrackValue().equalsIgnoreCase("NA")){
+            if((! metricItemArraylist.getMetricTrackValue().trim().isEmpty()) && (! metricItemArraylist.getMetricTrackValue().
+                    equalsIgnoreCase("NA")))
+            {
                 common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
+                common.setdrawabledata(getResources().getString(R.string.heading),"\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvheading);
             }else{
                 common.setdrawabledata("","NA" , tvdegree);
+                common.setspannable(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
             }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
             common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);

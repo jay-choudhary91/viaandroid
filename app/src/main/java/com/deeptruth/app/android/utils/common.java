@@ -979,6 +979,22 @@ public class common {
         return deniedpermissions;
     }
 
+    public static List<String> getlocationdeniedpermissions()
+    {
+        String[] neededpermissions = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+        List<String> deniedpermissions = new ArrayList<>();
+        for (String permission : neededpermissions) {
+            if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), permission) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                deniedpermissions.add(permission);
+            }
+        }
+        return deniedpermissions;
+    }
+
     public static void deletefile(String filename)
     {
         File sourcefile=new File(filename);

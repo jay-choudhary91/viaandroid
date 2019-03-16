@@ -26,6 +26,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -61,6 +62,7 @@ import android.widget.TextView;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.adapter.encryptiondataadapter;
 import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
@@ -71,9 +73,11 @@ import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
+import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.simpledivideritemdecoration;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.github.mikephil.charting.utils.Utils;
@@ -202,46 +206,36 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     ImageView img_phone_orientation;
     @BindView(R.id.layoutcompass)
     ImageView layoutcompass;
-
-
-    private String imageurl = null;
-    private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
-    @BindView(R.id.tab_photoreader)
-    ImageView tab_photoreader;
-    private Handler myhandler;
-    private Runnable myrunnable;
-    String selectedmetrices = "", selectedhashes = "";
-    private String keytype = config.prefs_md5;
-    public int flingactionmindstvac;
-    private static final int request_read_external_storage = 1;
-    private final int flingactionmindspdvac = 10;
-    int targetheight=0,previousheight=0;
-    int footerheight;
-    int navigationbarheight = 0;
-
-    GoogleMap mgooglemap;
-
-    customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
-            tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
-            tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery,tvdegree;
+    @BindView(R.id.layout_item_encryption)
+    LinearLayout layout_item_encryption;
+    @BindView(R.id.recycler_encryption)
+    RecyclerView recycler_encryption;
     @BindView(R.id.layout_googlemap)
     LinearLayout layout_googlemap;
     @BindView(R.id.googlemap)
     FrameLayout googlemap;
     @BindView(R.id.attitude_indicator)
     AttitudeIndicator attitudeindicator;
-    int bottompadding;
+    @BindView(R.id.tab_photoreader)
+    ImageView tab_photoreader;
 
-    boolean ismediaplayer = false;
-    String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
-            mediatime = "",mediasize="",lastsavedangle="";
+    private String imageurl = null,selectedmetrices = "";
+    private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
+    private int flingactionmindstvac,footerheight,navigationbarheight = 0,targetheight=0,previousheight=0,bottompadding,
+            rootviewheight, devidedheight,actionbarheight;
+    private GoogleMap mgooglemap;
+    private customfonttextview tvaddress,tvlatitude,tvlongitude,tvaltitude,tvspeed,tvheading,tvtraveled,tvxaxis,tvyaxis,tvzaxis,tvphone,
+            tvnetwork,tvconnection,tvversion,tvwifi,tvgpsaccuracy,tvscreen,tvcountry,tvcpuusage,tvbrightness,tvtimezone,
+            tvmemoryusage,tvbluetooth,tvlocaltime,tvstoragefree,tvlanguage,tvuptime,tvbattery,tvdegree;
+    private String medianame = "",medianotes = "",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",
+            screenheight = "",screenwidth = "",lastsavedangle="";
     private float currentDegree = 0f;
-    ImageView img_niddle;
-    adapteritemclick mcontrollernavigator;
-    int rootviewheight, devidedheight,actionbarheight;
-
+    private ImageView img_niddle;
+    private adapteritemclick mcontrollernavigator;
     private BroadcastReceiver getmetadatabroadcastreceiver;
     private TranslateAnimation validationbaranimation;
+    private encryptiondataadapter encryptionadapter;
+    private ArrayList<arraycontainer> encryptionarraylist = new ArrayList<>();
     @Override
     public int getlayoutid() {
         return R.layout.fragment_phototabreaderfrag;
@@ -268,6 +262,13 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     {
         gethelper().setdatacomposing(false);
 
+        layout_item_encryption.setVisibility(View.GONE);
+        recycler_encryption.setVisibility(View.VISIBLE);
+
+        recycler_encryption.setLayoutManager(new LinearLayoutManagerWithSmoothScroller(getActivity()));
+        recycler_encryption.addItemDecoration(new simpledivideritemdecoration(applicationviavideocomposer.getactivity()));
+        encryptionadapter = new encryptiondataadapter(encryptionarraylist,applicationviavideocomposer.getactivity());
+        recycler_encryption.setAdapter(encryptionadapter);
         photorootview.post(new Runnable() {
             @Override
             public void run() {
@@ -857,10 +858,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (myhandler != null && myrunnable != null)
-            myhandler.removeCallbacks(myrunnable);
-        Log.e("ondestroy", "distroy");
-
     }
 
     @Override
@@ -1035,6 +1032,15 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                                                     layout_validating.setVisibility(View.VISIBLE);
                                                     //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
                                                     break;
+                                            }
+
+                                            if(encryptionarraylist.size() == 0)
+                                                encryptionarraylist.add(metricmainarraylist.get(0));
+
+                                            if(encryptionarraylist.size() > 0)
+                                            {
+                                                encryptionarraylist.set(0,metricmainarraylist.get(0));
+                                                encryptionadapter.notifyDataSetChanged();
                                             }
                                         }
                                         else
@@ -1294,13 +1300,14 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase(config.speed)){
             common.setspannable(getResources().getString(R.string.speed),"\n"+metricItemArraylist.getMetricTrackValue(), tvspeed);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.heading))){
-            common.setspannable(getResources().getString(R.string.heading),"\n"+metricItemArraylist.getMetricTrackValue()+"° ", tvheading);
-            if(!metricItemArraylist.getMetricTrackValue().equalsIgnoreCase("NA")){
+            if((! metricItemArraylist.getMetricTrackValue().trim().isEmpty()) && (! metricItemArraylist.getMetricTrackValue().
+                    equalsIgnoreCase("NA")))
+            {
                 common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
-
+                common.setdrawabledata(getResources().getString(R.string.heading),"\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvheading);
             }else{
                 common.setdrawabledata("","NA" , tvdegree);
-
+                common.setspannable(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
             }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase((config.distancetravelled))){
             common.setspannable(getResources().getString(R.string.traveled),"\n"+metricItemArraylist.getMetricTrackValue(), tvtraveled);

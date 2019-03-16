@@ -86,6 +86,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -123,9 +124,25 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     TextView txt_media_quality;
     @BindView(R.id.txt_zoomlevel)
     TextView txt_zoomlevel;
+    @BindView(R.id.linear_header)
+    LinearLayout linearheader;
 
     mediaqualityadapter qualityadapter;
     List<String> qualityitemslist=new ArrayList<>();
+
+    /**
+     * ID of the current {@link CameraDevice}.
+     */
+    public static final String CAMERA_FRONT = "1";
+    public static final String CAMERA_BACK = "0";
+
+    private String cameraid = CAMERA_BACK,selectedmediaquality="";
+    private boolean isflashsupported=false,isvisibletouser=false;;
+    private boolean isflashon = false,previewupdated=false;
+    protected float fingerSpacing = 0;
+    protected float zoomLevel = 1f;
+    protected float maximumZoomLevel;
+    protected Rect rectzoom;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private int REQUEST_CAMERA_PERMISSION = 1,rotationangle=90;
@@ -203,20 +220,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
 
     };
-
-    /**
-     * ID of the current {@link CameraDevice}.
-     */
-    public static final String CAMERA_FRONT = "1";
-    public static final String CAMERA_BACK = "0";
-
-    private String cameraid = CAMERA_BACK,selectedmediaquality="";
-    private boolean isflashsupported=false,isvisibletouser=false;;
-    private boolean isflashon = false;
-    protected float fingerSpacing = 0;
-    protected float zoomLevel = 1f;
-    protected float maximumZoomLevel;
-    protected Rect rectzoom;
 
     /**
      * An {@link AutoFitTextureView} for camera preview.
@@ -503,10 +506,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    @BindView(R.id.linear_header)
-    LinearLayout linearheader;
-
-
     public static imagecomposerfragment newInstance() {
         return new imagecomposerfragment();
     }
@@ -529,7 +528,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         ButterKnife.bind(this, rootview);
         gethelper().drawerenabledisable(true);
         gethelper().setdatacomposing(true);
-
+        previewupdated=false;
         zoomLevel=1f;
         mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
@@ -707,11 +706,20 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         String currentdate[] = common.getcurrentdatewithtimezone();
         try {
             try {
+                Calendar sequencetime = Calendar.getInstance();
+                String devicetime = common.get24hourformat();
+                SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
+                String starttime = sdf.format(sequencetime.getTime());
+                String endtime = sdf.format(sequencetime.getTime());
+
                 if(metricesjsonarray != null && metricesjsonarray.length() > 0)
                 {
                     JSONObject arrayobject=metricesjsonarray.getJSONObject(0);
                     arrayobject.put("interim_identifying_hashes","");
                     arrayobject.put("distancetravelled","0");
+                    arrayobject.put("sequencestarttime",starttime);
+                    arrayobject.put("sequenceendtime",endtime);
+                    arrayobject.put("devicetime",devicetime);
                 }
                 String metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
                 mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
@@ -1116,6 +1124,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            previewupdated=true;
                         }
 
                         @Override
@@ -1198,6 +1208,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     private void capturestillpicture() {
         try {
+
+            if(! previewupdated)
+                return;
 
             if(expandable_layout != null && expandable_layout.isExpanded())
                 expendcollpaseview();
@@ -1830,12 +1843,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void switchCamera(ImageView imageview) {
         if (cameraid.equals(CAMERA_FRONT)) {
+            previewupdated=false;
             imageview.setImageResource(R.drawable.icon_cameraflip);
             cameraid = CAMERA_BACK;
             closeCamera();
             reopenCamera();
 
         } else if (cameraid.equals(CAMERA_BACK)) {
+            previewupdated=false;
             cameraid = CAMERA_FRONT;
             imageview.setImageResource(R.drawable.icon_reversecamera);
             closeCamera();
