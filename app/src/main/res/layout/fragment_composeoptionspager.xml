@@ -47,36 +47,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="5"
                 android:orientation="horizontal">
 
                 <com.deeptruth.app.android.views.customfonttextview
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/txt_space_a"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:visibility="visible"
                     />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/txt_space_b"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
+                    android:visibility="visible"
                     />
 
                 <com.deeptruth.app.android.views.customfonttextview
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/txt_mediatype_a"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:gravity="center"
                     android:padding="8dp"
                     android:textColor="@color/white"
-                    android:text="VIDEO"
+                    android:visibility="visible"
+                    android:text=""
                     />
 
 
@@ -84,13 +83,13 @@
                     app:fontType="Comfortaa-Bold"
                     android:id="@+id/txt_mediatype_b"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:textSize="12sp"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:text="PHOTO"
+                    android:visibility="invisible"
+                    android:text=""
                     />
 
 
@@ -98,13 +97,13 @@
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/txt_mediatype_c"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:gravity="left"
+                    android:gravity="center"
                     android:padding="8dp"
                     android:textSize="12sp"
                     android:textColor="@color/white"
-                    android:text="AUDIO"
+                    android:visibility="invisible"
+                    android:text=""
                     />
 
             </LinearLayout>
