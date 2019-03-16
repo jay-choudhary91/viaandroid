@@ -868,7 +868,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     @Override
                     public void run() {
                         int heading = Math.round(event.values[0]);
-                        common.setdrawabledata(getResources().getString(R.string.heading),+heading +"° " +common.getcompassdirection(heading) , tvheading);
+                        common.setdrawabledata(getResources().getString(R.string.heading),"\n"+heading +"° " , tvheading);
                         common.setdrawabledata("",+heading +"° " +common.getcompassdirection(heading) , txtdegree);
                     }
                 });
