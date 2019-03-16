@@ -575,12 +575,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    if (currentprocessframe != processframe) {
                        currentprocessframe = processframe;
 
-                       if (processframe < metricmainarraylist.size()) {
+                       if (processframe < metricmainarraylist.size() && metricmainarraylist.size() > 0) {
                            arraycontainerformetric = new arraycontainer();
                            arraycontainerformetric = metricmainarraylist.get(processframe);
                        }
 
-                       if(encryptionarraylist.size() == 0)
+                       if(encryptionarraylist.size() == 0 && arraycontainerformetric != null)
                            encryptionarraylist.add(arraycontainerformetric);
 
                        if(encryptionarraylist.size() > 0)
