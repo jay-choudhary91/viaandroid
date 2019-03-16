@@ -60,7 +60,7 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.3"
-            android:text="BlockChain Id"/>
+            android:text="BlockChain Id:"/>
 
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -81,7 +81,7 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.3"
-            android:text="Hash Formula"/>
+            android:text="Hash Formula:"/>
 
 
         <com.deeptruth.app.android.views.customfonttextview
@@ -102,7 +102,7 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.3"
-            android:text="Media Hash"/>
+            android:text="Media Hash:"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_mediahash"
@@ -122,7 +122,7 @@
             app:fontType="OpenSans_Regular"
             style="@style/txt_row_encryption"
             android:layout_weight="0.3"
-            android:text="Meta Hash"/>
+            android:text="Meta Hash:"/>
 
         <com.deeptruth.app.android.views.customfonttextview
             android:id="@+id/txt_metahash"

@@ -9,7 +9,6 @@
     android:background="@android:color/white">
 
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -54,6 +53,25 @@
                     />
 
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:padding="5dp"
+                    android:id="@+id/audio_downwordarrow"
+                    android:src="@drawable/handle_down_arrow"/>
+
+                <ImageView
+                    android:id="@+id/img_fullscreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_full_screen_mode"
+                    android:padding="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"/>
 
             </RelativeLayout>
 
@@ -121,14 +139,6 @@
                             android:textColor="@color/black"
                             android:paddingLeft="4dip" />
                     </RelativeLayout>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/layout_seekbartiming"
-                        android:layout_centerInParent="true"
-                        android:id="@+id/audio_downwordarrow"
-                        android:src="@drawable/handle_down_arrow"/>
 
                     <ImageView
                         android:id="@+id/img_pause"
