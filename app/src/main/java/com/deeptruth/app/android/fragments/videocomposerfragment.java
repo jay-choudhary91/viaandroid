@@ -352,7 +352,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private boolean isdraweropen=false,isgraphicalshown=false;
     private Handler myHandler;
     private Runnable myRunnable;
-    private boolean issavedtofolder=false;
+    private boolean issavedtofolder=false,previewupdated=false;;
     JSONArray metadatametricesjson=new JSONArray();
 
 
@@ -401,6 +401,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         ButterKnife.bind(this,rootview);
 
         zoomLevel=1f;
+        previewupdated=false;
         applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
@@ -971,6 +972,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 public void onConfigured(CameraCaptureSession cameraCaptureSession) {
                     mPreviewSession = cameraCaptureSession;
                     updatePreview();
+                    previewupdated=true;
                 }
                 @Override
                 public void onConfigureFailed(CameraCaptureSession cameraCaptureSession) {
@@ -1157,13 +1159,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         try {
             // UI
 
+            if(! previewupdated)
+                return;
+
             if(expandable_layout != null && expandable_layout.isExpanded())
                 expendcollpaseview();
 
             metadatametricesjson=new JSONArray();
             mediakey ="";
-            issavedtofolder=false;
-            isvideorecording = true;
             startPreview(true);
             if(mediarecorder != null)
             {
@@ -1174,6 +1177,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 wavevisualizerslist.clear();
                 //startnoise();
             }
+
+            issavedtofolder=false;
+            isvideorecording = true;
+            startblinkanimation();
+            if(madapterclick != null)
+                madapterclick.onItemClicked(null,1);
+            showhideactionbaricon(0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1440,11 +1450,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
             startRecordingVideo();
-
-            startblinkanimation();
-            if(madapterclick != null)
-                madapterclick.onItemClicked(null,1);
-            showhideactionbaricon(0);
         }
     }
 
@@ -2085,12 +2090,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void switchCamera(ImageView imageView) {
         if (cameraId.equals(CAMERA_FRONT)) {
+            previewupdated=false;
             imageView.setImageResource(R.drawable.icon_cameraflip);
             cameraId = CAMERA_BACK;
             closeCamera();
             reopenCamera();
 
         } else if (cameraId.equals(CAMERA_BACK)) {
+            previewupdated=false;
             cameraId = CAMERA_FRONT;
             imageView.setImageResource(R.drawable.icon_reversecamera);
             closeCamera();
