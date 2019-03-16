@@ -2326,7 +2326,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 if (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));
 
-                if(arraycontainerformetric != null && layout_halfscrnimg.getVisibility() == View.VISIBLE)
+                if(arraycontainerformetric != null && layout_halfscrnimg.getVisibility() == View.VISIBLE && (!gethelper().isdraweropened()))
                 {
                     String color = "white";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))

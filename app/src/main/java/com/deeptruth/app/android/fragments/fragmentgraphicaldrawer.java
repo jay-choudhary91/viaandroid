@@ -485,7 +485,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     rotatecompass(degree);
                     String direction= common.getcompassdirection(degree);
 
-                    common.setdrawabledata("","\n"+strdegree +"° " + direction , txtdegree);
+                    common.setdrawabledata("",strdegree +"° " + direction , txtdegree);
 
                     double heading=Double.parseDouble(strdegree);
                     int headingg=(int)heading;
