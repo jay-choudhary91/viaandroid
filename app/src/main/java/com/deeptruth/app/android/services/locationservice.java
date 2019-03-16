@@ -345,22 +345,28 @@ public class locationservice extends Service implements LocationListener, GpsSta
 
         }*/
 
+        if (location.hasSpeed())
+        {
+            float meter=location.getSpeed();
+            double miles=common.convertmetertomiles(meter);
+            xdata.getinstance().saveSetting("gpsspeed", "" + miles);
+        }
+
         if (oldlocation != null)
         {
             long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(),oldlocation.getLatitude(),
                     oldlocation.getLongitude());
             travelleddistance = meter/0.3048;
 
-            double kilometers = common.distancebetweenpoints(location.getLatitude(), location.getLongitude(),oldlocation.getLatitude(),
+            /*double kilometers = common.distancebetweenpoints(location.getLatitude(), location.getLongitude(),oldlocation.getLatitude(),
                     oldlocation.getLongitude());
 
             double miles = kilometers / 1.6;
-            //double miles=common.convertmetertomiles(meter);
             String strspeed = "" + miles;
             if (strspeed.contains("."))
                 strspeed = strspeed.substring(0, strspeed.indexOf("."));
 
-            xdata.getinstance().saveSetting("gpsspeed", "" +strspeed);
+            xdata.getinstance().saveSetting("gpsspeed", "" +strspeed);*/
                 /*float timeDifferance = (location.getTime() - oldlocation.getTime());
                 if(meter > 0)
                 {
