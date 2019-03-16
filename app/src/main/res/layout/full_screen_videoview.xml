@@ -276,10 +276,17 @@
                             android:layout_marginBottom="-15dp"
                             android:padding="10dp"
                             />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_above="@+id/layout_backgroundcontroller"
+                            android:padding="5dp"
+                            android:id="@+id/video_downwordarrow"
+                            android:src="@drawable/handle_down_arrow"/>
+
                     </RelativeLayout>
-
-
-
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_below="@+id/layout_halfscrnimg"
