@@ -62,17 +62,6 @@
                     android:id="@+id/audio_downwordarrow"
                     android:src="@drawable/handle_down_arrow"/>
 
-                <ImageView
-                    android:id="@+id/img_fullscreen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_full_screen_mode"
-                    android:padding="10dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginBottom="5dp"/>
-
             </RelativeLayout>
 
             <RelativeLayout
@@ -156,7 +145,18 @@
 
                 </RelativeLayout>
 
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/img_fullscreen"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_above="@+id/layout_scrubberview"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_full_screen_mode"
+                android:layout_marginBottom="8dp"
+                android:padding="10dp"
+                />
+
+        </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -170,17 +170,19 @@
 
             </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/layout_mediatype"
-            android:layout_width="match_parent"
-            android:visibility="visible"
-            android:layout_alignParentTop="true"
-            android:layout_height="wrap_content"
-            android:paddingTop="18dp"
-            android:background="@color/dark_blue_solid_a"
-            android:orientation="horizontal">
 
-            <include layout="@layout/action_bar_mediadetails"></include>
+
+            <RelativeLayout
+                android:id="@+id/layout_mediatype"
+                android:layout_width="match_parent"
+                android:visibility="visible"
+                android:layout_alignParentTop="true"
+                android:layout_height="wrap_content"
+                android:paddingTop="18dp"
+                android:background="@color/dark_blue_solid_a"
+                android:orientation="horizontal">
+
+                <include layout="@layout/action_bar_mediadetails"></include>
 
         </RelativeLayout>
 
