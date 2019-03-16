@@ -142,6 +142,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     int navigationbarheight = 0;
     private TranslateAnimation validationbaranimation;
     private AlphaAnimation blinkencryptionanimation;
+    int parentviewwidth=0;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -190,6 +191,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             parentview.post(new Runnable() {
                 @Override
                 public void run() {
+
+                    parentviewwidth=parentview.getWidth();
 
                     final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
                     alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
@@ -510,8 +513,51 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     {
         flingactionmindstvac=common.getcomposerswipearea();
         currentselectedcomposer=config.selectedmediatype;
-        showselectedfragment();
-        getlatestthumbnailfromdirectory();
+
+        parentview.post(new Runnable() {
+            @Override
+            public void run() {
+                fixbottomtabwidth(txt_space_a,parentviewwidth/5);
+                fixbottomtabwidth(txt_space_b,parentviewwidth/5);
+                fixbottomtabwidth(txt_mediatype_a,parentviewwidth/5);
+                fixbottomtabwidth(txt_mediatype_b,parentviewwidth/5);
+                fixbottomtabwidth(txt_mediatype_c,parentviewwidth/5);
+
+                txt_space_a.setVisibility(View.VISIBLE);
+                txt_space_b.setVisibility(View.VISIBLE);
+                txt_mediatype_a.setVisibility(View.VISIBLE);
+                txt_mediatype_b.setVisibility(View.VISIBLE);
+                txt_mediatype_c.setVisibility(View.VISIBLE);
+
+                showselectedfragment();
+
+                final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+                alphanimation.setDuration(2000); //You can manage the time of the blink with this parameter
+                alphanimation.setRepeatMode(1);
+
+                Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        //fadeoutcontrollers();
+                        txt_mediatype_a.setText(config.item_video);
+                        txt_mediatype_b.setText(config.item_photo);
+                        txt_mediatype_c.setText(config.item_audio);
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                };
+                alphanimation.setAnimationListener(alphalistener);
+                layout_mediatype.startAnimation(alphanimation);
+
+                getlatestthumbnailfromdirectory();
+            }
+        });
     }
 
     @Override
@@ -728,8 +774,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (currentselectedcomposer)
         {
             case 0:
-                txt_space_a.setVisibility(View.VISIBLE);
-                txt_space_b.setVisibility(View.VISIBLE);
+                if(txt_space_a.getWidth() == 0)
+                    resizebottomtab(txt_space_a,0,parentviewwidth/5);
+
+                if(txt_space_b.getWidth() == 0)
+                    resizebottomtab(txt_space_b,0,parentviewwidth/5);
+
                 imgrotatecamera.setVisibility(View.VISIBLE);
                 resetbuttonviews(txt_mediatype_a,txt_mediatype_b,txt_mediatype_c);
                 showhideactionbottombaricon(1);
@@ -739,12 +789,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 fragvideocomposer.setData(false, mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
                 changezoomcontrollerposition(1000);
-
             break;
 
             case 1:
-                txt_space_a.setVisibility(View.GONE);
-                txt_space_b.setVisibility(View.VISIBLE);
+                if(txt_space_a.getWidth() > 0)
+                    resizebottomtab(txt_space_a,parentviewwidth/5,0);
+
+                if(txt_space_b.getWidth() == 0)
+                    resizebottomtab(txt_space_b,0,parentviewwidth/5);
+
                 imgrotatecamera.setVisibility(View.VISIBLE);
                 resetbuttonviews(txt_mediatype_b,txt_mediatype_a,txt_mediatype_c);
                 showhideactionbottombaricon(1);
@@ -754,12 +807,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 fragimgcapture.setData(mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
                 changezoomcontrollerposition(1000);
-
             break;
 
             case 2:
-                txt_space_a.setVisibility(View.GONE);
-                txt_space_b.setVisibility(View.GONE);
+                if(txt_space_a.getWidth() > 0)
+                    resizebottomtab(txt_space_a,parentviewwidth/5,0);
+
+                if(txt_space_b.getWidth() > 0)
+                    resizebottomtab(txt_space_b,parentviewwidth/5,0);
+
                 imgrotatecamera.setVisibility(View.GONE);
                 resetbuttonviews(txt_mediatype_c,txt_mediatype_a,txt_mediatype_b);
                 showhideactionbottombaricon(3);
@@ -777,6 +833,29 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             gifdrawable.pause();
             gifdrawable.seekTo(0);
         }
+    }
+
+    public void resizebottomtab(final View view, int start, final int end)
+    {
+        ValueAnimator animator = ValueAnimator.ofInt(start, end);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int value = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams lp = view.getLayoutParams();
+                lp.width = value;
+                view.setLayoutParams(lp);
+            }
+        });
+        animator.setDuration(700);
+        animator.start();
+    }
+
+    public void fixbottomtabwidth(final View view, int width)
+    {
+        LinearLayout.LayoutParams layoutparams = new LinearLayout.LayoutParams(width,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        view.setLayoutParams(layoutparams);
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
