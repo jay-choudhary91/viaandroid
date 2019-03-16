@@ -2059,7 +2059,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     equalsIgnoreCase("NA")))
             {
                 common.setdrawabledata("","\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvdegree);
-                common.setdrawabledata(getResources().getString(R.string.heading),"\n"+ (metricItemArraylist.getMetricTrackValue()+"° " +common.getcompassdirection(Integer.parseInt(metricItemArraylist.getMetricTrackValue()))) , tvheading);
+                common.setdrawabledata(getResources().getString(R.string.heading),"\n"+ (metricItemArraylist.getMetricTrackValue()+"°"), tvheading);
             }else{
                 common.setdrawabledata("","NA" , tvdegree);
                 common.setspannable(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
