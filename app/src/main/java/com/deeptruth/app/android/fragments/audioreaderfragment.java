@@ -413,6 +413,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                         if(rlcontrollerview.getLayoutParams().height < lovermovementlimit){
 
+                            gethelper().updateactionbar(0);
                             audio_downwordarrow.setImageResource(R.drawable.handle_down_arrow);
                             float height = rlcontrollerview.getLayoutParams().height + e2.getY();
                             //setanimation(layouttop,height,e2.getY(),false);
@@ -432,6 +433,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             layout_footer.setVisibility(View.GONE);
                             audio_downwordarrow.setImageResource(R.drawable.handle_up_arrow);
 
+                            gethelper().updateactionbar(1);
+
+
                             if(layout_audiodetails.getLayoutParams().height<=0){
                                 layout_audiodetails.getLayoutParams().height = layout_audiodetails.getHeight();
                                 layout_audiodetails.requestLayout();
@@ -444,6 +448,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                         if(rlcontrollerview.getLayoutParams().height >= uppermovementlimit) {
                             layout_footer.setVisibility(View.VISIBLE);
+                            gethelper().updateactionbar(0);
                             audio_downwordarrow.setImageResource(R.drawable.handle_down_arrow);
                             float height = rlcontrollerview.getLayoutParams().height - (Math.abs(e2.getY()));
                             rlcontrollerview.getLayoutParams().height = (int) height;
