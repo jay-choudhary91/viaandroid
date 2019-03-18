@@ -542,40 +542,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
 
                 @Override
-                public boolean onDown(MotionEvent e) {
-                    return false;
-                }
-            });
+                public boolean onSingleTapConfirmed(MotionEvent e) {
 
-            videodownwordarrow.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent event) {
-                    switch (view.getId())
-                    {
-                        case  R.id.video_downwordarrow:
-
-                            if (detector.onTouchEvent(event)) {
-                                return true;
-                            }
-
-                            if(event.getAction() == MotionEvent.ACTION_UP) {
-                                if(mIsScrolling ) {
-                                    updatesurfaceviewsize();
-                                    mIsScrolling  = false;
-                                };
-                            }
-                            //detector.onTouchEvent(event);
-                            break;
-                    }
-
-                    return false;
-                }
-            });
-
-
-            videodownwordarrow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
                     if(rootviewheight > layout_halfscrnimg.getLayoutParams().height){
                         layout_halfscrnimg.getLayoutParams().height = rootviewheight;
 
@@ -611,7 +579,46 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         videodownwordarrow.setImageResource(R.drawable.handle_down_arrow);
                         layout_footer.setVisibility(View.VISIBLE);
                     }
+                    Log.e("singleclcik=","songleclcik");
+                    return super.onSingleTapConfirmed(e);
                 }
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    return false;
+                }
+            });
+
+            videodownwordarrow.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent event) {
+                    switch (view.getId())
+                    {
+                        case  R.id.video_downwordarrow:
+
+                            if (detector.onTouchEvent(event)) {
+                                return true;
+                            }
+
+                            if(event.getAction() == MotionEvent.ACTION_UP) {
+                                if(mIsScrolling ) {
+
+                                    updatesurfaceviewsize();
+                                    return true;
+                                };
+                            }
+                            //detector.onTouchEvent(event);
+                            break;
+                    }
+
+                    return false;
+                }
+            });
+
+
+            videodownwordarrow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {}
+
             });
         }
 
@@ -2578,6 +2585,19 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
 
+     public void setplaypuasebtnondrag(){
+
+         int surfaceView_Width = videotextureview.getWidth();
+         int surfaceView_Height = videotextureview.getHeight();
+
+         int centerheight = surfaceView_Height/2;
+         int buttonheight = playpausebutton.getHeight();
+
+         int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;
+
+         recenterplaypause(lastvalue ,0);
+     }
+
     public void updatesurfaceviewsize(){
 
         int surfaceView_Width = videotextureview.getWidth();
@@ -2876,6 +2896,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                     if(headerheight == 0 && scrubberheight == 0){
                         updatesurfaceviewsizefullscreen();
+                    }else{
+
+                        setplaypuasebtnondrag();
                     }
                 }
             });
