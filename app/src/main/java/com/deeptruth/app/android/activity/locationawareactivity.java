@@ -2,6 +2,7 @@ package com.deeptruth.app.android.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -23,6 +24,7 @@ import android.location.Geocoder;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
+import android.location.OnNmeaMessageListener;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -38,6 +40,7 @@ import android.os.IBinder;
 import android.os.StatFs;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -77,9 +80,15 @@ import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -112,19 +121,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public abstract class locationawareactivity extends baseactivity implements GpsStatus.Listener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener,Orientation.Listener {
+public abstract class locationawareactivity extends baseactivity implements GpsStatus.Listener,LocationListener, Orientation.Listener {
 
     private static final String REQUESTING_LOCATION_UPDATES_KEY = "requesting_location_update_key";
     private static final String LOCATION_KEY = "location_key";
     private static final String LAST_UPDATED_TIME_STRING_KEY = "last_updated_time_key";
     private static final int PERMISSION_LOCATION_REQUEST_CODE = 99;
 
-    private LocationRequest mlocationrequest;
-    private Location mcurrentlocation;
-    private GoogleApiClient mgoogleapiclient;
     int GPS_REQUEST_CODE = 111;
     public Bundle newsavedinstancestate = null;
     boolean updateitem = false;
@@ -147,7 +150,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     public static final int my_permission_read_phone_state = 90;
     private static final int request_permissions = 101;
     private Runnable doafterallpermissionsgranted;
-    private Location oldlocation;
     private Handler myHandler;
     private Runnable myRunnable;
     public boolean isrecording = false;
@@ -160,27 +162,112 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     // bandwidth in kbps
     private int POOR_BANDWIDTH = 150;
 
-    List<CellInfo> towerinfolist=new ArrayList<>() ;
-    private boolean isservicebound=false;
+    List<CellInfo> towerinfolist = new ArrayList<>();
+    private boolean isservicebound = false;
     private databasemanager mdbhelper;
     boolean updatesync = true;
-    ArrayList<startmediainfo> unsyncedmediaitems=new ArrayList<>();
-    int syncupdationcounter=0;
-    boolean isdatasyncing=false;
-    int downloadmetadataattempt=2,systemdialogshowrequestcode =110;
+    ArrayList<startmediainfo> unsyncedmediaitems = new ArrayList<>();
+    int syncupdationcounter = 0;
+    boolean isdatasyncing = false;
+    int downloadmetadataattempt = 2, systemdialogshowrequestcode = 110;
     ArrayList<video> readerarraymedialist = new ArrayList<video>();
     private BroadcastReceiver coredatabroadcastreceiver;
-    Date initialdate ;
+    Date initialdate;
     private Orientation mOrientation;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private LocationCallback mLocationCallback;
+    private LocationRequest locationRequest;
+    private Location oldlocation;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         applicationviavideocomposer.setActivity(locationawareactivity.this);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        try {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(locationawareactivity.this);
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(locationawareactivity.this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                // Logic to handle location object
+                            }
+                        }
+                    });
+            locationRequest = LocationRequest.create();
+            locationRequest.setInterval(5000);
+            locationRequest.setFastestInterval(1000);
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    for (Location location : locationResult.getLocations()) {
+                        // Update UI with location data
+                        if (location != null)
+                        {
+                            try {
+                                googleutils.saveUserCurrentLocation(location);
+                                if (location.hasSpeed())
+                                {
+                                    float mps=location.getSpeed();
+                                    double mph=common.convertmpstomph(mps);
+                                    DecimalFormat precision=new DecimalFormat("0.0");
+                                    //xdata.getinstance().saveSetting("gpsspeed", "" +mps+" "+ mph);
+                                    xdata.getinstance().saveSetting("gpsspeed", ""+precision.format(mph));
+                                }
+
+                                if (location.hasAltitude())
+                                {
+                                    int altitudefeet = (int) (location.getAltitude() / 0.3048);
+                                    xdata.getinstance().saveSetting(config.gpsaltitude, "" + altitudefeet);
+                                }
+
+                                if (location == null || location.getLatitude() == 0.0)
+                                    return;
+
+                                if (getcurrentfragment() != null) {
+                                    getcurrentfragment().oncurrentlocationchanged(location);
+                                    updatelocationsparams(location);
+                                }
+
+                                if(xdata.getinstance().getSetting(config.istravelleddistanceneeded).equalsIgnoreCase("true"))
+                                {
+                                    if(oldlocation == null)
+                                        oldlocation=location;
+
+                                    long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(), oldlocation.getLatitude(),
+                                            oldlocation.getLongitude());
+                                    double miles=common.convertmetertomiles(meter);
+                                    DecimalFormat precision=new DecimalFormat("0.0");
+                                    xdata.getinstance().saveSetting("travelleddistance", ""+precision.format(miles));
+                                }
+                                else
+                                {
+                                    xdata.getinstance().saveSetting("travelleddistance", "0.0");
+                                    oldlocation=null;
+                                }
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    }
+                }
+
+                ;
+            };
+        } catch (SecurityException ex) {
+            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         newsavedinstancestate = savedInstanceState;
         telephonymanager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         initialdate = new Date();
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
@@ -400,6 +487,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     private void doafterallpermissionsgranted() {
+        getLastLocation();
+        startLocationUpdates();
         enableGPS(locationawareactivity.this);
         preparemetricesdata();
 
@@ -418,20 +507,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         } else {
             enableGPS(locationawareactivity.this);
         }
-    }
-
-    public void initLocationAPIs(Bundle savedInstanceState) {
-        mgoogleapiclient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-
-        createLocationRequest();
-
-        updateValuesFromBundle(savedInstanceState);
-
-        mgoogleapiclient.connect();
     }
 
     public static boolean checkPermission(final Context context) {
@@ -495,11 +570,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         }
         try
         {
-            if (mgoogleapiclient != null && mgoogleapiclient.isConnected()) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(
-                        mgoogleapiclient, mlocationrequest, this);
-
-            }
+            mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, null);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -510,9 +581,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     protected void stopLocationUpdates() {
         try
         {
-            if (mgoogleapiclient != null && mgoogleapiclient.isConnected())
-                LocationServices.FusedLocationApi.removeLocationUpdates(mgoogleapiclient, this);
-
+            if (mFusedLocationClient != null)
+                mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -520,72 +590,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     }
 
-    @SuppressLint("RestrictedApi")
-    protected LocationRequest createLocationRequest() {
-        mlocationrequest = new LocationRequest();
-        mlocationrequest.setInterval(10000);
-        mlocationrequest.setFastestInterval(10000);
-        mlocationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        return mlocationrequest;
-    }
-
-
-    private void updateValuesFromBundle(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            // Update the value of mRequestingLocationUpdates from the Bundle, and
-            // make sure that the Start Updates and Stop Updates buttons are
-            // correctly enabled or disabled.
-            if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
-//                mRequestingLocationUpdates = savedInstanceState.getBoolean(
-//                        REQUESTING_LOCATION_UPDATES_KEY);
-
-            }
-
-            // Update the value of mcurrentlocation from the Bundle and update the
-            // UI to show the correct latitude and longitude.
-            if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
-                // Since LOCATION_KEY was found in the Bundle, we can be sure that
-                // mCurrentLocationis not null.
-                mcurrentlocation = savedInstanceState.getParcelable(LOCATION_KEY);
-            }
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        startLocationUpdates();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
 
     @Override
     public void onLocationChanged(Location location) {
         //saving the user current location
-        if (location != null) {
-
-            googleutils.saveUserCurrentLocation(location);
-
-            if (location == null || location.getLatitude() == 0.0)
-                return;
-
-            mcurrentlocation = location;
-            if (getcurrentfragment() != null) {
-                getcurrentfragment().oncurrentlocationchanged(location);
-                updatelocationsparams(location);
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    public Location getCurrentLocation() {
-        return mcurrentlocation;
     }
 
     @SuppressLint("MissingPermission")
@@ -601,7 +609,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
     public void setNavigateWithLocation() {
         if (locationawareactivity.checkLocationEnable(locationawareactivity.this)) {
-            initLocationAPIs(newsavedinstancestate);
             if (getcurrentfragment() != null) {
                 getcurrentfragment().getAccurateLocation();
             }
@@ -1344,6 +1351,12 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     @Override
+    public void onPause() {
+        stopLocationUpdates();
+        super.onPause();
+    }
+
+    @Override
     public void registerAccelerometerSensor() {
         Thread thread = new Thread() {
             public void run() {
@@ -1692,6 +1705,8 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance") +" "+ "feet");
+                if(xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
+                    metricitemarraylist.get(i).setMetricTrackValue("0"+" "+ "feet");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsaccuracy"));
@@ -1700,8 +1715,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("currentaddress"));
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("speed")) {
-
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsspeed") +" "+ "mph");
+                if(xdata.getinstance().getSetting("gpsspeed").trim().isEmpty())
+                    metricitemarraylist.get(i).setMetricTrackValue("0"+" "+ "mph");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.gpsaltitude)) {
                 String altitude=xdata.getinstance().getSetting(config.gpsaltitude);
@@ -1710,7 +1726,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                 metricitemarraylist.get(i).setMetricTrackValue("" + altitude + " feet");
             }
-            oldlocation = location;
         }
     }
 
@@ -1752,7 +1767,27 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
             };
             registerReceiver(coredatabroadcastreceiver, intentFilter);
         }
+        /*else if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+        {
+            if(mFusedLocationClient != null)
+            {
+                getLastLocation();
+                startLocationUpdates();
+            }
+        }*/
+    }
 
+    @SuppressWarnings("MissingPermission")
+    private void getLastLocation() {
+        mFusedLocationClient.getLastLocation().addOnCompleteListener(locationawareactivity.this,
+                new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+
+                        }
+                    }
+                });
     }
 
     @Override

@@ -2170,7 +2170,9 @@ public class common {
     }
 
 
-
+    public static double convertmpstomph(double mps) {
+        return  mps * 2.236936 ;
+    }
     public static double convertmetertomiles(double meters) {
         return  meters*0.000621371192;
     }

@@ -771,6 +771,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void showselectedfragment()
     {
+        xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
         switch (currentselectedcomposer)
         {
             case 0:
@@ -919,6 +920,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 showhideactionbottombaricon(2);
             }
+            xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"true");
 
             // setimagerecordstart();
         }
@@ -946,6 +948,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
 
             changezoomcontrollerposition(0);
+            xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
         }
         else if(type == 3) // For swipe gesture to change fragment
         {
@@ -965,6 +968,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 e.printStackTrace();
             }
             getlatestthumbnailfromdirectory();
+            xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
         }
         else if(type == 5)
         {

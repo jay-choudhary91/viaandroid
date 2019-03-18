@@ -327,76 +327,12 @@ public class locationservice extends Service implements LocationListener, GpsSta
 
     public void updatelocationsparams(Location location) {
 
-        double travelleddistance = 0.0;
-        double altitude = 0.0;
-
         if(location == null)
             return;
 
         fetchcompleteaddress(location);
-        // Speed calulcation is followed by this -> https://stackoverflow.com/questions/4811920/why-getspeed-always-return-0-on-android
-        /*if (location.hasSpeed())
-        {
-            convertmpstomph(location.getSpeed(),60);
-            xdata.getinstance().saveSetting("gpsspeed", "" + location.getSpeed());
-        }
-        else
-        {
-
-        }*/
-
-        if (location.hasSpeed())
-        {
-            float meter=location.getSpeed();
-            double miles=common.convertmetertomiles(meter);
-            xdata.getinstance().saveSetting("gpsspeed", "" + miles);
-        }
-
-        if (oldlocation != null)
-        {
-            long meter = common.calculateDistance(location.getLatitude(), location.getLongitude(),oldlocation.getLatitude(),
-                    oldlocation.getLongitude());
-            travelleddistance = meter/0.3048;
-
-            /*double kilometers = common.distancebetweenpoints(location.getLatitude(), location.getLongitude(),oldlocation.getLatitude(),
-                    oldlocation.getLongitude());
-
-            double miles = kilometers / 1.6;
-            String strspeed = "" + miles;
-            if (strspeed.contains("."))
-                strspeed = strspeed.substring(0, strspeed.indexOf("."));
-
-            xdata.getinstance().saveSetting("gpsspeed", "" +strspeed);*/
-                /*float timeDifferance = (location.getTime() - oldlocation.getTime());
-                if(meter > 0)
-                {
-                    float speed = meter / timeDifferance;
-                    convertmpstomph(speed,timeDifferance);
-                }*/
-
-        }
-
-        if (location.hasAltitude())
-        {
-            int altitudefeet = (int) (location.getAltitude() / 0.3048);
-            xdata.getinstance().saveSetting(config.gpsaltitude, "" + altitudefeet);
-        }
-        else
-        {
-            int outValue = (int) altitude;
-            if(! xdata.getinstance().getSetting(config.gpsaltitude).trim().isEmpty())
-            {
-                xdata.getinstance().saveSetting(config.gpsaltitude, "" + xdata.getinstance().getSetting(config.gpsaltitude));
-            }
-            else
-            {
-                xdata.getinstance().saveSetting(config.gpsaltitude, ""+outValue);
-            }
-        }
-        xdata.getinstance().saveSetting("travelleddistance", "" + "" + ((int) travelleddistance));
         xdata.getinstance().saveSetting("gpsaccuracy", "" + location.getAccuracy());
         xdata.getinstance().saveSetting("strengthofsatellites", "" + location.getAccuracy());
-
         oldlocation = location;
     }
 
@@ -441,18 +377,6 @@ public class locationservice extends Service implements LocationListener, GpsSta
             }
         });
         thread.start();
-    }
-
-    public void convertmpstomph(float distance,float time)
-    {
-        String strspeed="0";
-        float kph = ( distance/1000.0f ) / ( time/3600.0f );
-        float mph = kph / 1.609f;
-        strspeed = "" + mph;
-        if (strspeed.contains("."))
-            strspeed = strspeed.substring(0, strspeed.indexOf("."));
-
-        xdata.getinstance().saveSetting("gpsspeed", "" +strspeed);
     }
 }
 
