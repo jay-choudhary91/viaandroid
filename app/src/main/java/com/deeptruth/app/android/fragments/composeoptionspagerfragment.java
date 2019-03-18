@@ -188,51 +188,57 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 e.printStackTrace();
             }
 
-            parentviewwidth=common.getScreenWidth(applicationviavideocomposer.getactivity());
-
-            final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
-            alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
-            alphanimation.setStartOffset(1000);
-            alphanimation.setRepeatMode(1);
-
-            Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+            parentview.post(new Runnable() {
                 @Override
-                public void onAnimationStart(Animation animation) {
+                public void run() {
 
-                }
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    //fadeoutcontrollers();
-                }
-                @Override
-                public void onAnimationRepeat(Animation animation) {
+                    parentviewwidth=parentview.getWidth();
 
-                }
-            };
-            alphanimation.setAnimationListener(alphalistener);
+                    final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+                    alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
+                    alphanimation.setStartOffset(1000);
+                    alphanimation.setRepeatMode(1);
 
-            validationbaranimation = new TranslateAnimation(-parentview.getWidth(), parentview.getWidth()+100 ,0.0f, 0.0f);
-            validationbaranimation.setDuration(3000);
-            validationbaranimation.setRepeatCount(Animation.INFINITE);
-            validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
-            img_scanover.startAnimation(validationbaranimation);
+                    Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
 
-            Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    txt_section_validating_secondary.startAnimation(alphanimation);
-                    txt_encrypting.startAnimation(alphanimation);
+                        }
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            //fadeoutcontrollers();
+                        }
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    };
+                    alphanimation.setAnimationListener(alphalistener);
+
+                    validationbaranimation = new TranslateAnimation(-parentview.getWidth(), parentview.getWidth()+100 ,0.0f, 0.0f);
+                    validationbaranimation.setDuration(3000);
+                    validationbaranimation.setRepeatCount(Animation.INFINITE);
+                    validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
+                    img_scanover.startAnimation(validationbaranimation);
+
+                    Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            txt_section_validating_secondary.startAnimation(alphanimation);
+                            txt_encrypting.startAnimation(alphanimation);
+                        }
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                        }
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                            txt_section_validating_secondary.startAnimation(alphanimation);
+                            txt_encrypting.startAnimation(alphanimation);
+                        }
+                    };
+                    validationbaranimation.setAnimationListener(translatelistener);
                 }
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                }
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                    txt_section_validating_secondary.startAnimation(alphanimation);
-                    txt_encrypting.startAnimation(alphanimation);
-                }
-            };
-            validationbaranimation.setAnimationListener(translatelistener);
+            });
 
             layoutbottom.post(new Runnable() {
                 @Override
@@ -508,59 +514,65 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         flingactionmindstvac=common.getcomposerswipearea();
         currentselectedcomposer=config.selectedmediatype;
 
-        if(currentselectedcomposer == 0)
-        {
-            fixbottomtabwidth(txt_space_a,parentviewwidth/5);
-            fixbottomtabwidth(txt_space_b,parentviewwidth/5);
-        }
-        else if(currentselectedcomposer == 1)
-        {
-            fixbottomtabwidth(txt_space_a,0);
-            fixbottomtabwidth(txt_space_b,parentviewwidth/5);
-        }
-        else if(currentselectedcomposer == 2)
-        {
-            fixbottomtabwidth(txt_space_a,0);
-            fixbottomtabwidth(txt_space_b,0);
-        }
-
-        fixbottomtabwidth(txt_mediatype_a,parentviewwidth/5);
-        fixbottomtabwidth(txt_mediatype_b,parentviewwidth/5);
-        fixbottomtabwidth(txt_mediatype_c,parentviewwidth/5);
-
-        txt_space_a.setVisibility(View.VISIBLE);
-        txt_space_b.setVisibility(View.VISIBLE);
-        txt_mediatype_a.setVisibility(View.VISIBLE);
-        txt_mediatype_b.setVisibility(View.VISIBLE);
-        txt_mediatype_c.setVisibility(View.VISIBLE);
-
-        showselectedfragment();
-
-        final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
-        alphanimation.setDuration(2000); //You can manage the time of the blink with this parameter
-        alphanimation.setRepeatMode(1);
-
-        Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+        parentview.post(new Runnable() {
             @Override
-            public void onAnimationStart(Animation animation) {
+            public void run() {
 
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                //fadeoutcontrollers();
-                txt_mediatype_a.setText(config.item_video);
-                txt_mediatype_b.setText(config.item_photo);
-                txt_mediatype_c.setText(config.item_audio);
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                if(currentselectedcomposer == 0)
+                {
+                    fixbottomtabwidth(txt_space_a,parentviewwidth/5);
+                    fixbottomtabwidth(txt_space_b,parentviewwidth/5);
+                }
+                else if(currentselectedcomposer == 1)
+                {
+                    fixbottomtabwidth(txt_space_a,0);
+                    fixbottomtabwidth(txt_space_b,parentviewwidth/5);
+                }
+                else if(currentselectedcomposer == 2)
+                {
+                    fixbottomtabwidth(txt_space_a,0);
+                    fixbottomtabwidth(txt_space_b,0);
+                }
 
-            }
-        };
-        alphanimation.setAnimationListener(alphalistener);
-        layout_mediatype.startAnimation(alphanimation);
+                fixbottomtabwidth(txt_mediatype_a,parentviewwidth/5);
+                fixbottomtabwidth(txt_mediatype_b,parentviewwidth/5);
+                fixbottomtabwidth(txt_mediatype_c,parentviewwidth/5);
 
-        getlatestthumbnailfromdirectory();
+                txt_space_a.setVisibility(View.VISIBLE);
+                txt_space_b.setVisibility(View.VISIBLE);
+                txt_mediatype_a.setVisibility(View.VISIBLE);
+                txt_mediatype_b.setVisibility(View.VISIBLE);
+                txt_mediatype_c.setVisibility(View.VISIBLE);
+
+                showselectedfragment();
+
+                final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+                alphanimation.setDuration(2000); //You can manage the time of the blink with this parameter
+                alphanimation.setRepeatMode(1);
+
+                Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        //fadeoutcontrollers();
+                        txt_mediatype_a.setText(config.item_video);
+                        txt_mediatype_b.setText(config.item_photo);
+                        txt_mediatype_c.setText(config.item_audio);
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                };
+                alphanimation.setAnimationListener(alphalistener);
+                layout_mediatype.startAnimation(alphanimation);
+
+                getlatestthumbnailfromdirectory();
+            }
+        });
     }
 
     @Override
