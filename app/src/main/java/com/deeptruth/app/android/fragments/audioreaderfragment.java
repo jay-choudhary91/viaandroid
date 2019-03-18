@@ -373,8 +373,9 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     switch (view.getId())
                     {
                         case  R.id.audio_downwordarrow:
-
                             detector.onTouchEvent(event);
+
+
                             break;
                     }
 
@@ -385,19 +386,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             audio_downwordarrow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(rootviewheight > rlcontrollerview.getLayoutParams().height){
-                        rlcontrollerview.getLayoutParams().height = rootviewheight;
-                        rlcontrollerview.requestLayout();
-                        rlcontrollerview.animate().setDuration(500);
-                        layout_footer.setVisibility(View.GONE);
 
-                        audio_downwordarrow.setImageResource(R.drawable.handle_up_arrow);
-                    }else{
-                        rlcontrollerview.getLayoutParams().height = audioviewheight;
-                        layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
-                        audio_downwordarrow.setImageResource(R.drawable.handle_down_arrow);
-                        layout_footer.setVisibility(View.VISIBLE);
-                    }
                 }
             });
 
@@ -473,7 +462,31 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             }
                         }
                     }
+
+
                     return false;
+                }
+
+                @Override
+                public boolean onSingleTapConfirmed(MotionEvent e) {
+
+
+                    if(rootviewheight > rlcontrollerview.getLayoutParams().height){
+                        rlcontrollerview.getLayoutParams().height = rootviewheight;
+                        rlcontrollerview.requestLayout();
+                        rlcontrollerview.animate().setDuration(500);
+                        layout_footer.setVisibility(View.GONE);
+
+                        audio_downwordarrow.setImageResource(R.drawable.handle_up_arrow);
+                    }else{
+                        rlcontrollerview.getLayoutParams().height = audioviewheight;
+                        layout_audiodetails.getLayoutParams().height = audiodetailviewheight;
+                        audio_downwordarrow.setImageResource(R.drawable.handle_down_arrow);
+                        layout_footer.setVisibility(View.VISIBLE);
+                    }
+
+                    Log.e("singleclcik=","songleclcik");
+                    return super.onSingleTapConfirmed(e);
                 }
 
                 @Override
