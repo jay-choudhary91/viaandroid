@@ -77,7 +77,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     boolean isviewtouched=false;
     callservice phonecallservice;
     private fragmentmedialist fragmedialist;
-    boolean isdraweropen=false;
+    boolean isdraweropen=false ,isdrawerrunning = false;
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +105,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                     // imglefthandle.setVisibility(View.VISIBLE);
                     imgrighthandle.setVisibility(View.VISIBLE);
                     imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
+                    isdrawerrunning = false;
                 }
             }
             public void onDrawerOpened(View drawerView) {
@@ -124,11 +125,13 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 super.onDrawerSlide(drawerView, slideOffset);
                 if(slideOffset > 0.0)  // Moving to right
                 {
+                    isdrawerrunning = true;
                     imgrighthandle.setVisibility(View.VISIBLE);
                     imglefthandle.setVisibility(View.GONE);
                 }
                 else  // Moving to left
                 {
+                    isdrawerrunning = true;
                     imgrighthandle.setVisibility(View.GONE);
                     imglefthandle.setVisibility(View.VISIBLE);
                 }
@@ -141,12 +144,14 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 if (newState == DrawerLayout.STATE_SETTLING) {
                     if ( isdraweropen ==false) {
                         // starts opening
+                        isdrawerrunning = true;
                         imglefthandle.setVisibility(View.GONE);
                         imgrighthandle.setVisibility(View.VISIBLE);
                         imgrighthandle.setImageResource(R.drawable.handle_right_arrow);
                         invalidateOptionsMenu();
 
                     } else {
+                        isdrawerrunning = true;
                         imglefthandle.setVisibility(View.GONE);
                         imgrighthandle.setVisibility(View.VISIBLE);
                         imgrighthandle.setImageResource(R.drawable.handle_left_arrow);
@@ -157,6 +162,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 }
             }
         };
+
         navigationdrawer.addDrawerListener(drawertoggle);
         drawertoggle.syncState();
         navigationdrawer.setScrimColor(getResources().getColor(android.R.color.transparent));
@@ -273,7 +279,9 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         }else if((getcurrentfragment() instanceof videocomposerfragment || getcurrentfragment() instanceof imagecomposerfragment || getcurrentfragment() instanceof audiocomposerfragment) &&
                 !navigationdrawer.isDrawerOpen(GravityCompat.START)){
 
-            imglefthandle.setVisibility(View.VISIBLE);
+
+            if(!isdrawerrunning)
+                   imglefthandle.setVisibility(View.VISIBLE);
         }
     }
 
