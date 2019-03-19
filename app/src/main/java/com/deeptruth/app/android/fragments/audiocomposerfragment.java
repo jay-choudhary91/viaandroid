@@ -300,7 +300,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         mrecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         if(getaudiodir() != null)
         {
-            mrecorder.setOutputFile(getfile().getAbsolutePath());
+            mrecorder.setOutputFile(getaudiodir().getAbsolutePath());
             mrecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
             try {
