@@ -2694,7 +2694,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         //videotextureview.setLayoutParams(new FrameLayout.LayoutParams(viewWidth, viewHeight));
     }
 
-
     private void getbitmap(final int viewwidth)
     {
         backgroundexecutor.execute(new backgroundexecutor.task("", 0L, "") {
@@ -2867,47 +2866,33 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         super.showhideviewondrawer(drawershown);
 
         if (drawershown) {
-            //layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-            gethelper().updateactionbar(0);
-            layout_mediatype.setVisibility(View.GONE);
-            videodownwordarrow.setVisibility(View.GONE);
-            //  common.slidetoabove(layout_mediatype);
-            layoutbackgroundcontroller.setVisibility(View.GONE);
-            layout_footer.setVisibility(View.GONE);
-            playpausebutton.setVisibility(View.GONE);
-            img_fullscreen.setVisibility(View.GONE);
-            imgpause.setVisibility(View.GONE);
+
+            if(!islastdragarrow){
+                //layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
+                gethelper().updateactionbar(0);
+                layout_mediatype.setVisibility(View.GONE);
+                videodownwordarrow.setVisibility(View.GONE);
+                //  common.slidetoabove(layout_mediatype);
+                layoutbackgroundcontroller.setVisibility(View.GONE);
+                layout_footer.setVisibility(View.GONE);
+                playpausebutton.setVisibility(View.GONE);
+                img_fullscreen.setVisibility(View.GONE);
+                imgpause.setVisibility(View.GONE);
+            }
         } else {
-            if (player != null && player.isPlaying()) {
 
-                if(islastdragarrow){
-                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                    playpausebutton.setVisibility(View.VISIBLE);
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                    layout_mediatype.setVisibility(View.VISIBLE);
-                    gethelper().updateactionbar(0);
-                    videodownwordarrow.setVisibility(View.VISIBLE);
+            if(!islastdragarrow){
+                if (player != null && player.isPlaying()) {
 
-                }else{
                     layout_footer.setVisibility(View.GONE);
                     layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                     layout_mediatype.setVisibility(View.GONE);
                     imgpause.setVisibility(View.VISIBLE);
                     gethelper().updateactionbar(0);
                     layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                }
 
-            } else {
+                } else {
 
-                if(islastdragarrow){
-                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                    playpausebutton.setVisibility(View.VISIBLE);
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                    layout_mediatype.setVisibility(View.VISIBLE);
-                    gethelper().updateactionbar(0);
-                    videodownwordarrow.setVisibility(View.VISIBLE);
-
-                }else{
                     layoutbackgroundcontroller.setVisibility(View.GONE);
                     layout_footer.setVisibility(View.VISIBLE);
                     layout_mediatype.setVisibility(View.VISIBLE);
@@ -2919,8 +2904,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                 }
             }
-        }
 
+        }
     }
 
     public void setheadermargine(final int headerheight, final int scrubberheight, int layoutheight, boolean ifheightset){
