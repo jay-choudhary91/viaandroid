@@ -59,7 +59,6 @@ public class visualizeraudiorecorder extends View {
         height = h; // new height of this View
         LINE_SCALE=common.convertDpToPixel(LINE_SCALE,context);
         amplitudes = new ArrayList<Float>(width / LINE_WIDTH);
-        Log.e("onSizeChanged ",""+width+" "+height);
     }
 
     // clear all amplitudes to prepare for a new visualization
@@ -87,11 +86,6 @@ public class visualizeraudiorecorder extends View {
         for (float power : amplitudes) {
             float scaledHeight = power / LINE_SCALE; // scale the power
             curX += LINE_WIDTH+2; // increase X by LINE_WIDTH
-
-            float a=middle - scaledHeight / 1;
-            Log.e("curX ",""+curX);
-            //Log.e("x,y ",""+curX+" "+middle+" "+curX+" "+a);
-         //   Log.e("x,y ",""+curX+" "+middle + scaledHeight / 1+" "+curX+" "+a);
 
             Shader shader = new LinearGradient(curX, middle + scaledHeight / 1, curX, middle
                     - scaledHeight / 1, new int[]{
