@@ -959,13 +959,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     if(layout_mediatype.getVisibility()==View.GONE)  // Action bar is hidden
                     {
                       //  rlcontrollerview.getLayoutParams().height = rootviewheight;
-                        removebottommargin();
+                     /*   removebottommargin();
                         gethelper().updateactionbar(1);
 
                         layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         layout_mediatype.setVisibility(View.VISIBLE);
-                        playpausebutton.setVisibility(View.VISIBLE);
+                        playpausebutton.setVisibility(View.VISIBLE);*/
 
                         if(player != null && (! player.isPlaying()))  // Player is pause
                         {
@@ -980,13 +980,20 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             linearseekbarcolorview.setVisibility(View.GONE);
                             mediaseekbar.setVisibility(View.GONE);
                             layout_seekbartiming.setVisibility(View.GONE);
+                            removebottommargin();
+                            gethelper().updateactionbar(1);
+
+                            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                            layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                            layout_mediatype.setVisibility(View.VISIBLE);
+                            playpausebutton.setVisibility(View.VISIBLE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         }
                         else   // Player is playing
                         {
                           //  rlcontrollerview.getLayoutParams().height = rootviewheight;
-                            gethelper().updateactionbar(1);
-                            layout_mediatype.setVisibility(View.VISIBLE);
+                            gethelper().updateactionbar(0);
+                            layout_mediatype.setVisibility(View.GONE);
                             layout_footer.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
                             audio_downwordarrow.setVisibility(View.GONE);
@@ -997,7 +1004,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             linearseekbarcolorview.setVisibility(View.VISIBLE);
                             mediaseekbar.setVisibility(View.VISIBLE);
                             layout_seekbartiming.setVisibility(View.VISIBLE);
-                            layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.white));
+                            layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         }
                     }
                     else  // Action bar is showing
@@ -1021,7 +1028,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             layout_scrubberview.setVisibility(View.GONE);
                             gethelper().drawerenabledisable(false);
                         }
-                        else
+                        /*else
                         {
                           //  rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) +mediatypeheight;
                             gethelper().updateactionbar(0);
@@ -1029,7 +1036,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                             gethelper().drawerenabledisable(false);
                             layout_scrubberview.setVisibility(View.GONE);
                             audio_downwordarrow.setVisibility(View.GONE);
-                        }
+                        }*/
                     }
                 }
                 else {
@@ -1061,13 +1068,19 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 }else{
                     if(layout_audiodetails.getVisibility()==View.GONE){
                        // rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) +mediatypeheight ;
-                         removebottommargin();
-                         layout_mediatype.setVisibility(View.GONE);
-                          layout_scrubberview.setVisibility(View.GONE);
+                        //  removebottommargin();
+                          layout_mediatype.setVisibility(View.GONE);
+                          layout_scrubberview.setVisibility(View.VISIBLE);
+                          linearseekbarcolorview.setVisibility(View.VISIBLE);
                           playpausebutton.setVisibility(View.GONE);
+                          mediaseekbar.setVisibility(View.VISIBLE);
+                          layout_seekbartiming.setVisibility(View.VISIBLE);
+                          img_pause.setVisibility(VISIBLE);
                           img_fullscreen.setVisibility(View.GONE);
                           layout_footer.setVisibility(View.GONE);
-                           gethelper().drawerenabledisable(false);
+                          gethelper().updateactionbar(0);
+                           gethelper().drawerenabledisable(true);
+                        layout_scrubberview.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
 
                     }
                     ismediacompleted =false;
@@ -2388,7 +2401,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                 mediaseekbar.setVisibility(View.VISIBLE);
                 layout_seekbartiming.setVisibility(View.VISIBLE);
                 linearseekbarcolorview.setVisibility(View.VISIBLE);
-                layout_mediatype.setVisibility(View.VISIBLE);
+                layout_mediatype.setVisibility(View.GONE);
+                gethelper().updateactionbar(0);
                 img_pause.setVisibility(View.VISIBLE);
 
                 setseekbarlayoutcolor();
