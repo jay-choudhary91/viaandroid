@@ -2885,7 +2885,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     playpausebutton.setVisibility(View.VISIBLE);
                     img_fullscreen.setVisibility(View.VISIBLE);
                     layout_mediatype.setVisibility(View.VISIBLE);
-                    gethelper().updateactionbar(0);
+                    gethelper().updateactionbar(1);
                     videodownwordarrow.setVisibility(View.VISIBLE);
 
                 }else{
@@ -2904,7 +2904,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     playpausebutton.setVisibility(View.VISIBLE);
                     img_fullscreen.setVisibility(View.VISIBLE);
                     layout_mediatype.setVisibility(View.VISIBLE);
-                    gethelper().updateactionbar(0);
+                    gethelper().updateactionbar(1);
                     videodownwordarrow.setVisibility(View.VISIBLE);
 
                 }else{
