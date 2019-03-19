@@ -1058,8 +1058,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                                 audio_downwordarrow.setVisibility(View.GONE);
 
                             }
-
-                        }
                     }
                 }
                 else {

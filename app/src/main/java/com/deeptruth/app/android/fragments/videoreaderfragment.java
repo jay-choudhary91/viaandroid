@@ -2881,50 +2881,50 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         } else {
 
-            if(!islastdragarrow){
+            if (!islastdragarrow) {
                 if (player != null && player.isPlaying()) {
 
-                if(islastdragarrow){
-                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                    playpausebutton.setVisibility(View.VISIBLE);
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                    layout_mediatype.setVisibility(View.VISIBLE);
-                    gethelper().updateactionbar(1);
-                    videodownwordarrow.setVisibility(View.VISIBLE);
+                    if (islastdragarrow) {
+                        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                        playpausebutton.setVisibility(View.VISIBLE);
+                        img_fullscreen.setVisibility(View.VISIBLE);
+                        layout_mediatype.setVisibility(View.VISIBLE);
+                        gethelper().updateactionbar(1);
+                        videodownwordarrow.setVisibility(View.VISIBLE);
 
-                }else{
-                    layout_footer.setVisibility(View.GONE);
-                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                    layout_mediatype.setVisibility(View.GONE);
-                    imgpause.setVisibility(View.VISIBLE);
-                    gethelper().updateactionbar(0);
-                    layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                }
-
-            } else {
-
-                if(islastdragarrow){
-                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                    playpausebutton.setVisibility(View.VISIBLE);
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                    layout_mediatype.setVisibility(View.VISIBLE);
-                    gethelper().updateactionbar(1);
-                    videodownwordarrow.setVisibility(View.VISIBLE);
+                    } else {
+                        layout_footer.setVisibility(View.GONE);
+                        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                        layout_mediatype.setVisibility(View.GONE);
+                        imgpause.setVisibility(View.VISIBLE);
+                        gethelper().updateactionbar(0);
+                        layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                    }
 
                 } else {
 
-                    layoutbackgroundcontroller.setVisibility(View.GONE);
-                    layout_footer.setVisibility(View.VISIBLE);
-                    layout_mediatype.setVisibility(View.VISIBLE);
-                    playpausebutton.setVisibility(View.VISIBLE);
-                    img_fullscreen.setVisibility(View.VISIBLE);
-                    gethelper().updateactionbar(1);
-                    img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                    setbottomimgview();
-                    layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                    if (islastdragarrow) {
+                        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                        playpausebutton.setVisibility(View.VISIBLE);
+                        img_fullscreen.setVisibility(View.VISIBLE);
+                        layout_mediatype.setVisibility(View.VISIBLE);
+                        gethelper().updateactionbar(1);
+                        videodownwordarrow.setVisibility(View.VISIBLE);
+
+                    } else {
+
+                        layoutbackgroundcontroller.setVisibility(View.GONE);
+                        layout_footer.setVisibility(View.VISIBLE);
+                        layout_mediatype.setVisibility(View.VISIBLE);
+                        playpausebutton.setVisibility(View.VISIBLE);
+                        img_fullscreen.setVisibility(View.VISIBLE);
+                        gethelper().updateactionbar(1);
+                        img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+                        setbottomimgview();
+                        layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                    }
                 }
             }
-
         }
     }
 
