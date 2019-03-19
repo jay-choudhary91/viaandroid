@@ -2395,6 +2395,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
            // rlcontrollerview.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")) + mediatypeheight;
 
             if(islastdragarrow){
+                gethelper().updateactionbar(0);
                 return;
             }else{
                 rlcontrollerview.getLayoutParams().height = (rootviewheight - navigationbarheight);
@@ -2446,6 +2447,8 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     setbottomimgview();
                     layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                 }
+            }else{
+                gethelper().updateactionbar(1);
             }
         }
 
