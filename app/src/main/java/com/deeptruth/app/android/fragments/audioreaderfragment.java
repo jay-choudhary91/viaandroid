@@ -345,7 +345,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     ImageView img_phone_orientation;
     int navigationbarheight = 0;
     GestureDetector detector;
-    boolean islastdragarrow = false;
+    public boolean islastdragarrow = false;
 
     public audioreaderfragment() {
     }

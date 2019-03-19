@@ -362,16 +362,17 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             try
             {
                 View view=((videoreaderfragment) getcurrentfragment()).layout_videodetails;
-
+                boolean islastdragarrow = ((videoreaderfragment) getcurrentfragment()).islastdragarrow;
                 if(view != null)
                 {
-                    if(view.getVisibility() == View.VISIBLE)
+                    if(view.getVisibility() == View.VISIBLE && islastdragarrow == false)
                     {
                         Log.e("viewgone","gone");
                     }
                     else
                     {
                         imglefthandle.setVisibility(View.VISIBLE);
+                        drawerenabledisable(true);
 
                         Log.e("visiblity","visiblity");
                     }
@@ -400,9 +401,10 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
              try
              {
                  View view=((audioreaderfragment) getcurrentfragment()).layout_audiodetails;
+                 boolean islastdragarrow = ((videoreaderfragment) getcurrentfragment()).islastdragarrow;
                  if(view != null)
                  {
-                     if(view.getVisibility() == View.VISIBLE)
+                     if(view.getVisibility() == View.VISIBLE && islastdragarrow == false)
                      {
                          Log.e("viewgone","gone");
                      }

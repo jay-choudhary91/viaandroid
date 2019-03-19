@@ -376,7 +376,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     Surface surfacetexture = null;
 
 
-    boolean ismediaplayer = false,islastdragarrow = false;
+    public boolean ismediaplayer = false,islastdragarrow = false;
     String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             lastsavedangle="";
     private float currentDegree = 0f;
