@@ -1535,7 +1535,10 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             img_fullscreen.setVisibility(View.VISIBLE);
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             layout_mediatype.setVisibility(View.VISIBLE);
-            layout_validating.setVisibility(View.VISIBLE);
+
+            if(!metricmainarraylist.get(0).getColor().equalsIgnoreCase("white") && !metricmainarraylist.get(0).getColor().isEmpty())
+                   layout_validating.setVisibility(View.VISIBLE);
+
             layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
             setbottomimgview();
         }
