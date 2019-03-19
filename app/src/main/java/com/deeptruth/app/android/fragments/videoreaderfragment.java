@@ -2113,8 +2113,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 layoutbackgroundcontroller.setVisibility(View.GONE);
             }else{
                 Log.e("halfscreen..","oncomplete");
-                showcontrollers();
-                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+
+                if(!islastdragarrow){
+                    showcontrollers();
+                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                }
             }
 
             new Handler().postDelayed(new Runnable() {
