@@ -10,6 +10,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -125,9 +126,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     Handler timerhandler;
     int Hours, Seconds, Minutes, MilliSeconds ;
     public Dialog maindialogshare,subdialogshare;
-    private LinearLayoutManager mLayoutManager;
-    private Handler wavehandler;
-    private Runnable waverunnable;
     private String keytype =config.prefs_md5,mediakey="";
     JSONArray metadatametricesjson=new JSONArray();
     private long currentframenumber =0,mframetorecordcount=0,frameduration =15;
@@ -188,6 +186,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         timerhandler = new Handler() ;
         layout_drawertouchable.setOnTouchListener(this);
         img_dotmenu.setVisibility(View.VISIBLE);
+        myvisualizerview.setVisibility(View.VISIBLE);
 
         img_warning.setOnClickListener(this);
         img_close.setOnClickListener(this);
@@ -291,6 +290,26 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private void doafterallpermissionsgranted()
     {
         setmetriceshashesdata();
+        startwaverecord();
+    }
+
+    public void startwaverecord()
+    {
+        mrecorder = new MediaRecorder();
+        mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mrecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        if(getaudiodir() != null)
+        {
+            mrecorder.setOutputFile(getfile().getAbsolutePath());
+            mrecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+
+            try {
+                mrecorder.prepare();
+                mrecorder.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -314,12 +333,20 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
 
             try{
-                mrecorder.stop();
-                mrecorder.release();
+                if(mrecorder != null)
+                {
+                    mrecorder.stop();
+                    mrecorder.release();
+                }
+
             }catch (Exception e){
                 e.printStackTrace();
             }
-
+            if(myvisualizerview != null)
+            {
+                myvisualizerview.clear();
+                myvisualizerview.setVisibility(View.INVISIBLE);
+            }
             stopblinkanimation();
         }
         if(myHandler != null && myHandler != null)
@@ -345,6 +372,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         {
             stoprecording();
             stopblinkanimation();
+            startwaverecord();
         }
     }
 
@@ -501,6 +529,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void startrecording() throws IOException {
 
+        if (ActivityCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+
         mediakey ="";
         mdbstartitemcontainer.clear();
         mdbmiddleitemcontainer.clear();
@@ -513,7 +552,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         currentframenumber =0;
         mframetorecordcount =0;
         currentframenumber = currentframenumber + frameduration;
-        myvisualizerview.setVisibility(View.VISIBLE);
+
+        try{
+            if(mrecorder != null)
+            {
+                mrecorder.stop();
+                mrecorder.release();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         mrecorder = new MediaRecorder();
         mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -644,6 +693,25 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         return file;
     }
 
+    private File getaudiodir() {
+
+        File file=null;
+        try {
+
+            File destinationDir = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_MUSIC), BuildConfig.APPLICATION_ID);
+
+            file=new File(destinationDir, File.separator+"audiotemp.m4a");
+            if (!file.exists())
+                file.mkdirs();
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
     private File gettempfile() {
         String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
         String fileName = config.audiotempfile;
@@ -713,11 +781,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         stoptimer();
         resettimer();
         isaudiorecording=false;
-        if(mrecorder==null){
+        /*if(mrecorder==null){
             myvisualizerview.clear();
             myvisualizerview.setVisibility(View.INVISIBLE);
         }
-
+*/
         try {
 
             if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 &&
@@ -1054,39 +1122,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private void startnoise() {
         myvisualizerview.setVisibility(View.VISIBLE);
-        getaudiowave();
-    }
-
-    public void getaudiowave() {
-
-        if(wavehandler != null && wavehandler != null)
-            wavehandler.removeCallbacks(waverunnable);
-
-        wavehandler =new Handler();
-        waverunnable = new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-
-                    if((isaudiorecording))
-                    {
-                        int x = mrecorder.getMaxAmplitude();
-
-                        myvisualizerview.addAmplitude(x); // update the VisualizeView
-                        myvisualizerview.invalidate();
-
-                        wavevisualizerslist.add(new wavevisualizer(x,true));
-
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                wavehandler.postDelayed(this, 2);
-            }
-        };
-        wavehandler.post(waverunnable);
     }
 
     @Override
@@ -1136,7 +1171,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             @Override
             public void run() {
 
-                boolean graphicopen=false;
                 if(isaudiorecording)
                 {
 
@@ -1161,6 +1195,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 }
 
+                if(myvisualizerview != null)
+                {
+                    int x=1000;
+                    if(mrecorder != null)
+                        x = mrecorder.getMaxAmplitude();
+
+                    myvisualizerview.addAmplitude(x); // update the VisualizeView
+                    myvisualizerview.invalidate();
+                    wavevisualizerslist.add(new wavevisualizer(x,true));
+                }
+
                 if(! isaudiorecording)
                 {
                     ArrayList<metricmodel> mlocalarraylist=gethelper().getmetricarraylist();
@@ -1172,7 +1217,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
                 common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
 
-                myHandler.postDelayed(this, 1000);
+                myHandler.postDelayed(this, 10);
             }
         };
         myHandler.post(myRunnable);
