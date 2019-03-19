@@ -679,7 +679,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File file=new File(storagedirectory, fileName+".m4a");
-
         File destinationDir=new File(storagedirectory);
         try {
 
@@ -695,15 +694,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private File getaudiodir() {
 
-        File file=null;
+        String storagedirectory=config.dirallmedia;
+        String fileName = "audiotemp";
+        File file=new File(storagedirectory, fileName+".m4a");
+        File destinationDir=new File(storagedirectory);
         try {
 
-            File destinationDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_MUSIC), BuildConfig.APPLICATION_ID);
-
-            file=new File(destinationDir, File.separator+"audiotemp.m4a");
-            if (!file.exists())
-                file.mkdirs();
+            if (! destinationDir.exists())
+                destinationDir.mkdirs();
 
         }catch (Exception e)
         {
