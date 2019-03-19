@@ -295,7 +295,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void startwaverecord()
     {
-        mrecorder = new MediaRecorder();
+        /*mrecorder = new MediaRecorder();
         mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mrecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         if(getaudiodir() != null)
@@ -309,7 +309,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     @Override
@@ -553,7 +553,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         mframetorecordcount =0;
         currentframenumber = currentframenumber + frameduration;
 
-        try{
+        /*try{
             if(mrecorder != null)
             {
                 mrecorder.stop();
@@ -562,7 +562,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
 
         mrecorder = new MediaRecorder();
         mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -679,7 +679,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         String storagedirectory=xdata.getinstance().getSetting(config.selected_folder);
         String fileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File file=new File(storagedirectory, fileName+".m4a");
-
         File destinationDir=new File(storagedirectory);
         try {
 
@@ -695,15 +694,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     private File getaudiodir() {
 
-        File file=null;
+        String storagedirectory=config.dirallmedia;
+        String fileName = "audiotemp";
+        File file=new File(storagedirectory, fileName+".m4a");
+        File destinationDir=new File(storagedirectory);
         try {
 
-            File destinationDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_MUSIC), BuildConfig.APPLICATION_ID);
-
-            file=new File(destinationDir, File.separator+"audiotemp.m4a");
-            if (!file.exists())
-                file.mkdirs();
+            if (! destinationDir.exists())
+                destinationDir.mkdirs();
 
         }catch (Exception e)
         {
@@ -781,11 +779,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         stoptimer();
         resettimer();
         isaudiorecording=false;
-        /*if(mrecorder==null){
+        if(myvisualizerview != null)
+        {
             myvisualizerview.clear();
             myvisualizerview.setVisibility(View.INVISIBLE);
         }
-*/
+
         try {
 
             if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 &&
@@ -1173,6 +1172,16 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 if(isaudiorecording)
                 {
+                    if(myvisualizerview != null)
+                    {
+                        if(mrecorder != null)
+                        {
+                            int x = mrecorder.getMaxAmplitude();
+                            myvisualizerview.addAmplitude(x); // update the VisualizeView
+                            myvisualizerview.invalidate();
+                            wavevisualizerslist.add(new wavevisualizer(x,true));
+                        }
+                    }
 
                     if((! selectedmetrices.toString().trim().isEmpty()))
                     {
@@ -1186,24 +1195,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         }
                         selectedmetrices="";
                     }
-
-                  /*  if((! isaudiorecording) && (! selectedmetrices.toString().trim().isEmpty()))
-                    {
-                        mmetricsitems.add(new videomodel(selectedmetrices));
-                        selectedmetrices="";
-                    }*/
-
-                }
-
-                if(myvisualizerview != null)
-                {
-                    int x=1000;
-                    if(mrecorder != null)
-                        x = mrecorder.getMaxAmplitude();
-
-                    myvisualizerview.addAmplitude(x); // update the VisualizeView
-                    myvisualizerview.invalidate();
-                    wavevisualizerslist.add(new wavevisualizer(x,true));
                 }
 
                 if(! isaudiorecording)
