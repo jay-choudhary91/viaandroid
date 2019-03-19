@@ -2090,6 +2090,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void switchCamera(ImageView imageView) {
         if (cameraId.equals(CAMERA_FRONT)) {
+            imgflashon.setImageResource(R.drawable.icon_flashoff);
             previewupdated=false;
             imageView.setImageResource(R.drawable.icon_cameraflip);
             cameraId = CAMERA_BACK;
@@ -2097,6 +2098,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             reopenCamera();
 
         } else if (cameraId.equals(CAMERA_BACK)) {
+            imgflashon.setImageResource(R.drawable.icon_flashoff);
             previewupdated=false;
             cameraId = CAMERA_FRONT;
             imageView.setImageResource(R.drawable.icon_reversecamera);

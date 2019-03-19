@@ -1811,7 +1811,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void camraflashonoff() {
         try {
-            if (cameraid.equals(CAMERA_BACK)) {
                 if (isflashsupported) {
                     if (isflashon) {
                         mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
@@ -1825,7 +1824,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         isflashon = true;
                     }
                 }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1843,6 +1841,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
     public void switchCamera(ImageView imageview) {
         if (cameraid.equals(CAMERA_FRONT)) {
+            imgflashon.setImageResource(R.drawable.icon_flashoff);
             previewupdated=false;
             imageview.setImageResource(R.drawable.icon_cameraflip);
             cameraid = CAMERA_BACK;
@@ -1850,6 +1849,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             reopenCamera();
 
         } else if (cameraid.equals(CAMERA_BACK)) {
+            imgflashon.setImageResource(R.drawable.icon_flashoff);
             previewupdated=false;
             cameraid = CAMERA_FRONT;
             imageview.setImageResource(R.drawable.icon_reversecamera);
