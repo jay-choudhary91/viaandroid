@@ -375,7 +375,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     GoogleMap mgooglemap;
     Surface surfacetexture = null;
 
-    boolean ismediaplayer = false;
+
+    boolean ismediaplayer = false,islastdragarrow = false;
     String medianame = "",medianotes = "",mediaduration="",mediafolder = "",mediatransectionid = "",latitude = "", longitude = "",screenheight = "",screenwidth = "",
             lastsavedangle="";
     private float currentDegree = 0f;
@@ -471,10 +472,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                         float distanceX, float distanceY) {
                     if(e2.getY() > 0)
                     {
+                        islastdragarrow =false;
                         int lovermovementlimit = rootviewheight - footerheight;
                         // int uppermovementlimit = (rootviewheight /100)*35;
                         if(layout_halfscrnimg.getLayoutParams().height < lovermovementlimit){
-
+                            gethelper().drawerenabledisable(false);
                             mIsScrolling = true;
                             float height = layout_halfscrnimg.getLayoutParams().height + e2.getY();
                             //setanimation(layouttop,height,e2.getY(),false);
@@ -496,6 +498,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                         }else{
 
+                            islastdragarrow =true;
+                            gethelper().drawerenabledisable(true);
                             layout_footer.setVisibility(View.GONE);
                             videodownwordarrow.setImageResource(R.drawable.handle_up_arrow);
 
@@ -508,6 +512,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     else
                     {
                         int uppermovementlimit = (rootviewheight /100)*50;
+                        islastdragarrow =false;
+                        gethelper().drawerenabledisable(false);
 
                         if(layout_halfscrnimg.getLayoutParams().height >= uppermovementlimit) {
                             layout_footer.setVisibility(View.VISIBLE);
@@ -533,7 +539,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             }
                         }else{
-
+                            islastdragarrow =false;
                             videodownwordarrow.setImageResource(R.drawable.handle_down_arrow);
 
                         }
@@ -545,6 +551,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 public boolean onSingleTapConfirmed(MotionEvent e) {
 
                     if(rootviewheight > layout_halfscrnimg.getLayoutParams().height){
+                        islastdragarrow =true;
+                        gethelper().drawerenabledisable(true);
                         layout_halfscrnimg.getLayoutParams().height = rootviewheight;
 
                         RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,rootviewheight+navigationbarheight);
@@ -564,6 +572,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                         videodownwordarrow.setImageResource(R.drawable.handle_up_arrow);
                     }else{
+                        islastdragarrow =false;
+                        gethelper().drawerenabledisable(false);
                         layout_halfscrnimg.getLayoutParams().height = videoviewheight;
                         layout_videodetails.getLayoutParams().height = detailviewheight;
                         RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,videoviewheight);
@@ -602,7 +612,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             if(event.getAction() == MotionEvent.ACTION_UP) {
                                 if(mIsScrolling ) {
 
-                                    updatesurfaceviewsize();
+                                    if(!islastdragarrow)
+                                       updatesurfaceviewsize();
                                     return true;
                                 };
                             }
@@ -1265,6 +1276,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 imgpause.setVisibility(View.GONE);
                                 img_fullscreen.setVisibility(View.GONE);
                                 videodownwordarrow.setVisibility(View.GONE);
+                                islastdragarrow =false;
 
                             // recenterplaypause();
                     } else{
@@ -1393,11 +1405,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }*/
                         }
                     } else {
-                        img_fullscreen.setVisibility(View.VISIBLE);
-                        gethelper().drawerenabledisable(false);
-                        img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
-                        playpausebutton.setVisibility(View.VISIBLE);
-                        imgpause.setVisibility(View.GONE);
+
+                        if(islastdragarrow){
+                            return;
+                        }else{
+                            gethelper().drawerenabledisable(false);
+                            img_fullscreen.setVisibility(View.VISIBLE);
+                            img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+                            playpausebutton.setVisibility(View.VISIBLE);
+                            imgpause.setVisibility(View.GONE);
+                        }
                     }
 
                     break;
@@ -1415,7 +1432,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layout_footer.setVisibility(View.GONE);
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
-                            gethelper().drawerenabledisable(false);
                             layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.VISIBLE);
                             gethelper().drawerenabledisable(true);
@@ -2854,6 +2870,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             //layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
             gethelper().updateactionbar(0);
             layout_mediatype.setVisibility(View.GONE);
+            videodownwordarrow.setVisibility(View.GONE);
             //  common.slidetoabove(layout_mediatype);
             layoutbackgroundcontroller.setVisibility(View.GONE);
             layout_footer.setVisibility(View.GONE);
@@ -2862,22 +2879,45 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             imgpause.setVisibility(View.GONE);
         } else {
             if (player != null && player.isPlaying()) {
-                layout_footer.setVisibility(View.GONE);
-                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                layout_mediatype.setVisibility(View.GONE);
-                imgpause.setVisibility(View.VISIBLE);
-                gethelper().updateactionbar(0);
-                layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+
+                if(islastdragarrow){
+                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                    playpausebutton.setVisibility(View.VISIBLE);
+                    img_fullscreen.setVisibility(View.VISIBLE);
+                    layout_mediatype.setVisibility(View.VISIBLE);
+                    gethelper().updateactionbar(0);
+                    videodownwordarrow.setVisibility(View.VISIBLE);
+
+                }else{
+                    layout_footer.setVisibility(View.GONE);
+                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                    layout_mediatype.setVisibility(View.GONE);
+                    imgpause.setVisibility(View.VISIBLE);
+                    gethelper().updateactionbar(0);
+                    layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                }
+
             } else {
-                layoutbackgroundcontroller.setVisibility(View.GONE);
-                layout_footer.setVisibility(View.VISIBLE);
-                layout_mediatype.setVisibility(View.VISIBLE);
-                playpausebutton.setVisibility(View.VISIBLE);
-                img_fullscreen.setVisibility(View.VISIBLE);
-                gethelper().updateactionbar(1);
-                img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                setbottomimgview();
-                layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+
+                if(islastdragarrow){
+                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                    playpausebutton.setVisibility(View.VISIBLE);
+                    img_fullscreen.setVisibility(View.VISIBLE);
+                    layout_mediatype.setVisibility(View.VISIBLE);
+                    gethelper().updateactionbar(0);
+                    videodownwordarrow.setVisibility(View.VISIBLE);
+
+                }else{
+                    layoutbackgroundcontroller.setVisibility(View.GONE);
+                    layout_footer.setVisibility(View.VISIBLE);
+                    layout_mediatype.setVisibility(View.VISIBLE);
+                    playpausebutton.setVisibility(View.VISIBLE);
+                    img_fullscreen.setVisibility(View.VISIBLE);
+                    gethelper().updateactionbar(1);
+                    img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+                    setbottomimgview();
+                    layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                }
             }
         }
 
