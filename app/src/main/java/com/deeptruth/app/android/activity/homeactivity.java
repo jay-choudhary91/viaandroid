@@ -60,7 +60,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @BindView(R.id.rootview)
     RelativeLayout rootview;
-
     @BindView(R.id.drawer_layout)
     DrawerLayout navigationdrawer;
     private ActionBarDrawerToggle drawertoggle;
@@ -78,6 +77,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     callservice phonecallservice;
     private fragmentmedialist fragmedialist;
     boolean isdraweropen=false ,isdrawerrunning = false;
+    int rootviewheight,navigationbarheight, finalheight ,imageheight;
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -190,7 +190,16 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
             transaction.commit();
         }
-
+        rootview.post(new Runnable() {
+            @Override
+            public void run() {
+                rootviewheight= rootview.getHeight();
+                navigationbarheight =  common.getnavigationbarheight();
+                finalheight= rootviewheight - navigationbarheight;
+                finalheight = finalheight/2;
+                drawerbutton();
+            }
+        });
         detectphonecallservice();
         setdrawerdata();
     }
@@ -289,44 +298,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     public void updateactionbar(int fullscreenmode) {
         if(fullscreenmode == 0)   // Enable full screen mode
         {
-           /* View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_IMMERSIVE
-                            // Set the content to appear under the system bars so that the
-                            // content doesn't resize when the system bars hide and show.
-                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                            // Hide the nav bar and status bar
-                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_FULLSCREEN);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    rootview.setPadding(0,0,0,0);
-                }
-            },100);*/
-
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
         }
         else        // Disable full screen mode
         {
-            /*View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    int statusbarheight=Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-                    rootview.setPadding(0,statusbarheight,0,0);
-                }
-            },800);*/
-
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         }
@@ -598,5 +574,23 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         }
+    }
+
+    public void drawerbutton(){
+        imglefthandle.setVisibility(View.VISIBLE);
+        imglefthandle.post(new Runnable() {
+            @Override
+            public void run() {
+              imageheight =  imglefthandle.getHeight();
+                if(imageheight<= 0){
+                    imageheight = 90;
+                }
+            }
+        });
+        RelativeLayout.LayoutParams params  = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(10,(finalheight-imageheight),0,0);
+        Log.e("finalheight", ""+finalheight);
+        imglefthandle.setLayoutParams(params);
+        imglefthandle.requestLayout();
     }
 }
