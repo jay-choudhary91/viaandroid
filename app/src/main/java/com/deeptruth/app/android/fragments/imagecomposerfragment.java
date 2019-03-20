@@ -671,6 +671,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         if(txt_media_quality != null)
             txt_media_quality.setRotation(angle);
+
+        if(txt_zoomlevel != null)
+            txt_zoomlevel.setRotation(angle);
     }
 
 

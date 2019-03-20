@@ -529,8 +529,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         expandable_layout.setLayoutParams(lpexpandable);
                     }
 
-
-
                     txt_media_low.setVisibility(View.VISIBLE);
                     txt_media_medium.setVisibility(View.VISIBLE);
                     txt_media_high.setVisibility(View.VISIBLE);
@@ -612,6 +610,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         rotationangle=(int)rotateangle;
         Log.e("rotateangle ",""+rotateangle);
 
+
+
         if(rotateangle == 180)
             rotateangle=0;
 
@@ -626,17 +626,20 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lp.setMargins(0, 0, 0, 0);
                         headercontainer.setLayoutParams(lp);
 
-                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,20,10,0);
+                        img_dotmenu.setPadding(10,20,10,0);*/
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
                         imgflashon.setLayoutParams(lpimgflashon);
 
                         headercontainer.setAngle(90);
+
+                        if(txt_zoomlevel != null)
+                            txt_zoomlevel.setRotation(rotateangle);
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
                 }
@@ -655,11 +658,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
                         img_dotmenu.setPadding(10,20,10,0);
 
-                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                       /* LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
-                        imgflashon.setLayoutParams(lpimgflashon);
+                        imgflashon.setLayoutParams(lpimgflashon);*/
 
                         headercontainer.setAngle(270);
+
+                        if(txt_zoomlevel != null)
+                            txt_zoomlevel.setRotation(rotateangle);
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -683,11 +689,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, 20,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,20,10,0);
+                        img_dotmenu.setPadding(10,20,20,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lpimgflashon.setMargins(20, 0, 0,  0);
+                        lpimgflashon.setMargins(30, 0, 0,  0);
                         imgflashon.setLayoutParams(lpimgflashon);
+
+                        if(txt_zoomlevel != null)
+                            txt_zoomlevel.setRotation(rotateangle);
 
                     }
 
