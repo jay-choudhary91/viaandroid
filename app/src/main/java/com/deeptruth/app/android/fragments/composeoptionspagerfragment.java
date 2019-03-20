@@ -1264,8 +1264,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                }
            }
 
-            if(txt_encrypting != null && (fragvideocomposer != null || fragaudiocomposer != null)){
-                if(! fragvideocomposer.isvideorecording)
+            if(txt_encrypting != null)
+            {
+                if( fragvideocomposer != null && !fragvideocomposer.isvideorecording){
+                    layout_encryption.setRotation(rotateangle);
+                }
+
+                if(fragaudiocomposer != null && currentselectedcomposer == 2)
                     layout_encryption.setRotation(rotateangle);
             }
 
