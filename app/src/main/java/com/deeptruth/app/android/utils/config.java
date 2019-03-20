@@ -54,7 +54,7 @@ public class config {
     public static final String mediaquality480 = "480P";
     public static final String mediaquality720 = "720P";
     public static final String mediaquality1080 = "1080P";
-    public static final String mediarecorderformat = "0:00:00.0";
+    public static final String mediarecorderformat = "00:00.00";
 
     public static final String build_flavor_reader = "reader";
     public static final String build_flavor_composer = "composer";

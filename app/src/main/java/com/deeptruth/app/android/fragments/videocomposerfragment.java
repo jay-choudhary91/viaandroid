@@ -1724,10 +1724,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         public void run() {
                             if(isvideorecording)
                             {
-                                txt_title_actionbarcomposer.setText("" + String.format("%01d", Hours) + ":"+
+                                //+ String.format("%01d", Hours) + ":"+
+                                txt_title_actionbarcomposer.setText(
                                         "" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + "."
-                                        + String.format("%01d", (MilliSeconds/100)));
+                                        + String.format("%02d", (MilliSeconds/100)));
                             }
 
                         }
