@@ -315,7 +315,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public void resetbuttonviews(final TextView textView1, TextView textView2, TextView textView3)
+    public void resetbuttonviews(final TextView textView1, final TextView textView2, final TextView textView3)
     {
         //textView1.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.wave_blue));
         textView2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
@@ -333,6 +333,19 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         });
         colorAnimation.setDuration(config.transition_fragment_millis_700);
         colorAnimation.start();
+
+        ValueAnimator alphaAnimation = ValueAnimator.ofFloat(0.5f,1.0f);
+        alphaAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                textView1.setAlpha((Float) animator.getAnimatedValue());
+                textView2.setAlpha((Float) animator.getAnimatedValue());
+                textView3.setAlpha((Float) animator.getAnimatedValue());
+            }
+        });
+        alphaAnimation.setDuration(config.transition_fragment_millis_700);
+        alphaAnimation.start();
     }
 
     @Override

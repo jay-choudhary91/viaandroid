@@ -71,6 +71,7 @@
     <color name="actionbar_solid">#524a4a</color>
     <color name="actionbar_solid_normal">#a9a9a9</color>
     <color name="actionbar_solid_normal_transparent">#50a9a9a9</color>
+    <color name="validating_white_bg">#50a9a9a9</color>
     <color name="scanover_green">#4D7921</color>
     <color name="scanover_yellow">#FDD012</color>
     <color name="scanover_red">#FF3B30</color>
