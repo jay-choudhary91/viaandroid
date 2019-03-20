@@ -114,7 +114,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "videocomposerfragment";
 
-    public int rotationangle=90;
+    public int rotationangle=0;
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
     protected float maximumZoomLevel;
@@ -1540,73 +1540,78 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(mOrientation != null)
             mOrientation.startListening(this);
 
-        common.dismisscustompermissiondialog();
-        stopvideotimer();
-        resetvideotimer();
-        if (doafterallpermissionsgranted != null) {
-            doafterallpermissionsgranted.run();
-            doafterallpermissionsgranted = null;
-        } else {
-            if(permissionslist.size() == 0)
-            {
-                permissionslist.add(new permissions(Manifest.permission.CAMERA,false,false));
-            }
-            List<String> deniedpermissions = new ArrayList<>();
-            for(int i=0;i<permissionslist.size();i++)
-            {
-                permissionslist.get(i).setIspermissionallowed(true);
-                if (ContextCompat.checkSelfPermission(getActivity(), permissionslist.get(i).getPermissionname()) != PackageManager.PERMISSION_GRANTED)
-                {
-                    if(! permissionslist.get(i).isIspermissionskiped())
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                common.dismisscustompermissiondialog();
+                stopvideotimer();
+                resetvideotimer();
+                if (doafterallpermissionsgranted != null) {
+                    doafterallpermissionsgranted.run();
+                    doafterallpermissionsgranted = null;
+                } else {
+                    if(permissionslist.size() == 0)
                     {
-                        deniedpermissions.add(permissionslist.get(i).getPermissionname());
-                        permissionslist.get(i).setIspermissionallowed(false);
-                        break;
+                        permissionslist.add(new permissions(Manifest.permission.CAMERA,false,false));
                     }
-                }
-            }
-
-            if (deniedpermissions.isEmpty()) {
-                // All permissions are granted
-                doafterallpermissionsgranted();
-            } else {
-                //String[] array = new String[deniedpermissions.size()];
-
-                String[] array = new String[1];
-                array = deniedpermissions.toArray(array);
-                final String[] finalArray = array;
-
-                common.showcustompermissiondialog(applicationviavideocomposer.getactivity(), new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-                    }
-
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-                        if(type == 0)
+                    List<String> deniedpermissions = new ArrayList<>();
+                    for(int i=0;i<permissionslist.size();i++)
+                    {
+                        permissionslist.get(i).setIspermissionallowed(true);
+                        if (ContextCompat.checkSelfPermission(getActivity(), permissionslist.get(i).getPermissionname()) != PackageManager.PERMISSION_GRANTED)
                         {
-                            if(finalArray.length > 0)
+                            if(! permissionslist.get(i).isIspermissionskiped())
                             {
-                                for(int i=0;i<permissionslist.size();i++)
-                                {
-                                    if(finalArray[0].equalsIgnoreCase(permissionslist.get(i).getPermissionname()))
-                                    {
-                                        permissionslist.get(i).setIspermissionskiped(true);
-                                        break;
-                                    }
-                                }
+                                deniedpermissions.add(permissionslist.get(i).getPermissionname());
+                                permissionslist.get(i).setIspermissionallowed(false);
+                                break;
                             }
                         }
-                        else if(type == 1)
-                        {
-                            if(finalArray.length > 0)
-                                ActivityCompat.requestPermissions(getActivity(), finalArray, request_permissions);
-                        }
                     }
-                },finalArray[0]);
+
+                    if (deniedpermissions.isEmpty()) {
+                        // All permissions are granted
+                        doafterallpermissionsgranted();
+                    } else {
+                        //String[] array = new String[deniedpermissions.size()];
+
+                        String[] array = new String[1];
+                        array = deniedpermissions.toArray(array);
+                        final String[] finalArray = array;
+
+                        common.showcustompermissiondialog(applicationviavideocomposer.getactivity(), new adapteritemclick() {
+                            @Override
+                            public void onItemClicked(Object object) {
+                            }
+
+                            @Override
+                            public void onItemClicked(Object object, int type) {
+                                if(type == 0)
+                                {
+                                    if(finalArray.length > 0)
+                                    {
+                                        for(int i=0;i<permissionslist.size();i++)
+                                        {
+                                            if(finalArray[0].equalsIgnoreCase(permissionslist.get(i).getPermissionname()))
+                                            {
+                                                permissionslist.get(i).setIspermissionskiped(true);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                else if(type == 1)
+                                {
+                                    if(finalArray.length > 0)
+                                        ActivityCompat.requestPermissions(getActivity(), finalArray, request_permissions);
+                                }
+                            }
+                        },finalArray[0]);
+                    }
+                }
+                txt_title_actionbarcomposer.setText(config.mediarecorderformat);
             }
-        }
-        txt_title_actionbarcomposer.setText(config.mediarecorderformat);
+        },config.transition_fragment_millis_700);
     }
 
     @Override

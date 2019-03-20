@@ -145,7 +145,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     protected Rect rectzoom;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    private int REQUEST_CAMERA_PERMISSION = 1,rotationangle=90;
+    private int REQUEST_CAMERA_PERMISSION = 1,rotationangle=0;
     private static final String FRAGMENT_DIALOG = "dialog";
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -863,28 +863,35 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void onResume() {
         super.onResume();
 
-        String[] neededpermissions = {
-                Manifest.permission.CAMERA,
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        };
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                String[] neededpermissions = {
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                };
 
-        List<String> deniedpermissions = new ArrayList<>();
+                List<String> deniedpermissions = new ArrayList<>();
 
-        for (String permission : neededpermissions) {
-            if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
-                deniedpermissions.add(permission);
+                for (String permission : neededpermissions) {
+                    if (ContextCompat.checkSelfPermission(getActivity(), permission) != PackageManager.PERMISSION_GRANTED) {
+                        deniedpermissions.add(permission);
+                    }
+                }
+
+                if(deniedpermissions.isEmpty()){
+                    doafterallpermissions();
+                }
+                else
+                {
+                    String[] array = new String[deniedpermissions.size()];
+                    array = deniedpermissions.toArray(array);
+                    ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
+                }
             }
-        }
-
-        if(deniedpermissions.isEmpty()){
-            doafterallpermissions();
-        }else {
-                String[] array = new String[deniedpermissions.size()];
-                array = deniedpermissions.toArray(array);
-                ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
-            }
-        }
+        },config.transition_fragment_millis_700);
+    }
 
 
         public void doafterallpermissions()
