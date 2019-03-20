@@ -580,7 +580,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     }
 
     public void drawerbutton(){
-        imglefthandle.setVisibility(View.VISIBLE);
         imglefthandle.post(new Runnable() {
             @Override
             public void run() {

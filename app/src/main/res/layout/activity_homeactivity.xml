@@ -34,7 +34,6 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:padding="5dp"
-             android:visibility="gone"
              android:src="@drawable/handle_right_arrow"
              />
 
