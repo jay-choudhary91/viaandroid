@@ -626,11 +626,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lp.setMargins(0, 0, 0, 0);
                         headercontainer.setLayoutParams(lp);
 
-                        /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
+                        lpimg_dotmenu.setMargins(0, 0, 20,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,20,10,0);*/
+                        img_dotmenu.setPadding(10,20,10,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
@@ -658,9 +658,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
                         img_dotmenu.setPadding(10,20,10,0);
 
-                       /* LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
-                        imgflashon.setLayoutParams(lpimgflashon);*/
+                        LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lpimgflashon.setMargins(20, 0, 0,  0);
+                        imgflashon.setLayoutParams(lpimgflashon);
 
                         headercontainer.setAngle(270);
 
