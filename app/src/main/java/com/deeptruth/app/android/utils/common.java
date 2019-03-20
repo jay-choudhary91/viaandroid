@@ -849,7 +849,7 @@ public class common {
     {
         int[] screenWidthHeight=getScreenWidthHeight(applicationviavideocomposer.getactivity());
         int screenwidth=screenWidthHeight[0];
-        int width=((screenwidth)/3);
+        int width=((screenwidth)/5);
         return width;
     }
 
