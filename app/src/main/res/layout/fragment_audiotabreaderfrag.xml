@@ -52,17 +52,26 @@
                     android:contentDescription="@string/description"
                     />
 
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/rl_audio_downwordarrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp"
+                    android:background="@color/black"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:padding="5dp"
-                    android:id="@+id/audio_downwordarrow"
-                    android:src="@drawable/handle_down_arrow"/>
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    >
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:id="@+id/audio_downwordarrow"
+                        android:src="@drawable/ic_horizontal_line"/>
+
+                     </RelativeLayout>
             </RelativeLayout>
+
 
             <RelativeLayout
                 android:id="@+id/layout_scrubberview"
@@ -144,6 +153,8 @@
                         android:paddingRight="@dimen/margin_15dp"/>
 
                 </RelativeLayout>
+
+
 
             <ImageView
                 android:id="@+id/img_fullscreen"
