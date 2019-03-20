@@ -145,7 +145,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     protected Rect rectzoom;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    private int REQUEST_CAMERA_PERMISSION = 1,rotationangle=90;
+    private int REQUEST_CAMERA_PERMISSION = 1,rotationangle=0;
     private static final String FRAGMENT_DIALOG = "dialog";
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);

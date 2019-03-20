@@ -114,7 +114,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "videocomposerfragment";
 
-    public int rotationangle=90;
+    public int rotationangle=0;
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
     protected float maximumZoomLevel;
