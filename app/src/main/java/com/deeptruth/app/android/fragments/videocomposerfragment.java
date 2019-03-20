@@ -1602,7 +1602,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
                 txt_title_actionbarcomposer.setText(config.mediarecorderformat);
             }
-        },700);
+        },config.transition_fragment_millis_700);
     }
 
     @Override

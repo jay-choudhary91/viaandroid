@@ -887,7 +887,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
                 }
             }
-        },700);
+        },config.transition_fragment_millis_700);
     }
 
 
