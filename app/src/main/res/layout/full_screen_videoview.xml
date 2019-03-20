@@ -69,6 +69,23 @@
                             android:layout_alignParentBottom="true"
                             android:background="@color/transparent">
 
+                            <RelativeLayout
+                                android:id="@+id/rl_video_downwordarrow"
+                                android:layout_width="match_parent"
+                                android:layout_height="10dp"
+                                android:background="@color/black"
+                                android:layout_marginTop="@dimen/margin_10dp"
+                                >
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:id="@+id/video_downwordarrow"
+                                    android:src="@drawable/ic_horizontal_line"/>
+
+                            </RelativeLayout>
+
                             <LinearLayout
                                 android:id="@+id/layout_customcontroller"
                                 android:layout_width="match_parent"
@@ -276,15 +293,6 @@
                             android:layout_marginBottom="-15dp"
                             android:padding="10dp"
                             />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_above="@+id/layout_backgroundcontroller"
-                            android:padding="5dp"
-                            android:id="@+id/video_downwordarrow"
-                            android:src="@drawable/handle_down_arrow"/>
 
                     </RelativeLayout>
 
