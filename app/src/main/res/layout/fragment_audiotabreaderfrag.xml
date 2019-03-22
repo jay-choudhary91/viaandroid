@@ -55,7 +55,7 @@
                 <RelativeLayout
                     android:id="@+id/rl_audio_downwordarrow"
                     android:layout_width="match_parent"
-                    android:layout_height="10dp"
+                    android:layout_height="13dp"
                     android:background="@color/black"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
@@ -63,11 +63,12 @@
                     >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="60dp"
+                        android:layout_height="13dp"
+                        android:padding="5dp"
                         android:layout_centerHorizontal="true"
                         android:id="@+id/audio_downwordarrow"
-                        android:src="@drawable/ic_horizontal_line"/>
+                        android:src="@drawable/horizontal_line_img"/>
 
                      </RelativeLayout>
             </RelativeLayout>
