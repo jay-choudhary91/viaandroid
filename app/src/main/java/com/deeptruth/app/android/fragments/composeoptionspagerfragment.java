@@ -412,7 +412,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else
         {
-            img_warning.setVisibility(View.GONE);
+           // img_warning.setVisibility(View.GONE);
+            img_warning.setVisibility(View.VISIBLE);
             showwarningsection=false;
         }
     }
