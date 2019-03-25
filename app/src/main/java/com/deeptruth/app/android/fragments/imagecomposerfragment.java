@@ -1509,7 +1509,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             case R.id.img_warning:
 
                 img_warning.setVisibility(View.GONE);
-                img_close.setVisibility(View.VISIBLE);
+               // img_close.setVisibility(View.VISIBLE);
+                img_close.setVisibility(View.GONE);
 
                 if(madapterclick != null)
                     madapterclick.onItemClicked(null,5);
@@ -1525,45 +1526,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void showwarningorclosebutton()
-    {
-        if(img_warning == null || img_close == null)
-            return;
-
-        if(img_warning.getVisibility() == View.VISIBLE || img_close.getVisibility() == View.VISIBLE)
-        {
-
-        }
-        else
-        {
-            img_warning.setVisibility(View.GONE);
-            img_close.setVisibility(View.VISIBLE);
-        }
-    }
-
     public void hideallsection() {
         if (img_warning == null || img_close == null)
             return;
 
         img_warning.setVisibility(View.GONE);
         img_close.setVisibility(View.GONE);
-    }
-
-    public void showwarningsection(boolean showwarningsection)
-    {
-        if(img_warning == null || img_close == null)
-            return;
-
-        if(showwarningsection)
-        {
-            img_warning.setVisibility(View.GONE);
-            img_close.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            img_warning.setVisibility(View.VISIBLE);
-            img_close.setVisibility(View.GONE);
-        }
     }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)

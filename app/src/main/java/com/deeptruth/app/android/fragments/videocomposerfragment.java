@@ -608,7 +608,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void changeiconsorientation(float rotateangle)
     {
         rotationangle=(int)rotateangle;
-        Log.e("rotateangle ",""+rotateangle);
+        Log.e("lastrotatedangle ",""+rotateangle);
 
 
 
@@ -1409,7 +1409,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         else
         {
             img_warning.setVisibility(View.GONE);
-            img_close.setVisibility(View.VISIBLE);
+            //img_close.setVisibility(View.VISIBLE);
+            img_close.setVisibility(View.GONE);
         }
     }
 
@@ -1429,7 +1430,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(showwarningsection)
         {
             img_warning.setVisibility(View.GONE);
-            img_close.setVisibility(View.VISIBLE);
+            //img_close.setVisibility(View.VISIBLE);
+            img_close.setVisibility(View.GONE);
         }
         else
         {

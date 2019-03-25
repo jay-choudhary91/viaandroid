@@ -5,20 +5,21 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout_textsection"
+        android:layout_height="40dp">
+
+        <include layout="@layout/layout_validating"></include>
+
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/img_warning"
         android:layout_width="45dp"
         android:layout_height="40dp"
         android:layout_margin="5dp"
+        android:layout_gravity="right"
         android:src="@drawable/warning_icon"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/layout_textsection"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/layout_validating"></include>
-
-    </RelativeLayout>
 
 </LinearLayout>

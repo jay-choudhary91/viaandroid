@@ -1241,7 +1241,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                    {
                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
-                       layoutparams.setMargins((layoutbottomheight/2)-50,0,0,(layoutbottom.getHeight()-30));
                        layout_no_gps_wifi.setLayoutParams(layoutparams);
                        layout_no_gps_wifi.setAngle(90);
                    }
@@ -1249,7 +1248,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                    {
                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-                       layoutparams.setMargins(0,0,(layoutbottomheight/2)-50,(layoutbottom.getHeight()-30));
                        layout_no_gps_wifi.setLayoutParams(layoutparams);
                        layout_no_gps_wifi.setAngle(270);
                    }
@@ -1257,7 +1255,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                    {
                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
-                       layoutparams.setMargins(0,(layoutbottomheight/2)-50,0,0);
                        layout_no_gps_wifi.setLayoutParams(layoutparams);
                        layout_no_gps_wifi.setAngle(0);
                    }
