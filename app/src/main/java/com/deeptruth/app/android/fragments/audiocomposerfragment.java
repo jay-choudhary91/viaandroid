@@ -410,7 +410,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             case R.id.img_warning:
 
                 img_warning.setVisibility(View.GONE);
-                img_close.setVisibility(View.VISIBLE);
+                //img_close.setVisibility(View.VISIBLE);
+                img_close.setVisibility(View.GONE);
 
                 if(madapterclick != null)
                     madapterclick.onItemClicked(null,5);
@@ -439,7 +440,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         else
         {
             img_warning.setVisibility(View.GONE);
-            img_close.setVisibility(View.VISIBLE);
+           // img_close.setVisibility(View.VISIBLE);
+            img_close.setVisibility(View.GONE);
         }
     }
 
@@ -459,7 +461,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         if(showwarningsection)
         {
             img_warning.setVisibility(View.GONE);
-            img_close.setVisibility(View.VISIBLE);
+            //img_close.setVisibility(View.VISIBLE);
+            img_close.setVisibility(View.GONE);
         }
         else
         {
