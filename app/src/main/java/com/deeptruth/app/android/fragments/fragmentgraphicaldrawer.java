@@ -601,7 +601,9 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             String latency = xdata.getinstance().getSetting(config.latency).toString();
             if(latency != null && (! latency.trim().isEmpty()) )
             {
-                layout_datalatency.setVisibility(View.VISIBLE);
+                if(layout_datalatency != null)
+                    layout_datalatency.setVisibility(View.VISIBLE);
+
                 String[] latencyarray = latency.split(",");
                 for(int i = 0 ;i< latencyarray.length;i++)
                 {
@@ -618,12 +620,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             }
             else
             {
-                layout_datalatency.setVisibility(View.GONE);
+                if(layout_datalatency != null)
+                    layout_datalatency.setVisibility(View.GONE);
             }
         }
         else
         {
-            layout_datalatency.setVisibility(View.GONE);
+            if(layout_datalatency != null)
+                layout_datalatency.setVisibility(View.GONE);
         }
     }
 
