@@ -398,31 +398,31 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
         else
         {
-            common.setdrawabledata(getResources().getString(R.string.latitude),"\n"+"NA", tvlatitude);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+"NA", tvlatitude);
         }
 
         if(! longitudedegree.isEmpty() && (! longitudedegree.equalsIgnoreCase("NA")))
         {
             String longitude = common.convertlongitude(Double.parseDouble(longitudedegree));
-            common.setdrawabledata(getResources().getString(R.string.longitude),"\n"+longitude, tvlongitude);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+longitude, tvlongitude);
         }
         else
         {
-            common.setdrawabledata(getResources().getString(R.string.longitude),"\n"+"NA", tvlongitude);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+"NA", tvlongitude);
         }
 
         if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
         {
-            common.setdrawabledata(getResources().getString(R.string.altitude),"\n"+altitude, tvaltitude);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+altitude, tvaltitude);
         }
         else
         {
-            common.setdrawabledata(getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+"NA", tvaltitude);
         }
 
             /**/
 
-            common.setdrawabledata(getResources().getString(R.string.traveled),"\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
             common.setdrawabledata(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
             if(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)).equalsIgnoreCase("NA")) {
                 common.setdrawabledata(getResources().getString(R.string.address),": "+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
