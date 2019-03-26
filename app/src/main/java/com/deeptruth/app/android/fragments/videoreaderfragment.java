@@ -2,8 +2,6 @@ package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
 import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -36,12 +33,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
@@ -57,13 +51,9 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
@@ -82,7 +72,6 @@ import android.widget.TextView;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.adapter.adaptermediagrid;
 import com.deeptruth.app.android.adapter.encryptiondataadapter;
 import com.deeptruth.app.android.adapter.folderdirectoryspinneradapter;
 import com.deeptruth.app.android.adapter.framebitmapadapter;
@@ -95,13 +84,11 @@ import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.models.frame;
 import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
-import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
+import com.deeptruth.app.android.sensor.Orientation;
 import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
-import com.deeptruth.app.android.utils.NoScrollRecycler;
 import com.deeptruth.app.android.utils.ScrubberLinearLayoutManagerWithSmoothScroller;
-import com.deeptruth.app.android.utils.centerlayoutmanager;
 import com.deeptruth.app.android.utils.circularImageview;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -113,6 +100,7 @@ import com.deeptruth.app.android.videotrimmer.utils.backgroundexecutor;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.deeptruth.app.android.views.customseekbar;
 import com.github.mikephil.charting.utils.Utils;
+import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -136,7 +124,6 @@ import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -148,7 +135,7 @@ import static android.widget.RelativeLayout.TRUE;
  */
 
 public class videoreaderfragment extends basefragment implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener,TextureView.SurfaceTextureListener,
-     MediaPlayer.OnVideoSizeChangedListener,MediaPlayer.OnBufferingUpdateListener, customedittext.OnKeyListener
+     MediaPlayer.OnVideoSizeChangedListener,MediaPlayer.OnBufferingUpdateListener,Orientation.Listener, customedittext.OnKeyListener
 {
 
     @BindView(R.id.img_dotmenu)
@@ -253,6 +240,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     RelativeLayout layoutbackgroundcontroller;
     @BindView(R.id.linear_seekbarcolorview)
     LinearLayout linearseekbarcolorview;
+    @BindView(R.id.rl_videotextureview)
+    RelativeLayout rl_videotextureview;
 
     @BindView(R.id.txt_address)
     customfonttextview tvaddress;
@@ -370,7 +359,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     RelativeLayout rl_video_downwordarrow;
 
     int footerheight ,bottompadding ,actionbarheight;
-    int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0;
+    int headerheight = 0,headerwidth = 0,scrubberheight = 0, scrubberwidth = 0, lastrotatedangle =-1,videorotatedangle=-1;
     boolean flag = true;
     boolean islisttouched=false,islistdragging=false,isfromlistscroll=false;
 
@@ -426,6 +415,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     encryptiondataadapter encryptionadapter;
     private TranslateAnimation validationbaranimation;
     boolean mIsScrolling = true;
+    private Orientation mOrientation;
+
     @Override
     public int getlayoutid() {
         return R.layout.full_screen_videoview;
@@ -464,6 +455,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             });
 
+            //mOrientation = new Orientation(applicationviavideocomposer.getactivity());
             gethelper().setwindowfitxy(true);
             //layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
             loadviewdata();
@@ -638,6 +630,51 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 public void onClick(View v) {}
 
             });
+
+
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    /*rl_videotextureview.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            int w = common.getScreenWidth(applicationviavideocomposer.getactivity());
+                            int h = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+                            rl_videotextureview.setRotation(90.0f);
+                            rl_videotextureview.setTranslationX((w - h) / 2);
+                            rl_videotextureview.setTranslationY((h - w) / 2);
+
+                            ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) rl_videotextureview.getLayoutParams();
+                            lp.height = w;
+                            lp.width = h;
+                            rl_videotextureview.requestLayout();
+
+                            ViewGroup.LayoutParams layoutParams = videotextureview.getLayoutParams();
+                            layoutParams.width = h;
+                            layoutParams.height = w;
+
+                            videotextureview.setLayoutParams(layoutParams);
+
+                            videotextureview.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //updatesurfaceviewsizefullscreen(videotextureview.getWidth(),videotextureview.getHeight());
+                                    //updatesurfaceviewsize();
+
+
+
+                                   // recenterplaypause(finalmargin,1);
+                                }
+                            });
+                        }
+                    });*/
+
+                }
+            },10000);
         }
 
         return rootview;
@@ -1176,6 +1213,75 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         return false;
     }
 
+    @Override
+    public void onOrientationChanged(float pitch, float roll) {
+
+    }
+
+    @Override
+    public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
+        float pitch = orientation[1] * -57;
+
+        if(pitch <= -50 || videorotatedangle == -1 || videorotatedangle == 0)
+            return;
+
+        float roll = orientation[2] * -57;
+        float rotateangle=3600;
+        if(roll < -45 && roll >= -120)
+        {
+            rotateangle=-90;  // Flip Portrait 90
+        }
+        else if(roll >= -40 && roll <= 45)
+        {
+            rotateangle=0;     // Portrait 90
+        }
+        else if(roll > 45 && roll <= 120)
+        {
+            rotateangle=90;    // Landscape left side
+        }
+        else if(roll < 45 && roll < -120)
+        {
+            rotateangle=180;    // Landscape right side
+        }
+
+        if(rotateangle != 3600 && layout_videodetails != null)
+        {
+            if(layout_videodetails.getVisibility() == View.GONE && lastrotatedangle != rotateangle)
+            {
+                lastrotatedangle=(int)rotateangle;
+
+                int w = common.getScreenWidth(applicationviavideocomposer.getactivity());
+                int h = common.getScreenHeight(applicationviavideocomposer.getactivity());
+
+                if(lastrotatedangle == 0)
+                {
+                    h = common.getScreenWidth(applicationviavideocomposer.getactivity());
+                    w = common.getScreenHeight(applicationviavideocomposer.getactivity());
+                }
+
+                rl_videotextureview.setRotation(lastrotatedangle);
+                rl_videotextureview.setTranslationX((w - h) / 2);
+                rl_videotextureview.setTranslationY((h - w) / 2);
+
+                ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) rl_videotextureview.getLayoutParams();
+                lp.height = w;
+                lp.width = h;
+                rl_videotextureview.requestLayout();
+
+                RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(h,w);
+                videotextureview.setLayoutParams(paramsvideotextureview);
+
+                videotextureview.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                    }
+                });
+            }
+        }
+    }
+
     public class setonClick implements View.OnClickListener
     {
 
@@ -1262,64 +1368,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     gethelper().onBack();
                     break;
                 case R.id.img_fullscreen:
-                        if(layout_videodetails.getVisibility()==View.VISIBLE){
-                            xdata.getinstance().saveSetting("fullscreen", "" + "fullscreen");
-                            layout_halfscrnimg.getLayoutParams().height = (rootviewheight-navigationbarheight);
-
-                               layout_videodetails.getLayoutParams().height = 0;
-                                gethelper().drawerenabledisable(false);
-                                gethelper().updateactionbar(0);
-                                setheadermargine(0,0,(rootviewheight-navigationbarheight),true);
-                                layout_videodetails.setVisibility(View.GONE);
-                                scrollview_detail.setVisibility(View.GONE);
-                                scrollview_meta.setVisibility(View.GONE);
-                                scrollView_encyrption.setVisibility(View.GONE);
-                                tab_layout.setVisibility(View.GONE);
-                                //updatetextureviewsize(targetwidth,targetheight);
-                                layout_footer.setVisibility(View.GONE);
-                                layout_mediatype.setVisibility(View.GONE);
-                                layoutbackgroundcontroller.setVisibility(View.GONE);
-                                playpausebutton.setVisibility(View.GONE);
-                                imgpause.setVisibility(View.GONE);
-                                img_fullscreen.setVisibility(View.GONE);
-                                videodownwordarrow.setVisibility(View.GONE);
-                                rl_video_downwordarrow.setVisibility(View.GONE);
-                                islastdragarrow =false;
-
-                            // recenterplaypause();
-                    } else{
-                            //setheaderlayout(false);
-                                removeheaderpadding();
-                                xdata.getinstance().saveSetting("fullscreen", "" + "halfscreen");
-                                layout_halfscrnimg.getLayoutParams().height = videoviewheight;
-                                layout_videodetails.getLayoutParams().height = detailviewheight;
-                                gethelper().drawerenabledisable(false);
-                                gethelper().updateactionbar(1);
-                                playpausebutton.setVisibility(View.GONE);
-                                layout_videodetails.setVisibility(View.VISIBLE);
-                                tab_layout.setVisibility(View.VISIBLE);
-                                scrollview_detail.setVisibility(View.VISIBLE);
-                                layout_mediatype.setVisibility(View.VISIBLE);
-                                totalduration.setVisibility(View.VISIBLE);
-                                time_current.setVisibility(View.VISIBLE);
-                                layout_footer.setVisibility(View.VISIBLE);
-                                layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
-                                layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
-                                //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
-                                setheadermargine(headerheight,scrubberheight,0,false);
-                                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-                                layout_seekbartiming.getResources().getColor(R.color.white);
-                                dividerline.setVisibility(View.GONE);
-
-                                imgpause.setVisibility(View.GONE);
-                                collapseimg_view();
-                                img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
-                                img_fullscreen.setVisibility(View.VISIBLE);
-                                resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
-                                videodownwordarrow.setVisibility(View.VISIBLE);
-                                rl_video_downwordarrow.setVisibility(View.VISIBLE);
-
-                                 //recenterplaypause();
+                    if(layout_videodetails.getVisibility()==View.VISIBLE)
+                    {
+                        resizeviewtofullscreen();
+                    }
+                    else
+                    {
+                        resizeviewtohalfscreen();
                     }
                     break;
 
@@ -1490,7 +1545,65 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
+    public void resizeviewtofullscreen()
+    {
+        xdata.getinstance().saveSetting("fullscreen", "" + "fullscreen");
+        layout_halfscrnimg.getLayoutParams().height = (rootviewheight-navigationbarheight);
 
+        layout_videodetails.getLayoutParams().height = 0;
+        gethelper().drawerenabledisable(false);
+        gethelper().updateactionbar(0);
+        setheadermargine(0,0,(rootviewheight-navigationbarheight),true);
+        layout_videodetails.setVisibility(View.GONE);
+        scrollview_detail.setVisibility(View.GONE);
+        scrollview_meta.setVisibility(View.GONE);
+        scrollView_encyrption.setVisibility(View.GONE);
+        tab_layout.setVisibility(View.GONE);
+        //updatetextureviewsize(targetwidth,targetheight);
+        layout_footer.setVisibility(View.GONE);
+        layout_mediatype.setVisibility(View.GONE);
+        layoutbackgroundcontroller.setVisibility(View.GONE);
+        playpausebutton.setVisibility(View.GONE);
+        imgpause.setVisibility(View.GONE);
+        img_fullscreen.setVisibility(View.GONE);
+        videodownwordarrow.setVisibility(View.GONE);
+        rl_video_downwordarrow.setVisibility(View.GONE);
+        islastdragarrow =false;
+    }
+
+
+    public void resizeviewtohalfscreen()
+    {
+        removeheaderpadding();
+        xdata.getinstance().saveSetting("fullscreen", "" + "halfscreen");
+        layout_halfscrnimg.getLayoutParams().height = videoviewheight;
+        layout_videodetails.getLayoutParams().height = detailviewheight;
+        gethelper().drawerenabledisable(false);
+        gethelper().updateactionbar(1);
+        playpausebutton.setVisibility(View.GONE);
+        layout_videodetails.setVisibility(View.VISIBLE);
+        tab_layout.setVisibility(View.VISIBLE);
+        scrollview_detail.setVisibility(View.VISIBLE);
+        layout_mediatype.setVisibility(View.VISIBLE);
+        totalduration.setVisibility(View.VISIBLE);
+        time_current.setVisibility(View.VISIBLE);
+        layout_footer.setVisibility(View.VISIBLE);
+        layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
+        layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
+        //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
+        setheadermargine(headerheight,scrubberheight,0,false);
+        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+        layout_seekbartiming.getResources().getColor(R.color.white);
+        dividerline.setVisibility(View.GONE);
+
+        imgpause.setVisibility(View.GONE);
+        collapseimg_view();
+        img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+        img_fullscreen.setVisibility(View.VISIBLE);
+        resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
+        videodownwordarrow.setVisibility(View.VISIBLE);
+        rl_video_downwordarrow.setVisibility(View.VISIBLE);
+    }
 
     public void showalertdialog(String message){
         new AlertDialog.Builder(getActivity(),R.style.customdialogtheme)
@@ -1588,6 +1701,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
+
+        if(mOrientation != null)
+            mOrientation.startListening(this);
+
         isfragmentstopped=false;
         Log.e("onresume","onresume");
 
@@ -1923,6 +2040,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             e.printStackTrace();
         }
+        if(mOrientation != null)
+            mOrientation.stopListening();
+
         Log.e("onstop","onstop");
     }
 
@@ -2659,11 +2779,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         recenterplaypause(lastvalue ,0);
     }
 
-    public void updatesurfaceviewsizefullscreen(){
-
-        int surfaceView_Width = videotextureview.getWidth();
-        int surfaceView_Height = videotextureview.getHeight();
-
+    public void updatesurfaceviewsizefullscreen(int surfaceView_Width,int surfaceView_Height){
 
         ViewGroup.LayoutParams layoutParams = videotextureview.getLayoutParams();
         layoutParams.width = surfaceView_Width;
@@ -2724,6 +2840,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    // Retrieve media data
                    long videoLengthInMs = Integer.parseInt(mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) * 1000;
 
+                   String rotation = mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION);
+                   if(rotation != null && (! rotation.equalsIgnoreCase("null")) && (! rotation.isEmpty()))
+                       videorotatedangle =Integer.parseInt(rotation);
+
+                   Log.e("rotation ",rotation);
                    String time = mediametadataretriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
                    long timeInmillisec = Long.parseLong( time );
                    long duration = timeInmillisec / 1000;
@@ -2737,6 +2858,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    final int thumbHeight = mheightview;
 
                    int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
+
+                   //90 portrait
+                   // left landscape 0
+                   // right landscape 180
+                   // reverse portrait 270
+
 
                     if(seconds <= 3){
                         numThumbs = 10;
@@ -2936,7 +3063,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 public void run() {
 
                     if(headerheight == 0 && scrubberheight == 0){
-                        updatesurfaceviewsizefullscreen();
+                        updatesurfaceviewsizefullscreen(videotextureview.getWidth(),videotextureview.getHeight());
                     }else{
 
                         setplaypuasebtnondrag();
