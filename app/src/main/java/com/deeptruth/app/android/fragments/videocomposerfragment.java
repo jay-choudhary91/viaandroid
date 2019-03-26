@@ -328,7 +328,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     TextView txt_title_actionbarcomposer,txt_media_quality;
 
-    ImageView imgflashon,img_dotmenu,img_close,handle;
+    ImageView imgflashon,img_dotmenu,handle;
 
     View rootview = null;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
@@ -393,12 +393,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ImageView img_gpswifiwarning;
     @BindView(R.id.txt_encrypting)
     TextView txt_encrypting;
+    @BindView(R.id.img_close)
+    ImageView img_close;
 
     Animation blinkanimation;
     mediaqualityadapter qualityadapter;
     List<String> qualityitemslist=new ArrayList<>();
     private TranslateAnimation validationbaranimation;
-    int parentviewwidth=0;
 
     @Override
     public int getlayoutid() {
@@ -424,7 +425,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
         img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
-        img_close = (ImageView) rootview.findViewById(R.id.img_close);
         handle = (ImageView) rootview.findViewById(R.id.handle);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
@@ -529,56 +529,48 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         });
 
-        mTextureView.post(new Runnable() {
+        final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+        alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
+        alphanimation.setStartOffset(1000);
+        alphanimation.setRepeatMode(1);
+
+        Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
             @Override
-            public void run() {
+            public void onAnimationStart(Animation animation) {
 
-                parentviewwidth=mTextureView.getWidth();
-
-                final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
-                alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
-                alphanimation.setStartOffset(1000);
-                alphanimation.setRepeatMode(1);
-
-                Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        //fadeoutcontrollers();
-                    }
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                };
-                alphanimation.setAnimationListener(alphalistener);
-
-                validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
-                        common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
-                validationbaranimation.setDuration(3000);
-                validationbaranimation.setRepeatCount(Animation.INFINITE);
-                validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
-                img_scanover.startAnimation(validationbaranimation);
-
-                Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        txt_section_validating_secondary.startAnimation(alphanimation);
-                    }
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                    }
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                        txt_section_validating_secondary.startAnimation(alphanimation);
-                    }
-                };
-                validationbaranimation.setAnimationListener(translatelistener);
             }
-        });
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                //fadeoutcontrollers();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        };
+        alphanimation.setAnimationListener(alphalistener);
+
+        validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
+                common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
+        validationbaranimation.setDuration(3000);
+        validationbaranimation.setRepeatCount(Animation.INFINITE);
+        validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
+        img_scanover.startAnimation(validationbaranimation);
+
+        Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                txt_section_validating_secondary.startAnimation(alphanimation);
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                txt_section_validating_secondary.startAnimation(alphanimation);
+            }
+        };
+        validationbaranimation.setAnimationListener(translatelistener);
 
         mOrientation = new Orientation(applicationviavideocomposer.getactivity());
         return rootview;
@@ -1692,6 +1684,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         stopblinkanimation();
         if(myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
+
+        if(validationbaranimation != null)
+        {
+            validationbaranimation.cancel();
+            validationbaranimation.reset();
+        }
 
         super.onPause();
     }

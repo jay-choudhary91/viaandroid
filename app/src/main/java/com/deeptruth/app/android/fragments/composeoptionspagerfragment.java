@@ -788,7 +788,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 showhideactionbottombaricon(2);
             }
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"true");
-
+            startblinkencryption();
             // setimagerecordstart();
         }
         else if(type == 2) // for video record stop,audio record stop and image captured button click
@@ -810,6 +810,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             changezoomcontrollerposition(0);
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
+            stopblinkencryption();
         }
         else if(type == 3) // For swipe gesture to change fragment
         {

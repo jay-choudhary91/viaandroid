@@ -883,15 +883,14 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         },config.transition_fragment_millis_0);
     }
 
-
-        public void doafterallpermissions()
-        {
-            startBackgroundThread();
-            if (mTextureView.isAvailable()) {
-                openCamera(mTextureView.getWidth(), mTextureView.getHeight());
-            }
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+    public void doafterallpermissions()
+    {
+        startBackgroundThread();
+        if (mTextureView.isAvailable()) {
+            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
         }
+        mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+    }
 
     @Override
     public void onPause() {
