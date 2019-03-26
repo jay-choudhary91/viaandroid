@@ -57,7 +57,8 @@
     <color name="drawer_bg">#0E6479</color>
     <color name="drawer_seekbar_min">#007FE1</color>
     <color name="drawer_seekbar_max">#ABB0B1</color>
-
+    <color name="yellow_radar_start">#15FDD012</color>
+    <color name="yellow_radar_end">#15FDD012</color>
 
 
     <!-- VIDEO TRIMMER -->

@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -509,8 +510,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if(common.isdevelopermodeenable())
                     img_settings.setVisibility(View.VISIBLE);
 
-                if(shouldlaunchcomposer)
-                    launchbottombarfragment();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(shouldlaunchcomposer)
+                            launchbottombarfragment();
+                    }
+                },200);
+
             }
 
             loadffmpeglibrary();
