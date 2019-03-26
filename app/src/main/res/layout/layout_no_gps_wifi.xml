@@ -34,16 +34,16 @@
 
         <ImageView
             android:id="@+id/img_gpswifiwarning"
-            android:layout_width="35dp"
-            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/warning_icon"/>
 
         <ImageView
             android:id="@+id/img_close"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginRight="20dp"
             android:visibility="gone"
             android:layout_alignParentRight="true"
