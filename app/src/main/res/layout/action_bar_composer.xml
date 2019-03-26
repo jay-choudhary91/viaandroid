@@ -51,7 +51,7 @@
                     android:id="@+id/img_flash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:src="@drawable/icon_flashoff"/>
 
                 <Spinner
@@ -86,8 +86,6 @@
                     android:src="@drawable/stopwatch"/>
 
             </LinearLayout>
-
-
 
             <ImageView
                 android:id="@+id/img_dotmenu"

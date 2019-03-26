@@ -689,7 +689,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         lpimg_dotmenu.setMargins(0, 0, 20,  0);
                         img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,20,20,0);
+                        img_dotmenu.setPadding(10,20,10,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimgflashon.setMargins(30, 0, 0,  0);
@@ -1560,7 +1560,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     for(int i=0;i<permissionslist.size();i++)
                     {
                         permissionslist.get(i).setIspermissionallowed(true);
-                        if (ContextCompat.checkSelfPermission(getActivity(), permissionslist.get(i).getPermissionname()) != PackageManager.PERMISSION_GRANTED)
+                        if (ContextCompat.checkSelfPermission(applicationviavideocomposer.getactivity(), permissionslist.get(i).getPermissionname()) != PackageManager.PERMISSION_GRANTED)
                         {
                             if(! permissionslist.get(i).isIspermissionskiped())
                             {
