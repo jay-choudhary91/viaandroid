@@ -343,7 +343,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     LinearLayout linearLayout;
     TextView txt_title_actionbarcomposer;
 
-    ImageView imgflashon,img_dotmenu,img_warning,img_close,img_stop_watch;
+    ImageView imgflashon,img_dotmenu,img_stop_watch;
 
     public Dialog maindialogshare,subdialogshare;
     View rootview = null;
@@ -534,8 +534,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
         img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
-        img_warning= (ImageView) rootview.findViewById(R.id.img_warning);
-        img_close = (ImageView) rootview.findViewById(R.id.img_close);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
 
@@ -544,8 +542,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         imgflashon.setOnClickListener(this);
         img_dotmenu.setOnClickListener(this);
         img_stop_watch.setOnClickListener(this);
-        img_warning.setOnClickListener(this);
-        img_close.setOnClickListener(this);
         txt_media_quality.setOnClickListener(this);
         txt_media_low.setOnClickListener(this);
         txt_media_medium.setOnClickListener(this);
@@ -659,12 +655,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         if(img_dotmenu != null)
             img_dotmenu.setRotation(angle);
-
-        if(img_warning != null)
-            img_warning.setRotation(angle);
-
-        if(img_close != null)
-            img_close.setRotation(angle);
 
         if(img_stop_watch != null)
             img_stop_watch.setRotation(angle);
@@ -890,7 +880,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     ActivityCompat.requestPermissions(getActivity(), array, request_permissions);
                 }
             }
-        },config.transition_fragment_millis_700);
+        },config.transition_fragment_millis_0);
     }
 
 
@@ -1505,33 +1495,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
                 setupcamerazoom();
                 break;
-
-            case R.id.img_warning:
-
-                img_warning.setVisibility(View.GONE);
-               // img_close.setVisibility(View.VISIBLE);
-                img_close.setVisibility(View.GONE);
-
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(null,5);
-                break;
-
-            case R.id.img_close:
-                img_warning.setVisibility(View.VISIBLE);
-                img_close.setVisibility(View.GONE);
-
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(null,6);
-                break;
         }
-    }
-
-    public void hideallsection() {
-        if (img_warning == null || img_close == null)
-            return;
-
-        img_warning.setVisibility(View.GONE);
-        img_close.setVisibility(View.GONE);
     }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
@@ -1671,32 +1635,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             layout_seekbarzoom.setVisibility(View.VISIBLE);
             layout_seekbarzoom.animate().alpha(1.0f).setDuration(500).setListener(null);
         }
-    }
-
-    public void fadeoutzoomcontrollers()
-    {
-        layout_seekbarzoom.setAlpha(layout_seekbarzoom.getAlpha());
-        layout_seekbarzoom.animate().alpha(0f).setDuration(800).setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animator) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animator) {
-
-            }
-        });
     }
 
     /**

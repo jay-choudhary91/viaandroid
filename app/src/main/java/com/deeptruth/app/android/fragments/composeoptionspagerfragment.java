@@ -277,7 +277,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 textView1.setTextColor((Integer)animator.getAnimatedValue());
             }
         });
-        colorAnimation.setDuration(config.transition_fragment_millis_700);
+        colorAnimation.setDuration(config.transition_fragment_millis_300);
         colorAnimation.start();
 
         ValueAnimator alphaAnimation = ValueAnimator.ofFloat(0.5f,1.0f);
@@ -290,7 +290,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 textView3.setAlpha((Float) animator.getAnimatedValue());
             }
         });
-        alphaAnimation.setDuration(config.transition_fragment_millis_700);
+        alphaAnimation.setDuration(config.transition_fragment_millis_300);
         alphaAnimation.start();
     }
 
@@ -722,7 +722,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 view.setLayoutParams(lp);
             }
         });
-        animator.setDuration(config.transition_fragment_millis_700);
+        animator.setDuration(config.transition_fragment_millis_300);
         animator.start();
     }
 
