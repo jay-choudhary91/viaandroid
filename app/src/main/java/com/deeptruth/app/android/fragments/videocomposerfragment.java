@@ -531,7 +531,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
         alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
-        alphanimation.setStartOffset(1000);
+        alphanimation.setStartOffset(1500);
         alphanimation.setRepeatMode(1);
 
         Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
@@ -552,7 +552,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
                 common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
-        validationbaranimation.setDuration(3000);
+        validationbaranimation.setDuration(4000);
         validationbaranimation.setRepeatCount(Animation.INFINITE);
         validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
         img_scanover.startAnimation(validationbaranimation);
@@ -643,9 +643,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         rotationangle=(int)rotateangle;
 
-            if(headercontainer !=null){
+            if(headercontainer !=null && layout_no_gps_wifi != null ){
 
-                if(layout_no_gps_wifi != null && isvideorecording)
+                /*if(layout_no_gps_wifi != null && isvideorecording)
                 {
                     RelativeLayout.LayoutParams layoutparams=null;
                     if(rotateangle == -90)
@@ -670,7 +670,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         layout_no_gps_wifi.setAngle(0);
                     }
                 }
-
+*/
                 if(rotateangle == 180)
                     rotateangle=0;
 
@@ -680,20 +680,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        lp.setMargins(0, 0, 0, 0);
-                        headercontainer.setLayoutParams(lp);
+                        setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,90);
+
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
+                        setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,90);
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        lpimg_dotmenu.setMargins(0, 0, 20,  0);
-                        img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,20,10,0);
+                        setdynamiclayout(lpimg_dotmenu,null,0,0,20,0,10,20,10,0,img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lpimgflashon.setMargins(layout_bottom.getHeight(), 0, 0,  0);
-                        imgflashon.setLayoutParams(lpimgflashon);
-
-                        headercontainer.setAngle(90);
+                        setdynamiclayout(null,lpimgflashon,layout_bottom.getHeight(),0,0,0,0,0,0,0,imgflashon,null,null,0);
 
                         if(txt_zoomlevel != null)
                             txt_zoomlevel.setRotation(rotateangle);
@@ -706,20 +704,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        lp.setMargins(0, 0, 0,  0);
-                        headercontainer.setLayoutParams(lp);
+                        setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,270);
+
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+                        setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,270);
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        lpimg_dotmenu.setMargins(0, 0, layout_bottom.getHeight()+30,  0);
-                        img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,20,10,0);
+                        setdynamiclayout(lpimg_dotmenu,null,0,0,layout_bottom.getHeight()+30,0,10,20,10,0,img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lpimgflashon.setMargins(20, 0, 0,  0);
-                        imgflashon.setLayoutParams(lpimgflashon);
-
-                        headercontainer.setAngle(270);
+                        setdynamiclayout(null,lpimgflashon,20,0,0,0,0,0,0,0,imgflashon,null,null,0);
 
                         if(txt_zoomlevel != null)
                             txt_zoomlevel.setRotation(rotateangle);
@@ -738,19 +734,21 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     if(!isvideorecording)
                     {
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        headercontainer.setLayoutParams(lp);
-                        headercontainer.setAngle((int)rotateangle);
+
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+                        setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,(int)rotateangle);
+
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
+                        setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,(int)rotateangle);
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        lpimg_dotmenu.setMargins(0, 0, 20,  0);
-                        img_dotmenu.setLayoutParams(lpimg_dotmenu);
-                        img_dotmenu.setPadding(10,20,10,0);
+                        setdynamiclayout(lpimg_dotmenu,null,0,0,20,0,10,20,10,0,img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lpimgflashon.setMargins(30, 0, 0,  0);
-                        imgflashon.setLayoutParams(lpimgflashon);
+                        setdynamiclayout(null,lpimgflashon,30,0,0,0,0,0,0,0,imgflashon,null,null,0);
 
                         if(txt_zoomlevel != null)
                             txt_zoomlevel.setRotation(rotateangle);
@@ -2286,6 +2284,34 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             layout_bottom.setVisibility(View.VISIBLE);
             headercontainer.setVisibility(View.VISIBLE);
             layout_seekbarzoom.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    public void setdynamiclayout(RelativeLayout.LayoutParams relativelayoutparams,LinearLayout.LayoutParams linearLayoutParams,int marginleft,int margintop,int marginright,int marginbottom,
+                                 int paddingleft,int paddingtop,int paddingright,int paddingbottom,ImageView imageView,RotateLayout rotationheadercontainer,RotateLayout rotationwifilayout,
+                                 int rotationangle){
+
+
+        if(relativelayoutparams!= null){
+
+            if(imageView !=null){
+                relativelayoutparams.setMargins(marginleft,margintop,marginright,marginbottom);
+                imageView.setLayoutParams(relativelayoutparams);
+                imageView.setPadding(paddingleft,paddingtop,paddingright,paddingbottom);
+            }
+            if(rotationheadercontainer != null){
+                rotationheadercontainer.setLayoutParams(relativelayoutparams);
+                rotationheadercontainer.setAngle(rotationangle);
+
+            }else if(rotationwifilayout!= null){
+                rotationwifilayout.setLayoutParams(relativelayoutparams);
+                rotationwifilayout.setAngle(rotationangle);
+            }
+        }else{
+
+            linearLayoutParams.setMargins(marginleft, margintop, marginright,  marginbottom);
+            imageView.setLayoutParams(linearLayoutParams);
         }
     }
 }
