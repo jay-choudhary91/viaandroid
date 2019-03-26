@@ -1374,6 +1374,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         try {
 
             setaudiodata();
+            hdlr.postDelayed(seekbarupdatorhandler, 10);
 
             if(playerposition > 0)
             {
@@ -1400,7 +1401,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             {
                 playpausebutton.setImageResource(R.drawable.pause);
                 player.start();
-                hdlr.postDelayed(seekbarupdatorhandler, 10);
                 player.setOnCompletionListener(this);
             }
         }
@@ -1680,7 +1680,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     String color = "white";
                     if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
                         color = arraycontainerformetric.getColor();
-
                     switch (color) {
                         case "green":
                             img_verified.setVisibility(View.VISIBLE);
