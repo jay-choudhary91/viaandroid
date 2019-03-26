@@ -188,7 +188,9 @@ public class config {
     public static final String currentlatency = "currentlatency";
     public static final String phone_attitude = "phone_attitude";
 
+    public static final long transition_fragment_millis_0 = 0;
     public static final long transition_fragment_millis_700 = 700;
+    public static final long transition_fragment_millis_300 = 300;
 
     public static int selectedmediatype=0;   // video,photo,camera
     // An Enum class

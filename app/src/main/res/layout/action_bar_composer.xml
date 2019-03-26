@@ -107,15 +107,6 @@
                 android:layout_centerVertical="true"
                 android:src="@drawable/warning_icon"/>
 
-            <ImageView
-                android:id="@+id/img_close"
-                android:layout_width="20dp"
-                android:visibility="gone"
-                android:layout_height="20dp"
-                android:layout_toLeftOf="@id/img_dotmenu"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_close"/>
-
         </RelativeLayout>
 
         <net.cachapa.expandablelayout.ExpandableLayout

@@ -89,10 +89,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
-    @BindView(R.id.img_warning)
-    ImageView img_warning;
-    @BindView(R.id.img_close)
-    ImageView img_close;
     @BindView(R.id.myvisualizerview)
     visualizeraudiorecorder myvisualizerview;
     @BindView(R.id.layout_drawertouchable)
@@ -187,9 +183,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         layout_drawertouchable.setOnTouchListener(this);
         img_dotmenu.setVisibility(View.VISIBLE);
         myvisualizerview.setVisibility(View.VISIBLE);
-
-        img_warning.setOnClickListener(this);
-        img_close.setOnClickListener(this);
         img_dotmenu.setOnClickListener(this);
 
         keytype=common.checkkey();
@@ -214,12 +207,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     {
         if(img_dotmenu != null)
             img_dotmenu.setRotation(rotateangle);
-
-        if(img_warning != null)
-            img_warning.setRotation(rotateangle);
-
-        if(img_close != null)
-            img_close.setRotation(rotateangle);
     }
 
     @Override
@@ -407,67 +394,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 break;
             }
 
-            case R.id.img_warning:
-
-                img_warning.setVisibility(View.GONE);
-                //img_close.setVisibility(View.VISIBLE);
-                img_close.setVisibility(View.GONE);
-
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(null,5);
-                break;
-
-            case R.id.img_close:
-                img_warning.setVisibility(View.VISIBLE);
-                img_close.setVisibility(View.GONE);
-
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(null,6);
-                break;
-
-        }
-    }
-
-    public void showwarningorclosebutton()
-    {
-        if(img_warning == null || img_close == null)
-            return;
-
-        if(img_warning.getVisibility() == View.VISIBLE || img_close.getVisibility() == View.VISIBLE)
-        {
-
-        }
-        else
-        {
-            img_warning.setVisibility(View.GONE);
-           // img_close.setVisibility(View.VISIBLE);
-            img_close.setVisibility(View.GONE);
-        }
-    }
-
-    public void hideallsection() {
-        if (img_warning == null || img_close == null)
-            return;
-
-        img_warning.setVisibility(View.GONE);
-        img_close.setVisibility(View.GONE);
-    }
-
-    public void showwarningsection(boolean showwarningsection)
-    {
-        if(img_warning == null || img_close == null)
-            return;
-
-        if(showwarningsection)
-        {
-            img_warning.setVisibility(View.GONE);
-            //img_close.setVisibility(View.VISIBLE);
-            img_close.setVisibility(View.GONE);
-        }
-        else
-        {
-            img_warning.setVisibility(View.VISIBLE);
-            img_close.setVisibility(View.GONE);
         }
     }
 
