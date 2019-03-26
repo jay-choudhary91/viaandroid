@@ -172,34 +172,34 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         fragment_container.setOnTouchListener(this);
 
         drawerenabledisable(false);
-        /*new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                fragmedialist =new fragmentmedialist();
+                fragmedialist.shouldlaunchcomposer(true);
+                replaceFragment(fragmedialist, false, true);
 
+                if(graphicaldrawerfragment == null)
+                {
+                    graphicaldrawerfragment =new fragmentgraphicaldrawer();
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
+                    transaction.commit();
+                }
+                rootview.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        rootviewheight= rootview.getHeight();
+                        navigationbarheight =  common.getnavigationbarheight();
+                        finalheight= rootviewheight - navigationbarheight;
+                        finalheight = finalheight/2;
+                        drawerbutton();
+                    }
+                });
             }
-        },100);*/
+        },200);
 
-        fragmedialist =new fragmentmedialist();
-        fragmedialist.shouldlaunchcomposer(true);
-        replaceFragment(fragmedialist, false, true);
 
-        if(graphicaldrawerfragment == null)
-        {
-            graphicaldrawerfragment =new fragmentgraphicaldrawer();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-            transaction.commit();
-        }
-        rootview.post(new Runnable() {
-            @Override
-            public void run() {
-                rootviewheight= rootview.getHeight();
-                navigationbarheight =  common.getnavigationbarheight();
-                finalheight= rootviewheight - navigationbarheight;
-                finalheight = finalheight/2;
-                drawerbutton();
-            }
-        });
         detectphonecallservice();
         setdrawerdata();
     }
@@ -498,6 +498,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     }*/
 
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
+
     public void setdrawerdata(){
 
         if(myhandler != null && myhandler != null)
@@ -508,8 +514,15 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
             @Override
             public void run()
             {
-                if((graphicaldrawerfragment!= null))
-                    graphicaldrawerfragment.setmetricesdata();
+                try
+                {
+                    if((graphicaldrawerfragment!= null))
+                        graphicaldrawerfragment.setmetricesdata();
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
 
                 myhandler.postDelayed(this, 1000);
             }

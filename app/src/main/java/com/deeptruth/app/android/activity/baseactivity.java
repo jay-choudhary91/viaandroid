@@ -145,6 +145,12 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         replaceFragment(f, R.id.fragment_container, clearBackStack, addToBackstack);
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
+
     public void replaceFragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack) {
         if (clearBackStack) {
             clearfragmentbackstack();
