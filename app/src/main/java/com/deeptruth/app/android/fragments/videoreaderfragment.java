@@ -817,7 +817,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                            RelativeLayout.LayoutParams.WRAP_CONTENT);
                    p.addRule(RelativeLayout.ABOVE, seekBar.getId());
                    Rect thumbRect = mediaseekbar.getSeekBarThumb().getBounds();
-                   p.setMargins((int) (thumbRect.centerX() - dpToPx(getActivity(), 1)), 0, 0, 0);
+                   p.setMargins((int) (thumbRect.centerX() - dpToPx(getActivity(), 19)), 0, -50, 0);
                    layout_progressline.setLayoutParams(p);
                    txt_mediatimethumb.setText(common.gettimestring(seekBar.getProgress()));
                    txt_mediatimethumb.setVisibility(View.VISIBLE);
@@ -2631,6 +2631,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                 videostarttime = player.getCurrentPosition();
                 mediaseekbar.setProgress(player.getCurrentPosition());
+                Log.e("seekbartime",""+player.getCurrentPosition());
 
                 if (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));

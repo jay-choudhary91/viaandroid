@@ -18,354 +18,344 @@
         android:handle="@+id/rl_video_container"
         android:layout_centerVertical="true">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/layout_videoreader"
+            android:layout_height="match_parent">
+
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/layout_videoreader"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:id="@+id/layout_halfscrnimg">
+
+                <FrameLayout
+                    android:id="@+id/videoSurfaceContainer"
+                    android:background="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
 
                     <RelativeLayout
+                        android:id="@+id/rl_videotextureview"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:visibility="gone"
-                        android:id="@+id/layout_halfscrnimg">
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:background="@color/black">
 
-                        <FrameLayout
-                            android:id="@+id/videoSurfaceContainer"
-                            android:background="@color/black"
+                        <TextureView
+                            android:id="@+id/videotextureview"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" >
-
-                            <RelativeLayout
-                                android:id="@+id/rl_videotextureview"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:background="@color/black">
-
-                                <TextureView
-                                    android:id="@+id/videotextureview"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    />
-
-                            </RelativeLayout>
-                        </FrameLayout>
-
-                        <com.deeptruth.app.android.utils.circularImageview
-                            android:id="@+id/btn_playpause"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:contentDescription="@string/description"
-                            android:visibility="invisible"
+                            android:layout_height="match_parent"
                             />
 
+                    </RelativeLayout>
+                </FrameLayout>
+
+                <com.deeptruth.app.android.utils.circularImageview
+                    android:id="@+id/btn_playpause"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:contentDescription="@string/description"
+                    android:visibility="invisible"
+                    />
+
+
+                <RelativeLayout
+                    android:id="@+id/layout_backgroundcontroller"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/transparent">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_video_downwordarrow"
+                        android:layout_width="match_parent"
+                        android:layout_height="13dp"
+                        android:background="@color/black"
+                        android:layout_marginTop="@dimen/margin_10dp"
+                        >
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="13dp"
+                            android:padding="5dp"
+                            android:layout_centerHorizontal="true"
+                            android:id="@+id/video_downwordarrow"
+                            android:src="@drawable/horizontal_line_img"/>
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_customcontroller"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <RelativeLayout
-                            android:id="@+id/layout_backgroundcontroller"
+                            android:id="@+id/scrub_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentBottom="true"
-                            android:background="@color/transparent">
+                            >
 
                             <RelativeLayout
-                                android:id="@+id/rl_video_downwordarrow"
+                                android:id="@+id/layout_scrubberview"
                                 android:layout_width="match_parent"
-                                android:layout_height="13dp"
-                                android:background="@color/black"
-                                android:layout_marginTop="@dimen/margin_10dp"
-                                >
+                                android:layout_height="50dp"
+                                android:layout_alignParentBottom="false"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="5dp"
+                                android:visibility="visible">
 
-                                <ImageView
-                                    android:layout_width="60dp"
-                                    android:layout_height="13dp"
-                                    android:padding="5dp"
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/recyview_frames"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:visibility="visible" />
+
+                                <RelativeLayout
+                                    android:id="@+id/scrubberverticalbar"
+                                    android:layout_width="20dp"
+                                    android:layout_height="50dp"
                                     android:layout_centerHorizontal="true"
-                                    android:id="@+id/video_downwordarrow"
-                                    android:src="@drawable/horizontal_line_img"/>
+                                    android:background="@color/gray_x"
+                                    android:visibility="gone">
+
+                                    <View
+                                        android:layout_width="2dp"
+                                        android:layout_height="50dp"
+                                        android:layout_centerHorizontal="true"
+                                        android:background="@color/blue_button"
+                                        android:visibility="gone">
+
+                                    </View>
+
+
+                                </RelativeLayout>
 
                             </RelativeLayout>
 
+
                             <LinearLayout
-                                android:id="@+id/layout_customcontroller"
+                                android:id="@+id/linear_seekbarcolorview"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="20dp"
-                                android:background="@color/white"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                                android:layout_below="@+id/layout_scrubberview"
+                                android:layout_centerInParent="true"
+                                android:background="@color/transparent"
+                                android:orientation="horizontal" />
 
-                                <RelativeLayout
-                                    android:id="@+id/scrub_layout"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                   >
-
-                                    <RelativeLayout
-                                        android:id="@+id/layout_scrubberview"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:layout_alignParentBottom="false"
-                                        android:layout_centerHorizontal="true"
-                                        android:layout_marginTop="5dp"
-                                        android:layout_marginLeft="@dimen/margin_18dp"
-                                        android:layout_marginRight="@dimen/margin_18dp"
-                                        android:visibility="visible">
-
-                                        <android.support.v7.widget.RecyclerView
-                                            android:id="@+id/recyview_frames"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:layout_gravity="center_horizontal"
-                                            android:visibility="visible" />
-
-                                        <RelativeLayout
-                                            android:id="@+id/scrubberverticalbar"
-                                            android:layout_width="20dp"
-                                            android:layout_height="50dp"
-                                            android:layout_centerHorizontal="true"
-                                            android:layout_marginLeft="@dimen/margin_18dp"
-                                            android:layout_marginRight="@dimen/margin_18dp"
-                                            android:background="@color/gray_x"
-                                            android:visibility="gone">
-
-                                            <View
-                                                android:layout_width="2dp"
-                                                android:layout_height="50dp"
-                                                android:layout_centerHorizontal="true"
-                                                android:background="@color/blue_button"
-                                                android:visibility="gone">
-
-                                            </View>
-
-
-                                        </RelativeLayout>
-
-                                    </RelativeLayout>
-
-
-                                    <LinearLayout
-                                        android:id="@+id/linear_seekbarcolorview"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/layout_scrubberview"
-                                        android:layout_centerInParent="true"
-                                        android:layout_marginLeft="@dimen/margin_18dp"
-                                        android:layout_marginRight="@dimen/margin_18dp"
-                                        android:background="@color/transparent"
-                                        android:orientation="horizontal" />
-
-                                    <com.deeptruth.app.android.views.customseekbar
-                                        android:id="@+id/mediacontroller_progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/layout_scrubberview"
-                                        android:layout_centerInParent="true"
-                                        android:layout_marginLeft="@dimen/margin_18dp"
-                                        android:layout_marginRight="@dimen/margin_18dp"
-                                        android:background="@color/transparent"
-                                        android:progressDrawable="@drawable/custom_seekbar"
-                                        android:thumb="@drawable/custom_thumb" />
-
-                                    <RelativeLayout
-                                        android:id="@+id/layout_seekbartiming"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/mediacontroller_progress"
-                                        android:visibility="visible">
-
-                                        <View
-                                            android:id="@+id/dividerline"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="1dp"
-                                            android:background="@color/uvv_gray"
-                                            android:visibility="gone" />
-
-                                        <com.deeptruth.app.android.views.customfonttextview
-                                            android:id="@+id/time_current"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentLeft="true"
-                                            android:layout_marginLeft="@dimen/margin_18dp"
-                                            android:layout_toRightOf="@+id/img_volume"
-                                            android:paddingLeft="0dip"
-                                            android:textColor="@color/black"
-                                            android:textSize="14sp"
-                                            android:textStyle="bold"
-                                            app:fontType="OpenSans_Regular" />
-
-
-                                        <com.deeptruth.app.android.views.customfonttextview
-                                            android:id="@+id/video_endtime"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentRight="true"
-                                            android:layout_marginRight="@dimen/margin_18dp"
-                                            android:paddingLeft="4dip"
-                                            android:paddingRight="0dip"
-                                            android:textColor="@color/black"
-                                            android:textSize="14sp"
-                                            android:textStyle="bold"
-                                            app:fontType="OpenSans_Regular" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout
-                                        android:id="@+id/layoutpause"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@+id/layout_seekbartiming"
-                                        android:padding="5dp"
-                                        android:visibility="gone">
-
-                                        <ImageView
-                                            android:id="@+id/img_pause"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_centerHorizontal="true"
-                                            android:layout_centerInParent="true"
-                                            android:layout_gravity="center"
-                                            android:layout_margin="5dp"
-                                            android:src="@drawable/ic_pause"
-                                            android:paddingBottom="@dimen/margin_10dp"
-                                            android:paddingLeft="@dimen/margin_15dp"
-                                            android:paddingRight="@dimen/margin_15dp"
-                                            android:visibility="gone" />
-                                    </RelativeLayout>
-
-                                </RelativeLayout>
-                            </LinearLayout>
+                            <com.deeptruth.app.android.views.customseekbar
+                                android:id="@+id/mediacontroller_progress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/layout_scrubberview"
+                                android:layout_centerInParent="true"
+                                android:background="@color/transparent"
+                                android:progressDrawable="@drawable/custom_seekbar"
+                                android:thumb="@drawable/custom_thumb" />
 
                             <RelativeLayout
-                                android:id="@+id/layout_progressline"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/layout_seekbartiming"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="left"
-                                android:layout_alignParentTop="true"
-                                android:orientation="vertical"
+                                android:layout_below="@+id/mediacontroller_progress"
                                 android:visibility="visible">
 
+                                <View
+                                    android:id="@+id/dividerline"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="@color/uvv_gray"
+                                    android:visibility="gone" />
+
                                 <com.deeptruth.app.android.views.customfonttextview
-                                    android:id="@+id/txt_mediatimethumb"
+                                    android:id="@+id/time_current"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center_horizontal"
-                                    android:maxLines="1"
-                                    android:background="@drawable/timebubble"
-                                    android:layout_marginTop="2dp"
-                                    android:singleLine="true"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_toRightOf="@+id/img_volume"
+                                    android:paddingLeft="0dip"
                                     android:textColor="@color/black"
-                                    android:textSize="10sp"
-                                    android:paddingLeft="1dp"
-                                    android:paddingRight="1dp"
-                                    android:visibility="invisible"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
                                     app:fontType="OpenSans_Regular" />
 
-                                <RelativeLayout
-                                    android:layout_width="4dp"
-                                    android:layout_height="50dp"
-                                    android:layout_below="@id/txt_mediatimethumb"
+
+                                <com.deeptruth.app.android.views.customfonttextview
+                                    android:id="@+id/video_endtime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:paddingLeft="4dip"
+                                    android:paddingRight="0dip"
+                                    android:textColor="@color/black"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    app:fontType="OpenSans_Regular" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/layoutpause"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/layout_seekbartiming"
+                                android:padding="5dp"
+                                android:visibility="gone">
+
+                                <ImageView
+                                    android:id="@+id/img_pause"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
                                     android:layout_centerHorizontal="true"
-                                    android:background="@color/white"
-                                    android:gravity="center_horizontal"
-                                    android:orientation="vertical">
-
-                                    <View
-                                        android:id="@+id/view_progressline"
-                                        android:layout_width="2dp"
-                                        android:layout_height="40dp"
-                                        android:layout_centerHorizontal="true"
-                                        android:background="@color/blacktransparent"
-                                        android:visibility="visible"></View>
-
-                                </RelativeLayout>
-
+                                    android:layout_centerInParent="true"
+                                    android:layout_gravity="center"
+                                    android:layout_margin="5dp"
+                                    android:src="@drawable/ic_pause"
+                                    android:paddingBottom="@dimen/margin_10dp"
+                                    android:paddingLeft="@dimen/margin_15dp"
+                                    android:paddingRight="@dimen/margin_15dp"
+                                    android:visibility="gone" />
                             </RelativeLayout>
 
                         </RelativeLayout>
+                    </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/img_fullscreen"
-                            android:layout_width="45dp"
-                            android:layout_height="45dp"
-                            android:layout_above="@+id/layout_backgroundcontroller"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/ic_full_screen_mode"
-                            android:layout_marginBottom="-15dp"
-                            android:padding="10dp"
-                            />
+                    <RelativeLayout
+                        android:id="@+id/layout_progressline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_alignParentTop="true"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.deeptruth.app.android.views.customfonttextview
+                            android:id="@+id/txt_mediatimethumb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:background="@drawable/timebubble"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/black"
+                            android:textSize="10sp"
+                            android:paddingLeft="1dp"
+                            android:ellipsize="none"
+                            android:singleLine="true"
+                            android:paddingRight="1dp"
+                            android:visibility="invisible"
+                            app:fontType="OpenSans_Regular" />
+
+                        <RelativeLayout
+                            android:layout_width="4dp"
+                            android:layout_height="50dp"
+                            android:layout_below="@id/txt_mediatimethumb"
+                            android:layout_centerHorizontal="true"
+                            android:background="@color/white"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical">
+
+                            <View
+                                android:id="@+id/view_progressline"
+                                android:layout_width="2dp"
+                                android:layout_height="40dp"
+                                android:layout_centerHorizontal="true"
+                                android:background="@color/blacktransparent"
+                                android:visibility="visible"></View>
+
+                        </RelativeLayout>
 
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_below="@+id/layout_halfscrnimg"
-                        android:paddingBottom="50dp"
-                        android:visibility="gone"
-                        android:id="@+id/layout_videodetails"
-                        android:layout_height="0dp">
-                        <include layout="@layout/layout_mediadetails"></include>
-                    </RelativeLayout>
-
-                    <LinearLayout
-                    android:id="@+id/layout_mediatype"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_alignParentTop="true"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="18dp"
-                    android:background="@color/dark_blue_solid_a"
-                    android:orientation="horizontal">
-
-                    <include layout="@layout/action_bar_mediadetails"></include>
-
-
-                </LinearLayout>
-
-                    <RelativeLayout
-                    android:id="@+id/layout_footer"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/bottomborder"
-                    android:layout_gravity="bottom|end"
-                    android:layout_alignParentBottom="true"
-                    android:visibility="visible"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin_left"
-                        android:layout_marginRight="@dimen/normal_margin_right"
-                        android:id="@+id/img_share_media"
-                        android:visibility="visible"
-                        android:background="@drawable/share"/>
-
-                    <ImageView
-                        android:id="@+id/img_delete_media"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/normal_margin_left"
-                        android:layout_marginRight="@dimen/normal_margin_right"
-                        android:layout_alignParentRight="true"
-                        android:visibility="visible"
-                        android:background="@drawable/garbage"/>
                 </RelativeLayout>
 
-                    <LinearLayout
-                    android:id="@+id/layout_validating"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_below="@id/layout_mediatype"
-                    android:orientation="vertical">
-
-                    <include layout="@layout/layout_validating"></include>
-
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/img_fullscreen"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_above="@+id/layout_backgroundcontroller"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_full_screen_mode"
+                    android:layout_marginBottom="-15dp"
+                    android:padding="10dp"
+                    />
 
             </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_below="@+id/layout_halfscrnimg"
+                android:paddingBottom="50dp"
+                android:visibility="gone"
+                android:id="@+id/layout_videodetails"
+                android:layout_height="0dp">
+                <include layout="@layout/layout_mediadetails"></include>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_mediatype"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_alignParentTop="true"
+                android:layout_height="wrap_content"
+                android:paddingTop="18dp"
+                android:background="@color/dark_blue_solid_a"
+                android:orientation="horizontal">
+
+                <include layout="@layout/action_bar_mediadetails"></include>
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_footer"
+                android:layout_width="match_parent"
+                android:background="@drawable/bottomborder"
+                android:layout_gravity="bottom|end"
+                android:layout_alignParentBottom="true"
+                android:visibility="visible"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_margin_left"
+                    android:layout_marginRight="@dimen/normal_margin_right"
+                    android:id="@+id/img_share_media"
+                    android:visibility="visible"
+                    android:background="@drawable/share"/>
+
+                <ImageView
+                    android:id="@+id/img_delete_media"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/normal_margin_left"
+                    android:layout_marginRight="@dimen/normal_margin_right"
+                    android:layout_alignParentRight="true"
+                    android:visibility="visible"
+                    android:background="@drawable/garbage"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_validating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_below="@id/layout_mediatype"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_validating"></include>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 </RelativeLayout>
