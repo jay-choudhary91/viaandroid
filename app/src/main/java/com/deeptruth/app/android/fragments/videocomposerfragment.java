@@ -2,6 +2,7 @@ package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -35,6 +36,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,6 +53,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -113,7 +116,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     private static final String TAG = "videocomposerfragment";
-
+    private boolean showwarningsection=true;
     public int rotationangle=0;
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
@@ -325,7 +328,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     TextView txt_title_actionbarcomposer,txt_media_quality;
 
-    ImageView imgflashon,img_dotmenu,img_warning,img_close,handle;
+    ImageView imgflashon,img_dotmenu,img_close,handle;
 
     View rootview = null;
     long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
@@ -378,10 +381,24 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_media_high;
     @BindView(R.id.txt_zoomlevel)
     TextView txt_zoomlevel;
+    @BindView(R.id.layout_no_gps_wifi)
+    RotateLayout layout_no_gps_wifi;
+    @BindView(R.id.img_scanover)
+    ImageView img_scanover;
+    @BindView(R.id.txt_section_validating_secondary)
+    TextView txt_section_validating_secondary;
+    @BindView(R.id.img_warning)
+    ImageView img_warning;
+    @BindView(R.id.img_gpswifiwarning)
+    ImageView img_gpswifiwarning;
+    @BindView(R.id.txt_encrypting)
+    TextView txt_encrypting;
 
     Animation blinkanimation;
     mediaqualityadapter qualityadapter;
     List<String> qualityitemslist=new ArrayList<>();
+    private TranslateAnimation validationbaranimation;
+    int parentviewwidth=0;
 
     @Override
     public int getlayoutid() {
@@ -402,11 +419,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         zoomLevel=1f;
         previewupdated=false;
+        txt_section_validating_secondary.setVisibility(View.INVISIBLE);
         applicationviavideocomposer.getactivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mTextureView = (AutoFitTextureView) rootview.findViewById(R.id.texture);
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
         img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
-        img_warning = (ImageView) rootview.findViewById(R.id.img_warning);
         img_close = (ImageView) rootview.findViewById(R.id.img_close);
         handle = (ImageView) rootview.findViewById(R.id.handle);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
@@ -450,7 +467,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         imgflashon.setOnClickListener(this);
         img_dotmenu.setOnClickListener(this);
-        img_warning.setOnClickListener(this);
+        img_gpswifiwarning.setOnClickListener(this);
         img_close.setOnClickListener(this);
         txt_media_quality.setOnClickListener(this);
         txt_media_low.setOnClickListener(this);
@@ -461,32 +478,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
         expandable_layout.setVisibility(View.VISIBLE);
         txt_media_quality.setVisibility(View.VISIBLE);
-        /*spinner_mediaquality.setVisibility(View.VISIBLE);
-        qualityadapter = new mediaqualityadapter(applicationviavideocomposer.getactivity(),
-                R.layout.row_mediaqualityadapter,qualityitemslist);
-        spinner_mediaquality.setAdapter(qualityadapter);
-        spinner_mediaquality.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            public void onItemSelected(AdapterView<?> parent, View view, final int position, long id)
-            {
-                if(! selectedvideoquality.equalsIgnoreCase(qualityitemslist.get(position)))
-                {
-                    selectedvideoquality=qualityitemslist.get(position);
-                    if(mediarecorder != null)
-                    {
-                        mediarecorder.reset();
-                        startPreview();
-                    }
-                }
-            }
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });*/
-
-        /*setqualitydropdown();
-
-        if(qualityitemslist.size() > 1)
-            spinner_mediaquality.setSelection(1,true);*/
 
         txt_media_quality.setText(config.mediaquality720);
         txt_media_low.setText(config.mediaquality480);
@@ -535,6 +526,57 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
 
                 Log.d("ExpandableLayout", "State: " + state);
+            }
+        });
+
+        mTextureView.post(new Runnable() {
+            @Override
+            public void run() {
+
+                parentviewwidth=mTextureView.getWidth();
+
+                final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
+                alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
+                alphanimation.setStartOffset(1000);
+                alphanimation.setRepeatMode(1);
+
+                Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        //fadeoutcontrollers();
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                };
+                alphanimation.setAnimationListener(alphalistener);
+
+                validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
+                        common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
+                validationbaranimation.setDuration(3000);
+                validationbaranimation.setRepeatCount(Animation.INFINITE);
+                validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
+                img_scanover.startAnimation(validationbaranimation);
+
+                Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(alphanimation);
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(alphanimation);
+                    }
+                };
+                validationbaranimation.setAnimationListener(translatelistener);
             }
         });
 
@@ -608,14 +650,37 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     public void changeiconsorientation(float rotateangle)
     {
         rotationangle=(int)rotateangle;
-        Log.e("lastrotatedangle ",""+rotateangle);
-
-
-
-        if(rotateangle == 180)
-            rotateangle=0;
 
             if(headercontainer !=null){
+
+                if(layout_no_gps_wifi != null && isvideorecording)
+                {
+                    RelativeLayout.LayoutParams layoutparams=null;
+                    if(rotateangle == -90)
+                    {
+                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
+                        layout_no_gps_wifi.setLayoutParams(layoutparams);
+                        layout_no_gps_wifi.setAngle(90);
+                    }
+                    else if(rotateangle == 90)
+                    {
+                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+                        layout_no_gps_wifi.setLayoutParams(layoutparams);
+                        layout_no_gps_wifi.setAngle(270);
+                    }
+                    else
+                    {
+                        layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
+                        layout_no_gps_wifi.setLayoutParams(layoutparams);
+                        layout_no_gps_wifi.setAngle(0);
+                    }
+                }
+
+                if(rotateangle == 180)
+                    rotateangle=0;
 
                 if(rotateangle == -90)
                 {
@@ -1199,6 +1264,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             issavedtofolder=false;
             isvideorecording = true;
             startblinkanimation();
+            if(validationbaranimation != null)
+                img_scanover.startAnimation(validationbaranimation);
+
             if(madapterclick != null)
                 madapterclick.onItemClicked(null,1);
             showhideactionbaricon(0);
@@ -1209,6 +1277,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     private void stopRecordingVideo() {
         // UI
+        if(validationbaranimation != null)
+        {
+            validationbaranimation.cancel();
+            validationbaranimation.reset();
+        }
+
         issavedtofolder=true;
         isvideorecording = false;
         lastrecordedvideo=new File(selectedvideofile);
@@ -1336,21 +1410,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 gethelper().addFragment(settingfrag, false, true);
                 break;
 
-            case R.id.img_warning:
-
-                img_warning.setVisibility(View.GONE);
+            case R.id.img_gpswifiwarning:
+                img_gpswifiwarning.setVisibility(View.GONE);
                 img_close.setVisibility(View.VISIBLE);
-
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(null,5);
                 break;
 
             case R.id.img_close:
-                img_warning.setVisibility(View.VISIBLE);
+                img_gpswifiwarning.setVisibility(View.VISIBLE);
                 img_close.setVisibility(View.GONE);
-
-                if(madapterclick != null)
-                    madapterclick.onItemClicked(null,6);
                 break;
         }
     }
@@ -1394,49 +1461,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         {
             txt_media_quality.setText(quality);
             selectedvideoquality=quality;
-        }
-    }
-
-    public void showwarningorclosebutton()
-    {
-        if(img_warning == null || img_close == null)
-            return;
-
-        if(img_warning.getVisibility() == View.VISIBLE || img_close.getVisibility() == View.VISIBLE)
-        {
-
-        }
-        else
-        {
-            img_warning.setVisibility(View.GONE);
-            //img_close.setVisibility(View.VISIBLE);
-            img_close.setVisibility(View.GONE);
-        }
-    }
-
-    public void hideallsection() {
-        if (img_warning == null || img_close == null)
-            return;
-
-        img_warning.setVisibility(View.GONE);
-        img_close.setVisibility(View.GONE);
-    }
-
-    public void showwarningsection(boolean showwarningsection)
-    {
-        if(img_warning == null || img_close == null)
-            return;
-
-        if(showwarningsection)
-        {
-            img_warning.setVisibility(View.GONE);
-            //img_close.setVisibility(View.VISIBLE);
-            img_close.setVisibility(View.GONE);
-        }
-        else
-        {
-            img_warning.setVisibility(View.VISIBLE);
-            img_close.setVisibility(View.GONE);
         }
     }
 
@@ -1896,10 +1920,108 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 common.setgraphicalblockchainvalue(config.datahash,hashvalue,true);
                 common.setgraphicalblockchainvalue(config.matrichash,metrichashvalue,true);
 
+                try {
+                    if(gethelper().isdraweropened())
+                    {
+                        layout_no_gps_wifi.setVisibility(View.GONE);
+                        myHandler.postDelayed(this, 1000);
+                        return;
+                    }
+
+                    if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
+                            xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+                    {
+                        try {
+                            DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                    , R.color.scanover_yellow));
+
+                            if(img_close.getVisibility() != View.VISIBLE)
+                            {
+                                img_gpswifiwarning.setVisibility(View.VISIBLE);
+                                txt_encrypting.setVisibility(View.VISIBLE);
+                            }
+
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                        visiblewarningcontrollers();
+                    }
+                    else
+                    {
+                        try {
+                            DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                    , R.color.dark_blue_solid_a));
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                        img_gpswifiwarning.setVisibility(View.GONE);
+                        txt_encrypting.setVisibility(View.GONE);
+                        img_close.setVisibility(View.GONE);
+                        validatingcontrollers();
+                    }
+
+                    if(isvideorecording)
+                    {
+                        if(img_close.getVisibility() == View.VISIBLE)
+                        {
+                            txt_encrypting.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            txt_encrypting.setVisibility(View.GONE);
+                        }
+                    }
+                    else
+                    {
+                        img_gpswifiwarning.setVisibility(View.GONE);
+                        txt_encrypting.setVisibility(View.GONE);
+                        img_close.setVisibility(View.GONE);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 myHandler.postDelayed(this, 1000);
             }
         };
         myHandler.post(myRunnable);
+    }
+
+    public void visiblewarningcontrollers(){
+
+        if(isvideorecording)
+        {
+            if(layout_no_gps_wifi != null)
+                layout_no_gps_wifi.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            layout_no_gps_wifi.setVisibility(View.GONE);
+        }
+    }
+
+    public void hidewarningsection()
+    {
+        if(layout_no_gps_wifi != null)
+            layout_no_gps_wifi.setVisibility(View.GONE);
+    }
+
+    public void validatingcontrollers(){
+
+        if(isvideorecording)
+        {
+            hidewarningsection();
+            layout_no_gps_wifi.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            hidewarningsection();
+            layout_no_gps_wifi.setVisibility(View.GONE);
+        }
+
     }
 
 

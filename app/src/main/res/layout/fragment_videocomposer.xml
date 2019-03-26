@@ -48,6 +48,28 @@
             </FrameLayout>
 
         <com.github.rongi.rotate_layout.layout.RotateLayout
+            android:id="@+id/layout_no_gps_wifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:angle="0">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:orientation="vertical">
+
+                <include layout="@layout/layout_no_gps_wifi"></include>
+
+
+            </LinearLayout>
+
+        </com.github.rongi.rotate_layout.layout.RotateLayout>
+
+        <com.github.rongi.rotate_layout.layout.RotateLayout
             android:id="@+id/header_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
