@@ -85,8 +85,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     FrameLayout tab_container;
     @BindView(R.id.img_mediathumbnail)
     ImageView img_mediathumbnail;
-    @BindView(R.id.layout_no_gps_wifi)
-    RotateLayout layout_no_gps_wifi;
     @BindView(R.id.txt_mediatype_a)
     TextView txt_mediatype_a;
     @BindView(R.id.txt_mediatype_b)
@@ -101,16 +99,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_space_a;
     @BindView(R.id.txt_space_b)
     TextView txt_space_b;
-    @BindView(R.id.img_warning)
-    ImageView img_warning;
-    @BindView(R.id.layout_textsection)
-    RelativeLayout layout_textsection;
-    @BindView(R.id.img_scanover)
-    ImageView img_scanover;
     @BindView(R.id.txt_encrypting)
     TextView txt_encrypting;
-    @BindView(R.id.txt_section_validating_secondary)
-    TextView txt_section_validating_secondary;
+
     @BindView(R.id.layout_encryption)
     RelativeLayout layout_encryption;
 
@@ -131,7 +122,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ArrayList<String> audioarraylist =new ArrayList<>();
     private Handler myHandler;
     private Runnable myRunnable;
-    private boolean showwarningsection=true;
+
     private CountDownTimer countertimer;
 
     GifDrawable gifdrawable;
@@ -140,9 +131,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private static final int ORIENTATION_90 = 3;
     private static final int ORIENTATION_270 = 1;
     int navigationbarheight = 0;
-    private TranslateAnimation validationbaranimation;
-    private AlphaAnimation blinkencryptionanimation;
     int parentviewwidth=0;
+    private AlphaAnimation blinkencryptionanimation;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -162,7 +152,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            txt_section_validating_secondary.setVisibility(View.INVISIBLE);
+
             recordstartstopbutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
@@ -193,50 +183,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 public void run() {
 
                     parentviewwidth=parentview.getWidth();
-
-                    final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
-                    alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
-                    alphanimation.setStartOffset(1000);
-                    alphanimation.setRepeatMode(1);
-
-                    Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            //fadeoutcontrollers();
-                        }
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    };
-                    alphanimation.setAnimationListener(alphalistener);
-
-                    validationbaranimation = new TranslateAnimation(-parentview.getWidth(), parentview.getWidth()+100 ,0.0f, 0.0f);
-                    validationbaranimation.setDuration(3000);
-                    validationbaranimation.setRepeatCount(Animation.INFINITE);
-                    validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
-                    img_scanover.startAnimation(validationbaranimation);
-
-                    Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            txt_section_validating_secondary.startAnimation(alphanimation);
-                            txt_encrypting.startAnimation(alphanimation);
-                        }
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                        }
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-                            txt_section_validating_secondary.startAnimation(alphanimation);
-                            txt_encrypting.startAnimation(alphanimation);
-                        }
-                    };
-                    validationbaranimation.setAnimationListener(translatelistener);
                 }
             });
 
@@ -331,7 +277,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 textView1.setTextColor((Integer)animator.getAnimatedValue());
             }
         });
-        colorAnimation.setDuration(config.transition_fragment_millis_700);
+        colorAnimation.setDuration(config.transition_fragment_millis_300);
         colorAnimation.start();
 
         ValueAnimator alphaAnimation = ValueAnimator.ofFloat(0.5f,1.0f);
@@ -344,7 +290,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 textView3.setAlpha((Float) animator.getAnimatedValue());
             }
         });
-        alphaAnimation.setDuration(config.transition_fragment_millis_700);
+        alphaAnimation.setDuration(config.transition_fragment_millis_300);
         alphaAnimation.start();
     }
 
@@ -403,87 +349,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             countertimer.cancel();
     }
 
-    public void showwarningsection(boolean showwarning)
-    {
-        if(showwarning)
-        {
-            img_warning.setVisibility(View.VISIBLE);
-            showwarningsection=true;
-        }
-        else
-        {
-           // img_warning.setVisibility(View.GONE);
-            img_warning.setVisibility(View.VISIBLE);
-            showwarningsection=false;
-        }
-    }
 
-    public void visiblewarningcontrollers(){
-
-        if(fragvideocomposer != null && fragvideocomposer.isvideorecording)
-        {
-            layout_no_gps_wifi.setVisibility(View.GONE);
-            fragvideocomposer.showwarningorclosebutton();
-            fragvideocomposer.showwarningsection(showwarningsection);
-            if(layout_no_gps_wifi != null)
-                layout_no_gps_wifi.setVisibility(View.VISIBLE);
-        }
-        else if(fragaudiocomposer != null && fragaudiocomposer.isaudiorecording)
-        {
-            layout_no_gps_wifi.setVisibility(View.GONE);
-            fragaudiocomposer.showwarningorclosebutton();
-            fragaudiocomposer.showwarningsection(showwarningsection);
-            if(layout_no_gps_wifi != null)
-                layout_no_gps_wifi.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            layout_no_gps_wifi.setVisibility(View.GONE);
-            hidewarningsection();
-        }
-    }
-
-    public void hidewarningsection()
-    {
-        if(layout_no_gps_wifi != null)
-            layout_no_gps_wifi.setVisibility(View.GONE);
-
-        if(fragvideocomposer != null)
-            fragvideocomposer.hideallsection();
-
-        if(fragaudiocomposer != null)
-            fragaudiocomposer.hideallsection();
-
-        if(fragimgcapture != null)
-            fragimgcapture.hideallsection();
-    }
-
-    public void validatingcontrollers(){
-
-        if(fragvideocomposer != null && fragvideocomposer.isvideorecording)
-        {
-            hidewarningsection();
-            layout_no_gps_wifi.setVisibility(View.VISIBLE);
-            img_warning.setVisibility(View.GONE);
-        }
-        else if(fragaudiocomposer != null && fragaudiocomposer.isaudiorecording)
-        {
-            hidewarningsection();
-            layout_no_gps_wifi.setVisibility(View.VISIBLE);
-            img_warning.setVisibility(View.GONE);
-        }
-        else
-        {
-            hidewarningsection();
-            layout_no_gps_wifi.setVisibility(View.GONE);
-        }
-
-        /*if(fragimgcapture != null)
-        {
-            fragimgcapture.showwarningorclosebutton();
-            fragimgcapture.showwarningsection(showwarningsection);
-        }*/
-    }
 
     public void runhandler()
     {
@@ -495,41 +361,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             @Override
             public void run() {
 
-                try {
-                    if(gethelper().isdraweropened())
-                    {
-                        layout_no_gps_wifi.setVisibility(View.GONE);
-                        myHandler.postDelayed(this, 1000);
-                        return;
-                    }
 
-                    if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
-                            xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
-                    {
-                        try {
-                            DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                    , R.color.scanover_yellow));
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                        visiblewarningcontrollers();
-                    }
-                    else
-                    {
-                        try {
-                            DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                    , R.color.dark_blue_solid_a));
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-                        validatingcontrollers();
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 myHandler.postDelayed(this, 1000);
             }
         };
@@ -890,7 +722,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 view.setLayoutParams(lp);
             }
         });
-        animator.setDuration(config.transition_fragment_millis_700);
+        animator.setDuration(config.transition_fragment_millis_300);
         animator.start();
     }
 
@@ -948,32 +780,19 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             if(currentselectedcomposer == 0)
             {
-
-                if(validationbaranimation != null)
-                    img_scanover.startAnimation(validationbaranimation);
-
                 showhideactionbottombaricon(0);
                 changezoomcontrollerposition(0);
             }
             else if(currentselectedcomposer == 2)
             {
-                if(validationbaranimation != null)
-                    img_scanover.startAnimation(validationbaranimation);
-
                 showhideactionbottombaricon(2);
             }
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"true");
-
+            startblinkencryption();
             // setimagerecordstart();
         }
         else if(type == 2) // for video record stop,audio record stop and image captured button click
         {
-            if(validationbaranimation != null)
-            {
-                validationbaranimation.cancel();
-                validationbaranimation.reset();
-            }
-
             if(gifdrawable!= null && gifdrawable.isPlaying())
             {
                 gifdrawable.pause();
@@ -991,6 +810,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             changezoomcontrollerposition(0);
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
+            stopblinkencryption();
         }
         else if(type == 3) // For swipe gesture to change fragment
         {
@@ -1014,11 +834,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(type == 5)
         {
-            showwarningsection(true);
+
         }
         else if(type == 6)
         {
-            showwarningsection(false);
+
         }
         else if(type == 9)
         {
@@ -1235,31 +1055,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(rotateangle != 3600)
         {
             if(fragvideocomposer != null && (! fragvideocomposer.isvideorecording)) {
-               if(layout_no_gps_wifi != null)
-               {
-                   RelativeLayout.LayoutParams layoutparams=null;
-                   if(rotateangle == -90 && currentselectedcomposer == 0)
-                   {
-                       layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                       layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
-                       layout_no_gps_wifi.setLayoutParams(layoutparams);
-                       layout_no_gps_wifi.setAngle(90);
-                   }
-                   else if(rotateangle == 90 && currentselectedcomposer == 0)
-                   {
-                       layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                       layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-                       layout_no_gps_wifi.setLayoutParams(layoutparams);
-                       layout_no_gps_wifi.setAngle(270);
-                   }
-                   else
-                   {
-                       layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                       layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
-                       layout_no_gps_wifi.setLayoutParams(layoutparams);
-                       layout_no_gps_wifi.setAngle(0);
-                   }
-               }
+
            }
 
             if(txt_encrypting != null)
