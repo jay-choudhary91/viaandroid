@@ -531,7 +531,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
         alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
-        alphanimation.setStartOffset(1000);
+        alphanimation.setStartOffset(1500);
         alphanimation.setRepeatMode(1);
 
         Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
@@ -552,7 +552,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
                 common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
-        validationbaranimation.setDuration(3000);
+        validationbaranimation.setDuration(4000);
         validationbaranimation.setRepeatCount(Animation.INFINITE);
         validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
         img_scanover.startAnimation(validationbaranimation);
