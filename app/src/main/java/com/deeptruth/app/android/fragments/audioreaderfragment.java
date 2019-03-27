@@ -1305,6 +1305,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             layout_scrubberview.setVisibility(View.GONE);
             mediaseekbar.setVisibility(View.GONE);
             layout_seekbartiming.setVisibility(View.GONE);
+            img_fullscreen.setVisibility(VISIBLE);
             setbottomimgview();
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             linearseekbarcolorview.setVisibility(View.GONE);
