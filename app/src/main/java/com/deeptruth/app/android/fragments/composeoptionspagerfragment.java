@@ -856,8 +856,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     public void startblinkencryption()
     {
         blinkencryptionanimation = new AlphaAnimation(0.0f, 1.0f);
-        blinkencryptionanimation.setDuration(800); //You can manage the time of the blink with this parameter
-        blinkencryptionanimation.setStartOffset(200);
+        blinkencryptionanimation.setDuration(1000); //You can manage the time of the blink with this parameter
+        blinkencryptionanimation.setStartOffset(1000);
         blinkencryptionanimation.setRepeatMode(Animation.REVERSE);
         blinkencryptionanimation.setRepeatCount(Animation.INFINITE);
         txt_encrypting.startAnimation(blinkencryptionanimation);

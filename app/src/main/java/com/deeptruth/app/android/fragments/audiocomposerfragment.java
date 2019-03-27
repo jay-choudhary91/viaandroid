@@ -193,6 +193,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         ButterKnife.bind(this, rootview);
         gethelper().drawerenabledisable(true);
         gethelper().setdatacomposing(true);
+        txt_section_validating_secondary.setVisibility(View.INVISIBLE);
 
         handle = (ImageView) rootview.findViewById(R.id.handle);
         img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
@@ -224,8 +225,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
         alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
-        alphanimation.setStartOffset(1500);
+        alphanimation.setStartOffset(1000);
         alphanimation.setRepeatMode(1);
+
+        final AlphaAnimation fadeout_animation = new AlphaAnimation(1.0f, 0.0f);
+        fadeout_animation.setDuration(1000); //You can manage the time of the blink with this parameter
+        fadeout_animation.setStartOffset(1000);
+        fadeout_animation.setRepeatMode(1);
 
         Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
             @Override
@@ -234,6 +240,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
             @Override
             public void onAnimationEnd(Animation animation) {
+                txt_section_validating_secondary.startAnimation(fadeout_animation);
                 //fadeoutcontrollers();
             }
             @Override
@@ -242,6 +249,22 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
         };
         alphanimation.setAnimationListener(alphalistener);
+        Animation.AnimationListener fadeoutlistener=new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                txt_section_validating_secondary.startAnimation(alphanimation);
+                //fadeoutcontrollers();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        };
+        fadeout_animation.setAnimationListener(fadeoutlistener);
 
         validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
                 common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
@@ -260,7 +283,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
             @Override
             public void onAnimationRepeat(Animation animation) {
-                txt_section_validating_secondary.startAnimation(alphanimation);
+             //   txt_section_validating_secondary.startAnimation(alphanimation);
             }
         };
         validationbaranimation.setAnimationListener(translatelistener);
