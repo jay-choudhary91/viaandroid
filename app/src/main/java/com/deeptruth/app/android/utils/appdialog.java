@@ -207,6 +207,8 @@ public class appdialog
                             dialog.dismiss();
                     }
 
+                }else{
+                    dialog.dismiss();
                 }
             }
         });

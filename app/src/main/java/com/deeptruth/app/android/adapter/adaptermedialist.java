@@ -199,14 +199,16 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.img_loader.setVisibility(View.GONE);
             }
 
-            if(mediaobject.getMediatitle().trim().isEmpty())
+            holder.edtvideoname.setText(mediaobject.getMediatitle());
+
+            /*if(mediaobject.getMediatitle().trim().isEmpty())
             {
                 holder.edtvideoname.setText(config.no_title);
             }
             else
             {
-                holder.edtvideoname.setText(mediaobject.getMediatitle());
-            }
+
+            }*/
 
             if(mediaobject.getDuration().trim().isEmpty())
             {
