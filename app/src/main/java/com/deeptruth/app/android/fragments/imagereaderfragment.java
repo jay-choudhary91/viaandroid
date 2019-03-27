@@ -252,7 +252,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             navigationbarheight =  common.getnavigationbarheight();
             txt_section_validating_secondary.setVisibility(View.INVISIBLE);
             setfooterlayout();
-            //    setheadermargine();
+            //    setheadermargin();
             loadviewdata();
         }
         return rootview;

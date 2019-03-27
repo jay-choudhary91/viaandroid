@@ -363,7 +363,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         if(rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-           // setheadermargine();
+           // setheadermargin();
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
             gethelper().setdatacomposing(false);

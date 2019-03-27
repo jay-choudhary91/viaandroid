@@ -80,7 +80,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-            // setheadermargine();
+            // setheadermargin();
             img_camera.setVisibility(View.VISIBLE);
             txt_title_actionbarcomposer.setText("MyFolders");
             img_arrow_back.setOnClickListener(this);
