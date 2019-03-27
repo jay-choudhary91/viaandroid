@@ -165,6 +165,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     int numberOfTaps = 0, devicewidth = 0;
     long lastTapTimeMs = 0;
     long touchDownMs = 0;
+    boolean iskeyboardopen = false;
     // Called just after any media uploaded
     public void registerbroadcastmediauploaded()
     {
@@ -695,6 +696,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 break;
             case R.id.img_header_search:
                 layout_sectionsearch.setVisibility(View.VISIBLE);
+                iskeyboardopen =  true;
                 edt_searchitem.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
                 edt_searchitem.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0));
                 break;
@@ -702,6 +704,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 edt_searchitem.setText("");
                 hidekeyboard();
                 layout_sectionsearch.setVisibility(View.GONE);
+                iskeyboardopen = false;
                 break;
             case R.id.img_dotmenu:
                 hidekeyboard();
@@ -766,14 +769,30 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         if(selectedmediatype == 0)
         {
             checkitem="video";
+            layout_sectionsearch.setVisibility(View.GONE);
+
+           if(iskeyboardopen)
+                  hidekeyboard();
+
+            iskeyboardopen = false;
         }
         else if(selectedmediatype == 1)
         {
             checkitem="image";
+            layout_sectionsearch.setVisibility(View.GONE);
+            if(iskeyboardopen)
+                hidekeyboard();
+
+            iskeyboardopen = false;
         }
         else if(selectedmediatype == 2)
         {
             checkitem="audio";
+            layout_sectionsearch.setVisibility(View.GONE);
+            if(iskeyboardopen)
+                hidekeyboard();
+
+            iskeyboardopen = false;
         }
         audiocount=0;videocount=0;imagecount=0;
         for(int i = 0; i< arraymediaitemlist.size(); i++)
@@ -1213,7 +1232,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     {
                         arraymediaitemlist.get(i).setVideostarttransactionid(videostarttransactionid);
                         arraymediaitemlist.get(i).setThumbnailpath(thumbnailurl);
-                        arraymediaitemlist.get(i).setMediatitle(media_name);
+                        if(media_name.trim().isEmpty()){
+                            arraymediaitemlist.get(i).setMediatitle(config.no_title);
+                        }else{
+                            arraymediaitemlist.get(i).setMediatitle(media_name);
+                        }
                         arraymediaitemlist.get(i).setMedianotes(media_notes);
                         arraymediaitemlist.get(i).setMediacolor(color);
                         arraymediaitemlist.get(i).setLocalkey(localkey);
