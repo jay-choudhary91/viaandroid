@@ -508,7 +508,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     {
                         imgrotatecamera.setEnabled(true);
                     }
-                }, 1500);
+                }, 1000);
                 if(currentselectedcomposer == 0)
                 {
                     if(fragvideocomposer != null)
