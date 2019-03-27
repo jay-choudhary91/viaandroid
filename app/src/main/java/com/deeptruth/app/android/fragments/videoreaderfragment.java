@@ -946,6 +946,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 alphanimation.setStartOffset(1000);
                 alphanimation.setRepeatMode(1);
 
+                final AlphaAnimation fadeout_animation = new AlphaAnimation(1.0f, 0.0f);
+                fadeout_animation.setDuration(1000); //You can manage the time of the blink with this parameter
+                fadeout_animation.setStartOffset(1000);
+                fadeout_animation.setRepeatMode(1);
+
                 Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -953,6 +958,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
                     @Override
                     public void onAnimationEnd(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(fadeout_animation);
                         //fadeoutcontrollers();
                     }
                     @Override
@@ -961,9 +967,25 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
                 };
                 alphanimation.setAnimationListener(alphalistener);
+                Animation.AnimationListener fadeoutlistener=new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        txt_section_validating_secondary.startAnimation(alphanimation);
+                        //fadeoutcontrollers();
+                    }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                };
+                fadeout_animation.setAnimationListener(fadeoutlistener);
 
                 validationbaranimation = new TranslateAnimation(-totalwidth, totalwidth ,0.0f, 0.0f);
-                validationbaranimation.setDuration(3000);
+                validationbaranimation.setDuration(4000);
                 validationbaranimation.setRepeatCount(Animation.INFINITE);
                 validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
                 img_scanover.startAnimation(validationbaranimation);
@@ -978,7 +1000,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
                     @Override
                     public void onAnimationRepeat(Animation animation) {
-                        txt_section_validating_secondary.startAnimation(alphanimation);
+                      //  txt_section_validating_secondary.startAnimation(alphanimation);
                     }
                 };
                 validationbaranimation.setAnimationListener(translatelistener);
