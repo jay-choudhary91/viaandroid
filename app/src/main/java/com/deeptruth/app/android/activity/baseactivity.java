@@ -270,6 +270,10 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             backtolastfragment();
 
         }
+        else if(getcurrentfragment() instanceof fragmentmedialist)
+        {
+            finish();
+        }
         else if(getcurrentfragment() instanceof composeoptionspagerfragment)
         {
             if(mfragments.size() == 1)
