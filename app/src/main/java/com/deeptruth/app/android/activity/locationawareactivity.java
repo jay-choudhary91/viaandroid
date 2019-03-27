@@ -1710,9 +1710,9 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 metricitemarraylist.get(i).setMetricTrackValue("" + degree);
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase(config.distancetravelled)) {
-                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance") +" "+ "feet");
+                metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("travelleddistance") +" "+ "miles");
                 if(xdata.getinstance().getSetting("travelleddistance").trim().isEmpty())
-                    metricitemarraylist.get(i).setMetricTrackValue("0"+" "+ "feet");
+                    metricitemarraylist.get(i).setMetricTrackValue("0"+" "+ "miles");
             }
             if (metricitemarraylist.get(i).getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")) {
                 metricitemarraylist.get(i).setMetricTrackValue(xdata.getinstance().getSetting("gpsaccuracy"));
