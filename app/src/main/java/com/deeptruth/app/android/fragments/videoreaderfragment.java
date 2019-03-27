@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -43,6 +44,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -100,7 +102,6 @@ import com.deeptruth.app.android.videotrimmer.utils.backgroundexecutor;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.deeptruth.app.android.views.customseekbar;
 import com.github.mikephil.charting.utils.Utils;
-import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -398,7 +399,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public int flingactionmindstvac;
     private long currentmediaduration =0;
     private int videostarttime =0, endtime =0;
-    int position=0;
+    private int position=0,devicemodeportrait=0,devicemodereverseportrait=2,devicemodelandscapeleft=1,
+            devicemodelandscaperight=3;
     String latency = "";
     int mheightview = 0;
     int viewheight = 0;
@@ -430,7 +432,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             ButterKnife.bind(this, rootview);
 
             txt_section_validating_secondary.setVisibility(View.INVISIBLE);
-            //setheadermargine();
+            //setheadermargin();
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
             gethelper().setdatacomposing(false);
@@ -455,7 +457,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             });
 
-            //mOrientation = new Orientation(applicationviavideocomposer.getactivity());
+            mOrientation = new Orientation(applicationviavideocomposer.getactivity());
             gethelper().setwindowfitxy(true);
             //layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
             loadviewdata();
@@ -484,7 +486,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             int scrubberheightgesture =  scrubberheight -50;
 
-                            setheadermargine(headerheight,scrubberheightgesture,finalvideotextureviewheight,true);
+                            setheadermargin(headerheight,scrubberheightgesture,finalvideotextureviewheight,true);
 
                             Log.e("down bottom layout=",""+layout_videodetails.getLayoutParams().height);
 
@@ -524,7 +526,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             int finalvideotextureviewheight = (int)videotextureviewheight;
                             int scrubberheightgesture =  scrubberheight -50;
 
-                            setheadermargine(headerheight,scrubberheightgesture,finalvideotextureviewheight,true);
+                            setheadermargin(headerheight,scrubberheightgesture,finalvideotextureviewheight,true);
 
                             Log.e("increseheight botmlyut=",""+layout_videodetails.getLayoutParams().height);
 
@@ -1182,7 +1184,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         videowidth = width;
         videoheight = height;
          if(flag){
-             setheadermargine(headerheight,scrubberheight,0,false);
+             setheadermargin(headerheight,scrubberheight,0,false);
              flag = false;
          }
 
@@ -1190,7 +1192,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
     }
 
-    public void recenterplaypause(final int topheight, final int setvisiblety)
+    public void recenterplaypause(final int topheight, final int visibility)
     {
         videotextureview.post(new Runnable() {
             @Override
@@ -1202,7 +1204,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    params.setMargins(0,topheight,0,0);
                    playpausebutton.setLayoutParams(params);
 
-                   if(setvisiblety == 0)
+                   if(visibility == 0)
                         playpausebutton.setVisibility(View.VISIBLE);
             }
         });
@@ -1222,14 +1224,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
         float pitch = orientation[1] * -57;
 
-        if(pitch <= -50 || videorotatedangle == -1 || videorotatedangle == 0)
+        if(videorotatedangle == -1 || videorotatedangle == 90)
+            return;
+
+        if(pitch <= -50)
             return;
 
         float roll = orientation[2] * -57;
         float rotateangle=3600;
         if(roll < -45 && roll >= -120)
         {
-            rotateangle=-90;  // Flip Portrait 90
+            rotateangle=-90;  // Landscape right side
         }
         else if(roll >= -40 && roll <= 45)
         {
@@ -1241,7 +1246,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
         else if(roll < 45 && roll < -120)
         {
-            rotateangle=180;    // Landscape right side
+            rotateangle=180;
         }
 
         if(rotateangle != 3600 && layout_videodetails != null)
@@ -1250,7 +1255,91 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             {
                 lastrotatedangle=(int)rotateangle;
 
-                int w = common.getScreenWidth(applicationviavideocomposer.getactivity());
+                // if device in portrait mode then angle will be 90 0 -90
+                // if device in landscape left side angle will be 0 -90 180
+                // if device in landscape right side angle will be 180 90 0
+
+                Display display = ((WindowManager) applicationviavideocomposer.getactivity().
+                        getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+                int devicerotation = display.getRotation();
+                //Toast.makeText(applicationviavideocomposer.getactivity(),""+lastrotatedangle+" "+devicerotation,Toast.LENGTH_SHORT).show();
+
+                if(devicerotation == 0)  // Portrait
+                {
+                    // if device in portrait mode then angle will be 90 0 -90
+                    if(rotateangle == 90)
+                    {
+                        changedevicemode(devicemodelandscapeleft);
+                    }
+                    else if(rotateangle == 0)
+                    {
+                        changedevicemode(devicemodeportrait);
+                    }
+                    else if(rotateangle == -90)
+                    {
+                        changedevicemode(devicemodelandscaperight);
+                    }
+                }
+                else if(devicerotation == 1)  // Landscape left
+                {
+                    // if device in landscape left side angle will be 0 -90 180
+                    if(rotateangle == 0)
+                    {
+                        changedevicemode(devicemodelandscapeleft);
+                    }
+                    else if(rotateangle == -90)
+                    {
+                        changedevicemode(devicemodeportrait);
+                    }
+                    else if(rotateangle == 180)
+                    {
+                        changedevicemode(devicemodelandscaperight);
+                    }
+                }
+                else if(devicerotation == 2)   // Reverse portrait
+                {
+
+                }
+                else if(devicerotation == 3) // Landscape right
+                {
+                    // if device in landscape right side angle will be 180 90 0
+                    if(rotateangle == 180)
+                    {
+                        changedevicemode(devicemodelandscapeleft);
+                    }
+                    else if(rotateangle == 90)
+                    {
+                        changedevicemode(devicemodeportrait);
+                    }
+                    else if(rotateangle == 0)
+                    {
+                        changedevicemode(devicemodelandscaperight);
+                    }
+                }
+
+                /*if(lastrotatedangle == 90 && common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
+                {
+                    if(common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
+                        common.changedevicemode(3);
+                }*/
+
+                /*if(lastrotatedangle == -90 && common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
+                {
+                    if(common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
+                        common.changedevicemode(false);
+                }
+                else if(lastrotatedangle == 0 && (! common.isdeviceinportraitmode(applicationviavideocomposer.getactivity())))
+                {
+                    if(! common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
+                        common.changedevicemode(true);
+                }
+                else if(lastrotatedangle == 90 && common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
+                {
+                    if(common.isdeviceinportraitmode(applicationviavideocomposer.getactivity()))
+                        common.changedevicemode(false);
+                }*/
+
+                /*int w = common.getScreenWidth(applicationviavideocomposer.getactivity());
                 int h = common.getScreenHeight(applicationviavideocomposer.getactivity());
 
                 if(lastrotatedangle == 0)
@@ -1277,9 +1366,35 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
 
                     }
-                });
+                });*/
             }
         }
+    }
+
+    public void changedevicemode(int mode)
+    {
+        if(mode == devicemodeportrait)
+        {
+            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+        else if(mode == devicemodelandscapeleft)
+        {
+            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+        else if(mode == devicemodereverseportrait)
+        {
+            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+        }
+        else if(mode == devicemodelandscaperight)
+        {
+            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+        }
+        /*videotextureview.post(new Runnable() {
+            @Override
+            public void run() {
+                setplaypuasebtnondrag(videotextureview.getHeight());
+            }
+        });*/
     }
 
     public class setonClick implements View.OnClickListener
@@ -1553,7 +1668,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_videodetails.getLayoutParams().height = 0;
         gethelper().drawerenabledisable(false);
         gethelper().updateactionbar(0);
-        setheadermargine(0,0,(rootviewheight-navigationbarheight),true);
+        setheadermargin(0,0,(rootviewheight-navigationbarheight),true);
         layout_videodetails.setVisibility(View.GONE);
         scrollview_detail.setVisibility(View.GONE);
         scrollview_meta.setVisibility(View.GONE);
@@ -1591,7 +1706,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
         layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
         //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
-        setheadermargine(headerheight,scrubberheight,0,false);
+        setheadermargin(headerheight,scrubberheight,0,false);
         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
         layout_seekbartiming.getResources().getColor(R.color.white);
         dividerline.setVisibility(View.GONE);
@@ -2631,7 +2746,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                 videostarttime = player.getCurrentPosition();
                 mediaseekbar.setProgress(player.getCurrentPosition());
-                Log.e("seekbartime",""+player.getCurrentPosition());
 
                 if (time_current != null)
                     time_current.setText(common.gettimestring(videostarttime));
@@ -2734,12 +2848,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
 
-     public void setplaypuasebtnondrag(){
+     public void setplaypuasebtnondrag(int parentheight){
 
-         int surfaceView_Width = videotextureview.getWidth();
-         int surfaceView_Height = videotextureview.getHeight();
-
-         int centerheight = surfaceView_Height/2;
+         int centerheight = parentheight/2;
          int buttonheight = playpausebutton.getHeight();
 
          int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;
@@ -2866,7 +2977,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                    // reverse portrait 270
 
 
-                    if(seconds <= 3){
+                    if(seconds <= 3 && minutes == 0 && hours == 0){
                         numThumbs = 10;
                     }else{
                         numThumbs = 15;
@@ -3052,7 +3163,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }
     }
 
-    public void setheadermargine(final int headerheight, final int scrubberheight, int layoutheight, boolean ifheightset){
+    public void setheadermargin(final int headerheight, final int scrubberheight, int layoutheight, boolean ifheightset){
         if(ifheightset){
 
             RelativeLayout.LayoutParams paramsvideotextureview  = new RelativeLayout.LayoutParams(targetwidth,(rootviewheight-navigationbarheight));
@@ -3067,7 +3178,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         updatesurfaceviewsizefullscreen(videotextureview.getWidth(),videotextureview.getHeight());
                     }else{
 
-                        setplaypuasebtnondrag();
+                        setplaypuasebtnondrag(videotextureview.getHeight());
                     }
                 }
             });
