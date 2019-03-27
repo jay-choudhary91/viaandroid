@@ -28,7 +28,7 @@ import java.util.List;
 public class visualizeraudiorecorder extends View {
 
     private static final int LINE_WIDTH = 10; // width of visualizer lines
-    private static float LINE_SCALE = 8; // scales visualizer lines
+    private float LINE_SCALE = 8; // scales visualizer lines
     private List<Float> amplitudes; // amplitudes for line lengths
     private int width; // width of this View
     private int height; // height of this View
@@ -41,7 +41,7 @@ public class visualizeraudiorecorder extends View {
         this.context=context;
         linePaint = new Paint(); // create Paint for lines
         linePaint.setColor(getResources().getColor(R.color.wave_color)); // set color to green
-        LINE_SCALE=common.convertDpToPixel(LINE_SCALE,context);
+        LINE_SCALE=common.convertDpToPixel(8,context);
         linePaint.setAlpha(255);
         linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
         linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -57,7 +57,9 @@ public class visualizeraudiorecorder extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         width = w; // new width of this View
         height = h; // new height of this View
-        LINE_SCALE=common.convertDpToPixel(LINE_SCALE,context);
+
+        LINE_SCALE=common.convertDpToPixel(8,context);
+        Log.e("LINE_SCALEheight",""+LINE_SCALE);
         amplitudes = new ArrayList<Float>(width / LINE_WIDTH);
     }
 

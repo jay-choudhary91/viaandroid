@@ -1374,6 +1374,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         try {
 
             setaudiodata();
+            hdlr.postDelayed(seekbarupdatorhandler, 10);
 
             if(playerposition > 0)
             {
@@ -1400,7 +1401,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
             {
                 playpausebutton.setImageResource(R.drawable.pause);
                 player.start();
-                hdlr.postDelayed(seekbarupdatorhandler, 10);
                 player.setOnCompletionListener(this);
             }
         }
@@ -1675,6 +1675,33 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 if (time_current != null)
                     time_current.setText(common.gettimestring(starttime));
+                if(arraycontainerformetric != null && rlcontrollerview.getVisibility() == View.VISIBLE && (!gethelper().isdraweropened()))
+                {
+                    String color = "white";
+                    if (arraycontainerformetric.getColor() != null && (!arraycontainerformetric.getColor().isEmpty()))
+                        color = arraycontainerformetric.getColor();
+                    switch (color) {
+                        case "green":
+                            img_verified.setVisibility(View.VISIBLE);
+                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#0EAE3E"));
+                            break;
+                        case "white":
+                            img_verified.setVisibility(View.GONE);
+                            break;
+                        case "red":
+                            img_verified.setVisibility(View.VISIBLE);
+                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FF3B30"));
+                            break;
+                        case "yellow":
+                            img_verified.setVisibility(View.VISIBLE);
+                            //txt_section_validating_secondary.setBackgroundColor(Color.parseColor("#FDD012"));
+                            break;
+                    }
+                }
+                else
+                {
+                    img_verified.setVisibility(View.GONE);
+                }
 
                 hdlr.postDelayed(this, 10);
             }
@@ -1841,7 +1868,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
                     }
                 });
 
-                img_verified.setVisibility(View.VISIBLE);
+               // img_verified.setVisibility(View.VISIBLE);
                 ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(audiourl));
                 if(metricmainarraylist.size()>0){
 

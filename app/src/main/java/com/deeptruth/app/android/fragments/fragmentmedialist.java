@@ -23,6 +23,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -398,7 +399,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             recyclerviewgrid.setVisibility(View.VISIBLE);
             recyclerviewgrid.setNestedScrollingEnabled(false);
             recyclerviewlist.setNestedScrollingEnabled(false);
-            RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+            RecyclerView.LayoutManager mLayoutManager=new GridLayoutManager(getActivity(), 2);
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
 
@@ -816,6 +817,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         if(adaptermedialist != null && adaptermediagrid != null)
         {
             adaptermedialist.notifyitems(arraymediaitemlist);
+            if(arraymediaitemlist.size()==1){
+                RecyclerView.LayoutManager mLayoutManager=new GridLayoutManager(getActivity(), 2);
+                recyclerviewgrid.setLayoutManager(mLayoutManager);
+            }else{
+                RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+                recyclerviewgrid.setLayoutManager(mLayoutManager);
+            }
             adaptermediagrid.notifyDataSetChanged();
             recyclerviewlist.smoothScrollToPosition(0);
 
