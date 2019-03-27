@@ -570,7 +570,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 //looping through existing elements
                 for (video object : arraymediaitemlist) {
                     //if the existing elements contains the search input
-                    if (object.getMediatitle().contains(text.toLowerCase()) && object.isDoenable()) {
+                    if (object.getMediatitle().toLowerCase().contains(text.toLowerCase()) && object.isDoenable()) {
                         //adding the element to filtered list
                         filterdnames.add(object);
                     }
@@ -1005,7 +1005,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             videoobject.setLocalkey(localkey);
                             videoobject.setVideostarttransactionid(videostarttransactionid);
                             videoobject.setThumbnailpath(thumbnailurl);
-                            videoobject.setMediatitle(media_name);
+                            videoobject.setMediatitle((media_name.trim().isEmpty())?config.no_title:media_name);
                             videoobject.setMedianotes(media_notes);
                             videoobject.setMediacolor(color);
                             videoobject.setExtension(common.getvideoextension(location));
@@ -1213,7 +1213,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     {
                         arraymediaitemlist.get(i).setVideostarttransactionid(videostarttransactionid);
                         arraymediaitemlist.get(i).setThumbnailpath(thumbnailurl);
-                        arraymediaitemlist.get(i).setMediatitle(media_name);
+                        arraymediaitemlist.get(i).setMediatitle((media_name.trim().isEmpty())?config.no_title:media_name);
                         arraymediaitemlist.get(i).setMedianotes(media_notes);
                         arraymediaitemlist.get(i).setMediacolor(color);
                         arraymediaitemlist.get(i).setLocalkey(localkey);
