@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
@@ -172,14 +173,20 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         fragment_container.setOnTouchListener(this);
 
         drawerenabledisable(false);
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+        {
+            fragmedialist =new fragmentmedialist();
+            fragmedialist.shouldlaunchcomposer(true);
+            replaceFragment(fragmedialist, false, true);
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                launchcomposerfragment();
-                //fragmedialist =new fragmentmedialist();
-                //fragmedialist.shouldlaunchcomposer(true);
-                //replaceFragment(fragmedialist, false, true);
+                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                {
+                    launchcomposerfragment();
+                }
 
                 if(graphicaldrawerfragment == null)
                 {

@@ -1659,6 +1659,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                if(selectedmediafile == null)
+                    return;
+
                 File sourceFile = new File(selectedmediafile);
 
                 if(sourceFile.exists())
