@@ -55,6 +55,8 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
     RecyclerView recyclerlist;
     @BindView(R.id.layout_mediatype)
     LinearLayout layout_mediatype;
+    @BindView(R.id.root_view)
+    LinearLayout root_view;
 
     @BindView(R.id.txt_title_actionbarcomposer)
     TextView txt_title_actionbarcomposer;
@@ -71,6 +73,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
     private final int request_permissions = 101;
     private Runnable doafterallpermissionsgranted;
     boolean isfullscreen = false;
+    int navigationbarheight = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState)
@@ -80,6 +83,8 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
+            navigationbarheight =  common.getnavigationbarheight();
+            setlayoutmargin();
             // setheadermargin();
             img_camera.setVisibility(View.VISIBLE);
             txt_title_actionbarcomposer.setText("MyFolders");
@@ -421,10 +426,12 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
     public void setheader(boolean isfullscreen){
         this.isfullscreen = isfullscreen;
     }
-    public void setheadermargine(){
-        LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
-        layout_mediatype.setLayoutParams(params);
+
+    public void setlayoutmargin(){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,navigationbarheight);
+        root_view.setLayoutParams(params);
+        root_view.requestLayout();
     }
 
     public void setheaderpadding(){
@@ -442,7 +449,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
         if(isfottermarginset){
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,Integer.parseInt(xdata.getinstance().getSetting("headerheight")));
             params.addRule(RelativeLayout.ALIGN_PARENT_TOP,TRUE);
-            layout_mediatype.setLayoutParams(params);
+            root_view.setLayoutParams(params);
         }
     }
 
