@@ -770,29 +770,20 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             checkitem="video";
             layout_sectionsearch.setVisibility(View.GONE);
-
-           if(iskeyboardopen)
-                  hidekeyboard();
-
-            iskeyboardopen = false;
+            setsearchbar();
         }
         else if(selectedmediatype == 1)
         {
             checkitem="image";
             layout_sectionsearch.setVisibility(View.GONE);
-            if(iskeyboardopen)
-                hidekeyboard();
-
-            iskeyboardopen = false;
+            setsearchbar();
         }
         else if(selectedmediatype == 2)
         {
             checkitem="audio";
             layout_sectionsearch.setVisibility(View.GONE);
-            if(iskeyboardopen)
-                hidekeyboard();
+            setsearchbar();
 
-            iskeyboardopen = false;
         }
         audiocount=0;videocount=0;imagecount=0;
         for(int i = 0; i< arraymediaitemlist.size(); i++)
@@ -1900,6 +1891,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             params.setMargins(0,0,0,navigationbarheight);
             listlayout.setLayoutParams(params);
         }
+    }
+
+    public void setsearchbar(){
+        if(iskeyboardopen){
+            edt_searchitem.setText("");
+            hidekeyboard();
+        }
+        iskeyboardopen = false;
     }
 
 }
