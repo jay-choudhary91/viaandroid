@@ -305,7 +305,7 @@ public class myfolderfragment extends basefragment implements View.OnClickListen
         File[] files = rootdir.listFiles();
         for (File file : files)
         {
-            if(! file.getName().equalsIgnoreCase("cache"))
+            if(! file.getName().equalsIgnoreCase(config.cachefolder))
             {
                 String[] thumbnailpath=getfolderthumbnailpath(file.getAbsolutePath());
                 if(file.getName().equalsIgnoreCase(config.allmedia))

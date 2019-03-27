@@ -869,7 +869,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         File[] files = rootdir.listFiles();
         for (File file : files)
         {
-            if((! file.getName().equalsIgnoreCase("cache")) && (! file.getName().equalsIgnoreCase(config.allmedia)))
+            if((! file.getName().equalsIgnoreCase(config.cachefolder)) && (! file.getName().equalsIgnoreCase(config.allmedia)))
             {
                 itemname.add(file.getName());
                 itempath.add(file.getAbsolutePath());
