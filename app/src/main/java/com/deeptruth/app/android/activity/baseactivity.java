@@ -279,7 +279,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public void launchmedialistfragment()
     {
         fragmentmedialist frag=new fragmentmedialist();
-        replaceFragment(frag, true, false);
+        replaceFragment(frag, false, true);
     }
 
     public void backtolastfragment()
