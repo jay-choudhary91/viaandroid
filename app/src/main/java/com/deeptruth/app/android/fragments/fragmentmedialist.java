@@ -510,13 +510,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if(common.isdevelopermodeenable())
                     img_settings.setVisibility(View.VISIBLE);
 
-                new Handler().postDelayed(new Runnable() {
+                /*new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if(shouldlaunchcomposer)
                             launchbottombarfragment();
                     }
-                },200);
+                },200);*/
 
             }
 

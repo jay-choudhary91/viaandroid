@@ -21,6 +21,7 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.fragments.audiocomposerfragment;
 import com.deeptruth.app.android.fragments.audioreaderfragment;
 import com.deeptruth.app.android.fragments.basefragment;
+import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
 import com.deeptruth.app.android.fragments.fragmentmedialist;
 import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.imagereaderfragment;
@@ -208,7 +209,20 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     public void switchtomedialist()
     {
-        if(getcurrentfragment() instanceof fragmentmedialist)
+        if(getcurrentfragment() instanceof composeoptionspagerfragment)
+        {
+            if(mfragments.size() == 1)
+            {
+                mfragments.pop();
+                launchmedialistfragment();
+            }
+            else
+            {
+                backtolastfragment();
+                switchtomedialist();
+            }
+        }
+        else if(getcurrentfragment() instanceof fragmentmedialist)
         {
 
         }
@@ -225,6 +239,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         int a=getSupportFragmentManager().getBackStackEntryCount();
         int b=getMinNumberOfFragments();
 
+        int size=mfragments.size();
         if (getSupportFragmentManager().getBackStackEntryCount() <= getMinNumberOfFragments()) {
             finish();
             return;
@@ -243,10 +258,28 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             backtolastfragment();
 
         }
+        else if(getcurrentfragment() instanceof composeoptionspagerfragment)
+        {
+            if(mfragments.size() == 1)
+            {
+                mfragments.pop();
+                launchmedialistfragment();
+            }
+            else
+            {
+                backtolastfragment();
+            }
+        }
         else
         {
             backtolastfragment();
         }
+    }
+
+    public void launchmedialistfragment()
+    {
+        fragmentmedialist frag=new fragmentmedialist();
+        replaceFragment(frag, true, false);
     }
 
     public void backtolastfragment()
