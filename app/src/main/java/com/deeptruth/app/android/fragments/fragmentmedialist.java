@@ -236,7 +236,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-      //  setheadermargine();
+      //  setheadermargin();
         gethelper().drawerenabledisable(false);
         gethelper().setwindowfitxy(true);
         gethelper().updateactionbar(1);
@@ -286,7 +286,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this,rootview);
             listlayout=rootview.findViewById(R.id.listlayout);
-           // setheadermargine();
+           // setheadermargin();
 
             gethelper().drawerenabledisable(false);
 

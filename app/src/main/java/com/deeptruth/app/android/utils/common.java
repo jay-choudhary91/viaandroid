@@ -2222,18 +2222,5 @@ public class common {
 
         return false;
     }
-
-    public static void changedevicemode(boolean mode)
-    {
-        if(mode)
-        {
-            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
-        else
-        {
-            applicationviavideocomposer.getactivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-    }
-
 }
 
