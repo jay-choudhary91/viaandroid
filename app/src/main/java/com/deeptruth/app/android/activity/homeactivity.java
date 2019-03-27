@@ -503,7 +503,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
     }
 
     public void setdrawerdata(){

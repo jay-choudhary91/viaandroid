@@ -1784,6 +1784,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             closeCamera();
             reopenCamera();
         }
+        zoomLevel=1.0f;
+        DecimalFormat precision=new DecimalFormat("0.0");
+        txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
     }
 
     public void reopenCamera() {

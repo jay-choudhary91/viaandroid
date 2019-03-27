@@ -149,7 +149,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
     }
 
     public void replaceFragment(basefragment f, int layoutId, boolean clearBackStack, boolean addToBackstack) {

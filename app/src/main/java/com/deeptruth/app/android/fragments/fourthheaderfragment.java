@@ -46,7 +46,7 @@ public class fourthheaderfragment extends Fragment {
                 public void onClick(View view) {
                     Intent in=new Intent(getActivity(),homeactivity.class);
                     startActivity(in);
-                    getActivity().overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                    getActivity().overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
                     getActivity().finish();
                 }
             });
