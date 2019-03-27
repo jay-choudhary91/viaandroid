@@ -501,6 +501,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
                 break;
             case R.id.img_rotate_camera:
+                imgrotatecamera.setEnabled(false);
+                new Handler().postDelayed(new Runnable()
+                {
+                    public void run()
+                    {
+                        imgrotatecamera.setEnabled(true);
+                    }
+                }, 1500);
                 if(currentselectedcomposer == 0)
                 {
                     if(fragvideocomposer != null)
