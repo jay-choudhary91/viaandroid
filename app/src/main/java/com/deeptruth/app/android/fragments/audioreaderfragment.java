@@ -1293,9 +1293,23 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     @Override
     public void onPause() {
         super.onPause();
-
         pause();
         progressdialog.dismisswaitdialog();
+    }
+    public void onRestart() {
+        if( layout_audiodetails != null && layout_audiodetails.getVisibility() == View.GONE){
+            layout_mediatype.setVisibility(View.VISIBLE);
+            playpausebutton.setVisibility(View.VISIBLE);
+            gethelper().updateactionbar(1);
+            layout_footer.setVisibility(View.VISIBLE);
+            layout_scrubberview.setVisibility(View.GONE);
+            mediaseekbar.setVisibility(View.GONE);
+            layout_seekbartiming.setVisibility(View.GONE);
+            setbottomimgview();
+            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+            linearseekbarcolorview.setVisibility(View.GONE);
+        }
+        Log.e("onrestart","onrestart");
     }
 
     @Override

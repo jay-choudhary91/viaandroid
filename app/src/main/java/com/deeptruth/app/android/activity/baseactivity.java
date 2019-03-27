@@ -92,9 +92,21 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     protected void onRestart() {
         super.onRestart();
 
-        if(getcurrentfragment() instanceof videoreaderfragment){
+        if(getcurrentfragment() instanceof videoreaderfragment ){
+             try{
+                 ((videoreaderfragment) getcurrentfragment()).onRestart();
+             }catch (Exception e){
+                 e.printStackTrace();
+             }
 
-            ((videoreaderfragment) getcurrentfragment()).onRestart();
+        }
+        else if( getcurrentfragment() instanceof audioreaderfragment){
+            try{
+                ((audioreaderfragment) getcurrentfragment()).onRestart();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
     @Override

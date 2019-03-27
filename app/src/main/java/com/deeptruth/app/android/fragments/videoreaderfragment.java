@@ -1684,6 +1684,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     }
 
     public void onRestart() {
+        if( layout_videodetails != null && layout_videodetails.getVisibility() == View.GONE){
+             layout_mediatype.setVisibility(View.VISIBLE);
+             playpausebutton.setVisibility(View.VISIBLE);
+             gethelper().updateactionbar(1);
+             layout_footer.setVisibility(View.VISIBLE);
+             img_fullscreen.setVisibility(View.VISIBLE);
+             setbottomimgview();
+             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+             layoutbackgroundcontroller.setVisibility(View.GONE);
+        }
         Log.e("onrestart","onrestart");
     }
 
