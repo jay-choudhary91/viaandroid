@@ -511,13 +511,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 if(common.isdevelopermodeenable())
                     img_settings.setVisibility(View.VISIBLE);
 
-                new Handler().postDelayed(new Runnable() {
+                /*new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if(shouldlaunchcomposer)
                             launchbottombarfragment();
                     }
-                },200);
+                },200);*/
 
             }
 
@@ -869,7 +869,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         File[] files = rootdir.listFiles();
         for (File file : files)
         {
-            if((! file.getName().equalsIgnoreCase("cache")) && (! file.getName().equalsIgnoreCase(config.allmedia)))
+            if((! file.getName().equalsIgnoreCase(config.cachefolder)) && (! file.getName().equalsIgnoreCase(config.allmedia)))
             {
                 itemname.add(file.getName());
                 itempath.add(file.getAbsolutePath());

@@ -175,9 +175,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                fragmedialist =new fragmentmedialist();
-                fragmedialist.shouldlaunchcomposer(true);
-                replaceFragment(fragmedialist, false, true);
+
+                launchcomposerfragment();
+                //fragmedialist =new fragmentmedialist();
+                //fragmedialist.shouldlaunchcomposer(true);
+                //replaceFragment(fragmedialist, false, true);
 
                 if(graphicaldrawerfragment == null)
                 {
@@ -607,5 +609,11 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         Log.e("finalheight", ""+finalheight);
         imglefthandle.setLayoutParams(params);
         imglefthandle.requestLayout();
+    }
+
+    public void launchcomposerfragment()
+    {
+        composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
+        replaceFragment(fragbottombar, false, true);
     }
 }

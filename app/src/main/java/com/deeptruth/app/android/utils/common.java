@@ -1107,7 +1107,7 @@ public class common {
         File[] files = rootdir.listFiles();
         for (File file : files)
         {
-            if((! file.getName().equalsIgnoreCase("cache")))
+            if((! file.getName().equalsIgnoreCase(config.cachefolder)) && (! file.getName().equalsIgnoreCase(config.allmedia)))
             {
                 folder myfolder=new folder();
                 myfolder.setFoldername(file.getName());

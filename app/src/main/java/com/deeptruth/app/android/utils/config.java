@@ -12,6 +12,7 @@ public class config {
 
     public static String allmedia="All Media";
     public static String media="media";
+    public static String cachefolder="cache";
     public static String audiotempfile="audiotemp.pcm";
 
 

@@ -56,7 +56,8 @@
         <activity
             android:name="com.deeptruth.app.android.activity.homeactivity"
             android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize"/>
 
         <service
             android:name="com.deeptruth.app.android.services.locationservice"
