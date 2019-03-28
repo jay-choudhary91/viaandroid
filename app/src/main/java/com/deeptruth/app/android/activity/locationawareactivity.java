@@ -488,6 +488,10 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     private void doafterallpermissionsgranted() {
+        if (! checkPermission(this)) {
+            return;
+        }
+
         getLastLocation();
         startLocationUpdates();
         enableGPS(locationawareactivity.this);
