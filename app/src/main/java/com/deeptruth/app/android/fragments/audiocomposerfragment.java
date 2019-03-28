@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaMetadataRetriever;
@@ -1273,7 +1274,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             /*DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                                     , R.color.scanover_yellow));*/
 
-                            img_scanover.setBackgroundResource(R.drawable.gradient_radar_bar_yellow);
+                            GradientDrawable gradient=common.getyelloradargradient();
+                            if(gradient != null)
+                                img_scanover.setBackground(gradient);
+
                             if(img_close.getVisibility() != View.VISIBLE)
                             {
                                 img_gpswifiwarning.setVisibility(View.VISIBLE);
@@ -1295,7 +1299,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         {
                             e.printStackTrace();
                         }*/
-                        img_scanover.setBackgroundResource(R.drawable.gradient_radar_bar_blue);
+                        GradientDrawable gradient=common.getblueradargradient();
+                        if(gradient != null)
+                            img_scanover.setBackground(gradient);
+
                         img_gpswifiwarning.setVisibility(View.GONE);
                         txt_encrypting.setVisibility(View.GONE);
                         img_close.setVisibility(View.GONE);
