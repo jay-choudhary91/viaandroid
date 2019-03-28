@@ -54,16 +54,6 @@
                 app:setDisabledTrackColor="@color/grey_x"
             />
 
-            <com.deeptruth.app.android.utils.AwesomeToggle
-                android:layout_width="50dp"
-                android:layout_height="22dp"
-                app:inactive_background_color="@color/colorPrimary"
-                app:active_background_color="@color/dark_blue_solid_a"
-                app:font_color="@color/white"
-                android:visibility="gone"
-                app:inner_toggle_color="@color/white"
-                />
-
         </RelativeLayout>
 
         <WebView
