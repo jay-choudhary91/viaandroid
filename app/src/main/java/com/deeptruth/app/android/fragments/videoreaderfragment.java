@@ -147,8 +147,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     ImageView img_camera;
     @BindView(R.id.img_arrow_back)
     ImageView img_arrow_back;
-    @BindView(R.id.img_delete_media)
-    ImageView img_delete_media;
 
     @BindView(R.id.recyview_frames)
     RecyclerView recyview_frames;
@@ -191,8 +189,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     customedittext edt_medianame;
     @BindView(R.id.edt_medianotes)
     customedittext edt_medianotes;
-    @BindView(R.id.layout_footer)
-    RelativeLayout layout_footer;
     @BindView(R.id.tab_layout)
     LinearLayout tab_layout;
     @BindView(R.id.scrollview_encyption)
@@ -499,7 +495,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                             islastdragarrow =true;
                             gethelper().drawerenabledisable(true);
-                            layout_footer.setVisibility(View.GONE);
                             //videodownwordarrow.setImageResource(R.drawable.handle_up_arrow);
 
                             if(layout_videodetails.getLayoutParams().height<=0){
@@ -515,7 +510,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         gethelper().drawerenabledisable(false);
 
                         if(layout_halfscrnimg.getLayoutParams().height >= uppermovementlimit) {
-                            layout_footer.setVisibility(View.VISIBLE);
                             mIsScrolling = true;
                             float height = layout_halfscrnimg.getLayoutParams().height - (Math.abs(e2.getY()));
                             layout_halfscrnimg.getLayoutParams().height = (int) height;
@@ -568,7 +562,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                         layout_halfscrnimg.requestLayout();
                         layout_halfscrnimg.animate().setDuration(500);
-                        layout_footer.setVisibility(View.GONE);
 
                        // videodownwordarrow.setImageResource(R.drawable.handle_up_arrow);
 
@@ -588,7 +581,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             }
                         });
                        // videodownwordarrow.setImageResource(R.drawable.handle_down_arrow);
-                        layout_footer.setVisibility(View.VISIBLE);
                     }
                     Log.e("singleclcik=","songleclcik");
                     return super.onSingleTapConfirmed(e);
@@ -693,6 +685,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         layout_item_encryption.setVisibility(View.GONE);
         recycler_encryption.setVisibility(View.VISIBLE);
+        img_share_media.setVisibility(View.VISIBLE);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(applicationviavideocomposer.getactivity());
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -892,7 +885,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         img_camera.setOnClickListener(new setonClick());
         img_arrow_back.setOnClickListener(new setonClick());
         videotextureview.setOnClickListener(new setonClick());
-        img_delete_media.setOnClickListener(new setonClick());
         imgpause.setOnClickListener(new setonClick());
         img_share_media.setOnClickListener(new setonClick());
         img_edit_name.setOnClickListener(new setonClick());
@@ -908,7 +900,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         txtslotmedia.setText(getResources().getString(R.string.video));
         scrollview_detail.setVisibility(View.VISIBLE);
         tab_layout.setVisibility(View.VISIBLE);
-        layout_footer.setVisibility(View.VISIBLE);
         img_fullscreen.setVisibility(View.VISIBLE);
         layout_videodetails.setVisibility(View.VISIBLE);
         layout_mediatype.setVisibility(View.VISIBLE);
@@ -1094,12 +1085,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
                 }
                 return false;
-            }
-        });
-        layout_footer.post(new Runnable() {
-            @Override
-            public void run() {
-               footerheight = layout_footer.getHeight();
             }
         });
     }
@@ -1483,18 +1468,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     launchbottombarfragment();
                     break;
 
-                case R.id.img_delete_media:
-                    img_delete_media.setEnabled(false);
-                    new Handler().postDelayed(new Runnable()
-                    {
-                        public void run()
-                        {
-                            img_delete_media.setEnabled(true);
-                        }
-                    }, 1500);
-                    showalertdialog(getActivity().getResources().getString(R.string.delete_confirm_video));
-                    break;
-
                 case R.id.img_arrow_back:
                     try {
                         img_arrow_back.setClickable(false);
@@ -1539,12 +1512,10 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                                 gethelper().updateactionbar(1);
                                 setbottomimgview();
-                                layout_footer.setVisibility(View.VISIBLE);
                                 img_fullscreen.setVisibility(View.VISIBLE);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
                                 layoutpause.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(true);
-                                layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 playpausebutton.setVisibility(View.VISIBLE);
                                 layout_mediatype.setVisibility(View.VISIBLE);
                                 img_fullscreen.setImageResource(R.drawable.ic_info_mode);
@@ -1554,7 +1525,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 //layout_halfscrnimg.getLayoutParams().height = rootviewheight;
                                 gethelper().updateactionbar(0);
-                                layout_footer.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(true);
                                 img_fullscreen.setVisibility(View.GONE);
                                 layoutbackgroundcontroller.setVisibility(View.VISIBLE);
@@ -1566,7 +1536,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
-                                layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 // layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             }
                         }
@@ -1576,14 +1545,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                            layout_footer.setVisibility(View.GONE);
 
                             if(player != null && (! player.isPlaying()))
                             {
                                 //layout_halfscrnimg.getLayoutParams().height = rootviewheight + Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));;
                                 gethelper().updateactionbar(0);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
-                                layout_footer.setVisibility(View.GONE);
                                 img_fullscreen.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(false);
                                 layout_mediatype.setVisibility(View.GONE);
@@ -1602,7 +1569,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
-                                layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             }*/
                         }
                     } else {
@@ -1630,7 +1596,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layout_mediatype.setVisibility(View.GONE);
                             layoutpause.setVisibility(View.VISIBLE);
                             layoutcustomcontroller.requestLayout();
-                            layout_footer.setVisibility(View.GONE);
                             playpausebutton.setVisibility(View.GONE);
                             img_fullscreen.setVisibility(View.GONE);
                             layoutbackgroundcontroller.setVisibility(View.VISIBLE);
@@ -1639,7 +1604,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
-                            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         }
                         start();
                     }
@@ -1650,12 +1614,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         pause();
                         if(layout_videodetails.getVisibility()==View.GONE){
                             playpausebutton.setImageResource(R.drawable.play_btn);
-                            img_share_media.setVisibility(View.VISIBLE);
-                            img_delete_media.setVisibility(View.VISIBLE);
                             playpausebutton.setVisibility(View.VISIBLE);
                             img_fullscreen.setVisibility(View.VISIBLE);
                             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                            layout_footer.setVisibility(View.VISIBLE);
                             layoutbackgroundcontroller.setVisibility(View.GONE);
                             totalduration.setVisibility(View.VISIBLE);
                             time_current.setVisibility(View.VISIBLE);
@@ -1663,7 +1624,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             imgpause.setVisibility(View.GONE);
                             setbottomimgview();
                             layout_mediatype.setVisibility(View.VISIBLE);
-                            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                         }
                     }
                     break;
@@ -1697,7 +1657,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         scrollView_encyrption.setVisibility(View.GONE);
         tab_layout.setVisibility(View.GONE);
         //updatetextureviewsize(targetwidth,targetheight);
-        layout_footer.setVisibility(View.GONE);
         layout_mediatype.setVisibility(View.GONE);
         layoutbackgroundcontroller.setVisibility(View.GONE);
         playpausebutton.setVisibility(View.GONE);
@@ -1724,8 +1683,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_mediatype.setVisibility(View.VISIBLE);
         totalduration.setVisibility(View.VISIBLE);
         time_current.setVisibility(View.VISIBLE);
-        layout_footer.setVisibility(View.VISIBLE);
-        layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
         layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.white));
         //updatetextureviewsize((previouswidth- previouswidthpercentage),previousheight);
         setheadermargin(headerheight,scrubberheight,0,false);
@@ -1803,7 +1760,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
              layout_mediatype.setVisibility(View.VISIBLE);
              playpausebutton.setVisibility(View.VISIBLE);
              gethelper().updateactionbar(1);
-             layout_footer.setVisibility(View.VISIBLE);
              img_fullscreen.setVisibility(View.VISIBLE);
              setbottomimgview();
              img_fullscreen.setImageResource(R.drawable.ic_info_mode);
@@ -3055,9 +3011,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         playpausebutton.setImageResource(R.drawable.play_btn);
         playpausebutton.setVisibility(View.VISIBLE);
         img_fullscreen.setVisibility(View.VISIBLE);
-        layout_footer.setVisibility(View.VISIBLE);
-        img_share_media.setVisibility(View.VISIBLE);
-        img_delete_media.setVisibility(View.VISIBLE);
         imgpause.setVisibility(View.GONE);
     }
 
@@ -3070,13 +3023,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         playpausebutton.setImageResource(R.drawable.play_btn);
         playpausebutton.setVisibility(View.VISIBLE);
         img_fullscreen.setVisibility(View.VISIBLE);
-        layout_footer.setVisibility(View.VISIBLE);
-        img_share_media.setVisibility(View.VISIBLE);
-        img_delete_media.setVisibility(View.VISIBLE);
         imgpause.setVisibility(View.GONE);
         gethelper().updateactionbar(1);
         setbottomimgview();
-        layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
         layoutbackgroundcontroller.setVisibility(View.GONE);
         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
     }
@@ -3158,7 +3107,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 rl_video_downwordarrow.setVisibility(View.GONE);
                 //  common.slidetoabove(layout_mediatype);
                 layoutbackgroundcontroller.setVisibility(View.GONE);
-                layout_footer.setVisibility(View.GONE);
                 playpausebutton.setVisibility(View.GONE);
                 img_fullscreen.setVisibility(View.GONE);
                 imgpause.setVisibility(View.GONE);
@@ -3170,7 +3118,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             if (!islastdragarrow) {
                 if (player != null && player.isPlaying()) {
 
-                        layout_footer.setVisibility(View.GONE);
                         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                         layout_mediatype.setVisibility(View.GONE);
                         imgpause.setVisibility(View.VISIBLE);
@@ -3180,14 +3127,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 } else {
 
                         layoutbackgroundcontroller.setVisibility(View.GONE);
-                        layout_footer.setVisibility(View.VISIBLE);
                         layout_mediatype.setVisibility(View.VISIBLE);
                         playpausebutton.setVisibility(View.VISIBLE);
                         img_fullscreen.setVisibility(View.VISIBLE);
                         gethelper().updateactionbar(1);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                         setbottomimgview();
-                        layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                 }
             }else{
                 gethelper().updateactionbar(1);
