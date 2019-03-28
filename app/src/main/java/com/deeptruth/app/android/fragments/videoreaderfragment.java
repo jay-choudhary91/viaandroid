@@ -116,6 +116,7 @@ import org.json.JSONTokener;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -432,6 +433,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
             gethelper().setdatacomposing(false);
+
+
 
             /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
             showcontrollers.startAnimation(startAnimation);*/
@@ -1983,11 +1986,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void setfolderspinner()
     {
         final List<folder> folderitem=common.getalldirfolders();
+        setspinnerpopupwindowheight(folderitem.size());
         folderdirectoryspinneradapter adapter = new folderdirectoryspinneradapter(applicationviavideocomposer.getactivity(),
                 R.layout.row_myfolderspinneradapter,folderitem);
 
         int selectedposition=0;
+
         final File foldername = new File(mediafolder);
+
         for(int i=0;i<folderitem.size();i++)
         {
             if(folderitem.get(i).getFoldername().equalsIgnoreCase(foldername.getName()))
@@ -3250,6 +3256,24 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             layout_halfscrnimg.setVisibility(View.VISIBLE);
             layout_validating.setVisibility(View.VISIBLE);
             removeheadermargin();
+        }
+    }
+
+    public void  setspinnerpopupwindowheight(int size){
+        try {
+            Field popup = Spinner.class.getDeclaredField("mPopup");
+            popup.setAccessible(true);
+            // Get private mPopup member variable and try cast to ListPopupWindow
+            android.widget.ListPopupWindow popupWindow = (android.widget.ListPopupWindow) popup.get(spinnermediafolder);
+            // Set popupWindow height to 500px
+            if(size>3){
+                popupWindow.setHeight(300);
+            }else{
+                popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
+        }
+        catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
+            // silently fail...
         }
     }
 }

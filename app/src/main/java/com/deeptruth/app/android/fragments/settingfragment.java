@@ -71,17 +71,12 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 @Override
                 public void onToggle(boolean isChecked) {
                     if(isChecked){
-
                         xdata.getinstance().saveSetting(config.enableintroscreen,"yes");
-
-
                     }else{
-
                         xdata.getinstance().saveSetting(config.enableintroscreen,"no");
-
                     }
-                }
-        });
+                 }
+            });
 
           img_arrow_back.setOnClickListener(this);
           webview.getSettings().setJavaScriptEnabled(true);
