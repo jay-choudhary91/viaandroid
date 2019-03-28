@@ -55,7 +55,7 @@ public class settingfragment extends basefragment implements View.OnClickListene
           ButterKnife.bind(this, rootview);
           gethelper().drawerenabledisable(false);
 
-            if(xdata.getinstance().getSetting("enableintroscreen").isEmpty() || xdata.getinstance().getSetting("enableintroscreen").equalsIgnoreCase("yes")){
+            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes")){
                 togglebutton.setEnable(true);
                 togglebutton.setVisibility(View.VISIBLE);
 
@@ -72,12 +72,12 @@ public class settingfragment extends basefragment implements View.OnClickListene
                 public void onToggle(boolean isChecked) {
                     if(isChecked){
 
-                        xdata.getinstance().saveSetting("enableintroscreen","yes");
+                        xdata.getinstance().saveSetting(config.enableintroscreen,"yes");
 
 
                     }else{
 
-                        xdata.getinstance().saveSetting("enableintroscreen","no");
+                        xdata.getinstance().saveSetting(config.enableintroscreen,"no");
 
                     }
                 }

@@ -90,7 +90,7 @@ public class splashactivity extends Activity {
                 else
                 {
 
-                    if(xdata.getinstance().getSetting("enableintroscreen").isEmpty() || xdata.getinstance().getSetting("enableintroscreen").equalsIgnoreCase("yes")){
+                    if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes")){
                         Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
                         startActivity(intent);
                         finish();
