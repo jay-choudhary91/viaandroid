@@ -173,40 +173,47 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         fragment_container.setOnTouchListener(this);
 
         drawerenabledisable(false);
-        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
-        {
-            fragmedialist =new fragmentmedialist();
-            fragmedialist.shouldlaunchcomposer(true);
-            replaceFragment(fragmedialist, false, true);
-        }
-        new Handler().postDelayed(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-
-                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                {
-                    launchcomposerfragment();
-                }
-
-                if(graphicaldrawerfragment == null)
-                {
-                    graphicaldrawerfragment =new fragmentgraphicaldrawer();
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
-                    transaction.commit();
-                }
-                rootview.post(new Runnable() {
+                applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        rootviewheight= rootview.getHeight();
-                        navigationbarheight =  common.getnavigationbarheight();
-                        finalheight= rootviewheight - navigationbarheight;
-                        finalheight = finalheight/2;
-                        drawerbutton();
+                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
+                        {
+                            fragment_container.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
+                            fragmedialist =new fragmentmedialist();
+                            fragmedialist.shouldlaunchcomposer(true);
+                            replaceFragment(fragmedialist, false, true);
+                        }
+                        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                        {
+                            fragment_container.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
+                            launchcomposerfragment();
+                        }
+
+                        if(graphicaldrawerfragment == null)
+                        {
+                            graphicaldrawerfragment =new fragmentgraphicaldrawer();
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
+                            transaction.commit();
+                        }
+                        rootview.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                rootviewheight= rootview.getHeight();
+                                navigationbarheight =  common.getnavigationbarheight();
+                                finalheight= rootviewheight - navigationbarheight;
+                                finalheight = finalheight/2;
+                                drawerbutton();
+                            }
+                        });
                     }
                 });
             }
-        },200);
+        }).start();
+
 
 
         detectphonecallservice();
