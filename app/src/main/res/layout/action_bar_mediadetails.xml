@@ -91,7 +91,7 @@
             android:id="@+id/img_share_media"
             android:layout_toLeftOf="@+id/img_dotmenu"
             android:visibility="gone"
-            android:background="@drawable/share"/>
+            android:background="@drawable/white_img_share"/>
     </RelativeLayout>
 
     <RelativeLayout
