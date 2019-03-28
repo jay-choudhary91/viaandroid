@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,12 +14,17 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.akash.RevealSwitch;
+import com.akash.revealswitch.OnToggleListener;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.utils.AwesomeToggle;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.xdata;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +41,8 @@ public class settingfragment extends basefragment implements View.OnClickListene
     RelativeLayout layout_mediatype;
     @BindView(R.id.setting_webview)
     WebView webview;
+    @BindView(R.id.togglebutton)
+    RevealSwitch togglebutton;
     @BindView(R.id.ll_rootlayout)
     LinearLayout llrootlayout;
     int navigationbarheight = 0;
@@ -51,8 +59,33 @@ public class settingfragment extends basefragment implements View.OnClickListene
           ButterKnife.bind(this, rootview);
           gethelper().drawerenabledisable(false);
 
+            if(xdata.getinstance().getSetting("enableintroscreen").isEmpty() || xdata.getinstance().getSetting("enableintroscreen").equalsIgnoreCase("yes")){
+                togglebutton.setEnable(true);
+                togglebutton.setVisibility(View.VISIBLE);
+
+            }else{
+                togglebutton.setEnable(false);
+                togglebutton.setVisibility(View.VISIBLE);
+            }
+
           navigationbarheight =  common.getnavigationbarheight();
           setlayoutmargin();
+
+            togglebutton.setToggleListener(new OnToggleListener() {
+                @Override
+                public void onToggle(boolean isChecked) {
+                    if(isChecked){
+
+                        xdata.getinstance().saveSetting("enableintroscreen","yes");
+
+
+                    }else{
+
+                        xdata.getinstance().saveSetting("enableintroscreen","no");
+
+                    }
+                }
+        });
 
           img_arrow_back.setOnClickListener(this);
           webview.getSettings().setJavaScriptEnabled(true);

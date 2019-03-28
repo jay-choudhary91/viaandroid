@@ -92,6 +92,7 @@ dependencies {
 
     // Add dependency
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    implementation 'com.github.Akashkamble:RevealSwitch:1.0.1'
 
 }
 apply plugin: 'com.google.gms.google-services'

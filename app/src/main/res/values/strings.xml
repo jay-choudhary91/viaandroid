@@ -119,6 +119,7 @@
     <string name="item_metrics">metrics</string>
     <string name="item_hashes">hashes</string>
     <string name="item_graphical">graphical</string>
+    <string name="introscreen">Intro Screen</string>
 
     <string name="locationtracking">Location Tracking</string>
     <string name="locationanalytics">Location Analytics</string>

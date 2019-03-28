@@ -25,18 +25,55 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/ll_toggle"
+            android:layout_below="@+id/layout_mediatype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+
+            <com.deeptruth.app.android.views.customfonttextview
+               android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/introscreen"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:textSize="15sp"
+                app:fontType="Comfortaa-Regular"
+                />
+
+            <com.akash.RevealSwitch
+                android:id="@+id/togglebutton"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
+                android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                app:setEnabledTrackColor="@color/dark_blue_solid_a"
+                app:setDisabledTrackColor="@color/grey_x"
+            />
+
+            <com.deeptruth.app.android.utils.AwesomeToggle
+                android:layout_width="50dp"
+                android:layout_height="22dp"
+                app:inactive_background_color="@color/colorPrimary"
+                app:active_background_color="@color/dark_blue_solid_a"
+                app:font_color="@color/white"
+                android:visibility="gone"
+                app:inner_toggle_color="@color/white"
+                />
+
+        </RelativeLayout>
+
         <WebView
             android:layout_width="match_parent"
             android:id="@+id/setting_webview"
-            android:layout_below="@+id/layout_mediatype"
+            android:layout_below="@+id/ll_toggle"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true">
 
         </WebView>
 
-
     </RelativeLayout>
-
-
-
 </LinearLayout>

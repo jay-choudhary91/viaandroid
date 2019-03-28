@@ -89,12 +89,21 @@ public class splashactivity extends Activity {
                 }
                 else
                 {
-                    Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
-                    startActivity(intent);
-                    finish();
+
+                    if(xdata.getinstance().getSetting("enableintroscreen").isEmpty() || xdata.getinstance().getSetting("enableintroscreen").equalsIgnoreCase("yes")){
+                        Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    }else{
+                        Intent intent=new Intent(splashactivity.this,homeactivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
+                        finish();
+                    }
                 }
             }
-        },1600);
+        },2000);
     }
     public void getstatusbarheight() {
         Rect rectangle = new Rect();
