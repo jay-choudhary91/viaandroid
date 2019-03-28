@@ -117,8 +117,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
     View rootview;
 
-    @BindView(R.id.img_delete_media)
-    ImageView img_delete_media;
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
     @BindView(R.id.img_folder)
@@ -166,8 +164,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
     customedittext edt_medianame;
     @BindView(R.id.edt_medianotes)
     customedittext edt_medianotes;
-    @BindView(R.id.layout_footer)
-    RelativeLayout layout_footer;
     @BindView(R.id.tab_layout)
     LinearLayout tab_layout;
     @BindView(R.id.scrollview_encyption)
@@ -355,13 +351,11 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         img_folder.setOnClickListener(this);
         img_camera.setOnClickListener(this);
         img_arrow_back.setOnClickListener(this);
-        img_delete_media.setOnClickListener(this);
 
         img_dotmenu.setOnClickListener(this);
         img_folder.setOnClickListener(this);
         img_camera.setOnClickListener(this);
         img_arrow_back.setOnClickListener(this);
-        img_delete_media.setOnClickListener(this);
 
         img_dotmenu.setVisibility(View.VISIBLE);
         img_folder.setVisibility(View.VISIBLE);
@@ -404,12 +398,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
         img_fullscreen.setOnClickListener(this);
         scrollview_detail.setVisibility(View.VISIBLE);
         tab_layout.setVisibility(View.VISIBLE);
-        layout_footer.setVisibility(View.VISIBLE);
         img_fullscreen.setVisibility(View.VISIBLE);
         layout_photodetails.setVisibility(View.VISIBLE);
         layout_mediatype.setVisibility(View.VISIBLE);
         layout_date.setVisibility(View.VISIBLE);
         layout_time.setVisibility(View.VISIBLE);
+        img_share_media.setVisibility(View.VISIBLE);
         layout_photodetails.setOnClickListener(this);
         layout_dtls.setOnClickListener(this);
 
@@ -576,12 +570,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 }
             }
         });
-        layout_footer.post(new Runnable() {
-            @Override
-            public void run() {
-                footerheight = layout_footer.getHeight();
-            }
-        });
 
         fetchmetadatafromdb();
         loadmap();
@@ -664,19 +652,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 launchbottombarfragment();
                 break;
 
-            case R.id.img_delete_media:
-
-                img_delete_media.setEnabled(false);
-                new Handler().postDelayed(new Runnable()
-                {
-                    public void run()
-                    {
-                        img_delete_media.setEnabled(true);
-                    }
-                }, 1500);
-                showalertdialog(getActivity().getResources().getString(R.string.dlt_cnfm_photo));
-                break;
-
             case R.id.img_arrow_back:
                 try {
                     img_arrow_back.setClickable(false);
@@ -707,7 +682,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     scrollview_meta.setVisibility(View.GONE);
                     scrollView_encyrption.setVisibility(View.GONE);
                     tab_layout.setVisibility(View.GONE);
-                    layout_footer.setVisibility(View.GONE);
                     layout_mediatype.setVisibility(View.GONE);
                     img_fullscreen.setVisibility(View.INVISIBLE);
 
@@ -720,9 +694,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                     layout_photodetails.setVisibility(View.VISIBLE);
                     tab_layout.setVisibility(View.VISIBLE);
                     scrollview_detail.setVisibility(View.VISIBLE);
-                    layout_footer.setVisibility(View.VISIBLE);
                     collapseimg_view();
-                    layout_footer.setBackgroundColor(getResources().getColor(R.color.white));
                     img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
                     gethelper().updateactionbar(0,getResources().getColor(R.color.dark_blue_solid));
                     resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
@@ -733,7 +705,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                 Log.e("ontouch","ontouch");
 
                 if(layout_photodetails.getVisibility()==View.GONE){
-                    if(layout_footer.getVisibility()==(View.GONE)){
+                    if(layout_mediatype.getVisibility()==(View.GONE)){
                        // layout_halfscrn.getLayoutParams().height = rootviewheight;
                         setbottomimgview();
                         gethelper().updateactionbar(1);
@@ -742,8 +714,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         layout_mediatype.setVisibility(View.VISIBLE);
                       //  common.slidetodown(layout_mediatype);
                         gethelper().drawerenabledisable(true);
-                        layout_footer.setVisibility(View.VISIBLE);
-                        layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                     } else {
                         gethelper().updateactionbar(0);
                         //layout_halfscrn.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
@@ -752,7 +722,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
                         layout_mediatype.setVisibility(View.GONE);
                         img_fullscreen.setVisibility(View.GONE);
                         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                        layout_footer.setVisibility(View.GONE);
                     }
 
                 } else {
@@ -1546,22 +1515,18 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             layout_halfscrn.getLayoutParams().height = (rootviewheight -navigationbarheight);;
             gethelper().updateactionbar(0);
             common.slidetoabove(layout_mediatype);
-            layout_footer.setVisibility(View.GONE);
             img_fullscreen.setVisibility(View.GONE);
             layout_validating.setVisibility(View.GONE);
         }else{
            // layout_halfscrn.getLayoutParams().height = rootviewheight;
             gethelper().updateactionbar(1);
             common.slidetodown(layout_mediatype);
-            layout_footer.setVisibility(View.VISIBLE);
             img_fullscreen.setVisibility(View.VISIBLE);
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
             layout_mediatype.setVisibility(View.VISIBLE);
 
             if(!metricmainarraylist.get(0).getColor().equalsIgnoreCase("white") && !metricmainarraylist.get(0).getColor().isEmpty())
                    layout_validating.setVisibility(View.VISIBLE);
-
-            layout_footer.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
             setbottomimgview();
         }
     }

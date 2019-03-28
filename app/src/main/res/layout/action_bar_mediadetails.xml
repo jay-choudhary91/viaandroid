@@ -77,12 +77,21 @@
         <ImageView
             android:id="@+id/img_dotmenu"
             android:layout_width="wrap_content"
-            android:paddingLeft="20dp"
+            android:paddingLeft="14dp"
             android:layout_marginRight="10dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_settings" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_10dp"
+            android:id="@+id/img_share_media"
+            android:layout_toLeftOf="@+id/img_dotmenu"
+            android:visibility="gone"
+            android:background="@drawable/white_img_share"/>
     </RelativeLayout>
 
     <RelativeLayout

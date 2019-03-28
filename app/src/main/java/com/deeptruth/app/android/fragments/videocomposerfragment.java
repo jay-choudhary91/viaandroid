@@ -710,6 +710,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        img_dotmenu.setVisibility(View.GONE);
                         setdynamiclayout(lpimg_dotmenu,null,0,0,20,0,10,20,10,0,img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -734,6 +735,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        img_dotmenu.setVisibility(View.GONE);
                         setdynamiclayout(lpimg_dotmenu,null,0,0,layout_bottom.getHeight()+30,0,10,20,10,0,img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -767,6 +769,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        img_dotmenu.setVisibility(View.VISIBLE);
                         setdynamiclayout(lpimg_dotmenu,null,0,0,20,0,10,20,10,0,img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -1907,7 +1910,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         myRunnable = new Runnable() {
             @Override
             public void run() {
-
                 if(isvideorecording)
                 {
                     if((! selectedmetrices.toString().trim().isEmpty()))
