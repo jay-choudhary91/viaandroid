@@ -52,11 +52,13 @@
         <com.deeptruth.app.android.views.customfonttextview
             app:fontType="Comfortaa-Regular"
             android:id="@+id/tv_foldername"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:textColor="@color/black"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="14sp"
             android:text="All Media"
             />
@@ -75,8 +77,5 @@
             />
 
         </LinearLayout>
-
-
-
 
 </RelativeLayout>
