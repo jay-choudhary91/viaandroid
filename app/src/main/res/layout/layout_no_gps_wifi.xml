@@ -10,7 +10,21 @@
         android:id="@+id/layout_textsection"
         android:layout_height="40dp">
 
-        <include layout="@layout/layout_validating"></include>
+        <ImageView
+            android:id="@+id/img_scanover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:scaleType="fitXY"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="OpenSans_Semibold"
+            android:id="@+id/txt_section_validating_secondary"
+            style="@style/txt_no_gps_wifi"
+            android:gravity="right|center_vertical"
+            android:text="@string/validating"
+            android:layout_centerVertical="true"
+            android:paddingRight="10dp"/>
 
     </RelativeLayout>
 

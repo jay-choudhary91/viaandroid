@@ -12,10 +12,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.GradientDrawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -395,6 +397,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_encrypting;
     @BindView(R.id.img_close)
     ImageView img_close;
+    @BindView(R.id.actionbar)
+    RelativeLayout actionbar;
 
     Animation blinkanimation;
     mediaqualityadapter qualityadapter;
@@ -1282,6 +1286,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(validationbaranimation != null)
                 img_scanover.startAnimation(validationbaranimation);
 
+            actionbar.setBackgroundColor(Color.TRANSPARENT);
             if(madapterclick != null)
                 madapterclick.onItemClicked(null,1);
             showhideactionbaricon(0);
@@ -1298,6 +1303,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             validationbaranimation.reset();
         }
 
+        actionbar.setBackgroundResource(R.drawable.gradient_fade_header_blue);
         issavedtofolder=true;
         isvideorecording = false;
         lastrecordedvideo=new File(selectedvideofile);
@@ -1952,9 +1958,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
                         try {
-                            DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                    , R.color.scanover_yellow));
+                            /*DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                    , R.color.scanover_yellow));*/
 
+                            GradientDrawable gradient=common.getyelloradargradient();
+                            if(gradient != null)
+                                img_scanover.setBackground(gradient);
+
+                            //img_scanover.setBackgroundResource(R.drawable.gradient_radar_bar_yellow);
                             if(img_close.getVisibility() != View.VISIBLE)
                             {
                                 img_gpswifiwarning.setVisibility(View.VISIBLE);
@@ -1969,13 +1980,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     }
                     else
                     {
-                        try {
+                        /*try {
                             DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                                     , R.color.dark_blue_solid_a));
                         }catch (Exception e)
                         {
                             e.printStackTrace();
-                        }
+                        }*/
+
+                        GradientDrawable gradient=common.getblueradargradient();
+                        if(gradient != null)
+                            img_scanover.setBackground(gradient);
+
                         img_gpswifiwarning.setVisibility(View.GONE);
                         txt_encrypting.setVisibility(View.GONE);
                         img_close.setVisibility(View.GONE);

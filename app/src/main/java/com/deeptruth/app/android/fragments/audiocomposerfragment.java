@@ -5,6 +5,8 @@ import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaMetadataRetriever;
@@ -115,6 +117,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     TextView txt_encrypting;
     @BindView(R.id.img_close)
     ImageView img_close;
+    @BindView(R.id.actionbar)
+    RelativeLayout actionbar;
 
     private TranslateAnimation validationbaranimation;
 
@@ -602,6 +606,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         if(validationbaranimation != null)
             img_scanover.startAnimation(validationbaranimation);
 
+        actionbar.setBackgroundColor(Color.TRANSPARENT);
         mrecorder = new MediaRecorder();
         mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mrecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -828,6 +833,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             validationbaranimation.cancel();
             validationbaranimation.reset();
         }
+
+        actionbar.setBackgroundResource(R.drawable.gradient_fade_header_blue);
 
         try {
 
@@ -1264,8 +1271,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
                         try {
-                            DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                    , R.color.scanover_yellow));
+                            /*DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
+                                    , R.color.scanover_yellow));*/
+
+                            GradientDrawable gradient=common.getyelloradargradient();
+                            if(gradient != null)
+                                img_scanover.setBackground(gradient);
 
                             if(img_close.getVisibility() != View.VISIBLE)
                             {
@@ -1281,13 +1292,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     }
                     else
                     {
-                        try {
+                        /*try {
                             DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                                     , R.color.dark_blue_solid_a));
                         }catch (Exception e)
                         {
                             e.printStackTrace();
-                        }
+                        }*/
+                        GradientDrawable gradient=common.getblueradargradient();
+                        if(gradient != null)
+                            img_scanover.setBackground(gradient);
+
                         img_gpswifiwarning.setVisibility(View.GONE);
                         txt_encrypting.setVisibility(View.GONE);
                         img_close.setVisibility(View.GONE);
