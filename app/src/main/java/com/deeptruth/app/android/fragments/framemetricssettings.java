@@ -73,6 +73,9 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
     String keytype =config.prefs_md5;
     int framecount=15;
     int updateevery=5;
+    int navigationbarheight = 0;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
         if (rootview == null) {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
+
             layout_md =(RelativeLayout)rootview.findViewById(R.id.layout_md);
             layout_md_salt =(RelativeLayout)rootview.findViewById(R.id.layout_md_salt);
             layout_sha =(RelativeLayout)rootview.findViewById(R.id.layout_sha);
@@ -100,6 +104,8 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
 
             layout_view=rootview.findViewById(R.id.layout_view);
 
+            navigationbarheight =  common.getnavigationbarheight();
+            setlayoutmargin();
 
             layout_md.setOnClickListener(this);
             layout_md_salt.setOnClickListener(this);
@@ -337,9 +343,10 @@ public class framemetricssettings extends basefragment implements View.OnClickLi
         common.hidekeyboard(applicationviavideocomposer.getactivity());
     }
 
-    public void setheadermargins(){
-        LinearLayout.LayoutParams params  = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
-        layout_mediatype.setLayoutParams(params);
+    public void setlayoutmargin(){
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,0,0,navigationbarheight);
+        layout_view.setLayoutParams(params);
+        layout_view.requestLayout();
     }
 }
