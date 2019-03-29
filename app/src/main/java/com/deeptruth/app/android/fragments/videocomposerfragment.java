@@ -64,6 +64,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.adapter.mediaqualityadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
@@ -125,6 +126,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     protected float maximumZoomLevel;
     protected Rect zoom;
     boolean firsthashvalue = true;
+    Double gpsvalue = 0.0;
     FragmentManager fm ;
     Calendar sequencestarttime,sequenceendtime;
     public static final String CAMERA_FRONT = "1";
@@ -399,6 +401,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ImageView img_close;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
+    @BindView(R.id.txt_weekgps)
+    TextView txt_weekgps;
+    @BindView(R.id.txt_no_gps_wifi)
+    TextView txt_no_gps_wifi;
 
     Animation blinkanimation;
     mediaqualityadapter qualityadapter;
@@ -1433,11 +1439,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             case R.id.img_gpswifiwarning:
                 img_gpswifiwarning.setVisibility(View.GONE);
+                txt_encrypting.setVisibility(View.GONE);
                 img_close.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.img_close:
                 img_gpswifiwarning.setVisibility(View.VISIBLE);
+                txt_encrypting.setVisibility(View.VISIBLE);
                 img_close.setVisibility(View.GONE);
                 break;
         }
@@ -1953,14 +1961,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         myHandler.postDelayed(this, 1000);
                         return;
                     }
-
                     if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
                         try {
                             /*DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                                     , R.color.scanover_yellow));*/
-
                             GradientDrawable gradient=common.getyelloradargradient();
                             if(gradient != null)
                                 img_scanover.setBackground(gradient);
@@ -1977,6 +1983,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             e.printStackTrace();
                         }
                         visiblewarningcontrollers();
+                        visibleconnection();
+                        checkgpsaccuracy();
                     }
                     else
                     {
@@ -1995,7 +2003,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         img_gpswifiwarning.setVisibility(View.GONE);
                         txt_encrypting.setVisibility(View.GONE);
                         img_close.setVisibility(View.GONE);
+                        txt_no_gps_wifi.setVisibility(View.GONE);
                         validatingcontrollers();
+                        checkgpsaccuracy();
                     }
 
                     if(isvideorecording)
@@ -2355,6 +2365,45 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             linearLayoutParams.setMargins(marginleft, margintop, marginright,  marginbottom);
             imageView.setLayoutParams(linearLayoutParams);
+        }
+    }
+
+    public void visibleconnection(){
+        if(isvideorecording) {
+            if (layout_no_gps_wifi != null) {
+                Log.e("gpsvalue",""+xdata.getinstance().getSetting(config.GPSAccuracy));
+                if ((common.isnetworkconnected(getActivity()) == false) && (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))) {
+                    txt_no_gps_wifi.setVisibility(View.VISIBLE);
+                    txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps_wifi));
+                } else {
+                    if ((common.isnetworkconnected(getActivity()) == false)) {
+                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
+                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_internet));
+                    } else if (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")) {
+                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
+                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps));
+                    }
+                }
+            }
+        }
+    }
+    public void checkgpsaccuracy(){
+        if(isvideorecording){
+            if((!(xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())) && xdata.getinstance().getSetting(config.GPSAccuracy)!= null){
+                gpsvalue = Double.valueOf(xdata.getinstance().getSetting(config.GPSAccuracy));
+                if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
+                    txt_weekgps.setVisibility(View.GONE);
+                }else{
+                    if ((gpsvalue < 50 && gpsvalue != 0)) {
+                        txt_weekgps.setVisibility(View.VISIBLE);
+                        txt_weekgps.setText(getResources().getString(R.string.weak_gps));
+                    } else {
+                        txt_weekgps.setVisibility(View.GONE);
+                    }
+                }
+
+            }
+
         }
     }
 }

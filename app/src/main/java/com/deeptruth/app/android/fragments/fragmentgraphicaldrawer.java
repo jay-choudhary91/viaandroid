@@ -448,6 +448,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             common.setdrawabledata(getResources().getString(R.string.connection),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)), tvconnection);
             common.setdrawabledata(getResources().getString(R.string.version),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)), tvversion);
             common.setdrawabledata(getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
+            Log.e("gpsaccuracy",""+common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)));
             common.setdrawabledata(getResources().getString(R.string.gpsaccuracy),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)), tvgpsaccuracy);
             common.setdrawabledata(getResources().getString(R.string.screen),"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight), tvscreen);
             common.setdrawabledata(getResources().getString(R.string.country),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Country)), tvcountry);

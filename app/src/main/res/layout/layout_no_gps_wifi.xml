@@ -30,6 +30,42 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:id="@+id/layout_wifi_gps"
+        android:layout_height="wrap_content">
+
+        <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="OpenSans_Semibold"
+            android:id="@+id/txt_no_gps_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:layout_alignParentLeft="true"
+            android:gravity="right|center_vertical"
+            android:text="@string/no_gps_wifi"
+            android:layout_centerVertical="true"
+            android:paddingLeft="10dp"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            app:fontType="OpenSans_Semibold"
+            android:id="@+id/txt_weekgps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"
+            android:gravity="right|center_vertical"
+            android:text="@string/weak_gps"
+            android:layout_centerVertical="true"
+            android:paddingRight="10dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:orientation="horizontal">

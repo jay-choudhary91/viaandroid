@@ -180,6 +180,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ImageView img_roundblink;
     Animation blinkanimation;
     Calendar sequencestarttime,sequenceendtime;
+    @BindView(R.id.txt_weekgps)
+    TextView txt_weekgps;
+    @BindView(R.id.txt_no_gps_wifi)
+    TextView txt_no_gps_wifi;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_audiocomposer;
@@ -1277,7 +1281,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             GradientDrawable gradient=common.getyelloradargradient();
                             if(gradient != null)
                                 img_scanover.setBackground(gradient);
-
+                                visibleconnection();
+                                checkgpsaccuracy();
                             if(img_close.getVisibility() != View.VISIBLE)
                             {
                                 img_gpswifiwarning.setVisibility(View.VISIBLE);
@@ -1306,7 +1311,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         img_gpswifiwarning.setVisibility(View.GONE);
                         txt_encrypting.setVisibility(View.GONE);
                         img_close.setVisibility(View.GONE);
+                        txt_no_gps_wifi.setVisibility(View.GONE);
                         validatingcontrollers();
+                        checkgpsaccuracy();
                     }
 
                     if(isaudiorecording)
@@ -1529,5 +1536,43 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             layoutbottom.setVisibility(View.VISIBLE);
             linearheader.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void visibleconnection(){
+        if(isaudiorecording) {
+            if (layout_no_gps_wifi != null) {
+                txt_encrypting.setVisibility(View.GONE);
+                if ((common.isnetworkconnected(getActivity()) == false) && (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))) {
+                    txt_no_gps_wifi.setVisibility(View.VISIBLE);
+                    txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps_wifi));
+                } else {
+                    if ((common.isnetworkconnected(getActivity()) == false)) {
+                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
+                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_internet));
+                    } else if (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")) {
+                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
+                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps));
+                    }
+                }
+            }
+        }
+    }
+    public void checkgpsaccuracy(){
+        if(isaudiorecording) {
+            if((!(xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())) && xdata.getinstance().getSetting(config.GPSAccuracy)!= null){
+                Double  gpsvalue = Double.valueOf(xdata.getinstance().getSetting(config.GPSAccuracy));
+                if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
+                    txt_weekgps.setVisibility(View.GONE);
+                }else {
+                    if ((gpsvalue < 50 && gpsvalue != 0 && gpsvalue == null && gpsvalue.equals("NA"))) {
+                        txt_weekgps.setVisibility(View.VISIBLE);
+                        txt_weekgps.setText(getResources().getString(R.string.weak_gps));
+                    } else {
+                        txt_weekgps.setVisibility(View.GONE);
+                    }
+                }
+            }
+        }
+
     }
 }

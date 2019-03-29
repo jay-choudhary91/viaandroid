@@ -133,6 +133,7 @@
                             android:layout_alignParentLeft="true"
                             android:layout_marginLeft="-50dp"
                             android:alpha="0.4"
+                            android:visibility="gone"
                             android:background="@drawable/gradient_verify_yellow"/>
 
                         <com.deeptruth.app.android.views.customfonttextview

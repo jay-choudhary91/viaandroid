@@ -87,7 +87,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                 public void run() {
 
                     imagethumbnail_width = holder.img_mediathumbnail.getWidth();
-                    holder.img_scanover.post(new Runnable() {
+                    /*holder.img_scanover.post(new Runnable() {
                         @Override
                         public void run() {
                             imagescanover_width = holder.img_scanover.getWidth();
@@ -145,7 +145,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
 
 
                         }
-                    });
+                    });*/
                 }
             });
 

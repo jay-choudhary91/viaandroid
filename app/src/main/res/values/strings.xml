@@ -161,8 +161,11 @@
     <string name="camera_take_picture">Allow Deeptruth to take pictures and record videos</string>
     <string name="allow">ALLOW</string>
     <string name="skip_for_now">Skip for Now</string>
-    <string name="no_gps_wifi">No GPS/Wifi connection.</string>
+    <string name="no_gps_wifi">No Internet  &amp; No GPS</string>
+    <string name="weak_gps">Weak GPS</string>
     <string name="encrypting">ENCRYPTING</string>
+    <string name="no_internet">No Internet</string>
+    <string name="no_gps">NO GPS</string>
     <string name="validating">VALIDATING</string>
 
     <string name="address">Address</string>

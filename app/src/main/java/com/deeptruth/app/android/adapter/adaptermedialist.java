@@ -116,7 +116,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 @Override
                 public void run() {
 
-                    holder.img_scanover.post(new Runnable() {
+                    /*holder.img_scanover.post(new Runnable() {
                         @Override
                         public void run() {
                             imagethumbanail_width  = holder.img_videothumbnail.getWidth();
@@ -175,7 +175,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             }
                         }
                     });
-
+*/
                 }
             });
 
