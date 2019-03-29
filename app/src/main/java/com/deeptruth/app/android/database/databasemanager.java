@@ -1108,6 +1108,25 @@ public class databasemanager {
         return  cur;
     }
 
+    public Cursor getmediacolor(String localkey) {
+        String videotoken="";
+        Cursor cur=null;
+        try {
+            lock.lock();
+            String sql = "SELECT color FROM tblmetadata where localkey = '"+localkey+"'";
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+
+            cur = mDb.rawQuery(sql, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+        return  cur;
+    }
+
 
     public Cursor readallmetabyvideoid(String objectparentid) {
         String videotoken="";

@@ -267,7 +267,94 @@
                             android:visibility="gone"
                             android:text=""
                             />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="3">
+
+                            <com.deeptruth.app.android.views.customfonttextview
+                                app:fontType="OpenSans_Regular"
+                                android:id="@+id/tv_valid"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:textSize="13sp"
+                                android:layout_marginTop="3dp"
+                                android:layout_below="@+id/tv_localkey"
+                                android:textColor="@color/black"
+                                android:maxLines="1"
+                                android:layout_weight="1"
+                                android:visibility="visible"
+                                android:text=""
+                                />
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_below="@id/relative_child"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/black"
+                                ></View>
+
+
+
+                            <com.deeptruth.app.android.views.customfonttextview
+                                app:fontType="OpenSans_Regular"
+                                android:id="@+id/tv_caution"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:textSize="13sp"
+                                android:layout_marginTop="3dp"
+                                android:layout_below="@+id/tv_localkey"
+                                android:textColor="@color/black"
+                                android:maxLines="1"
+                                android:layout_weight="1"
+                                android:visibility="visible"
+                                android:text=""
+                                />
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_below="@id/relative_child"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/black"
+                                ></View>
+
+                            <com.deeptruth.app.android.views.customfonttextview
+                                app:fontType="OpenSans_Regular"
+                                android:id="@+id/tv_unsent"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:textSize="13sp"
+                               android:layout_weight="1"
+                                android:layout_marginTop="3dp"
+                                android:layout_below="@+id/tv_localkey"
+                                android:textColor="@color/black"
+                                android:maxLines="1"
+                                android:visibility="visible"
+                                android:text=""
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_seekbarcolorview"
+                            android:layout_width="match_parent"
+                            android:layout_height="15dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_centerInParent="true"
+                            android:background="@color/transparent"
+                            android:orientation="horizontal" />
                     </LinearLayout>
+
                 </LinearLayout>
             </RelativeLayout>
 
