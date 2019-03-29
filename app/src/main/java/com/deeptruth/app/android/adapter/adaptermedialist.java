@@ -211,7 +211,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
             colorbararray = mediaobject.getBarcolor();
 
-            if(colorbararray.length > 0){
+            if(colorbararray != null && colorbararray.length > 0 ){
 
                 int validcount=0,cautioncount=0,unsentcount=0;
 
