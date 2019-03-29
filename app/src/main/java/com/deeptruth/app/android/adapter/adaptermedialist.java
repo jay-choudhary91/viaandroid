@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,10 +33,12 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.video;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.xdata;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,17 +55,23 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     adapteritemclick adapter;
     private int listviewheight=0,imagethumbanail_width=0,totalwidth=0;
     ViewBinderHelper binderHelper;
+    String []colorbararray;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
-        public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration;
+        public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration,
+                tv_valid,tv_caution,tv_unsent;
         EditText edtvideoname;
         RelativeLayout relative_child;
         public ImageView img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
-        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide;
+        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview;
+
 
         public myViewHolder(View view) {
             super(view);
+            tv_valid = (TextView) view.findViewById(R.id.tv_valid);
+            tv_caution = (TextView) view.findViewById(R.id.tv_caution);
+            tv_unsent = (TextView) view.findViewById(R.id.tv_unsent);
             tv_medianotes = (TextView) view.findViewById(R.id.tv_medianotes);
             txt_pipesign = (TextView) view.findViewById(R.id.txt_pipesign);
             edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
@@ -82,6 +91,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             tv_mediaduration = (TextView) view.findViewById(R.id.tv_mediaduration);
             root_view = (SwipeRevealLayout) view.findViewById(R.id.root_view);
             relative_child = (RelativeLayout) view.findViewById(R.id.relative_child);
+            linearseekbarcolorview = (LinearLayout) view.findViewById(R.id.linear_seekbarcolorview);
         }
     }
 
@@ -175,7 +185,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             }
                         }
                     });
-
                 }
             });
 
@@ -197,6 +206,33 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             else
             {
                 holder.img_loader.setVisibility(View.GONE);
+            }
+
+
+            colorbararray = mediaobject.getBarcolor();
+
+            if(colorbararray.length > 0){
+
+                int validcount=0,cautioncount=0,unsentcount=0;
+
+                for(int i=0;i<colorbararray.length;i++){
+
+                    String color = colorbararray[i];
+
+                    if(color.equalsIgnoreCase("green")){
+                        validcount++;
+                    }else if(color.equalsIgnoreCase("yellow")){
+
+                        cautioncount++;
+                    }else if(color.isEmpty()){
+                        unsentcount++;
+                    }
+                }
+
+                holder.tv_valid.setText("valid"+" "+validcount);
+                holder.tv_caution.setText("caution"+" "+ cautioncount);
+                holder.tv_unsent.setText("unsent"+" "+ unsentcount);
+                setseekbarlayoutcolor(holder.linearseekbarcolorview,colorbararray);
             }
 
             holder.edtvideoname.setText(mediaobject.getMediatitle());
@@ -387,6 +423,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 }
             });
 
+
+
+
             double parentheight=listviewheight;
             parentheight=parentheight/4.4;
             holder.root_view.getLayoutParams().height = (int)parentheight;
@@ -439,6 +478,34 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     @Override
     public int getItemCount() {
         return arrayvideolist.size();
+    }
+
+    private void setseekbarlayoutcolor(LinearLayout colorbarlayout,String []colorbar){
+        try
+        {
+            colorbarlayout.removeAllViews();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        for(int i=0 ; i<colorbar.length;i++)
+        {
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+            param.leftMargin=0;
+
+            View view = new View(applicationviavideocomposer.getactivity());
+            view.setLayoutParams(param);
+
+
+            if(!colorbar[i].isEmpty() && colorbar[i] != null){
+                view.setBackgroundColor(Color.parseColor(colorbar[0]));
+            }else{
+                view.setBackgroundColor(Color.parseColor("gray"));
+            }
+            colorbarlayout.addView(view);
+        }
     }
 
 }

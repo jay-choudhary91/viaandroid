@@ -30,6 +30,7 @@ public class video
     public boolean ischeck = false;
     public boolean doenable = false;
     public int griditemheight = 0;
+    public String []barcolor;
 
 
 
@@ -223,5 +224,11 @@ public class video
         this.createtime = createtime;
     }
 
+    public String[] getBarcolor() {
+        return barcolor;
+    }
 
+    public void setBarcolor(String[] barcolor) {
+        this.barcolor = barcolor;
+    }
 }

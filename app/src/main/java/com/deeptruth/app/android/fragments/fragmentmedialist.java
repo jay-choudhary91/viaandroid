@@ -1003,12 +1003,32 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
                         String status = "" + cursor.getString(cursor.getColumnIndex("status"));
 
+                        video videoobject=new video();
+
+                        Cursor cursor2 = mdbhelper.getmediacolor(localkey);
+                        if (cursor2 != null && cursor2.getCount()>0){
+
+                            String []colorbararray = new String[cursor2.getCount()];
+                            int count = 0;
+                            while (cursor2.moveToNext()){
+
+                                if (cursor.getString(cursor.getColumnIndex("color")) != null) {
+                                    colorbararray[count] = cursor.getString(cursor.getColumnIndex("color"));
+                                    count++;
+
+                                }else{
+                                    colorbararray[count] = "";
+                                    count++;
+                                }
+                            };
+                            videoobject.setBarcolor(colorbararray);
+                        }
+
                         if(id.trim().isEmpty() || id.equalsIgnoreCase("null"))
                             id="0";
 
                         if(! isexistinarraay(mediafilepath))
                         {
-                            video videoobject=new video();
                             videoobject.setId(Integer.parseInt(id));
                             videoobject.setPath(mediafilepath);
                             videoobject.setmimetype(type);
@@ -1217,6 +1237,26 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 //String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
                 String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
 
+                /*Cursor cursor2 = mdbhelper.getmediacolor(localkey);
+                String []colorbararray = new String[0];
+                if (cursor != null && cursor.getCount()>0){
+
+                    colorbararray = new String[cursor2.getCount()];
+                    int count = 0;
+                    while (cursor2.moveToNext()){
+
+                        if (cursor.getString(cursor.getColumnIndex("color")) != null) {
+                            colorbararray[count] = cursor.getString(cursor.getColumnIndex("color"));
+                            count++;
+
+                        }else{
+                            colorbararray[count] = "";
+                            count++;
+                        }
+                    };
+                }*/
+                
+
                 for(int i = 0; i< arraymediaitemlist.size(); i++)
                 {
                     if(common.getfilename(arraymediaitemlist.get(i).getPath()).equalsIgnoreCase(location))
@@ -1228,6 +1268,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         arraymediaitemlist.get(i).setMediacolor(color);
                         arraymediaitemlist.get(i).setLocalkey(localkey);
                         arraymediaitemlist.get(i).setMediastatus(status);
+
                         if(! mediaduration.trim().isEmpty())
                             arraymediaitemlist.get(i).setDuration(mediaduration);
 
