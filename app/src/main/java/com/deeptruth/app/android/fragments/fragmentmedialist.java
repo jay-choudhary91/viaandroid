@@ -1016,6 +1016,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     colorbararray[count] = cursor.getString(cursor.getColumnIndex("color"));
                                     count++;
 
+                                    
+
                                 }else{
                                     colorbararray[count] = "";
                                     count++;
