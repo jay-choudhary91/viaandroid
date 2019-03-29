@@ -1564,7 +1564,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
                     txt_weekgps.setVisibility(View.GONE);
                 }else {
-                    if ((gpsvalue < 50 && gpsvalue != 0 && gpsvalue == null && gpsvalue.equals("NA"))) {
+                    if ((gpsvalue < 50 && gpsvalue != 0)) {
                         txt_weekgps.setVisibility(View.VISIBLE);
                         txt_weekgps.setText(getResources().getString(R.string.weak_gps));
                     } else {
