@@ -2255,5 +2255,18 @@ public class common {
 
         return false;
     }
+
+    public static String getcolorprogresspercentage(int currentprogress,int totalitem)
+    {
+        double current=currentprogress;
+        double max=totalitem;
+        double progresspercentage = (current * 100) / max;
+        DecimalFormat precision=new DecimalFormat("0.00");
+        String output=precision.format(progresspercentage)+"%";
+        if(progresspercentage == 100)
+            output="100%";
+
+        return output;
+    }
 }
 

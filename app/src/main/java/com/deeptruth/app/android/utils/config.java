@@ -172,8 +172,13 @@ public class config {
     public static final String item_image="IMAGE";
 
     public static final String color_red="red";
+    public static final String color_gray="gray";
     public static final String color_yellow="yellow";
     public static final String color_green="green";
+
+    public static final String item_valid="Valid";
+    public static final String item_caution="Caution";
+    public static final String item_unsent="Unsent";
 
     public static final String caution="CAUTION";
     public static final String verified="VERIFIED";
