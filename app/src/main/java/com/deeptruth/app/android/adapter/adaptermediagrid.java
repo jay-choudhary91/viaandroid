@@ -100,6 +100,11 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
                     holder.linearseekbarcolorview.setVisibility(View.INVISIBLE);
                 }
             }
+            else
+            {
+                holder.linearseekbarcolorview.setVisibility(View.GONE);
+                holder.tv_mediaduration.setPadding(0,0,0,5);
+            }
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
