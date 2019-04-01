@@ -725,6 +725,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,layout_bottom.getHeight(),0,0,0,0,0,0,0,imgflashon,null,null,0);
+                        setvalidatingtext();
 
                         if(txt_zoomlevel != null)
                             txt_zoomlevel.setRotation(rotateangle);
@@ -750,6 +751,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,20,0,0,0,0,0,0,0,imgflashon,null,null,0);
+
+                        // set validating text to right padding
+                        txt_section_validating_secondary.setPadding(0,0,layout_bottom.getHeight(),0);
+                        RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(80, 60);
+                        warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+                        setdynamiclayout(warninglayoutparams,null,0,0,layout_bottom.getHeight(),0,0,0,0,0,img_gpswifiwarning,null,null,0);
+                        setdynamiclayout(warninglayoutparams,null,0,0,layout_bottom.getHeight(),0,0,0,0,0,img_close,null,null,0);
 
                         if(txt_zoomlevel != null)
                             txt_zoomlevel.setRotation(rotateangle);
@@ -785,6 +793,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,30,0,0,0,0,0,0,0,imgflashon,null,null,0);
 
+                        setvalidatingtext();
                         if(txt_zoomlevel != null)
                             txt_zoomlevel.setRotation(rotateangle);
 
@@ -1310,6 +1319,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
 
         actionbar.setBackgroundResource(R.drawable.gradient_fade_header_blue);
+        img_dotmenu.setVisibility(View.GONE);
         issavedtofolder=true;
         isvideorecording = false;
         lastrecordedvideo=new File(selectedvideofile);
@@ -2404,6 +2414,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             }
 
+        }
+    }
+    public void setvalidatingtext(){
+        txt_section_validating_secondary.setPadding(0,0,0,0);
+        if(img_gpswifiwarning.getHeight()>0 && img_gpswifiwarning.getWidth()>0){
+            RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(img_gpswifiwarning.getWidth(), img_gpswifiwarning.getHeight());
+            warninglayoutparams.setMargins(0,0,40,0);
+            warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+            img_gpswifiwarning.setLayoutParams(warninglayoutparams);
+            img_close.setLayoutParams(warninglayoutparams);
         }
     }
 }

@@ -417,10 +417,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:scrollbars="vertical"
                         android:gravity="center"
                         android:layout_alignParentLeft="true"
                         android:background="@android:color/transparent"
-                        android:spinnerMode="dropdown" />
+                        android:spinnerMode="dialog" />
 
                     <ImageView
                         android:layout_width="wrap_content"
