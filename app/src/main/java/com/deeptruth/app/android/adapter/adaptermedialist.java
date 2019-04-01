@@ -200,6 +200,10 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                     holder.layout_colorbar.setVisibility(View.GONE);
                 }
             }
+            else
+            {
+                holder.layout_colorbar.setVisibility(View.GONE);
+            }
 
 
             holder.edtvideoname.setText(mediaobject.getMediatitle());
