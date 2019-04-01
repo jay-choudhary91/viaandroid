@@ -2261,8 +2261,8 @@ public class common {
         double current=currentprogress;
         double max=totalitem;
         double progresspercentage = (current * 100) / max;
-        DecimalFormat precision=new DecimalFormat("0.00");
-        String output=precision.format(progresspercentage)+"%";
+        //DecimalFormat precision=new DecimalFormat("0.00");
+        String output=""+Math.round(progresspercentage)+"%";
         if(progresspercentage == 100)
             output="100%";
 
