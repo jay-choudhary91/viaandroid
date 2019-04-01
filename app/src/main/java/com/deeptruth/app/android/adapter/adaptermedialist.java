@@ -55,7 +55,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     adapteritemclick adapter;
     private int listviewheight=0,imagethumbanail_width=0,totalwidth=0;
     ViewBinderHelper binderHelper;
-    String []colorbararray;
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration,
@@ -64,14 +63,12 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         RelativeLayout relative_child;
         public ImageView img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
         public SwipeRevealLayout root_view;
-        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview;
+        LinearLayout layout_share_slide,layout_delete_slide,layout_folder_slide,linearseekbarcolorview,layout_colorbar,layout_valid,
+                layout_caution,layout_unsent;
 
 
         public myViewHolder(View view) {
             super(view);
-            tv_valid = (TextView) view.findViewById(R.id.tv_valid);
-            tv_caution = (TextView) view.findViewById(R.id.tv_caution);
-            tv_unsent = (TextView) view.findViewById(R.id.tv_unsent);
             tv_medianotes = (TextView) view.findViewById(R.id.tv_medianotes);
             txt_pipesign = (TextView) view.findViewById(R.id.txt_pipesign);
             edtvideoname = (EditText) view.findViewById(R.id.edt_videoname);
@@ -92,6 +89,13 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             root_view = (SwipeRevealLayout) view.findViewById(R.id.root_view);
             relative_child = (RelativeLayout) view.findViewById(R.id.relative_child);
             linearseekbarcolorview = (LinearLayout) view.findViewById(R.id.linear_seekbarcolorview);
+            tv_valid = (TextView) view.findViewById(R.id.tv_valid);
+            tv_caution = (TextView) view.findViewById(R.id.tv_caution);
+            tv_unsent = (TextView) view.findViewById(R.id.tv_unsent);
+            layout_valid = (LinearLayout) view.findViewById(R.id.layout_valid);
+            layout_caution = (LinearLayout) view.findViewById(R.id.layout_caution);
+            layout_unsent = (LinearLayout) view.findViewById(R.id.layout_unsent);
+            layout_colorbar = (LinearLayout) view.findViewById(R.id.layout_colorbar);
         }
     }
 
@@ -122,73 +126,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         binderHelper.bind(holder.root_view,""+position);
         if(mediaobject.isDoenable())
         {
-            holder.img_videothumbnail.post(new Runnable() {
-                @Override
-                public void run() {
-
-                    /*holder.img_scanover.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            imagethumbanail_width  = holder.img_videothumbnail.getWidth();
-                            int img_scanoverwidth=  holder.img_scanover.getWidth();
-                            totalwidth= imagethumbanail_width + (img_scanoverwidth);
-                            if(totalwidth > 0)
-                            {
-                                TranslateAnimation animation = new TranslateAnimation(-50.0f,totalwidth,0.0f, 0.0f);
-                                animation.setDuration(3000);
-                                animation.setStartOffset(mediaobject.getGriditemheight()*10);
-                                animation.setRepeatCount(Animation.INFINITE);
-                                animation.setRepeatMode(ValueAnimator.RESTART);
-                                holder.img_scanover.startAnimation(animation);
-
-                                Animation.AnimationListener listener =new Animation.AnimationListener() {
-                                    @Override
-                                    public void onAnimationStart(Animation animation) {
-                                    }
-
-                                    @Override
-                                    public void onAnimationEnd(Animation animation) {
-                                    }
-
-                                    @Override
-                                    public void onAnimationRepeat(Animation animation) {
-                                        animation.setStartOffset(5000);
-                                    }
-                                };
-
-                                if(mediaobject != null)
-                                {
-                                    if(mediaobject.getMediacolor().equalsIgnoreCase(config.color_green))
-                                    {
-                                        animation.setAnimationListener(listener);
-                                        holder.img_scanover.setVisibility(View.VISIBLE);
-                                        holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_green);
-                                    }
-                                    else if(mediaobject.getMediacolor().equalsIgnoreCase(config.color_yellow))
-                                    {
-                                        animation.setAnimationListener(listener);
-                                        holder.img_scanover.setVisibility(View.VISIBLE);
-                                        holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_yellow);
-                                    }
-                                    else if(mediaobject.getMediacolor().equalsIgnoreCase(config.color_red))
-                                    {
-                                        animation.setAnimationListener(listener);
-                                        holder.img_scanover.setVisibility(View.VISIBLE);
-                                        holder.img_scanover.setBackgroundResource(R.drawable.gradient_verify_red);
-                                    }
-                                    else
-                                    {
-                                        holder.img_scanover.setBackgroundResource(0);
-                                        holder.img_scanover.setVisibility(View.GONE);
-                                    }
-                                }
-                            }
-                        }
-                    });
-*/
-                }
-            });
-
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 if(mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete) ||
@@ -209,43 +146,61 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.img_loader.setVisibility(View.GONE);
             }
 
-
-            colorbararray = mediaobject.getBarcolor();
-
-            if(colorbararray != null && colorbararray.length > 0 ){
-
+            ArrayList<String> arrayList = mediaobject.getMediabarcolor();
+            if(arrayList != null && arrayList.size() > 0 )
+            {
+                holder.layout_colorbar.setVisibility(View.VISIBLE);
                 int validcount=0,cautioncount=0,unsentcount=0;
-
-                for(int i=0;i<colorbararray.length;i++){
-
-                    String color = colorbararray[i];
-
-                    if(color.equalsIgnoreCase("green")){
+                for(int i=0;i<arrayList.size();i++)
+                {
+                    if(arrayList.get(i).equalsIgnoreCase(config.color_green))
+                    {
                         validcount++;
-                    }else if(color.equalsIgnoreCase("yellow")){
-
+                        holder.layout_valid.setVisibility(View.VISIBLE);
+                    }
+                    else if(arrayList.get(i).equalsIgnoreCase(config.color_yellow))
+                    {
                         cautioncount++;
-                    }else if(color.isEmpty()){
+                        holder.layout_caution.setVisibility(View.VISIBLE);
+                    }
+                    else if(arrayList.get(i).trim().isEmpty())
+                    {
                         unsentcount++;
+                        holder.layout_unsent.setVisibility(View.VISIBLE);
                     }
                 }
+                if(validcount == 0)
+                    holder.layout_valid.setVisibility(View.GONE);
 
-                holder.tv_valid.setText("valid"+" "+validcount);
-                holder.tv_caution.setText("caution"+" "+ cautioncount);
-                holder.tv_unsent.setText("unsent"+" "+ unsentcount);
-                setseekbarlayoutcolor(holder.linearseekbarcolorview,colorbararray);
-            }
+                if(cautioncount == 0)
+                    holder.layout_caution.setVisibility(View.GONE);
 
-            holder.edtvideoname.setText(mediaobject.getMediatitle());
+                if(unsentcount == 0)
+                    holder.layout_unsent.setVisibility(View.GONE);
 
-            /*if(mediaobject.getMediatitle().trim().isEmpty())
-            {
-                holder.edtvideoname.setText(config.no_title);
+                holder.layout_caution.setPadding(0,0,0,0);
+                holder.layout_unsent.setPadding(0,0,0,0);
+
+                if(validcount > 0 && cautioncount > 0)
+                    holder.layout_caution.setPadding(1,0,0,0);
+
+                if(cautioncount > 0 && unsentcount > 0)
+                    holder.layout_unsent.setPadding(1,0,0,0);
+
+                if(validcount > 0 && unsentcount > 0)
+                    holder.layout_unsent.setPadding(1,0,0,0);
+
+                holder.tv_valid.setText(config.item_valid+" "+common.getcolorprogresspercentage(validcount,arrayList.size()));
+                holder.tv_caution.setText(config.item_caution+" "+ common.getcolorprogresspercentage(cautioncount,arrayList.size()));
+                holder.tv_unsent.setText(config.item_unsent+" "+ common.getcolorprogresspercentage(unsentcount,arrayList.size()));
+                setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
             }
             else
             {
+                holder.layout_colorbar.setVisibility(View.GONE);
+            }
 
-            }*/
+            holder.edtvideoname.setText(mediaobject.getMediatitle());
 
             if(mediaobject.getDuration().trim().isEmpty())
             {
@@ -478,7 +433,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         return arrayvideolist.size();
     }
 
-    private void setseekbarlayoutcolor(LinearLayout colorbarlayout,String []colorbar){
+    private void setseekbarlayoutcolor(LinearLayout colorbarlayout,ArrayList<String> arrayList){
         try
         {
             colorbarlayout.removeAllViews();
@@ -487,20 +442,20 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             e.printStackTrace();
         }
 
-        for(int i=0 ; i<colorbar.length;i++)
+        for(int i=0 ; i<arrayList.size();i++)
         {
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
             param.leftMargin=0;
-
             View view = new View(applicationviavideocomposer.getactivity());
             view.setLayoutParams(param);
-
-
-            if(!colorbar[i].isEmpty() && colorbar[i] != null){
-                view.setBackgroundColor(Color.parseColor(colorbar[0]));
-            }else{
-                view.setBackgroundColor(Color.parseColor("gray"));
+            if(arrayList.get(i) != null && (! arrayList.get(i).isEmpty()))
+            {
+                view.setBackgroundColor(Color.parseColor(arrayList.get(i)));
+            }
+            else
+            {
+                view.setBackgroundColor(Color.parseColor(config.color_gray));
             }
             colorbarlayout.addView(view);
         }

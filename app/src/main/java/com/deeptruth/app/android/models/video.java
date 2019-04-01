@@ -2,6 +2,8 @@ package com.deeptruth.app.android.models;
 
 import android.graphics.Bitmap;
 
+import java.util.ArrayList;
+
 /**
  * Created by root on 9/8/18.
  */
@@ -30,7 +32,7 @@ public class video
     public boolean ischeck = false;
     public boolean doenable = false;
     public int griditemheight = 0;
-    public String []barcolor;
+    public ArrayList<String> mediabarcolor=new ArrayList<>();
 
 
 
@@ -224,11 +226,11 @@ public class video
         this.createtime = createtime;
     }
 
-    public String[] getBarcolor() {
-        return barcolor;
+    public ArrayList<String> getMediabarcolor() {
+        return mediabarcolor;
     }
 
-    public void setBarcolor(String[] barcolor) {
-        this.barcolor = barcolor;
+    public void setMediabarcolor(ArrayList<String> mediabarcolor) {
+        this.mediabarcolor = mediabarcolor;
     }
 }

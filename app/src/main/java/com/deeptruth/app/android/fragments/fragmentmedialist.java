@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
@@ -64,6 +65,7 @@ import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
+import com.google.gson.Gson;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -83,6 +85,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 import static android.widget.RelativeLayout.TRUE;
 
 /**
@@ -1004,33 +1007,21 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         String status = "" + cursor.getString(cursor.getColumnIndex("status"));
 
                         video videoobject=new video();
-
-                        Cursor cursor2 = mdbhelper.getmediacolor(localkey);
-                        if (cursor2 != null && cursor2.getCount()>0){
-
-                            String []colorbararray = new String[cursor2.getCount()];
-                            int count = 0;
-                            while (cursor2.moveToNext()){
-
-                                if (cursor.getString(cursor.getColumnIndex("color")) != null) {
-                                    colorbararray[count] = cursor.getString(cursor.getColumnIndex("color"));
-                                    count++;
-
-
-
-                                }else{
-                                    colorbararray[count] = "";
-                                    count++;
-                                }
-                            };
-                            videoobject.setBarcolor(colorbararray);
-                        }
-
                         if(id.trim().isEmpty() || id.equalsIgnoreCase("null"))
                             id="0";
 
                         if(! isexistinarraay(mediafilepath))
                         {
+                            Cursor cursor2 = mdbhelper.getmediacolor(localkey);
+                            if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
+                            {
+                                ArrayList<String> arrayList=new ArrayList<>();
+                                do{
+                                    arrayList.add(cursor2.getString(cursor2.getColumnIndex("color")));
+                                }while (cursor2.moveToNext());
+                                videoobject.setMediabarcolor(arrayList);
+                            }
+
                             videoobject.setId(Integer.parseInt(id));
                             videoobject.setPath(mediafilepath);
                             videoobject.setmimetype(type);
@@ -1195,7 +1186,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                if(dataupdator >= 5)
                {
                    if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
+                   {
                        getallmedialistfromdb();
+                       if(adaptermedialist != null && arraymediaitemlist.size() > 0)
+                           adaptermedialist.notifyitems(arraymediaitemlist);
+
+                       if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
+                           adaptermediagrid.notifyDataSetChanged();
+                   }
 
                    dataupdator=0;
                }
@@ -1222,6 +1220,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             e.printStackTrace();
         }
 
+        ArrayList<video> localarray=new ArrayList<>();
+        localarray.addAll(arraymediaitemlist);
+        /*for(int i=0;i<arraymediaitemlist.size();i++)
+        {
+            localarray.add(arraymediaitemlist.get(i));
+        }*/
         Cursor cursor = mdbhelper.getallmediastartdata();
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst())
         {
@@ -1236,33 +1240,32 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 String color = "" + cursor.getString(cursor.getColumnIndex("color"));
                 String mediaduration = "" + cursor.getString(cursor.getColumnIndex("mediaduration"));
                 String status = "" + cursor.getString(cursor.getColumnIndex("status"));
-                //String videocompletedevicedate = "" + cursor.getString(cursor.getColumnIndex("videocompletedevicedate"));
                 String mediastartdevicedate = "" + cursor.getString(cursor.getColumnIndex("videostartdevicedate"));
 
-                /*Cursor cursor2 = mdbhelper.getmediacolor(localkey);
-                String []colorbararray = new String[0];
-                if (cursor != null && cursor.getCount()>0){
-
-                    colorbararray = new String[cursor2.getCount()];
-                    int count = 0;
-                    while (cursor2.moveToNext()){
-
-                        if (cursor.getString(cursor.getColumnIndex("color")) != null) {
-                            colorbararray[count] = cursor.getString(cursor.getColumnIndex("color"));
-                            count++;
-
-                        }else{
-                            colorbararray[count] = "";
-                            count++;
-                        }
-                    };
-                }*/
-                
 
                 for(int i = 0; i< arraymediaitemlist.size(); i++)
                 {
+                    /*video oldobject=arraymediaitemlist.get(i);
+                    {
+                        SharedPreferences  mPrefs = getActivity().getPreferences(MODE_PRIVATE);
+                        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+                        Gson gson = new Gson();
+                        String json = gson.toJson(oldobject);
+                        prefsEditor.putString("MyObject", json);
+                        prefsEditor.commit();
+                    }*/
                     if(common.getfilename(arraymediaitemlist.get(i).getPath()).equalsIgnoreCase(location))
                     {
+                        Cursor cursor2 = mdbhelper.getmediacolor(localkey);
+                        if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
+                        {
+                            ArrayList<String> arrayList=new ArrayList<>();
+                            do{
+                                arrayList.add(cursor2.getString(cursor2.getColumnIndex("color")));
+                            }while (cursor2.moveToNext());
+                            arraymediaitemlist.get(i).setMediabarcolor(arrayList);
+                        }
+
                         arraymediaitemlist.get(i).setVideostarttransactionid(videostarttransactionid);
                         arraymediaitemlist.get(i).setThumbnailpath(thumbnailurl);
                         arraymediaitemlist.get(i).setMediatitle((media_name.trim().isEmpty())?config.no_title:media_name);
@@ -1301,6 +1304,19 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         {
                             e.printStackTrace();
                         }
+
+
+                        /*{
+                            Gson gson = new Gson();
+                            SharedPreferences  mPrefs = getActivity().getPreferences(MODE_PRIVATE);
+                            String json = mPrefs.getString("MyObject", "");
+                            video obj = gson.fromJson(json, video.class);
+                            if(obj != arraymediaitemlist.get(i))
+                                adaptermedialist.notifyitems(arraymediaitemlist);
+                        }*/
+                      /*if(localarray.get(i) != arraymediaitemlist.get(i))
+                           adaptermedialist.notifyitems(arraymediaitemlist);*/
+
                         break;
                     }
                 }
