@@ -1267,7 +1267,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     if(gethelper().isdraweropened())
                     {
                         layout_no_gps_wifi.setVisibility(View.GONE);
-                        myHandler.postDelayed(this, 1000);
+                        myHandler.postDelayed(this, 10);
                         return;
                     }
 
