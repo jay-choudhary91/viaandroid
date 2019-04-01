@@ -176,6 +176,11 @@ public class config {
     public static final String color_yellow="yellow";
     public static final String color_green="green";
 
+    public static final String color_code_red="#FF3B30";
+    public static final String color_code_gray="#b1afaa";
+    public static final String color_code_yellow="#FDD012";
+    public static final String color_code_green="#4CD964";
+
     public static final String item_valid="Valid";
     public static final String item_caution="Caution";
     public static final String item_unsent="Unsent";

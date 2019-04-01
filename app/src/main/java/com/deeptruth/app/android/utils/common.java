@@ -2268,5 +2268,27 @@ public class common {
 
         return output;
     }
+
+    public static String getcolorbystring(String colorname)
+    {
+        String color="#FF3B30";
+        if(colorname.equalsIgnoreCase("green"))
+        {
+            color=config.color_code_green;
+        }
+        else if(colorname.equalsIgnoreCase("yellow"))
+        {
+            color=config.color_code_yellow;
+        }
+        else if(colorname.equalsIgnoreCase("red"))
+        {
+            color=config.color_code_red;
+        }
+        else if(colorname.equalsIgnoreCase("gray"))
+        {
+            color=config.color_code_gray;
+        }
+        return color;
+    }
 }
 

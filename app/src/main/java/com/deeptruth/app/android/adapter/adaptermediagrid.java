@@ -87,16 +87,20 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             holder.rl_row_media.setVisibility(View.VISIBLE);
             holder.tv_mediaduration.setText(mediaobject.getDuration());
 
-            ArrayList<String> arrayList = mediaobject.getMediabarcolor();
-            if(arrayList != null && arrayList.size() > 0 )
+            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             {
-                holder.linearseekbarcolorview.setVisibility(View.VISIBLE);
-                setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
+                ArrayList<String> arrayList = mediaobject.getMediabarcolor();
+                if(arrayList != null && arrayList.size() > 0 )
+                {
+                    holder.linearseekbarcolorview.setVisibility(View.VISIBLE);
+                    setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
+                }
+                else
+                {
+                    holder.linearseekbarcolorview.setVisibility(View.INVISIBLE);
+                }
             }
-            else
-            {
-                holder.linearseekbarcolorview.setVisibility(View.INVISIBLE);
-            }
+
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 if(mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete) ||
@@ -195,11 +199,11 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             view.setLayoutParams(param);
             if(arrayList.get(i) != null && (! arrayList.get(i).isEmpty()))
             {
-                view.setBackgroundColor(Color.parseColor(arrayList.get(i)));
+                view.setBackgroundColor(Color.parseColor(common.getcolorbystring( arrayList.get(i))));
             }
             else
             {
-                view.setBackgroundColor(Color.parseColor(config.color_gray));
+                view.setBackgroundColor(Color.parseColor(config.color_code_gray));
             }
             colorbarlayout.addView(view);
         }
