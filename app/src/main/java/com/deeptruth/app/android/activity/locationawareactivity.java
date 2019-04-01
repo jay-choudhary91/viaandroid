@@ -62,6 +62,9 @@ import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
+import com.deeptruth.app.android.fragments.audiocomposerfragment;
+import com.deeptruth.app.android.fragments.composeoptionspagerfragment;
+import com.deeptruth.app.android.fragments.imagecomposerfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.mediametadatainfo;
@@ -622,6 +625,21 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     public void enableGPS(final Context context) {
+
+        if(getcurrentfragment() != null)
+        {
+            if(getcurrentfragment() instanceof videocomposerfragment ||
+                    getcurrentfragment() instanceof audiocomposerfragment || getcurrentfragment() instanceof imagecomposerfragment
+                    || getcurrentfragment() instanceof composeoptionspagerfragment)
+            {
+                // its a case where user is on recorder (video/image/audio)
+            }
+            else
+            {
+                // its a case where it can show gps dialog in other fragments when onResume(activity) method called.
+                return;
+            }
+        }
         if (!locationawareactivity.checkLocationEnable(context)) {
             showgpsalert(context);
         } else {
