@@ -452,6 +452,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     }
 
     private void setseekbarlayoutcolor(LinearLayout colorbarlayout,ArrayList<String> arrayList){
+
+        /*if(colorbarlayout != null && colorbarlayout.getChildCount() == 0)
+        {
+
+        }*/
         try
         {
             colorbarlayout.removeAllViews();

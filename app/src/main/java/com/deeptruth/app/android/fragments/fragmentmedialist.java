@@ -1183,7 +1183,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             public void run() {
 
                dataupdator++;
-               if(dataupdator >= 5)
+               if(dataupdator >= 10)
                {
                    if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
                    {
