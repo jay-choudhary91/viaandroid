@@ -45,9 +45,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/centersnaprecyclerview"
+                android:layout_width="match_parent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_height="wrap_content"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <com.deeptruth.app.android.views.customfonttextview

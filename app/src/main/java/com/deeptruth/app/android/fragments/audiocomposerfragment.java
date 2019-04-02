@@ -13,7 +13,6 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -22,8 +21,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -180,8 +177,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     ImageView img_roundblink;
     Animation blinkanimation;
     Calendar sequencestarttime,sequenceendtime;
-    @BindView(R.id.txt_weekgps)
-    TextView txt_weekgps;
+    @BindView(R.id.txt_weakgps)
+    TextView txt_weakgps;
     @BindView(R.id.txt_no_gps_wifi)
     TextView txt_no_gps_wifi;
     @Override
@@ -1559,16 +1556,18 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     }
     public void checkgpsaccuracy(){
         if(isaudiorecording) {
-            if((!(xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())) && xdata.getinstance().getSetting(config.GPSAccuracy)!= null){
+            if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())
+                    && (! xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")))
+            {
                 Double  gpsvalue = Double.valueOf(xdata.getinstance().getSetting(config.GPSAccuracy));
                 if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
-                    txt_weekgps.setVisibility(View.GONE);
+                    txt_weakgps.setVisibility(View.GONE);
                 }else {
-                    if ((gpsvalue < 50 && gpsvalue != 0)) {
-                        txt_weekgps.setVisibility(View.VISIBLE);
-                        txt_weekgps.setText(getResources().getString(R.string.weak_gps));
+                    if ((gpsvalue <= 50 && gpsvalue != 0)) {
+                        txt_weakgps.setVisibility(View.VISIBLE);
+                        txt_weakgps.setText(getResources().getString(R.string.weak_gps));
                     } else {
-                        txt_weekgps.setVisibility(View.GONE);
+                        txt_weakgps.setVisibility(View.GONE);
                     }
                 }
             }

@@ -50,7 +50,7 @@
 
         <com.deeptruth.app.android.views.customfonttextview
             app:fontType="OpenSans_Semibold"
-            android:id="@+id/txt_weekgps"
+            android:id="@+id/txt_weakgps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"

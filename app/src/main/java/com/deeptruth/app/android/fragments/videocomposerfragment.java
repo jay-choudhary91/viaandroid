@@ -1,7 +1,6 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Dialog;
@@ -38,11 +37,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -64,15 +60,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.adapter.mediaqualityadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.dbitemcontainer;
 import com.deeptruth.app.android.models.frameinfo;
-import com.deeptruth.app.android.models.mediacompletiondialogmain;
-import com.deeptruth.app.android.models.mediacompletiondialogsub;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.permissions;
 import com.deeptruth.app.android.models.videomodel;
@@ -87,9 +80,6 @@ import com.deeptruth.app.android.utils.sha;
 import com.deeptruth.app.android.utils.xdata;
 import com.github.rongi.rotate_layout.layout.RotateLayout;
 import com.google.gson.Gson;
-import com.warkiz.widget.IndicatorSeekBar;
-import com.warkiz.widget.OnSeekChangeListener;
-import com.warkiz.widget.SeekParams;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -99,7 +89,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -401,8 +390,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ImageView img_close;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
-    @BindView(R.id.txt_weekgps)
-    TextView txt_weekgps;
+    @BindView(R.id.txt_weakgps)
+    TextView txt_weakgps;
     @BindView(R.id.txt_no_gps_wifi)
     TextView txt_no_gps_wifi;
 
@@ -1994,7 +1983,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         }
                         visiblewarningcontrollers();
                         visibleconnection();
-                        checkgpsaccuracy();
                     }
                     else
                     {
@@ -2015,9 +2003,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         img_close.setVisibility(View.GONE);
                         txt_no_gps_wifi.setVisibility(View.GONE);
                         validatingcontrollers();
-                        checkgpsaccuracy();
                     }
 
+                    checkgpsaccuracy();
                     if(isvideorecording)
                     {
                         if(img_close.getVisibility() == View.VISIBLE)
@@ -2399,16 +2387,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     }
     public void checkgpsaccuracy(){
         if(isvideorecording){
-            if((!(xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())) && xdata.getinstance().getSetting(config.GPSAccuracy)!= null){
+            if(xdata.getinstance().getSetting(config.GPSAccuracy)!= null && (! xdata.getinstance().getSetting(config.GPSAccuracy).isEmpty())
+                    && (! xdata.getinstance().getSetting(config.GPSAccuracy).equalsIgnoreCase("NA")))
+            {
                 gpsvalue = Double.valueOf(xdata.getinstance().getSetting(config.GPSAccuracy));
                 if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")){
-                    txt_weekgps.setVisibility(View.GONE);
+                    txt_weakgps.setVisibility(View.GONE);
                 }else{
-                    if ((gpsvalue < 50 && gpsvalue != 0)) {
-                        txt_weekgps.setVisibility(View.VISIBLE);
-                        txt_weekgps.setText(getResources().getString(R.string.weak_gps));
+                    if ((gpsvalue <= 50 && gpsvalue != 0)) {
+                        txt_weakgps.setVisibility(View.VISIBLE);
+                        txt_weakgps.setText(getResources().getString(R.string.weak_gps));
                     } else {
-                        txt_weekgps.setVisibility(View.GONE);
+                        txt_weakgps.setVisibility(View.GONE);
                     }
                 }
 
