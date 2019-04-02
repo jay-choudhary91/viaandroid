@@ -103,7 +103,7 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             else
             {
                 holder.linearseekbarcolorview.setVisibility(View.GONE);
-                holder.tv_mediaduration.setPadding(0,0,0,5);
+                holder.tv_mediaduration.setPadding(0,0,15,5);
             }
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))

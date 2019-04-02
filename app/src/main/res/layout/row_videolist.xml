@@ -267,12 +267,19 @@
                             android:visibility="gone"
                             android:text=""
                             />
+
                         <LinearLayout
                             android:id="@+id/layout_colorbar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
+                            android:orientation="vertical"
                             android:layout_marginTop="3dp">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
                             <com.deeptruth.app.android.views.customfonttextview
                                 app:fontType="OpenSans_Regular"
@@ -351,6 +358,8 @@
                             android:layout_marginTop="5dp"
                             android:background="@color/transparent"
                             android:orientation="horizontal" />
+
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
