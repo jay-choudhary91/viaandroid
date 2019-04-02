@@ -99,6 +99,7 @@ import org.json.JSONTokener;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -2075,7 +2076,13 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("wifiname")){
             common.setspannable(getResources().getString(R.string.wifi),"\n"+metricItemArraylist.getMetricTrackValue(), tvwifi);
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("gpsaccuracy")){
-            common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
+            if(!metricItemArraylist.getMetricTrackValue().equals("NA")){
+                DecimalFormat precision=new DecimalFormat("0.0");
+                double gpsaccuracy = Double.parseDouble(metricItemArraylist.getMetricTrackValue());
+                common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+precision.format(gpsaccuracy) + " feet", tvgpsaccuracy);
+            }else{
+                common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+metricItemArraylist.getMetricTrackValue(), tvgpsaccuracy);
+            }
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenwidth")){
             screenwidth = metricItemArraylist.getMetricTrackValue();
         }else if(metricItemArraylist.getMetricTrackKeyName().equalsIgnoreCase("screenheight")){
