@@ -2967,10 +2967,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                    // Set thumbnail properties (Thumbs are squares)
 
-                   final int thumbWidth = mheightview;
-                   final int thumbHeight = mheightview;
+                    int thumbWidthwithoutmultipay =(int)getActivity().getResources().getDimension(R.dimen.play_screen_bar_height);
 
-                   int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
+                    final int thumbWidth = (int)(thumbWidthwithoutmultipay * 1.5);
+
+                    final int thumbHeight = (int)getActivity().getResources().getDimension(R.dimen.play_screen_bar_height);
+
+                    int numThumbs = (int) Math.ceil(((float) viewwidth) / thumbWidth);
 
                    //90 portrait
                    // left landscape 0
