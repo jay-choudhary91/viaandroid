@@ -1,38 +1,29 @@
 package com.deeptruth.app.android.fragments;
 
-import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,20 +36,19 @@ import com.bumptech.glide.Glide;
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.activity.locationawareactivity;
+import com.deeptruth.app.android.adapter.adaptercomposemediatype;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
-import com.deeptruth.app.android.models.permissions;
+import com.deeptruth.app.android.models.mediatype;
 import com.deeptruth.app.android.sensor.Orientation;
+import com.deeptruth.app.android.utils.SpeedyLinearLayoutManager;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.github.rongi.rotate_layout.layout.RotateLayout;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,6 +94,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     @BindView(R.id.layout_encryption)
     RelativeLayout layout_encryption;
+    @BindView(R.id.centersnaprecyclerview)
+    RecyclerView centersnaprecyclerview;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -201,6 +193,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             });
 
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
+            setUpRecyclerView();
         }
         return rootview;
     }
@@ -366,6 +359,124 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
         };
         myHandler.post(myRunnable);
+    }
+
+    adapteritemclick mlistitemclick=new adapteritemclick() {
+        @Override
+        public void onItemClicked(Object object) {
+
+        }
+
+        @Override
+        public void onItemClicked(Object object, int position) {
+
+            fetchrecyclerposition(position);
+            //setrecyclerposition(position);
+        }
+    };
+
+    public void fetchrecyclerposition(int position)
+    {
+        if(position == 2 || position == 3 || position == 4)
+        {
+            setrecyclerposition(position);
+            if(position == 2)
+            {
+                currentselectedcomposer=0;
+                showselectedfragment();
+            }
+            else if(position == 3)
+            {
+                currentselectedcomposer=1;
+                showselectedfragment();
+            }
+            else if(position == 4)
+            {
+                currentselectedcomposer=2;
+                showselectedfragment();
+            }
+
+        }
+    }
+
+    public void setrecyclerposition(int position)
+    {
+        if(position == 2 || position == 3 || position == 4)
+        {
+            int width=common.getScreenWidth(applicationviavideocomposer.getactivity());
+            width=width/5;
+            if(position == 2)
+            {
+                width=0;
+            }
+            else if(position == 3)
+            {
+            }
+            else if(position == 4)
+            {
+                width=width*2;
+            }
+
+            int offset=(int)width;
+            LinearLayoutManager layoutManager = ((LinearLayoutManager)centersnaprecyclerview.getLayoutManager());
+            layoutManager.scrollToPositionWithOffset(0,-offset);
+        }
+    }
+
+    private void setUpRecyclerView() {
+
+        ArrayList<mediatype> arrayList=new ArrayList<>();
+        arrayList.add(new mediatype("",""));
+        arrayList.add(new mediatype("",""));
+        arrayList.add(new mediatype("VIDEO",""));
+        arrayList.add(new mediatype("PHOTO",""));
+        arrayList.add(new mediatype("AUDIO",""));
+        arrayList.add(new mediatype("",""));
+        arrayList.add(new mediatype("",""));
+
+        int width=common.getScreenWidth(applicationviavideocomposer.getactivity());
+        /*final SpeedyLinearLayoutManager layoutmanager=new SpeedyLinearLayoutManager(applicationviavideocomposer.getactivity(),
+                SpeedyLinearLayoutManager.HORIZONTAL, false);*/
+        final LinearLayoutManager layoutmanager
+                = new LinearLayoutManager(applicationviavideocomposer.getactivity(), LinearLayoutManager.HORIZONTAL, false);
+        centersnaprecyclerview.setLayoutManager(layoutmanager);
+        adaptercomposemediatype adapter = new adaptercomposemediatype(applicationviavideocomposer.getactivity(),arrayList,width,mlistitemclick);
+        centersnaprecyclerview.setAdapter(adapter);
+        final SnapHelper snapHelperCenter = new LinearSnapHelper();
+        snapHelperCenter.attachToRecyclerView(centersnaprecyclerview);
+
+        centersnaprecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        int center = common.getScreenWidth(applicationviavideocomposer.getactivity())/2;
+                        View view =snapHelperCenter.findSnapView(layoutmanager);
+                        //View centerView = centersnaprecyclerview.findChildViewUnder(center, centersnaprecyclerview.getTop());
+                        int centerPos = centersnaprecyclerview.getChildAdapterPosition(view);
+                        if(centerPos == 2 && currentselectedcomposer != 0)
+                            fetchrecyclerposition(centerPos);
+
+                        if(centerPos == 3 && currentselectedcomposer != 1)
+                            fetchrecyclerposition(centerPos);
+
+                        if(centerPos == 4 && currentselectedcomposer != 2)
+                            fetchrecyclerposition(centerPos);
+                        break;
+                    case RecyclerView.SCROLL_STATE_DRAGGING:
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+
     }
 
     public void initviewpager()
@@ -638,7 +749,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             return;
         Log.e("currentselectedcomposer",""+currentselectedcomposer);
         currentselectedcomposer--;
-        showselectedfragment();
+        //showselectedfragment();
+        if(currentselectedcomposer == 0)
+            fetchrecyclerposition(2);
+
+        if(currentselectedcomposer == 1)
+            fetchrecyclerposition(3);
+
+        if(currentselectedcomposer == 2)
+            fetchrecyclerposition(4);
     }
 
     public void swiperighttoleft()
@@ -648,7 +767,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         currentselectedcomposer++;
         Log.e("currentselectedcomposer",""+currentselectedcomposer);
-        showselectedfragment();
+        if(currentselectedcomposer == 0)
+            fetchrecyclerposition(2);
+
+        if(currentselectedcomposer == 1)
+            fetchrecyclerposition(3);
+
+        if(currentselectedcomposer == 2)
+            fetchrecyclerposition(4);
     }
 
     public void showselectedfragment()
