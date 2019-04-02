@@ -457,7 +457,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             });
 
-            mOrientation = new Orientation(applicationviavideocomposer.getactivity());
+           // mOrientation = new Orientation(applicationviavideocomposer.getactivity());
             gethelper().setwindowfitxy(true);
             //layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
             loadviewdata();

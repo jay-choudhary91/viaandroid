@@ -1724,13 +1724,13 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     public void copymediafromgallery(final String selectedmediafile){
 
+        if(selectedmediafile == null)
+            return;
+
         progressdialog.showwaitingdialog(applicationviavideocomposer.getactivity());
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                if(selectedmediafile == null)
-                    return;
 
                 File sourceFile = new File(selectedmediafile);
 
