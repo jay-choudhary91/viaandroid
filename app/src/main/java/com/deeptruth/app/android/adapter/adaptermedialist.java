@@ -58,7 +58,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
     public class myViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_mediatime,tv_mediadate,tv_localkey,tv_sync_status,txt_pipesign,tv_medianotes,tv_mediaduration,
-                tv_valid,tv_caution,tv_unsent,txt_pipesign_caution,txt_pipesign_unsent;
+                tv_valid,tv_caution,tv_unsent,tv_invalid,txt_pipesign_caution,txt_pipesign_unsent,txt_pipesign_invalid;
         EditText edtvideoname;
         RelativeLayout relative_child;
         public ImageView img_loader,img_videothumbnail,img_slide_share,img_slide_create_dir,img_slide_delete,img_scanover;
@@ -91,8 +91,10 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             tv_valid = (TextView) view.findViewById(R.id.tv_valid);
             tv_caution = (TextView) view.findViewById(R.id.tv_caution);
             tv_unsent = (TextView) view.findViewById(R.id.tv_unsent);
+            tv_invalid = (TextView) view.findViewById(R.id.tv_invalid);
             txt_pipesign_caution = (TextView) view.findViewById(R.id.txt_pipesign_caution);
             txt_pipesign_unsent = (TextView) view.findViewById(R.id.txt_pipesign_unsent);
+            txt_pipesign_invalid = (TextView) view.findViewById(R.id.txt_pipesign_invalid);
             layout_colorbar = (LinearLayout) view.findViewById(R.id.layout_colorbar);
         }
     }
@@ -150,7 +152,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 if(arrayList != null && arrayList.size() > 0 )
                 {
                     holder.layout_colorbar.setVisibility(View.VISIBLE);
-                    int validcount=0,cautioncount=0,unsentcount=0;
+                    int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
                     for(int i=0;i<arrayList.size();i++)
                     {
                         if(arrayList.get(i).equalsIgnoreCase(config.color_green))
@@ -162,6 +164,11 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                         {
                             cautioncount++;
                             holder.tv_caution.setVisibility(View.VISIBLE);
+                        }
+                        else if(arrayList.get(i).equalsIgnoreCase(config.color_red))
+                        {
+                            invalidcount++;
+                            holder.tv_invalid.setVisibility(View.VISIBLE);
                         }
                         else if(arrayList.get(i).trim().isEmpty())
                         {
@@ -178,21 +185,26 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                     if(unsentcount == 0)
                         holder.tv_unsent.setVisibility(View.GONE);
 
+                    if(invalidcount == 0)
+                        holder.tv_invalid.setVisibility(View.GONE);
+
                     holder.txt_pipesign_caution.setVisibility(View.GONE);
                     holder.txt_pipesign_unsent.setVisibility(View.GONE);
+                    holder.txt_pipesign_invalid.setVisibility(View.GONE);
 
                     if(validcount > 0 && cautioncount > 0)
                         holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
 
-                    if(cautioncount > 0 && unsentcount > 0)
+                    if((cautioncount > 0 || validcount > 0) && unsentcount > 0)
                         holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
 
-                    if(validcount > 0 && unsentcount > 0)
-                        holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
+                    if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
+                        holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
 
                     holder.tv_valid.setText(config.item_valid+" "+common.getcolorprogresspercentage(validcount,arrayList.size()));
                     holder.tv_caution.setText(config.item_caution+" "+ common.getcolorprogresspercentage(cautioncount,arrayList.size()));
                     holder.tv_unsent.setText(config.item_unsent+" "+ common.getcolorprogresspercentage(unsentcount,arrayList.size()));
+                    holder.tv_invalid.setText(config.item_invalid+" "+ common.getcolorprogresspercentage(invalidcount,arrayList.size()));
                     setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
                 }
                 else

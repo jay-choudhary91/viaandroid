@@ -184,6 +184,7 @@ public class config {
     public static final String item_valid="Valid";
     public static final String item_caution="Caution";
     public static final String item_unsent="Unsent";
+    public static final String item_invalid="Invalid";
 
     public static final String caution="CAUTION";
     public static final String verified="VERIFIED";
