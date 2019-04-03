@@ -195,6 +195,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
                         if(graphicaldrawerfragment == null)
                         {
+                            
                             graphicaldrawerfragment =new fragmentgraphicaldrawer();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
