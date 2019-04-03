@@ -1316,8 +1316,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                 if(framecolor.equalsIgnoreCase(config.color_red))
                                     invalidcount++;
 
-                                if(framecolor.trim().isEmpty())
-                                    unsentcount++;
+                                if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                {
+                                    if(framecolor.trim().isEmpty())
+                                        unsentcount++;
+                                }
 
                             }while (cursor2.moveToNext());
 
