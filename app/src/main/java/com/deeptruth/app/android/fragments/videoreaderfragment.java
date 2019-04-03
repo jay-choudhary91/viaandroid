@@ -1616,23 +1616,31 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     break;
 
                 case R.id.img_pause:
-                    if(player.isPlaying()){
-                        pause();
                         if(layout_videodetails.getVisibility()==View.GONE){
-                            playpausebutton.setImageResource(R.drawable.play_btn);
-                            playpausebutton.setVisibility(View.VISIBLE);
-                            img_fullscreen.setVisibility(View.VISIBLE);
-                            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                            layoutbackgroundcontroller.setVisibility(View.GONE);
-                            totalduration.setVisibility(View.VISIBLE);
-                            time_current.setVisibility(View.VISIBLE);
-                            gethelper().updateactionbar(1);
-                            imgpause.setVisibility(View.GONE);
-                            setbottomimgview();
-                            layout_mediatype.setVisibility(View.VISIBLE);
-                            gethelper().setdrawerheightonfullscreen(0);
+                            if(player.isPlaying() && gethelper().isdraweropened()){
+                                pause();
+                                imgpause.setImageResource(R.drawable.ic_play);
+                            }else if(player.isPlaying() && !gethelper().isdraweropened()){
+                                pause();
+                                imgpause.setImageResource(R.drawable.ic_pause);
+                                playpausebutton.setImageResource(R.drawable.play_btn);
+                                playpausebutton.setVisibility(View.VISIBLE);
+                                img_fullscreen.setVisibility(View.VISIBLE);
+                                img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+                                layoutbackgroundcontroller.setVisibility(View.GONE);
+                                totalduration.setVisibility(View.VISIBLE);
+                                time_current.setVisibility(View.VISIBLE);
+                                gethelper().updateactionbar(1);
+                                imgpause.setVisibility(View.GONE);
+                                setbottomimgview();
+                                layout_mediatype.setVisibility(View.VISIBLE);
+                                gethelper().setdrawerheightonfullscreen(0);
+                            }else if(!player.isPlaying() && gethelper().isdraweropened()){
+                                start();
+                                imgpause.setImageResource(R.drawable.ic_pause);
+                            }
                         }
-                    }
+
                     break;
 
                 case R.id.layout_dtls:
@@ -3154,6 +3162,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 } else {
 
                         layoutbackgroundcontroller.setVisibility(View.GONE);
+                        imgpause.setImageResource(R.drawable.ic_pause);
                         layout_mediatype.setVisibility(View.VISIBLE);
                         playpausebutton.setVisibility(View.VISIBLE);
                         img_fullscreen.setVisibility(View.VISIBLE);
