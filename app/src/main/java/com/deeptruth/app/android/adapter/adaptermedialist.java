@@ -146,65 +146,72 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.img_loader.setVisibility(View.GONE);
             }
 
-            if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+            /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             {
-                ArrayList<String> arrayList = mediaobject.getMediabarcolor();
-                if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null )
+
+            }
+            else
+            {
+                holder.layout_colorbar.setVisibility(View.GONE);
+            }*/
+
+            ArrayList<String> arrayList = mediaobject.getMediabarcolor();
+            if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null )
+            {
+                holder.layout_colorbar.setVisibility(View.VISIBLE);
+                try {
+                    if(mediaobject.getColorbarview().getParent() != null)
+                        ((ViewGroup)mediaobject.getColorbarview().getParent()).removeView(mediaobject.getColorbarview());
+
+                    holder.linearseekbarcolorview.removeAllViews();
+                }catch (Exception e)
                 {
-                    holder.layout_colorbar.setVisibility(View.VISIBLE);
-                    try {
-                        if(mediaobject.getColorbarview().getParent() != null)
-                            ((ViewGroup)mediaobject.getColorbarview().getParent()).removeView(mediaobject.getColorbarview());
+                    e.printStackTrace();
+                }
+                holder.linearseekbarcolorview.addView(mediaobject.getColorbarview());
+                holder.linearseekbarcolorview.invalidate();
+                holder.linearseekbarcolorview.requestLayout();
 
-                        holder.linearseekbarcolorview.removeAllViews();
-                    }catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                    holder.linearseekbarcolorview.addView(mediaobject.getColorbarview());
-                    holder.linearseekbarcolorview.invalidate();
-                    holder.linearseekbarcolorview.requestLayout();
+                int validcount=mediaobject.getValidcount();
+                int cautioncount=mediaobject.getCautioncount();
+                int unsentcount=mediaobject.getUnsentcount();
+                int invalidcount=mediaobject.getInvalidcount();
 
-                    int validcount=mediaobject.getValidcount();
-                    int cautioncount=mediaobject.getCautioncount();
-                    int unsentcount=mediaobject.getUnsentcount();
-                    int invalidcount=mediaobject.getInvalidcount();
+                holder.tv_valid.setVisibility(View.GONE);
+                holder.tv_caution.setVisibility(View.GONE);
+                holder.tv_unsent.setVisibility(View.GONE);
+                holder.tv_invalid.setVisibility(View.GONE);
 
-                    holder.tv_valid.setVisibility(View.GONE);
-                    holder.tv_caution.setVisibility(View.GONE);
-                    holder.tv_unsent.setVisibility(View.GONE);
-                    holder.tv_invalid.setVisibility(View.GONE);
+                if(validcount > 0)
+                    holder.tv_valid.setVisibility(View.VISIBLE);
 
-                    if(validcount > 0)
-                        holder.tv_valid.setVisibility(View.VISIBLE);
+                if(cautioncount > 0)
+                    holder.tv_caution.setVisibility(View.VISIBLE);
 
-                    if(cautioncount > 0)
-                        holder.tv_caution.setVisibility(View.VISIBLE);
+                if(unsentcount > 0)
+                    holder.tv_unsent.setVisibility(View.VISIBLE);
 
-                    if(unsentcount > 0)
-                        holder.tv_unsent.setVisibility(View.VISIBLE);
+                if(invalidcount > 0)
+                    holder.tv_invalid.setVisibility(View.VISIBLE);
 
-                    if(invalidcount > 0)
-                        holder.tv_invalid.setVisibility(View.VISIBLE);
+                holder.txt_pipesign_caution.setVisibility(View.GONE);
+                holder.txt_pipesign_unsent.setVisibility(View.GONE);
+                holder.txt_pipesign_invalid.setVisibility(View.GONE);
 
-                    holder.txt_pipesign_caution.setVisibility(View.GONE);
-                    holder.txt_pipesign_unsent.setVisibility(View.GONE);
-                    holder.txt_pipesign_invalid.setVisibility(View.GONE);
+                if(validcount > 0 && cautioncount > 0)
+                    holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
 
-                    if(validcount > 0 && cautioncount > 0)
-                        holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
+                if((cautioncount > 0 || validcount > 0) && unsentcount > 0)
+                    holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
 
-                    if((cautioncount > 0 || validcount > 0) && unsentcount > 0)
-                        holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
+                if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
+                    holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
 
-                    if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
-                        holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
-
-                    holder.tv_valid.setText(config.item_valid+" "+common.getcolorprogresspercentage(validcount,arrayList.size()));
-                    holder.tv_caution.setText(config.item_caution+" "+ common.getcolorprogresspercentage(cautioncount,arrayList.size()));
-                    holder.tv_unsent.setText(config.item_unsent+" "+ common.getcolorprogresspercentage(unsentcount,arrayList.size()));
-                    holder.tv_invalid.setText(config.item_invalid+" "+ common.getcolorprogresspercentage(invalidcount,arrayList.size()));
-                    //setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
+                holder.tv_valid.setText(config.item_valid+" "+common.getcolorprogresspercentage(validcount,arrayList.size()));
+                holder.tv_caution.setText(config.item_caution+" "+ common.getcolorprogresspercentage(cautioncount,arrayList.size()));
+                holder.tv_unsent.setText(config.item_unsent+" "+ common.getcolorprogresspercentage(unsentcount,arrayList.size()));
+                holder.tv_invalid.setText(config.item_invalid+" "+ common.getcolorprogresspercentage(invalidcount,arrayList.size()));
+                //setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
                     /*if(holder.layout_colorbar != null && holder.linearseekbarcolorview.getChildCount() < arrayList.size())
                     {
                         int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
@@ -234,11 +241,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
 
                         setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
                     }*/
-                }
-                else
-                {
-                    holder.layout_colorbar.setVisibility(View.GONE);
-                }
             }
             else
             {
