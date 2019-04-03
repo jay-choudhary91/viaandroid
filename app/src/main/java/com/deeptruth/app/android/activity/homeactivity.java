@@ -362,6 +362,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         imglefthandle.setVisibility(View.GONE);
         imgrighthandle.setVisibility(View.GONE);
         updateheader("");
+        setdrawerheightonfullscreen(0);
 
         {
             RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
