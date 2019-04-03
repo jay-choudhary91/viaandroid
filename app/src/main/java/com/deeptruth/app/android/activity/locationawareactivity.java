@@ -1831,6 +1831,11 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     public void syncmediadatabase()
     {
         Log.e("Method ","syncmediadatabase");
+        if(! common.isnetworkconnected(locationawareactivity.this))
+        {
+            isdatasyncing=false;
+            return;
+        }
         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
             if(getcurrentfragment() instanceof videocomposerfragment)
@@ -1841,13 +1846,6 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                     isdatasyncing=false;
                     return;
                 }
-
-                if(! common.isnetworkconnected(locationawareactivity.this))
-                {
-                    isdatasyncing=false;
-                    return;
-                }
-
             }
 
             if (mdbhelper == null) {

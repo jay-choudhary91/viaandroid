@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.models;
 
 import android.graphics.Bitmap;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -32,7 +33,13 @@ public class video
     public boolean ischeck = false;
     public boolean doenable = false;
     public int griditemheight = 0;
+    public int validcount = 0;
+    public int cautioncount = 0;
+    public int invalidcount = 0;
+    public int unsentcount = 0;
+    public int unsentunreceived = 0;
     public ArrayList<String> mediabarcolor=new ArrayList<>();
+    public View colorbarview=null;
 
 
 
@@ -49,6 +56,54 @@ public class video
     public  video()
     {
 
+    }
+
+    public View getColorbarview() {
+        return colorbarview;
+    }
+
+    public int getValidcount() {
+        return validcount;
+    }
+
+    public void setValidcount(int validcount) {
+        this.validcount = validcount;
+    }
+
+    public int getCautioncount() {
+        return cautioncount;
+    }
+
+    public void setCautioncount(int cautioncount) {
+        this.cautioncount = cautioncount;
+    }
+
+    public int getInvalidcount() {
+        return invalidcount;
+    }
+
+    public void setInvalidcount(int invalidcount) {
+        this.invalidcount = invalidcount;
+    }
+
+    public int getUnsentcount() {
+        return unsentcount;
+    }
+
+    public void setUnsentcount(int unsentcount) {
+        this.unsentcount = unsentcount;
+    }
+
+    public int getUnsentunreceived() {
+        return unsentunreceived;
+    }
+
+    public void setUnsentunreceived(int unsentunreceived) {
+        this.unsentunreceived = unsentunreceived;
+    }
+
+    public void setColorbarview(View colorbarview) {
+        this.colorbarview = colorbarview;
     }
 
     public int getId() {

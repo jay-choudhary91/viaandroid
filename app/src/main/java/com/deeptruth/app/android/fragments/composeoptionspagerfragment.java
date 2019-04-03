@@ -193,7 +193,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             });
 
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
-            setUpRecyclerView();
         }
         return rootview;
     }
@@ -514,7 +513,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 txt_mediatype_b.setVisibility(View.VISIBLE);
                 txt_mediatype_c.setVisibility(View.VISIBLE);
 
-                showselectedfragment();
+                setUpRecyclerView();
+                //showselectedfragment();
+                if(currentselectedcomposer == 0)
+                    fetchrecyclerposition(2);
+
+                if(currentselectedcomposer == 1)
+                    fetchrecyclerposition(3);
+
+                if(currentselectedcomposer == 2)
+                    fetchrecyclerposition(4);
 
                 final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
                 alphanimation.setDuration(2000); //You can manage the time of the blink with this parameter
@@ -887,7 +895,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 int newheight=0;
                 if(layout_mediatype.getVisibility() == View.VISIBLE)
                 {
-                    newheight=footerlayoutheight;
+                    newheight=footerlayoutheight+30;
                 }
                 else
                 {
