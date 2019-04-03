@@ -648,6 +648,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
                 recyclerviewlist.setVisibility(View.GONE);
                 recyclerviewgrid.setVisibility(View.VISIBLE);
+
+                if(adaptermediagrid != null && arraymediaitemlist.size() > 0)
+                    adaptermediagrid.notifyDataSetChanged();
                 try {
                     DrawableCompat.setTint(btn_gallerylist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                             , R.color.img_bg));
@@ -671,6 +674,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.blue));
                 recyclerviewlist.setVisibility(View.VISIBLE);
                 recyclerviewgrid.setVisibility(View.GONE);
+
+                if(adaptermedialist != null && arraymediaitemlist.size() > 0)
+                    adaptermedialist.notifyitems(arraymediaitemlist);
                 try {
                     DrawableCompat.setTint(btn_gridlist.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
                             , R.color.img_bg));
