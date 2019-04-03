@@ -1,6 +1,7 @@
 package com.deeptruth.app.android.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,14 @@ public class adaptercomposemediatype extends RecyclerView.Adapter<adaptercompose
     @Override
     public void onBindViewHolder(final myViewHolder holder, final int position) {
         holder.txt_mediatype.setText(mitemlist.get(position).getMedianame());
+        if(mitemlist.get(position).isIsmediaselected())
+        {
+            holder.txt_mediatype.setTextColor(context.getResources().getColor(R.color.wave_blue));
+        }
+        else
+        {
+            holder.txt_mediatype.setTextColor(context.getResources().getColor(R.color.white));
+        }
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
