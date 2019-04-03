@@ -89,6 +89,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
+
         ButterKnife.bind(this);
         applicationviavideocomposer.setActivity(homeactivity.this);
         config.selectedmediatype=0;
@@ -196,6 +197,7 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
                         if(graphicaldrawerfragment == null)
                         {
+                            
                             graphicaldrawerfragment =new fragmentgraphicaldrawer();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.add(R.id.fragment_graphic_drawer_container,graphicaldrawerfragment);
