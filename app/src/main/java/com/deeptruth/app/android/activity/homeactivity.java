@@ -54,6 +54,8 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
 
     @BindView(R.id.fragment_container)
     FrameLayout fragment_container;
+    @BindView(R.id.navigation_drawer)
+    FrameLayout navigation_drawer;
     @BindView(R.id.img_lefthandle)
     ImageView imglefthandle;
     @BindView(R.id.img_righthandle)
@@ -632,4 +634,15 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
         composeoptionspagerfragment fragbottombar=new composeoptionspagerfragment();
         replaceFragment(fragbottombar, false, true);
     }
+
+    @Override
+    public void setdrawerheightonfullscreen(int drawerheight) {
+        if(drawerheight!=0){
+            navigation_drawer.setPadding(0,0,0,drawerheight);
+        }else{
+            navigation_drawer.setPadding(0,0,0,0);
+        }
+        //  graphicaldrawerfragment.setdrawerheight(drawerheight);
+    }
+
 }

@@ -275,6 +275,8 @@ public abstract class basefragment extends Fragment {
 
         public void getCallInfo();
 
+        public void setdrawerheightonfullscreen(int drawerheight);
+
         public void getairplanemodeon();
 
         public void drawerenabledisable(boolean enable);
@@ -307,6 +309,7 @@ public abstract class basefragment extends Fragment {
     public void showhideviewondrawer(boolean isshow) {
 
     }
+
 
     public void setmetriceslistitems(ArrayList<metricmodel> mitems) {
 
