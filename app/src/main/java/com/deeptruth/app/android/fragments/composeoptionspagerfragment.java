@@ -42,7 +42,6 @@ import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediatype;
 import com.deeptruth.app.android.sensor.Orientation;
-import com.deeptruth.app.android.utils.SpeedyLinearLayoutManager;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
@@ -112,6 +111,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ArrayList<String> imagearraylist =new ArrayList<>();
     ArrayList<String> videoarraylist =new ArrayList<>();
     ArrayList<String> audioarraylist =new ArrayList<>();
+    ArrayList<mediatype> mediatypeArrayList =new ArrayList<>();
     private Handler myHandler;
     private Runnable myRunnable;
 
@@ -125,6 +125,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     int navigationbarheight = 0;
     int parentviewwidth=0;
     private AlphaAnimation blinkencryptionanimation;
+    private adaptercomposemediatype centersnapadapter;
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -410,28 +411,41 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             else if(position == 3)
             {
+
             }
             else if(position == 4)
             {
                 width=width*2;
             }
-
             int offset=(int)width;
             LinearLayoutManager layoutManager = ((LinearLayoutManager)centersnaprecyclerview.getLayoutManager());
             layoutManager.scrollToPositionWithOffset(0,-offset);
+            changecenteritemcolor(position);
         }
+    }
+
+    public void changecenteritemcolor(int position)
+    {
+        for(int i=0;i<mediatypeArrayList.size();i++)
+        {
+            mediatypeArrayList.get(i).setIsmediaselected(false);
+            if(position == i)
+                mediatypeArrayList.get(i).setIsmediaselected(true);
+        }
+        centersnapadapter.notifyDataSetChanged();
     }
 
     private void setUpRecyclerView() {
 
-        ArrayList<mediatype> arrayList=new ArrayList<>();
-        arrayList.add(new mediatype("",""));
-        arrayList.add(new mediatype("",""));
-        arrayList.add(new mediatype("VIDEO",""));
-        arrayList.add(new mediatype("PHOTO",""));
-        arrayList.add(new mediatype("AUDIO",""));
-        arrayList.add(new mediatype("",""));
-        arrayList.add(new mediatype("",""));
+
+        mediatypeArrayList.clear();
+        mediatypeArrayList.add(new mediatype("",""));
+        mediatypeArrayList.add(new mediatype("",""));
+        mediatypeArrayList.add(new mediatype("VIDEO",""));
+        mediatypeArrayList.add(new mediatype("PHOTO",""));
+        mediatypeArrayList.add(new mediatype("AUDIO",""));
+        mediatypeArrayList.add(new mediatype("",""));
+        mediatypeArrayList.add(new mediatype("",""));
 
         int width=common.getScreenWidth(applicationviavideocomposer.getactivity());
         /*final SpeedyLinearLayoutManager layoutmanager=new SpeedyLinearLayoutManager(applicationviavideocomposer.getactivity(),
@@ -439,8 +453,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         final LinearLayoutManager layoutmanager
                 = new LinearLayoutManager(applicationviavideocomposer.getactivity(), LinearLayoutManager.HORIZONTAL, false);
         centersnaprecyclerview.setLayoutManager(layoutmanager);
-        adaptercomposemediatype adapter = new adaptercomposemediatype(applicationviavideocomposer.getactivity(),arrayList,width,mlistitemclick);
-        centersnaprecyclerview.setAdapter(adapter);
+        centersnapadapter = new adaptercomposemediatype(applicationviavideocomposer.getactivity(), mediatypeArrayList,width,mlistitemclick);
+        centersnaprecyclerview.setAdapter(centersnapadapter);
         final SnapHelper snapHelperCenter = new LinearSnapHelper();
         snapHelperCenter.attachToRecyclerView(centersnaprecyclerview);
 
