@@ -1540,6 +1540,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
+                                getcontrollerheight();
                                 // layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             }
                         }
@@ -1608,6 +1609,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                             layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
+                            getcontrollerheight();
                         }
                         start();
                     }
@@ -1628,6 +1630,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             imgpause.setVisibility(View.GONE);
                             setbottomimgview();
                             layout_mediatype.setVisibility(View.VISIBLE);
+                            gethelper().setdrawerheightonfullscreen(0);
                         }
                     }
                     break;
@@ -3044,6 +3047,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         setbottomimgview();
         layoutbackgroundcontroller.setVisibility(View.GONE);
         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+        gethelper().setdrawerheightonfullscreen(0);
     }
 
     public void setbottomimgview(){
@@ -3116,16 +3120,23 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         if (drawershown) {
 
             if(!islastdragarrow){
-                //layout_halfscrnimg.getLayoutParams().height = rootviewheight +Integer.parseInt(xdata.getinstance().getSetting("statusbarheight"));
-                gethelper().updateactionbar(0);
-                layout_mediatype.setVisibility(View.GONE);
-                videodownwordarrow.setVisibility(View.GONE);
-                rl_video_downwordarrow.setVisibility(View.GONE);
-                //  common.slidetoabove(layout_mediatype);
-                layoutbackgroundcontroller.setVisibility(View.GONE);
-                playpausebutton.setVisibility(View.GONE);
-                img_fullscreen.setVisibility(View.GONE);
-                imgpause.setVisibility(View.GONE);
+                if (player != null && player.isPlaying()){
+                    layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+                    imgpause.setVisibility(View.VISIBLE);
+                }else {
+                    gethelper().updateactionbar(0);
+                    layout_mediatype.setVisibility(View.GONE);
+                    videodownwordarrow.setVisibility(View.GONE);
+                    rl_video_downwordarrow.setVisibility(View.GONE);
+                    //  common.slidetoabove(layout_mediatype);
+                    layoutbackgroundcontroller.setVisibility(View.GONE);
+                    imgpause.setVisibility(View.GONE);
+                    playpausebutton.setVisibility(View.GONE);
+                    img_fullscreen.setVisibility(View.GONE);
+
+                    gethelper().setdrawerheightonfullscreen(0);
+
+                }
             }else{
                 gethelper().updateactionbar(0);
             }
@@ -3285,6 +3296,16 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         catch (NoClassDefFoundError | ClassCastException | NoSuchFieldException | IllegalAccessException e) {
             // silently fail...
         }
+    }
+
+    public void getcontrollerheight(){
+        layoutbackgroundcontroller.post(new Runnable() {
+            @Override
+            public void run() {
+                int controllerheight = layoutbackgroundcontroller.getHeight();
+                gethelper().setdrawerheightonfullscreen(controllerheight);
+            }
+        });
     }
 }
 
