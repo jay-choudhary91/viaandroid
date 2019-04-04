@@ -7,8 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/splashscrn"
-        android:layout_height="100dp">
+        android:background="@color/topbar_color"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/img_imagetext"
@@ -16,8 +16,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="visible"
-            android:layout_marginTop="@dimen/margin_10dp"
+            android:layout_marginTop="@dimen/margin_15dp"
             android:src="@drawable/deeptruth_text"/>
+
 
         <com.deeptruth.app.android.views.customfonttextview
             android:layout_width="wrap_content"
@@ -27,7 +28,7 @@
             android:textSize="15dp"
             app:fontType="Comfortaa-Regular"
             android:textColor="@color/blue"
-            android:layout_margin="@dimen/margin_10dp"
+            android:layout_marginBottom="@dimen/margin_15dp"
             android:layout_height="wrap_content" />
     </LinearLayout>
 

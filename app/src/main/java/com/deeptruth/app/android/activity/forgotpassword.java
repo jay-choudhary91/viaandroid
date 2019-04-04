@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.models.customedittext;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.views.customfontedittext;
 import com.deeptruth.app.android.views.customfonttextview;
+import com.google.android.gms.common.internal.service.Common;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,9 +44,13 @@ public class forgotpassword extends Activity implements View.OnClickListener {
         switch (view.getId())
         {
             case R.id.tv_submit:
-               Intent  intent = new Intent(forgotpassword.this,verifiedemail.class);
-               intent.putExtra("code","12345" );
-               startActivity(intent);
+                if(common.checkemailvalidation(forgotpassword.this,edtusername)){
+                    Intent  intent = new Intent(forgotpassword.this,verifiedemail.class);
+                    intent.putExtra("code","12345" );
+                    startActivity(intent);
+                }
         }
     }
+
+
 }
