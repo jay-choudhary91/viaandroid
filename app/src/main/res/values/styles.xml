@@ -230,7 +230,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:background">@drawable/edittext_shap_withoutbackground</item>
+        <item name="android:background">@drawable/edittext_shap</item>
         <item name="android:padding">10dp</item>
     </style>
 </resources>
