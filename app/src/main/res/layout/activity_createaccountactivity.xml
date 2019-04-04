@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.deeptruth.app.android.activity.createaccount">
 
-</android.support.constraint.ConstraintLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_below="@+id/actionbar_createaccount"
+        android:layout_marginTop="@dimen/margin_50dp"
+        android:layout_height="match_parent">
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edt_createaccount"
+            android:hint="@string/username"
+            app:fontType="Comfortaa-Regular"
+            android:id="@+id/edt_username"/>
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edt_createaccount"
+            android:hint="@string/email"
+            app:fontType="Comfortaa-Regular"
+            android:layout_below="@+id/edt_username"
+            android:id="@+id/email"/>
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edt_createaccount"
+            android:hint="@string/password"
+            app:fontType="Comfortaa-Regular"
+            android:layout_below="@+id/email"
+            android:id="@+id/edt_password"/>
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edt_createaccount"
+            android:hint="@string/confirmpassword"
+            android:layout_below="@+id/edt_password"
+            app:fontType="Comfortaa-Regular"
+            android:id="@+id/edt_confirmpassword"/>
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edt_createaccount"
+            android:hint="@string/phone_number"
+            app:fontType="Comfortaa-Regular"
+            android:layout_below="@+id/edt_confirmpassword"
+            android:id="@+id/edt_phonenumber"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            style="@style/txt_submit"
+            android:hint="@string/submit"
+            app:fontType="Comfortaa-Regular"
+            android:layout_below="@+id/edt_phonenumber"
+            android:id="@+id/txt_submit"/>
+    </RelativeLayout>
+
+    <include layout="@layout/action_bar_createaccount"
+        android:layout_width="match_parent"
+        android:id="@+id/actionbar_createaccount"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"></include>
+
+</RelativeLayout>

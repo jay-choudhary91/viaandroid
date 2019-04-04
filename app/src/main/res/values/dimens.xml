@@ -41,13 +41,6 @@
     <dimen name="normal_margin_right">20dp</dimen>
     <dimen name="normal_margin_left">20dp</dimen>
 
-    <dimen name="margin_5dp">5dp</dimen>
-    <dimen name="margin_10dp">10dp</dimen>
-    <dimen name="margin_15dp">15dp</dimen>
-    <dimen name="margin_20dp">20dp</dimen>
-    <dimen name="margin_16dp">16dp</dimen>
-    <dimen name="margin_18dp">18dp</dimen>
-
 
     <dimen name="padding_10dp">10dp</dimen>
     <dimen name="thumbmargin">1dip</dimen>
