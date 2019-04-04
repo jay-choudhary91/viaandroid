@@ -209,4 +209,8 @@
     <string name="uptime">Phone UpTime</string>
     <string name="battery">Battery</string>
 
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="submit">Submit</string>
+    <string name="hint_text">enter username/email</string>
+
 </resources>
