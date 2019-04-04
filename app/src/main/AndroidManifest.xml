@@ -112,7 +112,8 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activity.createaccount" />
         <activity android:name=".activity.forgotpassword" />
-        <activity android:name=".activity.verifiedemail"></activity>
+        <activity android:name=".activity.verifiedemail"
+            android:windowSoftInputMode="stateHidden"></activity>
     </application>
 
 </manifest>

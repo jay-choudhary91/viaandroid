@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context="com.deeptruth.app.android.activity.verifiedemail">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/splashscrn"
-        tools:context="com.deeptruth.app.android.activity.verifiedemail">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:weightSum="1"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/splashscrn">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,7 +20,8 @@
                 android:orientation="vertical"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:layout_weight=".6">
+                android:layout_weight="1">
+
                 <ImageView
                     android:id="@+id/img_imagedeep"
                     android:layout_width="90dp"
@@ -53,12 +49,13 @@
                     android:textColor="@color/blue"
                     android:layout_marginTop="5dp"
                     android:layout_height="wrap_content" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight=".4">
+                android:layout_weight="1">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -103,7 +100,7 @@
                             app:pinHeight="35dp"
                             app:pinLength="5"
                             app:cursorVisible="false"
-                            app:forceKeyboard="true"
+                            app:forceKeyboard="false"
                             app:hint="0"
                             app:inputType="number"
                             app:password="false"/>
@@ -192,8 +189,5 @@
 
                 </RelativeLayout>
             </LinearLayout>
-
         </LinearLayout>
-    </RelativeLayout>
-
-</android.support.constraint.ConstraintLayout>
+    </ScrollView>
