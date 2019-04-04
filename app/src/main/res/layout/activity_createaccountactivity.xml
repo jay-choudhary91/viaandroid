@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/grey_x"
+    android:background="@color/forgotpassword_bg"
     tools:context="com.deeptruth.app.android.activity.createaccount">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:focusableInTouchMode="true"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_below="@+id/actionbar_createaccount"
@@ -70,7 +70,7 @@
                 android:text="@string/submit"
                 android:id="@+id/txt_submit"
                 android:padding="10dp"
-                android:background="@drawable/edittext_shap_withoutbackground"/>
+                android:background="@drawable/edittext_shap"/>
 
         </RelativeLayout>
 
