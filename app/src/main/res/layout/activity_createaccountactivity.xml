@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.deeptruth.app.android.activity.createaccount">
 
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_below="@+id/actionbar_createaccount"

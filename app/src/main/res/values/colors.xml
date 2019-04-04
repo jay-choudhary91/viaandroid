@@ -41,6 +41,8 @@
     <color name="blue">#00ADE5</color>
     <color name="img_bg">#919191</color>
     <color name="img_blue_bg">#0074ab</color>
+    <color name="forgetpassword_txt">#06cee4</color>
+    <color name="topbar_color">#004055</color>
 
     <color name="btn_background">#00ADE5</color>
     <color name="dark_green">#19B16D</color>
