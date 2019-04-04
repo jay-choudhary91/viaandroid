@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,6 +17,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature android:name="android.hardware.usb.host" />
 
     <uses-permission android:name="android.permission.USB_PERMISSION" />
@@ -35,16 +37,16 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
-        android:name="com.deeptruth.app.android.applicationviavideocomposer"
+        android:name=".applicationviavideocomposer"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
         <provider
-            android:name="com.deeptruth.app.android.utils.genericfileprovider"
+            android:name=".utils.genericfileprovider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -54,29 +56,27 @@
         </provider>
 
         <activity
-            android:name="com.deeptruth.app.android.activity.homeactivity"
-            android:windowSoftInputMode="adjustResize"
+            android:name=".activity.homeactivity"
+            android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|screenSize"/>
+            android:windowSoftInputMode="adjustResize" />
 
         <service
-            android:name="com.deeptruth.app.android.services.locationservice"
+            android:name=".services.locationservice"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name="com.deeptruth.app.android.services.callservice"
+            android:name=".services.callservice"
             android:enabled="true" />
-
         <service
-            android:name="com.deeptruth.app.android.services.insertmediadataservice"
+            android:name=".services.insertmediadataservice"
             android:enabled="true" />
-
         <service
-            android:name="com.deeptruth.app.android.services.readmediadataservice"
+            android:name=".services.readmediadataservice"
             android:enabled="true" />
 
         <receiver
-            android:name="com.deeptruth.app.android.netutils.connectivityreceiver"
+            android:name=".netutils.connectivityreceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -90,7 +90,8 @@
             android:name="io.fabric.ApiKey"
             android:value="42d19fb0e2e5d57caf4b1257310ca64e6f19cade" />
 
-        <activity android:name="com.deeptruth.app.android.activity.splashactivity"
+        <activity
+            android:name=".activity.splashactivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
@@ -104,8 +105,13 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
         </activity>
-        <activity android:name="com.deeptruth.app.android.activity.introscreenactivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.introscreenactivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.signin" />
+        <activity android:name=".activity.createaccount" />
+        <activity android:name=".activity.forgotpassword" />
+        <activity android:name=".activity.verifiedemail"></activity>
     </application>
 
 </manifest>

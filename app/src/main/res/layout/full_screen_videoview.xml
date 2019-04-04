@@ -254,7 +254,7 @@
 
                         <RelativeLayout
                             android:layout_width="4dp"
-                            android:layout_height="50dp"
+                            android:layout_height="45dp"
                             android:layout_below="@id/txt_mediatimethumb"
                             android:layout_centerHorizontal="true"
                             android:background="@color/white"
