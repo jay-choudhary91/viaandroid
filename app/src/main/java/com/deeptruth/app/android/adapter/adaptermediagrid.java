@@ -88,24 +88,34 @@ public class adaptermediagrid extends RecyclerView.Adapter<adaptermediagrid.myVi
             holder.tv_mediaduration.setText(mediaobject.getDuration());
 
             ArrayList<String> arrayList = mediaobject.getMediabarcolor();
-            if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null ) {
+            if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
+            {
                 holder.linearseekbarcolorview.setVisibility(View.VISIBLE);
-                try {
-                    if (mediaobject.getColorbarview().getParent() != null)
-                        ((ViewGroup) mediaobject.getColorbarview().getParent()).removeView(mediaobject.getColorbarview());
-
-                    holder.linearseekbarcolorview.removeAllViews();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                holder.linearseekbarcolorview.addView(mediaobject.getColorbarview());
-                holder.linearseekbarcolorview.invalidate();
-                holder.linearseekbarcolorview.requestLayout();
+                holder.linearseekbarcolorview.setBackgroundColor(Color.RED);
             }
             else
             {
-                holder.linearseekbarcolorview.setVisibility(View.INVISIBLE);
+                if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null ) {
+                    holder.linearseekbarcolorview.setVisibility(View.VISIBLE);
+                    holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
+                    try {
+                        if (mediaobject.getColorbarview().getParent() != null)
+                            ((ViewGroup) mediaobject.getColorbarview().getParent()).removeView(mediaobject.getColorbarview());
+
+                        holder.linearseekbarcolorview.removeAllViews();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    holder.linearseekbarcolorview.addView(mediaobject.getColorbarview());
+                    holder.linearseekbarcolorview.invalidate();
+                    holder.linearseekbarcolorview.requestLayout();
+                }
+                else
+                {
+                    holder.linearseekbarcolorview.setVisibility(View.INVISIBLE);
+                }
             }
+
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
             {

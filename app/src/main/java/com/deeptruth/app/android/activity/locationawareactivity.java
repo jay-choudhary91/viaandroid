@@ -530,39 +530,44 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try
+        if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
         {
-            if(isservicebound)
-                applicationviavideocomposer.getactivity().unbindService(serviceConnection);
-
-            try {
+            try
+            {
+                if(isservicebound)
+                    applicationviavideocomposer.getactivity().unbindService(serviceConnection);
 
                 try {
-                    unregisterReceiver(phonecallbroadcast);
+
+                    try {
+                        unregisterReceiver(phonecallbroadcast);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (msensormanager != null)
+                        msensormanager.unregisterListener(maccelerometerlistener);
+
+                    if (msensormanager != null)
+                        msensormanager.unregisterListener(mBarometerListener);
+
+                    if (msensormanager != null)
+                        msensormanager.unregisterListener(mcompasslistener);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                if (msensormanager != null)
-                    msensormanager.unregisterListener(maccelerometerlistener);
-
-                if (msensormanager != null)
-                    msensormanager.unregisterListener(mBarometerListener);
-
-                if (msensormanager != null)
-                    msensormanager.unregisterListener(mcompasslistener);
-
-            } catch (Exception e) {
+            }catch (Exception e)
+            {
                 e.printStackTrace();
             }
 
-        }catch (Exception e)
-        {
-            e.printStackTrace();
+            stopLocationUpdates();
         }
         if (myHandler != null && myRunnable != null)
             myHandler.removeCallbacks(myRunnable);
-        stopLocationUpdates();
+
     }
 
     protected void startLocationUpdates() {

@@ -85,7 +85,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'rongi.rotate-layout:rotate-layout:3.0.0'
     implementation 'com.github.Akashkamble:RevealSwitch:1.0.1'
-
+    implementation 'com.github.GoodieBag:Pinview:v1.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // Check for v11.4.2 or higher

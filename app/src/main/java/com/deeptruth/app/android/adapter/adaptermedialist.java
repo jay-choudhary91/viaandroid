@@ -122,10 +122,13 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
         final video mediaobject=arrayvideolist.get(position);
-        binderHelper.closeLayout(""+position);
-        binderHelper.bind(holder.root_view,""+position);
         if(mediaobject.isDoenable())
         {
+            if(! holder.root_view.isOpened())
+                binderHelper.closeLayout(""+position);
+
+            binderHelper.bind(holder.root_view,""+position);
+
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
                 if(mediaobject.getMediastatus().equalsIgnoreCase(config.sync_complete) ||
@@ -136,9 +139,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 else
                 {
                     holder.img_loader.setVisibility(View.VISIBLE);
-                    Glide.with(context).
-                            load(R.drawable.media_loader).
-                            into(holder.img_loader);
+                    Glide.with(context).load(R.drawable.media_loader).into(holder.img_loader);
                 }
             }
             else
@@ -146,16 +147,56 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.img_loader.setVisibility(View.GONE);
             }
 
-            /*if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-            {
-
-            }
-            else
-            {
-                holder.layout_colorbar.setVisibility(View.GONE);
-            }*/
+            int validcount=mediaobject.getValidcount();
+            int cautioncount=mediaobject.getCautioncount();
+            int unsentcount=mediaobject.getUnsentcount();
+            int invalidcount=mediaobject.getInvalidcount();
 
             ArrayList<String> arrayList = mediaobject.getMediabarcolor();
+            if (mediaobject.getMediastatus().equalsIgnoreCase(config.sync_notfound))
+            {
+                holder.layout_colorbar.setVisibility(View.VISIBLE);
+                holder.linearseekbarcolorview.setBackgroundColor(Color.RED);
+                invalidcount=1;
+                holder.tv_invalid.setText(config.item_invalid+" 100%");
+            }
+
+            Log.e("Status ",""+validcount+" "+cautioncount+" "+unsentcount+" "+invalidcount);
+            holder.tv_valid.setVisibility(View.VISIBLE);
+            holder.tv_caution.setVisibility(View.VISIBLE);
+            holder.tv_unsent.setVisibility(View.VISIBLE);
+            holder.tv_invalid.setVisibility(View.VISIBLE);
+
+            if(validcount == 0)
+                holder.tv_valid.setVisibility(View.GONE);
+
+            if(cautioncount == 0)
+                holder.tv_caution.setVisibility(View.GONE);
+
+            if(unsentcount == 0)
+                holder.tv_unsent.setVisibility(View.GONE);
+
+            if(invalidcount == 0)
+                holder.tv_invalid.setVisibility(View.GONE);
+
+            holder.txt_pipesign_caution.setVisibility(View.GONE);
+            holder.txt_pipesign_unsent.setVisibility(View.GONE);
+            holder.txt_pipesign_invalid.setVisibility(View.GONE);
+
+            if(validcount > 0 && cautioncount > 0)
+                holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
+
+            if((cautioncount > 0 || validcount > 0) && unsentcount > 0)
+                holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
+
+            if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
+                holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
+
+            /*holder.tv_valid.setText(config.item_valid);
+            holder.tv_caution.setText(config.item_caution);
+            holder.tv_unsent.setText(config.item_unsent);
+            holder.tv_invalid.setText(config.item_invalid);*/
+
             if(arrayList != null && arrayList.size() > 0 && mediaobject.getColorbarview() != null )
             {
                 holder.layout_colorbar.setVisibility(View.VISIBLE);
@@ -168,49 +209,16 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 {
                     e.printStackTrace();
                 }
+                holder.linearseekbarcolorview.setBackgroundColor(Color.TRANSPARENT);
                 holder.linearseekbarcolorview.addView(mediaobject.getColorbarview());
                 holder.linearseekbarcolorview.invalidate();
                 holder.linearseekbarcolorview.requestLayout();
-
-                int validcount=mediaobject.getValidcount();
-                int cautioncount=mediaobject.getCautioncount();
-                int unsentcount=mediaobject.getUnsentcount();
-                int invalidcount=mediaobject.getInvalidcount();
-
-                holder.tv_valid.setVisibility(View.GONE);
-                holder.tv_caution.setVisibility(View.GONE);
-                holder.tv_unsent.setVisibility(View.GONE);
-                holder.tv_invalid.setVisibility(View.GONE);
-
-                if(validcount > 0)
-                    holder.tv_valid.setVisibility(View.VISIBLE);
-
-                if(cautioncount > 0)
-                    holder.tv_caution.setVisibility(View.VISIBLE);
-
-                if(unsentcount > 0)
-                    holder.tv_unsent.setVisibility(View.VISIBLE);
-
-                if(invalidcount > 0)
-                    holder.tv_invalid.setVisibility(View.VISIBLE);
-
-                holder.txt_pipesign_caution.setVisibility(View.GONE);
-                holder.txt_pipesign_unsent.setVisibility(View.GONE);
-                holder.txt_pipesign_invalid.setVisibility(View.GONE);
-
-                if(validcount > 0 && cautioncount > 0)
-                    holder.txt_pipesign_caution.setVisibility(View.VISIBLE);
-
-                if((cautioncount > 0 || validcount > 0) && unsentcount > 0)
-                    holder.txt_pipesign_unsent.setVisibility(View.VISIBLE);
-
-                if((cautioncount > 0 || validcount > 0 || unsentcount > 0) && invalidcount > 0)
-                    holder.txt_pipesign_invalid.setVisibility(View.VISIBLE);
 
                 holder.tv_valid.setText(config.item_valid+" "+common.getcolorprogresspercentage(validcount,arrayList.size()));
                 holder.tv_caution.setText(config.item_caution+" "+ common.getcolorprogresspercentage(cautioncount,arrayList.size()));
                 holder.tv_unsent.setText(config.item_unsent+" "+ common.getcolorprogresspercentage(unsentcount,arrayList.size()));
                 holder.tv_invalid.setText(config.item_invalid+" "+ common.getcolorprogresspercentage(invalidcount,arrayList.size()));
+
                 //setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
                     /*if(holder.layout_colorbar != null && holder.linearseekbarcolorview.getChildCount() < arrayList.size())
                     {
@@ -244,7 +252,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
             else
             {
-                holder.layout_colorbar.setVisibility(View.GONE);
+                Log.e("else case ","case2");
+                if(validcount == 0 && invalidcount == 0 && cautioncount == 0 && unsentcount == 0)
+                    holder.layout_colorbar.setVisibility(View.GONE);
             }
 
 
@@ -257,8 +267,8 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             }
             else
             {
-                holder.tv_mediaduration.setText(mediaobject.getDuration());
                 holder.tv_mediaduration.setVisibility(View.VISIBLE);
+                holder.tv_mediaduration.setText(mediaobject.getDuration());
             }
 
             if(mediaobject.getCreatedate().trim().isEmpty())
@@ -274,9 +284,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.tv_mediatime.setText(mediaobject.getCreatetime());
             }
 
-
             holder.tv_medianotes.setText(mediaobject.getMedianotes());
-
 
             if(mediaobject.getVideostarttransactionid().isEmpty() ||  mediaobject.getVideostarttransactionid().equalsIgnoreCase("null")){
                 holder.tv_localkey.setText("");
@@ -334,15 +342,37 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.edtvideoname.requestFocus();
                 mediaobject.setSelected(false);
 
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                Editable editableText=  holder.edtvideoname.getEditableText();
-                if(editableText!=null) {
-                    Log.e("position",""+position);
-                    holder.edtvideoname.setInputType(InputType.TYPE_CLASS_TEXT);
-                    holder.edtvideoname.setEllipsize(TextUtils.TruncateAt.END);
-                    holder.edtvideoname.setSingleLine();
+                {
+                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    Editable editableText=  holder.edtvideoname.getEditableText();
+                    if(editableText!=null) {
+                        Log.e("position",""+position);
+                        holder.edtvideoname.setInputType(InputType.TYPE_CLASS_TEXT);
+                        holder.edtvideoname.setEllipsize(TextUtils.TruncateAt.END);
+                        holder.edtvideoname.setSingleLine();
+                    }
                 }
+
+
+                holder.tv_medianotes.setEnabled(true);
+                holder.tv_medianotes.setClickable(true);
+                holder.tv_medianotes.setFocusableInTouchMode(true);
+                holder.tv_medianotes.requestFocus();
+                mediaobject.setSelected(false);
+
+                {
+                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    Editable editableText=  holder.tv_medianotes.getEditableText();
+                    if(editableText!=null) {
+                        Log.e("position",""+position);
+                        holder.tv_medianotes.setInputType(InputType.TYPE_CLASS_TEXT);
+                        holder.tv_medianotes.setEllipsize(TextUtils.TruncateAt.END);
+                        holder.tv_medianotes.setSingleLine();
+                    }
+                }
+
             }
             else
             {
@@ -350,27 +380,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.edtvideoname.setEnabled(false);
                 holder.edtvideoname.setClickable(false);
                 holder.edtvideoname.setKeyListener(null);
-            }
 
-            if(mediaobject.isSelected){
-                holder.tv_medianotes.setEnabled(true);
-                holder.tv_medianotes.setClickable(true);
-                holder.tv_medianotes.setFocusableInTouchMode(true);
-                holder.tv_medianotes.requestFocus();
-                mediaobject.setSelected(false);
-
-                InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                Editable editableText=  holder.tv_medianotes.getEditableText();
-                if(editableText!=null) {
-                    Log.e("position",""+position);
-                    holder.tv_medianotes.setInputType(InputType.TYPE_CLASS_TEXT);
-                    holder.tv_medianotes.setEllipsize(TextUtils.TruncateAt.END);
-                    holder.tv_medianotes.setSingleLine();
-                }
-            }
-            else
-            {
                 mediaobject.setSelected(false);
                 holder.tv_medianotes.setEnabled(false);
                 holder.tv_medianotes.setClickable(false);
@@ -388,6 +398,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             holder.layout_share_slide.setEnabled(true);
                         }
                     }, 1000);
+                    binderHelper.closeLayout(""+position);
                     adapter.onItemClicked(mediaobject,1);
                 }
             });
@@ -403,6 +414,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             holder.layout_delete_slide.setEnabled(true);
                         }
                     }, 1000);
+                    binderHelper.closeLayout(""+position);
                     adapter.onItemClicked(mediaobject,2);
                 }
             });
@@ -410,6 +422,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.layout_folder_slide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    binderHelper.closeLayout(""+position);
                     adapter.onItemClicked(mediaobject,6);
                 }
             });
@@ -433,6 +446,9 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         }
         else
         {
+            binderHelper.closeLayout(""+position);
+            binderHelper.bind(holder.root_view,""+position);
+
             holder.root_view.getLayoutParams().height = 0;
             holder.root_view.setVisibility(View.GONE);
         }
