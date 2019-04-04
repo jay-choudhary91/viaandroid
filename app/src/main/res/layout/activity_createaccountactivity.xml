@@ -70,7 +70,7 @@
                 android:text="@string/submit"
                 android:id="@+id/txt_submit"
                 android:padding="10dp"
-                android:background="@drawable/edittext_shap_withoutbackground"/>
+                android:background="@drawable/edittext_shap"/>
 
         </RelativeLayout>
 
