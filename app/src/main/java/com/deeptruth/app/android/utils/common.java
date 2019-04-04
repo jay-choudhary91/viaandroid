@@ -1891,6 +1891,9 @@ public class common {
 
     public static void setdrawabledata(String encryption_key, String encryption_value, TextView txt_encryption){
 
+        if(txt_encryption == null)
+            return;
+
         if(! encryption_key.trim().isEmpty())
         {
             String encryptionstr =  encryption_key.concat(encryption_value);

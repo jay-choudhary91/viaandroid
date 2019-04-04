@@ -437,59 +437,60 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     private void setUpRecyclerView() {
 
+        if(mediatypeArrayList.size() == 0)
+        {
+            mediatypeArrayList.clear();
+            mediatypeArrayList.add(new mediatype("",""));
+            mediatypeArrayList.add(new mediatype("",""));
+            mediatypeArrayList.add(new mediatype("VIDEO",""));
+            mediatypeArrayList.add(new mediatype("PHOTO",""));
+            mediatypeArrayList.add(new mediatype("AUDIO",""));
+            mediatypeArrayList.add(new mediatype("",""));
+            mediatypeArrayList.add(new mediatype("",""));
 
-        mediatypeArrayList.clear();
-        mediatypeArrayList.add(new mediatype("",""));
-        mediatypeArrayList.add(new mediatype("",""));
-        mediatypeArrayList.add(new mediatype("VIDEO",""));
-        mediatypeArrayList.add(new mediatype("PHOTO",""));
-        mediatypeArrayList.add(new mediatype("AUDIO",""));
-        mediatypeArrayList.add(new mediatype("",""));
-        mediatypeArrayList.add(new mediatype("",""));
-
-        int width=common.getScreenWidth(applicationviavideocomposer.getactivity());
+            int width=common.getScreenWidth(applicationviavideocomposer.getactivity());
         /*final SpeedyLinearLayoutManager layoutmanager=new SpeedyLinearLayoutManager(applicationviavideocomposer.getactivity(),
                 SpeedyLinearLayoutManager.HORIZONTAL, false);*/
-        final LinearLayoutManager layoutmanager
-                = new LinearLayoutManager(applicationviavideocomposer.getactivity(), LinearLayoutManager.HORIZONTAL, false);
-        centersnaprecyclerview.setLayoutManager(layoutmanager);
-        centersnapadapter = new adaptercomposemediatype(applicationviavideocomposer.getactivity(), mediatypeArrayList,width,mlistitemclick);
-        centersnaprecyclerview.setAdapter(centersnapadapter);
-        final SnapHelper snapHelperCenter = new LinearSnapHelper();
-        snapHelperCenter.attachToRecyclerView(centersnaprecyclerview);
+            final LinearLayoutManager layoutmanager
+                    = new LinearLayoutManager(applicationviavideocomposer.getactivity(), LinearLayoutManager.HORIZONTAL, false);
+            centersnaprecyclerview.setLayoutManager(layoutmanager);
+            centersnapadapter = new adaptercomposemediatype(applicationviavideocomposer.getactivity(), mediatypeArrayList,width,mlistitemclick);
+            centersnaprecyclerview.setAdapter(centersnapadapter);
+            final SnapHelper snapHelperCenter = new LinearSnapHelper();
+            snapHelperCenter.attachToRecyclerView(centersnaprecyclerview);
 
-        centersnaprecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                switch (newState) {
-                    case RecyclerView.SCROLL_STATE_IDLE:
-                        int center = common.getScreenWidth(applicationviavideocomposer.getactivity())/2;
-                        View view =snapHelperCenter.findSnapView(layoutmanager);
-                        //View centerView = centersnaprecyclerview.findChildViewUnder(center, centersnaprecyclerview.getTop());
-                        int centerPos = centersnaprecyclerview.getChildAdapterPosition(view);
-                        if(centerPos == 2 && currentselectedcomposer != 0)
-                            fetchrecyclerposition(centerPos);
+            centersnaprecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    switch (newState) {
+                        case RecyclerView.SCROLL_STATE_IDLE:
+                            int center = common.getScreenWidth(applicationviavideocomposer.getactivity())/2;
+                            View view =snapHelperCenter.findSnapView(layoutmanager);
+                            //View centerView = centersnaprecyclerview.findChildViewUnder(center, centersnaprecyclerview.getTop());
+                            int centerPos = centersnaprecyclerview.getChildAdapterPosition(view);
+                            if(centerPos == 2 && currentselectedcomposer != 0)
+                                fetchrecyclerposition(centerPos);
 
-                        if(centerPos == 3 && currentselectedcomposer != 1)
-                            fetchrecyclerposition(centerPos);
+                            if(centerPos == 3 && currentselectedcomposer != 1)
+                                fetchrecyclerposition(centerPos);
 
-                        if(centerPos == 4 && currentselectedcomposer != 2)
-                            fetchrecyclerposition(centerPos);
-                        break;
-                    case RecyclerView.SCROLL_STATE_DRAGGING:
-                        break;
-                    case RecyclerView.SCROLL_STATE_SETTLING:
-                        break;
+                            if(centerPos == 4 && currentselectedcomposer != 2)
+                                fetchrecyclerposition(centerPos);
+                            break;
+                        case RecyclerView.SCROLL_STATE_DRAGGING:
+                            break;
+                        case RecyclerView.SCROLL_STATE_SETTLING:
+                            break;
+                    }
                 }
-            }
 
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
-
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                }
+            });
+        }
     }
 
     public void initviewpager()
