@@ -1084,6 +1084,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         muploadframelist.clear();
 
         try {
+
+            if(sequencestarttime == null)
+                sequencestarttime = Calendar.getInstance();
+
+            if(sequenceendtime == null)
+                sequenceendtime = Calendar.getInstance();
+
             SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss:SS");
             String starttime = sdf.format(sequencestarttime.getTime());
             String endtime = sdf.format(sequenceendtime.getTime());

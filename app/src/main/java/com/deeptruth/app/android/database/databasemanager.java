@@ -1009,6 +1009,20 @@ public class databasemanager {
         }
     }
 
+    public void deletefrommetadatabylocation(String location) {
+        try {
+            lock.lock();
+            if(mDb == null)
+                mDb = mDbHelper.getReadableDatabase();
+            mDb.execSQL("delete from tblmetadata where location='"+location+"'");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lock.unlock();
+        }
+    }
+
     public void deletefrommetadatabylocalkey(String localkey) {
         try {
             lock.lock();

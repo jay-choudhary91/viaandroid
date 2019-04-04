@@ -1020,7 +1020,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                         if(! isexistinarraay(mediafilepath))
                         {
-                            Cursor cursor2 = mdbhelper.getmediacolor(localkey);
+                            /*Cursor cursor2 = mdbhelper.getmediacolor(localkey);
                             if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
                             {
                                 ArrayList<String> arrayList=new ArrayList<>();
@@ -1028,7 +1028,66 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     arrayList.add(cursor2.getString(cursor2.getColumnIndex("color")));
                                 }while (cursor2.moveToNext());
                                 videoobject.setMediabarcolor(arrayList);
-                            }
+                            }*/
+
+                            /*Cursor cursor2 = mdbhelper.getmediacolor(localkey);
+                            if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
+                            {
+                                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                                View viewparent = inflater.inflate(R.layout.row_mediacolor, null, false);
+                                LinearLayout layout=(LinearLayout)viewparent.findViewById(R.id.linear_seekbarcolorview);
+                                ArrayList<String> arrayList=new ArrayList<>();
+                                int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
+
+                                do{
+                                    String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
+                                    arrayList.add(framecolor);
+                                    if(framecolor.equalsIgnoreCase(config.color_green))
+                                        validcount++;
+
+                                    if(framecolor.equalsIgnoreCase(config.color_yellow))
+                                        cautioncount++;
+
+                                    if(framecolor.equalsIgnoreCase(config.color_red))
+                                        invalidcount++;
+
+                                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                    {
+                                        if(framecolor.trim().isEmpty())
+                                            unsentcount++;
+                                    }
+
+                                }while (cursor2.moveToNext());
+
+                                if(validcount != videoobject.getValidcount() || cautioncount != videoobject.getCautioncount()
+                                        || unsentcount != videoobject.getUnsentcount())
+                                {
+                                    cursor2.moveToFirst();
+                                    do{
+                                        String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
+
+                                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+                                        View view = new View(applicationviavideocomposer.getactivity());
+                                        view.setLayoutParams(param);
+                                        if(framecolor != null && (! framecolor.isEmpty()))
+                                        {
+                                            view.setBackgroundColor(Color.parseColor(common.getcolorbystring( framecolor)));
+                                        }
+                                        else
+                                        {
+                                            view.setBackgroundColor(Color.parseColor(config.color_code_gray));
+                                        }
+                                        layout.addView(view);
+                                    }while (cursor2.moveToNext());
+                                    videoobject.setColorbarview(layout);
+                                }
+                                videoobject.setMediabarcolor(arrayList);
+                                videoobject.setValidcount(validcount);
+                                videoobject.setCautioncount(cautioncount);
+                                videoobject.setInvalidcount(invalidcount);
+                                videoobject.setUnsentcount(unsentcount);
+                            }*/
 
                             videoobject.setId(Integer.parseInt(id));
                             videoobject.setPath(mediafilepath);
@@ -1228,8 +1287,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             e.printStackTrace();
         }
 
-        ArrayList<video> localarray=new ArrayList<>();
-        localarray.addAll(arraymediaitemlist);
         /*for(int i=0;i<arraymediaitemlist.size();i++)
         {
             localarray.add(arraymediaitemlist.get(i));
@@ -1363,8 +1420,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                                     adaptermediagrid.notifyItemChanged(i);
                             }
                         }
-
-
                         break;
                     }
                 }
@@ -1381,7 +1436,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         }
     }
 
-    public void deletemediainfo(String localkey)
+    public void deletemediainfo(String localkey,String location)
     {
         databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
         mdbhelper.createDatabase();
@@ -1392,8 +1447,16 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         {
             e.printStackTrace();
         }
-        mdbhelper.deletefrommetadatabylocalkey(localkey);
-        mdbhelper.deletefromstartvideoinfobylocalkey(localkey);
+
+        if(! localkey.trim().isEmpty())
+        {
+            mdbhelper.deletefrommetadatabylocalkey(localkey);
+            mdbhelper.deletefromstartvideoinfobylocalkey(localkey);
+        }
+        else
+        {
+            mdbhelper.deletefrommetadatabylocation(location);
+        }
         try
         {
             mdbhelper.close();
@@ -1441,9 +1504,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         if(type == 1)   // Media shairing
         {
-            if(adaptermedialist != null && adaptermediagrid != null)
-                adaptermedialist.notifyitems(arraymediaitemlist);
-
             if(videoobj.getmimetype().startsWith("image")){
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));
@@ -1561,10 +1621,18 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             if (fdelete.exists()) {
                                 if (fdelete.delete()) {
                                     String localkey=videoobj.getLocalkey();
+                                    String location=videoobj.getPath();
                                     System.out.println("file Deleted :" + videoobj.getPath());
                                     arraymediaitemlist.remove(videoobj);
                                     if(! localkey.trim().isEmpty())
-                                        deletemediainfo(localkey);
+                                    {
+                                        deletemediainfo(localkey,location);
+                                    }
+                                    else
+                                    {
+                                        deletemediainfo(localkey,location);
+                                    }
+
 
                                 } else {
                                     System.out.println("file not Deleted :" + videoobj.getPath());
@@ -1608,11 +1676,18 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                         if (fdelete.exists()) {
                             if (fdelete.delete()) {
                                 String localkey=videoobj.getLocalkey();
+                                String location=videoobj.getPath();
                                 System.out.println("file Deleted :" + videoobj.getPath());
                                 arraymediaitemlist.remove(videoobj);
                                 dialog.dismiss();
                                 if(! localkey.trim().isEmpty())
-                                    deletemediainfo(localkey);
+                                {
+                                    deletemediainfo(localkey,location);
+                                }
+                                else
+                                {
+                                    deletemediainfo(localkey,location);
+                                }
 
                             } else {
                                 System.out.println("file not Deleted :" + videoobj.getPath());
