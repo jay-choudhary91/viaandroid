@@ -88,7 +88,7 @@
                     android:text="@string/login"
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/login"
-                    android:layout_marginTop="@dimen/margin_2dp"
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:layout_below="@+id/edt_password"/>
 
                 <com.deeptruth.app.android.views.customfonttextview
