@@ -89,8 +89,11 @@ public class splashactivity extends Activity {
                 }
                 else
                 {
+                    Intent intent=new Intent(splashactivity.this,signin.class);
+                    startActivity(intent);
+                    finish();
 
-                    if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
+                    /*if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
                     {
                         if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
                             xdata.getinstance().saveSetting(config.enableintroscreen,"no");
@@ -104,7 +107,7 @@ public class splashactivity extends Activity {
                         startActivity(intent);
                         overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
                         finish();
-                    }
+                    }*/
                 }
             }
         },2000);
