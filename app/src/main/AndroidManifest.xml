@@ -108,7 +108,8 @@
         <activity
             android:name=".activity.introscreenactivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.signin" />
+        <activity android:name=".activity.signin"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".activity.createaccount" />
         <activity android:name=".activity.forgotpassword" />
         <activity android:name=".activity.verifiedemail"></activity>

@@ -155,19 +155,39 @@
 
     <style name="MaterialTheme" parent="android:Theme.Material.Light.NoActionBar.Fullscreen" />
 
+    <style name="edt_login">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_marginLeft">@dimen/margin_50dp</item>
+        <item name="android:layout_marginRight">@dimen/margin_50dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_15dp</item>
+        <item name="android:background">@drawable/edittext_shap</item>
+
+    </style>
+
     <style name="edt_createaccount">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:background">@drawable/edittext_shap</item>
         <item name="android:padding">5dp</item>
         <item name="android:textColorHint">@color/black</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:layout_marginLeft">@dimen/margin_50dp</item>
-        <item name="android:layout_marginRight">@dimen/margin_50dp</item>
-        <item name="android:layout_marginTop">@dimen/margin_10dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_marginLeft">@dimen/margin_30dp</item>
+        <item name="android:layout_marginRight">@dimen/margin_30dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_15dp</item>
+        <item name="android:background">@drawable/edittext_shap_withoutbackground</item>
 
     </style>
     <style name="txt_createaccount">
@@ -184,12 +204,12 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:layout_marginLeft">@dimen/margin_50dp</item>
-        <item name="android:layout_marginRight">@dimen/margin_50dp</item>
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginLeft">@dimen/margin_30dp</item>
+        <item name="android:layout_marginRight">@dimen/margin_30dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_15dp</item>
     </style>
 
     <style name="edt_createaccount_withoutbackground">

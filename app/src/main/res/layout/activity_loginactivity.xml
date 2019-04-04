@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:fillViewport="true"
     android:layout_height="match_parent"
     android:background="@drawable/splashscrn"
     tools:context="com.deeptruth.app.android.activity.signin">
@@ -19,7 +21,7 @@
             android:orientation="vertical"
             android:layout_gravity="bottom"
             android:gravity="bottom"
-            android:layout_weight=".6">
+            android:layout_weight=".55">
             <ImageView
                 android:id="@+id/img_imagedeep"
                 android:layout_width="90dp"
@@ -53,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center"
-            android:layout_weight=".4">
+            android:layout_weight=".45">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -63,14 +65,19 @@
                 android:layout_height="wrap_content">
 
                 <com.deeptruth.app.android.views.customfontedittext
-                    style="@style/edt_createaccount"
+                    style="@style/edt_login"
                     android:hint="@string/username"
                     app:fontType="Comfortaa-Regular"
+                    android:background="@drawable/edittext_shap"
+                    android:maxLength="50"
+                    android:imeOptions="actionNext"
                     android:id="@+id/edt_username"/>
 
                 <com.deeptruth.app.android.views.customfontedittext
-                    style="@style/edt_createaccount"
+                    style="@style/edt_login"
                     android:hint="@string/password"
+                    android:imeOptions="actionDone"
+                    android:maxLength="15"
                     android:layout_below="@id/edt_username"
                     app:fontType="Comfortaa-Regular"
                     android:id="@+id/edt_password"/>
@@ -106,4 +113,4 @@
 
 
 
-</RelativeLayout>
+</ScrollView>
