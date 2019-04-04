@@ -82,4 +82,5 @@
     <color name="scanover_red">#FF3B30</color>
 
     <color name="wave_pink">#9c3776</color>
+    <color name="forgotpassword_bg">#0B384F</color>
 </resources>
