@@ -73,6 +73,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -83,6 +84,8 @@ import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.folder;
+import com.deeptruth.app.android.views.customfontedittext;
+import com.google.android.gms.common.internal.service.Common;
 
 import org.json.JSONArray;
 
@@ -2290,5 +2293,32 @@ public class common {
         }
         return color;
     }
+
+    public static boolean isValidEmail(String target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
+
+    public static boolean validCellPhone(String number) {
+        return android.util.Patterns.PHONE.matcher(number).matches();
+    }
+
+    public static boolean checkemailvalidation(Context mcontext,customfontedittext edtusername){
+
+        if (edtusername.getText().toString().trim().toString().length() == 0) {
+            Toast.makeText(mcontext, "Please enter email!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (! common.isValidEmail(edtusername.getText().toString().trim())) {
+            Toast.makeText(mcontext, "Please enter valid email!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    };
+
+
 }
 
