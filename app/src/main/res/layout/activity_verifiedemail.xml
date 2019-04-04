@@ -93,7 +93,22 @@
                         android:layout_marginTop="@dimen/margin_10dp"
                         android:layout_below="@+id/txt_checkemail">
 
-                        <com.deeptruth.app.android.views.customfontedittext
+
+                        <com.goodiebag.pinview.Pinview
+                            android:id="@+id/pinview"
+                            app:pinBackground="@drawable/style_rounded"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:pinWidth="35dp"
+                            app:pinHeight="35dp"
+                            app:pinLength="5"
+                            app:cursorVisible="false"
+                            app:forceKeyboard="true"
+                            app:hint="0"
+                            app:inputType="number"
+                            app:password="false"/>
+
+                      <!--  <com.deeptruth.app.android.views.customfontedittext
                             android:id="@+id/edt_codebox1"
                             style="@style/edt_codebox"
                             android:textSize="18sp"
@@ -137,7 +152,7 @@
                             android:padding="5dp"
                             android:textColorHint="@color/forgetpassword_txt"
                             android:layout_below="@+id/tv_forgotpassword"
-                            android:layout_margin="@dimen/margin_5dp"/>
+                            android:layout_margin="@dimen/margin_5dp"/>-->
 
                     </LinearLayout>
 
@@ -159,7 +174,7 @@
                         android:layout_below="@+id/ll_codebox"/>
 
                     <com.deeptruth.app.android.views.customfonttextview
-                        android:id="@+id/tv_camcel"
+                        android:id="@+id/tv_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
