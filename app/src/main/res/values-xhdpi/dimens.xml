@@ -14,6 +14,5 @@
     <dimen name="margin_30dp">30dp</dimen>
     <dimen name="margin_40dp">40dp</dimen>
     <dimen name="margin_50dp">50dp</dimen>
-    <dimen name="top_margin_30">25dp</dimen>
-    <dimen name="top_margin_50">40dp</dimen>
+
 </resources>
