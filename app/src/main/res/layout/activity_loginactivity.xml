@@ -1,9 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/splashscrn"
     tools:context="com.deeptruth.app.android.activity.signin">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_imagedeep"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center"
+            android:background="intro_thumb"
+            />
+
+        <ImageView
+            android:id="@+id/img_imagetext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/deeptruth_text"/>
+
+        <com.deeptruth.app.android.views.customfonttextview
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:text="@string/proof_of_the_truth"
+            android:textSize="15dp"
+            app:fontType="Comfortaa-Regular"
+            android:textColor="@color/blue"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_height="wrap_content">
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edt_createaccount"
+            android:hint="username"
+            android:id="@+id/edt_username"/>
+
+        <com.deeptruth.app.android.views.customfontedittext
+            style="@style/edt_createaccount"
+            android:hint="password"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/edt_username"
+            android:id="@+id/edt_password"/>
+
+        <com.deeptruth.app.android.models.customfonttextview
+            style="@style/txt_createaccount"
+            android:layout_below="@id/edt_password"
+            />
+
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

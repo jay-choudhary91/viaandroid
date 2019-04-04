@@ -9,6 +9,13 @@
     <string name="varifiable">100% varifiable video documentation.</string>
     <string name="start_secure_record">START SECURE RECORDING</string>-->
 
+
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="confirmpassword">Confirm Password</string>
+    <string name="submit">Submit</string>
+
     <string name="capture">CAPTURE</string>
     <string name="start_by_documenting">Start by documenting what you\'re experiencing. Use DeepTruth to create audio, video and photo files.</string>
     <string name="verify">VERIFY</string>
