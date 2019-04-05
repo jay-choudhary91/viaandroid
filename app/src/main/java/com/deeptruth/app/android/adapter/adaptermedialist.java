@@ -122,12 +122,13 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
     public void onBindViewHolder(@NonNull final myViewHolder holder, final int position) {
 
         final video mediaobject=arrayvideolist.get(position);
+        //binderHelper.bind(holder.root_view,""+position);
         if(mediaobject.isDoenable())
         {
-            if(! holder.root_view.isOpened())
-                binderHelper.closeLayout(""+position);
+       //     if(! holder.root_view.isOpened())
+        //        binderHelper.closeLayout(""+position);
 
-            binderHelper.bind(holder.root_view,""+position);
+          //  binderHelper.bind(holder.root_view,""+position);
 
             if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_reader))
             {
@@ -218,37 +219,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 holder.tv_caution.setText(config.item_caution+" "+ common.getcolorprogresspercentage(cautioncount,arrayList.size()));
                 holder.tv_unsent.setText(config.item_unsent+" "+ common.getcolorprogresspercentage(unsentcount,arrayList.size()));
                 holder.tv_invalid.setText(config.item_invalid+" "+ common.getcolorprogresspercentage(invalidcount,arrayList.size()));
-
-                //setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
-                    /*if(holder.layout_colorbar != null && holder.linearseekbarcolorview.getChildCount() < arrayList.size())
-                    {
-                        int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
-                        for(int i=0;i<arrayList.size();i++)
-                        {
-                            if(arrayList.get(i).equalsIgnoreCase(config.color_green))
-                            {
-                                validcount++;
-                                holder.tv_valid.setVisibility(View.VISIBLE);
-                            }
-                            else if(arrayList.get(i).equalsIgnoreCase(config.color_yellow))
-                            {
-                                cautioncount++;
-                                holder.tv_caution.setVisibility(View.VISIBLE);
-                            }
-                            else if(arrayList.get(i).equalsIgnoreCase(config.color_red))
-                            {
-                                invalidcount++;
-                                holder.tv_invalid.setVisibility(View.VISIBLE);
-                            }
-                            else if(arrayList.get(i).trim().isEmpty())
-                            {
-                                unsentcount++;
-                                holder.tv_unsent.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-                        setseekbarlayoutcolor(holder.linearseekbarcolorview,arrayList);
-                    }*/
             }
             else
             {
@@ -328,63 +298,6 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                 {
                     Glide.with(context).load(R.drawable.audiothum).apply(requestOptions).thumbnail(0.1f).into(holder.img_videothumbnail);
                 }
-
-           /* holder.img_videothumbnail.setBackgroundResource(R.drawable.audiotab);*/
-            }
-
-
-
-            if(mediaobject.isSelected){
-                holder.edtvideoname.setEnabled(true);
-                holder.edtvideoname.setClickable(true);
-                holder.edtvideoname.setFocusableInTouchMode(true);
-                holder.edtvideoname.setSelection(mediaobject.getName().substring(0, mediaobject.getName().lastIndexOf(".")).length());
-                holder.edtvideoname.requestFocus();
-                mediaobject.setSelected(false);
-
-                {
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                    Editable editableText=  holder.edtvideoname.getEditableText();
-                    if(editableText!=null) {
-                        Log.e("position",""+position);
-                        holder.edtvideoname.setInputType(InputType.TYPE_CLASS_TEXT);
-                        holder.edtvideoname.setEllipsize(TextUtils.TruncateAt.END);
-                        holder.edtvideoname.setSingleLine();
-                    }
-                }
-
-
-                holder.tv_medianotes.setEnabled(true);
-                holder.tv_medianotes.setClickable(true);
-                holder.tv_medianotes.setFocusableInTouchMode(true);
-                holder.tv_medianotes.requestFocus();
-                mediaobject.setSelected(false);
-
-                {
-                    InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                    Editable editableText=  holder.tv_medianotes.getEditableText();
-                    if(editableText!=null) {
-                        Log.e("position",""+position);
-                        holder.tv_medianotes.setInputType(InputType.TYPE_CLASS_TEXT);
-                        holder.tv_medianotes.setEllipsize(TextUtils.TruncateAt.END);
-                        holder.tv_medianotes.setSingleLine();
-                    }
-                }
-
-            }
-            else
-            {
-                mediaobject.setSelected(false);
-                holder.edtvideoname.setEnabled(false);
-                holder.edtvideoname.setClickable(false);
-                holder.edtvideoname.setKeyListener(null);
-
-                mediaobject.setSelected(false);
-                holder.tv_medianotes.setEnabled(false);
-                holder.tv_medianotes.setClickable(false);
-                holder.tv_medianotes.setKeyListener(null);
             }
 
             holder.layout_share_slide.setOnClickListener(new View.OnClickListener() {
@@ -398,6 +311,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             holder.layout_share_slide.setEnabled(true);
                         }
                     }, 1000);
+                    binderHelper.bind(holder.root_view,""+position);
                     binderHelper.closeLayout(""+position);
                     adapter.onItemClicked(mediaobject,1);
                 }
@@ -414,6 +328,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
                             holder.layout_delete_slide.setEnabled(true);
                         }
                     }, 1000);
+                    binderHelper.bind(holder.root_view,""+position);
                     binderHelper.closeLayout(""+position);
                     adapter.onItemClicked(mediaobject,2);
                 }
@@ -422,6 +337,7 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
             holder.layout_folder_slide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    binderHelper.bind(holder.root_view,""+position);
                     binderHelper.closeLayout(""+position);
                     adapter.onItemClicked(mediaobject,6);
                 }
@@ -446,12 +362,27 @@ public class adaptermedialist extends RecyclerView.Adapter<adaptermedialist.myVi
         }
         else
         {
-            binderHelper.closeLayout(""+position);
-            binderHelper.bind(holder.root_view,""+position);
+        //    binderHelper.closeLayout(""+position);
+      //      binderHelper.bind(holder.root_view,""+position);
 
             holder.root_view.getLayoutParams().height = 0;
             holder.root_view.setVisibility(View.GONE);
         }
+
+        //binderHelper.bind(holder.root_view,""+position);
+
+        /*if(mediaobject.isDoenable())
+        {
+            if(! holder.root_view.isOpened())
+                 binderHelper.closeLayout(""+position);
+
+            binderHelper.bind(holder.root_view,""+position);
+        }
+        else
+        {
+            binderHelper.closeLayout(""+position);
+            binderHelper.bind(holder.root_view,""+position);
+        }*/
 
     }
 

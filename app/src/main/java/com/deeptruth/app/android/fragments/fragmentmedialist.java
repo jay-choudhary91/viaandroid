@@ -848,8 +848,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 RecyclerView.LayoutManager mLayoutManager=new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                 recyclerviewgrid.setLayoutManager(mLayoutManager);
             }
-            adaptermediagrid.notifyDataSetChanged();
-            recyclerviewlist.smoothScrollToPosition(0);
+
+            if(adaptermediagrid != null)
+                adaptermediagrid.notifyDataSetChanged();
+            //recyclerviewlist.smoothScrollToPosition(0);
 
             if(scrolllisttotop)
                 recyclerviewgrid.smoothScrollToPosition(0);
@@ -1176,7 +1178,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             }
                         });
 
-
                         setmediaadapter();
                         if (arraymediaitemlist != null && arraymediaitemlist.size() > 0)
                         {
@@ -1206,35 +1207,39 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             @Override
             public void run() {
                 listviewheight=recyclerviewgrid.getHeight();
-                adaptermedialist = new adaptermedialist(getActivity(), arraymediaitemlist, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-                    }
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-                        video videoobj=(video)object;
-                        setAdapter(videoobj,type);
-                    }
+                if(adaptermedialist == null)
+                {
+                    adaptermedialist = new adaptermedialist(getActivity(), arraymediaitemlist, new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                        }
+                        @Override
+                        public void onItemClicked(Object object, int type) {
+                            video videoobj=(video)object;
+                            setAdapter(videoobj,type);
+                        }
 
-                },listviewheight);
-                recyclerviewlist.setAdapter(adaptermedialist);
+                    },listviewheight);
+                    recyclerviewlist.setAdapter(adaptermedialist);
+                }
 
-                adaptermediagrid = new adaptermediagrid(getActivity(), arraymediaitemlist, new adapteritemclick() {
-                    @Override
-                    public void onItemClicked(Object object) {
-                    }
-                    @Override
-                    public void onItemClicked(Object object, int type) {
-                        video videoobj=(video)object;
-                        setAdapter(videoobj,type);
-                    }
+                if(adaptermediagrid == null)
+                {
+                    adaptermediagrid = new adaptermediagrid(getActivity(), arraymediaitemlist, new adapteritemclick() {
+                        @Override
+                        public void onItemClicked(Object object) {
+                        }
+                        @Override
+                        public void onItemClicked(Object object, int type) {
+                            video videoobj=(video)object;
+                            setAdapter(videoobj,type);
+                        }
 
-                });
-                recyclerviewgrid.setAdapter(adaptermediagrid);
+                    });
+                    recyclerviewgrid.setAdapter(adaptermediagrid);
+                }
 
                 showselectedmediatypeitems(config.selectedmediatype,true);
-                //showselecteditemincenter(common.sortmediatype(config.selectedmediatype),false);
-
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
