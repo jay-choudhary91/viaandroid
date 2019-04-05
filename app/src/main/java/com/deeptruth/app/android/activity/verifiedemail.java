@@ -208,6 +208,6 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
 // set the new task and clear flags
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
-        finish();;
+        finish();
     }
 }
