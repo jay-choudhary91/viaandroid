@@ -1,12 +1,14 @@
 package com.deeptruth.app.android.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -50,7 +52,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
     public void onClick(View view) {
        switch (view.getId()){
            case R.id.login :
-               if (validation() == true)
+               if (validation())
                {
                    login();
                }
@@ -90,7 +92,10 @@ public class signin extends registrationbaseactivity implements View.OnClickList
             Toast.makeText(this, "Please enter valid username!", Toast.LENGTH_SHORT).show();
             return false;
         }
+        if (edt_password.getText().toString().trim().toString().length() == 0) {
+            Toast.makeText(this, "Please enter password!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
-
 }

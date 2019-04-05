@@ -712,7 +712,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        setdynamiclayout(null,lpimgflashon,20,0,0,0,0,0,0,0,imgflashon,null,null,0);
+                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
 
                         // set validating text to right padding
                         txt_section_validating_secondary.setPadding(0,0,layout_bottom.getHeight(),0);
@@ -753,7 +753,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        setdynamiclayout(null,lpimgflashon,30,0,0,0,0,0,0,0,imgflashon,null,null,0);
+                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
 
                         setvalidatingtext();
                         if(txt_zoomlevel != null)

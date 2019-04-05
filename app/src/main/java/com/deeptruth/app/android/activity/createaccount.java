@@ -56,7 +56,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.txt_submit:
-                if(checkValidations() == true){
+                if(checkValidations()){
                     Intent intent=new Intent(createaccount.this,verifiedemail.class);
                     startActivity(intent);
                 }
