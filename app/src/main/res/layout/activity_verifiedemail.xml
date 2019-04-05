@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:fillViewport="true"
+    android:layout_height="match_parent"
+    android:background="@drawable/splashscrn"
     tools:context="com.deeptruth.app.android.activity.verifiedemail">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="match_parent"
-            android:background="@drawable/splashscrn">
+            android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -20,7 +21,7 @@
                 android:orientation="vertical"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:layout_weight="1">
+                android:layout_weight="0.6">
 
                 <ImageView
                     android:id="@+id/img_imagedeep"
@@ -55,57 +56,59 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_weight="0.4"
+                android:gravity="bottom"
+                >
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_centerInParent="true"
                     android:id="@+id/layout_signin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_height="wrap_content">
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="@dimen/margin_10dp">
 
                     <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/txt_checkemail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
+                        android:layout_below="@+id/ll_topbar"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/margin_40dp"
+                        android:ellipsize="none"
+                        android:gravity="center_horizontal"
+                        android:padding="@dimen/margin_5dp"
+                        android:singleLine="true"
+                        android:text="@string/txt_checkemail"
                         android:textColor="@color/blue"
                         android:textSize="15sp"
-                        android:padding="@dimen/margin_5dp"
-                        android:ellipsize="none"
-                        android:singleLine="true"
                         android:visibility="visible"
-                        android:text="@string/txt_checkemail"
-                        app:fontType="OpenSans_Regular"
-                        android:layout_below="@+id/ll_topbar"/>
+                        app:fontType="OpenSans_Regular" />
 
                     <LinearLayout
                         android:id="@+id/ll_codebox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
+                        android:layout_below="@+id/txt_checkemail"
                         android:layout_marginTop="@dimen/margin_10dp"
-                        android:layout_below="@+id/txt_checkemail">
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
 
                         <com.goodiebag.pinview.Pinview
                             android:id="@+id/pinview"
-                            app:pinBackground="@drawable/style_rounded"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:pinWidth="35dp"
-                            app:pinHeight="35dp"
-                            app:pinLength="5"
                             app:cursorVisible="false"
                             app:forceKeyboard="false"
                             app:hint="0"
                             app:inputType="number"
-                            app:password="false"/>
+                            app:password="false"
+                            app:pinBackground="@drawable/style_rounded"
+                            app:pinHeight="35dp"
+                            app:pinLength="5"
+                            app:pinWidth="35dp" />
 
-                      <!--  <com.deeptruth.app.android.views.customfontedittext
+                        <!--  <com.deeptruth.app.android.views.customfontedittext
                             android:id="@+id/edt_codebox1"
                             style="@style/edt_codebox"
                             android:textSize="18sp"
@@ -158,34 +161,34 @@
                         android:id="@+id/tv_complete"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
+                        android:layout_below="@+id/ll_codebox"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/margin_10dp"
+                        android:ellipsize="none"
+                        android:gravity="center_horizontal"
+                        android:singleLine="true"
+                        android:text="@string/complete"
                         android:textColor="@color/blue"
                         android:textSize="25sp"
-                        android:ellipsize="none"
-                        android:singleLine="true"
                         android:visibility="visible"
-                        android:text="@string/complete"
-                        app:fontType="OpenSans_Regular"
-                        android:layout_below="@+id/ll_codebox"/>
+                        app:fontType="OpenSans_Regular" />
 
                     <com.deeptruth.app.android.views.customfonttextview
                         android:id="@+id/tv_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
+                        android:layout_below="@+id/tv_complete"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="@dimen/margin_5dp"
+                        android:ellipsize="none"
+                        android:gravity="center_horizontal"
+                        android:padding="@dimen/margin_5dp"
+                        android:singleLine="true"
+                        android:text="@string/cancel"
                         android:textColor="@color/blue"
                         android:textSize="15sp"
-                        android:padding="@dimen/margin_5dp"
-                        android:ellipsize="none"
-                        android:singleLine="true"
                         android:visibility="visible"
-                        android:text="@string/cancel"
-                        app:fontType="OpenSans_Regular"
-                        android:layout_below="@+id/tv_complete"/>
+                        app:fontType="OpenSans_Regular" />
 
                 </RelativeLayout>
             </LinearLayout>

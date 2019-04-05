@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="play_screen_bar_height">43dp</dimen>
+    <dimen name="progressbar_line_height">42dp</dimen>
+
     <dimen name="top_margin_30">25dp</dimen>
     <dimen name="top_margin_50">40dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
