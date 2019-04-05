@@ -82,12 +82,6 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     boolean isdraweropen=false ,isdrawerrunning = false;
     int rootviewheight,navigationbarheight, finalheight ,imageheight;
 
-    @Override
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-        finish();
-    }
-
     @SuppressLint("RestrictedApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {

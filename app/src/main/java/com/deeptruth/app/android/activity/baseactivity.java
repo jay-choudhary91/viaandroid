@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +29,13 @@ import com.deeptruth.app.android.fragments.imagereaderfragment;
 import com.deeptruth.app.android.fragments.videocomposerfragment;
 import com.deeptruth.app.android.fragments.videoreaderfragment;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.interfaces.homepressedlistener;
 import com.deeptruth.app.android.netutils.connectivityreceiver;
 import com.deeptruth.app.android.netutils.xapi;
 import com.deeptruth.app.android.netutils.xapipost;
 import com.deeptruth.app.android.netutils.xapipostjson;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.homewatcher;
 import com.deeptruth.app.android.utils.progressdialog;
 
 import java.util.HashMap;
@@ -51,12 +54,16 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     public boolean isisapprunning() {
         return isapprunning;
     }
-
+    homewatcher mHomeWatcher;
     public static baseactivity getinstance() {
         return instance;
     }
     public void isapprunning(boolean b) {
         isapprunning = b;
+    }
+
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
     }
 
     @Override
@@ -73,6 +80,19 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
         setContentView(contentview);
 
         initviews(savedInstanceState);
+
+        mHomeWatcher = new homewatcher(this);
+        mHomeWatcher.setOnHomePressedListener(new homepressedlistener() {
+            @Override
+            public void onHomePressed() {
+                // do something here...
+                finish();
+            }
+            @Override
+            public void onHomeLongPressed() {
+            }
+        });
+        mHomeWatcher.startWatch();
 
     }
 
@@ -121,7 +141,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if(mHomeWatcher != null)
+            mHomeWatcher.stopWatch();
     }
 
     public void initviews(Bundle savedInstanceState) {

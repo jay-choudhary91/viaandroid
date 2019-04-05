@@ -1,6 +1,12 @@
 package com.deeptruth.app.android.activity;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import com.deeptruth.app.android.interfaces.homepressedlistener;
+import com.deeptruth.app.android.utils.homewatcher;
 
 /**
  * Created by ${matraex} on 5/4/19.
@@ -8,9 +14,33 @@ import android.support.v7.app.AppCompatActivity;
 
 public class registrationbaseactivity extends AppCompatActivity
 {
+    homewatcher mHomeWatcher;
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
-        finish();
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mHomeWatcher = new homewatcher(this);
+        mHomeWatcher.setOnHomePressedListener(new homepressedlistener() {
+            @Override
+            public void onHomePressed() {
+                // do something here...
+                finish();
+            }
+            @Override
+            public void onHomeLongPressed() {
+            }
+        });
+        mHomeWatcher.startWatch();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mHomeWatcher != null)
+            mHomeWatcher.stopWatch();
     }
 }
