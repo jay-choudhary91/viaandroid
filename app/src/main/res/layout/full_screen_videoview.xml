@@ -122,14 +122,14 @@
                                 <RelativeLayout
                                     android:id="@+id/scrubberverticalbar"
                                     android:layout_width="20dp"
-                                    android:layout_height="50dp"
+                                    android:layout_height="@dimen/progressbar_line_height"
                                     android:layout_centerHorizontal="true"
                                     android:background="@color/gray_x"
                                     android:visibility="gone">
 
                                     <View
                                         android:layout_width="2dp"
-                                        android:layout_height="50dp"
+                                        android:layout_height="@dimen/progressbar_line_height"
                                         android:layout_centerHorizontal="true"
                                         android:background="@color/blue_button"
                                         android:visibility="gone">
@@ -254,7 +254,7 @@
 
                         <RelativeLayout
                             android:layout_width="4dp"
-                            android:layout_height="45dp"
+                            android:layout_height="@dimen/progressbar_line_height"
                             android:layout_below="@id/txt_mediatimethumb"
                             android:layout_centerHorizontal="true"
                             android:background="@color/white"
@@ -264,7 +264,7 @@
                             <View
                                 android:id="@+id/view_progressline"
                                 android:layout_width="2dp"
-                                android:layout_height="40dp"
+                                android:layout_height="30dp"
                                 android:layout_centerHorizontal="true"
                                 android:background="@color/blacktransparent"
                                 android:visibility="visible"></View>
