@@ -20,7 +20,7 @@ import com.google.android.gms.common.internal.service.Common;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class createaccount extends Activity implements View.OnClickListener  {
+public class createaccount extends registrationbaseactivity implements View.OnClickListener  {
 
 
     @BindView(R.id.edt_username)
@@ -35,6 +35,12 @@ public class createaccount extends Activity implements View.OnClickListener  {
     MaskedEditText edt_phonenumber;
     @BindView(R.id.txt_submit)
     TextView txt_submit;
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

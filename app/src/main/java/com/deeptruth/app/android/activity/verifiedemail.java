@@ -26,7 +26,7 @@ import org.json.JSONException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class verifiedemail extends Activity implements View.OnClickListener {
+public class verifiedemail extends registrationbaseactivity implements View.OnClickListener {
 
     @BindView(R.id.pinview)
     Pinview pinview;
