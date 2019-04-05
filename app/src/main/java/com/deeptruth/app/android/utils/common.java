@@ -86,6 +86,7 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.views.customfontedittext;
 import com.google.android.gms.common.internal.service.Common;
+import com.google.android.gms.common.util.ArrayUtils;
 
 import org.json.JSONArray;
 
@@ -121,6 +122,8 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.Context.USB_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
@@ -2304,6 +2307,23 @@ public class common {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
         }
     }
+    public static boolean isvalidusername(String target) {
+        if (target == null) {
+            return false;
+        } else {
+                char[] chars = target.toCharArray();
+
+                    if(chars!=null && chars.length >0){
+                      Log.e("arrayvalue",""+chars[0]);
+                      int value = (int) chars[0];
+                        if( (value>='a' && value<='z') || (value>='A' && value<='Z')){
+                        return true;
+                    }
+                }
+                return false;
+        }
+    }
+
 
     public static boolean validCellPhone(String number) {
         return android.util.Patterns.PHONE.matcher(number).matches();

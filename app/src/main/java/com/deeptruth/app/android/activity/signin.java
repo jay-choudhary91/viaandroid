@@ -10,9 +10,11 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 
@@ -48,7 +50,10 @@ public class signin extends registrationbaseactivity implements View.OnClickList
     public void onClick(View view) {
        switch (view.getId()){
            case R.id.login :
-               login();
+               if (validation() == true)
+               {
+                   login();
+               }
                break;
            case R.id.createaccount:
                Intent intent=new Intent(signin.this,createaccount.class);
@@ -77,6 +82,15 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                         overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
                         finish();
                     }
+    }
+
+    public boolean validation(){
+
+        if ((! common.isvalidusername(edt_username.getText().toString().trim()))) {
+            Toast.makeText(this, "Please enter valid username!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
 }

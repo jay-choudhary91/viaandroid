@@ -72,6 +72,10 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                 Toast.makeText(this, "Please enter user name!", Toast.LENGTH_SHORT).show();
                 return false;
             }
+            if(! common.isvalidusername(edt_username.getText().toString().trim().toString())){
+                Toast.makeText(this, "Please enter user name!", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             if (! common.isValidEmail(edt_email.getText().toString().trim())) {
                 Toast.makeText(this, "Please enter valid email!", Toast.LENGTH_SHORT).show();
                 return false;
