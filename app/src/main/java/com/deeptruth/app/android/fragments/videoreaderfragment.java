@@ -457,11 +457,59 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 }
             });
 
+
            // mOrientation = new Orientation(applicationviavideocomposer.getactivity());
             gethelper().setwindowfitxy(true);
             //layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
             loadviewdata();
             loadmap();
+
+            recyview_frames.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    int action = event.getAction();
+                    switch (action)
+                    {
+                        case MotionEvent.ACTION_DOWN:
+                            // Disallow Drawer to intercept touch events.
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            // Allow Drawer to intercept touch events.
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+
+                    // Handle seekbar touch events.
+                    v.onTouchEvent(event);
+                    return true;
+                }
+            });
+
+            mediaseekbar.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    int action = event.getAction();
+                    switch (action)
+                    {
+                        case MotionEvent.ACTION_DOWN:
+                            // Disallow Drawer to intercept touch events.
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            // Allow Drawer to intercept touch events.
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            break;
+                    }
+
+                    // Handle seekbar touch events.
+                    v.onTouchEvent(event);
+                    return true;
+                }
+            });
+
 
             detector = new GestureDetector(applicationviavideocomposer.getactivity(),new GestureDetector.SimpleOnGestureListener(){
                 @Override
@@ -544,6 +592,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     }
                     return false;
                 }
+
+
 
                 @Override
                 public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -628,8 +678,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 public void onClick(View v) {}
 
             });
-
-
 
             new Handler().postDelayed(new Runnable() {
                 @Override
