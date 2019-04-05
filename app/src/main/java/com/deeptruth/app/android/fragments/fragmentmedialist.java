@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -19,7 +18,6 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -56,7 +54,6 @@ import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.mediatype;
 import com.deeptruth.app.android.models.video;
-import com.deeptruth.app.android.utils.LinearLayoutManagerWithSmoothScroller;
 import com.deeptruth.app.android.utils.appdialog;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
@@ -67,7 +64,6 @@ import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
-import com.google.gson.Gson;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.io.File;
@@ -87,8 +83,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.MODE_PRIVATE;
-import static android.widget.RelativeLayout.TRUE;
 
 /**
  * Created by ${matraex} on 6/8/18.
@@ -165,7 +159,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     private int REQUESTCODE_PICK=201,audiocount=0,videocount=0,imagecount=0;
     private FFmpeg ffmpeg;
     int navigationbarheight = 0;
-
     Handler handler = new Handler();
     int numberOfTaps = 0, devicewidth = 0;
     long lastTapTimeMs = 0;
@@ -247,6 +240,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         gethelper().setwindowfitxy(true);
         gethelper().updateactionbar(1);
         isinbackground=false;
+        if(edt_searchitem != null)
+            edt_searchitem.setTag(false);
     }
 
     public void requestpermissions()
@@ -385,6 +380,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 }
             });
 
+            edt_searchitem.setTag(false);
+            edt_searchitem.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    edt_searchitem.setTag(hasFocus);
+                }
+            });
+
             edt_searchitem.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -393,12 +396,12 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
                 }
 
                 @Override
                 public void afterTextChanged(Editable editable) {
-                    filter(editable.toString());
+                    if((Boolean) edt_searchitem.getTag())
+                        searchmediafromlist(editable.toString());
                 }
             });
 
@@ -566,7 +569,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             showselectedmediatypeitems(selectedpos,false);
     }
 
-    private void filter(String text) {
+    private void searchmediafromlist(String text) {
         if(arraymediaitemlist != null && arraymediaitemlist.size() > 0)
         {
             if(text.trim().length() > 0)
