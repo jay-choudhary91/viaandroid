@@ -19,7 +19,7 @@ import com.deeptruth.app.android.utils.xdata;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class signin extends Activity implements View.OnClickListener{
+public class signin extends registrationbaseactivity implements View.OnClickListener{
 
 
     @BindView(R.id.edt_username)

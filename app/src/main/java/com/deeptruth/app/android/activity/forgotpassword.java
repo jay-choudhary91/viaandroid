@@ -18,7 +18,7 @@ import com.google.android.gms.common.internal.service.Common;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class forgotpassword extends Activity implements View.OnClickListener {
+public class forgotpassword extends registrationbaseactivity implements View.OnClickListener {
 
     @BindView(R.id.tv_forgotpassword)
     customfonttextview tvforgotpassword;
