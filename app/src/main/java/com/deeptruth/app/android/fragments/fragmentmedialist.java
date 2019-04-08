@@ -1790,7 +1790,7 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
         String type = null;
         if(selectedmediatype == -1)
         {
-            config.selectedmediatype=1;
+            config.selectedmediatype =0;
             selectedmediatype=config.selectedmediatype;
         }
 
