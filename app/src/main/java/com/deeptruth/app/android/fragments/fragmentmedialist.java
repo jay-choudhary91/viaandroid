@@ -1025,75 +1025,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
                         if(! isexistinarraay(mediafilepath))
                         {
-                            /*Cursor cursor2 = mdbhelper.getmediacolor(localkey);
-                            if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
-                            {
-                                ArrayList<String> arrayList=new ArrayList<>();
-                                do{
-                                    arrayList.add(cursor2.getString(cursor2.getColumnIndex("color")));
-                                }while (cursor2.moveToNext());
-                                videoobject.setMediabarcolor(arrayList);
-                            }*/
-
-                            /*Cursor cursor2 = mdbhelper.getmediacolor(localkey);
-                            if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
-                            {
-                                LayoutInflater inflater = LayoutInflater.from(getActivity());
-                                View viewparent = inflater.inflate(R.layout.row_mediacolor, null, false);
-                                LinearLayout layout=(LinearLayout)viewparent.findViewById(R.id.linear_seekbarcolorview);
-                                ArrayList<String> arrayList=new ArrayList<>();
-                                int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
-
-                                do{
-                                    String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
-                                    arrayList.add(framecolor);
-                                    if(framecolor.equalsIgnoreCase(config.color_green))
-                                        validcount++;
-
-                                    if(framecolor.equalsIgnoreCase(config.color_yellow))
-                                        cautioncount++;
-
-                                    if(framecolor.equalsIgnoreCase(config.color_red))
-                                        invalidcount++;
-
-                                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
-                                    {
-                                        if(framecolor.trim().isEmpty())
-                                            unsentcount++;
-                                    }
-
-                                }while (cursor2.moveToNext());
-
-                                if(validcount != videoobject.getValidcount() || cautioncount != videoobject.getCautioncount()
-                                        || unsentcount != videoobject.getUnsentcount())
-                                {
-                                    cursor2.moveToFirst();
-                                    do{
-                                        String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
-
-                                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                                                LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
-                                        View view = new View(applicationviavideocomposer.getactivity());
-                                        view.setLayoutParams(param);
-                                        if(framecolor != null && (! framecolor.isEmpty()))
-                                        {
-                                            view.setBackgroundColor(Color.parseColor(common.getcolorbystring( framecolor)));
-                                        }
-                                        else
-                                        {
-                                            view.setBackgroundColor(Color.parseColor(config.color_code_gray));
-                                        }
-                                        layout.addView(view);
-                                    }while (cursor2.moveToNext());
-                                    videoobject.setColorbarview(layout);
-                                }
-                                videoobject.setMediabarcolor(arrayList);
-                                videoobject.setValidcount(validcount);
-                                videoobject.setCautioncount(cautioncount);
-                                videoobject.setInvalidcount(invalidcount);
-                                videoobject.setUnsentcount(unsentcount);
-                            }*/
-
                             videoobject.setId(Integer.parseInt(id));
                             videoobject.setPath(mediafilepath);
                             videoobject.setmimetype(type);
@@ -1152,6 +1083,65 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                             }catch (Exception e)
                             {
                                 e.printStackTrace();
+                            }
+
+                            Cursor cursor2 = mdbhelper.getmediacolor(localkey);
+                            if (cursor2 != null && cursor2.getCount()> 0 && cursor2.moveToFirst())
+                            {
+                                LayoutInflater inflater = LayoutInflater.from(getActivity());
+                                View viewparent = inflater.inflate(R.layout.row_mediacolor, null, false);
+                                LinearLayout layout=(LinearLayout)viewparent.findViewById(R.id.linear_seekbarcolorview);
+                                ArrayList<String> arrayList=new ArrayList<>();
+                                int validcount=0,cautioncount=0,unsentcount=0,invalidcount=0;
+
+                                do{
+                                    String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
+                                    arrayList.add(framecolor);
+                                    if(framecolor.equalsIgnoreCase(config.color_green))
+                                        validcount++;
+
+                                    if(framecolor.equalsIgnoreCase(config.color_yellow))
+                                        cautioncount++;
+
+                                    if(framecolor.equalsIgnoreCase(config.color_red))
+                                        invalidcount++;
+
+                                    if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
+                                    {
+                                        if(framecolor.trim().isEmpty())
+                                            unsentcount++;
+                                    }
+
+                                }while (cursor2.moveToNext());
+
+                                if(validcount != videoobject.getValidcount() || cautioncount != videoobject.getCautioncount()
+                                        || unsentcount != videoobject.getUnsentcount())
+                                {
+                                    cursor2.moveToFirst();
+                                    do{
+                                        String framecolor=cursor2.getString(cursor2.getColumnIndex("color"));
+
+                                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT,1.0f);
+                                        View view = new View(applicationviavideocomposer.getactivity());
+                                        view.setLayoutParams(param);
+                                        if(framecolor != null && (! framecolor.isEmpty()))
+                                        {
+                                            view.setBackgroundColor(Color.parseColor(common.getcolorbystring( framecolor)));
+                                        }
+                                        else
+                                        {
+                                            view.setBackgroundColor(Color.parseColor(config.color_code_gray));
+                                        }
+                                        layout.addView(view);
+                                    }while (cursor2.moveToNext());
+                                    videoobject.setColorbarview(layout);
+                                }
+                                videoobject.setMediabarcolor(arrayList);
+                                videoobject.setValidcount(validcount);
+                                videoobject.setCautioncount(cautioncount);
+                                videoobject.setInvalidcount(invalidcount);
+                                videoobject.setUnsentcount(unsentcount);
                             }
 
                             File file=new File(mediafilepath);

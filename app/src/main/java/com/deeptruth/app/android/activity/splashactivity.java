@@ -44,10 +44,8 @@ public class splashactivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
-       // requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
-
-         img_imagedeep= (ImageView) findViewById(R.id.img_imagedeep);
+        img_imagedeep= (ImageView) findViewById(R.id.img_imagedeep);
 
         try {
 
@@ -55,25 +53,10 @@ public class splashactivity extends Activity {
                     .diskCacheStrategy(DiskCacheStrategy.NONE) // because file name is always same
                     .skipMemoryCache(true);
 
-
             Glide.with(this)
                     .load(R.drawable.intro_thumb)
                     .apply(requestOptions)
                     .into( new gifdrawableimagetarget(img_imagedeep,1));
-
-
-           // img_imagedeep.lo
-           /* gifDrawable.setLoopCount(1);
-            gifDrawable.setSpeed(1.0f);
-            img_imagedeep.setImageDrawable(gifDrawable);
-            img_imagedeep.setAlpha(0f);
-           // img_imagedeep.setVisibility(View.VISIBLE);
-            img_imagedeep.animate()
-             .setDuration(100)
-             .alpha(1.0f)
-             .setListener(null);*/
-
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,33 +75,8 @@ public class splashactivity extends Activity {
                     Intent intent=new Intent(splashactivity.this,signin.class);
                     startActivity(intent);
                     finish();
-
-                    /*if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
-                    {
-                        if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
-                            xdata.getinstance().saveSetting(config.enableintroscreen,"no");
-
-                        Intent intent=new Intent(splashactivity.this,introscreenactivity.class);
-                        startActivity(intent);
-                        finish();
-
-                    }else{
-                        Intent intent=new Intent(splashactivity.this,homeactivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
-                        finish();
-                    }*/
                 }
             }
         },2000);
-    }
-    public void getstatusbarheight() {
-        Rect rectangle = new Rect();
-        Window window = getWindow();
-        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-        int statusBarHeight = rectangle.top;
-        if (statusBarHeight != 0) {
-            xdata.getinstance().saveSetting("statusbarheight", "" + statusBarHeight);
-        }
     }
 }

@@ -53,10 +53,8 @@ public class signin extends registrationbaseactivity implements View.OnClickList
        switch (view.getId()){
            case R.id.login :
                login();
-               /*if (validation())
-               {
-                   login();
-               }*/
+               /*if(isvalidated())
+                    login();*/
                break;
            case R.id.createaccount:
                Intent intent=new Intent(signin.this,createaccount.class);
@@ -69,25 +67,26 @@ public class signin extends registrationbaseactivity implements View.OnClickList
 
        }
     }
-    public void login(){
-                    if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
-                    {
-                        if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
-                            xdata.getinstance().saveSetting(config.enableintroscreen,"no");
+    public void login()
+    {
+        if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
+        {
+            if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
+                xdata.getinstance().saveSetting(config.enableintroscreen,"no");
 
-                        Intent intent=new Intent(signin.this,introscreenactivity.class);
-                        startActivity(intent);
-                        finish();
+            Intent intent=new Intent(signin.this,introscreenactivity.class);
+            startActivity(intent);
+            finish();
 
-                    }else{
-                        Intent intent=new Intent(signin.this,homeactivity.class);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
-                        finish();
-                    }
+        }else{
+            Intent intent=new Intent(signin.this,homeactivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
+            finish();
+        }
     }
 
-    public boolean validation(){
+    public boolean isvalidated(){
 
         if ((! common.isvalidusername(edt_username.getText().toString().trim()))) {
             Toast.makeText(this, "Please enter valid username!", Toast.LENGTH_SHORT).show();
