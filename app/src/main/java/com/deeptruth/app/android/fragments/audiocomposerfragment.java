@@ -552,7 +552,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                         public void run() {
                             if(isaudiorecording)
                             {
-                                //"" + String.format("%01d", Hours) + ":"+
+                                //"" + String.format("%01d", hours) + ":"+
                                 txt_title_actionbarcomposer.setText(
                                         "" + String.format("%02d", Minutes) + ":"
                                         + String.format("%02d", Seconds) + "."

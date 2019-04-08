@@ -324,12 +324,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     ImageView imgflashon,img_dotmenu,handle;
 
     View rootview = null;
-    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    long millisecondtime, starttime, timebuff, updatetime = 0L ;
     Handler timerhandler;
-    int Hours,Seconds, Minutes, MilliSeconds,framepersecond=30,videobitrate=2000000 ; // 2000000 is equals to 2 MB. It means quality is exisiting around 420P. It also depands on frame rate.
+    int hours, seconds, minutes, milliSeconds,framepersecond=30,videobitrate=2000000 ; // 2000000 is equals to 2 MB. It means quality is exisiting around 420P. It also depands on frame rate.
     String keytype =config.prefs_md5,currenthashvalue="",selectedvideoquality="720P";
-    ArrayList<videomodel> mvideoframes =new ArrayList<>();
-    ArrayList<frameinfo> muploadframelist =new ArrayList<>();
+    ArrayList<videomodel> videoframes =new ArrayList<>();
+    ArrayList<frameinfo> uploadframelist =new ArrayList<>();
     long currentframenumber =0;
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
@@ -338,16 +338,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     File lastrecordedvideo=null;
     String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
-    ArrayList<videomodel> mmetricsitems =new ArrayList<>();
-    ArrayList<videomodel> mhashesitems =new ArrayList<>();
-    ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
-    ArrayList<dbitemcontainer> mdbmiddleitemcontainer =new ArrayList<>();
+    ArrayList<videomodel> metricsitems =new ArrayList<>();
+    ArrayList<videomodel> hashesitems =new ArrayList<>();
+    ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
+    ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
     ArrayList<permissions> permissionslist =new ArrayList<>();
 
     private boolean isdraweropen=false,isgraphicalshown=false;
-    private Handler myHandler;
-    private Runnable myRunnable;
+    private Handler myhandler;
+    private Runnable myrunnable;
     private boolean issavedtofolder=false,previewupdated=false;;
     JSONArray metadatametricesjson=new JSONArray();
 
@@ -1320,8 +1320,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     insertstartmediainfo();
 
                     Gson gson = new Gson();
-                    String list1 = gson.toJson(mdbstartitemcontainer);
-                    String list2 = gson.toJson(mdbmiddleitemcontainer);
+                    String list1 = gson.toJson(dbstartitemcontainer);
+                    String list2 = gson.toJson(dbmiddleitemcontainer);
                     xdata.getinstance().saveSetting("liststart",list1);
                     xdata.getinstance().saveSetting("listmiddle",list2);
                     xdata.getinstance().saveSetting("mediapath",lastrecordedvideo.getAbsolutePath());
@@ -1480,10 +1480,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         } else {
             selectedhashes="";
             selectedmetrices="";
-            mmetricsitems.clear();
-            mhashesitems.clear();
-            mdbstartitemcontainer.clear();
-            mdbmiddleitemcontainer.clear();
+            metricsitems.clear();
+            hashesitems.clear();
+            dbstartitemcontainer.clear();
+            dbmiddleitemcontainer.clear();
 
             imgflashon.setVisibility(View.VISIBLE);
             apicurrentduration =0;
@@ -1491,7 +1491,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             mframetorecordcount =0;
             currentframenumber = currentframenumber + frameduration;
 
-            mvideoframes.clear();
+            videoframes.clear();
             gethelper().updateactionbar(1,applicationviavideocomposer.getactivity().getResources().getColor(R.color.dark_blue_solid));
           //  layout_bottom.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.actionbar_solid_normal_transparent));
             startRecordingVideo();
@@ -1691,8 +1691,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         closemediawithtimer();
         showhideactionbaricon(1);
         stopblinkanimation();
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
 
         if(validationbaranimation != null)
         {
@@ -1728,26 +1728,26 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void startvideotimer()
     {
-        StartTime = SystemClock.uptimeMillis();
+        starttime = SystemClock.uptimeMillis();
         timerhandler.postDelayed(runnable, 0);
     }
 
     public void stopvideotimer()
     {
-        TimeBuff += MillisecondTime;
+        timebuff += millisecondtime;
         timerhandler.removeCallbacks(runnable);
     }
 
     public void resetvideotimer()
     {
-        MillisecondTime = 0L ;
-        StartTime = 0L ;
-        TimeBuff = 0L ;
-        UpdateTime = 0L ;
-        Seconds = 0 ;
-        Minutes = 0 ;
-        Hours = 0 ;
-        MilliSeconds = 0 ;
+        millisecondtime = 0L ;
+        starttime = 0L ;
+        timebuff = 0L ;
+        updatetime = 0L ;
+        seconds = 0 ;
+        minutes = 0 ;
+        hours = 0 ;
+        milliSeconds = 0 ;
         //timer.setText("00:00:00");
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
     }
@@ -1758,24 +1758,24 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    MillisecondTime = SystemClock.uptimeMillis() - StartTime;
-                    UpdateTime = TimeBuff + MillisecondTime;
-                    Seconds = (int) (UpdateTime / 1000);
-                    Minutes = Seconds / 60;
-                    Hours = Minutes/60;
-                    Seconds = Seconds % 60;
-                    MilliSeconds = (int) (UpdateTime % 1000);
+                    millisecondtime = SystemClock.uptimeMillis() - starttime;
+                    updatetime = timebuff + millisecondtime;
+                    seconds = (int) (updatetime / 1000);
+                    minutes = seconds / 60;
+                    hours = minutes /60;
+                    seconds = seconds % 60;
+                    milliSeconds = (int) (updatetime % 1000);
 
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if(isvideorecording)
                             {
-                                //+ String.format("%01d", Hours) + ":"+
+                                //+ String.format("%01d", hours) + ":"+
                                 txt_title_actionbarcomposer.setText(
-                                        "" + String.format("%02d", Minutes) + ":"
-                                        + String.format("%02d", Seconds) + "."
-                                        + String.format("%02d", (MilliSeconds/100)));
+                                        "" + String.format("%02d", minutes) + ":"
+                                        + String.format("%02d", seconds) + "."
+                                        + String.format("%02d", (milliSeconds /100)));
                             }
 
                         }
@@ -1849,13 +1849,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 currenthashvalue=keyvalue;
                 apicurrentduration++;
 
-                mvideoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
+                videoframes.add(new videomodel(message+" "+ keytype +" "+ framenumber + ": " + keyvalue));
                 hashvalue = keyvalue;
 
                 if(! selectedhashes.trim().isEmpty())
                     selectedhashes=selectedhashes+"\n";
 
-                selectedhashes =selectedhashes+mvideoframes.get(mvideoframes.size()-1).getframeinfo();
+                selectedhashes =selectedhashes+ videoframes.get(videoframes.size()-1).getframeinfo();
 
 
                 if(apicurrentduration > apicallduration)
@@ -1872,7 +1872,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     {
                         metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
                         metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
-                        muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
+                        uploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
                         savemediaupdate(metricesarray);
                     }catch (Exception e)
                     {
@@ -1889,11 +1889,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void setmetriceshashesdata()
     {
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
+        if(myhandler != null && myrunnable != null)
+            myhandler.removeCallbacks(myrunnable);
 
-        myHandler=new Handler();
-        myRunnable = new Runnable() {
+        myhandler =new Handler();
+        myrunnable = new Runnable() {
             @Override
             public void run() {
                 if(isvideorecording)
@@ -1901,16 +1901,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     if((! selectedmetrices.toString().trim().isEmpty()))
                     {
 
-                        if(mmetricsitems.size() > 0)
+                        if(metricsitems.size() > 0)
                         {
-                           // mmetricsitems.set(0,new videomodel(selectedmetrices));
-                            mmetricsitems.add(new videomodel(selectedmetrices));
+                           // metricsitems.set(0,new videomodel(selectedmetrices));
+                            metricsitems.add(new videomodel(selectedmetrices));
                         }
                         else
                         {
-                            mmetricsitems.add(new videomodel(selectedmetrices));
+                            metricsitems.add(new videomodel(selectedmetrices));
                         }
-                        //mmetricesadapter.notifyItemChanged(mmetricsitems.size()-1);
+                        //mmetricesadapter.notifyItemChanged(metricsitems.size()-1);
                         selectedmetrices="";
                     }
                 }
@@ -1930,7 +1930,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     if(gethelper().isdraweropened())
                     {
                         layout_no_gps_wifi.setVisibility(View.GONE);
-                        myHandler.postDelayed(this, 1000);
+                        myhandler.postDelayed(this, 1000);
                         return;
                     }
                     if(xdata.getinstance().getSetting("wificonnected").equalsIgnoreCase("0") ||
@@ -2001,10 +2001,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     e.printStackTrace();
                 }
 
-                myHandler.postDelayed(this, 1000);
+                myhandler.postDelayed(this, 1000);
             }
         };
-        myHandler.post(myRunnable);
+        myhandler.post(myrunnable);
     }
 
     public void visiblewarningcontrollers(){
@@ -2053,18 +2053,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         String currentdate[] = common.getcurrentdatewithtimezone();
         String sequenceno = "",sequencehash = "", metrichash = "" ;
 
-        for(int i=0;i<muploadframelist.size();i++)
+        for(int i = 0; i< uploadframelist.size(); i++)
         {
             try {
-                Log.e("framenumber", muploadframelist.get(i).getFramenumber());
-                sequenceno = muploadframelist.get(i).getFramenumber();
-                sequencehash = muploadframelist.get(i).getHashvalue();
+                Log.e("framenumber", uploadframelist.get(i).getFramenumber());
+                sequenceno = uploadframelist.get(i).getFramenumber();
+                sequencehash = uploadframelist.get(i).getHashvalue();
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
-        muploadframelist.clear();
+        uploadframelist.clear();
 
         try {
             String devicetime = common.get24hourformat();
@@ -2081,7 +2081,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
 
             metrichash = md5.calculatestringtomd5(metricesjsonarray.get(0).toString());
-            mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
+            dbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"","",""));
         } catch (Exception e) {
             e.printStackTrace();
@@ -2097,12 +2097,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            if(mdbstartitemcontainer.size() == 0)
+            if(dbstartitemcontainer.size() == 0)
             {
-                mdbstartitemcontainer.add(new dbitemcontainer("","video","Local storage path", mediakey,"","","0","0",
+                dbstartitemcontainer.add(new dbitemcontainer("","video","Local storage path", mediakey,"","","0","0",
                         config.type_video_start,devicestartdate,devicestartdate,timeoffset,"","","",
                         xdata.getinstance().getSetting(config.selected_folder)));
-                Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
+                Log.e("startcontainersize"," "+ dbstartitemcontainer.size());
             }
 
         } catch (Exception e) {
@@ -2136,12 +2136,12 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             String updatecompletedate[] = common.getcurrentdatewithtimezone();
             String completeddate = updatecompletedate[0];
 
-            mdbstartitemcontainer.get(0).setItem1(json);
-            mdbstartitemcontainer.get(0).setItem3(lastrecordedvideo.getAbsolutePath());
-            mdbstartitemcontainer.get(0).setItem15(lastrecordedvideo.getAbsolutePath());
-            mdbstartitemcontainer.get(0).setItem13(completeddate);
+            dbstartitemcontainer.get(0).setItem1(json);
+            dbstartitemcontainer.get(0).setItem3(lastrecordedvideo.getAbsolutePath());
+            dbstartitemcontainer.get(0).setItem15(lastrecordedvideo.getAbsolutePath());
+            dbstartitemcontainer.get(0).setItem13(completeddate);
 
-            if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
+            if(dbstartitemcontainer != null && dbstartitemcontainer.size() > 0)
             {
                 databasemanager mdbhelper=null;
                 if (mdbhelper == null) {
@@ -2155,13 +2155,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                     e.printStackTrace();
                 }
 
-                mdbhelper.insertstartvideoinfo(mdbstartitemcontainer.get(0).getItem1(),mdbstartitemcontainer.get(0).getItem2()
-                ,mdbstartitemcontainer.get(0).getItem3(),mdbstartitemcontainer.get(0).getItem4(),mdbstartitemcontainer.get(0).getItem5()
-                ,mdbstartitemcontainer.get(0).getItem6(),mdbstartitemcontainer.get(0).getItem7(),mdbstartitemcontainer.get(0).getItem8(),
-                mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
-                ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
+                mdbhelper.insertstartvideoinfo(dbstartitemcontainer.get(0).getItem1(), dbstartitemcontainer.get(0).getItem2()
+                , dbstartitemcontainer.get(0).getItem3(), dbstartitemcontainer.get(0).getItem4(), dbstartitemcontainer.get(0).getItem5()
+                , dbstartitemcontainer.get(0).getItem6(), dbstartitemcontainer.get(0).getItem7(), dbstartitemcontainer.get(0).getItem8(),
+                dbstartitemcontainer.get(0).getItem9(), dbstartitemcontainer.get(0).getItem10(), dbstartitemcontainer.get(0).getItem11()
+                , dbstartitemcontainer.get(0).getItem12(), dbstartitemcontainer.get(0).getItem13(),"", dbstartitemcontainer.get(0).getItem14()
                 ,"0","sync_pending","","","0","inprogress","","",
-                mdbstartitemcontainer.get(0).getItem16(),duration);
+                dbstartitemcontainer.get(0).getItem16(),duration);
 
                 try {
                     mdbhelper.close();
