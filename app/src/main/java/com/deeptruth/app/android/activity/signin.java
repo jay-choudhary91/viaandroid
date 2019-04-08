@@ -1,18 +1,22 @@
 package com.deeptruth.app.android.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.xdata;
 
@@ -48,7 +52,10 @@ public class signin extends registrationbaseactivity implements View.OnClickList
     public void onClick(View view) {
        switch (view.getId()){
            case R.id.login :
-               login();
+               if (validation())
+               {
+                   login();
+               }
                break;
            case R.id.createaccount:
                Intent intent=new Intent(signin.this,createaccount.class);
@@ -79,4 +86,16 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                     }
     }
 
+    public boolean validation(){
+
+        if ((! common.isvalidusername(edt_username.getText().toString().trim()))) {
+            Toast.makeText(this, "Please enter valid username!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (edt_password.getText().toString().trim().toString().length() == 0) {
+            Toast.makeText(this, "Please enter password!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
 }

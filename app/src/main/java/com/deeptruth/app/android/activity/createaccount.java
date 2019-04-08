@@ -56,7 +56,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.txt_submit:
-                if(checkValidations() == true){
+                if(checkValidations()){
                     Intent intent=new Intent(createaccount.this,verifiedemail.class);
                     startActivity(intent);
                 }
@@ -69,6 +69,10 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
         public  boolean checkValidations() {
 
             if (edt_username.getText().toString().trim().toString().length() == 0) {
+                Toast.makeText(this, "Please enter user name!", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if(! common.isvalidusername(edt_username.getText().toString().trim().toString())){
                 Toast.makeText(this, "Please enter user name!", Toast.LENGTH_SHORT).show();
                 return false;
             }
