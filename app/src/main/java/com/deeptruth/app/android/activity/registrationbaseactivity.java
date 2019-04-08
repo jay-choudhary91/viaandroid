@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.deeptruth.app.android.interfaces.homepressedlistener;
 import com.deeptruth.app.android.utils.homewatcher;
@@ -23,6 +24,10 @@ public class registrationbaseactivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
+
         mHomeWatcher = new homewatcher(this);
         mHomeWatcher.setOnHomePressedListener(new homepressedlistener() {
             @Override
