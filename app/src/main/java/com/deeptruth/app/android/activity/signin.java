@@ -53,7 +53,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
        switch (view.getId()){
            case R.id.login :
                login();
-               /*if(validation())
+               /*if(isvalidated())
                     login();*/
                break;
            case R.id.createaccount:
@@ -86,7 +86,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
         }
     }
 
-    public boolean validation(){
+    public boolean isvalidated(){
 
         if ((! common.isvalidusername(edt_username.getText().toString().trim()))) {
             Toast.makeText(this, "Please enter valid username!", Toast.LENGTH_SHORT).show();
