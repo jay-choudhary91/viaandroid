@@ -56,9 +56,7 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
         pinview.setPinViewEventListener(new Pinview.PinViewEventListener() {
             @Override
             public void onDataEntered(Pinview pinview, boolean fromUser) {
-
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(pinview.getWindowToken(), 0);
+                hidekeyboard();
             }
         });
 
@@ -206,6 +204,7 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
     public void gotologin(){
         Intent i = new Intent(verifiedemail.this, signin.class);
 // set the new task and clear flags
+        hidekeyboard();
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         finish();
