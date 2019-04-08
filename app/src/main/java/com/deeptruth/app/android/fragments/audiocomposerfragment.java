@@ -2,7 +2,6 @@ package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -21,7 +20,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,7 +31,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -118,57 +115,43 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     RelativeLayout actionbar;
 
     private TranslateAnimation validationbaranimation;
-
     LinearLayout layout_drawer;
-    RecyclerView recyview_hashes;
-    RecyclerView recyview_metrices;
     ImageView handle,img_dotmenu;;
     LinearLayout linearLayout;
-
-    ScrollView scrollview_metrices,scrollview_hashes;
     adapteritemclick madapterclick;
-    private boolean isdraweropen=false;
     private Handler myHandler;
     private Runnable myRunnable;
-    public int selectedsection=1;
-    ArrayList<videomodel> mmetricsitems =new ArrayList<>();
-    ArrayList<videomodel> mhashesitems =new ArrayList<>();
-    private MediaRecorder mrecorder;
+    ArrayList<videomodel> metricsitems =new ArrayList<>();
+    ArrayList<videomodel> hashesitems =new ArrayList<>();
+    private MediaRecorder mediarecorder;
     private String recordedmediafile = null,selectedmetrices="", selectedhashes ="";;
     private Runnable doafterallpermissionsgranted;
     private static final int request_permissions = 1;
     View rootview;
     boolean isaudiorecording=false,isvisibletouser=false;
-    long MillisecondTime, StartTime, TimeBuff, UpdateTime = 0L ;
+    long millisecondtime, starttime, timebuff, updatetime = 0L ;
     Handler timerhandler;
-    int Hours, Seconds, Minutes, MilliSeconds ;
-    public Dialog maindialogshare,subdialogshare;
+    int hours, seconds, minutes, milliseconds;
     private String keytype =config.prefs_md5,mediakey="";
     JSONArray metadatametricesjson=new JSONArray();
     private long currentframenumber =0,mframetorecordcount=0,frameduration =15;
     private ArrayList<videomodel> mvideoframes =new ArrayList<>();
     StringBuilder sb = new StringBuilder();
     String hashvalue = "",metrichashvalue = "";
-    noise mNoise;
-
     private static final int RECORDER_SAMPLERATE = 8000;
     private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
     private AudioRecord audiorecorder = null;
-    private Thread recordingThread = null;
-    int BufferElements2Rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
-    int BytesPerElement = 2; // 2 bytes in 16bit format
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
-    public int flingactionmindstvac;
-    private  final int flingactionmindspdvac = 10;
+    private Thread recordingthread = null;
+    int bufferelements2rec = 1024; // want to play 2048 (2K) since 2 bytes we use only 1024
+    int bytesperelement = 2; // 2 bytes in 16bit format
     ArrayList<wavevisualizer> wavevisualizerslist =new ArrayList<>();
-    ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
-    ArrayList<dbitemcontainer> mdbmiddleitemcontainer =new ArrayList<>();
-    ArrayList<frameinfo> muploadframelist =new ArrayList<>();
-
+    ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
+    ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
+    ArrayList<frameinfo> uploadframelist =new ArrayList<>();
     mediacompletiondialogmain mediacompletionpopupmain;
     mediacompletiondialogsub mediacompletionpopupsub;
-    FragmentManager fm ;
+    FragmentManager fragmentmanager;
     adapteritemclick popupclickmain;
     adapteritemclick popupclicksub;
     FFmpeg ffmpeg;
@@ -375,17 +358,17 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void startwaverecord()
     {
-        /*mrecorder = new MediaRecorder();
-        mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mrecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        /*mediarecorder = new MediaRecorder();
+        mediarecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         if(getaudiodir() != null)
         {
-            mrecorder.setOutputFile(getaudiodir().getAbsolutePath());
-            mrecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mediarecorder.setOutputFile(getaudiodir().getAbsolutePath());
+            mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
             try {
-                mrecorder.prepare();
-                mrecorder.start();
+                mediarecorder.prepare();
+                mediarecorder.start();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -394,7 +377,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     @Override
     public void onPause() {
-        if(mrecorder != null)
+        if(mediarecorder != null)
         {
             isaudiorecording=false;
             gethelper().setrecordingrunning(true);
@@ -413,10 +396,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
 
             try{
-                if(mrecorder != null)
+                if(mediarecorder != null)
                 {
-                    mrecorder.stop();
-                    mrecorder.release();
+                    mediarecorder.stop();
+                    mediarecorder.release();
                 }
 
             }catch (Exception e){
@@ -509,26 +492,26 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void starttimer()
     {
-        StartTime = SystemClock.uptimeMillis();
+        starttime = SystemClock.uptimeMillis();
         timerhandler.postDelayed(runnable, 0);
     }
 
     public void stoptimer()
     {
-        TimeBuff += MillisecondTime;
+        timebuff += millisecondtime;
         timerhandler.removeCallbacks(runnable);
     }
 
     public void resettimer()
     {
-        MillisecondTime = 0L ;
-        StartTime = 0L ;
-        TimeBuff = 0L ;
-        UpdateTime = 0L ;
-        Seconds = 0 ;
-        Minutes = 0 ;
-        Hours = 0 ;
-        MilliSeconds = 0 ;
+        millisecondtime = 0L ;
+        starttime = 0L ;
+        timebuff = 0L ;
+        updatetime = 0L ;
+        seconds = 0 ;
+        minutes = 0 ;
+        hours = 0 ;
+        milliseconds = 0 ;
         //timer.setText("00:00:00");
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
     }
@@ -539,13 +522,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    MillisecondTime = SystemClock.uptimeMillis() - StartTime;
-                    UpdateTime = TimeBuff + MillisecondTime;
-                    Seconds = (int) (UpdateTime / 1000);
-                    Minutes = Seconds / 60;
-                    Hours = Minutes/60;
-                    Seconds = Seconds % 60;
-                    MilliSeconds = (int) (UpdateTime % 1000);
+                    millisecondtime = SystemClock.uptimeMillis() - starttime;
+                    updatetime = timebuff + millisecondtime;
+                    seconds = (int) (updatetime / 1000);
+                    minutes = seconds / 60;
+                    hours = minutes /60;
+                    seconds = seconds % 60;
+                    milliseconds = (int) (updatetime % 1000);
 
                     applicationviavideocomposer.getactivity().runOnUiThread(new Runnable() {
                         @Override
@@ -554,9 +537,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             {
                                 //"" + String.format("%01d", hours) + ":"+
                                 txt_title_actionbarcomposer.setText(
-                                        "" + String.format("%02d", Minutes) + ":"
-                                        + String.format("%02d", Seconds) + "."
-                                        + String.format("%02d", (MilliSeconds/100)));
+                                        "" + String.format("%02d", minutes) + ":"
+                                        + String.format("%02d", seconds) + "."
+                                        + String.format("%02d", (milliseconds /100)));
                             }
 
                         }
@@ -581,23 +564,23 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         }
 
         mediakey ="";
-        mdbstartitemcontainer.clear();
-        mdbmiddleitemcontainer.clear();
+        dbstartitemcontainer.clear();
+        dbmiddleitemcontainer.clear();
         wavevisualizerslist.clear();
         selectedhashes="";
         metadatametricesjson=new JSONArray();
         selectedmetrices="";
-        mmetricsitems.clear();
-        mhashesitems.clear();
+        metricsitems.clear();
+        hashesitems.clear();
         currentframenumber =0;
         mframetorecordcount =0;
         currentframenumber = currentframenumber + frameduration;
 
         /*try{
-            if(mrecorder != null)
+            if(mediarecorder != null)
             {
-                mrecorder.stop();
-                mrecorder.release();
+                mediarecorder.stop();
+                mediarecorder.release();
             }
 
         }catch (Exception e){
@@ -608,21 +591,21 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             img_scanover.startAnimation(validationbaranimation);
 
         actionbar.setBackgroundColor(Color.TRANSPARENT);
-        mrecorder = new MediaRecorder();
-        mrecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mrecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        mediarecorder = new MediaRecorder();
+        mediarecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         recordedmediafile = getfile().getAbsolutePath();
         Log.d("filename", recordedmediafile);
-        mrecorder.setOutputFile(recordedmediafile);
-        mrecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mediarecorder.setOutputFile(recordedmediafile);
+        mediarecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         try {
-            mrecorder.prepare();
-            mrecorder.start();
+            mediarecorder.prepare();
+            mediarecorder.start();
 
             audiorecorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                     RECORDER_SAMPLERATE, RECORDER_CHANNELS,
-                    RECORDER_AUDIO_ENCODING, BufferElements2Rec * BytesPerElement);
+                    RECORDER_AUDIO_ENCODING, bufferelements2rec * bytesperelement);
 
             if (audiorecorder.getState() != AudioRecord.STATE_INITIALIZED) {
                 Log.e("AudioRecord","AudioRecord init failed");
@@ -630,12 +613,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
 
             audiorecorder.startRecording();
-            recordingThread = new Thread(new Runnable() {
+            recordingthread = new Thread(new Runnable() {
                 public void run() {
                     writeAudioDataToFile();
                 }
             }, "AudioRecorder Thread");
-            recordingThread.start();
+            recordingthread.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -660,7 +643,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private void writeAudioDataToFile() {
         // Write the output audio in byte
         String filePath = gettempfile().getAbsolutePath();
-        short sData[] = new short[BufferElements2Rec];
+        short sData[] = new short[bufferelements2rec];
 
         FileOutputStream os = null;
         try {
@@ -672,12 +655,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         int framegap=0;
         while (isaudiorecording) {
             // gets the voice output from microphone to byte format
-            audiorecorder.read(sData, 0, BufferElements2Rec);
+            audiorecorder.read(sData, 0, bufferelements2rec);
             System.out.println("Short writing to file" + sData.toString());
             try {
                 // writes the data to file from buffer stores the voice buffer
                 byte data[] = short2byte(sData);
-                os.write(data, 0, BufferElements2Rec * BytesPerElement);
+                os.write(data, 0, bufferelements2rec * bytesperelement);
 
                 if(isaudiorecording)
                 {
@@ -799,8 +782,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     private void stoprecording() {
 
         try{
-            mrecorder.stop();
-            mrecorder.release();
+            mediarecorder.stop();
+            mediarecorder.release();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -812,14 +795,14 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 audiorecorder.stop();
                 audiorecorder.release();
                 audiorecorder = null;
-                recordingThread = null;
+                recordingthread = null;
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
 
-        mrecorder = null;
+        mediarecorder = null;
         stoptimer();
         resettimer();
         isaudiorecording=false;
@@ -839,8 +822,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
         try {
 
-            if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0 &&
-                    mdbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("audio"))
+            if(dbstartitemcontainer != null && dbstartitemcontainer.size() > 0 &&
+                    dbstartitemcontainer.get(0).getItem2().equalsIgnoreCase("audio"))
             {
 
                 final File destinationfilepath = common.gettempfileforaudiowave();
@@ -870,9 +853,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     @Override
                     public void onSuccess(String s) {
                         Log.e("SUCCESS with output : ","onSuccess");
-                        if(mdbstartitemcontainer.size() > 0)
+                        if(dbstartitemcontainer.size() > 0)
                         {
-                            mdbstartitemcontainer.get(0).setItem15(destinationfilepath.getAbsolutePath());
+                            dbstartitemcontainer.get(0).setItem15(destinationfilepath.getAbsolutePath());
                             callserviceforinsertintodb();
 
                             try {
@@ -924,8 +907,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         insertstartmediainfo();
 
         Gson gson = new Gson();
-        String list1 = gson.toJson(mdbstartitemcontainer);
-        String list2 = gson.toJson(mdbmiddleitemcontainer);
+        String list1 = gson.toJson(dbstartitemcontainer);
+        String list2 = gson.toJson(dbmiddleitemcontainer);
         xdata.getinstance().saveSetting("liststart",list1);
         xdata.getinstance().saveSetting("listmiddle",list2);
         xdata.getinstance().saveSetting("mediapath",recordedmediafile);
@@ -944,12 +927,12 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            if(mdbstartitemcontainer.size() == 0)
+            if(dbstartitemcontainer.size() == 0)
             {
-                mdbstartitemcontainer.add(new dbitemcontainer("","audio","Local storage path", mediakey,"","","0","0",
+                dbstartitemcontainer.add(new dbitemcontainer("","audio","Local storage path", mediakey,"","","0","0",
                         config.type_audio_start,devicestartdate,devicestartdate,timeoffset,"","","",
                         xdata.getinstance().getSetting(config.selected_folder)));
-                Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
+                Log.e("startcontainersize"," "+ dbstartitemcontainer.size());
             }
 
         } catch (Exception e) {
@@ -984,11 +967,11 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             String updatecompletedate[] = common.getcurrentdatewithtimezone();
             String completeddate = updatecompletedate[0];
 
-            mdbstartitemcontainer.get(0).setItem1(json);
-            mdbstartitemcontainer.get(0).setItem3(recordedmediafile);
-            mdbstartitemcontainer.get(0).setItem13(completeddate);
+            dbstartitemcontainer.get(0).setItem1(json);
+            dbstartitemcontainer.get(0).setItem3(recordedmediafile);
+            dbstartitemcontainer.get(0).setItem13(completeddate);
 
-            if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
+            if(dbstartitemcontainer != null && dbstartitemcontainer.size() > 0)
             {
                 databasemanager mdbhelper=null;
                 if (mdbhelper == null) {
@@ -1002,15 +985,15 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     e.printStackTrace();
                 }
 
-                mdbhelper.insertstartvideoinfo(mdbstartitemcontainer.get(0).getItem1(),mdbstartitemcontainer.get(0).getItem2()
-                        ,mdbstartitemcontainer.get(0).getItem3(),mdbstartitemcontainer.get(0).getItem4(),mdbstartitemcontainer.get(0).getItem5()
-                        ,mdbstartitemcontainer.get(0).getItem6(),mdbstartitemcontainer.get(0).getItem7(),mdbstartitemcontainer.get(0).getItem8(),
-                        mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
-                        ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
+                mdbhelper.insertstartvideoinfo(dbstartitemcontainer.get(0).getItem1(), dbstartitemcontainer.get(0).getItem2()
+                        , dbstartitemcontainer.get(0).getItem3(), dbstartitemcontainer.get(0).getItem4(), dbstartitemcontainer.get(0).getItem5()
+                        , dbstartitemcontainer.get(0).getItem6(), dbstartitemcontainer.get(0).getItem7(), dbstartitemcontainer.get(0).getItem8(),
+                        dbstartitemcontainer.get(0).getItem9(), dbstartitemcontainer.get(0).getItem10(), dbstartitemcontainer.get(0).getItem11()
+                        , dbstartitemcontainer.get(0).getItem12(), dbstartitemcontainer.get(0).getItem13(),"", dbstartitemcontainer.get(0).getItem14()
                         ,"0","sync_pending","","","0","inprogress","","",
-                        mdbstartitemcontainer.get(0).getItem16(),duration);
+                        dbstartitemcontainer.get(0).getItem16(),duration);
 
-                mdbhelper.updateaudiothumbnail(common.getfilename(mdbstartitemcontainer.get(0).getItem3()),mdbstartitemcontainer.get(0).getItem15());
+                mdbhelper.updateaudiothumbnail(common.getfilename(dbstartitemcontainer.get(0).getItem3()), dbstartitemcontainer.get(0).getItem15());
 
                 try {
                     mdbhelper.close();
@@ -1048,7 +1031,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     metricesarray.put(metadatametricesjson.get(metadatametricesjson.length()-1));
                     metrichashvalue = md5.calculatestringtomd5(metricesarray.toString());
 
-                    muploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
+                    uploadframelist.add(new frameinfo(""+framenumber,"xxx",keyvalue,keytype,false,mlocalarraylist));
                     savemediaupdate(metricesarray);
                 }catch (Exception e)
                 {
@@ -1070,18 +1053,18 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         String currentdate[] = common.getcurrentdatewithtimezone();
         String sequenceno = "",sequencehash = "", metrichash = "" ;
 
-        for(int i=0;i<muploadframelist.size();i++)
+        for(int i = 0; i< uploadframelist.size(); i++)
         {
             try {
-                Log.e("framenumber", muploadframelist.get(i).getFramenumber());
-                sequenceno = muploadframelist.get(i).getFramenumber();
-                sequencehash = muploadframelist.get(i).getHashvalue();
+                Log.e("framenumber", uploadframelist.get(i).getFramenumber());
+                sequenceno = uploadframelist.get(i).getFramenumber();
+                sequencehash = uploadframelist.get(i).getHashvalue();
             }catch (Exception e)
             {
                 e.printStackTrace();
             }
         }
-        muploadframelist.clear();
+        uploadframelist.clear();
 
         try {
 
@@ -1105,7 +1088,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
 
             metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
-            mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
+            dbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                     currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
         } catch (Exception e) {
             e.printStackTrace();
@@ -1233,9 +1216,9 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 {
                     if(myvisualizerview != null)
                     {
-                        if(mrecorder != null)
+                        if(mediarecorder != null)
                         {
-                            int x = mrecorder.getMaxAmplitude();
+                            int x = mediarecorder.getMaxAmplitude();
                             myvisualizerview.addAmplitude(x); // update the VisualizeView
                             myvisualizerview.invalidate();
                             wavevisualizerslist.add(new wavevisualizer(x,true));
@@ -1244,13 +1227,13 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                     if((! selectedmetrices.toString().trim().isEmpty()))
                     {
-                        if(mmetricsitems.size() > 0)
+                        if(metricsitems.size() > 0)
                         {
-                            mmetricsitems.set(0,new videomodel(selectedmetrices));
+                            metricsitems.set(0,new videomodel(selectedmetrices));
                         }
                         else
                         {
-                            mmetricsitems.add(new videomodel(selectedmetrices));
+                            metricsitems.add(new videomodel(selectedmetrices));
                         }
                         selectedmetrices="";
                     }
@@ -1279,8 +1262,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
                     {
                         try {
-                            /*DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                    , R.color.scanover_yellow));*/
 
                             GradientDrawable gradient=common.getyelloradargradient();
                             if(gradient != null)
@@ -1301,13 +1282,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                     }
                     else
                     {
-                        /*try {
-                            DrawableCompat.setTint(img_scanover.getDrawable(), ContextCompat.getColor(applicationviavideocomposer.getactivity()
-                                    , R.color.dark_blue_solid_a));
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }*/
                         GradientDrawable gradient=common.getblueradargradient();
                         if(gradient != null)
                             img_scanover.setBackground(gradient);
@@ -1386,7 +1360,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void showsharepopupmain()
     {
-        fm = getActivity().getSupportFragmentManager();
+        fragmentmanager = getActivity().getSupportFragmentManager();
         popupclickmain=new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
@@ -1400,12 +1374,8 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
                 }
                 else if(i==3){
-                    if(maindialogshare != null && maindialogshare.isShowing())
-                        maindialogshare.dismiss();
-
                     xdata.getinstance().saveSetting("selectedaudiourl",""+ recordedmediafile);
                     audioreaderfragment audiotabfrag = new audioreaderfragment();
-                    //  audiotabfrag.setdata(videoobj.getPath());
                     gethelper().addFragment(audiotabfrag, false, true);
                 }
             }
@@ -1417,7 +1387,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         };
 
         mediacompletionpopupmain=new mediacompletiondialogmain(popupclickmain,getResources().getString(R.string.share),getResources().getString(R.string.new_audio),getResources().getString(R.string.listen),getResources().getString(R.string.audio_has_been_encrypted),getResources().getString(R.string.congratulations_audio));
-        mediacompletionpopupmain.show(fm, "fragment_name");
+        mediacompletionpopupmain.show(fragmentmanager, "fragment_name");
 
     }
 
@@ -1425,7 +1395,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     public void showsharepopupsub()
     {
 
-        fm = getActivity().getSupportFragmentManager();
+        fragmentmanager = getActivity().getSupportFragmentManager();
         popupclicksub=new adapteritemclick() {
             @Override
             public void onItemClicked(Object object) {
@@ -1460,7 +1430,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             }
         };
         mediacompletionpopupsub=new mediacompletiondialogsub(popupclicksub,getResources().getString(R.string.save_to_camera),getResources().getString(R.string.share_partial_audio),getResources().getString(R.string.cancel_viewlist),getResources().getString(R.string.audio_how_would_you),"");
-        mediacompletionpopupsub.show(fm, "fragment_name");
+        mediacompletionpopupsub.show(fragmentmanager, "fragment_name");
     }
 
     public void launchmedialist()
