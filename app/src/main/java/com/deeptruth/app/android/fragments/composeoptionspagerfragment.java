@@ -48,6 +48,7 @@ import com.deeptruth.app.android.utils.xdata;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,6 +127,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     int parentviewwidth=0;
     private AlphaAnimation blinkencryptionanimation;
     private adaptercomposemediatype centersnapadapter;
+    private Date initialdate;
+
     @Override
     public int getlayoutid() {
         return R.layout.fragment_composeoptionspager;
@@ -145,7 +148,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
-
+            initialdate =new Date();
             recordstartstopbutton.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
@@ -663,7 +666,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public static void enableDisableView(View view, boolean enabled) {
+    public void enableDisableView(View view, boolean enabled) {
         view.setEnabled(enabled);
         if ( view instanceof ViewGroup ) {
             ViewGroup group = (ViewGroup)view;
@@ -768,36 +771,51 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void swipelefttoright()
     {
-        if(currentselectedcomposer == 0)
-            return;
-        Log.e("currentselectedcomposer",""+currentselectedcomposer);
-        currentselectedcomposer--;
-        //showselectedfragment();
-        if(currentselectedcomposer == 0)
-            fetchrecyclerposition(2);
+        Date currentdate=new Date();
+        int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
+        if(seconddifference >= 1)
+        {
+            if(currentselectedcomposer == 0)
+                return;
+            Log.e("currentselectedcomposer",""+currentselectedcomposer);
+            currentselectedcomposer--;
+            //showselectedfragment();
+            if(currentselectedcomposer == 0)
+                fetchrecyclerposition(2);
 
-        if(currentselectedcomposer == 1)
-            fetchrecyclerposition(3);
+            if(currentselectedcomposer == 1)
+                fetchrecyclerposition(3);
 
-        if(currentselectedcomposer == 2)
-            fetchrecyclerposition(4);
+            if(currentselectedcomposer == 2)
+                fetchrecyclerposition(4);
+
+            initialdate =new Date();
+        }
+
+
     }
 
     public void swiperighttoleft()
     {
-        if(currentselectedcomposer == 2)
-            return;
+        Date currentdate=new Date();
+        int seconddifference= (int) (Math.abs(initialdate.getTime()-currentdate.getTime())/1000);
+        if(seconddifference >= 1)
+        {
+            if(currentselectedcomposer == 2)
+                return;
 
-        currentselectedcomposer++;
-        Log.e("currentselectedcomposer",""+currentselectedcomposer);
-        if(currentselectedcomposer == 0)
-            fetchrecyclerposition(2);
+            currentselectedcomposer++;
+            Log.e("currentselectedcomposer",""+currentselectedcomposer);
+            if(currentselectedcomposer == 0)
+                fetchrecyclerposition(2);
 
-        if(currentselectedcomposer == 1)
-            fetchrecyclerposition(3);
+            if(currentselectedcomposer == 1)
+                fetchrecyclerposition(3);
 
-        if(currentselectedcomposer == 2)
-            fetchrecyclerposition(4);
+            if(currentselectedcomposer == 2)
+                fetchrecyclerposition(4);
+            initialdate =new Date();
+        }
     }
 
     public void showselectedfragment()
@@ -975,6 +993,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             {
                 MotionEvent motionevent=(MotionEvent)object;
                 flingswipegesture.onTouchEvent(motionevent);
+
             }
 
         }
