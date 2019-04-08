@@ -56,16 +56,16 @@
                 android:inputType="textPassword"
                 android:id="@+id/edt_confirmpassword"/>
 
-            <com.github.reinaldoarrosi.maskededittext.MaskedEditText
+            <br.com.sapereaude.maskedEditText.MaskedEditText
                 android:id="@+id/edt_phonenumber"
                 style="@style/edt_createaccount"
-                android:layout_below="@id/edt_confirmpassword"
-                android:inputType="number"
-                android:padding="7dp"
+                android:layout_below="@+id/edt_confirmpassword"
+                android:hint="###########"
                 android:imeOptions="actionDone"
-                app:mask="(999) 999-9999"
-                app:placeholder="X"
-                />
+                android:inputType="phone"
+                app:fontType="Comfortaa-Regular"
+                app:keep_hint="false"
+                app:mask="(###)###-####" />
 
             <com.deeptruth.app.android.views.customfonttextview
                 style="@style/txt_submit"
