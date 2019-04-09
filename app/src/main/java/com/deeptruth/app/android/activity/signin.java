@@ -60,8 +60,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
     public void onClick(View view) {
        switch (view.getId()){
            case R.id.login :
-               if(isvalidated())
-                    login();
+               isvalidated();
                break;
            case R.id.createaccount:
                Intent intent=new Intent(signin.this,createaccount.class);
