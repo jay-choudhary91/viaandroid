@@ -82,7 +82,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
             requestparams.put("name",edt_username.getText().toString().trim());
             requestparams.put("email",edt_email.getText().toString().trim());
             requestparams.put("password",edt_password.getText().toString().trim());
-            requestparams.put("changepassword",edt_confirmpassword.getText().toString().trim());
+            requestparams.put("confirmpassword",edt_confirmpassword.getText().toString().trim());
             progressdialog.showwaitingdialog(createaccount.this);
             xapipost_send(createaccount.this,requestparams, new apiresponselistener() {
                 @Override

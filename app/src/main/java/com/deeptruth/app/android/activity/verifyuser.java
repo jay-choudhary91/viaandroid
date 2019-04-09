@@ -52,7 +52,7 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
 
         switch (v.getId()){
             case R.id.tv_complete:
-                gotologin();
+                validatecallapi();
                 break;
 
             case R.id.tv_cancel:
@@ -62,8 +62,8 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
         }
     }
 
-    public void gotologin(){
-
+    public void validatecallapi()
+    {
         String value=pinview.getValue();
         String clientid= xdata.getinstance().getSetting("clientid");
 
@@ -88,12 +88,7 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
                                 if(object.has("clientid"))
                                     xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
 
-                                //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(verifyuser.this, signinactivity.class);
-                                hidekeyboard();
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(i);
-                                finish();
+                                gotologin();
                             }
                             else
                             {
@@ -129,7 +124,14 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
                 }
             }
         });
+    }
 
-
+    public void gotologin(){
+        //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
+        Intent i = new Intent(verifyuser.this, signinactivity.class);
+        hidekeyboard();
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 }
