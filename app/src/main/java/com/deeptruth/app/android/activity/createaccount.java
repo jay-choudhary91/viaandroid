@@ -1,10 +1,7 @@
 package com.deeptruth.app.android.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,7 +12,6 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
-import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
@@ -86,7 +82,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
             requestparams.put("name",edt_username.getText().toString().trim());
             requestparams.put("email",edt_email.getText().toString().trim());
             requestparams.put("password",edt_password.getText().toString().trim());
-            requestparams.put("confirmpassword",edt_confirmpassword.getText().toString().trim());
+            requestparams.put("changepassword",edt_confirmpassword.getText().toString().trim());
             progressdialog.showwaitingdialog(createaccount.this);
             xapipost_send(createaccount.this,requestparams, new apiresponselistener() {
                 @Override
@@ -104,7 +100,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                                         xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
 
                                     //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
-                                    Intent intent=new Intent(createaccount.this,verifiedemail.class);
+                                    Intent intent=new Intent(createaccount.this,verifyuser.class);
                                     startActivity(intent);
                                 }
                                 else

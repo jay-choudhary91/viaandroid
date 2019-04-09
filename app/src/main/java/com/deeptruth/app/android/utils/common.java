@@ -33,6 +33,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
@@ -88,6 +89,8 @@ import com.deeptruth.app.android.models.folder;
 import com.deeptruth.app.android.views.customfontedittext;
 import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.common.util.ArrayUtils;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import org.json.JSONArray;
 
@@ -2348,6 +2351,15 @@ public class common {
             String[] transparentarray=common.gettransparencyvalues();
             String colorString="#"+transparentarray[position]+"004860";
             actionbar.setBackgroundColor(Color.parseColor(colorString));
+    }
+
+    public static BitmapDescriptor bitmapdescriptorfromvector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }
 

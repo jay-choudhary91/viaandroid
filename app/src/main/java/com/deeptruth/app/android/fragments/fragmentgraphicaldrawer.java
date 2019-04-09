@@ -346,15 +346,20 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     {
         if(mgooglemap != null)
         {
-            if(isdatacomposing)
+            try {
+                if(isdatacomposing)
+                {
+                    mgooglemap.clear();
+                }
+                else
+                {
+                    mgooglemap.addMarker(new MarkerOptions()
+                            .position(latlng)
+                            .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),R.drawable.circle)));
+                }
+            }catch (Exception e)
             {
-                mgooglemap.clear();
-            }
-            else
-            {
-                mgooglemap.addMarker(new MarkerOptions()
-                .position(latlng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle_recird_btn)));
+                e.printStackTrace();
             }
         }
     }

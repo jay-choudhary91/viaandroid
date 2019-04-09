@@ -2219,9 +2219,14 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
     {
         if(mgooglemap != null)
         {
-            mgooglemap.addMarker(new MarkerOptions()
-                    .position(latlng)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle_recird_btn)));
+            try {
+                mgooglemap.addMarker(new MarkerOptions()
+                        .position(latlng)
+                        .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),R.drawable.circle)));
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
     public void rotatecompass(int degree)

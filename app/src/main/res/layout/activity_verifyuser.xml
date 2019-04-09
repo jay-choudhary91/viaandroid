@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:layout_height="match_parent"
     android:background="@drawable/splashscrn"
-    tools:context="com.deeptruth.app.android.activity.verifiedemail">
+    tools:context="com.deeptruth.app.android.activity.verifyuser">
 
         <LinearLayout
             android:layout_width="match_parent"
