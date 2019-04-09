@@ -89,7 +89,7 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
                                     xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
 
                                 //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(verifyuser.this, signin.class);
+                                Intent i = new Intent(verifyuser.this, signinactivity.class);
                                 hidekeyboard();
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(i);

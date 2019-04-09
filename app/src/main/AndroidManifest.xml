@@ -109,7 +109,7 @@
             android:name=".activity.introscreenactivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.signin"
+            android:name=".activity.signinactivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".activity.createaccount" />
         <activity android:name=".activity.forgotpassword" />

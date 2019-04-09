@@ -1,23 +1,14 @@
 package com.deeptruth.app.android.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
-import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
@@ -31,7 +22,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class signin extends registrationbaseactivity implements View.OnClickListener{
+public class signinactivity extends registrationbaseactivity implements View.OnClickListener{
 
 
     @BindView(R.id.edt_username)
@@ -63,11 +54,11 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                isvalidated();
                break;
            case R.id.createaccount:
-               Intent intent=new Intent(signin.this,createaccount.class);
+               Intent intent=new Intent(signinactivity.this,createaccount.class);
                startActivity(intent);
                break;
            case R.id.forgot_password:
-               intent = new Intent(signin.this, forgotpassword.class);
+               intent = new Intent(signinactivity.this, forgotpassword.class);
                startActivity(intent);
                break;
 
@@ -80,12 +71,12 @@ public class signin extends registrationbaseactivity implements View.OnClickList
             if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
                 xdata.getinstance().saveSetting(config.enableintroscreen,"no");
 
-            Intent intent=new Intent(signin.this,introscreenactivity.class);
+            Intent intent=new Intent(signinactivity.this,introscreenactivity.class);
             startActivity(intent);
             finish();
 
         }else{
-            Intent intent=new Intent(signin.this,homeactivity.class);
+            Intent intent=new Intent(signinactivity.this,homeactivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
             finish();
@@ -108,8 +99,8 @@ public class signin extends registrationbaseactivity implements View.OnClickList
         requestparams.put("action","authorize");
         requestparams.put("email",edt_username.getText().toString().trim());
         requestparams.put("password",edt_password.getText().toString().trim());
-        progressdialog.showwaitingdialog(signin.this);
-        xapipost_send(signin.this,requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(signinactivity.this);
+        xapipost_send(signinactivity.this,requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -124,7 +115,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                                 if(object.has("clientid"))
                                     xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
 
-                                //Toast.makeText(signin.this, "Auth success", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(signinactivity.this, "Auth success", Toast.LENGTH_SHORT).show();
                                 if(object.has("authtoken"))
                                     xdata.getinstance().saveSetting(config.authtoken,object.getString("authtoken"));
 
@@ -133,7 +124,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(signin.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(signinactivity.this, object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -151,7 +142,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(signin.this, error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(signinactivity.this, error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {
@@ -160,7 +151,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                 }
                 else
                 {
-                    Toast.makeText(signin.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(signinactivity.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
