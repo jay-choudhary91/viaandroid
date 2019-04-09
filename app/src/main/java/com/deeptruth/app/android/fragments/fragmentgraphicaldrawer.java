@@ -354,7 +354,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             {
                 mgooglemap.addMarker(new MarkerOptions()
                 .position(latlng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle_recird_btn)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle_record_btn)));
             }
         }
     }

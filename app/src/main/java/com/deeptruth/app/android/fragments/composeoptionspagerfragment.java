@@ -139,7 +139,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private Date initialdate;
     private String[] transparentarray=common.gettransparencyvalues();
     GradientDrawable gradientDrawablebutton;
-    private volatile boolean isCircle = false;
+    private volatile boolean iscircle = true;
 
     @Override
     public int getlayoutid() {
@@ -631,13 +631,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(currentselectedcomposer == 0)
                 {
 
-                    if (isCircle) {
-                        makeSquare();
+                    if (iscircle) {
+                        makesquare();
                     }
                     else {
-                        makeCircle();
+                        makecircle();
                     }
-                    isCircle = !isCircle;
+
 
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
@@ -669,13 +669,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                     try {
 
-                        if (isCircle) {
-                            makeSquare();
+                        if (iscircle) {
+                            makesquare();
                         }
                         else {
-                            makeCircle();
+                            makecircle();
                         }
-                        isCircle = !isCircle;
+
 
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();
@@ -976,7 +976,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 int newheight=0;
                 if(layout_mediatype.getVisibility() == View.VISIBLE)
                 {
-                    newheight=footerlayoutheight +60;
+                    newheight=footerlayoutheight+30;
                 }
                 else
                 {
@@ -1360,9 +1360,25 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         layoutbottom.setBackgroundColor(Color.parseColor(colorString));
     }
 
-    private void makeCircle() {
+    private void makecircle() {
+
         ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius",0f,0.0f);
+                ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius", 30.0f, 200.0f);
+
+        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
+        shiftAnimation.setTarget(mParent);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(800);
+        animatorSet.playTogether(cornerAnimation, shiftAnimation);
+        animatorSet.start();
+        iscircle = !iscircle;
+    }
+
+    private void makesquare() {
+
+        ObjectAnimator cornerAnimation =
+                ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius",100f,10.0f);
 
         Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
         shiftAnimation.setTarget(mParent);
@@ -1371,19 +1387,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         animatorSet.setDuration(800);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
+        iscircle = !iscircle;
 
     }
 
-    private void makeSquare() {
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius", 52.0f, 240.0f);
-
-        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
-        shiftAnimation.setTarget(mParent);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setDuration(500);
-        animatorSet.playTogether(cornerAnimation, shiftAnimation);
-        animatorSet.start();
-    }
 }

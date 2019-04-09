@@ -131,7 +131,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.widget.RelativeLayout.ABOVE;
 import static android.widget.RelativeLayout.TRUE;
 
 /**
@@ -1627,8 +1626,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     } else {
 
-                        if(player!= null && player.isPlaying())
+                        if(player!= null && player.isPlaying() && playpausebutton.getVisibility() == View.GONE ){
                             playpausebutton.setVisibility(View.VISIBLE);
+                        }else{
+                            playpausebutton.setVisibility(View.GONE);
+                        }
+
 
                         if(islastdragarrow){
                             return;
@@ -2724,7 +2727,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             mgooglemap.addMarker(new MarkerOptions()
                     .position(latlng)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle_recird_btn)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle_record_btn)));
         }
     }
     public void rotatecompass(int degree)
