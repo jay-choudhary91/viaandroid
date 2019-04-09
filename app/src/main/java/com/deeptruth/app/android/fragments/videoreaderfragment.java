@@ -2721,7 +2721,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             mgooglemap.addMarker(new MarkerOptions()
                     .position(latlng)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle)));
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.circle_recird_btn)));
         }
     }
     public void rotatecompass(int degree)
