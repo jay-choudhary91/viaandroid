@@ -182,7 +182,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         gethelper().drawerenabledisable(true);
         gethelper().setdatacomposing(true);
         txt_section_validating_secondary.setVisibility(View.INVISIBLE);
-        common.setactionbarcolor(65,actionbar);
 
         handle = (ImageView) rootview.findViewById(R.id.handle);
         img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
