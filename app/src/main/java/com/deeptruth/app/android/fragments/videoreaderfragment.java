@@ -1721,6 +1721,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         setheadermargin(0,0,(rootviewheight-navigationbarheight),true);
         layout_videodetails.setVisibility(View.GONE);
         scrollview_detail.setVisibility(View.GONE);
+        layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
         scrollview_meta.setVisibility(View.GONE);
         scrollView_encyrption.setVisibility(View.GONE);
         tab_layout.setVisibility(View.GONE);
