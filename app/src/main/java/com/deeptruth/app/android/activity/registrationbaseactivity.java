@@ -1,9 +1,12 @@
 package com.deeptruth.app.android.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.view.WindowManager;
 
 import com.deeptruth.app.android.interfaces.homepressedlistener;
@@ -19,6 +22,7 @@ public class registrationbaseactivity extends AppCompatActivity
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
+        hidekeyboard();
     }
 
     @Override
@@ -47,5 +51,10 @@ public class registrationbaseactivity extends AppCompatActivity
         super.onDestroy();
         if(mHomeWatcher != null)
             mHomeWatcher.stopWatch();
+    }
+
+    public void hidekeyboard(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 }

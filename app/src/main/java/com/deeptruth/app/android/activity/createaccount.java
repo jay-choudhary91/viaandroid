@@ -3,20 +3,20 @@ package com.deeptruth.app.android.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.utils.common;
-import com.github.reinaldoarrosi.maskededittext.MaskedEditText;
-import com.google.android.gms.common.internal.service.Common;
 
+import br.com.sapereaude.maskedEditText.MaskedEditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -48,20 +48,27 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.activity_createaccountactivity);
         ButterKnife.bind(this);
-
         txt_submit.setOnClickListener(this);
+        edt_phonenumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
+                    hidekeyboard();
+                }
+                return false;
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.txt_submit:
+                Log.e("phonenumber",""+edt_phonenumber.getText());
                 if(checkValidations()){
                     Intent intent=new Intent(createaccount.this,verifiedemail.class);
                     startActivity(intent);
                 }
-
-
                 break;
         }
     }
@@ -92,7 +99,23 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                 Toast.makeText(this, " confirm password is not correct!", Toast.LENGTH_SHORT).show();
                 return false;
             }
+            if(validphonenumber().trim().length() > 0 && validphonenumber().trim().length() <= 9)
+            {
+                Toast.makeText(this, " Please enter valid phone number!", Toast.LENGTH_SHORT).show();
+                return false;
+            }
 
             return true;
         }
+
+        public String validphonenumber(){
+            String phonenumber= edt_phonenumber.getText().toString().trim().toString();
+            phonenumber=phonenumber.replace("(" , "");
+            phonenumber=phonenumber.replace(")" , "");
+            phonenumber=phonenumber.replace(" ","");
+            phonenumber=phonenumber.replace("#","");
+            phonenumber=phonenumber.replace("-","");
+            phonenumber=phonenumber.replace("-","");
+            return phonenumber;
+    }
 }
