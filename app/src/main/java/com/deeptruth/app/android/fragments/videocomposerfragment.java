@@ -120,6 +120,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     Calendar sequencestarttime,sequenceendtime;
     public static final String CAMERA_FRONT = "1";
     public static final String CAMERA_BACK = "0";
+    private String[] transparentarray=common.gettransparencyvalues();
 
     private String cameraId = CAMERA_BACK;
 
@@ -464,6 +465,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         img_dotmenu.setVisibility(View.VISIBLE);
         textureview.setOnTouchListener(this);
 
+        common.setactionbarcolor(65,actionbar);
+
         imgflashon.setOnClickListener(this);
         img_dotmenu.setOnClickListener(this);
         img_gpswifiwarning.setOnClickListener(this);
@@ -597,17 +600,24 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return rootview;
     }
 
-    public void setzoomcontrollermargin(int bottommargin)
+    public void setzoomcontrollermargin(final int bottommargin)
     {
         if(layout_seekbarzoom != null && bottommargin > 0)
         {
+
             RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT);
             layoutparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
             layoutparams.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
-            layoutparams.setMargins(0,0,0,bottommargin);
+
+            if(isvideorecording){
+                layoutparams.setMargins(0,0,0,(bottommargin + 10));
+            }else{
+                layoutparams.setMargins(0,0,0,(bottommargin));
+            }
             layout_seekbarzoom.setLayoutParams(layoutparams);
             layout_seekbarzoom.setVisibility(View.VISIBLE);
+
         }
     }
     public void setqualitydropdown()
@@ -1280,7 +1290,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             validationbaranimation.reset();
         }
 
-        actionbar.setBackgroundResource(R.drawable.gradient_fade_header_blue);
+       // actionbar.setBackgroundResource(R.drawable.gradient_fade_header_blue);
+        common.setactionbarcolor(65,actionbar);
         img_dotmenu.setVisibility(View.GONE);
         issavedtofolder=true;
         isvideorecording = false;

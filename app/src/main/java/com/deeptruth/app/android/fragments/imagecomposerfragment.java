@@ -115,6 +115,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     TextView txt_zoomlevel;
     @BindView(R.id.linear_header)
     LinearLayout linearheader;
+    @BindView(R.id.actionbar)
+    RelativeLayout actionbar;
+
     mediaqualityadapter qualityadapter;
     List<String> qualityitemslist=new ArrayList<>();
 
@@ -143,7 +146,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    private static final String TAG = "imagecomposerfragment";
+    private static final String TAG = "Camera2BasicFragment";
 
     /**
      * Camera state: Showing camera preview.
@@ -511,6 +514,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
+        common.setactionbarcolor(65,actionbar);
 
         timerhandler = new Handler() ;
         textureview.setOnTouchListener(this);

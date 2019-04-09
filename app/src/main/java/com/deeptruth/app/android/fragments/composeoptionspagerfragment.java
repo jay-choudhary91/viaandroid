@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -128,6 +129,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private AlphaAnimation blinkencryptionanimation;
     private adaptercomposemediatype centersnapadapter;
     private Date initialdate;
+    private String[] transparentarray=common.gettransparencyvalues();
 
     @Override
     public int getlayoutid() {
@@ -160,6 +162,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
+            setactionbartransparency(65);
 
             try {
                 gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
@@ -928,7 +931,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 int newheight=0;
                 if(layout_mediatype.getVisibility() == View.VISIBLE)
                 {
-                    newheight=footerlayoutheight+30;
+                    newheight=footerlayoutheight +60;
                 }
                 else
                 {
@@ -1304,5 +1307,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
             params.setMargins(0,0,0,navigationbarheight);
             parentview.setLayoutParams(params);
+    }
+
+    public void setactionbartransparency(int progress)
+    {
+        String colorString="#"+transparentarray[progress]+"004860";
+        layoutbottom.setBackgroundColor(Color.parseColor(colorString));
     }
 }

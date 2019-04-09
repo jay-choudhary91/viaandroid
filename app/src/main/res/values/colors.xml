@@ -64,6 +64,8 @@
     <color name="blue_radar_startend">#24004860</color>
     <color name="blue_radar_middle">#004860</color>
 
+    <color name="translucent_dark_blue_solid">#50004860</color>
+
 
     <!-- VIDEO TRIMMER -->
     <color name="background_video_color">#2f3031</color>
