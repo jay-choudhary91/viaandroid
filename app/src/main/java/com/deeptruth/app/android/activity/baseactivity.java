@@ -86,7 +86,7 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
             @Override
             public void onHomePressed() {
                 // do something here...
-                finish();
+                //finish();
             }
             @Override
             public void onHomeLongPressed() {

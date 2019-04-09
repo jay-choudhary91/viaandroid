@@ -44,7 +44,7 @@ public class registrationbaseactivity extends AppCompatActivity
             @Override
             public void onHomePressed() {
                 // do something here...
-                finish();
+                //finish();
             }
             @Override
             public void onHomeLongPressed() {
