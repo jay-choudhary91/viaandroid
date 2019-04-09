@@ -25,14 +25,12 @@ import java.util.Map;
 public class xapi extends AsyncTask<Void, Void, String> {
 
     private Map<String, String> params = new HashMap<String, String>();
-    String action;
     Context mcontext;
     String useurl = "";
     apiresponselistener listner;
 
 
-    public xapi(Context context, String action, apiresponselistener responseListner) {
-        this.action = action;
+    public xapi(Context context, apiresponselistener responseListner) {
         this.mcontext = context;
         this.listner = responseListner;
         this.useurl = xdata.getinstance().getSetting(xdata.keybaseurl);
@@ -45,51 +43,6 @@ public class xapi extends AsyncTask<Void, Void, String> {
         } catch (Exception e) {
             ;
         }
-        return true;
-    }
-
-    public boolean setData(Map<String, String> params) {
-        this.params=params;
-        return true;
-    }
-
-    public static String gethttpresponse(String URL) {
-        String response = "";
-        String baseUrl = URL;
-
-        BufferedReader reader = null;
-        try {
-            Log.d("URL>>", baseUrl);
-            URL url = new URL(baseUrl);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-                buffer.append(chars, 0, read);
-            response = buffer.toString();
-
-            //buffer);
-        } catch (Exception MalformedURLException) {
-            System.out.print("Invalid URL:" + baseUrl);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    try {
-                        throw new xexception("IO Excepton - " + e.getMessage());
-                    } catch (xexception e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            }
-        }
-        return response;
-    }
-
-    public boolean reset() {
-        params = new HashMap<String, String>();
         return true;
     }
 
@@ -109,7 +62,7 @@ public class xapi extends AsyncTask<Void, Void, String> {
         BufferedReader reader = null;
 
         try {
-            String baseUrl = useurl + "action=" + action;
+            String baseUrl = useurl;
             for (String param : params.keySet()) {
                 baseUrl += "&" + param + "=" + params.get(param);
             }

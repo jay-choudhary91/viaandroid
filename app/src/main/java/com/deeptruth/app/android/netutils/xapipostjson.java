@@ -75,7 +75,7 @@ public class xapipostjson extends AsyncTask<Void, Void, String> {
             return taskresult.NO_INTERNET;
         }
 
-        String baseUrl = useurl+"action="+action;
+        String baseUrl = useurl+"xapi_body=1&"+"action="+action;
         Log.d("URL>>", baseUrl);
         Log.d("REQUEST >>", valuepairobject.toString());
 

@@ -406,8 +406,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
 
 
     @Override
-    public void xapi_send(Context mContext, String Action, HashMap<String,String> mPairList, apiresponselistener mListener) {
-        xapi api = new xapi(mContext,Action,mListener);
+    public void xapi_send(Context mContext, HashMap<String,String> mPairList, apiresponselistener mListener) {
+        xapi api = new xapi(mContext,mListener);
         Set keys = mPairList.keySet();
         Iterator itr = keys.iterator();
         while (itr.hasNext()) {
@@ -419,8 +419,8 @@ public abstract class baseactivity extends AppCompatActivity implements basefrag
     }
 
     @Override
-    public void xapipost_send(Context mContext, String Action, HashMap<String,String> mPairList, apiresponselistener mListener) {
-        xapipost api = new xapipost(mContext,Action,mListener);
+    public void xapipost_send(Context mContext, HashMap<String,String> mPairList, apiresponselistener mListener) {
+        xapipost api = new xapipost(mContext,mListener);
         Set keys = mPairList.keySet();
         Iterator itr = keys.iterator();
         while (itr.hasNext()) {

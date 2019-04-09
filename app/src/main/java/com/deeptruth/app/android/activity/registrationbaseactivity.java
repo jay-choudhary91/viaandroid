@@ -9,8 +9,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.view.WindowManager;
 
+import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.interfaces.homepressedlistener;
+import com.deeptruth.app.android.netutils.xapi;
+import com.deeptruth.app.android.netutils.xapipost;
 import com.deeptruth.app.android.utils.homewatcher;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by ${matraex} on 5/4/19.
@@ -56,5 +63,17 @@ public class registrationbaseactivity extends AppCompatActivity
     public void hidekeyboard(){
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public void xapipost_send(Context mContext, HashMap<String,String> mPairList, apiresponselistener mListener) {
+        xapipost api = new xapipost(mContext,mListener);
+        Set keys = mPairList.keySet();
+        Iterator itr = keys.iterator();
+        while (itr.hasNext()) {
+            String key = (String)itr.next();
+            String argvalue = (String)mPairList.get(key);
+            api.add(key,argvalue);
+        }
+        api.execute();
     }
 }
