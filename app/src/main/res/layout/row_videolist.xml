@@ -292,8 +292,8 @@
                                 android:background="@drawable/roundshape_validtext"
                                 android:maxLines="1"
                                 android:text="Valid"
-                                android:paddingLeft="2dp"
-                                android:paddingRight="2dp"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
                                 />
 
                             <com.deeptruth.app.android.views.customfonttextview
@@ -319,8 +319,8 @@
                                 android:textColor="@color/black"
                                 android:background="@drawable/roundshape_cautiontxt"
                                 android:maxLines="1"
-                                android:paddingLeft="2dp"
-                                android:paddingRight="2dp"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
                                 android:text="Caution"
                                 />
 
@@ -348,8 +348,8 @@
                                 android:background="@drawable/roundshape_unsenttxt"
                                 android:maxLines="1"
                                 android:text="Unsent"
-                                android:paddingLeft="2dp"
-                                android:paddingRight="2dp"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
                                 />
 
                             <com.deeptruth.app.android.views.customfonttextview
@@ -376,8 +376,8 @@
                                 android:background="@drawable/roundshape_redtxt"
                                 android:maxLines="1"
                                 android:text="Invalid"
-                                android:paddingLeft="2dp"
-                                android:paddingRight="2dp"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
                                 />
 
                         </LinearLayout>
