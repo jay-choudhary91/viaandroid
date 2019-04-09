@@ -76,6 +76,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -2342,6 +2343,11 @@ public class common {
         return true;
     };
 
+    public static void setactionbarcolor(int position, RelativeLayout actionbar){
 
+            String[] transparentarray=common.gettransparencyvalues();
+            String colorString="#"+transparentarray[position]+"004860";
+            actionbar.setBackgroundColor(Color.parseColor(colorString));
+    }
 }
 

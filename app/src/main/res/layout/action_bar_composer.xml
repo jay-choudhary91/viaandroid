@@ -8,7 +8,7 @@
         android:id="@+id/actionbar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/gradient_fade_header_blue"
+        android:background="@color/dark_blue_solid"
         >
 
         <RelativeLayout

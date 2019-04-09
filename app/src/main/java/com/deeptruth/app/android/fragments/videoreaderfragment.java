@@ -1626,6 +1626,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     } else {
 
+                        if(player!= null && player.isPlaying())
+                            playpausebutton.setVisibility(View.VISIBLE);
+
                         if(islastdragarrow){
                             return;
                         }else{
@@ -1659,6 +1662,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
                             getcontrollerheight();
                         }
+                        playpausebutton.setVisibility(View.GONE);
                         start();
                     }
                     break;
