@@ -76,7 +76,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
     }
     public void login()
     {
-        /*if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
+        if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
         {
             if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
                 xdata.getinstance().saveSetting(config.enableintroscreen,"no");
@@ -90,7 +90,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
             startActivity(intent);
             overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
             finish();
-        }*/
+        }
     }
 
     public boolean isvalidated(){
@@ -124,23 +124,9 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                             {
                                 //Toast.makeText(signin.this, "Auth success", Toast.LENGTH_SHORT).show();
                                 if(object.has("authtoken"))
-                                    xdata.getinstance().saveSetting("authtoken",object.getString("authtoken"));
+                                    xdata.getinstance().saveSetting(config.authtoken,object.getString("authtoken"));
 
-                                if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
-                                {
-                                    if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
-                                        xdata.getinstance().saveSetting(config.enableintroscreen,"no");
-
-                                    Intent intent=new Intent(signin.this,introscreenactivity.class);
-                                    startActivity(intent);
-                                    finish();
-
-                                }else{
-                                    Intent intent=new Intent(signin.this,homeactivity.class);
-                                    startActivity(intent);
-                                    overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
-                                    finish();
-                                }
+                                login();
                             }
                             else
                             {
