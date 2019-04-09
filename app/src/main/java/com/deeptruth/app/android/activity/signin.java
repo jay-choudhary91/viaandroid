@@ -121,6 +121,9 @@ public class signin extends registrationbaseactivity implements View.OnClickList
                         {
                             if(object.getString("success").equalsIgnoreCase("true"))
                             {
+                                if(object.has("clientid"))
+                                    xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
+
                                 //Toast.makeText(signin.this, "Auth success", Toast.LENGTH_SHORT).show();
                                 if(object.has("authtoken"))
                                     xdata.getinstance().saveSetting(config.authtoken,object.getString("authtoken"));

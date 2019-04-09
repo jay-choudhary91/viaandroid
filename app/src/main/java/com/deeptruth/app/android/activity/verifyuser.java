@@ -1,19 +1,8 @@
 package com.deeptruth.app.android.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
@@ -21,12 +10,10 @@ import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
-import com.deeptruth.app.android.views.customfontedittext;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.goodiebag.pinview.Pinview;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -34,7 +21,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class verifiedemail extends registrationbaseactivity implements View.OnClickListener {
+public class verifyuser extends registrationbaseactivity implements View.OnClickListener {
 
     @BindView(R.id.pinview)
     Pinview pinview;
@@ -46,8 +33,8 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verifiedemail);
-        ButterKnife.bind(verifiedemail.this);
+        setContentView(R.layout.activity_verifyuser);
+        ButterKnife.bind(verifyuser.this);
 
         tvcomplete.setOnClickListener(this);
         tvcancel.setOnClickListener(this);
@@ -55,7 +42,6 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
         pinview.setPinViewEventListener(new Pinview.PinViewEventListener() {
             @Override
             public void onDataEntered(Pinview pinview, boolean fromUser) {
-                String value=pinview.getValue();
                 hidekeyboard();
             }
         });
@@ -86,8 +72,8 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
         requestparams.put("action","verify");
         requestparams.put("clientid",clientid);
         requestparams.put("code",value);
-        progressdialog.showwaitingdialog(verifiedemail.this);
-        xapipost_send(verifiedemail.this,requestparams, new apiresponselistener() {
+        progressdialog.showwaitingdialog(verifyuser.this);
+        xapipost_send(verifyuser.this,requestparams, new apiresponselistener() {
             @Override
             public void onResponse(taskresult response) {
                 progressdialog.dismisswaitdialog();
@@ -99,8 +85,11 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
                         {
                             if(object.getString("success").equalsIgnoreCase("true"))
                             {
+                                if(object.has("clientid"))
+                                    xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
+
                                 //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(verifiedemail.this, signin.class);
+                                Intent i = new Intent(verifyuser.this, signin.class);
                                 hidekeyboard();
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(i);
@@ -109,7 +98,7 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
                             else
                             {
                                 if(object.has("error"))
-                                    Toast.makeText(verifiedemail.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(verifyuser.this, object.getString("error"), Toast.LENGTH_SHORT).show();
                             }
                         }
                         if(object.has("errors"))
@@ -127,7 +116,7 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
                                     error=error+"\n"+errorarray.get(i).toString();
                                 }
                             }
-                            Toast.makeText(verifiedemail.this, error, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(verifyuser.this, error, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e)
                     {
@@ -136,7 +125,7 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
                 }
                 else
                 {
-                    Toast.makeText(verifiedemail.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(verifyuser.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
