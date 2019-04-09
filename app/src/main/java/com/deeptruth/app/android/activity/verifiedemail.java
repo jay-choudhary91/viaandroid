@@ -17,11 +17,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.taskresult;
+import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfontedittext;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.goodiebag.pinview.Pinview;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,15 +42,6 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
     customfonttextview tvcomplete;
     @BindView(R.id.tv_cancel)
     customfonttextview tvcancel;
-    /*@BindView(R.id.edt_codebox2)
-    customfontedittext edtcodebox2;
-    @BindView(R.id.edt_codebox3)
-    customfontedittext edtcodebox3;
-    @BindView(R.id.edt_codebox4)
-    customfontedittext edtcodebox4;
-    @BindView(R.id.edt_codebox5)
-    customfontedittext edtcodebox5;*/
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,95 +55,10 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
         pinview.setPinViewEventListener(new Pinview.PinViewEventListener() {
             @Override
             public void onDataEntered(Pinview pinview, boolean fromUser) {
+                String value=pinview.getValue();
                 hidekeyboard();
             }
         });
-
-
-        /*edtcodebox1.addTextChangedListener(new mytextwatcher());
-        edtcodebox2.addTextChangedListener(new mytextwatcher());
-        edtcodebox3.addTextChangedListener(new mytextwatcher());
-        edtcodebox4.addTextChangedListener(new mytextwatcher());
-        edtcodebox5.addTextChangedListener(new mytextwatcher());*/
-
-        /*edtcodebox1.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(edtcodebox1.getText().length()==1)
-                {
-                    edtcodebox1.clearFocus();
-                    edtcodebox2.requestFocus();
-                    edtcodebox2.setCursorVisible(true);
-                }
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        edtcodebox2.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(edtcodebox2.getText().length()==1)
-                {
-                    edtcodebox2.clearFocus();
-                    edtcodebox3.requestFocus();
-                    edtcodebox3.setCursorVisible(true);
-                }
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        edtcodebox3.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(edtcodebox3.getText().length()==1)
-                {
-                    edtcodebox3.clearFocus();
-                    edtcodebox4.requestFocus();
-                    edtcodebox4.setCursorVisible(true);
-                }
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        edtcodebox4.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(edtcodebox4.getText().length()==1)
-                {
-                    edtcodebox4.clearFocus();
-                    edtcodebox5.requestFocus();
-                    edtcodebox5.setCursorVisible(true);
-                }
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        edtcodebox5.addTextChangedListener(new TextWatcher() {
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // TODO Auto-generated method stub
-                if(edtcodebox5.getText().length()==1)
-                {
-                    edtcodebox5.clearFocus();
-                }
-            }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        });*/
     }
 
     @Override
@@ -162,51 +76,71 @@ public class verifiedemail extends registrationbaseactivity implements View.OnCl
         }
     }
 
-    class mytextwatcher implements TextWatcher {
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            /*if (edtcodebox1.getText().hashCode() == s.hashCode())
-            {
-                edtcodebox2.requestFocus();
-            }
-            else if (edtcodebox2.getText().hashCode() == s.hashCode())
-            {
-                edtcodebox3.requestFocus();
-            }
-            else if (edtcodebox3.getText().hashCode() == s.hashCode())
-            {
-                edtcodebox4.requestFocus();
-            }
-            else if (edtcodebox4.getText().hashCode() == s.hashCode())
-            {
-                edtcodebox5.requestFocus();
-            }
-            else if (edtcodebox5.getText().hashCode() == s.hashCode())
-            {
-
-            }*/
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s)
-        {
-
-        }
-    }
-
     public void gotologin(){
-        Intent i = new Intent(verifiedemail.this, signin.class);
-// set the new task and clear flags
-        hidekeyboard();
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
-        finish();
+
+        String value=pinview.getValue();
+        String clientid= xdata.getinstance().getSetting("clientid");
+
+        HashMap<String,String> requestparams=new HashMap<>();
+        requestparams.put("type","client");
+        requestparams.put("action","verify");
+        requestparams.put("clientid",clientid);
+        requestparams.put("code",value);
+        progressdialog.showwaitingdialog(verifiedemail.this);
+        xapipost_send(verifiedemail.this,requestparams, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                progressdialog.dismisswaitdialog();
+                if(response.isSuccess())
+                {
+                    try {
+                        JSONObject object=new JSONObject(response.getData().toString());
+                        if(object.has("success"))
+                        {
+                            if(object.getString("success").equalsIgnoreCase("true"))
+                            {
+                                //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(verifiedemail.this, signin.class);
+                                hidekeyboard();
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(i);
+                                finish();
+                            }
+                            else
+                            {
+                                if(object.has("error"))
+                                    Toast.makeText(verifiedemail.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        if(object.has("errors"))
+                        {
+                            JSONArray errorarray=object.getJSONArray("errors");
+                            String error="";
+                            for(int i=0;i<errorarray.length();i++)
+                            {
+                                if(error.trim().isEmpty())
+                                {
+                                    error=error+errorarray.get(i).toString();
+                                }
+                                else
+                                {
+                                    error=error+"\n"+errorarray.get(i).toString();
+                                }
+                            }
+                            Toast.makeText(verifiedemail.this, error, Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(verifiedemail.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
 }

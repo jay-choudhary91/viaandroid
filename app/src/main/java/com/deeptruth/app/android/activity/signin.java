@@ -16,9 +16,17 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,9 +60,7 @@ public class signin extends registrationbaseactivity implements View.OnClickList
     public void onClick(View view) {
        switch (view.getId()){
            case R.id.login :
-               login();
-               /*if(isvalidated())
-                    login();*/
+               isvalidated();
                break;
            case R.id.createaccount:
                Intent intent=new Intent(signin.this,createaccount.class);
@@ -88,14 +94,73 @@ public class signin extends registrationbaseactivity implements View.OnClickList
 
     public boolean isvalidated(){
 
-        if ((! common.isvalidusername(edt_username.getText().toString().trim()))) {
+        /*if ((! common.isvalidusername(edt_username.getText().toString().trim()))) {
             Toast.makeText(this, "Please enter valid username!", Toast.LENGTH_SHORT).show();
             return false;
         }
         if (edt_password.getText().toString().trim().toString().length() == 0) {
             Toast.makeText(this, "Please enter password!", Toast.LENGTH_SHORT).show();
             return false;
-        }
+        }*/
+
+        HashMap<String,String> requestparams=new HashMap<>();
+        requestparams.put("type","client");
+        requestparams.put("action","authorize");
+        requestparams.put("email",edt_username.getText().toString().trim());
+        requestparams.put("password",edt_password.getText().toString().trim());
+        progressdialog.showwaitingdialog(signin.this);
+        xapipost_send(signin.this,requestparams, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                progressdialog.dismisswaitdialog();
+                if(response.isSuccess())
+                {
+                    try {
+                        JSONObject object=new JSONObject(response.getData().toString());
+                        if(object.has("success"))
+                        {
+                            if(object.getString("success").equalsIgnoreCase("true"))
+                            {
+                                //Toast.makeText(signin.this, "Auth success", Toast.LENGTH_SHORT).show();
+                                if(object.has("authtoken"))
+                                    xdata.getinstance().saveSetting(config.authtoken,object.getString("authtoken"));
+
+                                login();
+                            }
+                            else
+                            {
+                                if(object.has("error"))
+                                    Toast.makeText(signin.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        if(object.has("errors"))
+                        {
+                            JSONArray errorarray=object.getJSONArray("errors");
+                            String error="";
+                            for(int i=0;i<errorarray.length();i++)
+                            {
+                                if(error.trim().isEmpty())
+                                {
+                                    error=error+errorarray.get(i).toString();
+                                }
+                                else
+                                {
+                                    error=error+"\n"+errorarray.get(i).toString();
+                                }
+                            }
+                            Toast.makeText(signin.this, error, Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(signin.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         return true;
     }
 }

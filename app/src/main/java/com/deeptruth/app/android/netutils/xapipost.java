@@ -31,14 +31,12 @@ import java.util.List;
 public class xapipost extends AsyncTask<Void, Void, String> {
 
     List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-    String action;
     Context mContext;
     String useurl = "";
     apiresponselistener listner;
 
 
-    public xapipost(Context context, String action, apiresponselistener responseListner) {
-        this.action = action;
+    public xapipost(Context context, apiresponselistener responseListner) {
         this.mContext = context;
         this.listner = responseListner;
         this.useurl = xdata.getinstance().getSetting(xdata.keybaseurl);
@@ -60,7 +58,7 @@ public class xapipost extends AsyncTask<Void, Void, String> {
         }
         String responseString = "";
 
-        String baseUrl = useurl+"action="+action;
+        String baseUrl = useurl;
         Log.d("URL>>", baseUrl);
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(baseUrl);
@@ -72,15 +70,10 @@ public class xapipost extends AsyncTask<Void, Void, String> {
             // According to the JAVA API, InputStream constructor do nothing.
             //So we can't initialize InputStream although it is not an interface
             InputStream inputStream = response.getEntity().getContent();
-
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
             StringBuilder stringBuilder = new StringBuilder();
-
             String bufferedStrChunk = null;
-
             while((bufferedStrChunk = bufferedReader.readLine()) != null){
                 stringBuilder.append(bufferedStrChunk);
             }
@@ -108,6 +101,11 @@ public class xapipost extends AsyncTask<Void, Void, String> {
                 JSONObject object = jsonObject.optJSONObject("result");
                 result.success(true);
                 result.setData(object);
+            }
+            else if (jsonObject != null && jsonObject.has("errors"))
+            {
+                result.success(true);
+                result.setData(jsonObject);
             }
 
         } catch (Exception e) {
