@@ -1712,7 +1712,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_halfscrnimg.getLayoutParams().height = (rootviewheight-navigationbarheight);
 
         layout_videodetails.getLayoutParams().height = 0;
-        gethelper().drawerenabledisable(false);
+        gethelper().drawerenabledisable(true);
         gethelper().updateactionbar(1);
         setheadermargin(0,0,(rootviewheight-navigationbarheight),true);
         layout_videodetails.setVisibility(View.GONE);
@@ -3112,7 +3112,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void setbottomimgview(){
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,0,0,scrubberheight+40);
+        params.setMargins(0,0,0, (int) (scrubberheight + getResources().getDimension(R.dimen.margin_30dp)));
         params.addRule(RelativeLayout.ABOVE,R.id.layout_backgroundcontroller);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
