@@ -1626,12 +1626,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     } else {
 
-                        if(player!= null && player.isPlaying() && playpausebutton.getVisibility() == View.GONE ){
+                        if(playpausebutton.getVisibility() == View.GONE ){
                             playpausebutton.setVisibility(View.VISIBLE);
                         }else{
                             playpausebutton.setVisibility(View.GONE);
                         }
-
 
                         if(islastdragarrow){
                             return;
@@ -1639,7 +1638,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             gethelper().drawerenabledisable(false);
                             img_fullscreen.setVisibility(View.VISIBLE);
                             img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
-                            playpausebutton.setVisibility(View.VISIBLE);
+                            //playpausebutton.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.GONE);
                         }
                     }
