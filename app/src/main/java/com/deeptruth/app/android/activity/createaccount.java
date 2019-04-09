@@ -14,7 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.utils.common;
+import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.taskresult;
+import com.deeptruth.app.android.utils.xdata;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import br.com.sapereaude.maskedEditText.MaskedEditText;
 import butterknife.BindView;
@@ -64,18 +73,76 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.txt_submit:
-                Log.e("phonenumber",""+edt_phonenumber.getText());
-                if(checkValidations()){
-                    Intent intent=new Intent(createaccount.this,verifiedemail.class);
-                    startActivity(intent);
-                }
+                checkValidations();
                 break;
         }
     }
 
         public  boolean checkValidations() {
 
-            if (edt_username.getText().toString().trim().toString().length() == 0) {
+            HashMap<String,String> requestparams=new HashMap<>();
+            requestparams.put("type","client");
+            requestparams.put("action","create");
+            requestparams.put("name",edt_username.getText().toString().trim());
+            requestparams.put("email",edt_email.getText().toString().trim());
+            requestparams.put("password",edt_password.getText().toString().trim());
+            requestparams.put("confirmpassword",edt_confirmpassword.getText().toString().trim());
+            progressdialog.showwaitingdialog(createaccount.this);
+            xapipost_send(createaccount.this,requestparams, new apiresponselistener() {
+                @Override
+                public void onResponse(taskresult response) {
+                    progressdialog.dismisswaitdialog();
+                    if(response.isSuccess())
+                    {
+                        try {
+                            JSONObject object=new JSONObject(response.getData().toString());
+                            if(object.has("success"))
+                            {
+                                if(object.getString("success").equalsIgnoreCase("true"))
+                                {
+                                    if(object.has("clientid"))
+                                        xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
+
+                                    //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
+                                    Intent intent=new Intent(createaccount.this,verifiedemail.class);
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    if(object.has("error"))
+                                        Toast.makeText(createaccount.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            if(object.has("errors"))
+                            {
+                                JSONArray errorarray=object.getJSONArray("errors");
+                                String error="";
+                                for(int i=0;i<errorarray.length();i++)
+                                {
+                                    if(error.trim().isEmpty())
+                                    {
+                                        error=error+errorarray.get(i).toString();
+                                    }
+                                    else
+                                    {
+                                        error=error+"\n"+errorarray.get(i).toString();
+                                    }
+                                }
+                                Toast.makeText(createaccount.this, error, Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                    else
+                    {
+                        Toast.makeText(createaccount.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+            /*if (edt_username.getText().toString().trim().toString().length() == 0) {
                 Toast.makeText(this, "Please enter user name!", Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -103,7 +170,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
             {
                 Toast.makeText(this, " Please enter valid phone number!", Toast.LENGTH_SHORT).show();
                 return false;
-            }
+            }*/
 
             return true;
         }

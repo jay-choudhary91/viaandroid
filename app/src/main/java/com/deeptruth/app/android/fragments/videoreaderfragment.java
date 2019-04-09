@@ -131,6 +131,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.widget.RelativeLayout.ABOVE;
 import static android.widget.RelativeLayout.TRUE;
 
 /**
@@ -1565,7 +1566,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 gethelper().updateactionbar(1);
                                 setbottomimgview();
                                 img_fullscreen.setVisibility(View.VISIBLE);
-                                layoutbackgroundcontroller.setVisibility(View.GONE);
+                                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                                 layoutpause.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(true);
                                 playpausebutton.setVisibility(View.VISIBLE);
@@ -1679,7 +1680,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 playpausebutton.setVisibility(View.VISIBLE);
                                 img_fullscreen.setVisibility(View.VISIBLE);
                                 img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-                                layoutbackgroundcontroller.setVisibility(View.GONE);
+                                layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                                 totalduration.setVisibility(View.VISIBLE);
                                 time_current.setVisibility(View.VISIBLE);
                                 gethelper().updateactionbar(1);
@@ -1715,20 +1716,23 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         layout_halfscrnimg.getLayoutParams().height = (rootviewheight-navigationbarheight);
 
         layout_videodetails.getLayoutParams().height = 0;
-        gethelper().drawerenabledisable(false);
-        gethelper().updateactionbar(0);
+        gethelper().drawerenabledisable(true);
+        gethelper().updateactionbar(1);
         setheadermargin(0,0,(rootviewheight-navigationbarheight),true);
         layout_videodetails.setVisibility(View.GONE);
         scrollview_detail.setVisibility(View.GONE);
+        layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
         scrollview_meta.setVisibility(View.GONE);
         scrollView_encyrption.setVisibility(View.GONE);
         tab_layout.setVisibility(View.GONE);
         //updatetextureviewsize(targetwidth,targetheight);
-        layout_mediatype.setVisibility(View.GONE);
-        layoutbackgroundcontroller.setVisibility(View.GONE);
-        playpausebutton.setVisibility(View.GONE);
+        layout_mediatype.setVisibility(View.VISIBLE);
+        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
+        playpausebutton.setVisibility(View.VISIBLE);
         imgpause.setVisibility(View.GONE);
-        img_fullscreen.setVisibility(View.GONE);
+        setbottomimgview();
+        img_fullscreen.setVisibility(View.VISIBLE);
+        img_fullscreen.setImageResource(R.drawable.ic_info_mode);
         videodownwordarrow.setVisibility(View.GONE);
         rl_video_downwordarrow.setVisibility(View.GONE);
         islastdragarrow =false;
@@ -2412,7 +2416,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             if(layout_videodetails.getVisibility()==View.GONE){
                 Log.e("fullscreen..","oncomplete");
                 fullscreen_showcontrollers();
-                layoutbackgroundcontroller.setVisibility(View.GONE);
             }else{
                 Log.e("halfscreen..","oncomplete");
 
@@ -3105,7 +3108,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         imgpause.setVisibility(View.GONE);
         gethelper().updateactionbar(1);
         setbottomimgview();
-        layoutbackgroundcontroller.setVisibility(View.GONE);
+        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
         gethelper().setdrawerheightonfullscreen(0);
         imgpause.setImageResource(R.drawable.ic_pause);
@@ -3114,7 +3117,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
     public void setbottomimgview(){
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,0,0,footerheight);
+        params.setMargins(0,0,0, (int) (scrubberheight + getResources().getDimension(R.dimen.margin_30dp)));
+        params.addRule(RelativeLayout.ABOVE,R.id.layout_backgroundcontroller);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         img_fullscreen.setLayoutParams(params);
@@ -3214,7 +3218,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
                 } else {
 
-                        layoutbackgroundcontroller.setVisibility(View.GONE);
+                        layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                         imgpause.setImageResource(R.drawable.ic_pause);
                         layout_mediatype.setVisibility(View.VISIBLE);
                         playpausebutton.setVisibility(View.VISIBLE);

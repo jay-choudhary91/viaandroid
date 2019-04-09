@@ -289,11 +289,11 @@
                                 android:gravity="center"
                                 android:textSize="11sp"
                                 android:textColor="@color/black"
-                                android:background="@color/green_background"
+                                android:background="@drawable/roundshape_validtext"
                                 android:maxLines="1"
                                 android:text="Valid"
-                                android:paddingLeft="1dp"
-                                android:paddingRight="1dp"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
                                 />
 
                             <com.deeptruth.app.android.views.customfonttextview
@@ -303,8 +303,8 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:textSize="11sp"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:textColor="@color/black"
                                 android:text="|"
                                 />
@@ -317,10 +317,10 @@
                                 android:gravity="center"
                                 android:textSize="11sp"
                                 android:textColor="@color/black"
-                                android:background="@color/yellow_background"
+                                android:background="@drawable/roundshape_cautiontxt"
                                 android:maxLines="1"
-                                android:paddingLeft="1dp"
-                                android:paddingRight="1dp"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
                                 android:text="Caution"
                                 />
 
@@ -331,8 +331,8 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:textSize="11sp"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:textColor="@color/black"
                                 android:text="|"
                                 />
@@ -345,11 +345,11 @@
                                 android:gravity="center"
                                 android:textSize="11sp"
                                 android:textColor="@color/black"
-                                android:background="@color/grey_xx"
+                                android:background="@drawable/roundshape_unsenttxt"
                                 android:maxLines="1"
                                 android:text="Unsent"
-                                android:paddingLeft="1dp"
-                                android:paddingRight="1dp"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
                                 />
 
                             <com.deeptruth.app.android.views.customfonttextview
@@ -359,8 +359,8 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:textSize="11sp"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_marginRight="2dp"
                                 android:textColor="@color/black"
                                 android:text="|"
                                 />
@@ -373,11 +373,11 @@
                                 android:gravity="center"
                                 android:textSize="11sp"
                                 android:textColor="@color/black"
-                                android:background="@color/red_background"
+                                android:background="@drawable/roundshape_redtxt"
                                 android:maxLines="1"
                                 android:text="Invalid"
-                                android:paddingLeft="1dp"
-                                android:paddingRight="1dp"
+                                android:paddingLeft="3dp"
+                                android:paddingRight="3dp"
                                 />
 
                         </LinearLayout>

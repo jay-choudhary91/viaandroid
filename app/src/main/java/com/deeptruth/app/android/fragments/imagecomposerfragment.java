@@ -1,9 +1,7 @@
 package com.deeptruth.app.android.fragments;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -31,10 +29,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -58,8 +54,6 @@ import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.dbitemcontainer;
-import com.deeptruth.app.android.models.mediacompletiondialogmain;
-import com.deeptruth.app.android.models.mediacompletiondialogsub;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.models.videomodel;
 import com.deeptruth.app.android.services.insertmediadataservice;
@@ -68,9 +62,6 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.xdata;
 import com.google.gson.Gson;
-import com.warkiz.widget.IndicatorSeekBar;
-import com.warkiz.widget.OnSeekChangeListener;
-import com.warkiz.widget.SeekParams;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -103,8 +94,6 @@ import butterknife.ButterKnife;
  */
 
 public class imagecomposerfragment extends basefragment  implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener{
-
-
 
     @BindView(R.id.layout_seekbarzoom)
     RelativeLayout layout_seekbarzoom;
@@ -143,7 +132,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private boolean isflashon = false,previewupdated=false;
     protected float fingerSpacing = 0;
     protected float zoomLevel = 1f;
-    protected float maximumZoomLevel;
+    protected float maximumzoomlevel;
     protected Rect rectzoom;
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -199,7 +188,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * {@link TextureView.SurfaceTextureListener} handles several lifecycle events on a
      * {@link TextureView}.
      */
-    private final TextureView.SurfaceTextureListener mSurfaceTextureListener
+    private final TextureView.SurfaceTextureListener surfacetexturelistener
             = new TextureView.SurfaceTextureListener() {
 
         @Override
@@ -226,50 +215,50 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     /**
      * An {@link AutoFitTextureView} for camera preview.
      */
-    private AutoFitTextureView mTextureView;
+    private AutoFitTextureView textureview;
 
     /**
      * A {@link CameraCaptureSession } for camera preview.
      */
-    private CameraCaptureSession mCaptureSession;
+    private CameraCaptureSession capturesession;
 
     /**
      * A reference to the opened {@link CameraDevice}.
      */
-    private CameraDevice mCameraDevice;
+    private CameraDevice cameradevice;
 
     /**
      * The {@link android.util.Size} of camera preview.
      */
-    private Size mPreviewSize;
+    private Size previewsize;
 
     private static final int request_permissions = 1;
     private CameraCharacteristics characteristics;
     /**
      * {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state.
      */
-    private final CameraDevice.StateCallback mStateCallback = new CameraDevice.StateCallback() {
+    private final CameraDevice.StateCallback statecallback = new CameraDevice.StateCallback() {
 
         @Override
         public void onOpened(@NonNull CameraDevice cameraDevice) {
             // This method is called when the camera is opened.  We start camera preview here.
-            mCameraOpenCloseLock.release();
-            mCameraDevice = cameraDevice;
+            cameraopencloselock.release();
+            cameradevice = cameraDevice;
             createCameraPreviewSession();
         }
 
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
-            mCameraOpenCloseLock.release();
+            cameraopencloselock.release();
             cameraDevice.close();
-            mCameraDevice = null;
+            cameradevice = null;
         }
 
         @Override
         public void onError(@NonNull CameraDevice cameraDevice, int error) {
-            mCameraOpenCloseLock.release();
+            cameraopencloselock.release();
             cameraDevice.close();
-            mCameraDevice = null;
+            cameradevice = null;
             Activity activity = getActivity();
             if (null != activity) {
                 activity.finish();
@@ -281,17 +270,17 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     /**
      * An additional thread for running tasks that shouldn't block the UI.
      */
-    private HandlerThread mBackgroundThread;
+    private HandlerThread backgroundthread;
 
     /**
      * A {@link Handler} for running tasks in the background.
      */
-    private Handler mBackgroundHandler;
+    private Handler backgroundhandler;
 
     /**
      * An {@link ImageReader} that handles still image capture.
      */
-    private ImageReader mImageReader;
+    private ImageReader imagereader;
 
     /**
      * This is the output file for our picture.
@@ -302,52 +291,48 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * This a callback object for the {@link ImageReader}. "onImageAvailable" will be called when a
      * still image is ready to be saved.
      */
-    private final ImageReader.OnImageAvailableListener mOnImageAvailableListener
+    private final ImageReader.OnImageAvailableListener onimageavailablelistener
             = new ImageReader.OnImageAvailableListener() {
 
         @Override
         public void onImageAvailable(ImageReader reader) {
-            mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), capturedimagefile));
+            backgroundhandler.post(new ImageSaver(reader.acquireNextImage(), capturedimagefile));
         }
 
     };
 
-    private CaptureRequest.Builder mPreviewRequestBuilder;
+    private CaptureRequest.Builder previewrequestbuilder;
 
     /**
-     * {@link CaptureRequest} generated by {@link #mPreviewRequestBuilder}
+     * {@link CaptureRequest} generated by {@link #previewrequestbuilder}
      */
-    private CaptureRequest mPreviewRequest;
+    private CaptureRequest previewrequest;
 
     /**
      * The current state of camera state for taking pictures.
      *
      * @see #mCaptureCallback
      */
-    private int mState = STATE_PREVIEW;
+    private int previewstate = STATE_PREVIEW;
 
     /**
      * A {@link Semaphore} to prevent the app from exiting before closing the camera.
      */
-    private Semaphore mCameraOpenCloseLock = new Semaphore(1);
+    private Semaphore cameraopencloselock = new Semaphore(1);
 
     /**
      * Whether the current camera device supports Flash or not.
      */
-    private boolean mFlashSupported,brustmodeenabled=false;
+    private boolean brustmodeenabled=false;
     public boolean isimagecaptureprocessing=false;
 
     /**
      * Orientation of the camera sensor
      */
-    private int mSensorOrientation;
-
+    private int sensororientation;
     LinearLayout linearLayout;
     TextView txt_title_actionbarcomposer;
-
     ImageView imgflashon,img_dotmenu,img_stop_watch;
-
-    public Dialog maindialogshare,subdialogshare;
     View rootview = null;
     Handler timerhandler;
     String keytype = config.prefs_md5;
@@ -356,24 +341,15 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     String selectedvideofile ="",selectedmetrices="", selectedhashes ="",mediakey="";
     ArrayList<videomodel> mmetricsitems =new ArrayList<>();
     ArrayList<videomodel> mhashesitems =new ArrayList<>();
-    private boolean isdraweropen=false;
+    private boolean flashsupported=false;
     private Handler myhandler;
     private Runnable myrunnable;
     JSONObject metadatametricesjson=new JSONObject();
-    private LinearLayoutManager mLayoutManager;
     public int flingactionmindstvac;
-    private  final int flingactionmindspdvac = 10;
-    ArrayList<dbitemcontainer> mdbstartitemcontainer =new ArrayList<>();
-    ArrayList<dbitemcontainer> mdbmiddleitemcontainer =new ArrayList<>();
-
-    mediacompletiondialogmain mediacompletionpopupmain;
-    mediacompletiondialogsub mediacompletionpopupsub;
-    FragmentManager fm ;
-    adapteritemclick popupclickmain;
-    adapteritemclick popupclicksub;
+    ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
+    ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
     String hashvalue = "",metrichashvalue = "";
     RelativeLayout layoutbottom;
-
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
      */
@@ -381,7 +357,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             = new CameraCaptureSession.CaptureCallback() {
 
         private void process(CaptureResult result) {
-            switch (mState) {
+            switch (previewstate) {
                 case STATE_PREVIEW: {
                     // We have nothing to do when the camera preview is working normally.
                     break;
@@ -396,7 +372,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         // CONTROL_AE_STATE can be null on some devices
                         Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                         if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
-                            mState = STATE_PICTURE_TAKEN;
+                            previewstate = STATE_PICTURE_TAKEN;
                             capturestillpicture();
                         } else {
                             runPrecaptureSequence();
@@ -410,7 +386,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     if (aeState == null ||
                             aeState == CaptureResult.CONTROL_AE_STATE_PRECAPTURE ||
                             aeState == CaptureRequest.CONTROL_AE_STATE_FLASH_REQUIRED) {
-                        mState = STATE_WAITING_NON_PRECAPTURE;
+                        previewstate = STATE_WAITING_NON_PRECAPTURE;
                     }
                     break;
                 }
@@ -418,7 +394,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     // CONTROL_AE_STATE can be null on some devices
                     Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
                     if (aeState == null || aeState != CaptureResult.CONTROL_AE_STATE_PRECAPTURE) {
-                        mState = STATE_PICTURE_TAKEN;
+                        previewstate = STATE_PICTURE_TAKEN;
                         capturestillpicture();
                     }
                     break;
@@ -532,7 +508,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         gethelper().setdatacomposing(true);
         previewupdated=false;
         zoomLevel=1f;
-        mTextureView = (AutoFitTextureView)rootview.findViewById(R.id.texture);
+        textureview = (AutoFitTextureView)rootview.findViewById(R.id.texture);
         imgflashon = (ImageView) rootview.findViewById(R.id.img_flash);
         img_dotmenu = (ImageView) rootview.findViewById(R.id.img_dotmenu);
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
@@ -541,7 +517,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         common.setactionbarcolor(65,actionbar);
 
         timerhandler = new Handler() ;
-        mTextureView.setOnTouchListener(this);
+        textureview.setOnTouchListener(this);
         imgflashon.setOnClickListener(this);
         img_dotmenu.setOnClickListener(this);
         img_stop_watch.setOnClickListener(this);
@@ -683,12 +659,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             String devicestartdate = currenttimewithoffset[0];
             String timeoffset = currenttimewithoffset[1];
 
-            if(mdbstartitemcontainer.size() == 0)
+            if(dbstartitemcontainer.size() == 0)
             {
-                mdbstartitemcontainer.add(new dbitemcontainer("","image",capturedimagefile.getAbsolutePath(), mediakey,"","","0","0",
+                dbstartitemcontainer.add(new dbitemcontainer("","image",capturedimagefile.getAbsolutePath(), mediakey,"","","0","0",
                         config.type_image_start,devicestartdate,devicestartdate,timeoffset,"","","",
                         xdata.getinstance().getSetting(config.selected_folder)));
-                Log.e("startcontainersize"," "+mdbstartitemcontainer.size());
+                Log.e("startcontainersize"," "+ dbstartitemcontainer.size());
             }
 
         } catch (Exception e) {
@@ -718,7 +694,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     arrayobject.put("devicetime",devicetime);
                 }
                 String metrichash = md5.calculatestringtomd5(metricesjsonarray.toString());
-                mdbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
+                dbmiddleitemcontainer.add(new dbitemcontainer("", metrichash ,keytype, mediakey,""+metricesjsonarray.toString(),
                         currentdate[0],"0",sequencehash,sequenceno,"",currentdate[0],"",""));
             }catch (Exception e)
             {
@@ -759,8 +735,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             insertstartmediainfo(keyvalue);
             Gson gson = new Gson();
-            String list1 = gson.toJson(mdbstartitemcontainer);
-            String list2 = gson.toJson(mdbmiddleitemcontainer);
+            String list1 = gson.toJson(dbstartitemcontainer);
+            String list2 = gson.toJson(dbmiddleitemcontainer);
             xdata.getinstance().saveSetting("liststart",list1);
             xdata.getinstance().saveSetting("listmiddle",list2);
             xdata.getinstance().saveSetting("mediapath",capturedimagefile.getAbsolutePath());
@@ -806,12 +782,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             String updatecompletedate[] = common.getcurrentdatewithtimezone();
             String completeddate = updatecompletedate[0];
 
-            mdbstartitemcontainer.get(0).setItem1(json);
-            mdbstartitemcontainer.get(0).setItem3(capturedimagefile.getAbsolutePath());
-            mdbstartitemcontainer.get(0).setItem15(capturedimagefile.getAbsolutePath());
-            mdbstartitemcontainer.get(0).setItem13(completeddate);
+            dbstartitemcontainer.get(0).setItem1(json);
+            dbstartitemcontainer.get(0).setItem3(capturedimagefile.getAbsolutePath());
+            dbstartitemcontainer.get(0).setItem15(capturedimagefile.getAbsolutePath());
+            dbstartitemcontainer.get(0).setItem13(completeddate);
 
-            if(mdbstartitemcontainer != null && mdbstartitemcontainer.size() > 0)
+            if(dbstartitemcontainer != null && dbstartitemcontainer.size() > 0)
             {
                 databasemanager mdbhelper=null;
                 if (mdbhelper == null) {
@@ -825,13 +801,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                     e.printStackTrace();
                 }
 
-                mdbhelper.insertstartvideoinfo(mdbstartitemcontainer.get(0).getItem1(),mdbstartitemcontainer.get(0).getItem2()
-                        ,mdbstartitemcontainer.get(0).getItem3(),mdbstartitemcontainer.get(0).getItem4(),mdbstartitemcontainer.get(0).getItem5()
-                        ,mdbstartitemcontainer.get(0).getItem6(),mdbstartitemcontainer.get(0).getItem7(),mdbstartitemcontainer.get(0).getItem8(),
-                        mdbstartitemcontainer.get(0).getItem9(),mdbstartitemcontainer.get(0).getItem10(),mdbstartitemcontainer.get(0).getItem11()
-                        ,mdbstartitemcontainer.get(0).getItem12(),mdbstartitemcontainer.get(0).getItem13(),"",mdbstartitemcontainer.get(0).getItem14()
+                mdbhelper.insertstartvideoinfo(dbstartitemcontainer.get(0).getItem1(), dbstartitemcontainer.get(0).getItem2()
+                        , dbstartitemcontainer.get(0).getItem3(), dbstartitemcontainer.get(0).getItem4(), dbstartitemcontainer.get(0).getItem5()
+                        , dbstartitemcontainer.get(0).getItem6(), dbstartitemcontainer.get(0).getItem7(), dbstartitemcontainer.get(0).getItem8(),
+                        dbstartitemcontainer.get(0).getItem9(), dbstartitemcontainer.get(0).getItem10(), dbstartitemcontainer.get(0).getItem11()
+                        , dbstartitemcontainer.get(0).getItem12(), dbstartitemcontainer.get(0).getItem13(),"", dbstartitemcontainer.get(0).getItem14()
                         ,"0","sync_pending","","","0","inprogress","","",
-                        mdbstartitemcontainer.get(0).getItem16(),"");
+                        dbstartitemcontainer.get(0).getItem16(),"");
 
                 try {
                     mdbhelper.close();
@@ -889,10 +865,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     public void doafterallpermissions()
     {
         startBackgroundThread();
-        if (mTextureView.isAvailable()) {
-            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+        if (textureview.isAvailable()) {
+            openCamera(textureview.getWidth(), textureview.getHeight());
         }
-        mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+        textureview.setSurfaceTextureListener(surfacetexturelistener);
     }
 
     @Override
@@ -922,23 +898,23 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             Size largest = Collections.max(
                     Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
                     new CompareSizesByArea());
-            mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
+            imagereader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
                     ImageFormat.JPEG, /*maxImages*/2);
-            mImageReader.setOnImageAvailableListener(
-                    mOnImageAvailableListener, mBackgroundHandler);
+            imagereader.setOnImageAvailableListener(
+                    onimageavailablelistener, backgroundhandler);
             int displayRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-            mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+            sensororientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
             boolean swappedDimensions = false;
             switch (displayRotation) {
                 case Surface.ROTATION_0:
                 case Surface.ROTATION_180:
-                    if (mSensorOrientation == 90 || mSensorOrientation == 270) {
+                    if (sensororientation == 90 || sensororientation == 270) {
                         swappedDimensions = true;
                     }
                     break;
                 case Surface.ROTATION_90:
                 case Surface.ROTATION_270:
-                    if (mSensorOrientation == 0 || mSensorOrientation == 180) {
+                    if (sensororientation == 0 || sensororientation == 180) {
                         swappedDimensions = true;
                     }
                     break;
@@ -971,23 +947,23 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             // Danger, W.R.! Attempting to use too large a preview size could  exceed the camera
             // bus' bandwidth limitation, resulting in gorgeous previews but the storage of
             // garbage capture data.
-            mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
+            previewsize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
                     rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth,
                     maxPreviewHeight, largest);
 
             // We fit the aspect ratio of TextureView to the size of preview we picked.
             int orientation = getResources().getConfiguration().orientation;
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                mTextureView.setAspectRatio(
-                        mPreviewSize.getWidth(), mPreviewSize.getHeight());
+                textureview.setAspectRatio(
+                        previewsize.getWidth(), previewsize.getHeight());
             } else {
-                mTextureView.setAspectRatio(
-                        mPreviewSize.getHeight(), mPreviewSize.getWidth());
+                textureview.setAspectRatio(
+                        previewsize.getHeight(), previewsize.getWidth());
             }
 
             // Check if the flash is supported.
             Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-            mFlashSupported = available == null ? false : available;
+            flashsupported = available == null ? false : available;
 
 //            }
         } catch (Exception e) {
@@ -1009,17 +985,17 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         // Choose the sizes for camera preview and video recording
         try {
             characteristics = manager.getCameraCharacteristics(cameraid);
-            maximumZoomLevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+            maximumzoomlevel = characteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
         try {
-            if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
+            if (!cameraopencloselock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
-            manager.openCamera(cameraid, mStateCallback, mBackgroundHandler);
+            manager.openCamera(cameraid, statecallback, backgroundhandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1030,27 +1006,27 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      */
     private void closeCamera() {
         try {
-            if(mCameraOpenCloseLock != null)
+            if(cameraopencloselock != null)
             {
-                mCameraOpenCloseLock.acquire();
-                if (null != mCaptureSession) {
-                    mCaptureSession.close();
-                    mCaptureSession = null;
+                cameraopencloselock.acquire();
+                if (null != capturesession) {
+                    capturesession.close();
+                    capturesession = null;
                 }
-                if (null != mCameraDevice) {
-                    mCameraDevice.close();
-                    mCameraDevice = null;
+                if (null != cameradevice) {
+                    cameradevice.close();
+                    cameradevice = null;
                 }
-                if (null != mImageReader) {
-                    mImageReader.close();
-                    mImageReader = null;
+                if (null != imagereader) {
+                    imagereader.close();
+                    imagereader = null;
                 }
             }
 
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera closing.", e);
         } finally {
-            mCameraOpenCloseLock.release();
+            cameraopencloselock.release();
         }
     }
 
@@ -1058,22 +1034,22 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      * Starts a background thread and its {@link Handler}.
      */
     private void startBackgroundThread() {
-        mBackgroundThread = new HandlerThread("CameraBackground");
-        mBackgroundThread.start();
-        mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+        backgroundthread = new HandlerThread("CameraBackground");
+        backgroundthread.start();
+        backgroundhandler = new Handler(backgroundthread.getLooper());
     }
 
     /**
      * Stops the background thread and its {@link Handler}.
      */
     private void stopBackgroundThread() {
-        if(mBackgroundThread != null)
+        if(backgroundthread != null)
         {
-            mBackgroundThread.quitSafely();
+            backgroundthread.quitSafely();
             try {
-                mBackgroundThread.join();
-                mBackgroundThread = null;
-                mBackgroundHandler = null;
+                backgroundthread.join();
+                backgroundthread = null;
+                backgroundhandler = null;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -1085,44 +1061,44 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
      */
     private void createCameraPreviewSession() {
         try {
-            SurfaceTexture texture = mTextureView.getSurfaceTexture();
+            SurfaceTexture texture = textureview.getSurfaceTexture();
             assert texture != null;
 
             // We configure the size of default buffer to be the size of camera preview we want.
-            texture.setDefaultBufferSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+            texture.setDefaultBufferSize(previewsize.getWidth(), previewsize.getHeight());
 
             // This is the output Surface we need to start preview.
             Surface surface = new Surface(texture);
 
             // We set up a CaptureRequest.Builder with the output Surface.
-            mPreviewRequestBuilder
-                    = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-            mPreviewRequestBuilder.addTarget(surface);
+            previewrequestbuilder
+                    = cameradevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+            previewrequestbuilder.addTarget(surface);
 
             // Here, we create a CameraCaptureSession for camera preview.
-            mCameraDevice.createCaptureSession(Arrays.asList(surface, mImageReader.getSurface()),
+            cameradevice.createCaptureSession(Arrays.asList(surface, imagereader.getSurface()),
                     new CameraCaptureSession.StateCallback() {
 
                         @Override
                         public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                             // The camera is already closed
-                            if (null == mCameraDevice) {
+                            if (null == cameradevice) {
                                 return;
                             }
 
                             // When the session is ready, we start displaying the preview.
-                            mCaptureSession = cameraCaptureSession;
+                            capturesession = cameraCaptureSession;
                             try {
                                 // Auto focus should be continuous for camera preview.
-                                mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
+                                previewrequestbuilder.set(CaptureRequest.CONTROL_AF_MODE,
                                         CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                                 // Flash is automatically enabled when necessary.
-                                //setAutoFlash(mPreviewRequestBuilder);
+                                //setAutoFlash(previewrequestbuilder);
 
                                 // Finally, we start displaying the camera preview.
-                                mPreviewRequest = mPreviewRequestBuilder.build();
-                                mCaptureSession.setRepeatingRequest(mPreviewRequest,
-                                        mCaptureCallback, mBackgroundHandler);
+                                previewrequest = previewrequestbuilder.build();
+                                capturesession.setRepeatingRequest(previewrequest,
+                                        mCaptureCallback, backgroundhandler);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1145,36 +1121,36 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
     /**
-     * Configures the necessary {@link android.graphics.Matrix} transformation to `mTextureView`.
+     * Configures the necessary {@link android.graphics.Matrix} transformation to `textureview`.
      * This method should be called after the camera preview size is determined in
-     * setUpCameraOutputs and also the size of `mTextureView` is fixed.
+     * setUpCameraOutputs and also the size of `textureview` is fixed.
      *
-     * @param viewWidth  The width of `mTextureView`
-     * @param viewHeight The height of `mTextureView`
+     * @param viewWidth  The width of `textureview`
+     * @param viewHeight The height of `textureview`
      */
     private void configureTransform(int viewWidth, int viewHeight) {
         Activity activity = getActivity();
-        if (null == mTextureView || null == mPreviewSize || null == activity) {
+        if (null == textureview || null == previewsize || null == activity) {
             return;
         }
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
-        RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());
+        RectF bufferRect = new RectF(0, 0, previewsize.getHeight(), previewsize.getWidth());
         float centerX = viewRect.centerX();
         float centerY = viewRect.centerY();
         if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
             bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY());
             matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL);
             float scale = Math.max(
-                    (float) viewHeight / mPreviewSize.getHeight(),
-                    (float) viewWidth / mPreviewSize.getWidth());
+                    (float) viewHeight / previewsize.getHeight(),
+                    (float) viewWidth / previewsize.getWidth());
             matrix.postScale(scale, scale, centerX, centerY);
             matrix.postRotate(90 * (rotation - 2), centerX, centerY);
         } else if (Surface.ROTATION_180 == rotation) {
             matrix.postRotate(180, centerX, centerY);
         }
-        mTextureView.setTransform(matrix);
+        textureview.setTransform(matrix);
     }
 
     /**
@@ -1197,12 +1173,12 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private void runPrecaptureSequence() {
         try {
             // This is how to tell the camera to trigger.
-            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
+            previewrequestbuilder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,
                     CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER_START);
             // Tell #mCaptureCallback to wait for the precapture sequence to be set.
-            mState = STATE_WAITING_PRECAPTURE;
-            mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
-                    mBackgroundHandler);
+            previewstate = STATE_WAITING_PRECAPTURE;
+            capturesession.capture(previewrequestbuilder.build(), mCaptureCallback,
+                    backgroundhandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1230,18 +1206,18 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             final Activity activity = getActivity();
             metadatametricesjson=new JSONObject();
-            if (null == activity || null == mCameraDevice) {
+            if (null == activity || null == cameradevice) {
                 return;
             }
             selectedmetrices="";
-            mdbstartitemcontainer.clear();
-            mdbmiddleitemcontainer.clear();
+            dbstartitemcontainer.clear();
+            dbmiddleitemcontainer.clear();
             mmetricsitems.clear();
 
             // This is the CaptureRequest.Builder that we use to take a picture.
             final CaptureRequest.Builder captureBuilder =
-                    mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureBuilder.addTarget(mImageReader.getSurface());
+                    cameradevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+            captureBuilder.addTarget(imagereader.getSurface());
 
             // Use the same AE and AF modes as the preview.
             captureBuilder.set(CaptureRequest.CONTROL_AF_MODE,
@@ -1318,9 +1294,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                 }
             };
 
-            mCaptureSession.stopRepeating();
-            mCaptureSession.abortCaptures();
-            mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
+            capturesession.stopRepeating();
+            capturesession.abortCaptures();
+            capturesession.capture(captureBuilder.build(), CaptureCallback, null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1344,7 +1320,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         // We have to take that into account and rotate JPEG properly.
         // For devices with orientation of 90, we simply return our mapping from ORIENTATIONS.
         // For devices with orientation of 270, we need to rotate the JPEG 180 degrees.
-        return (ORIENTATIONS.get(rotation) + mSensorOrientation + 270) % 360;
+        return (ORIENTATIONS.get(rotation) + sensororientation + 270) % 360;
     }
 
     /**
@@ -1354,19 +1330,19 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     private void unlockfocus() {
         try {
             if(rectzoom != null)
-                mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, rectzoom);
+                previewrequestbuilder.set(CaptureRequest.SCALER_CROP_REGION, rectzoom);
 
             // Reset the auto-focus trigger
-            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
+            previewrequestbuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                     CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
-           // setAutoFlash(mPreviewRequestBuilder);
+           // setAutoFlash(previewrequestbuilder);
 
-            mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
-                    mBackgroundHandler);
+            capturesession.capture(previewrequestbuilder.build(), mCaptureCallback,
+                    backgroundhandler);
             // After this, the camera will go back to the normal state of preview.
-            mState = STATE_PREVIEW;
-            mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback,
-                    mBackgroundHandler);
+            previewstate = STATE_PREVIEW;
+            capturesession.setRepeatingRequest(previewrequest, mCaptureCallback,
+                    backgroundhandler);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1492,7 +1468,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
             case R.id.txt_zoomlevel:
                 zoomLevel++;
-                if(zoomLevel > maximumZoomLevel)
+                if(zoomLevel > maximumzoomlevel)
                     zoomLevel=1f;
 
                 setupcamerazoom();
@@ -1576,8 +1552,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                         float delta = 0.05f;
                         if (fingerSpacing != 0) {
                             if (currentFingerSpacing > fingerSpacing) {
-                                if ((maximumZoomLevel - zoomLevel) <= delta) {
-                                    delta = maximumZoomLevel - zoomLevel;
+                                if ((maximumzoomlevel - zoomLevel) <= delta) {
+                                    delta = maximumzoomlevel - zoomLevel;
                                 }
                                 zoomLevel = zoomLevel + delta;
                             } else if (currentFingerSpacing < fingerSpacing){
@@ -1618,11 +1594,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
         rectzoom = new Rect(croppedWidth/2, croppedHeight/2,
                 rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
-        Log.e("rectzoom level ",""+ rectzoom +" "+zoomLevel+" "+maximumZoomLevel);
-        mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, rectzoom);
+        Log.e("rectzoom level ",""+ rectzoom +" "+zoomLevel+" "+ maximumzoomlevel);
+        previewrequestbuilder.set(CaptureRequest.SCALER_CROP_REGION, rectzoom);
         try {
-            mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), mCaptureCallback,
-                    mBackgroundHandler);
+            capturesession.setRepeatingRequest(previewrequestbuilder.build(), mCaptureCallback,
+                    backgroundhandler);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -1742,13 +1718,13 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         try {
                 if (isflashsupported) {
                     if (isflashon) {
-                        mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
-                        mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
+                        previewrequestbuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);
+                        capturesession.setRepeatingRequest(previewrequestbuilder.build(), null, null);
                         imgflashon.setImageResource(R.drawable.icon_flashoff);
                         isflashon = false;
                     } else {
-                        mPreviewRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
-                        mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), null, null);
+                        previewrequestbuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
+                        capturesession.setRepeatingRequest(previewrequestbuilder.build(), null, null);
                         imgflashon.setImageResource(R.drawable.icon_flashon);
                         isflashon = true;
                     }
@@ -1793,10 +1769,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
     public void reopenCamera() {
-        if (mTextureView.isAvailable()) {
-            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+        if (textureview.isAvailable()) {
+            openCamera(textureview.getWidth(), textureview.getHeight());
         } else {
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
+            textureview.setSurfaceTextureListener(surfacetexturelistener);
         }
     }
 
