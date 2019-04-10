@@ -1306,6 +1306,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             if(fragvideocomposer != null)
                 fragvideocomposer.changeiconsorientation(rotateangle);
+            if(rotateangle == 90 || rotateangle == -90){
+                txt_encrypting.setTextSize(9);
+            }else{
+                txt_encrypting.setTextSize(10);
+            }
 
         }
     }
