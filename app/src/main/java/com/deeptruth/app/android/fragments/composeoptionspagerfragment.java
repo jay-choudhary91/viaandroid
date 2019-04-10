@@ -2,6 +2,7 @@ package com.deeptruth.app.android.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
@@ -156,7 +157,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if(rootview==null) {/* gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
+        if(rootview==null)
+        {/* gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
                 gifdrawable.setLoopCount(0);
                 gifdrawable.setSpeed(1.0f);
                 recordstartstopbutton.setImageDrawable(gifdrawable);
@@ -646,18 +648,37 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 {
                     if(fragimgcapture != null)
                     {
-                        if(fragimgcapture.isbrustmodeenabled())
-                        {
-                            startbrustcameratimer();
-                        }
-                        else
+                        if(fragimgcapture != null && (! fragimgcapture.isimagecaptureprocessing))
                         {
                             if(countertimer != null)
                                 countertimer.cancel();
 
                             txt_timer.setText("");
-                            txt_timer.setVisibility(View.GONE);
+                            txt_timer.setVisibility(View.VISIBLE);
                             enableDisableView(parentview,true);
+
+                            ObjectAnimator animation = ObjectAnimator.ofInt(txt_timer, "backgroundColor", Color.BLACK);
+                            animation.setDuration(20);
+                            animation.setEvaluator(new ArgbEvaluator());
+                            animation.setRepeatCount(Animation.RELATIVE_TO_SELF);
+                            animation.addListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationCancel(Animator animation) {
+                                    super.onAnimationCancel(animation);
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    txt_timer.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animation, boolean isReverse) {
+                                    txt_timer.setVisibility(View.GONE);
+                                }
+                            });
+                            animation.start();
 
                             if(fragimgcapture != null && (! fragimgcapture.isimagecaptureprocessing))
                                 fragimgcapture.takePicture();
@@ -713,6 +734,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 break;
         }
     }
+
 
     public void enableDisableView(View view, boolean enabled) {
         view.setEnabled(enabled);
