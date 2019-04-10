@@ -39,7 +39,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -61,7 +60,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.adapter.mediaqualityadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -460,9 +458,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         img_dotmenu.setVisibility(View.VISIBLE);
         textureview.setOnTouchListener(this);
-
-        common.setactionbarcolor(65,actionbar);
-
+        actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
         imgflashon.setOnClickListener(this);
         img_dotmenu.setOnClickListener(this);
         img_gpswifiwarning.setOnClickListener(this);
@@ -1206,7 +1202,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             if(validationbaranimation != null)
                 img_scanover.startAnimation(validationbaranimation);
 
-            actionbar.setBackgroundColor(Color.TRANSPARENT);
             if(madapterclick != null)
                 madapterclick.onItemClicked(null,1);
             showhideactionbaricon(0);
@@ -1222,9 +1217,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             validationbaranimation.cancel();
             validationbaranimation.reset();
         }
-
-       // actionbar.setBackgroundResource(R.drawable.gradient_fade_header_blue);
-        common.setactionbarcolor(65,actionbar);
         img_dotmenu.setVisibility(View.GONE);
         issavedtofolder=true;
         isvideorecording = false;

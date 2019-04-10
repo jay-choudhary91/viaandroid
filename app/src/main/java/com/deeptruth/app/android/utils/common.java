@@ -2337,11 +2337,10 @@ public class common {
         return true;
     };
 
-    public static void setactionbarcolor(int position, RelativeLayout actionbar){
-
-            String[] transparentarray=common.gettransparencyvalues();
-            String colorString="#"+transparentarray[position]+"004860";
-            actionbar.setBackgroundColor(Color.parseColor(colorString));
+    public static String getactionbarcolor()
+    {
+        String colorString="#"+common.gettransparencyvalues()[65]+"004860";
+        return colorString;
     }
 
     public static BitmapDescriptor bitmapdescriptorfromvector(Context context, int vectorResId) {

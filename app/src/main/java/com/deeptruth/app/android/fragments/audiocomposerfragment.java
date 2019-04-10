@@ -202,6 +202,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         loadffmpeglibrary();
         startnoise();
         txt_title_actionbarcomposer.setText(config.mediarecorderformat);
+        actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
 
         try {
             int bufferSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE,
@@ -590,7 +591,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         if(validationbaranimation != null)
             img_scanover.startAnimation(validationbaranimation);
 
-        actionbar.setBackgroundColor(Color.TRANSPARENT);
         mediarecorder = new MediaRecorder();
         mediarecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediarecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -817,8 +817,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             validationbaranimation.cancel();
             validationbaranimation.reset();
         }
-
-        actionbar.setBackgroundResource(R.drawable.gradient_fade_header_blue);
 
         try {
 

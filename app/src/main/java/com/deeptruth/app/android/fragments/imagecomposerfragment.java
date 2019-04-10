@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -505,8 +506,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
-        common.setactionbarcolor(65,actionbar);
-
+        actionbar.setBackgroundColor(Color.parseColor(common.getactionbarcolor()));
         timerhandler = new Handler() ;
         textureview.setOnTouchListener(this);
         imgflashon.setOnClickListener(this);
