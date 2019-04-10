@@ -206,45 +206,45 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
             scrollview_meta = (ScrollView) findViewById(R.id.scrollview_meta);
 
-          tvaddress.setTextColor(getResources().getColor(R.color.white));
-          tvlatitude.setTextColor(getResources().getColor(R.color.white));
-          tvlongitude.setTextColor(getResources().getColor(R.color.white));
-          tvaltitude.setTextColor(getResources().getColor(R.color.white));
-          tvspeed.setTextColor(getResources().getColor(R.color.white));
-          tvheading.setTextColor(getResources().getColor(R.color.white));
-          tvtraveled.setTextColor(getResources().getColor(R.color.white));
-          tvxaxis.setTextColor(getResources().getColor(R.color.white));
-          tvyaxis.setTextColor(getResources().getColor(R.color.white));
-          tvzaxis.setTextColor(getResources().getColor(R.color.white));
-          tvphone.setTextColor(getResources().getColor(R.color.white));
-          tvnetwork.setTextColor(getResources().getColor(R.color.white));
-          tvconnection.setTextColor(getResources().getColor(R.color.white));
-          tvversion.setTextColor(getResources().getColor(R.color.white));
-          tvwifi.setTextColor(getResources().getColor(R.color.white));
-          tvgpsaccuracy.setTextColor(getResources().getColor(R.color.white));
-          tvscreen.setTextColor(getResources().getColor(R.color.white));
-          tvcountry.setTextColor(getResources().getColor(R.color.white));
-          tvcpuusage.setTextColor(getResources().getColor(R.color.white));
-          tvbrightness.setTextColor(getResources().getColor(R.color.white));
-          tvtimezone.setTextColor(getResources().getColor(R.color.white));
-          tvmemoryusage.setTextColor(getResources().getColor(R.color.white));
-          tvbluetooth.setTextColor(getResources().getColor(R.color.white));
-          tvlocaltime.setTextColor(getResources().getColor(R.color.white));
-          tvstoragefree.setTextColor(getResources().getColor(R.color.white));
-          tvlanguage.setTextColor(getResources().getColor(R.color.white));
-          tvuptime.setTextColor(getResources().getColor(R.color.white));
-          tvbattery.setTextColor(getResources().getColor(R.color.white));
-          tvblockchainid.setTextColor(getResources().getColor(R.color.white));
-          tvblockid.setTextColor(getResources().getColor(R.color.white));
-          tvblocknumber.setTextColor(getResources().getColor(R.color.white));
-          tvmetahash.setTextColor(getResources().getColor(R.color.white));
-          tvlocationanalytics.setTextColor(getResources().getColor(R.color.white));
-          tvlocationtracking.setTextColor(getResources().getColor(R.color.white));
-          tvorientation.setTextColor(getResources().getColor(R.color.white));
-          tvPhoneanalytics.setTextColor(getResources().getColor(R.color.white));
-          tvencryption.setTextColor(getResources().getColor(R.color.white));
-          tvdataletency.setTextColor(getResources().getColor(R.color.white));
-          txtdegree.setTextColor(getResources().getColor(R.color.white));
+          tvaddress.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvlatitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvlongitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvaltitude.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvspeed.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvheading.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvtraveled.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvxaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvyaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvzaxis.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvphone.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvnetwork.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvconnection.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvversion.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvwifi.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvgpsaccuracy.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvscreen.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvcountry.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvcpuusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvbrightness.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvtimezone.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvmemoryusage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvbluetooth.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvlocaltime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvstoragefree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvlanguage.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvuptime.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvbattery.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvblockchainid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvblockid.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvblocknumber.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvmetahash.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvlocationanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvlocationtracking.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvorientation.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvPhoneanalytics.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvencryption.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          tvdataletency.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
+          txtdegree.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
 
             navigationbarheight =  common.getnavigationbarheight();
             setlayoutmargin();
@@ -355,7 +355,8 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 {
                     mgooglemap.addMarker(new MarkerOptions()
                             .position(latlng)
-                            .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),R.drawable.circle)));
+                            .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),
+                                    R.drawable.rounded_gps_dot)));
                 }
             }catch (Exception e)
             {
@@ -397,7 +398,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         if(! latitudedegree.isEmpty() && (! latitudedegree.equalsIgnoreCase("NA")))
         {
             String latitude = common.convertlatitude(Double.parseDouble(latitudedegree));
-            common.setdrawabledata(getResources().getString(R.string.latitude),"\n"+latitude, tvlatitude);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+latitude, tvlatitude);
         }
         else
         {
@@ -426,44 +427,44 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
             /**/
 
             common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+xdata.getinstance().getSetting(config.distancetravelled), tvtraveled);
-            common.setdrawabledata(getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)), tvspeed);
             if(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)).equalsIgnoreCase("NA")) {
-                common.setdrawabledata(getResources().getString(R.string.address),": "+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
+                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.address),": "+common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
             }else{ // remove "/n" from address
                 common.setdrawabledata("",common.getxdatavalue(xdata.getinstance().getSetting(config.Address)), tvaddress);
 
             }
-            common.setdrawabledata(getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
-            common.setdrawabledata(getResources().getString(R.string.yaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_y), tvyaxis);
-            common.setdrawabledata(getResources().getString(R.string.zaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_z), tvzaxis);
-            common.setdrawabledata(getResources().getString(R.string.phone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)), tvphone);
-            common.setdrawabledata(getResources().getString(R.string.network),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)), tvnetwork);
-            common.setdrawabledata(getResources().getString(R.string.connection),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)), tvconnection);
-            common.setdrawabledata(getResources().getString(R.string.version),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)), tvversion);
-            common.setdrawabledata(getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.xaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_x), tvxaxis);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.yaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_y), tvyaxis);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.zaxis),"\n"+xdata.getinstance().getSetting(config.acceleration_z), tvzaxis);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.phone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.PhoneType)), tvphone);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CellProvider)), tvnetwork);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Connectionspeed)), tvconnection);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.version),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.OSversion)), tvversion);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.WIFINetwork)), tvwifi);
             if(!common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)).equals("NA")){
                 DecimalFormat precision=new DecimalFormat("0.0");
                 double gpsaccuracy = Double.parseDouble(common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)));
-                common.setdrawabledata(getResources().getString(R.string.gpsaccuracy),"\n"+precision.format(gpsaccuracy)+ " feet", tvgpsaccuracy);
+                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),"\n"+precision.format(gpsaccuracy)+ " feet", tvgpsaccuracy);
             }else{
-                common.setdrawabledata(getResources().getString(R.string.gpsaccuracy),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)), tvgpsaccuracy);
+                common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.GPSAccuracy)), tvgpsaccuracy);
             }
-            common.setdrawabledata(getResources().getString(R.string.screen),"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight), tvscreen);
-            common.setdrawabledata(getResources().getString(R.string.country),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Country)), tvcountry);
-            common.setdrawabledata(getResources().getString(R.string.cpuusage),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
-            common.setdrawabledata(getResources().getString(R.string.brightness),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Brightness)), tvbrightness);
-            common.setdrawabledata(getResources().getString(R.string.timezone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.TimeZone)), tvtimezone);
-            common.setdrawabledata(getResources().getString(R.string.memoryusage),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
-            common.setdrawabledata(getResources().getString(R.string.bluetooth),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Bluetooth)), tvbluetooth);
-            common.setdrawabledata(getResources().getString(R.string.localtime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)), tvlocaltime);
-            common.setdrawabledata(getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
-            common.setdrawabledata(getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
-            common.setdrawabledata(getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
-            common.setdrawabledata(getResources().getString(R.string.battery),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
-            common.setdrawabledata(getResources().getString(R.string.blockchain_id)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
-            common.setdrawabledata(getResources().getString(R.string.block_id)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
-            common.setdrawabledata(getResources().getString(R.string.block_number), " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
-            common.setdrawabledata(getResources().getString(R.string.metrichash)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.screen),"\n"+xdata.getinstance().getSetting(config.ScreenWidth) +"*" +xdata.getinstance().getSetting(config.ScreenHeight), tvscreen);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.country),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Country)), tvcountry);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.cpuusage),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.CPUUsage)), tvcpuusage);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.brightness),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Brightness)), tvbrightness);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.TimeZone)), tvtimezone);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.memoryusage),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.MemoryUsage)), tvmemoryusage);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.bluetooth),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Bluetooth)), tvbluetooth);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.localtime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.LocalTime)), tvlocaltime);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.StorageAvailable)), tvstoragefree);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Language)), tvlanguage);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+ common.getxdatavalue(xdata.getinstance().getSetting(config.SystemUptime)), tvuptime);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.battery),"\n"+common.getxdatavalue(xdata.getinstance().getSetting(config.Battery)), tvbattery);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.blockchain_id)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.blockchainid)), tvblockchainid);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.block_id)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.hashformula)), tvblockid);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.block_number), " "+common.getxdatavalue(xdata.getinstance().getSetting(config.datahash)), tvblocknumber);
+            common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.metrichash)," "+common.getxdatavalue(xdata.getinstance().getSetting(config.matrichash)), tvmetahash);
 
             String latitude=xdata.getinstance().getSetting(config.Latitude);
             String longitude=xdata.getinstance().getSetting(config.Longitude);
@@ -498,11 +499,11 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
                     double heading=Double.parseDouble(strdegree);
                     int headingg=(int)heading;
-                    common.setdrawabledata(getResources().getString(R.string.heading),"\n"+headingg + "°" , tvheading);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+headingg + "°" , tvheading);
                 }
                 else
                 {
-                    common.setdrawabledata(getResources().getString(R.string.heading),"\n"+"NA", tvheading);
+                    common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"NA", tvheading);
                 }
 
             }
@@ -643,34 +644,34 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
 
     public void setmetadatavalue(){
 
-        common.setspannable(getResources().getString(R.string.latitude),"\n"+"N/A", tvlatitude);
-        common.setspannable(getResources().getString(R.string.longitude),"\n"+"N/A", tvlongitude);
-        common.setspannable(getResources().getString(R.string.altitude),"\n"+"N/A", tvaltitude);
-        common.setspannable(getResources().getString(R.string.speed),"\n"+"N/A", tvspeed);
-        common.setspannable(getResources().getString(R.string.heading),"\n"+"N/A", tvheading);
-        common.setspannable(getResources().getString(R.string.traveled),"\n"+"N/A", tvtraveled);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+"N/A", tvlatitude);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+"N/A", tvlongitude);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+"N/A", tvaltitude);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),"\n"+"N/A", tvspeed);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"N/A", tvheading);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+"N/A", tvtraveled);
         common.setspannable("","N/A", tvaddress);
-        common.setspannable(getResources().getString(R.string.xaxis),"\n"+"N/A", tvxaxis);
-        common.setspannable(getResources().getString(R.string.yaxis),"\n"+"N/A", tvyaxis);
-        common.setspannable(getResources().getString(R.string.zaxis),"\n"+"N/A", tvzaxis);
-        common.setspannable(getResources().getString(R.string.phone),"\n"+"N/A", tvphone);
-        common.setspannable(getResources().getString(R.string.network),"\n"+"N/A", tvnetwork);
-        common.setspannable(getResources().getString(R.string.connection),"\n"+"N/A", tvconnection);
-        common.setspannable(getResources().getString(R.string.version),"\n"+"N/A", tvversion);
-        common.setspannable(getResources().getString(R.string.wifi),"\n"+"N/A", tvwifi);
-        common.setspannable(getResources().getString(R.string.gpsaccuracy),"\n"+"N/A", tvgpsaccuracy);
-        common.setspannable(getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
-        common.setspannable(getResources().getString(R.string.country),"\n"+"N/A", tvcountry);
-        common.setspannable(getResources().getString(R.string.cpuusage),"\n"+"N/A", tvcpuusage);
-        common.setspannable(getResources().getString(R.string.brightness),"\n"+"N/A", tvbrightness);
-        common.setspannable(getResources().getString(R.string.timezone),"\n"+"N/A", tvtimezone);
-        common.setspannable(getResources().getString(R.string.memoryusage),"\n"+"N/A", tvmemoryusage);
-        common.setspannable(getResources().getString(R.string.bluetooth),"\n"+"N/A", tvbluetooth);
-        common.setspannable(getResources().getString(R.string.localtime),"\n"+"N/A", tvlocaltime);
-        common.setspannable(getResources().getString(R.string.storagefree),"\n"+"N/A", tvstoragefree);
-        common.setspannable(getResources().getString(R.string.language),"\n"+"N/A", tvlanguage);
-        common.setspannable(getResources().getString(R.string.uptime),"\n"+"N/A", tvuptime);
-        common.setspannable(getResources().getString(R.string.battery),"\n"+"N/A", tvbattery);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.xaxis),"\n"+"N/A", tvxaxis);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.yaxis),"\n"+"N/A", tvyaxis);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.zaxis),"\n"+"N/A", tvzaxis);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.phone),"\n"+"N/A", tvphone);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+"N/A", tvnetwork);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),"\n"+"N/A", tvconnection);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.version),"\n"+"N/A", tvversion);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+"N/A", tvwifi);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),"\n"+"N/A", tvgpsaccuracy);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.country),"\n"+"N/A", tvcountry);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.cpuusage),"\n"+"N/A", tvcpuusage);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.brightness),"\n"+"N/A", tvbrightness);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+"N/A", tvtimezone);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.memoryusage),"\n"+"N/A", tvmemoryusage);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.bluetooth),"\n"+"N/A", tvbluetooth);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.localtime),"\n"+"N/A", tvlocaltime);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+"N/A", tvstoragefree);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+"N/A", tvlanguage);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+"N/A", tvuptime);
+        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.battery),"\n"+"N/A", tvbattery);
 
     }
 
@@ -881,7 +882,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                     @Override
                     public void run() {
                         int heading = Math.round(event.values[0]);
-                        common.setdrawabledata(getResources().getString(R.string.heading),"\n"+heading +"° " , tvheading);
+                        common.setdrawabledata(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+heading +"° " , tvheading);
                         common.setdrawabledata("",+heading +"° " +common.getcompassdirection(heading) , txtdegree);
                     }
                 });

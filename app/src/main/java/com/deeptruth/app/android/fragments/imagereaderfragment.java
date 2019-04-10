@@ -1427,7 +1427,7 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             try {
                 mgooglemap.addMarker(new MarkerOptions()
                         .position(latlng)
-                        .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),R.drawable.circle)));
+                        .icon(common.bitmapdescriptorfromvector(applicationviavideocomposer.getactivity(),R.drawable.rounded_gps_dot)));
             }catch (Exception e)
             {
                 e.printStackTrace();
