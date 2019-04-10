@@ -113,7 +113,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     View rootview=null;
     int currentselectedcomposer=0,layoutbottomheight=0,layoutmediatypeheight=0;
-
+    int startrecorder=1,stoprecorder=2,fragmentswipe=3,updatemediathumbnail=4,adjustzoom=5;
     private int flingactionmindstvac,footerlayoutheight=0;
     private  final int flingactionmindspdvac = 100;
 
@@ -242,7 +242,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         if(mOrientation != null)
             mOrientation.stopListening();
 
-        composecallback(null,2);
+        composecallback(null,stoprecorder);
     }
 
     @Override
@@ -1018,7 +1018,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void composecallback(Object object,int type)
     {
-        if(type == 1) // for video record start,audio record start and image capture button click
+        if(type == startrecorder) // for video record start,audio record start and image capture button click
         {
             if(gifdrawable!= null && (! gifdrawable.isPlaying()))
                 gifdrawable.reset();
@@ -1034,16 +1034,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             }
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"true");
             startblinkencryption();
-            // setimagerecordstart();
         }
-        else if(type == 2) // for video record stop,audio record stop and image captured button click
+        else if(type == stoprecorder) // for video record stop,audio record stop and image captured button click
         {
             if(gifdrawable!= null && gifdrawable.isPlaying())
             {
                 gifdrawable.pause();
                 gifdrawable.seekTo(0);
             }
-
             if(currentselectedcomposer == 0)
             {
                 showhideactionbottombaricon(1);
@@ -1052,22 +1050,19 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             {
                 showhideactionbottombaricon(3);
             }
-
             changezoomcontrollerposition(0);
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
             stopblinkencryption();
         }
-        else if(type == 3) // For swipe gesture to change fragment
+        else if(type == fragmentswipe) // For swipe gesture to change fragment
         {
             if(object != null)
             {
                 MotionEvent motionevent=(MotionEvent)object;
                 flingswipegesture.onTouchEvent(motionevent);
-
             }
-
         }
-        else if(type == 4) // Back the fragment and navigate to media list
+        else if(type == updatemediathumbnail) // Back the fragment and navigate to media list
         {
             try {
                 config.selectedmediatype=currentselectedcomposer;
@@ -1078,25 +1073,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             getlatestthumbnailfromdirectory();
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
         }
-        else if(type == 5)
+        else if(type == adjustzoom)
         {
 
         }
-        else if(type == 6)
-        {
-
-        }
-        else if(type == 9)
-        {
-            layoutbottom.setVisibility(View.INVISIBLE);
-            layout_mediatype.setVisibility(View.GONE);
-        }
-        else if(type == 10)
-        {
-            layoutbottom.setVisibility(View.VISIBLE);
-            layout_mediatype.setVisibility(View.VISIBLE);
-        }
-
     }
 
     public void startblinkencryption()
@@ -1113,7 +1093,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     {
         if(blinkencryptionanimation != null)
             blinkencryptionanimation.cancel();
-
     }
 
     public void getlatestthumbnailfromdirectory()
@@ -1177,12 +1156,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             e.printStackTrace();
         }
-
     }
 
     public void setimagethumbnail()
     {
-        String mediapath="";
         img_mediathumbnail.setImageResource(0);
         img_mediathumbnail.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.transparent));
 
@@ -1231,14 +1208,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 into(img_mediathumbnail);
     }
 
-    public void setthumbnailimageplaceholder(int placeholder)
-    {
-        Glide.with(applicationviavideocomposer.getactivity()).
-                load(placeholder).
-                thumbnail(0.1f).
-                into(img_mediathumbnail);
-    }
-
     public void showhideactionbottombaricon(int i){
         if(i == 0){
             img_mediathumbnail.setVisibility(View.INVISIBLE);
@@ -1264,7 +1233,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             layout_encryption.setVisibility(View.INVISIBLE);
             img_mediathumbnail.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override
@@ -1332,10 +1300,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public void starttopbaranimation()
-    {
-
-    }
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
@@ -1345,7 +1309,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 try
                 {
                     if (motionEvent.getPointerCount() == 1)
-                        mitemclick.onItemClicked(motionEvent,3);
+                        mitemclick.onItemClicked(motionEvent,fragmentswipe);
 
                     return true;
                 } catch (Exception e) {
@@ -1357,7 +1321,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 try
                 {
                     if (motionEvent.getPointerCount() == 1)
-                        mitemclick.onItemClicked(motionEvent,3);
+                        mitemclick.onItemClicked(motionEvent,fragmentswipe);
 
                     return true;
                 } catch (Exception e) {
@@ -1368,12 +1332,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         return true;
     }
 
-    public void setfooterlayout(){
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
-            params.setMargins(0,0,0,navigationbarheight);
-            parentview.setLayoutParams(params);
+    public void setfooterlayout()
+    {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,TRUE);
+        params.setMargins(0,0,0,navigationbarheight);
+        parentview.setLayoutParams(params);
     }
 
     public void setactionbartransparency(int progress)
@@ -1382,14 +1346,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         layoutbottom.setBackgroundColor(Color.parseColor(colorString));
     }
 
-    private void makecircle() {
-
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius", 30.0f, 200.0f);
-
+    private void makecircle()
+    {
+        ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius", 30.0f, 200.0f);
         Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
         shiftAnimation.setTarget(mParent);
-
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(800);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
@@ -1397,20 +1358,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         iscircle = !iscircle;
     }
 
-    private void makesquare() {
-
-        ObjectAnimator cornerAnimation =
-                ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius",100f,10.0f);
-
+    private void makesquare()
+    {
+        ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius",100f,10.0f);
         Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
         shiftAnimation.setTarget(mParent);
-
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setDuration(800);
         animatorSet.playTogether(cornerAnimation, shiftAnimation);
         animatorSet.start();
         iscircle = !iscircle;
-
     }
-
 }
