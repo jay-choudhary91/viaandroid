@@ -2385,7 +2385,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 }
                 else
                 {
-                    value=getResources().getString(R.string.no_gps_wifi);
+                    value=value.concat(" & ") +getResources().getString(R.string.no_gps);
                 }
                 txt_weakgps.setText("");
             }
