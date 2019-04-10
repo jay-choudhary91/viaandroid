@@ -2789,7 +2789,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         {
             if(mediafilepath!=null)
             {
-                playpausebutton.setImageResource(R.drawable.pause);
+                playpausebutton.setImageResource(R.drawable.pausebutton);
                 player.start();
             }
         }
