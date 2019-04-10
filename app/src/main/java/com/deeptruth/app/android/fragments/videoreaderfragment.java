@@ -131,7 +131,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.widget.RelativeLayout.ABOVE;
 import static android.widget.RelativeLayout.TRUE;
 
 /**
@@ -1633,8 +1632,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         }
                     } else {
 
-                        if(player!= null && player.isPlaying())
+                        if(playpausebutton.getVisibility() == View.GONE ){
                             playpausebutton.setVisibility(View.VISIBLE);
+                        }else{
+                            playpausebutton.setVisibility(View.GONE);
+                        }
 
                         if(islastdragarrow){
                             return;
@@ -1642,7 +1644,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             gethelper().drawerenabledisable(false);
                             img_fullscreen.setVisibility(View.VISIBLE);
                             img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
-                            playpausebutton.setVisibility(View.VISIBLE);
+                            //playpausebutton.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.GONE);
                         }
                     }
@@ -1664,10 +1666,8 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                             imgpause.setVisibility(View.VISIBLE);
                             gethelper().drawerenabledisable(true);
-                            layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                            layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                            layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
                             getcontrollerheight();
+                            backgroundcolor();
                         }
                         playpausebutton.setVisibility(View.GONE);
                         start();
@@ -1727,20 +1727,31 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         setheadermargin(0,0,(rootviewheight-navigationbarheight),true);
         layout_videodetails.setVisibility(View.GONE);
         scrollview_detail.setVisibility(View.GONE);
+        layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
         scrollview_meta.setVisibility(View.GONE);
         scrollView_encyrption.setVisibility(View.GONE);
         tab_layout.setVisibility(View.GONE);
-        //updatetextureviewsize(targetwidth,targetheight);
         layout_mediatype.setVisibility(View.VISIBLE);
         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-        playpausebutton.setVisibility(View.VISIBLE);
-        imgpause.setVisibility(View.GONE);
         setbottomimgview();
-        img_fullscreen.setVisibility(View.VISIBLE);
-        img_fullscreen.setImageResource(R.drawable.ic_info_mode);
         videodownwordarrow.setVisibility(View.GONE);
         rl_video_downwordarrow.setVisibility(View.GONE);
         islastdragarrow =false;
+        if(player.isPlaying()){
+            img_fullscreen.setVisibility(View.GONE);
+            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+            backgroundcolor();
+            layoutpause.setVisibility(View.VISIBLE);
+            imgpause.setVisibility(View.VISIBLE);
+            imgpause.setImageResource(R.drawable.ic_pause);
+            playpausebutton.setVisibility(View.GONE);
+        }else{
+            img_fullscreen.setVisibility(View.VISIBLE);
+            img_fullscreen.setImageResource(R.drawable.ic_info_mode);
+            layoutpause.setVisibility(View.GONE);
+            imgpause.setVisibility(View.GONE);
+            playpausebutton.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -3362,6 +3373,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 gethelper().setdrawerheightonfullscreen(controllerheight);
             }
         });
+    }
+
+    public void backgroundcolor(){
+        layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+        layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+        layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
     }
 }
 

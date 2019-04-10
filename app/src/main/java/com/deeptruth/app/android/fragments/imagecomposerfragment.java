@@ -594,19 +594,27 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     }
 
 
-    public void setzoomcontrollermargin(int bottommargin)
+    public void setzoomcontrollermargin(final int bottommargin)
     {
         if(layout_seekbarzoom != null && bottommargin > 0)
         {
-            RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            layoutparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
-            layoutparams.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
-            layoutparams.setMargins(0,0,0,bottommargin);
-            layout_seekbarzoom.setLayoutParams(layoutparams);
-            layout_seekbarzoom.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.post(new Runnable() {
+                @Override
+                public void run() {
+                    int layout_seekbarzoomheight= layout_seekbarzoom.getHeight();
+
+                    RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    layoutparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
+                    layoutparams.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
+                    layoutparams.setMargins(0,0,0,(bottommargin +(layout_seekbarzoomheight)/2));
+                    layout_seekbarzoom.setLayoutParams(layoutparams);
+                    layout_seekbarzoom.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
+
 
     public void setqualitydropdown()
     {

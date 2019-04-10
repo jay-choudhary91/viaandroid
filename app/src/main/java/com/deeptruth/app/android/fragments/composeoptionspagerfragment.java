@@ -1,11 +1,16 @@
 package com.deeptruth.app.android.fragments;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -92,6 +97,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_space_b;
     @BindView(R.id.txt_encrypting)
     TextView txt_encrypting;
+    @BindView(R.id.base_view)
+    ViewGroup mParent;
+
 
     @BindView(R.id.layout_encryption)
     RelativeLayout layout_encryption;
@@ -130,6 +138,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     private adaptercomposemediatype centersnapadapter;
     private Date initialdate;
     private String[] transparentarray=common.gettransparencyvalues();
+    GradientDrawable gradientDrawablebutton;
+    private volatile boolean iscircle = true;
 
     @Override
     public int getlayoutid() {
@@ -146,7 +156,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        if(rootview==null) {
+        if(rootview==null) {/* gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
+                gifdrawable.setLoopCount(0);
+                gifdrawable.setSpeed(1.0f);
+                recordstartstopbutton.setImageDrawable(gifdrawable);
+                recordstartstopbutton.setAlpha(0f);
+                recordstartstopbutton.animate().alpha(1.0f).setDuration(100).setListener(null);
+                gifdrawable.pause();
+                gifdrawable.seekTo(0);*/
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
 
@@ -165,14 +182,16 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             setactionbartransparency(65);
 
             try {
-                gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
+
+
+               /* gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
                 gifdrawable.setLoopCount(0);
                 gifdrawable.setSpeed(1.0f);
                 recordstartstopbutton.setImageDrawable(gifdrawable);
                 recordstartstopbutton.setAlpha(0f);
                 recordstartstopbutton.animate().alpha(1.0f).setDuration(100).setListener(null);
                 gifdrawable.pause();
-                gifdrawable.seekTo(0);
+                gifdrawable.seekTo(0);*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -200,7 +219,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             });
 
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
+
+
+            gradientDrawablebutton = new GradientDrawable();
+            gradientDrawablebutton.setCornerRadius(360.0f);
+            gradientDrawablebutton.setShape(GradientDrawable.RECTANGLE);
+            mParent.setBackground(gradientDrawablebutton);
+
         }
+
         return rootview;
     }
 
@@ -603,6 +630,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 if(currentselectedcomposer == 0)
                 {
+
+                    if (iscircle) {
+                        makesquare();
+                    }
+                    else {
+                        makecircle();
+                    }
+
+
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
                 }
@@ -632,6 +668,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 {
 
                     try {
+
+                        if (iscircle) {
+                            makesquare();
+                        }
+                        else {
+                            makecircle();
+                        }
+
+
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();
                     }catch (Exception e)
@@ -931,7 +976,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 int newheight=0;
                 if(layout_mediatype.getVisibility() == View.VISIBLE)
                 {
-                    newheight=footerlayoutheight +60;
+                    newheight=footerlayoutheight+30;
                 }
                 else
                 {
@@ -1314,4 +1359,36 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         String colorString="#"+transparentarray[progress]+"004860";
         layoutbottom.setBackgroundColor(Color.parseColor(colorString));
     }
+
+    private void makecircle() {
+
+        ObjectAnimator cornerAnimation =
+                ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius", 30.0f, 200.0f);
+
+        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_right_down);
+        shiftAnimation.setTarget(mParent);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(800);
+        animatorSet.playTogether(cornerAnimation, shiftAnimation);
+        animatorSet.start();
+        iscircle = !iscircle;
+    }
+
+    private void makesquare() {
+
+        ObjectAnimator cornerAnimation =
+                ObjectAnimator.ofFloat(gradientDrawablebutton, "cornerRadius",100f,10.0f);
+
+        Animator shiftAnimation = AnimatorInflater.loadAnimator(getActivity(), R.animator.slide_left_up);
+        shiftAnimation.setTarget(mParent);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(800);
+        animatorSet.playTogether(cornerAnimation, shiftAnimation);
+        animatorSet.start();
+        iscircle = !iscircle;
+
+    }
+
 }

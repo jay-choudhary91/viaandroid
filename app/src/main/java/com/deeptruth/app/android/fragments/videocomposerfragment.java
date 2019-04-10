@@ -604,20 +604,25 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     {
         if(layout_seekbarzoom != null && bottommargin > 0)
         {
+            layout_seekbarzoom.post(new Runnable() {
+                @Override
+                public void run() {
+                    int layout_seekbarzoomheight= layout_seekbarzoom.getHeight();
 
-            RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT);
-            layoutparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
-            layoutparams.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
+                    RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                            RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    layoutparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
+                    layoutparams.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
 
-            if(isvideorecording){
-                layoutparams.setMargins(0,0,0,(bottommargin + 10));
-            }else{
-                layoutparams.setMargins(0,0,0,(bottommargin));
-            }
-            layout_seekbarzoom.setLayoutParams(layoutparams);
-            layout_seekbarzoom.setVisibility(View.VISIBLE);
-
+                    if(isvideorecording){
+                        layoutparams.setMargins(0,0,0,bottommargin + 20);
+                    }else{
+                        layoutparams.setMargins(0,0,0,(bottommargin +(layout_seekbarzoomheight)/2));
+                    }
+                    layout_seekbarzoom.setLayoutParams(layoutparams);
+                    layout_seekbarzoom.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
     public void setqualitydropdown()
@@ -718,7 +723,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        img_dotmenu.setVisibility(View.VISIBLE);
+                        img_dotmenu.setVisibility(View.GONE);
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
