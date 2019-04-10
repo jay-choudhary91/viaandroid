@@ -628,6 +628,12 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
 
                 break;
             case R.id.img_share_media:
+                if(! gethelper().isuserlogin())
+                {
+                    gethelper().redirecttologin();
+                    return;
+                }
+
                 img_share_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
@@ -789,36 +795,6 @@ public class imagereaderfragment extends basefragment implements View.OnClickLis
             Drawable drawable3 = (Drawable) view3.getBackground();
             drawable3.setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.MULTIPLY);
             view3.setTextColor(ContextCompat.getColor(getActivity(),R.color.blue));
-
-        }
-    }
-
-    @Override
-    public void onHeaderBtnClick(int btnid) {
-        super.onHeaderBtnClick(btnid);
-        switch (btnid) {
-            case R.id.img_share_icon:
-                img_share_media.setEnabled(false);
-                new Handler().postDelayed(new Runnable()
-                {
-                    public void run()
-                    {
-                        img_share_media.setEnabled(true);
-                    }
-                }, 2000);
-                if (imageurl != null && (!imageurl.isEmpty()))
-                    common.shareimage(getActivity(), imageurl);
-                break;
-            case R.id.img_upload_icon:
-
-                break;
-            case R.id.img_setting:
-                framemetricssettings fragmatriclist = new framemetricssettings();
-                gethelper().replaceFragment(fragmatriclist, false, true);
-                break;
-            case R.id.img_menu:
-                gethelper().onBack();
-                break;
 
         }
     }

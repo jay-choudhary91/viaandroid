@@ -1502,6 +1502,11 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     {
         if(type == 1)   // Media shairing
         {
+            if(! gethelper().isuserlogin())
+            {
+                gethelper().redirecttologin();
+                return;
+            }
             if(videoobj.getmimetype().startsWith("image")){
                 Uri uri= FileProvider.getUriForFile(applicationviavideocomposer.getactivity(),
                         BuildConfig.APPLICATION_ID + ".provider", new File(videoobj.getPath()));

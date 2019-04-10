@@ -817,6 +817,12 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
                 break;
             case R.id.img_share_media:
+                if(! gethelper().isuserlogin())
+                {
+                    gethelper().redirecttologin();
+                    return;
+                }
+
                 img_share_media.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
@@ -1384,25 +1390,6 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
         if(player != null && player.isPlaying()){
                 player.pause();
                 playpausebutton.setImageResource(R.drawable.play_btn);
-        }
-    }
-
-    @Override
-    public void onHeaderBtnClick(int btnid) {
-        super.onHeaderBtnClick(btnid);
-        switch (btnid){
-            case R.id.img_share_icon:
-                if(audiourl != null && (! audiourl.isEmpty()))
-                    common.shareaudio(getActivity(), audiourl);
-                break;
-            case R.id.img_menu:
-
-                gethelper().onBack();
-
-                break;
-            case R.id.img_setting:
-
-                break;
         }
     }
 

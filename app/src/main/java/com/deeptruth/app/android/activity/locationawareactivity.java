@@ -296,6 +296,20 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     }
 
     @Override
+    public boolean isuserlogin() {
+        if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public void redirecttologin() {
+        Intent intent=new Intent(locationawareactivity.this,signinactivity.class);
+        startActivity(intent);
+    }
+
+    @Override
     public void onOrientationChanged(float[] adjustedRotationMatrix, float[] orientation) {
         if(adjustedRotationMatrix != null && adjustedRotationMatrix.length > 0)
         {

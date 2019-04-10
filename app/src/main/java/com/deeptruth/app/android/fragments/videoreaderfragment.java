@@ -1496,11 +1496,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     imn.toggleSoftInput(InputMethodManager.SHOW_FORCED, 1);
                     break;
                 case R.id.img_share_media:
-                            img_share_media.setEnabled(false);
-                            new Handler().postDelayed(new Runnable()
-                            {
-                                public void run()
-                                {
+                    if(! gethelper().isuserlogin())
+                    {
+                        gethelper().redirecttologin();
+                        return;
+                    }
+
+                    img_share_media.setEnabled(false);
+                    new Handler().postDelayed(new Runnable()
+                    {
+                        public void run()
+                        {
                             img_share_media.setEnabled(true);
                         }
                     }, 1500);
@@ -2269,26 +2275,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         }
     };
-
-
-    @Override
-    public void onHeaderBtnClick(int btnid) {
-        super.onHeaderBtnClick(btnid);
-        switch (btnid){
-            case R.id.img_share_icon:
-                if(mediafilepath != null && (! mediafilepath.isEmpty()))
-                    common.sharevideo(getActivity(), mediafilepath);
-                break;
-            case R.id.img_menu:
-                gethelper().onBack();
-                break;
-            case R.id.img_setting:
-              //  destroyvideoplayer();
-                framemetricssettings fragmatriclist=new framemetricssettings();
-                gethelper().replaceFragment(fragmatriclist, false, true);
-                break;
-        }
-    }
 
     public void setupVideoPlayer(final Uri selecteduri)
     {

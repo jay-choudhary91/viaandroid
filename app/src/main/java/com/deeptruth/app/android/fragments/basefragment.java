@@ -284,6 +284,8 @@ public abstract class basefragment extends Fragment {
         public void hidedrawerbutton(boolean enable);
 
         public void setwindowfitxy(boolean isfullscreen);
+        public boolean isuserlogin();
+        public void redirecttologin();
 
         public ArrayList<metricmodel> getmetricarraylist();
         public void setrecordingrunning(boolean toggle);
