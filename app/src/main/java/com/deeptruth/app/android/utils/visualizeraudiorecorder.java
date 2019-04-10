@@ -34,6 +34,7 @@ public class visualizeraudiorecorder extends View {
     private int height; // height of this View
     private Paint linePaint; // specifies line drawing characteristics
     private Context context;
+    private boolean iscolorchange=false;
 
     // constructor
     public visualizeraudiorecorder(Context context, AttributeSet attrs) {
@@ -44,7 +45,7 @@ public class visualizeraudiorecorder extends View {
         LINE_SCALE=common.convertDpToPixel(8,context);
         linePaint.setAlpha(255);
         linePaint.setStrokeWidth(LINE_WIDTH); // set stroke width
-        linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        //linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         linePaint.setPathEffect(new DashPathEffect(new float[]{LINE_WIDTH,5},5));
         // If we don't render in software mode, the dotted line becomes a solid line.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -89,18 +90,34 @@ public class visualizeraudiorecorder extends View {
             float scaledHeight = power / LINE_SCALE; // scale the power
             curX += LINE_WIDTH+2; // increase X by LINE_WIDTH
 
-            Shader shader = new LinearGradient(curX, middle + scaledHeight / 1, curX, middle
-                    - scaledHeight / 1, new int[]{
-                    ContextCompat.getColor(context, R.color.dark_blue_solid),
-                    ContextCompat.getColor(context, R.color.wave_pink),
-                    ContextCompat.getColor(context, R.color.white),
-                    ContextCompat.getColor(context, R.color.wave_pink),
-                    ContextCompat.getColor(context, R.color.dark_blue_solid)},new float[]{0.2f,0.4f,0.5f,0.6f,0.8f}, Shader.TileMode.MIRROR /*or REPEAT*/);
-            linePaint.setShader(shader);
+            if(iscolorchange)
+            {
+                Shader shader = new LinearGradient(curX, middle + scaledHeight / 1, curX, middle
+                        - scaledHeight / 1, new int[]{
+                        ContextCompat.getColor(context, R.color.visualizer_primary),
+                        ContextCompat.getColor(context, R.color.visualizer_primary),
+                        ContextCompat.getColor(context, R.color.visualizer_primary),
+                        ContextCompat.getColor(context, R.color.visualizer_primary),
+                        ContextCompat.getColor(context, R.color.visualizer_primary)},new float[]{0.2f,0.4f,0.5f,0.6f,0.8f}, Shader.TileMode.MIRROR /*or REPEAT*/);
+                linePaint.setShader(shader);
+                iscolorchange=false;
+            }
+            else
+            {
+                Shader shader = new LinearGradient(curX, middle + scaledHeight / 1, curX, middle
+                        - scaledHeight / 1, new int[]{
+                        ContextCompat.getColor(context, R.color.visualizer_secondary),
+                        ContextCompat.getColor(context, R.color.visualizer_secondary),
+                        ContextCompat.getColor(context, R.color.visualizer_secondary),
+                        ContextCompat.getColor(context, R.color.visualizer_secondary),
+                        ContextCompat.getColor(context, R.color.visualizer_secondary)},new float[]{0.2f,0.4f,0.5f,0.6f,0.8f}, Shader.TileMode.MIRROR /*or REPEAT*/);
+                linePaint.setShader(shader);
+                iscolorchange=true;
+            }
+
             //linePaint.setPathEffect(new DashPathEffect(new float[] {5,5}, 5));
             // draw a line representing this item in the amplitudes ArrayList
-            canvas.drawLine(curX, middle + scaledHeight / 1, curX, middle
-                    - scaledHeight / 1, linePaint);
+            canvas.drawLine(curX, middle + scaledHeight / 1, curX, middle- scaledHeight / 1, linePaint);
 
         }
     }
