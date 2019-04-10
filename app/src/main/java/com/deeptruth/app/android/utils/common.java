@@ -2091,7 +2091,6 @@ public class common {
                 "8A","87","85","82","80","7D","7A","78","75","73","70","6E","6B","69","66","63","61","5E","5C","59","57","54","52",
                 "4F","4D","4A","47","45","42","40","3D","3B","38","36","33","30","2E","2B","29","26","24","21","1F","1C",
                 "1A","17","14","12","0F","0D","0A","08","05","03","00"};
-        Log.e("array size"," "+values.length);
         return values;
     }
 
@@ -2131,21 +2130,13 @@ public class common {
 
     public static int getnavigationbarheight(){
         Resources resources = applicationviavideocomposer.getactivity().getResources();
-
         boolean value  = hasNavBar(resources);
-
-        Log.e("anvegationbar done",""+value);
-
-
         if (value){
             int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
             return resources.getDimensionPixelSize(resourceId);
-
         }else{
             return 0;
         }
-
-
     }
 
     public static boolean hasNavBar (Resources resources)
