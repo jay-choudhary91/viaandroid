@@ -429,6 +429,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
         linearLayout=rootview.findViewById(R.id.content);
+        layout_seekbarzoom.setVisibility(View.INVISIBLE);
 
         gethelper().drawerenabledisable(true);
         gethelper().setdatacomposing(true);
@@ -613,12 +614,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                             RelativeLayout.LayoutParams.WRAP_CONTENT);
                     layoutparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
                     layoutparams.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
-
-                    if(isvideorecording){
-                        layoutparams.setMargins(0,0,0,bottommargin + 20);
-                    }else{
-                        layoutparams.setMargins(0,0,0,(bottommargin +(layout_seekbarzoomheight)/2));
-                    }
+                    layoutparams.setMargins(0,0,0,(bottommargin +(layout_seekbarzoomheight/2)));
                     layout_seekbarzoom.setLayoutParams(layoutparams);
                     layout_seekbarzoom.setVisibility(View.VISIBLE);
                 }
