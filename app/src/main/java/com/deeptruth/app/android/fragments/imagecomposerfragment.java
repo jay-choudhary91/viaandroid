@@ -21,7 +21,6 @@ import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.CamcorderProfile;
 import android.media.Image;
 import android.media.ImageReader;
 import android.os.Bundle;
@@ -49,7 +48,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
-import com.deeptruth.app.android.adapter.mediaqualityadapter;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
@@ -95,8 +93,6 @@ import butterknife.ButterKnife;
 
 public class imagecomposerfragment extends basefragment  implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback,View.OnTouchListener{
 
-    @BindView(R.id.layout_seekbarzoom)
-    RelativeLayout layout_seekbarzoom;
     @BindView(R.id.spinner_mediaquality)
     Spinner spinner_mediaquality;
     @BindView(R.id.expandable_layout)
@@ -111,15 +107,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     TextView txt_media_high;
     @BindView(R.id.txt_media_quality)
     TextView txt_media_quality;
-    @BindView(R.id.txt_zoomlevel)
-    TextView txt_zoomlevel;
     @BindView(R.id.linear_header)
     LinearLayout linearheader;
     @BindView(R.id.actionbar)
     RelativeLayout actionbar;
-
-    mediaqualityadapter qualityadapter;
-    List<String> qualityitemslist=new ArrayList<>();
 
     /**
      * ID of the current {@link CameraDevice}.
@@ -514,7 +505,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
-        layout_seekbarzoom.setVisibility(View.INVISIBLE);
         common.setactionbarcolor(65,actionbar);
 
         timerhandler = new Handler() ;
@@ -526,7 +516,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         txt_media_low.setOnClickListener(this);
         txt_media_medium.setOnClickListener(this);
         txt_media_high.setOnClickListener(this);
-        txt_zoomlevel.setOnClickListener(this);
 
         img_dotmenu.setVisibility(View.VISIBLE);
         imgflashon.setVisibility(View.VISIBLE);
@@ -594,48 +583,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         return rootview;
     }
 
-
-    public void setzoomcontrollermargin(final int bottommargin)
-    {
-        if(layout_seekbarzoom != null && bottommargin > 0)
-        {
-            layout_seekbarzoom.post(new Runnable() {
-                @Override
-                public void run() {
-
-
-                    int layout_seekbarzoomheight= layout_seekbarzoom.getHeight();
-
-                    RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                            RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    layoutparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
-                    layoutparams.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
-                    layoutparams.setMargins(0,0,0,(bottommargin +(layout_seekbarzoomheight)/2));
-                    layout_seekbarzoom.setLayoutParams(layoutparams);
-                    layout_seekbarzoom.setVisibility(View.VISIBLE);
-                }
-            });
-        }
-    }
-
-    public void setqualitydropdown()
-    {
-        qualityitemslist.clear();
-        qualityadapter.notifyDataSetChanged();
-
-        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P))
-            qualityitemslist.add(config.mediaquality480);
-
-        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P))
-            qualityitemslist.add(config.mediaquality720);
-
-        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_1080P))
-            qualityitemslist.add(config.mediaquality1080);
-
-        qualityadapter.notifyDataSetChanged();
-
-    }
-
     public void changeiconsorientation(float angle)
     {
         rotationangle=(int)angle;
@@ -650,9 +597,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
 
         if(txt_media_quality != null)
             txt_media_quality.setRotation(angle);
-
-        if(txt_zoomlevel != null)
-            txt_zoomlevel.setRotation(angle);
     }
 
 
@@ -1294,7 +1238,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                             madapterclick.onItemClicked(null,4);
 
                         zoomLevel=1.0f;
-                        txt_zoomlevel.setText(zoomLevel+" x");
+                        if(madapterclick != null)
+                            madapterclick.onItemClicked(""+zoomLevel+" x",5);
 
                         unlockfocus();
                     } catch (FileNotFoundException e) {
@@ -1475,15 +1420,17 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             case R.id.img_flash:
                 camraflashonoff();
                 break;
-
-            case R.id.txt_zoomlevel:
-                zoomLevel++;
-                if(zoomLevel > maximumzoomlevel)
-                    zoomLevel=1f;
-
-                setupcamerazoom();
-                break;
         }
+    }
+
+    public void adjustzoom()
+    {
+        zoomLevel++;
+
+        if(zoomLevel > maximumzoomlevel)
+            zoomLevel=1f;
+
+        applycamerazoom();
     }
 
     public void getselectedmetrics(ArrayList<metricmodel> mlocalarraylist)
@@ -1572,9 +1519,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
                                 }
                                 zoomLevel = zoomLevel - delta;
                             }
-                            setupcamerazoom();
-                            //seekbarzoom.setProgress(zoomLevel);
-                            fadeinzoomcontrollers();
+                            applycamerazoom();
 
                         }
                         fingerSpacing = currentFingerSpacing;
@@ -1593,10 +1538,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         return true;
     }
 
-    public void setupcamerazoom()
+    public void applycamerazoom()
     {
         DecimalFormat precision=new DecimalFormat("0.0");
-        txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
+        if(madapterclick != null)
+            madapterclick.onItemClicked(""+precision.format(zoomLevel)+" x",5);
 
         Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
         float ratio = (float) 1 / zoomLevel;
@@ -1615,17 +1561,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void fadeinzoomcontrollers()
-    {
-        if(layout_seekbarzoom.getVisibility() == View.GONE)
-        {
-            layout_seekbarzoom.setAlpha(layout_seekbarzoom.getAlpha());
-            layout_seekbarzoom.setVisibility(View.VISIBLE);
-            layout_seekbarzoom.animate().alpha(1.0f).setDuration(500).setListener(null);
-        }
-    }
-
-    /**
+    /*
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
     private class ImageSaver implements Runnable {
@@ -1775,7 +1711,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
         zoomLevel=1.0f;
         DecimalFormat precision=new DecimalFormat("0.0");
-        txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
+        if(madapterclick != null)
+            madapterclick.onItemClicked(""+precision.format(zoomLevel)+" x",5);
     }
 
     public void reopenCamera() {
@@ -1798,11 +1735,9 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         if(isshow){
             layoutbottom.setVisibility(View.GONE);
             linearheader.setVisibility(View.GONE);
-            layout_seekbarzoom.setVisibility(View.GONE);
         }else{
             layoutbottom.setVisibility(View.VISIBLE);
             linearheader.setVisibility(View.VISIBLE);
-            layout_seekbarzoom.setVisibility(View.VISIBLE);
         }
     }
 }

@@ -357,8 +357,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     private ActionBarDrawerToggle drawertoggle;
     @BindView(R.id.header_container)
     RotateLayout headercontainer;
-    @BindView(R.id.layout_seekbarzoom)
-    RelativeLayout layout_seekbarzoom;
     @BindView(R.id.img_roundblink)
     ImageView img_roundblink;
     @BindView(R.id.spinner_mediaquality)
@@ -373,8 +371,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_media_medium;
     @BindView(R.id.txt_media_high)
     TextView txt_media_high;
-    @BindView(R.id.txt_zoomlevel)
-    TextView txt_zoomlevel;
     @BindView(R.id.layout_no_gps_wifi)
     RotateLayout layout_no_gps_wifi;
     @BindView(R.id.img_scanover)
@@ -397,7 +393,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     TextView txt_no_gps_wifi;
 
     Animation blinkanimation;
-    mediaqualityadapter qualityadapter;
     List<String> qualityitemslist=new ArrayList<>();
     private TranslateAnimation validationbaranimation;
 
@@ -429,7 +424,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         txt_media_quality = (TextView) rootview.findViewById(R.id.txt_media_quality);
         linearLayout=rootview.findViewById(R.id.content);
-        layout_seekbarzoom.setVisibility(View.INVISIBLE);
 
         gethelper().drawerenabledisable(true);
         gethelper().setdatacomposing(true);
@@ -476,7 +470,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_media_low.setOnClickListener(this);
         txt_media_medium.setOnClickListener(this);
         txt_media_high.setOnClickListener(this);
-        txt_zoomlevel.setOnClickListener(this);
 
         txt_media_medium.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.yellow_background));
         expandable_layout.setVisibility(View.VISIBLE);
@@ -601,44 +594,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return rootview;
     }
 
-    public void setzoomcontrollermargin(final int bottommargin)
-    {
-        if(layout_seekbarzoom != null && bottommargin > 0)
-        {
-            layout_seekbarzoom.post(new Runnable() {
-                @Override
-                public void run() {
-                    int layout_seekbarzoomheight= layout_seekbarzoom.getHeight();
-
-                    RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                            RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    layoutparams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
-                    layoutparams.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
-                    layoutparams.setMargins(0,0,0,(bottommargin +(layout_seekbarzoomheight/2)));
-                    layout_seekbarzoom.setLayoutParams(layoutparams);
-                    layout_seekbarzoom.setVisibility(View.VISIBLE);
-                }
-            });
-        }
-    }
-    public void setqualitydropdown()
-    {
-        qualityitemslist.clear();
-        qualityadapter.notifyDataSetChanged();
-
-        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P))
-            qualityitemslist.add(config.mediaquality480);
-
-        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P))
-            qualityitemslist.add(config.mediaquality720);
-
-        if(CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_1080P))
-            qualityitemslist.add(config.mediaquality1080);
-
-        qualityadapter.notifyDataSetChanged();
-
-    }
-
     public void startblinkanimation()
     {
         img_roundblink.setVisibility(View.VISIBLE);
@@ -700,8 +655,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(null,lpimgflashon,layout_bottom.getHeight(),0,0,0,0,0,0,0,imgflashon,null,null,0);
                         setvalidatingtext();
 
-                        if(txt_zoomlevel != null)
-                            txt_zoomlevel.setRotation(rotateangle);
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
                 }
@@ -732,8 +685,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(warninglayoutparams,null,0,0,layout_bottom.getHeight(),0,0,0,0,0,img_gpswifiwarning,null,null,0);
                         setdynamiclayout(warninglayoutparams,null,0,0,layout_bottom.getHeight(),0,0,0,0,0,img_close,null,null,0);
 
-                        if(txt_zoomlevel != null)
-                            txt_zoomlevel.setRotation(rotateangle);
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -767,9 +718,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
 
                         setvalidatingtext();
-                        if(txt_zoomlevel != null)
-                            txt_zoomlevel.setRotation(rotateangle);
-
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -814,7 +762,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                                 }
                                 zoomLevel = zoomLevel - delta;
                             }
-                            setupcamerazoom();
+                            applycamerazoom();
                         }
                         fingerspacing = currentFingerSpacing;
                     }
@@ -835,29 +783,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
         return true;
     }
-
-    public void setupcamerazoom()
-    {
-        DecimalFormat precision=new DecimalFormat("0.0");
-        txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
-
-        Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
-        float ratio = (float) 1 / zoomLevel;
-        int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
-        int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
-        zoom = new Rect(croppedWidth/2, croppedHeight/2,
-                rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
-        Log.e("rectzoom level ",""+zoom+" "+zoomLevel+" "+ maximumzoomlevel);
-
-        previewbuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
-        try {
-            previewsession.setRepeatingRequest(previewbuilder.build(), null, backgroundhandler);
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * In this sample, we choose a video size with 3x4 aspect ratio. Also, we don't use sizes larger
@@ -1372,23 +1297,46 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         Intent intent = new Intent(config.broadcast_medialistnewitem);
         applicationviavideocomposer.getactivity().sendBroadcast(intent);
     }
+
+    public void adjustzoom()
+    {
+        zoomLevel++;
+
+        if(zoomLevel > maximumzoomlevel)
+            zoomLevel=1f;
+
+        applycamerazoom();
+    }
+
+    public void applycamerazoom()
+    {
+        DecimalFormat precision=new DecimalFormat("0.0");
+        if(madapterclick != null)
+            madapterclick.onItemClicked(""+precision.format(zoomLevel)+" x",5);
+
+        Rect rect = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+        float ratio = (float) 1 / zoomLevel;
+        int croppedWidth = rect.width() - Math.round((float)rect.width() * ratio);
+        int croppedHeight = rect.height() - Math.round((float)rect.height() * ratio);
+        zoom = new Rect(croppedWidth/2, croppedHeight/2,
+                rect.width() - croppedWidth/2, rect.height() - croppedHeight/2);
+        Log.e("rectzoom level ",""+zoom+" "+zoomLevel+" "+ maximumzoomlevel);
+
+        previewbuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+        try {
+            previewsession.setRepeatingRequest(previewbuilder.build(), null, backgroundhandler);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
             case R.id.img_flash:
                 navigateflash();
-                break;
-
-            case R.id.txt_zoomlevel:
-
-                zoomLevel++;
-
-                if(zoomLevel > maximumzoomlevel)
-                    zoomLevel=1f;
-
-                setupcamerazoom();
-
                 break;
 
             case R.id.txt_media_low:
@@ -2286,7 +2234,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
         zoomLevel=1.0f;
         DecimalFormat precision=new DecimalFormat("0.0");
-        txt_zoomlevel.setText(precision.format(zoomLevel)+" x");
+        if(madapterclick != null)
+            madapterclick.onItemClicked(""+precision.format(zoomLevel)+" x",5);
     }
 
     public void reopenCamera() {
@@ -2315,11 +2264,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(isshow){
             layout_bottom.setVisibility(View.GONE);
             headercontainer.setVisibility(View.GONE);
-            layout_seekbarzoom.setVisibility(View.GONE);
         }else{
             layout_bottom.setVisibility(View.VISIBLE);
             headercontainer.setVisibility(View.VISIBLE);
-            layout_seekbarzoom.setVisibility(View.VISIBLE);
         }
     }
 

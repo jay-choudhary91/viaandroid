@@ -54,18 +54,6 @@
                 <include layout="@layout/action_bar_composer"></include>
             </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/layout_seekbarzoom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:visibility="invisible"
-            android:orientation="vertical">
-
-            <include layout="@layout/layout_seekbarzoom_level"></include>
-
-        </RelativeLayout>
-
     </RelativeLayout>
 
 </RelativeLayout>

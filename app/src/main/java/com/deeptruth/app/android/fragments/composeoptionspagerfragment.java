@@ -72,8 +72,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @BindView(R.id.txt_timer)
     TextView txt_timer;
 
-    @BindView(R.id.img_video_capture)
-    ImageView recordstartstopbutton;
+    @BindView(R.id.layout_recorder)
+    RelativeLayout layout_recorder;
     @BindView(R.id.img_rotate_camera)
     ImageView imgrotatecamera;
     @BindView(R.id.layout_bottom)
@@ -100,7 +100,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     TextView txt_encrypting;
     @BindView(R.id.base_view)
     ViewGroup mParent;
-
+    @BindView(R.id.layout_seekbarzoom)
+    RelativeLayout layout_seekbarzoom;
+    @BindView(R.id.txt_zoomlevel)
+    TextView txt_zoomlevel;
 
     @BindView(R.id.layout_encryption)
     RelativeLayout layout_encryption;
@@ -170,7 +173,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             ButterKnife.bind(this, rootview);
 
             initialdate =new Date();
-            recordstartstopbutton.setOnClickListener(this);
+            txt_zoomlevel.setOnClickListener(this);
+            layout_recorder.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
             txt_mediatype_a.setOnClickListener(this);
@@ -607,6 +611,17 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     public void onClick(View view) {
         switch (view.getId())
         {
+            case R.id.txt_zoomlevel:
+                if(currentselectedcomposer == 0 && fragvideocomposer != null)
+                {
+                    fragvideocomposer.adjustzoom();
+                }
+                else if(currentselectedcomposer == 1  && fragimgcapture != null)
+                {
+                    fragimgcapture.adjustzoom();
+                }
+
+                break;
             case R.id.txt_mediatype_a:
                 currentselectedcomposer=0;
                 showselectedfragment();
@@ -620,13 +635,13 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 showselectedfragment();
                 break;
 
-            case R.id.img_video_capture:
-                recordstartstopbutton.setEnabled(false);
+            case R.id.layout_recorder:
+                layout_recorder.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
                 {
                     public void run()
                     {
-                        recordstartstopbutton.setEnabled(true);
+                        layout_recorder.setEnabled(true);
                     }
                 }, 1000);
 
@@ -891,6 +906,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     public void showselectedfragment()
     {
         xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
+        txt_zoomlevel.setText("1.0 x");
         switch (currentselectedcomposer)
         {
             case 0:
@@ -901,6 +917,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     resizebottomtab(txt_space_b,0,parentviewwidth/5);
 
                 imgrotatecamera.setVisibility(View.VISIBLE);
+                layout_seekbarzoom.setVisibility(View.VISIBLE);
                 resetbuttonviews(txt_mediatype_a,txt_mediatype_b,txt_mediatype_c);
                 showhideactionbottombaricon(1);
                 if(fragvideocomposer == null)
@@ -908,7 +925,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 fragvideocomposer.setData(false, mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
-                changezoomcontrollerposition(0);
             break;
 
             case 1:
@@ -919,6 +935,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     resizebottomtab(txt_space_b,0,parentviewwidth/5);
 
                 imgrotatecamera.setVisibility(View.VISIBLE);
+                layout_seekbarzoom.setVisibility(View.VISIBLE);
                 resetbuttonviews(txt_mediatype_b,txt_mediatype_a,txt_mediatype_c);
                 showhideactionbottombaricon(1);
                 if(fragimgcapture == null)
@@ -926,7 +943,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 fragimgcapture.setData(mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
-                changezoomcontrollerposition(0);
             break;
 
             case 2:
@@ -937,6 +953,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     resizebottomtab(txt_space_b,parentviewwidth/5,0);
 
                 imgrotatecamera.setVisibility(View.GONE);
+                layout_seekbarzoom.setVisibility(View.GONE);
                 resetbuttonviews(txt_mediatype_c,txt_mediatype_a,txt_mediatype_b);
                 showhideactionbottombaricon(3);
                 if(fragaudiocomposer == null)
@@ -990,32 +1007,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     };
 
-    public void changezoomcontrollerposition(long timemillis)
-    {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int newheight=0;
-                if(layout_mediatype.getVisibility() == View.VISIBLE)
-                {
-                    newheight=footerlayoutheight + 20;
-                }
-                else
-                {
-                    newheight=footerlayoutheight - (layoutmediatypeheight + (int)getResources().getDimension(R.dimen.margin_10dp));
-                }
-
-                if(fragvideocomposer != null)
-                    fragvideocomposer.setzoomcontrollermargin(newheight);
-
-
-                if(fragimgcapture != null)
-                    fragimgcapture.setzoomcontrollermargin(newheight);
-            }
-        },timemillis);
-
-    }
-
     public void composecallback(Object object,int type)
     {
         if(type == startrecorder) // for video record start,audio record start and image capture button click
@@ -1026,7 +1017,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             if(currentselectedcomposer == 0)
             {
                 showhideactionbottombaricon(0);
-                changezoomcontrollerposition(0);
             }
             else if(currentselectedcomposer == 2)
             {
@@ -1050,7 +1040,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             {
                 showhideactionbottombaricon(3);
             }
-            changezoomcontrollerposition(0);
             xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
             stopblinkencryption();
         }
@@ -1075,7 +1064,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(type == adjustzoom)
         {
-
+            txt_zoomlevel.setText(object.toString());
         }
     }
 
@@ -1274,12 +1263,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
             if(txt_encrypting != null)
             {
-                if( fragvideocomposer != null && !fragvideocomposer.isvideorecording){
+                if( fragvideocomposer != null && (! fragvideocomposer.isvideorecording)){
                     layout_encryption.setRotation(rotateangle);
+                    layout_seekbarzoom.setRotation(rotateangle);
                 }
 
                 if(fragaudiocomposer != null && currentselectedcomposer == 2)
                     layout_encryption.setRotation(rotateangle);
+                    layout_seekbarzoom.setRotation(rotateangle);
             }
 
             if(imgrotatecamera != null)
