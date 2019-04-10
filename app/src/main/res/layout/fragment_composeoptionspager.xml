@@ -36,7 +36,6 @@
         android:visibility="visible"
         android:padding="@dimen/margin_5dp"
         android:background="@color/translucent_dark_blue_solid"
-        android:animateLayoutChanges="true"
         >
         <RelativeLayout
             android:id="@+id/layout_mediatype"
