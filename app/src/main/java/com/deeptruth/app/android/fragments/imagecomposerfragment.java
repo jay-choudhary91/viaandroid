@@ -514,6 +514,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         img_stop_watch = (ImageView) rootview.findViewById(R.id.img_stop_watch);
         txt_title_actionbarcomposer = (TextView) rootview.findViewById(R.id.txt_title_actionbarcomposer);
         linearLayout=rootview.findViewById(R.id.content);
+        layout_seekbarzoom.setVisibility(View.INVISIBLE);
         common.setactionbarcolor(65,actionbar);
 
         timerhandler = new Handler() ;
@@ -601,6 +602,8 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             layout_seekbarzoom.post(new Runnable() {
                 @Override
                 public void run() {
+
+
                     int layout_seekbarzoomheight= layout_seekbarzoom.getHeight();
 
                     RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -614,7 +617,6 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
             });
         }
     }
-
 
     public void setqualitydropdown()
     {

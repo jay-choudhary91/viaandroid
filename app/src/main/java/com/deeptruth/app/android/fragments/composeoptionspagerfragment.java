@@ -886,7 +886,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 fragvideocomposer.setData(false, mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
-                changezoomcontrollerposition(1000);
+                changezoomcontrollerposition(0);
             break;
 
             case 1:
@@ -904,7 +904,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 fragimgcapture.setData(mitemclick,layoutbottom);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
-                changezoomcontrollerposition(1000);
+                changezoomcontrollerposition(0);
             break;
 
             case 2:
@@ -976,11 +976,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 int newheight=0;
                 if(layout_mediatype.getVisibility() == View.VISIBLE)
                 {
-                    newheight=footerlayoutheight+30;
+                    newheight=footerlayoutheight + 20;
                 }
                 else
                 {
-                    newheight=footerlayoutheight-layoutmediatypeheight;
+                    newheight=footerlayoutheight - (layoutmediatypeheight + (int)getResources().getDimension(R.dimen.margin_10dp));
                 }
 
                 if(fragvideocomposer != null)
