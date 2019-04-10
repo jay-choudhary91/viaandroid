@@ -39,6 +39,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -2363,21 +2364,37 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void visibleconnection(){
         if(isvideorecording) {
-            if (layout_no_gps_wifi != null) {
-                Log.e("gpsvalue",""+xdata.getinstance().getSetting(config.GPSAccuracy));
-                if ((common.isnetworkconnected(getActivity()) == false) && (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))) {
-                    txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                    txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps_wifi));
-                } else {
-                    if ((common.isnetworkconnected(getActivity()) == false)) {
-                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_internet));
-                    } else if (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")) {
-                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps));
-                    }
+              String value = "";
+            if(! common.isnetworkconnected(getActivity()))
+            {
+                value=getResources().getString(R.string.no_internet);
+                if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
+                        || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA")
+                        ||xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") )
+                {
+                    value=getResources().getString(R.string.no_network);
                 }
             }
+
+            if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+            {
+
+                if(value.isEmpty())
+                {
+                    value=getResources().getString(R.string.no_gps);
+                }
+                else
+                {
+                    value=getResources().getString(R.string.no_gps_wifi);
+                }
+                txt_weakgps.setText("");
+            }
+            else
+            {
+                checkgpsaccuracy();
+            }
+            txt_no_gps_wifi.setVisibility(View.VISIBLE);
+            txt_no_gps_wifi.setText(value);
         }
     }
     public void checkgpsaccuracy(){
