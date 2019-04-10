@@ -39,6 +39,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -646,11 +647,13 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
                         setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,90);
 
-                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        img_dotmenu.setVisibility(View.GONE);
+                        /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         img_dotmenu.setVisibility(View.GONE);
-                        setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
+                        setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);*/
 
+                        txt_no_gps_wifi.setPadding(layout_bottom.getHeight(),0,0,0);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,layout_bottom.getHeight(),0,0,0,0,0,0,0,imgflashon,null,null,0);
                         setvalidatingtext();
@@ -670,16 +673,18 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
                         setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,270);
 
-                        RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        img_dotmenu.setVisibility(View.GONE);
+                        /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         lpimg_dotmenu.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                         img_dotmenu.setVisibility(View.GONE);
-                        setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
+                        setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);*/
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
 
                         // set validating text to right padding
                         txt_section_validating_secondary.setPadding(0,0,layout_bottom.getHeight(),0);
+                        txt_weakgps.setPadding(0,0,layout_bottom.getHeight(),0);
                         RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(83, 69);
                         warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
                         setdynamiclayout(warninglayoutparams,null,0,0,layout_bottom.getHeight(),0,0,0,0,0,img_gpswifiwarning,null,null,0);
@@ -714,6 +719,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         img_dotmenu.setVisibility(View.VISIBLE);
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);
 
+                        txt_weakgps.setPadding(0,0,20,0);
+                        txt_no_gps_wifi.setPadding(20,0,0,0);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
 
@@ -2251,7 +2258,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
         }else{
             txt_title_actionbarcomposer.setText(config.mediarecorderformat);
-            img_dotmenu.setVisibility(View.VISIBLE);
+            img_dotmenu.setVisibility(View.GONE);
             txt_media_quality.setVisibility(View.VISIBLE);
         }
 
@@ -2300,21 +2307,37 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
     public void visibleconnection(){
         if(isvideorecording) {
-            if (layout_no_gps_wifi != null) {
-                Log.e("gpsvalue",""+xdata.getinstance().getSetting(config.GPSAccuracy));
-                if ((common.isnetworkconnected(getActivity()) == false) && (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))) {
-                    txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                    txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps_wifi));
-                } else {
-                    if ((common.isnetworkconnected(getActivity()) == false)) {
-                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_internet));
-                    } else if (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")) {
-                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps));
-                    }
+              String value = "";
+            if(! common.isnetworkconnected(getActivity()))
+            {
+                value=getResources().getString(R.string.no_internet);
+                if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
+                        || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA")
+                        ||xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") )
+                {
+                    value=getResources().getString(R.string.no_network);
                 }
             }
+
+            if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+            {
+
+                if(value.isEmpty())
+                {
+                    value=getResources().getString(R.string.no_gps);
+                }
+                else
+                {
+                    value=value.concat(" & ") +getResources().getString(R.string.no_gps);
+                }
+                txt_weakgps.setText("");
+            }
+            else
+            {
+                checkgpsaccuracy();
+            }
+            txt_no_gps_wifi.setVisibility(View.VISIBLE);
+            txt_no_gps_wifi.setText(value);
         }
     }
     public void checkgpsaccuracy(){
@@ -2339,9 +2362,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         }
     }
     public void setvalidatingtext(){
-        txt_section_validating_secondary.setPadding(0,0,0,0);
+        txt_section_validating_secondary.setPadding(0,0,20,0);
             RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(83, 69);
-            warninglayoutparams.setMargins(0,0,40,0);
+            warninglayoutparams.setMargins(0,0,20,0);
             warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
             img_gpswifiwarning.setLayoutParams(warninglayoutparams);
             img_close.setLayoutParams(warninglayoutparams);

@@ -18,5 +18,17 @@
     <dimen name="margin_30dp">30dp</dimen>
     <dimen name="margin_40dp">40dp</dimen>
     <dimen name="margin_50dp">50dp</dimen>
+    <dimen name="textsize1sp">1sp</dimen>
+    <dimen name="textsize2sp">2sp</dimen>
+    <dimen name="textsize3sp">3sp</dimen>
+    <dimen name="textsize4sp">4sp</dimen>
+    <dimen name="textsize5sp">5sp</dimen>
+    <dimen name="textsize6sp">6sp</dimen>
+    <dimen name="textsize7sp">7sp</dimen>
+    <dimen name="textsize8sp">8sp</dimen>
+    <dimen name="textsize9sp">9sp</dimen>
+    <dimen name="textsize10sp">10sp</dimen>
+    <dimen name="textsize11sp">11sp</dimen>
+    <dimen name="textsize12sp">12sp</dimen>
 
 </resources>

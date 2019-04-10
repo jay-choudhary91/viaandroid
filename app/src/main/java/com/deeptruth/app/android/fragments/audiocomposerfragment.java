@@ -1267,7 +1267,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                             if(gradient != null)
                                 img_scanover.setBackground(gradient);
                                 visibleconnection();
-                                checkgpsaccuracy();
                             if(img_close.getVisibility() != View.VISIBLE)
                             {
                                 img_gpswifiwarning.setVisibility(View.VISIBLE);
@@ -1514,21 +1513,37 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
 
     public void visibleconnection(){
         if(isaudiorecording) {
-            if (layout_no_gps_wifi != null) {
-                txt_encrypting.setVisibility(View.GONE);
-                if ((common.isnetworkconnected(getActivity()) == false) && (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))) {
-                    txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                    txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps_wifi));
-                } else {
-                    if ((common.isnetworkconnected(getActivity()) == false)) {
-                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_internet));
-                    } else if (xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0")) {
-                        txt_no_gps_wifi.setVisibility(View.VISIBLE);
-                        txt_no_gps_wifi.setText(getResources().getString(R.string.no_gps));
-                    }
+            String value = "";
+            if(! common.isnetworkconnected(getActivity()))
+            {
+                value=getResources().getString(R.string.no_internet);
+                if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
+                        || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA")
+                        ||xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") )
+                {
+                    value=getResources().getString(R.string.no_network);
                 }
             }
+
+            if(xdata.getinstance().getSetting("gpsenabled").equalsIgnoreCase("0"))
+            {
+
+                if(value.isEmpty())
+                {
+                    value=getResources().getString(R.string.no_gps);
+                }
+                else
+                {
+                    value=value.concat(" & ") +getResources().getString(R.string.no_gps);
+                }
+                txt_weakgps.setText("");
+            }
+            else
+            {
+                checkgpsaccuracy();
+            }
+            txt_no_gps_wifi.setVisibility(View.VISIBLE);
+            txt_no_gps_wifi.setText(value);
         }
     }
     public void checkgpsaccuracy(){
