@@ -334,7 +334,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
-    RelativeLayout layout_bottom;
+    RelativeLayout layout_bottom,layout_seekbarzoom;
     File lastrecordedvideo=null;
     String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
@@ -1463,10 +1463,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom) {
+    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom,RelativeLayout layout_seekbarzoom) {
         this.autostartvideo = autostartvideo;
         this.madapterclick = madapterclick;
         this.layout_bottom = layout_bottom;
+        this.layout_seekbarzoom = layout_seekbarzoom;
     }
 
     public static Fragment newInstance()
@@ -2263,9 +2264,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(isshow){
             layout_bottom.setVisibility(View.GONE);
             headercontainer.setVisibility(View.GONE);
+            layout_seekbarzoom.setVisibility(View.GONE);
         }else{
             layout_bottom.setVisibility(View.VISIBLE);
             headercontainer.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.setVisibility(View.VISIBLE);
         }
     }
 
