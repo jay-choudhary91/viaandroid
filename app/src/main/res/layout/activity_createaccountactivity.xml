@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_below="@+id/actionbar_createaccount"
             android:layout_marginTop="@dimen/margin_50dp"
+            android:id="@+id/layout_userdeatils"
             android:layout_height="match_parent">
 
             <com.deeptruth.app.android.views.customfontedittext

@@ -926,7 +926,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
 
-                fragvideocomposer.setData(false, mitemclick,layoutbottom);
+                fragvideocomposer.setData(false, mitemclick,layoutbottom,layout_seekbarzoom);
                 gethelper().replacetabfragment(fragvideocomposer,false,true);
             break;
 
@@ -944,7 +944,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
 
-                fragimgcapture.setData(mitemclick,layoutbottom);
+                fragimgcapture.setData(mitemclick,layoutbottom,layout_seekbarzoom);
                 gethelper().replacetabfragment(fragimgcapture,false,true);
             break;
 

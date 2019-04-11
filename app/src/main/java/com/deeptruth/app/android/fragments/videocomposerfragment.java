@@ -336,7 +336,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
-    RelativeLayout layout_bottom;
+    RelativeLayout layout_bottom,layout_seekbarzoom;
     File lastrecordedvideo=null;
     String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
@@ -524,41 +524,19 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
         });
 
-        final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
-        alphanimation.setDuration(1000); //You can manage the time of the blink with this parameter
-        alphanimation.setStartOffset(1000);
-        alphanimation.setRepeatMode(1);
-
         final AlphaAnimation fadeout_animation = new AlphaAnimation(1.0f, 0.0f);
-        fadeout_animation.setDuration(1000); //You can manage the time of the blink with this parameter
-        fadeout_animation.setStartOffset(1000);
+        fadeout_animation.setDuration(2000); //You can manage the time of the blink with this parameter
+        //fadeout_animation.setStartOffset(3500);
         fadeout_animation.setRepeatMode(1);
 
-        Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                txt_section_validating_secondary.startAnimation(fadeout_animation);
-                //fadeoutcontrollers();
-            }
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        };
-        alphanimation.setAnimationListener(alphalistener);
         Animation.AnimationListener fadeoutlistener=new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
+            public void onAnimationStart(Animation animation)
+            {
 
             }
             @Override
             public void onAnimationEnd(Animation animation) {
-                txt_section_validating_secondary.startAnimation(alphanimation);
-                //fadeoutcontrollers();
             }
             @Override
             public void onAnimationRepeat(Animation animation) {
@@ -567,9 +545,32 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         };
         fadeout_animation.setAnimationListener(fadeoutlistener);
 
+
+        final AlphaAnimation fadein_animation = new AlphaAnimation(0.0f, 1.0f);
+        fadein_animation.setDuration(1000); //You can manage the time of the blink with this parameter
+        //fadein_animation.setStartOffset(1000);
+        fadein_animation.setRepeatMode(1);
+
+        Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                 txt_section_validating_secondary.startAnimation(fadeout_animation);
+                //fadeoutcontrollers();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        };
+        fadein_animation.setAnimationListener(alphalistener);
+
         validationbaranimation = new TranslateAnimation(-common.getScreenHeight(applicationviavideocomposer.getactivity()),
                 common.getScreenHeight(applicationviavideocomposer.getactivity())+100 ,0.0f, 0.0f);
-        validationbaranimation.setDuration(4000);
+        validationbaranimation.setDuration(6000);
         validationbaranimation.setRepeatCount(Animation.INFINITE);
         validationbaranimation.setRepeatMode(ValueAnimator.RESTART);
         img_scanover.startAnimation(validationbaranimation);
@@ -577,14 +578,17 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         Animation.AnimationListener translatelistener=new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                txt_section_validating_secondary.startAnimation(alphanimation);
+                fadein_animation.setStartOffset(3000);
+                txt_section_validating_secondary.startAnimation(fadein_animation);
             }
             @Override
             public void onAnimationEnd(Animation animation) {
+
             }
             @Override
             public void onAnimationRepeat(Animation animation) {
-             //   txt_section_validating_secondary.startAnimation(alphanimation);
+                fadein_animation.setStartOffset(3000);
+                txt_section_validating_secondary.startAnimation(fadein_animation);
             }
         };
         validationbaranimation.setAnimationListener(translatelistener);
@@ -1471,10 +1475,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom) {
+    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom,RelativeLayout layout_seekbarzoom) {
         this.autostartvideo = autostartvideo;
         this.madapterclick = madapterclick;
         this.layout_bottom = layout_bottom;
+        this.layout_seekbarzoom = layout_seekbarzoom;
     }
 
     public static Fragment newInstance()
@@ -2271,9 +2276,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(isshow){
             layout_bottom.setVisibility(View.GONE);
             headercontainer.setVisibility(View.GONE);
+            layout_seekbarzoom.setVisibility(View.GONE);
         }else{
             layout_bottom.setVisibility(View.VISIBLE);
             headercontainer.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.setVisibility(View.VISIBLE);
         }
     }
 
