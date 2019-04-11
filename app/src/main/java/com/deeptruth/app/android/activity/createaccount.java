@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
     MaskedEditText edt_phonenumber;
     @BindView(R.id.txt_submit)
     TextView txt_submit;
+    @BindView(R.id.layout_userdeatils)
+    RelativeLayout layout_userdeatils;
 
     @Override
     protected void onUserLeaveHint() {
@@ -63,6 +66,7 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                 return false;
             }
         });
+        layout_userdeatils.setOnClickListener(this);
     }
 
     @Override
@@ -70,6 +74,9 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
         switch (v.getId()){
             case R.id.txt_submit:
                 checkValidations();
+                break;
+            case R.id.layout_userdeatils:
+                hidekeyboard();
                 break;
         }
     }

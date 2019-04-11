@@ -35,11 +35,11 @@ public class registrationbaseactivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+       /* getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR,WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR);
 
-        mHomeWatcher = new homewatcher(this);
+*/        mHomeWatcher = new homewatcher(this);
         mHomeWatcher.setOnHomePressedListener(new homepressedlistener() {
             @Override
             public void onHomePressed() {

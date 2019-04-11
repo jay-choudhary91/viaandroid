@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +38,13 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
     TextView txt_createaccount;
     @BindView(R.id.forgot_password)
     TextView txt_forgotpassword;
+    @BindView(R.id.rootview)
+    ScrollView rootview;
+    @BindView(R.id.layout_image)
+    LinearLayout layout_image;
+    @BindView(R.id.layout_logindetails)
+    LinearLayout layout_logindetails;
+    int rootviewheight,imageviewheight,userloginheight;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,27 +52,55 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
         setContentView(R.layout.activity_loginactivity);
         ButterKnife.bind(this);
 
+        rootview.post(new Runnable() {
+            @Override
+            public void run() {
+                rootviewheight = rootview.getHeight();
+                imageviewheight = ((rootviewheight *55)/100);
+                layout_image.getLayoutParams().height = imageviewheight;
+                layout_image.setVisibility(View.VISIBLE);
+                layout_image.requestLayout();
+
+                userloginheight = (rootviewheight -imageviewheight);
+                layout_logindetails.getLayoutParams().height = userloginheight;
+                layout_logindetails.setVisibility(View.VISIBLE);
+                layout_logindetails.requestLayout();
+
+
+            }
+        });
+
         txt_login.setOnClickListener(this);
         txt_createaccount.setOnClickListener(this);
         txt_forgotpassword.setOnClickListener(this);
+        rootview.setOnClickListener(this);
+        layout_logindetails.setOnClickListener(this);
+        layout_image.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View view) {
-       switch (view.getId()){
-           case R.id.login :
-               isvalidated();
-               break;
-           case R.id.createaccount:
-               Intent intent=new Intent(signinactivity.this,createaccount.class);
-               startActivity(intent);
-               break;
-           case R.id.forgot_password:
-               intent = new Intent(signinactivity.this, forgotpassword.class);
-               startActivity(intent);
-               break;
+        switch (view.getId()){
+            case R.id.login :
+                isvalidated();
+                break;
+            case R.id.createaccount:
+                Intent intent=new Intent(signinactivity.this,createaccount.class);
+                startActivity(intent);
+                break;
+            case R.id.forgot_password:
+                intent = new Intent(signinactivity.this, forgotpassword.class);
+                startActivity(intent);
+                break;
+            case R.id.layout_image:
+                hidekeyboard();
+                break;
+            case R.id.layout_logindetails:
+                hidekeyboard();
+                break;
 
-       }
+        }
     }
     public void login()
     {

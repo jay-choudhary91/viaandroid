@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
@@ -28,6 +29,8 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
     customfontedittext edtusername;
     @BindView(R.id.tv_next)
     customfonttextview tv_next;
+    @BindView(R.id.layout_forgotpass)
+    RelativeLayout layout_forgotpass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
         setContentView(R.layout.activity_forgotpassword);
         ButterKnife.bind(forgotpassword.this);
         tv_next.setOnClickListener(this);
+        layout_forgotpass.setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +52,10 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
                     Intent  intent = new Intent(forgotpassword.this,changepassword.class);
                     startActivity(intent);
                 }
+                break;
+
+            case R.id.layout_forgotpass:
+                hidekeyboard();
                 break;
         }
     }
