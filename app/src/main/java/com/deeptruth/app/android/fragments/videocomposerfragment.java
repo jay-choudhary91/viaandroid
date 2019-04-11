@@ -103,6 +103,8 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.widget.RelativeLayout.TRUE;
+
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener, Orientation.Listener {
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -639,13 +641,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     if(!isvideorecording)
                     {
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, common.getscreenwidthheight(50));
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        setdynamiclayout(lp,null,0,common.getscreenwidthheight(25),0,common.getscreenwidthheight(25),0,0,0,0,null,headercontainer,null,90);
+                        lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,90);
 
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
-                        setdynamiclayout(layoutparams,null,0,common.getscreenwidthheight(25),0,common.getscreenwidthheight(25),0,0,0,0,null,null,layout_no_gps_wifi,90);
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, common.getscreenwidthheight(50));
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, TRUE);
+                        layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,90);
 
                         img_dotmenu.setVisibility(View.GONE);
                         /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -665,13 +669,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     if(!isvideorecording)
                     {
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        setdynamiclayout(lp,null,0,common.getscreenwidthheight(25),0,common.getscreenwidthheight(25),0,0,0,0,null,headercontainer,null,270);
 
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-                        setdynamiclayout(layoutparams,null,0,common.getscreenwidthheight(25),0,common.getscreenwidthheight(25),0,0,0,0,null,null,layout_no_gps_wifi,270);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, common.getscreenwidthheight(50));
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+                        lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,270);
+
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, common.getscreenwidthheight(50));
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+                        layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,270);
 
                         img_dotmenu.setVisibility(View.GONE);
                         /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -687,7 +694,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         txt_weakgps.setPadding(0,0,(int) getResources().getDimension(R.dimen.margin_10dp),0);
 
                         RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(83, 69);
-                        warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+                        warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
                         setdynamiclayout(warninglayoutparams,null,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,img_gpswifiwarning,null,null,0);
                         setdynamiclayout(warninglayoutparams,null,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,img_close,null,null,0);
 
@@ -712,7 +719,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,(int)rotateangle);
 
                         RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP, TRUE);
                         setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,(int)rotateangle);
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -2291,12 +2298,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 imageView.setPadding(paddingleft,paddingtop,paddingright,paddingbottom);
             }
             if(rotationheadercontainer != null){
-                relativelayoutparams.setMargins(marginleft,margintop,marginright,marginbottom);
                 rotationheadercontainer.setLayoutParams(relativelayoutparams);
                 rotationheadercontainer.setAngle(rotationangle);
 
             }else if(rotationwifilayout!= null){
-                relativelayoutparams.setMargins(marginleft,margintop,marginright,marginbottom);
                 rotationwifilayout.setLayoutParams(relativelayoutparams);
                 rotationwifilayout.setAngle(rotationangle);
             }
@@ -2367,7 +2372,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         txt_section_validating_secondary.setPadding(0,0,20,0);
             RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(83, 69);
             warninglayoutparams.setMargins(0,0,20,0);
-            warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
+            warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
             img_gpswifiwarning.setLayoutParams(warninglayoutparams);
             img_close.setLayoutParams(warninglayoutparams);
     }
