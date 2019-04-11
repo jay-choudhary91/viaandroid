@@ -2097,11 +2097,11 @@ public class common {
     public static GradientDrawable getyelloradargradient()
     {
         // a hexadecimal color string to an integer value (int color)
-        int[] colors = {Color.parseColor("#14FDD012"),
+        int[] colors = {Color.parseColor("#00FDD012"),Color.parseColor("#00FDD012"),Color.parseColor("#14FDD012"),
                 Color.parseColor("#4AFDD012"),Color.parseColor("#85FDD012"),Color.parseColor("#C2FDD012"),
                 Color.parseColor("#FFFDD012"),
                 Color.parseColor("#C2FDD012"),Color.parseColor("#85FDD012"),Color.parseColor("#4AFDD012"),
-                Color.parseColor("#14FDD012")};
+                Color.parseColor("#14FDD012"),Color.parseColor("#00FDD012"),Color.parseColor("#00FDD012")};
 
         //create a new gradient color
         GradientDrawable gd = new GradientDrawable(
@@ -2114,11 +2114,11 @@ public class common {
     public static GradientDrawable getblueradargradient()
     {
         // a hexadecimal color string to an integer value (int color)
-        int[] colors = {Color.parseColor("#14004860"),
+        int[] colors = {Color.parseColor("#00FDD012"),Color.parseColor("#00FDD012"),Color.parseColor("#14004860"),
                 Color.parseColor("#4A004860"),Color.parseColor("#85004860"),Color.parseColor("#C2004860"),
                 Color.parseColor("#FF004860"),
                 Color.parseColor("#C2004860"),Color.parseColor("#85004860"),Color.parseColor("#4A004860"),
-                Color.parseColor("#14004860")};
+                Color.parseColor("#14004860"),Color.parseColor("#00FDD012"),Color.parseColor("#00FDD012")};
 
         //create a new gradient color
         GradientDrawable gd = new GradientDrawable(
