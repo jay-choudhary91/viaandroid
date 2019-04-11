@@ -2250,6 +2250,10 @@ public class common {
         return px / ((float) context.getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
+
+
+
+
     public static boolean isdeviceinportraitmode(Context mContext)
     {
         Display display = ((WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -2350,6 +2354,17 @@ public class common {
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    public static int getscreenwidthheight(int percentage){
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        applicationviavideocomposer.getactivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        int percentageheight = (height / 100) * percentage;
+
+        return percentageheight;
     }
 }
 
