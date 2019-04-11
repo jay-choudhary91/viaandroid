@@ -74,8 +74,6 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
         txt_createaccount.setOnClickListener(this);
         txt_forgotpassword.setOnClickListener(this);
         rootview.setOnClickListener(this);
-        layout_logindetails.setOnClickListener(this);
-        layout_image.setOnClickListener(this);
 
     }
 
@@ -93,13 +91,6 @@ public class signinactivity extends registrationbaseactivity implements View.OnC
                 intent = new Intent(signinactivity.this, forgotpassword.class);
                 startActivity(intent);
                 break;
-            case R.id.layout_image:
-                hidekeyboard();
-                break;
-            case R.id.layout_logindetails:
-                hidekeyboard();
-                break;
-
         }
     }
     public void login()

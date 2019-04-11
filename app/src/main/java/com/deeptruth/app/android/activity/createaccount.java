@@ -66,17 +66,13 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                 return false;
             }
         });
-        layout_userdeatils.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.txt_submit:
                 checkValidations();
-                break;
-            case R.id.layout_userdeatils:
-                hidekeyboard();
                 break;
         }
     }

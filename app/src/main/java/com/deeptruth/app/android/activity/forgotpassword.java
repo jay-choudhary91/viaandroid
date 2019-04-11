@@ -38,7 +38,6 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
         setContentView(R.layout.activity_forgotpassword);
         ButterKnife.bind(forgotpassword.this);
         tv_next.setOnClickListener(this);
-        layout_forgotpass.setOnClickListener(this);
     }
 
     @Override
@@ -52,10 +51,6 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
                     Intent  intent = new Intent(forgotpassword.this,changepassword.class);
                     startActivity(intent);
                 }
-                break;
-
-            case R.id.layout_forgotpass:
-                hidekeyboard();
                 break;
         }
     }
