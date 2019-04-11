@@ -57,7 +57,7 @@ public class splashactivity extends Activity {
                 else
                 {
 
-                   /* if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
+                    if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty() || xdata.getinstance().getSetting(config.enableintroscreen).equalsIgnoreCase("yes"))
                     {
                         if(xdata.getinstance().getSetting(config.enableintroscreen).isEmpty())
                             xdata.getinstance().saveSetting(config.enableintroscreen,"no");
@@ -71,10 +71,10 @@ public class splashactivity extends Activity {
                         startActivity(intent);
                         overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
                         finish();
-                    }*/
+                    }
 
                     // Login portion commented on app launch till furthure notice.
-                    if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
+                   /* if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
                     {
                         Intent intent=new Intent(splashactivity.this,signinactivity.class);
                         startActivity(intent);
@@ -97,7 +97,7 @@ public class splashactivity extends Activity {
                             overridePendingTransition(R.anim.activityfadein, R.anim.activityfadeout);
                             finish();
                         }
-                    }
+                    }*/
                 }
             }
         },2000);
