@@ -775,6 +775,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             }
         });
 
+        layout_mediatype.post(new Runnable() {
+            @Override
+            public void run() {
+                headerheight = layout_mediatype.getHeight();
+                headerwidth = layout_mediatype.getWidth();
+                bottompadding = layout_videodetails.getPaddingBottom();
+            }
+        });
+
         layoutbackgroundcontroller.post(new Runnable() {
             @Override
             public void run() {
@@ -2991,10 +3000,17 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         videotextureview.setLayoutParams(layoutParams);
         videotextureview.setVisibility(View.VISIBLE);
 
-        int centerheight = surfaceView_Height/2;
         int buttonheight = playpausebutton.getHeight();
+        int layoutvideotextureviewheight = rl_videotextureview.getHeight();
 
-        int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;
+        int centerheightoflayout = layoutvideotextureviewheight - (headerheight + scrubberheight);
+
+        int halfcenterheightoflayout = (centerheightoflayout/2);
+
+        //int percentageheight = (buttonheight / 100) * 75;
+        double res = (buttonheight / 100.0f) * 70;
+
+        int lastvalue = (halfcenterheightoflayout+headerheight) - (int)res;
 
         recenterplaypause(lastvalue ,0);
     }
