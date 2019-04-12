@@ -215,5 +215,13 @@
     <string name="uptime">Phone UpTime</string>
     <string name="battery">Battery</string>
 
+    <string name="view_dummy1">Dummy1</string>
+    <string name="view_dummy2">Dummy2</string>
+    <string name="view_video">Video</string>
+    <string name="view_image">Photo</string>
+    <string name="view_audio">audio</string>
+    <string name="view_dummy3">Dummy3</string>
+    <string name="view_dummy4">Dummy4</string>
+
 
 </resources>

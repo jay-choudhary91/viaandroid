@@ -7,6 +7,7 @@ import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -19,6 +20,8 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +50,7 @@ import com.deeptruth.app.android.activity.locationawareactivity;
 import com.deeptruth.app.android.adapter.adaptercomposemediatype;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
+import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediatype;
 import com.deeptruth.app.android.sensor.Orientation;
@@ -60,7 +64,6 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pl.droidsonroids.gif.GifDrawable;
 
 import static android.widget.RelativeLayout.TRUE;
 
@@ -72,7 +75,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     @BindView(R.id.txt_timer)
     TextView txt_timer;
-
     @BindView(R.id.layout_recorder)
     RelativeLayout layout_recorder;
     @BindView(R.id.img_rotate_camera)
@@ -83,20 +85,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     FrameLayout tab_container;
     @BindView(R.id.img_mediathumbnail)
     ImageView img_mediathumbnail;
-    @BindView(R.id.txt_mediatype_a)
-    TextView txt_mediatype_a;
-    @BindView(R.id.txt_mediatype_b)
-    TextView txt_mediatype_b;
-    @BindView(R.id.txt_mediatype_c)
-    TextView txt_mediatype_c;
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
     @BindView(R.id.parentview)
     RelativeLayout parentview;
-    @BindView(R.id.txt_space_a)
-    TextView txt_space_a;
-    @BindView(R.id.txt_space_b)
-    TextView txt_space_b;
     @BindView(R.id.txt_encrypting)
     TextView txt_encrypting;
     @BindView(R.id.base_view)
@@ -105,11 +97,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     RelativeLayout layout_seekbarzoom;
     @BindView(R.id.txt_zoomlevel)
     TextView txt_zoomlevel;
+    @BindView(R.id.viewpager)
+    ViewPager pagermediatype;
 
     @BindView(R.id.layout_encryption)
     RelativeLayout layout_encryption;
-    @BindView(R.id.centersnaprecyclerview)
-    RecyclerView centersnaprecyclerview;
 
     videocomposerfragment fragvideocomposer=null;
     audiocomposerfragment fragaudiocomposer=null;
@@ -126,20 +118,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     ArrayList<String> imagearraylist =new ArrayList<>();
     ArrayList<String> videoarraylist =new ArrayList<>();
     ArrayList<String> audioarraylist =new ArrayList<>();
-    ArrayList<mediatype> mediatypeArrayList =new ArrayList<>();
-    private Handler myHandler;
-    private Runnable myRunnable;
-
-    private CountDownTimer countertimer;
-
     private Orientation mOrientation;
-    private static final int ORIENTATION_0 = 0;
-    private static final int ORIENTATION_90 = 3;
-    private static final int ORIENTATION_270 = 1;
     int navigationbarheight = 0;
     int parentviewwidth=0;
     private AlphaAnimation blinkencryptionanimation;
-    private adaptercomposemediatype centersnapadapter;
     private Date initialdate;
     private String[] transparentarray=common.gettransparencyvalues();
     GradientDrawable gradientDrawablebutton;
@@ -161,46 +143,20 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if(rootview==null)
-        {/* gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
-                gifdrawable.setLoopCount(0);
-                gifdrawable.setSpeed(1.0f);
-                recordstartstopbutton.setImageDrawable(gifdrawable);
-                recordstartstopbutton.setAlpha(0f);
-                recordstartstopbutton.animate().alpha(1.0f).setDuration(100).setListener(null);
-                gifdrawable.pause();
-                gifdrawable.seekTo(0);*/
+        {
             rootview = super.onCreateView(inflater, container, savedInstanceState);
             ButterKnife.bind(this, rootview);
-
             initialdate =new Date();
             txt_zoomlevel.setOnClickListener(this);
             layout_recorder.setOnClickListener(this);
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
-            txt_mediatype_a.setOnClickListener(this);
-            txt_mediatype_b.setOnClickListener(this);
-            txt_mediatype_c.setOnClickListener(this);
             layoutbottom.setOnTouchListener(this);
             layout_mediatype.setOnTouchListener(this);
 
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
             setactionbartransparency(65);
-
-            try {
-
-
-               /* gifdrawable = new GifDrawable(getResources(), R.drawable.recorder_transparent);
-                gifdrawable.setLoopCount(0);
-                gifdrawable.setSpeed(1.0f);
-                recordstartstopbutton.setImageDrawable(gifdrawable);
-                recordstartstopbutton.setAlpha(0f);
-                recordstartstopbutton.animate().alpha(1.0f).setDuration(100).setListener(null);
-                gifdrawable.pause();
-                gifdrawable.seekTo(0);*/
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             parentview.post(new Runnable() {
                 @Override
@@ -209,7 +165,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     parentviewwidth=parentview.getWidth();
                 }
             });
-
             layoutbottom.post(new Runnable() {
                 @Override
                 public void run() {
@@ -225,16 +180,131 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             });
 
             mOrientation = new Orientation(applicationviavideocomposer.getactivity());
-
-
             gradientDrawablebutton = new GradientDrawable();
             gradientDrawablebutton.setCornerRadius(360.0f);
             gradientDrawablebutton.setShape(GradientDrawable.RECTANGLE);
             mParent.setBackground(gradientDrawablebutton);
 
+            pagermediatype.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
+            pagermediatype.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                    currentselectedcomposer=position;
+                    int currentpagerpos=position;
+                    if(currentpagerpos == 0)
+                        currentpagerpos=2;
+                    else if(currentpagerpos == 1)
+                        currentpagerpos=3;
+                    else if(currentpagerpos == 2)
+                        currentpagerpos=4;
+
+                    for(int i = 0; i<= mediatypepagerenum.values().length; i++)
+                    {
+                        if(pagermediatype != null)
+                        {
+                            View view= pagermediatype.getChildAt(i);
+                            if(view != null)
+                            {
+                                TextView txt_mediatype=(TextView)view.findViewById(R.id.txt_mediatype);
+                                if(currentpagerpos == i)
+                                {
+                                    txt_mediatype.setTextColor(applicationviavideocomposer.getactivity().getResources().
+                                            getColor(R.color.wave_blue));
+                                }
+                                else
+                                {
+                                    txt_mediatype.setTextColor(Color.WHITE);
+                                }
+                            }
+                        }
+                    }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showselectedfragment();
+                        }
+                    },200);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
         }
 
         return rootview;
+    }
+
+    public class CustomPagerAdapter extends PagerAdapter {
+
+        private Context mContext;
+
+        public CustomPagerAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup collection, final int position) {
+            final mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            ViewGroup layout = (ViewGroup) inflater.inflate(enummediatype.getLayoutResId(), collection, false);
+            final TextView txt_mediatype=(TextView)layout.findViewById(R.id.txt_mediatype);
+            txt_mediatype.setText(enummediatype.getItemname());
+            txt_mediatype.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e("onClick ",""+ enummediatype.getItemposition());
+                    if(enummediatype.getItemposition() == 2)
+                    {
+                        pagermediatype.setCurrentItem(0,true);
+                    }
+                    else if(enummediatype.getItemposition() == 3)
+                    {
+                        pagermediatype.setCurrentItem(1,true);
+                    }
+                    else if(enummediatype.getItemposition() == 4)
+                    {
+                        pagermediatype.setCurrentItem(2,true);
+                    }
+                }
+            });
+            collection.addView(layout);
+            return layout;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup collection, int position, Object view) {
+            collection.removeView((View) view);
+        }
+
+        @Override
+        public float getPageWidth(int position) {
+            return 0.20f;
+        }
+
+        @Override
+        public int getCount() {
+            return mediatypepagerenum.values().length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            return enummediatype.getItemname();
+        }
+
     }
 
     @Override
@@ -293,38 +363,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-    public void resetbuttonviews(final TextView textView1, final TextView textView2, final TextView textView3)
-    {
-        //textView1.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.wave_blue));
-        textView2.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-        textView3.setTextColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.white));
-
-        Integer colorFrom = getResources().getColor(R.color.white);
-        Integer colorTo = getResources().getColor(R.color.wave_blue);
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                textView1.setTextColor((Integer)animator.getAnimatedValue());
-            }
-        });
-        colorAnimation.setDuration(config.transition_fragment_millis_300);
-        colorAnimation.start();
-
-        ValueAnimator alphaAnimation = ValueAnimator.ofFloat(0.5f,1.0f);
-        alphaAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                textView1.setAlpha((Float) animator.getAnimatedValue());
-                textView2.setAlpha((Float) animator.getAnimatedValue());
-                textView3.setAlpha((Float) animator.getAnimatedValue());
-            }
-        });
-        alphaAnimation.setDuration(config.transition_fragment_millis_300);
-        alphaAnimation.start();
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -360,11 +398,15 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 if(fragaudiocomposer == null && locationawareactivity.checkCameraPermission(applicationviavideocomposer.getactivity()))
                 {
-                    runhandler();
-                    initviewpager();
+                    try
+                    {
+                        initviewpager();
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
                 }
             }
         },10);
@@ -373,238 +415,53 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
-
-        if(countertimer != null)
-            countertimer.cancel();
-    }
-
-
-
-    public void runhandler()
-    {
-        if(myHandler != null && myRunnable != null)
-            myHandler.removeCallbacks(myRunnable);
-
-        myHandler =new Handler();
-        myRunnable = new Runnable() {
-            @Override
-            public void run() {
-
-
-                myHandler.postDelayed(this, 1000);
-            }
-        };
-        myHandler.post(myRunnable);
-    }
-
-    adapteritemclick mlistitemclick=new adapteritemclick() {
-        @Override
-        public void onItemClicked(Object object) {
-
-        }
-
-        @Override
-        public void onItemClicked(Object object, int position) {
-
-            fetchrecyclerposition(position);
-            //setrecyclerposition(position);
-        }
-    };
-
-    public void fetchrecyclerposition(int position)
-    {
-        if(position == 2 || position == 3 || position == 4)
-        {
-            setrecyclerposition(position);
-            if(position == 2)
-            {
-                currentselectedcomposer=0;
-                showselectedfragment();
-            }
-            else if(position == 3)
-            {
-                currentselectedcomposer=1;
-                showselectedfragment();
-            }
-            else if(position == 4)
-            {
-                currentselectedcomposer=2;
-                showselectedfragment();
-            }
-
-        }
-    }
-
-    public void setrecyclerposition(int position)
-    {
-        if(position == 2 || position == 3 || position == 4)
-        {
-            int width=common.getScreenWidth(applicationviavideocomposer.getactivity());
-            width=width/5;
-            if(position == 2)
-            {
-                width=0;
-            }
-            else if(position == 3)
-            {
-
-            }
-            else if(position == 4)
-            {
-                width=width*2;
-            }
-            int offset=(int)width;
-            LinearLayoutManager layoutManager = ((LinearLayoutManager)centersnaprecyclerview.getLayoutManager());
-            layoutManager.scrollToPositionWithOffset(0,-offset);
-            changecenteritemcolor(position);
-        }
-    }
-
-    public void changecenteritemcolor(int position)
-    {
-        for(int i=0;i<mediatypeArrayList.size();i++)
-        {
-            mediatypeArrayList.get(i).setIsmediaselected(false);
-            if(position == i)
-                mediatypeArrayList.get(i).setIsmediaselected(true);
-        }
-        centersnapadapter.notifyDataSetChanged();
-    }
-
-    private void setUpRecyclerView() {
-
-        if(mediatypeArrayList.size() == 0)
-        {
-            mediatypeArrayList.clear();
-            mediatypeArrayList.add(new mediatype("",""));
-            mediatypeArrayList.add(new mediatype("",""));
-            mediatypeArrayList.add(new mediatype("VIDEO",""));
-            mediatypeArrayList.add(new mediatype("PHOTO",""));
-            mediatypeArrayList.add(new mediatype("AUDIO",""));
-            mediatypeArrayList.add(new mediatype("",""));
-            mediatypeArrayList.add(new mediatype("",""));
-
-            int width=common.getScreenWidth(applicationviavideocomposer.getactivity());
-        /*final SpeedyLinearLayoutManager layoutmanager=new SpeedyLinearLayoutManager(applicationviavideocomposer.getactivity(),
-                SpeedyLinearLayoutManager.HORIZONTAL, false);*/
-            final LinearLayoutManager layoutmanager
-                    = new LinearLayoutManager(applicationviavideocomposer.getactivity(), LinearLayoutManager.HORIZONTAL, false);
-            centersnaprecyclerview.setLayoutManager(layoutmanager);
-            centersnapadapter = new adaptercomposemediatype(applicationviavideocomposer.getactivity(), mediatypeArrayList,width,mlistitemclick);
-            centersnaprecyclerview.setAdapter(centersnapadapter);
-            final SnapHelper snapHelperCenter = new LinearSnapHelper();
-            snapHelperCenter.attachToRecyclerView(centersnaprecyclerview);
-
-            centersnaprecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    switch (newState) {
-                        case RecyclerView.SCROLL_STATE_IDLE:
-                            int center = common.getScreenWidth(applicationviavideocomposer.getactivity())/2;
-                            View view =snapHelperCenter.findSnapView(layoutmanager);
-                            //View centerView = centersnaprecyclerview.findChildViewUnder(center, centersnaprecyclerview.getTop());
-                            int centerPos = centersnaprecyclerview.getChildAdapterPosition(view);
-                            if(centerPos == 2 && currentselectedcomposer != 0)
-                                fetchrecyclerposition(centerPos);
-
-                            if(centerPos == 3 && currentselectedcomposer != 1)
-                                fetchrecyclerposition(centerPos);
-
-                            if(centerPos == 4 && currentselectedcomposer != 2)
-                                fetchrecyclerposition(centerPos);
-                            break;
-                        case RecyclerView.SCROLL_STATE_DRAGGING:
-                            break;
-                        case RecyclerView.SCROLL_STATE_SETTLING:
-                            break;
-                    }
-                }
-
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                }
-            });
-        }
     }
 
     public void initviewpager()
     {
         flingactionmindstvac=common.getcomposerswipearea();
         currentselectedcomposer=config.selectedmediatype;
+        pagermediatype.setCurrentItem(currentselectedcomposer,true);
 
-        parentview.post(new Runnable() {
-            @Override
-            public void run() {
+        getlatestthumbnailfromdirectory();
 
-                if(currentselectedcomposer == 0)
+        int currentpagerpos=currentselectedcomposer;
+        if(currentpagerpos == 0)
+            currentpagerpos=2;
+        else if(currentpagerpos == 1)
+            currentpagerpos=3;
+        else if(currentpagerpos == 2)
+            currentpagerpos=4;
+
+        if(currentpagerpos == 2)
+        {
+            for(int i=0;i<=6;i++)
+            {
+                if(pagermediatype != null)
                 {
-                    fixbottomtabwidth(txt_space_a,parentviewwidth/5);
-                    fixbottomtabwidth(txt_space_b,parentviewwidth/5);
-                }
-                else if(currentselectedcomposer == 1)
-                {
-                    fixbottomtabwidth(txt_space_a,0);
-                    fixbottomtabwidth(txt_space_b,parentviewwidth/5);
-                }
-                else if(currentselectedcomposer == 2)
-                {
-                    fixbottomtabwidth(txt_space_a,0);
-                    fixbottomtabwidth(txt_space_b,0);
-                }
-
-                fixbottomtabwidth(txt_mediatype_a,parentviewwidth/5);
-                fixbottomtabwidth(txt_mediatype_b,parentviewwidth/5);
-                fixbottomtabwidth(txt_mediatype_c,parentviewwidth/5);
-
-                txt_space_a.setVisibility(View.VISIBLE);
-                txt_space_b.setVisibility(View.VISIBLE);
-                txt_mediatype_a.setVisibility(View.VISIBLE);
-                txt_mediatype_b.setVisibility(View.VISIBLE);
-                txt_mediatype_c.setVisibility(View.VISIBLE);
-
-                setUpRecyclerView();
-                //showselectedfragment();
-                if(currentselectedcomposer == 0)
-                    fetchrecyclerposition(2);
-
-                if(currentselectedcomposer == 1)
-                    fetchrecyclerposition(3);
-
-                if(currentselectedcomposer == 2)
-                    fetchrecyclerposition(4);
-
-                final AlphaAnimation alphanimation = new AlphaAnimation(0.0f, 1.0f);
-                alphanimation.setDuration(2000); //You can manage the time of the blink with this parameter
-                alphanimation.setRepeatMode(1);
-
-                Animation.AnimationListener alphalistener=new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
+                    View view= pagermediatype.getChildAt(i);
+                    if(view != null)
+                    {
+                        TextView txt_mediatype=(TextView)view.findViewById(R.id.txt_mediatype);
+                        if(currentpagerpos == i)
+                        {
+                            txt_mediatype.setTextColor(applicationviavideocomposer.getactivity().getResources().
+                                    getColor(R.color.wave_blue));
+                        }
+                        else
+                        {
+                            txt_mediatype.setTextColor(Color.WHITE);
+                        }
                     }
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        //fadeoutcontrollers();
-                        txt_mediatype_a.setText(config.item_video);
-                        txt_mediatype_b.setText(config.item_photo);
-                        txt_mediatype_c.setText(config.item_audio);
-                    }
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                };
-                alphanimation.setAnimationListener(alphalistener);
-                layout_mediatype.startAnimation(alphanimation);
-
-                getlatestthumbnailfromdirectory();
+                }
             }
-        });
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showselectedfragment();
+                }
+            },200);
+        }
     }
 
     @Override
@@ -647,15 +504,12 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
                 if(currentselectedcomposer == 0)
                 {
-
                     if (iscircle) {
                         makesquare();
                     }
                     else {
                         makecircle();
                     }
-
-
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
                 }
@@ -665,9 +519,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     {
                         if(fragimgcapture != null && (! fragimgcapture.isimagecaptureprocessing))
                         {
-                            if(countertimer != null)
-                                countertimer.cancel();
-
                             txt_timer.setText("");
                             txt_timer.setVisibility(View.VISIBLE);
                             enableDisableView(parentview,true);
@@ -704,16 +555,11 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 }
                 else if(currentselectedcomposer == 2)
                 {
-
                     try {
-
-                        if (iscircle) {
+                        if (iscircle)
                             makesquare();
-                        }
-                        else {
+                        else
                             makecircle();
-                        }
-
 
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();
@@ -752,62 +598,14 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
     }
 
-
     public void enableDisableView(View view, boolean enabled) {
         view.setEnabled(enabled);
         if ( view instanceof ViewGroup ) {
             ViewGroup group = (ViewGroup)view;
-
             for ( int idx = 0 ; idx < group.getChildCount() ; idx++ ) {
                 enableDisableView(group.getChildAt(idx), enabled);
             }
         }
-    }
-
-    public void startbrustcameratimer()
-    {
-        if(countertimer != null)
-            countertimer.cancel();
-
-        txt_timer.setVisibility(View.VISIBLE);
-        enableDisableView(parentview,false);
-        countertimer=new CountDownTimer(21000, 1000)
-        {
-            public void onTick(long millisUntilFinished) {
-                Log.e("Timer running", " Tick");
-                millisUntilFinished=millisUntilFinished-10000;
-                int lefttime=(int)(millisUntilFinished/1000);
-                if(lefttime == 0)
-                {
-                    enableDisableView(parentview,true);
-
-                    if(countertimer != null)
-                        countertimer.cancel();
-
-                    txt_timer.setText("");
-                    txt_timer.setVisibility(View.GONE);
-                    cameracaptureeffect();
-                }
-                else
-                {
-                    txt_timer.setText(""+lefttime);
-                }
-            }
-
-            public void onFinish() {
-                enableDisableView(parentview,true);
-                if(countertimer != null)
-                    countertimer.cancel();
-            }
-        }.start();
-    }
-
-    private void cameracaptureeffect() {
-
-        txt_timer.setVisibility(View.GONE);
-
-        if(fragimgcapture != null)
-            fragimgcapture.takePicture();
     }
 
     public void medialistitemaddbroadcast()
@@ -815,7 +613,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         Intent intent = new Intent(config.broadcast_medialistnewitem);
         applicationviavideocomposer.getactivity().sendBroadcast(intent);
     }
-
 
     GestureDetector flingswipegesture = new GestureDetector(applicationviavideocomposer.getactivity(), new GestureDetector.SimpleOnGestureListener()
     {
@@ -864,22 +661,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             if(currentselectedcomposer == 0)
                 return;
-            Log.e("currentselectedcomposer",""+currentselectedcomposer);
             currentselectedcomposer--;
-            //showselectedfragment();
-            if(currentselectedcomposer == 0)
-                fetchrecyclerposition(2);
-
-            if(currentselectedcomposer == 1)
-                fetchrecyclerposition(3);
-
-            if(currentselectedcomposer == 2)
-                fetchrecyclerposition(4);
-
+            pagermediatype.setCurrentItem(currentselectedcomposer,true);
             initialdate =new Date();
         }
-
-
     }
 
     public void swiperighttoleft()
@@ -890,17 +675,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             if(currentselectedcomposer == 2)
                 return;
-
             currentselectedcomposer++;
-            Log.e("currentselectedcomposer",""+currentselectedcomposer);
-            if(currentselectedcomposer == 0)
-                fetchrecyclerposition(2);
-
-            if(currentselectedcomposer == 1)
-                fetchrecyclerposition(3);
-
-            if(currentselectedcomposer == 2)
-                fetchrecyclerposition(4);
+            pagermediatype.setCurrentItem(currentselectedcomposer,true);
             initialdate =new Date();
         }
     }
@@ -912,15 +688,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         switch (currentselectedcomposer)
         {
             case 0:
-                if(txt_space_a.getWidth() == 0)
-                    resizebottomtab(txt_space_a,0,parentviewwidth/5);
-
-                if(txt_space_b.getWidth() == 0)
-                    resizebottomtab(txt_space_b,0,parentviewwidth/5);
-
                 imgrotatecamera.setVisibility(View.VISIBLE);
                 layout_seekbarzoom.setVisibility(View.VISIBLE);
-                resetbuttonviews(txt_mediatype_a,txt_mediatype_b,txt_mediatype_c);
                 showhideactionbottombaricon(1);
                 if(fragvideocomposer == null)
                     fragvideocomposer=new videocomposerfragment();
@@ -930,15 +699,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             break;
 
             case 1:
-                if(txt_space_a.getWidth() > 0)
-                    resizebottomtab(txt_space_a,parentviewwidth/5,0);
-
-                if(txt_space_b.getWidth() == 0)
-                    resizebottomtab(txt_space_b,0,parentviewwidth/5);
-
                 imgrotatecamera.setVisibility(View.VISIBLE);
                 layout_seekbarzoom.setVisibility(View.VISIBLE);
-                resetbuttonviews(txt_mediatype_b,txt_mediatype_a,txt_mediatype_c);
                 showhideactionbottombaricon(1);
                 if(fragimgcapture == null)
                     fragimgcapture=new imagecomposerfragment();
@@ -948,15 +710,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             break;
 
             case 2:
-                if(txt_space_a.getWidth() > 0)
-                    resizebottomtab(txt_space_a,parentviewwidth/5,0);
-
-                if(txt_space_b.getWidth() > 0)
-                    resizebottomtab(txt_space_b,parentviewwidth/5,0);
-
                 imgrotatecamera.setVisibility(View.GONE);
                 layout_seekbarzoom.setVisibility(View.GONE);
-                resetbuttonviews(txt_mediatype_c,txt_mediatype_a,txt_mediatype_b);
                 showhideactionbottombaricon(3);
                 if(fragaudiocomposer == null)
                     fragaudiocomposer=new audiocomposerfragment();
@@ -967,29 +722,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
 
         setimagethumbnail();
-    }
-
-    public void resizebottomtab(final View view, int start, final int end)
-    {
-        ValueAnimator animator = ValueAnimator.ofInt(start, end);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int value = (Integer) valueAnimator.getAnimatedValue();
-                ViewGroup.LayoutParams lp = view.getLayoutParams();
-                lp.width = value;
-                view.setLayoutParams(lp);
-            }
-        });
-        animator.setDuration(config.transition_fragment_millis_300);
-        animator.start();
-    }
-
-    public void fixbottomtabwidth(final View view, int width)
-    {
-        LinearLayout.LayoutParams layoutparams = new LinearLayout.LayoutParams(width,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        view.setLayoutParams(layoutparams);
     }
 
     adapteritemclick mitemclick=new adapteritemclick() {
@@ -1246,10 +978,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
         if(rotateangle != 3600)
         {
-            if(fragvideocomposer != null && (! fragvideocomposer.isvideorecording)) {
-
-           }
-
             if(txt_encrypting != null)
             {
                 if( fragvideocomposer != null && (! fragvideocomposer.isvideorecording)){

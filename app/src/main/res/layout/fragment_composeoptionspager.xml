@@ -43,77 +43,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/centersnaprecyclerview"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_height="wrap_content"/>
+                android:layout_centerVertical="true"
+                android:layout_height="50dp"
+                />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="horizontal">
-
-                <com.deeptruth.app.android.views.customfonttextview
-                    app:fontType="Comfortaa-Regular"
-                    android:id="@+id/txt_space_a"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    />
-
-                <com.deeptruth.app.android.views.customfonttextview
-                    app:fontType="Comfortaa-Regular"
-                    android:id="@+id/txt_space_b"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    />
-
-                <com.deeptruth.app.android.views.customfonttextview
-                    app:fontType="Comfortaa-Regular"
-                    android:id="@+id/txt_mediatype_a"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textSize="10sp"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textColor="@color/white"
-                    android:visibility="visible"
-                    android:text=""
-                    />
-
-
-                <com.deeptruth.app.android.views.customfonttextview
-                    app:fontType="Comfortaa-Bold"
-                    android:id="@+id/txt_mediatype_b"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:textSize="10sp"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:visibility="invisible"
-                    android:text=""
-                    />
-
-
-                <com.deeptruth.app.android.views.customfonttextview
-                    app:fontType="Comfortaa-Regular"
-                    android:id="@+id/txt_mediatype_c"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textSize="10sp"
-                    android:textColor="@color/white"
-                    android:visibility="invisible"
-                    android:text=""
-                    />
-
-            </LinearLayout>
         </RelativeLayout>
 
     <RelativeLayout
