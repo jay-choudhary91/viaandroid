@@ -2320,7 +2320,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 value=getResources().getString(R.string.no_internet);
                 if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
                         || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA")
-                        ||xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") )
+                        || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null")
+                        || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
                 {
                     value=getResources().getString(R.string.no_network);
                 }
