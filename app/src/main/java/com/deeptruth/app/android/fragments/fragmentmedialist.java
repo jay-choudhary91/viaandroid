@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +22,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -50,6 +53,7 @@ import com.deeptruth.app.android.adapter.adaptermedialist;
 import com.deeptruth.app.android.adapter.adaptermediatype;
 import com.deeptruth.app.android.applicationviavideocomposer;
 import com.deeptruth.app.android.database.databasemanager;
+import com.deeptruth.app.android.enumclasses.mediatypepagerenum;
 import com.deeptruth.app.android.interfaces.adapteritemclick;
 import com.deeptruth.app.android.models.mediainfotablefields;
 import com.deeptruth.app.android.models.mediatype;
@@ -90,8 +94,6 @@ import static android.app.Activity.RESULT_OK;
 
 public class fragmentmedialist extends basefragment implements View.OnClickListener, View.OnTouchListener {
 
-    @BindView(R.id.recycler_mediatype)
-    RecyclerView recycler_mediatype;
     @BindView(R.id.rv_medialist_list)
     RecyclerView recyclerviewlist;
     @BindView(R.id.rv_medialist_grid)
@@ -106,12 +108,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     @BindView(R.id.layout_mediatype)
     RelativeLayout layout_mediatype;
 
-    @BindView(R.id.txt_mediatype_b)
-    TextView txt_mediatype_b;
-    @BindView(R.id.txt_mediatype_a)
-    TextView txt_mediatype_a;
-    @BindView(R.id.txt_mediatype_c)
-    TextView txt_mediatype_c;
     @BindView(R.id.img_dotmenu)
     ImageView img_dotmenu;
     @BindView(R.id.img_settings)
@@ -137,6 +133,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
     ImageView btn_gallerylist;
     @BindView(R.id.btn_gridlist)
     ImageView btn_gridlist;
+    @BindView(R.id.viewpager)
+    ViewPager pagermediatype;
 
     int selectedstyletype=1,selectedmediatype=-1,listviewheight=0,dataupdator=0;
     RelativeLayout listlayout;
@@ -147,16 +145,14 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
     View rootview = null;
     private static final int request_permissions = 1;
-    ArrayList<mediatype> mediatypeitemarray=new ArrayList<>();
     ArrayList<video> arraymediaitemlist = new ArrayList<>();
     adaptermedialist adaptermedialist;
     adaptermediagrid adaptermediagrid;
-    adaptermediatype adaptermediatype;
     private RecyclerTouchListener onTouchListener;
     private static final int request_read_external_storage = 1;
     private BroadcastReceiver medialistitemaddreceiver;
     private BroadcastReceiver broadcastmediauploaded;
-    private int REQUESTCODE_PICK=201,audiocount=0,videocount=0,imagecount=0;
+    private int REQUESTCODE_PICK=201;
     private FFmpeg ffmpeg;
     int navigationbarheight = 0;
     Handler handler = new Handler();
@@ -300,9 +296,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             lay_liststyle.setBackgroundColor(applicationviavideocomposer.getactivity().getResources().getColor(R.color.audiowave));
             lay_gridstyle.setOnClickListener(this);
             lay_liststyle.setOnClickListener(this);
-            txt_mediatype_a.setOnClickListener(this);
-            txt_mediatype_b.setOnClickListener(this);
-            txt_mediatype_c.setOnClickListener(this);
             img_dotmenu.setOnClickListener(this);
             img_camera.setOnClickListener(this);
             img_folder.setOnClickListener(this);
@@ -356,21 +349,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             setfooterlayout(true);
 
-          /*  recyclerviewgrid.post(new Runnable() {
-                @Override
-                public void run() {
-                    setfooterlayout(true);
-                }
-            });
-
-            recyclerviewlist.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                setfooterlayout(false);
-                            }
-                        });*/
-
-
             onTouchListener = new RecyclerTouchListener(applicationviavideocomposer.getactivity(), recyclerviewlist);
             onTouchListener.setSwipeOptionViews(R.id.img_slide_delete).setSwipeable( R.id.rl_rowfg,R.id.bottom_wraper,
             new RecyclerTouchListener.OnSwipeOptionsClickListener() {
@@ -411,92 +389,31 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             RecyclerView.LayoutManager mLayoutManager=new GridLayoutManager(getActivity(), 2);
             recyclerviewgrid.setLayoutManager(mLayoutManager);
 
-
             devicewidth=common.getScreenWidth(applicationviavideocomposer.getactivity());
-
-            mediatypeitemarray.clear();
-            mediatypeitemarray.add(new mediatype("",""));
-            mediatypeitemarray.add(new mediatype("",""));
-            mediatypeitemarray.add(new mediatype(config.item_video,""));
-            mediatypeitemarray.add(new mediatype(config.item_photo,""));
-            mediatypeitemarray.add(new mediatype(config.item_audio,""));
-            mediatypeitemarray.add(new mediatype("",""));
-            mediatypeitemarray.add(new mediatype("",""));
-
-            recycler_mediatype.setLayoutManager(new recyclerviewsmoothscroller(getActivity(),LinearLayoutManager.HORIZONTAL,
-                    false));
-            //recycler_mediatype.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-            adaptermediatype =new adaptermediatype(getActivity(), mediatypeitemarray, devicewidth,
-                    new adapteritemclick() {
-                        @Override
-                        public void onItemClicked(Object object) {
-
-                        }
-
-                        @Override
-                        public void onItemClicked(Object object, int position) {
-                            /*if(position == 2)
-                            {
-                                position=0;
-                            }
-                            else if(position == 3)
-                            {
-                                position=1;
-                            }
-                            else if(position == 4)
-                            {
-                                position=2;
-                            }*/
-                            showselecteditemincenter(position,true);
-                        }
-                    });
-            recycler_mediatype.setAdapter(adaptermediatype);
-
-            recycler_mediatype.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            pagermediatype.setAdapter(new CustomPagerAdapter(applicationviavideocomposer.getactivity()));
+            pagermediatype.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    switch (newState) {
-                        case RecyclerView.SCROLL_STATE_IDLE:
-                            int center = recycler_mediatype.getWidth()/2;
-                            View centerView = recycler_mediatype.findChildViewUnder(center, recycler_mediatype.getTop());
-                            int centerPos = recycler_mediatype.getChildAdapterPosition(centerView);
-                            showselecteditemincenter(centerPos,true);
-                            //int passeditem=centerPos-1;
-                            //recyclerView.scrollBy(eachitemwidth, 0);
-                            //recycler_mediatype.smoothScrollToPosition(centerPos);
-                            break;
-                        case RecyclerView.SCROLL_STATE_DRAGGING:
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                            break;
-                        case RecyclerView.SCROLL_STATE_SETTLING:
-
-                            break;
-
-                    }
                 }
 
                 @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
+                public void onPageSelected(final int position) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            selectedmediatype=position;
+                            showselectedmediatypeitems(selectedmediatype,true);
+                        }
+                    },200);
 
-                            /*int center = recycler_mediatype.getWidth()/2;
-                            View centerView = recycler_mediatype.findChildViewUnder(center, recycler_mediatype.getTop());
-                            int centerPos = recycler_mediatype.getChildAdapterPosition(centerView);*/
+                }
 
+                @Override
+                public void onPageScrollStateChanged(int state) {
 
-                           /* LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
-                            int last=layoutManager.findLastVisibleItemPosition();
-                            int first=layoutManager.findFirstVisibleItemPosition();
-                            int totalVisibleItems = last - first;
-                            int centeredItemPosition = totalVisibleItems / 2;*/
-                            //  Log.e("center item ",""+centerPos);
-                            //recycler_mediatype.smoothScrollToPosition(centeredItemPosition);
-                            //recycler_mediatype.setScrollY(centeredItemPosition);
                 }
             });
-
-
 
             layout_mediatype.setOnTouchListener(this);
             IntentFilter intentFilter = new IntentFilter(config.broadcast_medialistnewitem);
@@ -519,15 +436,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                 img_camera.setVisibility(View.VISIBLE);
                 if(common.isdevelopermodeenable())
                     img_settings.setVisibility(View.VISIBLE);
-
-                /*new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(shouldlaunchcomposer)
-                            launchbottombarfragment();
-                    }
-                },200);*/
-
             }
 
             loadffmpeglibrary();
@@ -537,36 +445,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             resetmedialist();
         }
         return rootview;
-    }
-
-    public void showselecteditemincenter(int selectedpos,boolean showselectedlist)
-    {
-        double width=devicewidth;
-        width=width/4.5;
-        if(selectedpos == 2)
-        {
-            selectedpos=0;
-            width=width/5;
-        }
-        else if(selectedpos == 3)
-        {
-            selectedpos=1;
-            width=width/4;
-        }
-        else if(selectedpos == 4)
-        {
-            selectedpos=2;
-            width=width/3;
-        }
-        else
-        {
-            width=0;
-        }
-        int offset=(int)width;
-        LinearLayoutManager layoutManager = ((LinearLayoutManager)recycler_mediatype.getLayoutManager());
-        layoutManager.scrollToPositionWithOffset(selectedpos,-offset);
-        if(selectedpos != selectedmediatype && showselectedlist)
-            showselectedmediatypeitems(selectedpos,false);
     }
 
     private void searchmediafromlist(String text) {
@@ -696,15 +574,6 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     e.printStackTrace();
                 }
                 break;
-            case R.id.txt_mediatype_a:
-
-                break;
-            case R.id.txt_mediatype_b:
-
-                break;
-            case R.id.txt_mediatype_c:
-
-                break;
             case R.id.img_camera:
                 launchbottombarfragment();
                 break;
@@ -797,9 +666,8 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             checkitem="audio";
             layout_sectionsearch.setVisibility(View.GONE);
             setsearchbar();
-
         }
-        audiocount=0;videocount=0;imagecount=0;
+        int audiocount=0,videocount=0,imagecount=0;
         for(int i = 0; i< arraymediaitemlist.size(); i++)
         {
             arraymediaitemlist.get(i).setDoenable(false);
@@ -817,25 +685,50 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             }
             if(arraymediaitemlist.get(i).getmimetype().contains(checkitem))
                 arraymediaitemlist.get(i).setDoenable(true);
-
         }
 
-        if(mediatypeitemarray != null && mediatypeitemarray.size() > 5)
+        String countaudio="",countvideo="",countimage="";
+        if(videocount > 0)
+            countvideo=" ("+videocount+")";
+
+        if(imagecount > 0)
+            countimage=" ("+imagecount+")";
+
+        if(audiocount > 0)
+            countaudio=" ("+audiocount+")";
+
+        if(mediatype == 0)
+            mediatype=2;
+        else if(mediatype == 1)
+            mediatype=3;
+        else if(mediatype == 2)
+            mediatype=4;
+
+        for(int i = 0; i<= mediatypepagerenum.values().length; i++)
         {
-            mediatypeitemarray.set(2,new mediatype(config.item_video,""));
-            mediatypeitemarray.set(3,new mediatype(config.item_photo,""));
-            mediatypeitemarray.set(4,new mediatype(config.item_audio,""));
+            if(pagermediatype != null)
+            {
+                View view= pagermediatype.getChildAt(i);
+                if(view != null)
+                {
+                    TextView txt_mediatype=(TextView)view.findViewById(R.id.txt_mediatype);
+                    if(i == 2)
+                        txt_mediatype.setText(config.item_video+countvideo);
+                    if(i == 3)
+                        txt_mediatype.setText(config.item_photo+countimage);
+                    if(i == 4)
+                        txt_mediatype.setText(config.item_audio+countaudio);
 
-            if(videocount > 0)
-                mediatypeitemarray.set(2,new mediatype(config.item_video," ("+videocount+")"));
-
-            if(imagecount > 0)
-                mediatypeitemarray.set(3,new mediatype(config.item_photo," ("+imagecount+")"));
-
-            if(audiocount > 0)
-                mediatypeitemarray.set(4,new mediatype(config.item_audio," ("+audiocount+")"));
-
-            adaptermediatype.notifyDataSetChanged();
+                    if(mediatype == i)
+                    {
+                        txt_mediatype.setTypeface(txt_mediatype.getTypeface(), Typeface.BOLD);
+                    }
+                    else
+                    {
+                        txt_mediatype.setTypeface(txt_mediatype.getTypeface(), Typeface.NORMAL);
+                    }
+                }
+            }
         }
 
         if(adaptermedialist != null && adaptermediagrid != null)
@@ -851,36 +744,9 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
 
             if(adaptermediagrid != null)
                 adaptermediagrid.notifyDataSetChanged();
-            //recyclerviewlist.smoothScrollToPosition(0);
 
             if(scrolllisttotop)
                 recyclerviewgrid.smoothScrollToPosition(0);
-        }
-
-        updatecounter(txt_mediatype_a);
-        updatecounter(txt_mediatype_b);
-        updatecounter(txt_mediatype_c);
-    }
-
-    public void updatecounter(TextView textView)
-    {
-        if(textView.getText().toString().startsWith(config.item_video))
-        {
-            textView.setText(config.item_video);
-            if(videocount > 0)
-                textView.setText(config.item_video+" ("+videocount+")");
-        }
-        else if(textView.getText().toString().startsWith(config.item_audio))
-        {
-            textView.setText(config.item_audio);
-            if(audiocount > 0)
-                textView.setText(config.item_audio+" ("+audiocount+")");
-        }
-        else if(textView.getText().toString().startsWith(config.item_photo))
-        {
-            textView.setText(config.item_photo);
-            if(imagecount > 0)
-                textView.setText(config.item_photo+" ("+imagecount+")");
         }
     }
 
@@ -1229,13 +1095,10 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
                     recyclerviewgrid.setAdapter(adaptermediagrid);
                 }
 
-                showselectedmediatypeitems(config.selectedmediatype,true);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        showselecteditemincenter(common.sortmediatype(config.selectedmediatype),false);
-                    }
-                },500);
+                if(config.selectedmediatype != pagermediatype.getCurrentItem())
+                    pagermediatype.setCurrentItem(config.selectedmediatype,true);
+                else
+                    showselectedmediatypeitems(config.selectedmediatype,true);
             }
         });
     }
@@ -2084,6 +1947,71 @@ public class fragmentmedialist extends basefragment implements View.OnClickListe
             hidekeyboard();
         }
         iskeyboardopen = false;
+    }
+
+    public class CustomPagerAdapter extends PagerAdapter {
+
+        private Context mContext;
+
+        public CustomPagerAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup collection, final int position) {
+            final mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            ViewGroup layout = (ViewGroup) inflater.inflate(enummediatype.getLayoutResId(), collection, false);
+            final TextView txt_mediatype=(TextView)layout.findViewById(R.id.txt_mediatype);
+            txt_mediatype.setText(enummediatype.getItemname());
+            txt_mediatype.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e("onClick ",""+ enummediatype.getItemposition());
+                    if(enummediatype.getItemposition() == 2)
+                    {
+                        pagermediatype.setCurrentItem(0,true);
+                    }
+                    else if(enummediatype.getItemposition() == 3)
+                    {
+                        pagermediatype.setCurrentItem(1,true);
+                    }
+                    else if(enummediatype.getItemposition() == 4)
+                    {
+                        pagermediatype.setCurrentItem(2,true);
+                    }
+                }
+            });
+            collection.addView(layout);
+            return layout;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup collection, int position, Object view) {
+            collection.removeView((View) view);
+        }
+
+        @Override
+        public float getPageWidth(int position) {
+            return 0.20f;
+        }
+
+        @Override
+        public int getCount() {
+            return mediatypepagerenum.values().length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            mediatypepagerenum enummediatype = mediatypepagerenum.values()[position];
+            return enummediatype.getItemname();
+        }
+
     }
 
 }
