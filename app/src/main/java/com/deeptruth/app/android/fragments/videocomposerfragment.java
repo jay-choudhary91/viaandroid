@@ -660,7 +660,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         txt_no_gps_wifi.setPadding((int) getResources().getDimension(R.dimen.margin_10dp),0,0,0);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
-                        //setvalidatingtext();
 
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
@@ -726,8 +725,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         txt_no_gps_wifi.setPadding(20,0,0,0);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
-
-                        //setvalidatingtext();
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -2363,14 +2360,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
 
         }
-    }
-    public void setvalidatingtext(){
-        txt_section_validating_secondary.setPadding(0,0,0,0);
-            RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(83, 69);
-            warninglayoutparams.setMargins(0,0,20,0);
-            warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
-            img_gpswifiwarning.setLayoutParams(warninglayoutparams);
-            img_close.setLayoutParams(warninglayoutparams);
     }
 }
 
