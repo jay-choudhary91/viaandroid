@@ -626,6 +626,7 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
         } catch (IOException e) {
             e.printStackTrace();
         }
+        myvisualizerview.setVisibility(View.VISIBLE);
         starttimer();
         isaudiorecording=true;
         gethelper().setrecordingrunning(true);
