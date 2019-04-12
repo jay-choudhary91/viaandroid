@@ -152,7 +152,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             imgrotatecamera.setOnClickListener(this);
             img_mediathumbnail.setOnClickListener(this);
             layoutbottom.setOnTouchListener(this);
-            layout_mediatype.setOnTouchListener(this);
 
             navigationbarheight =  common.getnavigationbarheight();
             setfooterlayout();
@@ -484,7 +483,7 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     }
                 }, 1000);
 
-                if(currentselectedcomposer == 0)
+                if(currentselectedcomposer == 0 || currentselectedcomposer == 2)
                 {
                     if (iscircle) {
                         makesquare();
@@ -492,6 +491,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     else {
                         makecircle();
                     }
+                }
+
+                if(currentselectedcomposer == 0)
+                {
                     if(fragvideocomposer != null)
                         fragvideocomposer.startstopvideo();
                 }
@@ -538,11 +541,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                 else if(currentselectedcomposer == 2)
                 {
                     try {
-                        if (iscircle)
-                            makesquare();
-                        else
-                            makecircle();
-
                         if(fragaudiocomposer != null)
                             fragaudiocomposer.startstopaudiorecording();
                     }catch (Exception e)
@@ -665,6 +663,9 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     public void showselectedfragment()
     {
+        if (! iscircle)
+            makecircle();
+
         xdata.getinstance().saveSetting(config.istravelleddistanceneeded,"false");
         txt_zoomlevel.setText("1.0 x");
         switch (currentselectedcomposer)
@@ -1003,22 +1004,17 @@ public class composeoptionspagerfragment extends basefragment implements View.On
             case  R.id.layout_bottom:
                 try
                 {
+                    if(currentselectedcomposer == 0 && (fragvideocomposer != null && (fragvideocomposer.isvideorecording)))
+                    {
+                        return true;
+                    }
+                    if(currentselectedcomposer == 2 && (fragaudiocomposer != null && (fragaudiocomposer.isaudiorecording)))
+                    {
+                        return true;
+                    }
                     if (motionEvent.getPointerCount() == 1)
                         mitemclick.onItemClicked(motionEvent,fragmentswipe);
 
-                    return true;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-
-            case  R.id.layout_mediatype:
-                try
-                {
-                    if (motionEvent.getPointerCount() == 1)
-                        mitemclick.onItemClicked(motionEvent,fragmentswipe);
-
-                    return true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
