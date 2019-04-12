@@ -132,7 +132,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
 
     private CountDownTimer countertimer;
 
-    GifDrawable gifdrawable;
     private Orientation mOrientation;
     private static final int ORIENTATION_0 = 0;
     private static final int ORIENTATION_90 = 3;
@@ -241,8 +240,8 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     @Override
     public void onStop() {
         super.onStop();
-        if(gifdrawable!= null && gifdrawable.isPlaying())
-            gifdrawable.stop();
+        if(! iscircle)
+            makecircle();
 
         if(mOrientation != null)
             mOrientation.stopListening();
@@ -968,11 +967,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
 
         setimagethumbnail();
-        if(gifdrawable!= null && gifdrawable.isPlaying())
-        {
-            gifdrawable.pause();
-            gifdrawable.seekTo(0);
-        }
     }
 
     public void resizebottomtab(final View view, int start, final int end)
@@ -1014,9 +1008,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
     {
         if(type == startrecorder) // for video record start,audio record start and image capture button click
         {
-            if(gifdrawable!= null && (! gifdrawable.isPlaying()))
-                gifdrawable.reset();
-
             if(currentselectedcomposer == 0)
             {
                 showhideactionbottombaricon(0);
@@ -1030,11 +1021,6 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         }
         else if(type == stoprecorder) // for video record stop,audio record stop and image captured button click
         {
-            if(gifdrawable!= null && gifdrawable.isPlaying())
-            {
-                gifdrawable.pause();
-                gifdrawable.seekTo(0);
-            }
             if(currentselectedcomposer == 0)
             {
                 showhideactionbottombaricon(1);
