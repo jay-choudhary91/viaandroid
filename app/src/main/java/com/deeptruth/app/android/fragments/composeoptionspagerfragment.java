@@ -470,28 +470,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
         {
             case R.id.txt_zoomlevel:
                 if(currentselectedcomposer == 0 && fragvideocomposer != null)
-                {
                     fragvideocomposer.adjustzoom();
-                }
                 else if(currentselectedcomposer == 1  && fragimgcapture != null)
-                {
                     fragimgcapture.adjustzoom();
-                }
-
                 break;
-            case R.id.txt_mediatype_a:
-                currentselectedcomposer=0;
-                showselectedfragment();
-                break;
-            case R.id.txt_mediatype_b:
-                currentselectedcomposer=1;
-                showselectedfragment();
-                break;
-            case R.id.txt_mediatype_c:
-                currentselectedcomposer=2;
-                showselectedfragment();
-                break;
-
             case R.id.layout_recorder:
                 layout_recorder.setEnabled(false);
                 new Handler().postDelayed(new Runnable()
