@@ -110,14 +110,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.signinactivity"
-            android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".activity.createaccount" />
-        <activity android:name=".activity.forgotpassword" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".activity.createaccount"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".activity.forgotpassword"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".activity.verifyuser"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".activity.changepassword"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
     </application>
 
 </manifest>
