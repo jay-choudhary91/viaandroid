@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.interfaces.homepressedlistener;
@@ -75,5 +77,23 @@ public class registrationbaseactivity extends AppCompatActivity
             api.add(key,argvalue);
         }
         api.execute();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View v = getCurrentFocus();
+
+        if (v != null && (ev.getAction() == MotionEvent.ACTION_UP  &&
+                v instanceof EditText &&
+                !v.getClass().getName().startsWith("android.webkit."))) {
+            int scrcoords[] = new int[2];
+            v.getLocationOnScreen(scrcoords);
+            float x = ev.getRawX() + v.getLeft() - scrcoords[0];
+            float y = ev.getRawY() + v.getTop() - scrcoords[1];
+
+            if (x < v.getLeft() || x > v.getRight() || y < v.getTop() || y > v.getBottom())
+                hidekeyboard();
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

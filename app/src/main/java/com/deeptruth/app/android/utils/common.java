@@ -602,6 +602,9 @@ public class common {
         }else if (keyname.equalsIgnoreCase("attitude")) {
             xdata.getinstance().saveSetting(config.attitude_data,((ismetricsselected)?value:"NA"));
         }
+        else if (keyname.equalsIgnoreCase(config.airplanemode)) {
+            xdata.getinstance().saveSetting(config.airplanemode,((ismetricsselected)?value:"NA"));
+        }
     }
 
 

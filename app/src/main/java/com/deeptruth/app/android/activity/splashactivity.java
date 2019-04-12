@@ -74,7 +74,7 @@ public class splashactivity extends Activity {
                     }
 
                     // Login portion commented on app launch till furthure notice.
-                    /*if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
+                   /* if(xdata.getinstance().getSetting(config.authtoken).trim().isEmpty())
                     {
                         Intent intent=new Intent(splashactivity.this,signinactivity.class);
                         startActivity(intent);

@@ -341,7 +341,7 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
     ArrayList<dbitemcontainer> dbstartitemcontainer =new ArrayList<>();
     ArrayList<dbitemcontainer> dbmiddleitemcontainer =new ArrayList<>();
     String hashvalue = "",metrichashvalue = "";
-    RelativeLayout layoutbottom;
+    RelativeLayout layoutbottom,layout_seekbarzoom;
     /**
      * A {@link CameraCaptureSession.CaptureCallback} that handles events related to JPEG capture.
      */
@@ -1723,9 +1723,10 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         }
     }
 
-    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom) {
+    public void setData(adapteritemclick madapterclick, RelativeLayout layoutbottom,RelativeLayout layout_seekbarzoom) {
         this.madapterclick = madapterclick;
         this.layoutbottom = layoutbottom;
+        this.layout_seekbarzoom = layout_seekbarzoom;
     }
 
     @Override
@@ -1735,9 +1736,11 @@ public class imagecomposerfragment extends basefragment  implements View.OnClick
         if(isshow){
             layoutbottom.setVisibility(View.GONE);
             linearheader.setVisibility(View.GONE);
+            layout_seekbarzoom.setVisibility(View.GONE);
         }else{
             layoutbottom.setVisibility(View.VISIBLE);
             linearheader.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.setVisibility(View.VISIBLE);
         }
     }
 }

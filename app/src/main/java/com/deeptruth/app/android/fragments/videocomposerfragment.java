@@ -103,6 +103,8 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.widget.RelativeLayout.TRUE;
+
 public class videocomposerfragment extends basefragment implements View.OnClickListener,View.OnTouchListener, Orientation.Listener {
 
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -334,7 +336,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
     long frameduration =15, mframetorecordcount =0,apicallduration=5,apicurrentduration=0;
     public boolean autostartvideo=false,camerastatusok=false;
     adapteritemclick madapterclick;
-    RelativeLayout layout_bottom;
+    RelativeLayout layout_bottom,layout_seekbarzoom;
     File lastrecordedvideo=null;
     String selectedvideofile ="", mediakey ="",selectedmetrices="", selectedhashes ="",hashvalue = "",metrichashvalue = "";
     //private ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
@@ -639,13 +641,15 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     if(!isvideorecording)
                     {
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, common.getscreenwidthheight(50));
                         lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        setdynamiclayout(lp,null,0,common.getscreenwidthheight(25),0,common.getscreenwidthheight(25),0,0,0,0,null,headercontainer,null,90);
+                        lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,90);
 
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT,RelativeLayout.TRUE);
-                        setdynamiclayout(layoutparams,null,0,common.getscreenwidthheight(25),0,common.getscreenwidthheight(25),0,0,0,0,null,null,layout_no_gps_wifi,90);
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, common.getscreenwidthheight(50));
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_LEFT, TRUE);
+                        layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,90);
 
                         img_dotmenu.setVisibility(View.GONE);
                         /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -656,7 +660,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         txt_no_gps_wifi.setPadding((int) getResources().getDimension(R.dimen.margin_10dp),0,0,0);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
-                        setvalidatingtext();
 
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
@@ -665,13 +668,16 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 {
                     if(!isvideorecording)
                     {
-                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-                        setdynamiclayout(lp,null,0,common.getscreenwidthheight(25),0,common.getscreenwidthheight(25),0,0,0,0,null,headercontainer,null,270);
 
-                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-                        setdynamiclayout(layoutparams,null,0,common.getscreenwidthheight(25),0,common.getscreenwidthheight(25),0,0,0,0,null,null,layout_no_gps_wifi,270);
+                        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, common.getscreenwidthheight(50));
+                        lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+                        lp.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,270);
+
+                        RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, common.getscreenwidthheight(50));
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, TRUE);
+                        layoutparams.addRule(RelativeLayout.CENTER_VERTICAL, TRUE);
+                        setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,270);
 
                         img_dotmenu.setVisibility(View.GONE);
                         /*RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -685,11 +691,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         // set validating text to right padding
                         txt_section_validating_secondary.setPadding(0,0,(int) getResources().getDimension(R.dimen.margin_10dp),0);
                         txt_weakgps.setPadding(0,0,(int) getResources().getDimension(R.dimen.margin_10dp),0);
-
-                        RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(83, 69);
-                        warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-                        setdynamiclayout(warninglayoutparams,null,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,img_gpswifiwarning,null,null,0);
-                        setdynamiclayout(warninglayoutparams,null,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,img_close,null,null,0);
 
                     }
 
@@ -712,7 +713,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lp,null,0,0,0,0,0,0,0,0,null,headercontainer,null,(int)rotateangle);
 
                         RelativeLayout.LayoutParams  layoutparams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP,RelativeLayout.TRUE);
+                        layoutparams.addRule(RelativeLayout.ALIGN_PARENT_TOP, TRUE);
                         setdynamiclayout(layoutparams,null,0,0,0,0,0,0,0,0,null,null,layout_no_gps_wifi,(int)rotateangle);
 
                         RelativeLayout.LayoutParams lpimg_dotmenu = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -724,8 +725,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         txt_no_gps_wifi.setPadding(20,0,0,0);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
                         setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
-
-                        setvalidatingtext();
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -1468,10 +1467,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         return (float) Math.sqrt(x * x + y * y);
     }
 
-    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom) {
+    public void setData(boolean autostartvideo, adapteritemclick madapterclick, RelativeLayout layout_bottom,RelativeLayout layout_seekbarzoom) {
         this.autostartvideo = autostartvideo;
         this.madapterclick = madapterclick;
         this.layout_bottom = layout_bottom;
+        this.layout_seekbarzoom = layout_seekbarzoom;
     }
 
     public static Fragment newInstance()
@@ -2268,9 +2268,11 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
         if(isshow){
             layout_bottom.setVisibility(View.GONE);
             headercontainer.setVisibility(View.GONE);
+            layout_seekbarzoom.setVisibility(View.GONE);
         }else{
             layout_bottom.setVisibility(View.VISIBLE);
             headercontainer.setVisibility(View.VISIBLE);
+            layout_seekbarzoom.setVisibility(View.VISIBLE);
         }
     }
 
@@ -2288,12 +2290,10 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 imageView.setPadding(paddingleft,paddingtop,paddingright,paddingbottom);
             }
             if(rotationheadercontainer != null){
-                relativelayoutparams.setMargins(marginleft,margintop,marginright,marginbottom);
                 rotationheadercontainer.setLayoutParams(relativelayoutparams);
                 rotationheadercontainer.setAngle(rotationangle);
 
             }else if(rotationwifilayout!= null){
-                relativelayoutparams.setMargins(marginleft,margintop,marginright,marginbottom);
                 rotationwifilayout.setLayoutParams(relativelayoutparams);
                 rotationwifilayout.setAngle(rotationangle);
             }
@@ -2312,7 +2312,8 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                 value=getResources().getString(R.string.no_internet);
                 if(xdata.getinstance().getSetting(config.CellProvider).isEmpty()
                         || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("NA")
-                        ||xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null") )
+                        || xdata.getinstance().getSetting(config.CellProvider).equalsIgnoreCase("null")
+                        || xdata.getinstance().getSetting(config.airplanemode).equals("ON"))
                 {
                     value=getResources().getString(R.string.no_network);
                 }
@@ -2359,14 +2360,6 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
             }
 
         }
-    }
-    public void setvalidatingtext(){
-        txt_section_validating_secondary.setPadding(0,0,20,0);
-            RelativeLayout.LayoutParams  warninglayoutparams = new RelativeLayout.LayoutParams(83, 69);
-            warninglayoutparams.setMargins(0,0,20,0);
-            warninglayoutparams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,RelativeLayout.TRUE);
-            img_gpswifiwarning.setLayoutParams(warninglayoutparams);
-            img_close.setLayoutParams(warninglayoutparams);
     }
 }
 
