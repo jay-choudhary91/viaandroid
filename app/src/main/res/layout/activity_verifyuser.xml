@@ -5,24 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:fillViewport="true"
+    android:id="@+id/rootview"
     android:layout_height="match_parent"
     android:background="@drawable/splashscrn"
     tools:context="com.deeptruth.app.android.activity.verifyuser">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_height="match_parent"
-            android:weightSum="1">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_gravity="bottom"
                 android:id="@+id/layout_top"
-                android:gravity="bottom"
-                android:layout_weight="0.6">
+                android:gravity="bottom">
 
                 <ImageView
                     android:id="@+id/img_imagedeep"
@@ -56,13 +55,14 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.4"
+                android:layout_height="wrap_content"
                 android:gravity="bottom"
+                android:id="@+id/layout_bottom"
+                android:layout_below="@+id/layout_top"
                 >
 
                 <RelativeLayout
-                    android:id="@+id/layout_signin"
+                    android:id="@+id/layout_verifyemail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -193,5 +193,5 @@
 
                 </RelativeLayout>
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>

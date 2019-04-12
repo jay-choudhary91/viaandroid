@@ -3,6 +3,8 @@ package com.deeptruth.app.android.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
@@ -29,12 +31,35 @@ public class verifyuser extends registrationbaseactivity implements View.OnClick
     customfonttextview tvcomplete;
     @BindView(R.id.tv_cancel)
     customfonttextview tvcancel;
+    @BindView(R.id.rootview)
+    ScrollView rootview;
+    @BindView(R.id.layout_bottom)
+    LinearLayout layout_bottom;
+    @BindView(R.id.layout_top)
+    LinearLayout layout_top;
+    int topviewheight,bottomviewheight,rootviewheight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verifyuser);
         ButterKnife.bind(verifyuser.this);
+        rootview.post(new Runnable() {
+            @Override
+            public void run() {
+                rootviewheight = rootview.getHeight();
+                topviewheight = ((rootviewheight *55)/100);
+                layout_top.getLayoutParams().height = topviewheight;
+                layout_top.setVisibility(View.VISIBLE);
+                layout_top.requestLayout();
+
+                bottomviewheight = (rootviewheight -topviewheight);
+                layout_bottom.getLayoutParams().height = bottomviewheight;
+                layout_bottom.setVisibility(View.VISIBLE);
+                layout_bottom.requestLayout();
+            }
+        });
+
 
         tvcomplete.setOnClickListener(this);
         tvcancel.setOnClickListener(this);
