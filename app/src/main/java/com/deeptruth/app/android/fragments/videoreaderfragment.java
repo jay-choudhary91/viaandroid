@@ -456,6 +456,14 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     layout_videodetails.setVisibility(View.VISIBLE);
                     layout_videodetails.requestLayout();
                     loadviewdata();
+
+                    img_fullscreen.getPaddingBottom();
+
+                    RelativeLayout.LayoutParams imageview  = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    int bottommargin= imageview.bottomMargin;
+                    Log.e("bottommargin",""+bottommargin);
+                    Log.e("bottompadding",""+img_fullscreen.getPaddingBottom());
+
                 }
             });
 
@@ -1773,7 +1781,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         setheadermargin(0,0,(rootviewheight-navigationbarheight),true);
         layout_videodetails.setVisibility(View.GONE);
         scrollview_detail.setVisibility(View.GONE);
-        layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
         scrollview_meta.setVisibility(View.GONE);
         scrollView_encyrption.setVisibility(View.GONE);
         tab_layout.setVisibility(View.GONE);
@@ -1782,11 +1789,11 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         setbottomimgview(0);
         videodownwordarrow.setVisibility(View.GONE);
         rl_video_downwordarrow.setVisibility(View.GONE);
+        backgroundcolor();
         islastdragarrow =false;
         if(player.isPlaying()){
             img_fullscreen.setVisibility(View.GONE);
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-            backgroundcolor();
             layoutpause.setVisibility(View.VISIBLE);
             imgpause.setVisibility(View.VISIBLE);
             imgpause.setImageResource(R.drawable.ic_pause);
@@ -1826,6 +1833,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         imgpause.setVisibility(View.GONE);
         collapseimg_view();
         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
+        img_fullscreen.setPadding(0,0,img_fullscreen.getPaddingRight(),img_fullscreen.getPaddingBottom());
         img_fullscreen.setVisibility(View.VISIBLE);
         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
         videodownwordarrow.setVisibility(View.VISIBLE);
