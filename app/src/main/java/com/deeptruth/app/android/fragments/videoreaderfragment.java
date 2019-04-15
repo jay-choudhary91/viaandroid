@@ -1782,7 +1782,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         tab_layout.setVisibility(View.GONE);
         layout_mediatype.setVisibility(View.VISIBLE);
         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-        setbottomimgview(0);
+        setbottomimgview();
         videodownwordarrow.setVisibility(View.GONE);
         rl_video_downwordarrow.setVisibility(View.GONE);
         backgroundcolor();
@@ -1829,7 +1829,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         imgpause.setVisibility(View.GONE);
         collapseimg_view();
         img_fullscreen.setImageResource(R.drawable.ic_full_screen_mode);
-        img_fullscreen.setPadding(0,0,img_fullscreen.getPaddingRight(),img_fullscreen.getPaddingBottom());
         img_fullscreen.setVisibility(View.VISIBLE);
         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
         videodownwordarrow.setVisibility(View.VISIBLE);
@@ -1898,7 +1897,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
              playpausebutton.setVisibility(View.VISIBLE);
              gethelper().updateactionbar(1);
              img_fullscreen.setVisibility(View.VISIBLE);
-             setbottomimgview(0);
+             setbottomimgview();
              img_fullscreen.setImageResource(R.drawable.ic_info_mode);
              layoutbackgroundcontroller.setVisibility(View.VISIBLE);
              layoutpause.setVisibility(View.VISIBLE);
@@ -3168,19 +3167,18 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         img_fullscreen.setVisibility(View.VISIBLE);
         imgpause.setVisibility(View.GONE);
         gethelper().updateactionbar(1);
-        setbottomimgview(0);
+        setbottomimgview();
         layoutbackgroundcontroller.setVisibility(View.VISIBLE);
         img_fullscreen.setImageResource(R.drawable.ic_info_mode);
         gethelper().setdrawerheightonfullscreen(0);
         imgpause.setImageResource(R.drawable.ic_pause);
     }
 
-    public void setbottomimgview(int layoutpauseheight){
+    public void setbottomimgview(){
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,0,0, (int) (scrubberheight + getResources().getDimension(R.dimen.margin_20dp) + layoutpauseheight));
+        params.setMargins(0,0,0, (int) -getResources().getDimension(R.dimen.margin_20dp));
         params.addRule(RelativeLayout.ABOVE,R.id.layout_backgroundcontroller);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         img_fullscreen.setLayoutParams(params);
     }
@@ -3189,7 +3187,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params.addRule(RelativeLayout.ABOVE,R.id.layout_backgroundcontroller );
-        params.setMargins(0,0,0, (int) - getResources().getDimension(R.dimen.margin_20dp));
+        params.setMargins(0,0,0,(int) -getResources().getDimension(R.dimen.margin_15dp));
         img_fullscreen.setLayoutParams(params);
     }
 
@@ -3299,7 +3297,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             getpausebtnheight();
                         }else{
                             playpausebutton.setVisibility(View.VISIBLE);
-                            setbottomimgview(0);
+                            setbottomimgview();
                         }
                 }
             }else{
@@ -3460,7 +3458,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             @Override
             public void run() {
                 layoutpauseheight= layoutpause.getHeight();
-                setbottomimgview(layoutpauseheight);
+                setbottomimgview();
             }
         });
     }
