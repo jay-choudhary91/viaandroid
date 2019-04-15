@@ -1587,16 +1587,13 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             if(player != null && (! player.isPlaying()))  // Player is pause
                             {
                                 gethelper().updateactionbar(1);
-
                                 img_fullscreen.setVisibility(View.VISIBLE);
                                 layoutbackgroundcontroller.setVisibility(View.VISIBLE);
                                 gethelper().drawerenabledisable(true);
                                 layout_mediatype.setVisibility(View.VISIBLE);
                                 img_fullscreen.setImageResource(R.drawable.ic_info_mode);
                                 layoutpause.setVisibility(View.VISIBLE);
-
                                 if(!isplaypauswebtnshow){
-                                    setbottomimgview(0);
                                     playpausebutton.setVisibility(View.VISIBLE);
 
                                 }else{
@@ -1613,9 +1610,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                 layoutpause.setVisibility(View.VISIBLE);
                                 layout_mediatype.setVisibility(View.GONE);
                                 playpausebutton.setVisibility(View.GONE);
-                                layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
+                              /*  layoutpause.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
                                 layout_seekbartiming.setBackgroundColor(getResources().getColor(R.color.whitetransparent));
-                                layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));
+                                layoutcustomcontroller.setBackgroundColor(getResources().getColor(R.color.transparent));*/
                                 getcontrollerheight();
                             }
                         }
@@ -1629,10 +1626,9 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                             {
                                 gethelper().updateactionbar(0);
                                 layoutbackgroundcontroller.setVisibility(View.GONE);
-                                img_fullscreen.setVisibility(View.GONE);
                                 gethelper().drawerenabledisable(false);
                                 layout_mediatype.setVisibility(View.GONE);
-                                layoutpause.setVisibility(View.GONE);
+                                layoutpause.setVisibility(View.VISIBLE);
                             }
                             /*else
                             {
@@ -1801,7 +1797,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         }else{
             img_fullscreen.setVisibility(View.VISIBLE);
             img_fullscreen.setImageResource(R.drawable.ic_info_mode);
-            layoutpause.setVisibility(View.GONE);
+            layoutpause.setVisibility(View.VISIBLE);
             imgpause.setVisibility(View.GONE);
             playpausebutton.setVisibility(View.VISIBLE);
         }
@@ -1905,7 +1901,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
              setbottomimgview(0);
              img_fullscreen.setImageResource(R.drawable.ic_info_mode);
              layoutbackgroundcontroller.setVisibility(View.VISIBLE);
-             layoutpause.setVisibility(View.GONE);
+             layoutpause.setVisibility(View.VISIBLE);
 
         }
         Log.e("onrestart","onrestart");
@@ -3193,7 +3189,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params.addRule(RelativeLayout.ABOVE,R.id.layout_backgroundcontroller );
-        params.setMargins(0,0,0,-25);
+        params.setMargins(0,0,0, (int) - getResources().getDimension(R.dimen.margin_20dp));
         img_fullscreen.setLayoutParams(params);
     }
 

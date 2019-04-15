@@ -968,9 +968,10 @@ public class composeoptionspagerfragment extends basefragment implements View.On
                     layout_seekbarzoom.setRotation(rotateangle);
                 }
 
-                if(fragaudiocomposer != null && currentselectedcomposer == 2)
+                if(fragaudiocomposer != null && currentselectedcomposer == 2){
                     layout_encryption.setRotation(rotateangle);
                     layout_seekbarzoom.setRotation(rotateangle);
+                }
             }
 
             if(imgrotatecamera != null)
