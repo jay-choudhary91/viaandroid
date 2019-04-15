@@ -2988,10 +2988,22 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
      public void setplaypuasebtnondrag(int parentheight){
 
-         int centerheight = parentheight/2;
+        /* int centerheight = parentheight/2;
          int buttonheight = playpausebutton.getHeight();
 
-         int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;
+         int lastvalue = (centerheight+ headerheight) - (buttonheight/2) ;*/
+
+         int buttonheight = playpausebutton.getHeight();
+         int layoutvideotextureviewheight = rl_videotextureview.getHeight();
+
+         int centerheightoflayout = layoutvideotextureviewheight - (headerheight + scrubberheight);
+
+         int halfcenterheightoflayout = (centerheightoflayout/2);
+
+         //int percentageheight = (buttonheight / 100) * 75;
+         double res = (buttonheight / 100.0f) * 70;
+
+         int lastvalue = (halfcenterheightoflayout+headerheight) - (int)res;
 
          recenterplaypause(lastvalue ,0);
      }
