@@ -496,14 +496,14 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                         lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        lpexpandable.setMargins(20, 0, 0,  0);
+                        lpexpandable.setMargins(0, 0, 0,  0);
                         expandable_layout.setLayoutParams(lpexpandable);
 
                     }else if(rotationangle == 90){
 
                         RelativeLayout.LayoutParams lpexpandable = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
                         lpexpandable.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                        lpexpandable.setMargins(20, 0, 0,  0);
+                        lpexpandable.setMargins(0, 0, 0,  0);
                         expandable_layout.setLayoutParams(lpexpandable);
 
 
