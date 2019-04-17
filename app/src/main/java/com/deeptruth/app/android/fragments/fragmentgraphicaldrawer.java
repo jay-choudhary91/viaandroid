@@ -3,6 +3,7 @@ package com.deeptruth.app.android.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,10 +32,17 @@ import android.widget.TextView;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.applicationviavideocomposer;
+import com.deeptruth.app.android.database.databasemanager;
+import com.deeptruth.app.android.models.arraycontainer;
+import com.deeptruth.app.android.models.metadatahash;
+import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.sensor.Orientation;
+import com.deeptruth.app.android.utils.AnalogClock;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.myanalogclock;
+import com.deeptruth.app.android.utils.worldanalogclock;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.github.mikephil.charting.charts.LineChart;
@@ -57,12 +66,23 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.warkiz.widget.IndicatorSeekBar;
 import com.warkiz.widget.OnSeekChangeListener;
 import com.warkiz.widget.SeekParams;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -177,13 +197,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     RelativeLayout layout_constraint;
     @BindView(R.id.layout_transparency_meter)
     LinearLayout layout_transparency_meter;
+    @BindView(R.id.phone_time_clock)
+    AnalogClock phone_time_clock;
+    @BindView(R.id.world_time_clock)
+    AnalogClock world_time_clock;
+    @BindView(R.id.txt_phone_time)
+    TextView txt_phone_time;
+    @BindView(R.id.txt_world_time)
+    TextView txt_world_time;
 
     View rootview;
     GoogleMap mgooglemap;
     private SensorManager msensormanager;
     private Sensor maccelerometersensormanager;
     public ScrollView scrollview_meta;
-
+    private ArrayList<arraycontainer> metricmainarraylist = new ArrayList<>();
     private boolean isinbackground=false,ismediaplayer = false,isgraphicopen=false,isdatacomposing=false;
     String latitude = "", longitude = "",screenheight = "",screenwidth = "",lastsavedangle="";
     private float currentDegree = 0f;
@@ -313,6 +341,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 seekbartransparency.setProgress(50f);
                 googlemap.setAlpha(0.5f);
             }
+
+            /*Calendar calendar = Calendar.getInstance();
+            phone_time_clock.setCalendar(calendar)
+                    .setDiameterInDp(400.0f)
+                    .setOpacity(1.0f)
+                    .setShowSeconds(true)
+                    .setColor(Color.WHITE);
+
+            Calendar calendar2 = Calendar.getInstance();
+            calendar2.add(Calendar.HOUR,-2);
+            world_time_clock.setCalendar(calendar2)
+                    .setDiameterInDp(400.0f)
+                    .setOpacity(1.0f)
+                    .setShowSeconds(true)
+                    .setColor(Color.WHITE);*/
 
             loadmap();
             setchartdata();
@@ -609,6 +652,19 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
+    public void setdatacomposing(boolean isdatacomposing,String mediafilepath)
+    {
+        if(! isdatacomposing)
+        {
+            metricmainarraylist.clear();
+            if(mgooglemap != null)
+                mgooglemap.clear();
+
+            fetchmetadatafromdb(mediafilepath);
+            drawmappath();
+        }
+    }
+
     public void setdatacomposing(boolean isdatacomposing)
     {
         this.isdatacomposing=isdatacomposing;
@@ -649,103 +705,109 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
         }
     }
 
+    public void drawmappath()
+    {
+        PolylineOptions options = new PolylineOptions().width(7).color(Color.RED).geodesic(true);
+        for (int i = 0; i < metricmainarraylist.size(); i++) {
+            arraycontainer container=metricmainarraylist.get(i);
+            ArrayList<metricmodel> arraylist=container.getMetricItemArraylist();
+            double latitude=0.0,longitude=0.0;
+            for(int j=0;j<arraylist.size();j++)
+            {
+                metricmodel model=arraylist.get(j);
+                if(model.getMetricTrackKeyName().equalsIgnoreCase("gpslatitude"))
+                {
+                    latitude=Double.parseDouble(model.getMetricTrackValue());
+                }
+                if(model.getMetricTrackKeyName().equalsIgnoreCase("gpslongitude"))
+                {
+                    longitude=Double.parseDouble(model.getMetricTrackValue());
+                }
+            }
+            LatLng point = new LatLng(latitude,longitude);
+            options.add(point);
+        }
+        /*options.add(new LatLng(26.763653, 75.645427));
+        options.add(new LatLng(26.860102, 75.753649));
+        options.add(new LatLng(26.888557, 75.810985));*/
+        if(mgooglemap != null)
+            mgooglemap.addPolyline(options);
 
-    public void setmetadatavalue(){
-
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.latitude),"\n"+"N/A", tvlatitude);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.longitude),"\n"+"N/A", tvlongitude);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.altitude),"\n"+"N/A", tvaltitude);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.speed),"\n"+"N/A", tvspeed);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.heading),"\n"+"N/A", tvheading);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.traveled),"\n"+"N/A", tvtraveled);
-        common.setspannable("","N/A", tvaddress);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.xaxis),"\n"+"N/A", tvxaxis);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.yaxis),"\n"+"N/A", tvyaxis);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.zaxis),"\n"+"N/A", tvzaxis);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.phone),"\n"+"N/A", tvphone);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.network),"\n"+"N/A", tvnetwork);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.connection),"\n"+"N/A", tvconnection);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.version),"\n"+"N/A", tvversion);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.wifi),"\n"+"N/A", tvwifi);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.gpsaccuracy),"\n"+"N/A", tvgpsaccuracy);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.screen),"\n"+screenwidth+"x"+screenheight, tvscreen);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.country),"\n"+"N/A", tvcountry);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.cpuusage),"\n"+"N/A", tvcpuusage);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.brightness),"\n"+"N/A", tvbrightness);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.timezone),"\n"+"N/A", tvtimezone);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.memoryusage),"\n"+"N/A", tvmemoryusage);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.bluetooth),"\n"+"N/A", tvbluetooth);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.localtime),"\n"+"N/A", tvlocaltime);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.storagefree),"\n"+"N/A", tvstoragefree);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.language),"\n"+"N/A", tvlanguage);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.uptime),"\n"+"N/A", tvuptime);
-        common.setspannable(applicationviavideocomposer.getactivity().getResources().getString(R.string.battery),"\n"+"N/A", tvbattery);
-
+        // Source ->   https://stackoverflow.com/questions/17425499/how-to-draw-interactive-polyline-on-route-google-maps-v2-android
     }
 
-    public static void locationAnalyticsdata(final TextView txt_latitude, final TextView txt_longitude, final TextView txt_altitude, final TextView txt_heading,
-                                             final TextView txt_orientation, final TextView txt_speed, final TextView txt_address) {
+    public void fetchmetadatafromdb(String mediafilepath) {
+        try {
+            databasemanager mdbhelper = new databasemanager(applicationviavideocomposer.getactivity());
+            mdbhelper.createDatabase();
 
+            try {
+                mdbhelper.open();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<metadatahash> mitemlist=mdbhelper.getmediametadatabyfilename(common.getfilename(mediafilepath));
+            for(int i=0;i<mitemlist.size();i++)
+            {
+                String metricdata=mitemlist.get(i).getMetricdata();
+                String sequencehash = mitemlist.get(i).getSequencehash();
+                String hashmethod = mitemlist.get(i).getHashmethod();
+                String videostarttransactionid = mitemlist.get(i).getVideostarttransactionid();
+                String serverdictionaryhash = mitemlist.get(i).getValuehash();
+                String color = mitemlist.get(i).getColor();
+                String latency = mitemlist.get(i).getLatency();
+                parsemetadata(metricdata,hashmethod,videostarttransactionid,sequencehash,serverdictionaryhash,color,latency);
+            }
+        }catch (Exception e)
         {
-            StringBuilder mformatbuilder = new StringBuilder();
-            final String latitude=xdata.getinstance().getSetting(config.LatitudeDegree);
-
-            if(! latitude.isEmpty() && (! latitude.equalsIgnoreCase("NA")))
-            {
-                mformatbuilder.append(config.Latitude+System.getProperty("line.separator")+ latitude);
-            }
-            else
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+config.Latitude+System.getProperty("line.separator")+"NA");
-            }
-
-            final String altitude=xdata.getinstance().getSetting(config.Altitude);
-
-            if(! altitude.isEmpty() && (! altitude.equalsIgnoreCase("NA")))
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Altitude+System.getProperty("line.separator")+
-                        common.getxdatavalue(xdata.getinstance().getSetting(config.Altitude)));
-            }
-            else
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Altitude+System.getProperty("line.separator")+"NA");
-            }
-            String value=common.getxdatavalue(xdata.getinstance().getSetting(config.Heading));
-            if((! value.equalsIgnoreCase("NA")) && (! value.equalsIgnoreCase("NA")))
-            {
-                double heading=Double.parseDouble(value);
-                int headingg=(int)heading;
-                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Heading+System.getProperty("line.separator")+headingg);
-            }
-            else
-            {
-                mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Heading+System.getProperty("line.separator"));
-            }
-
-            txt_latitude.setText(mformatbuilder.toString());
+            e.printStackTrace();
         }
+    }
 
-        {
-            StringBuilder mformatbuilder = new StringBuilder();
-            final String longitude=xdata.getinstance().getSetting(config.LongitudeDegree);
-            if(! longitude.isEmpty() && (! longitude.equalsIgnoreCase("NA")))
+    public void parsemetadata(String metadata,String hashmethod,String videostarttransactionid,String hashvalue,String metahash,
+                              String color,String latency) {
+        try {
+
+            Object json = new JSONTokener(metadata).nextValue();
+            JSONObject jsonobject;
+            if(json instanceof JSONObject)
             {
-                mformatbuilder.append(config.Longitude+System.getProperty("line.separator")+
-                        longitude);
+                jsonobject=new JSONObject(metadata);
+                ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                Iterator<String> myIter = jsonobject.keys();
+                while (myIter.hasNext()) {
+                    String key = myIter.next();
+                    String value = jsonobject.optString(key);
+                    metricmodel model = new metricmodel();
+                    model.setMetricTrackKeyName(key);
+                    model.setMetricTrackValue(value);
+                    metricItemArraylist.add(model);
+                }
+                metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,metahash,
+                        color,latency));
             }
-            else
+            else if(json instanceof JSONArray)
             {
-                mformatbuilder.append(System.getProperty("line.separator")+config.Longitude+System.getProperty("line.separator")+"NA");
+                JSONArray array = new JSONArray(metadata);
+                for (int j = 0; j < array.length(); j++) {
+                    ArrayList<metricmodel> metricItemArraylist = new ArrayList<>();
+                    JSONObject object = array.getJSONObject(j);
+                    Iterator<String> myIter = object.keys();
+                    while (myIter.hasNext()) {
+                        String key = myIter.next();
+                        String value = object.optString(key);
+                        metricmodel model = new metricmodel();
+                        model.setMetricTrackKeyName(key);
+                        model.setMetricTrackValue(value);
+                        metricItemArraylist.add(model);
+                    }
+                    metricmainarraylist.add(new arraycontainer(metricItemArraylist,hashmethod,videostarttransactionid,hashvalue,
+                            metahash,color,latency));
+                }
             }
-
-            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Speed+System.getProperty("line.separator")+
-                    common.getxdatavalue(xdata.getinstance().getSetting(config.Speed)));
-            mformatbuilder.append(System.getProperty("line.separator")+System.getProperty("line.separator")+config.Orientation+System.getProperty("line.separator")+
-                    common.getxdatavalue(xdata.getinstance().getSetting(config.Orientation)));
-
-            txt_longitude.setText(mformatbuilder.toString());
-
-            txt_address.setText(common.getxdatavalue(xdata.getinstance().getSetting(config.Address)));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -819,30 +881,7 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     private void setMap(GoogleMap googleMap) {
         this.mgooglemap = googleMap;
         this.mgooglemap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-        /*points.add(new LatLng(26.235896,74.24235896));
-        points.add(new LatLng(26.34235896,74.24235896));
-        points.add(new LatLng(26.232435896,74.424235896));
-        points.add(new LatLng(26.22235896,74.2325896));
-        points.add(new LatLng(26.454235896,74.24235896));
-        points.add(new LatLng(26.534235896,74.24235896));
-        points.add(new LatLng(26.5565235896,74.42235896));
-        points.add(new LatLng(26.67235896,74.23235896));
-        points.add(new LatLng(26.878235896,74.22135896));
-        points.add(new LatLng(26.45235896,74.23335896));
-        points.add(new LatLng(26.33235896,74.22335896));
-        polylineOptions.addAll(points);
-        polylineOptions.color(Color.BLUE);
-        polylineOptions.width(20);
-        Polyline polyline =mgooglemap.addPolyline(polylineOptions);
-        //polyline.setEndCap(new RoundCap());
-        //polyline.setJointType(JointType.ROUND);
-         polyline.setPattern(PATTERN_POLYLINE_DOTTED);*/
-
     }
-
-    //https://stackoverflow.com/questions/32905939/how-to-customize-the-polyline-in-google-map/46559529
-
 
     private void populatelocationonmap(final LatLng location) {
         if (mgooglemap == null)

@@ -437,10 +437,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             setfooterlayout();
             gethelper().setdatacomposing(false);
 
-
-            /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
-            showcontrollers.startAnimation(startAnimation);*/
-
             showcontrollers.post(new Runnable() {
                 @Override
                 public void run() {
@@ -455,23 +451,15 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                     layout_videodetails.setVisibility(View.VISIBLE);
                     layout_videodetails.requestLayout();
                     loadviewdata();
+                    // mOrientation = new Orientation(applicationviavideocomposer.getactivity());
+                    gethelper().setwindowfitxy(true);
+                    loadmap();
 
                     img_fullscreen.getPaddingBottom();
-
                     RelativeLayout.LayoutParams imageview  = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     int bottommargin= imageview.bottomMargin;
-                    Log.e("bottommargin",""+bottommargin);
-                    Log.e("bottompadding",""+img_fullscreen.getPaddingBottom());
-
                 }
             });
-
-
-           // mOrientation = new Orientation(applicationviavideocomposer.getactivity());
-            gethelper().setwindowfitxy(true);
-            //layout_mediatype.setPadding(0,Integer.parseInt(xdata.getinstance().getSetting("statusbarheight")),0,0);
-            loadviewdata();
-            loadmap();
 
             recyview_frames.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -645,7 +633,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                         });
                        // videodownwordarrow.setImageResource(R.drawable.handle_down_arrow);
                     }
-                    Log.e("singleclcik=","songleclcik");
                     return super.onSingleTapConfirmed(e);
                 }
                 @Override
@@ -673,63 +660,12 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
                                     return true;
                                 };
                             }
-                            //detector.onTouchEvent(event);
                             break;
                     }
 
                     return false;
                 }
             });
-
-
-            videodownwordarrow.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {}
-
-            });
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-
-                    /*rl_videotextureview.post(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            int w = common.getScreenWidth(applicationviavideocomposer.getactivity());
-                            int h = common.getScreenHeight(applicationviavideocomposer.getactivity());
-
-                            rl_videotextureview.setRotation(90.0f);
-                            rl_videotextureview.setTranslationX((w - h) / 2);
-                            rl_videotextureview.setTranslationY((h - w) / 2);
-
-                            ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) rl_videotextureview.getLayoutParams();
-                            lp.height = w;
-                            lp.width = h;
-                            rl_videotextureview.requestLayout();
-
-                            ViewGroup.LayoutParams layoutParams = videotextureview.getLayoutParams();
-                            layoutParams.width = h;
-                            layoutParams.height = w;
-
-                            videotextureview.setLayoutParams(layoutParams);
-
-                            videotextureview.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    //updatesurfaceviewsizefullscreen(videotextureview.getWidth(),videotextureview.getHeight());
-                                    //updatesurfaceviewsize();
-
-
-
-                                   // recenterplaypause(finalmargin,1);
-                                }
-                            });
-                        }
-                    });*/
-
-                }
-            },10000);
         }
 
         return rootview;
@@ -759,19 +695,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
 
         encryptionadapter = new encryptiondataadapter(encryptionarraylist,applicationviavideocomposer.getactivity());
         recycler_encryption.setAdapter(encryptionadapter);
-
-        showcontrollers.post(new Runnable() {
-            @Override
-            public void run() {
-                rootviewheight = showcontrollers.getHeight();
-                videoviewheight = ((rootviewheight *60)/100);
-                layout_halfscrnimg.getLayoutParams().height = videoviewheight;
-                layout_halfscrnimg.requestLayout();
-                detailviewheight = (rootviewheight - (videoviewheight+navigationbarheight));
-                layout_videodetails.getLayoutParams().height = detailviewheight;
-                layout_videodetails.requestLayout();
-            }
-        });
 
         layout_mediatype.post(new Runnable() {
             @Override
@@ -1076,6 +999,7 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
         txtslotmedia.setOnClickListener(new setonClick());
         resetButtonViews(txtslotmedia, txtslotmeta, txtslotencyption);
         mediafilepath = xdata.getinstance().getSetting("selectedvideourl");
+        gethelper().setdatacomposing(false,mediafilepath);
         edt_medianotes.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

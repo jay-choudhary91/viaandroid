@@ -1763,6 +1763,7 @@ public class audioreaderfragment extends basefragment implements SurfaceHolder.C
 
    public void setupaudiodata() {
        audiourl = xdata.getinstance().getSetting("selectedaudiourl");
+       gethelper().setdatacomposing(false,audiourl);
        if (audiourl != null && (!audiourl.isEmpty())) {
 
            audioduration = 0;
