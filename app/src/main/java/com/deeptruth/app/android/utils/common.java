@@ -519,10 +519,10 @@ public class common {
             xdata.getinstance().saveSetting(config.acceleration_y,"NA");
             xdata.getinstance().saveSetting(config.acceleration_z,"NA");
             xdata.getinstance().saveSetting(config.Connectionspeed,"NA");
-            xdata.getinstance().saveSetting(config.blockchainid,"");
-            xdata.getinstance().saveSetting(config.hashformula,"");
-            xdata.getinstance().saveSetting(config.datahash,"");
-            xdata.getinstance().saveSetting(config.matrichash,"");
+            xdata.getinstance().saveSetting(config.blockchainid,"NA");
+            xdata.getinstance().saveSetting(config.hashformula,"NA");
+            xdata.getinstance().saveSetting(config.datahash,"NA");
+            xdata.getinstance().saveSetting(config.matrichash,"NA");
             xdata.getinstance().saveSetting(config.distancetravelled,"NA");
             xdata.getinstance().saveSetting(config.latency,"");
             xdata.getinstance().saveSetting(config.currentlatency,"");
@@ -611,13 +611,13 @@ public class common {
     public static void setgraphicalblockchainvalue(String keyname,String value,boolean ismetricsselected){
 
          if (keyname.equalsIgnoreCase(config.blockchainid)) {
-            xdata.getinstance().saveSetting(config.blockchainid,(ismetricsselected)?value:"");
+            xdata.getinstance().saveSetting(config.blockchainid,(ismetricsselected)?value:"NA");
          } else if (keyname.equalsIgnoreCase(config.hashformula)) {
-                 xdata.getinstance().saveSetting(config.hashformula,(ismetricsselected)?value:"");
+                 xdata.getinstance().saveSetting(config.hashformula,(ismetricsselected)?value:"NA");
          } else if (keyname.equalsIgnoreCase(config.datahash)) {
-                     xdata.getinstance().saveSetting(config.datahash,(ismetricsselected)?value:"");
+                     xdata.getinstance().saveSetting(config.datahash,(ismetricsselected)?value:"NA");
          } else if (keyname.equalsIgnoreCase(config.matrichash)) {
-                         xdata.getinstance().saveSetting(config.matrichash,(ismetricsselected)?value:"");
+                         xdata.getinstance().saveSetting(config.matrichash,(ismetricsselected)?value:"NA");
          }
     }
 
