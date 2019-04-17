@@ -38,8 +38,11 @@ import com.deeptruth.app.android.models.metadatahash;
 import com.deeptruth.app.android.models.metricmodel;
 import com.deeptruth.app.android.sensor.AttitudeIndicator;
 import com.deeptruth.app.android.sensor.Orientation;
+import com.deeptruth.app.android.utils.AnalogClock;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.myanalogclock;
+import com.deeptruth.app.android.utils.worldanalogclock;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.github.mikephil.charting.charts.LineChart;
@@ -194,6 +197,14 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
     RelativeLayout layout_constraint;
     @BindView(R.id.layout_transparency_meter)
     LinearLayout layout_transparency_meter;
+    @BindView(R.id.phone_time_clock)
+    AnalogClock phone_time_clock;
+    @BindView(R.id.world_time_clock)
+    AnalogClock world_time_clock;
+    @BindView(R.id.txt_phone_time)
+    TextView txt_phone_time;
+    @BindView(R.id.txt_world_time)
+    TextView txt_world_time;
 
     View rootview;
     GoogleMap mgooglemap;
@@ -330,6 +341,21 @@ public class fragmentgraphicaldrawer extends basefragment implements OnChartValu
                 seekbartransparency.setProgress(50f);
                 googlemap.setAlpha(0.5f);
             }
+
+            /*Calendar calendar = Calendar.getInstance();
+            phone_time_clock.setCalendar(calendar)
+                    .setDiameterInDp(400.0f)
+                    .setOpacity(1.0f)
+                    .setShowSeconds(true)
+                    .setColor(Color.WHITE);
+
+            Calendar calendar2 = Calendar.getInstance();
+            calendar2.add(Calendar.HOUR,-2);
+            world_time_clock.setCalendar(calendar2)
+                    .setDiameterInDp(400.0f)
+                    .setOpacity(1.0f)
+                    .setShowSeconds(true)
+                    .setColor(Color.WHITE);*/
 
             loadmap();
             setchartdata();

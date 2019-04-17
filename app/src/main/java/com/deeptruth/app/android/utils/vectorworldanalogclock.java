@@ -36,7 +36,7 @@ import java.util.Calendar;
  *              I refactored it to make it usable as a library.
  *              Enjoy.
  */
-public abstract class vectoranalogclock extends RelativeLayout {
+public abstract class vectorworldanalogclock extends RelativeLayout {
 
     private AppCompatImageView analogFace;
     private AppCompatImageView analogHour;
@@ -54,23 +54,23 @@ public abstract class vectoranalogclock extends RelativeLayout {
 
     private Context ctx;
 
-    public vectoranalogclock(Context ctx) {
+    public vectorworldanalogclock(Context ctx) {
         super(ctx);
         this.ctx = ctx;
     }
 
-    public vectoranalogclock(Context context, AttributeSet attrs) {
+    public vectorworldanalogclock(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.ctx = context;
     }
 
-    public vectoranalogclock(Context context, AttributeSet attrs, int defStyleAttr) {
+    public vectorworldanalogclock(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.ctx = context;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public vectoranalogclock(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public vectorworldanalogclock(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.ctx = context;
     }
@@ -175,7 +175,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
     /**
      *  Sets the timing of the clock from the calendar object
      */
-    public vectoranalogclock setCalendar(Calendar calendar) {
+    public vectorworldanalogclock setCalendar(Calendar calendar) {
         this.calendar = calendar;
         tickTick();
 
@@ -185,7 +185,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
     /**
      * Sets the scale of the view.
      */
-    public vectoranalogclock setScale(float scale) {
+    public vectorworldanalogclock setScale(float scale) {
         this.scale = scale;
         this.setScaleY(scale * scaleMultiplier);
         this.setScaleX(scale * scaleMultiplier);
@@ -196,7 +196,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
     /**
      * @param diameterInDp: the desired diameter in dp
      */
-    public vectoranalogclock setDiameterInDp(float diameterInDp){
+    public vectorworldanalogclock setDiameterInDp(float diameterInDp){
         this.diameterInDp = diameterInDp;
         //scaleMultiplier = newSize / oldSize
         scaleMultiplier = diameterInDp / this.sizeInDp;
@@ -208,7 +208,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
     /**
      * @param diameterInPixels: the desired diameter in pixels
      */
-    public vectoranalogclock setDiameterInPixels(int diameterInPixels){
+    public vectorworldanalogclock setDiameterInPixels(int diameterInPixels){
         this.diameterInPixels = diameterInPixels;
         //scaleMultiplier = newSize / oldSize
         scaleMultiplier = (diameterInPixels+0.0f) / (this.sizeInPixels+0.0f);
@@ -223,7 +223,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
      *
      *               Default: 1.0f
      */
-    public vectoranalogclock setOpacity(float opacity) {
+    public vectorworldanalogclock setOpacity(float opacity) {
         this.opacity = opacity;
         main(ctx);
 
@@ -233,7 +233,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
     /**
      * @param color: hexadecimal color (ex: 0xff000000)
      */
-    public vectoranalogclock setColor(int color) {
+    public vectorworldanalogclock setColor(int color) {
         this.color = color;
         main(ctx);
 
@@ -243,7 +243,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
     /**
      * @param showSeconds: controls whether to show the seconds hand or not.
      */
-    public vectoranalogclock setShowSeconds(boolean showSeconds) {
+    public vectorworldanalogclock setShowSeconds(boolean showSeconds) {
         this.showSeconds = showSeconds;
         main(ctx);
 
@@ -382,6 +382,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
         animationSet.addAnimation(positioner);
         animationSet.addAnimation(rotator);
         animationSet.setInterpolator(new LinearInterpolator());
+
         analogSecond.startAnimation(animationSet);
 
         //Minutes Degree
@@ -401,6 +402,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
         animationSet.addAnimation(positioner);
         animationSet.addAnimation(rotator);
         animationSet.setInterpolator(new LinearInterpolator());
+
         analogMinute.startAnimation(animationSet);
 
         //every 1 hour moves by 0.00166667 degree every 1 second
@@ -423,6 +425,7 @@ public abstract class vectoranalogclock extends RelativeLayout {
         animationSet.addAnimation(positioner);
         animationSet.addAnimation(rotator);
         animationSet.setInterpolator(new LinearInterpolator());
+
         analogHour.startAnimation(animationSet);
 
         //move analogSecond by 360 degree every 1 minute
