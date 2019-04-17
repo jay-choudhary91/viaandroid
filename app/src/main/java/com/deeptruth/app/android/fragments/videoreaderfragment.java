@@ -438,7 +438,6 @@ public class videoreaderfragment extends basefragment implements View.OnClickLis
             gethelper().setdatacomposing(false);
 
 
-
             /*Animation startAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.view_fadein);
             showcontrollers.startAnimation(startAnimation);*/
 

@@ -59,6 +59,7 @@ public class changepassword extends registrationbaseactivity implements View.OnC
         requestparams.put("email",xdata.getinstance().getSetting(config.usernameemailaddress));
         requestparams.put("password",""+edt_password.getText().toString().trim());
         requestparams.put("confirmpassword",""+edt_confirmpassword.getText().toString().trim());
+        requestparams.put("reset_authtoken",""+xdata.getinstance().getSetting(config.reset_authtoken).toString().trim());
         progressdialog.showwaitingdialog(changepassword.this);
         xapipost_send(changepassword.this,requestparams, new apiresponselistener() {
             @Override
@@ -72,11 +73,14 @@ public class changepassword extends registrationbaseactivity implements View.OnC
                         {
                             if(object.getString("success").equalsIgnoreCase("true"))
                             {
-                                if(object.has("clientid"))
-                                    xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
+                                if(object.has(config.clientid))
+                                    xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                Intent intent=new Intent(changepassword.this,verifyuser.class);
-                                startActivity(intent);
+                                Intent i = new Intent(changepassword.this, signinactivity.class);
+                                hidekeyboard();
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(i);
+                                finish();
                             }
                             else
                             {
@@ -108,7 +112,7 @@ public class changepassword extends registrationbaseactivity implements View.OnC
                 }
                 else
                 {
-                    Toast.makeText(changepassword.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(changepassword.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                 }
             }
         });

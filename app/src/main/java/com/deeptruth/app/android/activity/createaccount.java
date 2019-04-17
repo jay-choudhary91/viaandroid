@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
 import com.deeptruth.app.android.interfaces.apiresponselistener;
+import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
@@ -99,10 +100,9 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                             {
                                 if(object.getString("success").equalsIgnoreCase("true"))
                                 {
-                                    if(object.has("clientid"))
-                                        xdata.getinstance().saveSetting("clientid",object.getString("clientid"));
+                                    if(object.has(config.clientid))
+                                        xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
 
-                                    //Toast.makeText(createaccount.this, "Auth success", Toast.LENGTH_SHORT).show();
                                     Intent intent=new Intent(createaccount.this,verifyuser.class);
                                     startActivity(intent);
                                 }
@@ -136,40 +136,10 @@ public class createaccount extends registrationbaseactivity implements View.OnCl
                     }
                     else
                     {
-                        Toast.makeText(createaccount.this, "Failed to parse json!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(createaccount.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-
-            /*if (edt_username.getText().toString().trim().toString().length() == 0) {
-                Toast.makeText(this, "Please enter user name!", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            if(! common.isvalidusername(edt_username.getText().toString().trim().toString())){
-                Toast.makeText(this, "Please enter user name!", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            if (! common.isValidEmail(edt_email.getText().toString().trim())) {
-                Toast.makeText(this, "Please enter valid email!", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            if (edt_password.getText().toString().trim().toString().length() == 0) {
-                Toast.makeText(this, "Please enter password!", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            if (edt_confirmpassword.getText().toString().trim().toString().length() == 0) {
-                Toast.makeText(this, "Please enter confirm password!", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            if (!(edt_password.getText().toString().trim().toString()).equals(edt_confirmpassword.getText().toString().trim().toString())) {
-                Toast.makeText(this, " confirm password is not correct!", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-            if(validphonenumber().trim().length() > 0 && validphonenumber().trim().length() <= 9)
-            {
-                Toast.makeText(this, " Please enter valid phone number!", Toast.LENGTH_SHORT).show();
-                return false;
-            }*/
 
             return true;
         }

@@ -10,13 +10,21 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.deeptruth.app.android.R;
+import com.deeptruth.app.android.interfaces.apiresponselistener;
 import com.deeptruth.app.android.models.customedittext;
 import com.deeptruth.app.android.utils.common;
 import com.deeptruth.app.android.utils.config;
+import com.deeptruth.app.android.utils.progressdialog;
+import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.deeptruth.app.android.views.customfontedittext;
 import com.deeptruth.app.android.views.customfonttextview;
 import com.google.android.gms.common.internal.service.Common;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,13 +53,73 @@ public class forgotpassword extends registrationbaseactivity implements View.OnC
         switch (view.getId())
         {
             case R.id.tv_next:
-                if(common.checkemailvalidation(forgotpassword.this,edtusername))
+                if(edtusername.getText().toString().trim().length() > 0)
                 {
                     xdata.getinstance().saveSetting(config.usernameemailaddress,edtusername.getText().toString().trim());
-                    Intent  intent = new Intent(forgotpassword.this,changepassword.class);
-                    startActivity(intent);
+                    validatecallapi();
                 }
                 break;
         }
+    }
+
+    public void validatecallapi()
+    {
+        HashMap<String,String> requestparams=new HashMap<>();
+        requestparams.put("type","client");
+        requestparams.put("action","forgotpassword");
+        requestparams.put("email",edtusername.getText().toString().trim());
+        progressdialog.showwaitingdialog(forgotpassword.this);
+        xapipost_send(forgotpassword.this,requestparams, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                progressdialog.dismisswaitdialog();
+                if(response.isSuccess())
+                {
+                    try {
+                        JSONObject object=new JSONObject(response.getData().toString());
+                        if(object.has("success"))
+                        {
+                            if(object.getString("success").equalsIgnoreCase("true"))
+                            {
+                                if(object.has(config.clientid))
+                                    xdata.getinstance().saveSetting(config.clientid,object.getString(config.clientid));
+
+                                Intent intent=new Intent(forgotpassword.this,verifyuser.class);
+                                startActivity(intent);
+                            }
+                            else
+                            {
+                                if(object.has("error"))
+                                    Toast.makeText(forgotpassword.this, object.getString("error"), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        if(object.has("errors"))
+                        {
+                            JSONArray errorarray=object.getJSONArray("errors");
+                            String error="";
+                            for(int i=0;i<errorarray.length();i++)
+                            {
+                                if(error.trim().isEmpty())
+                                {
+                                    error=error+errorarray.get(i).toString();
+                                }
+                                else
+                                {
+                                    error=error+"\n"+errorarray.get(i).toString();
+                                }
+                            }
+                            Toast.makeText(forgotpassword.this, error, Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    Toast.makeText(forgotpassword.this, getResources().getString(R.string.json_parsing_failed), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

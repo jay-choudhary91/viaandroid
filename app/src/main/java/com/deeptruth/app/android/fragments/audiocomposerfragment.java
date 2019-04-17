@@ -384,10 +384,40 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
     public void onPause() {
         if(mediarecorder != null)
         {
-            isaudiorecording=false;
-            gethelper().setrecordingrunning(true);
+            if (audiorecorder != null && isaudiorecording)
+            {
+                try
+                {
+                    isaudiorecording = false;
+                    gethelper().setrecordingrunning(false);
+                    audiorecorder.stop();
+                    audiorecorder.release();
+                    mediarecorder.stop();
+                    mediarecorder.release();
+                    audiorecorder = null;
+                    recordingthread = null;
+                }catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            mediarecorder = null;
             stoptimer();
             resettimer();
+            isaudiorecording=false;
+            if(myvisualizerview != null)
+            {
+                myvisualizerview.clear();
+                myvisualizerview.setVisibility(View.INVISIBLE);
+            }
+
+            if(validationbaranimation != null)
+            {
+                validationbaranimation.cancel();
+                validationbaranimation.reset();
+            }
+
             img_dotmenu.setVisibility(View.VISIBLE);
             txt_title_actionbarcomposer.setText(config.mediarecorderformat);
 
@@ -400,16 +430,6 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
                 e.printStackTrace();
             }
 
-            try{
-                if(mediarecorder != null)
-                {
-                    mediarecorder.stop();
-                    mediarecorder.release();
-                }
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
             if(myvisualizerview != null)
             {
                 myvisualizerview.clear();
@@ -793,8 +813,10 @@ public class audiocomposerfragment extends basefragment  implements View.OnClick
             e.printStackTrace();
         }
 
-        if (null != audiorecorder) {
-            try {
+        if (audiorecorder != null)
+        {
+            try
+            {
                 isaudiorecording = false;
                 gethelper().setrecordingrunning(false);
                 audiorecorder.stop();
