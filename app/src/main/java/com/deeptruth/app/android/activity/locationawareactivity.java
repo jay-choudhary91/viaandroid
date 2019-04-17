@@ -57,6 +57,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
+import android.widget.Toast;
 
 import com.deeptruth.app.android.BuildConfig;
 import com.deeptruth.app.android.R;
@@ -79,6 +80,7 @@ import com.deeptruth.app.android.utils.config;
 import com.deeptruth.app.android.utils.googleutils;
 import com.deeptruth.app.android.utils.md5;
 import com.deeptruth.app.android.utils.noise;
+import com.deeptruth.app.android.utils.progressdialog;
 import com.deeptruth.app.android.utils.taskresult;
 import com.deeptruth.app.android.utils.xdata;
 import com.google.android.gms.common.ConnectionResult;
@@ -146,7 +148,7 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
     private BroadcastReceiver phonecallbroadcast;
     String CALL_STATUS = "", CALL_DURATION = "", CALL_REMOTE_NUMBER = "", CALL_START_TIME = "", connectionspeed = "";
     MyPhoneStateListener mPhoneStatelistener;
-    int mSignalStrength = 0, dbtoxapiupdatecounter = 0;
+    int mSignalStrength = 0, dbtoxapiupdatecounter = 0,servermetricsgetupdatecounter=0;
 
     noise mNoise;
     private static final int PERMISSION_RECORD_AUDIO = 92;
@@ -335,7 +337,41 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
         return iscameracapture;
     }
 
-    public void getconnectionspeed() {
+    public void getsistermetric()
+    {
+        HashMap<String,String> requestparams=new HashMap<>();
+        requestparams.put("action","servermetrics_get");
+        xapipost_send(locationawareactivity.this,requestparams, new apiresponselistener() {
+            @Override
+            public void onResponse(taskresult response) {
+                if(response.isSuccess())
+                {
+                    try
+                    {
+                        JSONObject object=new JSONObject(response.getData().toString());
+                        if(object.has("metrics"))
+                        {
+                            JSONObject metricobject=object.getJSONObject("metrics");
+                            if(metricobject.has("satellitedate"))
+                                xdata.getinstance().saveSetting(config.satellitedate,metricobject.getString("satellitedate"));
+
+                            if(metricobject.has("satellites"))
+                                xdata.getinstance().saveSetting(config.satellitesdata,metricobject.getJSONArray("satellites").toString());
+
+                            if(metricobject.has("remote_ip"))
+                                xdata.getinstance().saveSetting(config.remoteip,metricobject.getString("remote_ip"));
+                        }
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    public void getconnectionspeed()
+    {
         if (!common.isnetworkconnected(locationawareactivity.this)) {
             connectionspeed = "NA";
             return;
@@ -726,22 +762,22 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-                        try {
-                            xdata.getinstance().saveSetting("gpsenabled", "1");
-                            if (! locationawareactivity.checkLocationEnable(locationawareactivity.this))
-                                xdata.getinstance().saveSetting("gpsenabled", "0");
-
-                            if(getcurrentfragment() != null)
-                                getcurrentfragment().updatewifigpsstatus();
-                        }catch (Exception e)
-                        {
-                            e.printStackTrace();
-                        }
-
                         if(BuildConfig.FLAVOR.equalsIgnoreCase(config.build_flavor_composer))
                         {
                             getconnectionspeed();
+
+                            try {
+                                xdata.getinstance().saveSetting("gpsenabled", "1");
+                                if (! locationawareactivity.checkLocationEnable(locationawareactivity.this))
+                                    xdata.getinstance().saveSetting("gpsenabled", "0");
+
+                                if(getcurrentfragment() != null)
+                                    getcurrentfragment().updatewifigpsstatus();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
                             towerinfolist = gettowerinfo();
                             for (int i = 0; i < metricitemarraylist.size(); i++) {
                                 if (metricitemarraylist.get(i).isSelected()) {
@@ -766,6 +802,14 @@ public abstract class locationawareactivity extends baseactivity implements GpsS
 
                             if(! isdatasyncing)
                                 syncmediadatabase();
+                        }
+
+                        servermetricsgetupdatecounter++;
+                        if((servermetricsgetupdatecounter >= 20 && common.isnetworkconnected(locationawareactivity.this)) ||
+                                (xdata.getinstance().getSetting(config.satellitedate).trim().isEmpty()))
+                        {
+                            servermetricsgetupdatecounter=0;
+                            getsistermetric();
                         }
 
                     }

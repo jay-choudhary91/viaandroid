@@ -198,6 +198,9 @@ public class config {
     public static final String usernameemailaddress="usernameemailaddress";
     public static final String reset_authtoken="reset_authtoken";
     public static final String clientid="clientid";
+    public static final String satellitedate="satellitedate";
+    public static final String remoteip="remoteip";
+    public static final String satellitesdata="satellites";
 
     public static final String selected_folder="selected_folder";
 
