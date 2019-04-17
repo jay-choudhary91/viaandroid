@@ -565,6 +565,12 @@ public class homeactivity extends locationawareactivity implements View.OnClickL
     }
 
     @Override
+    public void setdatacomposing(boolean isdatacomposing, String mediafilepath) {
+        if((graphicaldrawerfragment!= null))
+            graphicaldrawerfragment.setdatacomposing(isdatacomposing,mediafilepath);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 

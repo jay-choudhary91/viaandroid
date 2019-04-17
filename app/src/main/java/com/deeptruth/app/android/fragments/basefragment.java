@@ -247,6 +247,8 @@ public abstract class basefragment extends Fragment {
 
         public void setdatacomposing(boolean isdatacomposing);
 
+        public void setdatacomposing(boolean isdatacomposing,String mediafilepath);
+
         public void updateactionbar(int showHide, int color);
 
         public void updateactionbar(int showHide);
