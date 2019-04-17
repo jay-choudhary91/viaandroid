@@ -375,7 +375,7 @@
                         android:textColor="@color/white"
                         android:gravity="center"
                         android:layout_marginTop="5dp"
-                        android:text="02:04:12 MST"/>
+                        android:text=""/>
 
                 </LinearLayout>
 
@@ -408,7 +408,7 @@
                         android:textColor="@color/white"
                         android:gravity="center"
                         android:layout_marginTop="5dp"
-                        android:text="02:04:12 GMT"/>
+                        android:text=""/>
 
                 </LinearLayout>
 
