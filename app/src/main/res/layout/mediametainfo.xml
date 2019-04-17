@@ -292,6 +292,7 @@
                     android:layout_gravity="top|center"
                     android:layout_marginTop="5dp"
                     android:gravity="center"
+                    android:layout_marginRight="@dimen/margin_10dp"
                     android:orientation="vertical">
 
                     <com.deeptruth.app.android.views.customfonttextview
