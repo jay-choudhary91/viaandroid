@@ -659,7 +659,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         txt_no_gps_wifi.setPadding((int) getResources().getDimension(R.dimen.margin_10dp),0,0,0);
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
+                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
 
                     }
                     gethelper().hidedrawerbutton(true);  // hidden
@@ -686,7 +686,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
                         setdynamiclayout(lpimg_dotmenu,null,0,0,0,0,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_10dp),img_dotmenu,null,null,0);*/
 
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
+                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
 
                         // set validating text to right padding
                         txt_section_validating_secondary.setPadding(0,0,(int) getResources().getDimension(R.dimen.margin_10dp),0);
@@ -723,8 +723,9 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
                         txt_weakgps.setPadding(0,0,20,0);
                         txt_no_gps_wifi.setPadding(20,0,0,0);
+
                         LinearLayout.LayoutParams lpimgflashon = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),0,0,0,0,0,0,0,imgflashon,null,null,0);
+                        setdynamiclayout(null,lpimgflashon,(int) getResources().getDimension(R.dimen.margin_10dp),(int) getResources().getDimension(R.dimen.margin_4dp),0,0,0,0,0,0,imgflashon,null,null,0);
                     }
 
                     if(headercontainer.getAngle() == 90)
@@ -1208,6 +1209,7 @@ public class videocomposerfragment extends basefragment implements View.OnClickL
 
             if(madapterclick != null)
                 madapterclick.onItemClicked(null,1);
+
             showhideactionbaricon(0);
 
         } catch (Exception e) {
